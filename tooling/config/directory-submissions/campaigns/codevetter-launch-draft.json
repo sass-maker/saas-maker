@@ -1,0 +1,266 @@
+{
+  "$schema": "fleet.approved-campaign-manifest.v1",
+  "version": 1,
+  "campaign": {
+    "id": "codevetter-launch",
+    "kind": "launch_campaign",
+    "projectId": "codevetter",
+    "title": "CodeVetter launch day — concentrated burst at the AI-verification wedge",
+    "objective": "One coordinated day: Product Hunt + Show HN + targeted subreddits + awesome-list PRs (already open) + automatable directory batch, all pointing at CodeVetter. The wedge: 'verify AI-written code with execution evidence, not another LLM opinion' — local-first, open source, Mac-native. Goal is a GitHub star burst large enough to matter for trending/discovery, plus durable listings that keep referring.",
+    "createdAt": "2026-09-22",
+    "sourceRevision": "growth-loop v1 + awesome-lists.json submissions 2026-09-21 (8 PRs open, 1 issue filed)"
+  },
+  "sources": [
+    {
+      "id": "readme-positioning",
+      "type": "product-truth",
+      "reference": "codevetter/README.md + PRODUCT.md — differentiation table vs hosted AI reviewers and merge-gate tools",
+      "verifiedAt": "2026-09-22"
+    },
+    {
+      "id": "github-baseline",
+      "type": "baseline-measurement",
+      "reference": "site-health visibility ledger, github family: codevetter at 1 star, 11 views/14d, 2409 clones/14d at 2026-09-21 collection",
+      "verifiedAt": "2026-09-21"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step-1-flagship-posts",
+      "label": "1 — Owner posts the flagship surfaces (PH + Show HN), launch morning PT",
+      "itemKeys": ["product-hunt-launch", "show-hn"]
+    },
+    {
+      "id": "step-2-community-posts",
+      "label": "2 — Owner posts community surfaces while PH is active",
+      "itemKeys": ["reddit-sideproject", "reddit-local-first", "x-launch-post"]
+    },
+    {
+      "id": "step-3-automatable-directories",
+      "label": "3 — Agent executes the no-CAPTCHA directory batch and records receipts",
+      "itemKeys": ["insidr-submit", "microlaunch-submit", "devto-article"]
+    }
+  ],
+  "items": [
+    {
+      "key": "product-hunt-launch",
+      "kind": "launch-post",
+      "tier": "flagship",
+      "title": "Product Hunt launch — CodeVetter",
+      "content": {
+        "body": "Tagline: Verify AI-written code with execution evidence, not another LLM opinion.\n\nFirst comment (owner posts immediately after launch): \"I built CodeVetter because every AI reviewer I tried graded my agent's diff with another model reading the same diff. CodeVetter actually exercises the change — builds, tests, browser/API behavior — through a deterministic Rust engine and gives you a replayable evidence bundle. Runs entirely on your Mac: desktop app, CLI, and a read-only MCP server so Claude Code/Codex can verify their own work. No code leaves your machine. It's open source — would love feedback on the verification approach.\",\n\nTopics: Developer Tools, Artificial Intelligence, Open Source.\n\nRequired before launch: PH maker profile, 3-5 gallery images (app screenshots from apps/macos + a terminal evidence-bundle shot), a 60-90s demo video or GIF loop.",
+        "fields": {
+          "tagline": "Verify AI-written code with execution evidence, not another LLM opinion.",
+          "productUrl": "https://codevetter.com",
+          "repoUrl": "https://github.com/Codevetter/codevetter"
+        },
+        "assets": ["gallery images — apps/macos screenshots", "60-90s demo clip"]
+      },
+      "destination": {
+        "id": "product-hunt",
+        "url": "https://www.producthunt.com/posts/new",
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Owner submits via own PH account; launch Tue–Thu 00:01 PT for maximum day exposure",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22"
+      },
+      "timing": { "publishAt": null }
+    },
+    {
+      "key": "show-hn",
+      "kind": "launch-post",
+      "tier": "flagship",
+      "title": "Show HN — CodeVetter",
+      "content": {
+        "body": "Title: Show HN: CodeVetter – verify AI-written code with execution evidence, not an LLM's opinion\n\nText (optional body, keep short): I kept watching AI code reviewers grade my agent's work by having another model read the same diff. CodeVetter takes a different approach: it exercises the change — build, tests, browser/API behavior — via a deterministic Rust engine, then emits an inspectable evidence bundle you can replay. Local-first macOS app + CLI + read-only MCP server (so your coding agent can verify its own work). Open source.\n\nPost timing: Tue–Thu, ~8-9am PT. Owner posts from own account. Do not ask for upvotes anywhere — instant kill. Reply to every comment in the first 4 hours.",
+        "fields": { "url": "https://github.com/Codevetter/codevetter" },
+        "assets": []
+      },
+      "destination": {
+        "id": "hacker-news",
+        "url": "https://news.ycombinator.com/submit",
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Owner posts Show HN from own account; accreditation marks HN as a protected channel",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22"
+      },
+      "timing": { "publishAt": null }
+    },
+    {
+      "key": "reddit-sideproject",
+      "kind": "community-post",
+      "tier": "secondary",
+      "title": "r/SideProject post",
+      "content": {
+        "body": "Title: I built a Mac app that verifies AI-written code by actually running it — not by asking another LLM\n\nBody: Every AI code reviewer I tried grades the diff with another model reading the same diff. CodeVetter exercises the change instead: builds, tests, browser/API behavior through a deterministic Rust engine, then emits a replayable evidence bundle. Local-first (nothing leaves your machine), open source, and there's a read-only MCP server so Claude Code/Codex can verify their own output. Feedback welcome — especially on what evidence you'd actually trust.",
+        "fields": {},
+        "assets": []
+      },
+      "destination": {
+        "id": "reddit-sideproject",
+        "url": "https://www.reddit.com/r/SideProject/submit",
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Owner posts from own account; check r/SideProject self-promo rules at post time",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22"
+      },
+      "timing": { "publishAt": null }
+    },
+    {
+      "key": "reddit-local-first",
+      "kind": "community-post",
+      "tier": "secondary",
+      "title": "r/localfirst / r/selfhosted-adjacent post",
+      "content": {
+        "body": "Angle: the local-first property is the story here — 'your code never leaves your machine' vs every hosted AI reviewer. Draft a variant of the SideProject post that leads with local-first + the MCP server angle. Confirm the target subreddit accepts tool posts before submitting.",
+        "fields": {},
+        "assets": []
+      },
+      "destination": {
+        "id": "reddit-local-first",
+        "url": "https://www.reddit.com/submit",
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Owner picks exact subreddit at post time (local-first, macapps, or devtools per current rules) and posts from own account",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22"
+      },
+      "timing": { "publishAt": null }
+    },
+    {
+      "key": "x-launch-post",
+      "kind": "social-post",
+      "tier": "secondary",
+      "title": "X launch post",
+      "content": {
+        "body": "Draft: Shipped CodeVetter — an open-source Mac app that verifies AI-written code by executing it, not by asking another LLM. Builds, tests, browser/API behavior → replayable evidence bundle. Local-first, CLI + MCP so your coding agent can verify its own work. https://github.com/Codevetter/codevetter",
+        "fields": {},
+        "assets": ["demo clip if available"]
+      },
+      "destination": {
+        "id": "x",
+        "url": "https://x.com/compose/post",
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Owner posts from own account; X is a protected channel in accreditation state",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22"
+      },
+      "timing": { "publishAt": null }
+    },
+    {
+      "key": "insidr-submit",
+      "kind": "directory-submission",
+      "tier": "secondary",
+      "title": "Insidr.ai tool submission",
+      "content": {
+        "body": "Submit CodeVetter via the public tool-submission form. Description: execution-backed verification for AI-written code — local-first, open source, CLI + MCP.",
+        "fields": { "toolName": "CodeVetter", "toolUrl": "https://codevetter.com" },
+        "assets": []
+      },
+      "destination": {
+        "id": "insidr",
+        "url": "https://www.insidr.ai/submit-tools/",
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "browser",
+        "action": "Automatable no-CAPTCHA form per directories.json (automation: try); fill and submit via Playwright, record confirmation",
+        "requiresAuth": false,
+        "policyVerifiedAt": "2026-09-22"
+      },
+      "timing": { "publishAt": null }
+    },
+    {
+      "key": "microlaunch-submit",
+      "kind": "directory-submission",
+      "tier": "secondary",
+      "title": "Microlaunch submission",
+      "content": {
+        "body": "Submit CodeVetter to Microlaunch per directories.json. Manual rating only if the form proves automatable at run time; otherwise requeue as human-kick.",
+        "fields": { "productUrl": "https://codevetter.com" },
+        "assets": []
+      },
+      "destination": {
+        "id": "microlaunch",
+        "url": "https://microlaunch.net",
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Attempt only if no auth/CAPTCHA at run time; otherwise owner submits",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22"
+      },
+      "timing": { "publishAt": null }
+    },
+    {
+      "key": "devto-article",
+      "kind": "syndicated-article",
+      "tier": "secondary",
+      "title": "dev.to launch article",
+      "content": {
+        "body": "Working title: 'Your AI reviewer is grading homework with another AI — here's what execution-backed verification looks like'. Article arc: the diff-reading loop problem → running the task's own evidence checks → the receipt/replay format → MCP self-verification demo. Canonical URL points at codevetter.com.",
+        "fields": { "canonicalUrl": "https://codevetter.com" },
+        "assets": []
+      },
+      "destination": {
+        "id": "devto",
+        "url": "https://dev.to/new",
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Draft is automatable via DEV API once owner supplies a key; until then owner publishes the draft",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22"
+      },
+      "timing": { "publishAt": null }
+    }
+  ],
+  "exclusions": [
+    { "destinationId": "linkedin", "reason": "Owner-excluded protected channel" },
+    { "destinationId": "betalist", "reason": "Beta-stage focus; CodeVetter is a shipped product" },
+    { "destinationId": "uneed", "reason": "Turnstile CAPTCHA — stays blocked per policy" },
+    { "destinationId": "launching-next", "reason": "Anti-automation interstitial — stays blocked per policy" },
+    { "destinationId": "alternativeto", "reason": "Account-required; revisit after launch day metrics" }
+  ],
+  "measurement": {
+    "attribution": "site-health github outcome family: stars, forks, 14-day views/visitors/clones and referrer breakdown, collected daily by com.sarthak.github-metrics. Launch-day receipts are live post URLs.",
+    "metrics": [
+      "github stars on Codevetter/codevetter",
+      "14-day traffic views + visitors delta vs 2026-09-21 baseline (11 views)",
+      "referrer breakdown entries from producthunt.com / news.ycombinator.com / reddit.com",
+      "clones delta vs 2409/14d baseline"
+    ],
+    "checkpoints": [
+      "T+24h: star delta + PH ranking position",
+      "T+7d: referrer attribution, directory acceptances",
+      "T+14d: full traffic-window delta vs baseline"
+    ]
+  },
+  "permissions": {
+    "repositoryWrites": [
+      "saas-maker/tooling/config/directory-submissions/ (manifests, receipts, submissions ledger)"
+    ],
+    "commands": [
+      "node tooling/scripts/growth-queue.mjs",
+      "node tooling/scripts/github-repo-audit.mjs",
+      "node site-health/apps/backend/scripts/github-metrics-collect.mjs --project codevetter"
+    ],
+    "publishCommands": []
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "fleet.launchdesk-campaign-mark.v1",
+  "campaignId": "launchdesk-bulk-2026-09-22",
+  "status": "approved-and-marked",
+  "approvedBy": "owner",
+  "approvedAt": "2026-09-22T19:31:33Z",
+  "exclusions": [
+    "hacker-news",
+    "linkedin"
+  ],
+  "counts": {
+    "providerAcknowledged": 278,
+    "strictNetNew": 277,
+    "publishedLive": 0,
+    "pendingReviewDraftOrOpenPr": 182,
+    "pendingEmailConfirmation": 1,
+    "indeterminateDoNotRetry": 6,
+    "blockedOrDeferred": 164,
+    "trackedPairs": 449
+  },
+  "marking": {
+    "providerAcknowledged": "submitted",
+    "pendingEmailConfirmation": "queued",
+    "indeterminateDoNotRetry": "skipped",
+    "blockedOrDeferred": "skipped"
+  },
+  "evidence": {
+    "markdown": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/consolidated-evidence-round2-final-v2-20260922T192453Z.md",
+    "markdownSha256": "b805355eb33a58a16b37a7cb6d90ce0a2ae6d627c789ed13313715ab8ec198f2",
+    "json": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/consolidated-evidence-round2-final-v2-20260922T192453Z.json",
+    "jsonSha256": "16bf98620825f6f83852d7f671c73e1c246dff127ce83413480ea9ff0b7d7bf3"
+  },
+  "notes": [
+    "Submitted means provider-acknowledged intake, Draft, pending review, or open pull request; it does not mean published live.",
+    "Indeterminate pairs are marked skipped to prevent blind retries.",
+    "Blocked or deferred pairs remain documented in the evidence bundle and are not treated as failed publications."
+  ]
+}

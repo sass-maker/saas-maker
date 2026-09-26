@@ -191,6 +191,18 @@ jobs:
       - run: npm run check
 CIEOF
 
+# 5b. OpenSpec — in-repo spec home for change proposals.
+# Specs/changes live in the repo so any agent session can read intended
+# behavior without fetching GitHub; the spec-driven GitHub issue remains the
+# tracking layer (see tooling/skills/spec-driven).
+if command -v openspec >/dev/null 2>&1; then
+  openspec init --tools claude,codex,devin --no-animation >/dev/null 2>&1 || {
+    echo "  WARN: openspec init failed — run 'openspec init --tools claude,codex,devin' manually" >&2
+  }
+else
+  echo "  NOTE: openspec CLI not found — skipping spec home (brew install or npm i -g @fission-ai/openspec)" >&2
+fi
+
 # 6. Commit and push initial scaffold
 git add -A
 git commit -m "Initial scaffold
@@ -269,6 +281,7 @@ echo "Post-creation checklist:"
 echo "  [ ] AGENTS.md, PROJECT_STATUS.md, .gitignore committed"
 echo "  [ ] CI workflow committed (may need adjusting for your stack)"
 echo "  [ ] Fleet README updated"
+echo "  [ ] openspec/ spec home initialized (skippable — rerun 'openspec init' if CLI was missing)"
 echo "  [ ] If visual: run \$design-workflow and pass the Fleet design-review receipt"
 echo "  [ ] If Cloudflare: create wrangler config"
 echo "  [ ] If DB: create schema + first migration"

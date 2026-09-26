@@ -27,7 +27,10 @@ project should start directly inside a durable product organization.
    Timeline, Products, Features, Todo/Planned/Deferred/Blocked)
 5. **.gitignore** — standard Node/Cloudflare ignores
 6. **CI workflow** — `.github/workflows/ci.yml` with lint + typecheck + test
-7. **Fleet README entry** — adds the project to the appropriate category
+7. **OpenSpec home** — `openspec init --tools claude,codex,devin` when the CLI
+   is installed; in-repo specs hold feature truth, the `spec-driven` GitHub
+   issue holds tracking
+8. **Fleet README entry** — adds the project to the appropriate category
 
 ## How to invoke
 
@@ -63,3 +66,9 @@ The script:
 - [ ] Fleet README updated with new project in the right category
 - [ ] If the project uses Cloudflare: wrangler config created
 - [ ] If the project uses a DB: schema + first migration created
+- [ ] `openspec/` spec home initialized (rerun `openspec init --tools claude,codex,devin` if the CLI was missing)
+
+Scaffolding is phase 1 only. Continue with the full gate list at
+[`docs/new-project-checklist.md`](../../docs/new-project-checklist.md) —
+portfolio registration, landing/design, trust, deploy, SEO/GEO, analytics,
+and launch.

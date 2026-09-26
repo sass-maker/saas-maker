@@ -1,6 +1,6 @@
 ---
 name: spec-driven
-description: Spec-driven development for any new fleet feature. Use when starting non-trivial feature work (multi-file, new surface, behavior change, cross-repo) in any fleet project. Creates a GitHub tracking issue with proposal, design, specs, and task checklist — no local spec files. Trigger automatically at the start of feature work; do not wait for the user to ask.
+description: Spec-driven development for any new fleet feature. Use when starting non-trivial feature work (multi-file, new surface, behavior change, cross-repo) in any fleet project. Repos with an openspec/ home keep proposal, design, and spec deltas in openspec/changes/; the GitHub tracking issue carries a summary, the task checklist, and the link. Repos without openspec keep all spec content in the issue. Trigger automatically at the start of feature work; do not wait for the user to ask.
 ---
 
 # spec-driven — GitHub Issue spec workflow for new features
@@ -10,9 +10,20 @@ When an agent starts feature work in any fleet project, it must create a
 spec-driven tracking issue **before writing feature code**. This skill is the
 canonical entry point — invoke it the moment feature intent is detected.
 
-All spec content lives in the GitHub Issue: proposal, design notes,
-requirements/scenarios, and the task checklist. There is no local `openspec/`
-directory, no local spec files, and no `openspec` CLI.
+Spec content has two homes depending on the repo:
+
+- **Repo has `openspec/`** (fleet-init scaffolds it for new projects) —
+  `openspec/changes/<name>/` is the spec's source of truth: proposal,
+  design, spec deltas, and tasks live there, created via the vendored
+  `openspec-*` skills (`openspec-propose` generates all artifacts in one
+  step; `openspec archive` folds deltas into `openspec/specs/` at ship).
+- **Repo has no `openspec/`** — the GitHub tracking issue holds the full
+  spec inline (the template below).
+
+Either way, a GitHub tracking issue is still created: it owns cross-repo
+visibility and task state, and links to the openspec change when one exists.
+Do not copy the full proposal into the issue when openspec carries it —
+summarize and link.
 
 ## When to trigger (strong default)
 
@@ -55,8 +66,14 @@ the user has already scoped the feature.
 
 ### 2. Propose (mandatory)
 
-Create one GitHub tracking issue using `gh issue create`. The issue body is
-the complete spec — it must contain:
+When the repo has an `openspec/` home, create the change first via
+`openspec-propose` — it owns the full proposal, design, spec deltas, and
+task list.
+
+Then create one GitHub tracking issue using `gh issue create`. With an
+openspec change present, the issue body is a summary plus a link to
+`openspec/changes/<name>/` and the mirrored task checklist; without one,
+the issue body is the complete spec — it must contain:
 
 ```
 ## Why
@@ -134,15 +151,17 @@ The tracking issue does **not** replace these — it sits alongside them:
 
 | Artifact | Purpose | When |
 |---|---|---|
-| GitHub tracking issue | Feature spec + task checklist + operational state | Created at propose; checked off during apply; closed at ship |
+| `openspec/changes/<name>/` | In-repo spec truth: proposal, design, deltas, tasks | Repos with `openspec/`; archived into `openspec/specs/` at ship |
+| GitHub tracking issue | Task checklist + operational state + cross-repo visibility | Created at propose; checked off during apply; closed at ship |
 | `PROJECT_STATUS.md` | Durable product status | Read before broad work; update on ship |
 | `docs/plans/` | Rare design artifacts that outlive the feature | Only if the design has lasting reference value |
 | `AGENTS.md` | Per-project agent instructions | Stack, commands, conventions |
 
-Rule of thumb: **the tracking issue owns feature design and task state while
-the change is active**. **PROJECT_STATUS.md owns durable shipped/current
-product truth**. They meet at ship time: merge the linked PR, close the
-tracking issue, and record only the shipped outcome in `PROJECT_STATUS.md`.
+Rule of thumb: **openspec owns spec detail where it exists; the tracking
+issue owns task state and visibility in every repo**. **PROJECT_STATUS.md
+owns durable shipped/current product truth**. They meet at ship time: merge
+the linked PR, archive the openspec change, close the tracking issue, and
+record only the shipped outcome in `PROJECT_STATUS.md`.
 
 ## Anti-patterns
 
@@ -151,10 +170,11 @@ tracking issue, and record only the shipped outcome in `PROJECT_STATUS.md`.
   exemptions above.
 - **Writing feature code before the tracking issue exists** — the issue is the
   gate. No issue, no feature code.
-- **Maintaining local spec files** — all spec content lives in the tracking
-  issue. Do not create `openspec/` directories, `proposal.md`, `tasks.md`,
-  `design.md`, or `specs/` folders. The tracking issue is the single source
-  of truth.
+- **Maintaining ad-hoc local spec files** — the only sanctioned in-repo spec
+  home is `openspec/` (scaffolded by fleet-init, driven by the `openspec-*`
+  skills). Do not create `proposal.md`, `tasks.md`, `design.md`, or `specs/`
+  folders outside it, and do not duplicate openspec content into
+  `docs/plans/` or the issue body.
 - **Letting tracking issues stay open after ship** — close promptly on merge.
   Open tracking issues after the work is done are spec debt.
 - **Duplicating the proposal into `docs/plans/`** — the tracking issue IS the

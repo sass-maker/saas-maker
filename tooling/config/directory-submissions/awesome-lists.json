@@ -1,0 +1,136 @@
+{
+  "$schema": "fleet.awesome-list-targets.v1",
+  "version": 1,
+  "updated": "2026-09-22",
+  "note": "Awesome-list PR targets per project. Each entry is a drafted contribution, not permission to open the PR \u2014 promotion to a real pull request follows the launch-campaign approval gate and rides the owner's GitHub account.",
+  "targets": [
+    {
+      "projectId": "codevetter",
+      "repositoryUrl": "https://github.com/Codevetter/codevetter",
+      "lists": [
+        {
+          "repo": "kodustech/awesome-ai-code-review",
+          "section": "CLI & Local Workflows",
+          "fit": "Exact category match \u2014 AI code review tools for local/CLI workflows",
+          "entry": "- **CodeVetter** \u2014 Execution-backed verification for AI-written changes: runs the requested task's evidence checks locally and persists source-bound receipts. macOS app, CLI, and read-only MCP.",
+          "state": "submitted",
+          "evidence": "https://github.com/kodustech/awesome-ai-code-review/pull/46"
+        },
+        {
+          "repo": "luoyuctl/awesome-ai-coding-agents",
+          "section": "Code Review and PR Automation",
+          "fit": "List explicitly invites PRs; code-review category fits the verification workflow",
+          "entry": "- **CodeVetter** \u2014 Verifies that agent-written changes actually satisfy the requested task, with reproducible local evidence instead of a vibe verdict.",
+          "state": "submitted",
+          "evidence": "https://github.com/luoyuctl/awesome-ai-coding-agents/pull/1"
+        },
+        {
+          "repo": "ai-for-developers/awesome-ai-coding-tools",
+          "section": "Code Review and Refactoring",
+          "fit": "Broad AI coding-tools list, PR-friendly",
+          "entry": "- **CodeVetter** \u2014 Local-first verification of AI-written code changes with inspectable, source-bound receipts.",
+          "state": "submitted",
+          "evidence": "https://github.com/ai-for-developers/awesome-ai-coding-tools/pull/737"
+        },
+        {
+          "repo": "bradAGI/awesome-cli-coding-agents",
+          "section": "agent infrastructure / verification",
+          "fit": "Borderline \u2014 CodeVetter is a verifier, not an agent; propose only if the list carries a tools/harness section",
+          "entry": "- **CodeVetter** \u2014 Execution-backed verification harness for AI coding agents: proves a change satisfies its task with reproducible local checks.",
+          "state": "submitted",
+          "evidence": "https://github.com/bradAGI/awesome-cli-coding-agents/pull/374"
+        },
+        {
+          "repo": "jamesmurdza/awesome-ai-devtools",
+          "section": "CLI Utilities",
+          "fit": "Direct category match — AI-powered developer tools with a dedicated CLI utilities section",
+          "entry": "- [CodeVetter](https://github.com/Codevetter/codevetter) — Local-first CLI and macOS app that exercises AI-written changes and produces replayable verification evidence.",
+          "state": "submitted",
+          "evidence": "https://github.com/jamesmurdza/awesome-ai-devtools/pull/1106"
+        },
+        {
+          "repo": "jaywcjlove/awesome-swift-macos-apps",
+          "section": "AI",
+          "fit": "Direct category match — active open-source Swift macOS application with bilingual list support",
+          "entry": "- [CodeVetter](https://github.com/Codevetter/codevetter) — Verifies AI-written software changes with local execution and replayable evidence.",
+          "state": "submitted",
+          "evidence": "https://github.com/jaywcjlove/awesome-swift-macos-apps/pull/116"
+        }
+      ],
+      "excluded": [
+        {
+          "repo": "tiennm99/awesome-coding-agents",
+          "reason": "Inclusion floor is ~10k stars; CodeVetter does not qualify yet"
+        }
+      ]
+    },
+    {
+      "projectId": "posttrainllm",
+      "repositoryUrl": "https://github.com/PostTrainLLM/posttrainllm",
+      "lists": [
+        {
+          "repo": "Enterprise-AI-Atlas/awesome-local-llms",
+          "section": "Fine-Tuning Locally",
+          "fit": "Category-organized local-LLM registry; Mac-local training factory is a direct fit",
+          "entry": "- **PostTrainLLM** `Community` \u2014 Mac-first LLM factory and learning lab: LoRA/distillation recipes, eval gates, and a browser playground, all local on Apple Silicon.",
+          "state": "submitted",
+          "evidence": "https://github.com/Enterprise-AI-Atlas/awesome-local-llms/pull/2"
+        },
+        {
+          "repo": "rafska/awesome-local-llm",
+          "section": "Training and Fine-tuning",
+          "fit": "Active local-LLM list with a training section",
+          "entry": "- **PostTrainLLM** \u2014 Mac-local post-training factory: reproducible recipes, measured eval gates, browser playground.",
+          "state": "closed-without-merge",
+          "evidence": "https://github.com/rafska/awesome-local-llm/pull/227"
+        },
+        {
+          "repo": "duarte/awesome-local-llm",
+          "section": "Training and Fine-tuning",
+          "fit": "Companion local-LLM list with the same training section",
+          "entry": "- **PostTrainLLM** \u2014 Apple-Silicon LLM factory: distill/LoRA recipes, frozen eval gates, local browser playground.",
+          "state": "submitted",
+          "evidence": "https://github.com/duarte/awesome-local-llm/pull/1"
+        },
+        {
+          "repo": "ununununium/awesome-local-ai",
+          "section": "Tools",
+          "fit": "150+ local-AI tools list",
+          "entry": "- **PostTrainLLM** \u2014 Local-first post-training lab for Apple Silicon with recipe contracts and measured model gates.",
+          "state": "submitted",
+          "evidence": "https://github.com/ununununium/awesome-local-ai/pull/1"
+        },
+        {
+          "repo": "vince-lam/awesome-local-llms",
+          "section": "Tools",
+          "fit": "Curated local-LLM tools list",
+          "entry": "- **PostTrainLLM** \u2014 Mac-local LLM factory and guided learning lab with a live browser playground.",
+          "state": "submitted-via-issue",
+          "evidence": "https://github.com/vince-lam/awesome-local-llms/issues/82"
+        },
+        {
+          "repo": "vince-lam/awesome-local-llms",
+          "section": "suggestion issue",
+          "fit": "Rankings site tracks repos daily; suggestions accepted by issue",
+          "entry": null,
+          "state": "submitted-via-issue",
+          "evidence": "https://github.com/vince-lam/awesome-local-llms/issues/82"
+        },
+        {
+          "repo": "raullenchai/awesome-mlx",
+          "section": "Training & Fine-tuning",
+          "fit": "Direct category match — Apple Silicon training and fine-tuning tooling",
+          "entry": "- **PostTrainLLM** — Mac-local LLM specialist factory with reproducible training recipes and eval gates.",
+          "state": "submitted",
+          "evidence": "https://github.com/raullenchai/awesome-mlx/pull/28"
+        }
+      ],
+      "excluded": [
+        {
+          "repo": "Hannibal046/Awesome-LLM",
+          "reason": "Sections are milestone frameworks/applications; a Mac-local learning lab is off-topic there and would read as spam"
+        }
+      ]
+    }
+  ]
+}

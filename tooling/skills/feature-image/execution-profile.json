@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "balanced", "reasoning": "medium" },
+  "minimum": { "intelligence": "balanced", "reasoning": "low" },
+  "degradation": "allow",
+  "rationale": "Brand detection plus a browser capture loop; design taste matters but the mechanics dominate."
+}

@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "frontier", "reasoning": "high" },
+  "minimum": { "intelligence": "balanced", "reasoning": "medium" },
+  "degradation": "ask",
+  "rationale": "Security findings must be provable and correctly scoped; false alarms and missed auth gaps are both costly."
+}

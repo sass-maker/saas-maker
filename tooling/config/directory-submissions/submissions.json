@@ -1,0 +1,4225 @@
+{
+  "$schema": "fleet.growth-submissions.v1",
+  "version": 1,
+  "updated": "2026-09-22T19:31:33Z",
+  "approval": {
+    "status": "approved-and-marked",
+    "approvedBy": "owner",
+    "approvedAt": "2026-09-22T19:31:33Z",
+    "campaignId": "launchdesk-bulk-2026-09-22",
+    "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/consolidated-evidence-round2-final-v2-20260922T192453Z.json"
+  },
+  "submissions": [
+    {
+      "projectId": null,
+      "destinationId": "devpages",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/devpages-agent-a.json",
+      "reason": "HTTP 429 cooldown",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "agent-testing",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "agent-testing",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "agent-testing",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "agent-testing",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "ai-badges",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "ai-badges",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "ai-badges",
+      "destinationId": "github:chetanraj--awesome-github-badges",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/chetanraj/awesome-github-badges/pull/13",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "ai-badges",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "ai-badges",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/startup-collections-root-extra.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anchor",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anchor",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anchor",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anchor",
+      "destinationId": "fivetaco",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/private/tmp/launchdesk-programmatic-candidates-2026-09-22.json",
+      "reason": "Held after account gate / unresolved prior indeterminate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anchor",
+      "destinationId": "github:dkhamsing--open-source-ios-apps",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/dkhamsing/open-source-ios-apps/pull/2381",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anchor",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anchor",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anchor",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anchor",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anchor",
+      "destinationId": "startup-plug",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anchor",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anchor",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anime-list",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anime-list",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anime-list",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anime-list",
+      "destinationId": "lachief",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anime-list",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anime-list",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anime-list",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anime-list",
+      "destinationId": "startup-plug",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anime-list",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "anime-list",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "devpages",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/devpages-continuation-2026-09-23.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "github:oxnr--awesome-analytics",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/oxnr/awesome-analytics/pull/259",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "ready-saas-go",
+      "state": "skipped",
+      "outcome": "indeterminate_do_not_retry",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/remaining-routes-agent-2026-09-23.json",
+      "reason": "HTTP 301 redirected to the site root with no provider acknowledgement; no retry",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "site-web-directory",
+      "state": "skipped",
+      "outcome": "indeterminate_do_not_retry",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "reason": "Root POST referenced as indeterminate; no retry",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "startup-plug",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "app-health",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "browserdaddy",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "browserdaddy",
+      "destinationId": "devpages",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "browserdaddy",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "browserdaddy",
+      "destinationId": "fivetaco",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/private/tmp/launchdesk-programmatic-candidates-2026-09-22.json",
+      "reason": "Held after account gate / unresolved prior indeterminate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "browserdaddy",
+      "destinationId": "lachief",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "browserdaddy",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "browserdaddy",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "browserdaddy",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "browserdaddy",
+      "destinationId": "startup-plug",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "browserdaddy",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "browserdaddy",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "browserdaddy",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "calorie",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "calorie",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "calorie",
+      "destinationId": "fivetaco",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/private/tmp/launchdesk-programmatic-candidates-2026-09-22.json",
+      "reason": "Held after account gate / unresolved prior indeterminate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "calorie",
+      "destinationId": "github:dkhamsing--open-source-ios-apps",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/dkhamsing/open-source-ios-apps/pull/2384",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "calorie",
+      "destinationId": "lachief",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "calorie",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "calorie",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "calorie",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "calorie",
+      "destinationId": "startup-plug",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "calorie",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "calorie",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "ai-navhub",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "ai-tools-pin",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "bai-tools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "dynamite",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Desktop/fleet/saas-maker/tooling/config/directory-submissions/submissions.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "fivetaco",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/private/tmp/launchdesk-programmatic-candidates-2026-09-22.json",
+      "reason": "Held after account gate / unresolved prior indeterminate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "flowtools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/flowtools-continuation-agent.json",
+      "reason": "Deferred after first provider rate limit",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "futuretools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Desktop/fleet/saas-maker/tooling/config/directory-submissions/receipts.jsonl",
+      "reason": "Live form requires CAPTCHA; stopped without attempting bypass or recording a submission.",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "insidr",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Desktop/fleet/saas-maker/tooling/config/directory-submissions/submissions.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "rankmyai",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "spiff-store",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "startup-plug",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "chatgpt-memory-insights",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "ai-navhub",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "ai-tools-hunt",
+      "state": "skipped",
+      "outcome": "indeterminate_do_not_retry",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-third-agent.json",
+      "reason": "HTTP 500 with no acknowledgement; do not retry",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "ai-tools-pin",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "bai-tools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "devpages",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/devpages-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "flowtools",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/flowtools-continuation-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "github:jamesmurdza--awesome-ai-devtools",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/jamesmurdza/awesome-ai-devtools/pull/1106",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "github:jaywcjlove--awesome-swift-macos-apps",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/jaywcjlove/awesome-swift-macos-apps/pull/116",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "insidr",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Desktop/fleet/saas-maker/tooling/config/directory-submissions/submissions.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "lachief",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Desktop/fleet/saas-maker/tooling/config/directory-submissions/receipts.jsonl",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "rankmyai",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "spiff-store",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "startup-plug",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "codevetter",
+      "destinationId": "viesearch",
+      "state": "queued",
+      "outcome": "pending_email_confirmation",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/consolidated-evidence-round2-final-v2-20260922T192453Z.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "email-manager",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "email-manager",
+      "destinationId": "ai-tools-pin",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "email-manager",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "email-manager",
+      "destinationId": "flowtools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/flowtools-continuation-agent.json",
+      "reason": "Deferred after first provider rate limit",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "email-manager",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "email-manager",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "email-manager",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "email-manager",
+      "destinationId": "spiff-store",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "email-manager",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "email-manager",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "email-manager",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "email-manager",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "every-song-is-a-website",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Desktop/fleet/saas-maker/tooling/config/directory-submissions/receipts.jsonl",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "ai-navhub",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "ai-tools-pin",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "bai-tools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "devpages",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/devpages-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "flowtools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/flowtools-continuation-agent.json",
+      "reason": "Deferred after first provider rate limit",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "github:irazasyed--awesome-cloudflare",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/irazasyed/awesome-cloudflare/pull/71",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "rankmyai",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "spiff-store",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "free-ai",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "gitstat",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "gitstat",
+      "destinationId": "devpages",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "gitstat",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "gitstat",
+      "destinationId": "fivetaco",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/private/tmp/launchdesk-programmatic-candidates-2026-09-22.json",
+      "reason": "Held after account gate / unresolved prior indeterminate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "gitstat",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "gitstat",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "gitstat",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "gitstat",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "gitstat",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "gitstat",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "gitstat",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "gitstat",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "high-signal",
+      "destinationId": "ai-navhub",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "high-signal",
+      "destinationId": "bai-tools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "high-signal",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "high-signal",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "high-signal",
+      "destinationId": "flowtools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/flowtools-continuation-agent.json",
+      "reason": "Deferred after first provider rate limit",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "high-signal",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "high-signal",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "high-signal",
+      "destinationId": "rankmyai",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "high-signal",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "high-signal",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "high-signal",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "high-signal",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "issue-pages",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "issue-pages",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "issue-pages",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "issue-pages",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "ai-navhub",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "ai-tools-pin",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "bai-tools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "devpages",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "flowtools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/flowtools-continuation-agent.json",
+      "reason": "Deferred after first provider rate limit",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "rankmyai",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "spiff-store",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "karte",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "kith",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "kith",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "kith",
+      "destinationId": "fivetaco",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/private/tmp/launchdesk-programmatic-candidates-2026-09-22.json",
+      "reason": "Held after account gate / unresolved prior indeterminate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "kith",
+      "destinationId": "github:dkhamsing--open-source-ios-apps",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/dkhamsing/open-source-ios-apps/pull/2382",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "kith",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "kith",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "kith",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "kith",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "kith",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "kith",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "kith",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "ai-navhub",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "bai-tools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "devpages",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/devpages-continuation-2026-09-23.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "fivetaco",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/private/tmp/launchdesk-programmatic-candidates-2026-09-22.json",
+      "reason": "Held after account gate / unresolved prior indeterminate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "insidr",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Desktop/fleet/saas-maker/tooling/config/directory-submissions/submissions.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "rankmyai",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "knowledge-base",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "live",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "live",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "live",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "live",
+      "destinationId": "fivetaco",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/private/tmp/launchdesk-programmatic-candidates-2026-09-22.json",
+      "reason": "Held after account gate / unresolved prior indeterminate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "live",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "live",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "live",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "live",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "live",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "live",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "live",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "live",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "looptv",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "looptv",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "looptv",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "looptv",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "looptv",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "looptv",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "looptv",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "looptv",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "looptv",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "mashup",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "mashup",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "mashup",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "mashup",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "materia",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "materia",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "materia",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "materia",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "nomad-data-adventure",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "nomad-data-adventure",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "nomad-data-adventure",
+      "destinationId": "devpages",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Deferred after HTTP 429",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "nomad-data-adventure",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "nomad-data-adventure",
+      "destinationId": "fivetaco",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/private/tmp/launchdesk-programmatic-candidates-2026-09-22.json",
+      "reason": "Held after account gate / unresolved prior indeterminate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "nomad-data-adventure",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "nomad-data-adventure",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "nomad-data-adventure",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "nomad-data-adventure",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "nomad-data-adventure",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "nomad-data-adventure",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "nomad-data-adventure",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "on-record",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "on-record",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "on-record",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "on-record",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "ai-agents-directory",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Desktop/fleet/saas-maker/.fleet-local/directory-submissions/launchdesk-2026-09-22.jsonl",
+      "reason": "account-gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "ai-navhub",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "ai-tools-pin",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "bai-tools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "devpages",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Deferred after HTTP 429",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "flowtools",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/flowtools-continuation-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "github:linsa-io--macos-apps",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/linsa-io/macos-apps/pull/122",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "rankmyai",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "spiff-store",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pace",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "performancedaddy",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "performancedaddy",
+      "destinationId": "devpages",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/devpages-continuation-2026-09-23.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "performancedaddy",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "performancedaddy",
+      "destinationId": "fivetaco",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/private/tmp/launchdesk-programmatic-candidates-2026-09-22.json",
+      "reason": "Held after account gate / unresolved prior indeterminate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "performancedaddy",
+      "destinationId": "lachief",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "performancedaddy",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "performancedaddy",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "performancedaddy",
+      "destinationId": "site-web-directory",
+      "state": "skipped",
+      "outcome": "indeterminate_do_not_retry",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "reason": "Root POST referenced as indeterminate; no retry",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "performancedaddy",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "performancedaddy",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "performancedaddy",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "performancedaddy",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "performancedaddy",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "ph-catalog",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "ph-catalog",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "ph-catalog",
+      "destinationId": "github:davidgasquez--awesome-duckdb",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/davidgasquez/awesome-duckdb/pull/358",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "ph-catalog",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "ph-catalog",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/startup-collections-root-extra.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "ph-catalog",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pinpoint",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pinpoint",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pinpoint",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "pinpoint",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/startup-collections-root-extra.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "port-whisperer",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "port-whisperer",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "port-whisperer",
+      "destinationId": "github:toolleeo--awesome-cli-apps-in-a-csv",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/toolleeo/awesome-cli-apps-in-a-csv/pull/433",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "port-whisperer",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "port-whisperer",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/startup-collections-root-extra.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "ai-navhub",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "ai-tools-pin",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "bai-tools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "devpages",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/devpages-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "flowtools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/flowtools-continuation-agent.json",
+      "reason": "Too many submissions. Please try again later.",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "quality-internet-directory",
+      "state": "skipped",
+      "outcome": "indeterminate_do_not_retry",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "reason": "Invalid or expired submit session; not retried",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "rankmyai",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "spiff-store",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "startup-plug",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "posttrainllm",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "reddit-insights",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "reddit-insights",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "reddit-insights",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "reddit-insights",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "research-papers",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "research-papers",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "research-papers",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "research-papers",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "ai-navhub",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "ai-tools-pin",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "bai-tools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "devpages",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Deferred after HTTP 429",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "flowtools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/flowtools-continuation-agent.json",
+      "reason": "Deferred after first provider rate limit",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "rankmyai",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "spiff-store",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "rolepatch",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "saas-maker",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "saas-maker",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "saas-maker",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "saas-maker",
+      "destinationId": "flowtools",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-third-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "saas-maker",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "saas-maker",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "saas-maker",
+      "destinationId": "ready-saas-go",
+      "state": "skipped",
+      "outcome": "indeterminate_do_not_retry",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/ready-saas-go-2026-09-23.json",
+      "reason": "HTTP 200 returned the unchanged blank form with no provider acknowledgement; no retry",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "saas-maker",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "saas-maker",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "saas-maker",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "saas-maker",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "saas-maker",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "sarthakagrawal-personal",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "sarthakagrawal-personal",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "sarthakagrawal-personal",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "sarthakagrawal-personal",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "sarthakagrawal-personal",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "sarthakagrawal-personal",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "setline",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "setline",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "setline",
+      "destinationId": "fivetaco",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/private/tmp/launchdesk-programmatic-candidates-2026-09-22.json",
+      "reason": "Held after account gate / unresolved prior indeterminate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "setline",
+      "destinationId": "github:dkhamsing--open-source-ios-apps",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/dkhamsing/open-source-ios-apps/pull/2383",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "setline",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "setline",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "setline",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "setline",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "setline",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "setline",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "setline",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "significanthobbies",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "significanthobbies",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "significanthobbies",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "significanthobbies",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "significanthobbies",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "significanthobbies",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "significanthobbies",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "significanthobbies",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "significanthobbies",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "significanthobbies",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "society-relay",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "society-relay",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "society-relay",
+      "destinationId": "github:cagataycali--awesome-strands-agents",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/cagataycali/awesome-strands-agents/pull/31",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "society-relay",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "society-relay",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/startup-collections-root-extra.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "ai-navhub",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "ai-tools-pin",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "bai-tools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "devpages",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/devpages-agent-a.json",
+      "reason": "Deferred after HTTP 429",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "flowtools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/flowtools-continuation-agent.json",
+      "reason": "Deferred after first provider rate limit",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "github:fffaraz--awesome-github",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/fffaraz/awesome-github/pull/41",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "spiff-store",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "starboard",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "storagedaddy",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "storagedaddy",
+      "destinationId": "devpages",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Deferred after HTTP 429",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "storagedaddy",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "storagedaddy",
+      "destinationId": "fivetaco",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/private/tmp/launchdesk-programmatic-candidates-2026-09-22.json",
+      "reason": "Held after account gate / unresolved prior indeterminate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "storagedaddy",
+      "destinationId": "github:serhii-londar--open-source-mac-os-apps",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "https://github.com/serhii-londar/open-source-mac-os-apps/pull/1397",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "storagedaddy",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "storagedaddy",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "storagedaddy",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "storagedaddy",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "storagedaddy",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "storagedaddy",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "storagedaddy",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "storagedaddy",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "ai-tools-pin",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "devpages",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/devpages-agent-a.json",
+      "reason": "Deferred after HTTP 429",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "flowtools",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/flowtools-continuation-agent.json",
+      "reason": "Deferred after first provider rate limit",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "lachief",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/cooldown-logo-batch-2026-09-22.json",
+      "reason": "Required verified 540x540 square logo unavailable",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "spiff-store",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-google-forms-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "web-playables",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "web-playables",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "web-playables",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/quality-internet-continuation-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "web-playables",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "what-it-takes-to-win",
+      "destinationId": "active-search-results",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/active-search-results-agent-a.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "what-it-takes-to-win",
+      "destinationId": "curated-design",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/curated-design-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "what-it-takes-to-win",
+      "destinationId": "directory-web-promotion",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/directory-web-promotion-root.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "what-it-takes-to-win",
+      "destinationId": "pitchwall",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "authentication_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "what-it-takes-to-win",
+      "destinationId": "quality-internet-directory",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/classic-directory-batch-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "what-it-takes-to-win",
+      "destinationId": "startup-collections",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/native-api-batch-agent-2026-09-22.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "what-it-takes-to-win",
+      "destinationId": "startup-plug",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "provider_closed",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "what-it-takes-to-win",
+      "destinationId": "startup-project",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "backlink_required",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "what-it-takes-to-win",
+      "destinationId": "startup-sea",
+      "state": "submitted",
+      "outcome": "provider_acknowledged",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/discovered-routes-second-agent.json",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    },
+    {
+      "projectId": "what-it-takes-to-win",
+      "destinationId": "viesearch",
+      "state": "skipped",
+      "outcome": "blocked_or_deferred",
+      "evidence": "/Users/sarthak/Library/Application Support/Fleet Ops/growth-campaigns/launchdesk-bulk-2026-09-22/receipts/wave1-mass-submit.json",
+      "reason": "email_verification_serial_gate",
+      "recordedAt": "2026-09-22T19:24:53Z",
+      "campaignId": "launchdesk-bulk-2026-09-22"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "balanced", "reasoning": "high" },
+  "minimum": { "intelligence": "balanced", "reasoning": "medium" },
+  "degradation": "ask",
+  "rationale": "Graduation writes durable registry surfaces and sequences externally visible launch work behind owner gates; gap judgment matters more than raw capability."
+}

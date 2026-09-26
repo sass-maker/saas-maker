@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "frontier", "reasoning": "high" },
+  "minimum": { "intelligence": "balanced", "reasoning": "high" },
+  "degradation": "deny",
+  "rationale": "Cross-project prioritization and externally visible distribution work require strong judgment, preserved approval gates, and evidence-backed outcome measurement."
+}

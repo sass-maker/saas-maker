@@ -1,0 +1,192 @@
+[
+  {
+    "repo": "Codevetter/codevetter",
+    "product": "CodeVetter",
+    "reason": "Developers using coding agents need practical guidance on moving from plausible diffs to execution-backed evidence without overstating what static review or model judgment can prove.",
+    "topics": [
+      "How to verify AI-generated code changes beyond code review",
+      "What an evidence receipt for a coding agent should contain",
+      "Agent evaluation vs tests vs code review: what each can actually prove"
+    ]
+  },
+  {
+    "repo": "HeyPace/pace",
+    "product": "Pace",
+    "reason": "Mac users considering voice agents need a concrete explanation of on-device speech, screen understanding, action approval, and the privacy boundary of local versus explicitly enabled off-device planning.",
+    "topics": [
+      "How an on-device voice assistant can control a Mac privately",
+      "Screen-aware Mac assistants: local vision, planning, and action approval",
+      "Local vs cloud voice agents for macOS: a privacy and capability checklist"
+    ]
+  },
+  {
+    "repo": "PostTrainLLM/posttrainllm",
+    "product": "posttrainllm",
+    "reason": "Apple Silicon learners need reproducible, evidence-bounded guides for local post-training that distinguish recipes, actual runs, frozen baselines, and ship-or-park decisions.",
+    "topics": [
+      "How to post-train a small language model on Apple Silicon",
+      "A practical LoRA evaluation workflow for Mac-local models",
+      "How to measure model capability per gigabyte of RAM instead of chasing size"
+    ]
+  },
+  {
+    "repo": "Significant-Hobbies/live",
+    "product": "Live",
+    "reason": "People looking for a gentler way to pursue interests need guidance on bucket lists, commitments, timelines, and private history without productivity scoring or shame loops.",
+    "topics": [
+      "How to turn a bucket list into commitments you actually revisit",
+      "A personal hobby timeline that records progress without gamifying your life",
+      "How to build a truthful personal history from hobbies, side quests, and plans"
+    ]
+  },
+  {
+    "repo": "sass-maker/saas-maker",
+    "product": "SaaS Maker",
+    "reason": "Independent builders need concrete patterns for a public product directory, small reusable feedback surfaces, and capability-oriented agent tooling without turning a portfolio catalog into a control plane.",
+    "topics": [
+      "How to maintain a single source of truth for a multi-product portfolio",
+      "How to add a small reusable feedback layer across independent products",
+      "Why agent skills should declare capabilities instead of model names"
+    ]
+  },
+  {
+    "repo": "High-Signal-App/high-signal",
+    "product": "High Signal",
+    "reason": "Readers facing noisy technology and finance feeds need an evidence-first framework for concise briefs, source provenance, uncertainty, and public measurement of directional calls.",
+    "topics": [
+      "How to build an evidence-gated daily news brief",
+      "Attention is not evidence: a practical source-quality framework",
+      "Why a public track record makes market and technology signals more useful"
+    ]
+  },
+  {
+    "repo": "Significant-Hobbies/significanthobbies",
+    "product": "Significant Hobbies Hub",
+    "reason": "Builders of personal apps need patterns for connecting independent local-first products through privacy-safe summaries and typed actions without centralizing their private stores.",
+    "topics": [
+      "How to connect local-first personal apps without merging their databases",
+      "Privacy-safe summaries for a personal app hub",
+      "Typed semantic actions: a safer way for personal apps to work together"
+    ]
+  },
+  {
+    "repo": "Significant-Hobbies/anime-list",
+    "product": "Anime List",
+    "reason": "Anime and manga fans need useful discovery methods beyond generic top lists, including multi-field filters, seasonal schedules, and transparent personal tracking.",
+    "topics": [
+      "How to find anime with multi-field filters instead of endless recommendation lists",
+      "How to build a seasonal anime schedule you can actually maintain",
+      "How to discover manga beyond popularity rankings"
+    ]
+  },
+  {
+    "repo": "Significant-Hobbies/swe-interview-prep",
+    "product": "SWE Learning OS",
+    "reason": "Software engineers need a rigorous learning loop that connects concepts, drills, building, explain-backs, and spaced review rather than rewarding content consumption.",
+    "topics": [
+      "How to use spaced repetition for software engineering concepts",
+      "A concept-to-build learning loop for system design and coding",
+      "Socratic AI vs answer-giving tutors for technical learning"
+    ]
+  },
+  {
+    "repo": "Significant-Hobbies/calorie",
+    "product": "Calorie",
+    "reason": "People who want lightweight nutrition tracking need fast food logging, transparent nutrient targets, and clearly limited timing estimates rather than opaque coaching or medical certainty.",
+    "topics": [
+      "How to make food logging fast enough to do after every meal",
+      "Why a useful food journal tracks protein, carbs, fibre, and calories",
+      "How to present meal timing estimates without pretending they are medical advice"
+    ]
+  },
+  {
+    "repo": "Significant-Hobbies/setline",
+    "product": "Setline",
+    "reason": "People following a structured training programme need an offline-first execution layer that preserves authored order and records skips, partial sets, and deferrals explicitly.",
+    "topics": [
+      "How to follow a structured workout programme without rewriting it on the fly",
+      "What an offline-first workout tracker needs in the gym",
+      "How to record skipped, partial, drop, and deferred sets honestly"
+    ]
+  },
+  {
+    "repo": "Significant-Hobbies/kith",
+    "product": "Kith",
+    "reason": "People who want to remember relationships need a private, low-friction personal log that avoids CRM language, inferred relationship scores, and social-network mechanics.",
+    "topics": [
+      "How to keep personal relationship notes without turning people into a CRM",
+      "Why closeness should be something you set, not something an app scores",
+      "A local-first way to remember conversations, birthdays, and shared context"
+    ]
+  },
+  {
+    "repo": "Significant-Hobbies/ios-landings",
+    "product": "iOS landings",
+    "reason": "Small app teams need an honest, maintainable way to run separate Apple-product landing sites from one engine while preserving product-specific identity, screenshots, privacy, and real availability.",
+    "topics": [
+      "How to run multiple iOS app landing pages from one Astro codebase",
+      "How to market a beta iOS app without fake App Store or TestFlight claims",
+      "An Apple-compliant landing page checklist for small app teams"
+    ]
+  },
+  {
+    "repo": "Significant-Hobbies/karte",
+    "product": "Karte",
+    "reason": "Creators need guidance on public profiles that combine owned context, links, project history, optional AI modes, and better contextual inbound without reducing identity to a generic link list.",
+    "topics": [
+      "What an AI-enhanced link-in-bio can do beyond a list of links",
+      "Chat, encyclopedia, newspaper, or profile: choosing a public identity format",
+      "How to turn a creator profile into a better-contextualized inbound channel"
+    ]
+  },
+  {
+    "repo": "Codevetter/starboard",
+    "product": "Starboard",
+    "reason": "Developers need a project-aware way to discover open-source repositories and tools, with explainable evidence instead of generic trending lists.",
+    "topics": [
+      "How to discover GitHub repositories that fit the project you are building",
+      "What makes an open-source tool recommendation explainable",
+      "How to organize starred GitHub repositories into a useful technical library"
+    ]
+  },
+  {
+    "repo": "sass-maker/app-health",
+    "product": "App Health",
+    "reason": "Small product teams need practical monitoring that separates endpoint metadata, explicit application logs, analytics, and sensitive user data while remaining easy to integrate.",
+    "topics": [
+      "How to monitor API health without collecting sensitive request data",
+      "Endpoint telemetry vs application logs: what to collect and why",
+      "A minimal observability checklist for small web products"
+    ]
+  },
+  {
+    "repo": "Significant-Hobbies/what-it-takes-to-win",
+    "product": "Paths",
+    "reason": "Readers comparing themselves with visible success stories need an evidence-bounded framework that restores starting conditions, sequence, surrounding support, perseverance, luck, and unseen paths.",
+    "topics": [
+      "Why comparing your path to a visible success story usually fails",
+      "How to analyze a career path without turning it into a success score",
+      "Starting conditions, sequence, and luck: a better framework for life comparisons"
+    ]
+  },
+  {
+    "repo": "Significant-Hobbies/anchor",
+    "product": "Anchor",
+    "reason": "People planning deliberate days need a private way to compare the planned day with the lived one, capture interruptions, and learn from divergence without moralizing productivity.",
+    "topics": [
+      "How to compare the day you planned with the day you actually lived",
+      "Why a focus timer should use wall-clock time instead of timer ticks",
+      "How to capture interruptions without turning your day into a productivity score"
+    ]
+  },
+  {
+    "repo": "Significant-Hobbies/launchdesk",
+    "product": "LaunchDesk",
+    "reason": "Independent makers need a source-attributed way to choose launch destinations, track submissions locally, and distinguish reported metrics from verified facts.",
+    "topics": [
+      "Where to launch a new product: how to build a submission shortlist",
+      "How to evaluate product launch directories without trusting stale metrics",
+      "A local-first workflow for tracking product launch submissions and follow-ups"
+    ]
+  }
+]

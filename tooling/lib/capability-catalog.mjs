@@ -47,6 +47,7 @@ const ACTIVE_OPERATOR_SCRIPTS = new Set([
   'git-health.sh',
   'github-priority-queue.mjs',
   'link-project-agent-assets.sh',
+  'project-readiness.mjs',
   'unlink-project-agent-assets.sh',
   'validate-tooling.mjs',
   'verify-local.mjs',

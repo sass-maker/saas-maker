@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "balanced", "reasoning": "medium" },
+  "minimum": { "intelligence": "balanced", "reasoning": "low" },
+  "degradation": "ask",
+  "rationale": "Bounded provider calls against a fixed ledger; judgement is needed only when interpreting not-indexed verdicts."
+}

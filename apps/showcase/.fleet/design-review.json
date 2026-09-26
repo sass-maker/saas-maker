@@ -2,10 +2,10 @@
   "$schema": "fleet.design-review.v1",
   "version": 1,
   "project": "showcase",
-  "target": "Shared Fleet footer extension with project strip and Ask AI",
-  "surfaceMode": "operate",
-  "mode": "preserve",
-  "register": "product",
+  "target": "homepage hero",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "brand",
   "context": {
     "product": "PRODUCT.md",
     "design": "DESIGN.md"
@@ -13,48 +13,59 @@
   "direction": {
     "references": [],
     "probes": [],
-    "selected": "existing-design",
-    "approval": "delegated",
-    "before": "artifacts/design/footer-before-1440.png",
+    "selected": "agent-selected",
+    "approval": "agent-selected",
+    "before": "",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "tailwind-plus",
+      "sources": [],
+      "runtime": "none",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": ""
+      }
+    },
     "contract": {
-      "purpose": "Give product visitors one compact way to ask their preferred AI about the current product and discover related public work.",
-      "purposeSource": "packages/ai-chat-footer/PRODUCT.md and packages/portfolio-project-strip/PRODUCT.md",
-      "canonicalPurpose": "The shared footer helps a visitor understand the current product through a pre-filled AI handoff and continue into related public projects without another account or backend.",
+      "purpose": "",
+      "purposeSource": "",
+      "canonicalPurpose": "",
       "purposeAlignment": "match",
       "driftNote": "",
-      "audience": "Visitors who have reached the end of a Fleet product page and want either a concise explanation or another relevant project.",
-      "job": "Preserve the authored footer, then offer one clear AI handoff and one quiet portfolio discovery path.",
-      "thesis": "A restrained utility dock and colophon should feel inherited from the host, not like a second marketing footer.",
-      "system": "CurrentColor surfaces and borders, host typography, a compact split row above 760px, stacked groups below it, 44px AI actions, and a reduced-motion-safe project rail.",
-      "signature": "The product-specific Ask AI dock sits beside a living, self-excluding strip of the maker's other projects.",
-      "risk": "Two global surfaces can become repetitive or visually overpower the host, so the composition is bounded to one shallow extension with a single outer boundary."
+      "audience": "",
+      "job": "",
+      "thesis": "",
+      "system": "",
+      "signature": "",
+      "risk": ""
     }
   },
   "evidence": {
     "screenshots": [
       {
         "width": 390,
-        "path": "artifacts/design/footer-after-390.png"
+        "path": "artifacts/design/after-390.png"
       },
       {
         "width": 768,
-        "path": "artifacts/design/footer-after-768.png"
+        "path": "artifacts/design/after-768.png"
       },
       {
         "width": 1440,
-        "path": "artifacts/design/footer-after-1440.png"
+        "path": "artifacts/design/after-1440.png"
       }
     ],
     "projectCheck": {
-      "command": "pnpm exec vitest run tests/showcase/public-surface.test.ts && pnpm build:showcase && git diff --check",
-      "status": "pass"
+      "command": "replace-with-project-check",
+      "status": "pending"
     },
     "critique": {
-      "score": 38,
+      "score": 0,
       "maximum": 40
     },
     "audit": {
-      "score": 19,
+      "score": 0,
       "maximum": 20
     },
     "unresolved": {
@@ -63,9 +74,7 @@
     },
     "detector": {
       "posture": "advisory",
-      "findings": [
-        "The horizontally clipped project sequence is intentional on touch layouts and remains scrollable; it is not document overflow."
-      ]
+      "findings": []
     },
     "comprehension": {
       "status": "not-applicable",
@@ -91,7 +100,7 @@
     }
   },
   "ownerFeedback": {
-    "decision": "delegated",
-    "note": "The owner required both footer surfaces on every applicable project and explicitly delegated implementation without feedback pauses."
+    "decision": "agent-selected",
+    "note": "The agent selected the direction; no owner approval was required."
   }
 }

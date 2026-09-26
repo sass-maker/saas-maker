@@ -14,6 +14,7 @@ Subskills live as sibling directories under `skills/`.
 |---|---|---|
 | "Is the fleet healthy?" / "check all projects" / "what's broken?" / "fleet status" / "what's everyone working on?" / "audit the fleet" | `fleet-audit` | `../fleet-audit/SKILL.md` |
 | "Create a new project" / "scaffold X" / "add a new fleet product" / "init a new repo" | `fleet-init` | `../fleet-init/SKILL.md` |
+| "Launch X" / "X is ready to go public" / "graduate X" / "run the new-project checklist" | `fleet-launch` | `../fleet-launch/SKILL.md` |
 | "Deploy X" / "can I deploy?" / "is X safe to deploy?" / "check deploy readiness" | `fleet-deploy-guard` | `../fleet-deploy-guard/SKILL.md` |
 | "Does this work belong in a child project or fleet-ops?" / cross-project workspace decisions | `fleet-workspace` | `../fleet-workspace/SKILL.md` |
 | "Do the public products work?" / "open every website and click around" / "test guest journeys" / "check each product's unique pages" | `public-product-smoke` | `../public-product-smoke/SKILL.md` |

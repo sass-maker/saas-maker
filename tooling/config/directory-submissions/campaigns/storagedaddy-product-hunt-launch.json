@@ -1,0 +1,108 @@
+{
+  "$schema": "fleet.approved-campaign-manifest.v1",
+  "version": 1,
+  "campaign": {
+    "id": "storagedaddy-product-hunt-launch",
+    "kind": "launch_campaign",
+    "projectId": "storagedaddy",
+    "title": "StorageDaddy Product Hunt launch - three-tag amendment",
+    "objective": "Complete the already-prepared StorageDaddy Product Hunt launch using the three launch tags supported by the live form, while preserving the approved positioning, attribution, assets and evidence boundaries.",
+    "createdAt": "2026-09-22",
+    "sourceRevision": "storagedaddy d71be6dbbfbb6e819e803b3b723a6d360f64749a; public Worker d5bdba04-a62c-4ea9-91cb-a76ec5616f00"
+  },
+  "sources": [
+    {
+      "id": "approved-parent-campaign",
+      "type": "campaign-receipt",
+      "reference": "storagedaddy-attention-sprint manifest 54e922374237fc458da3a8257f2367c91e2c7f2ccbf1f6c1656cd5a5f18e0eeb; Product Hunt item recorded blocked after the live form allowed only three tags",
+      "verifiedAt": "2026-09-22"
+    },
+    {
+      "id": "product-truth",
+      "type": "product-truth",
+      "reference": "storagedaddy/PRODUCT.md and storagedaddy/site/PRODUCT.md; signed and notarized Apple-silicon beta, MIT source, local scanning, reviewed cleanup, no native-app telemetry",
+      "verifiedAt": "2026-09-22"
+    },
+    {
+      "id": "live-form-proof",
+      "type": "runtime-verification",
+      "reference": "Authenticated Product Hunt launch form inspected 2026-09-22; live UI permits up to three launch tags and offers Open Source, Developer Tools and Productivity",
+      "verifiedAt": "2026-09-22"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step-1-complete-product-hunt",
+      "label": "1 - Resume the existing Product Hunt draft, select the three approved tags, add approved assets and publish",
+      "itemKeys": ["product-hunt-launch-v2"]
+    }
+  ],
+  "items": [
+    {
+      "key": "product-hunt-launch-v2",
+      "kind": "launch-post",
+      "tier": "flagship",
+      "title": "Product Hunt launch - StorageDaddy with three supported tags",
+      "content": {
+        "body": "Name: StorageDaddy\n\nTagline: See what is eating your developer Mac before deleting it.\n\nDescription: StorageDaddy is a free, open-source native Mac storage analyzer for developers. It maps folders, build outputs, dependency stores, caches and recognized Claude/Codex session archives, then keeps cleanup candidates reviewable before anything moves to Trash. Scanning stays local and the native app has no telemetry.\n\nMaker comment: I built StorageDaddy because a large folder is not automatically junk. General disk maps are useful, but developer storage needs more context: which project owns this build output, whether a dependency store is replaceable, whether a cache is active, and whether local AI sessions should be archived before cleanup. The current beta is native, Apple-silicon only, free and MIT licensed. I would especially value feedback on the classifications and what evidence you would need before trusting a storage tool.\n\nLaunch tags: Open Source, Developer Tools, Productivity.",
+        "fields": {
+          "name": "StorageDaddy",
+          "tagline": "See what is eating your developer Mac before deleting it.",
+          "productUrl": "https://storagedaddy.significanthobbies.com/?utm_source=producthunt&utm_medium=launch&utm_campaign=storagedaddy-attention-2026-09",
+          "repositoryUrl": "https://github.com/sarthakagrawal927/storagedaddy",
+          "launchTags": ["Open Source", "Developer Tools", "Productivity"]
+        },
+        "assets": [
+          "storagedaddy/site/public/storagedaddy/assets/storage-explorer.png",
+          "storagedaddy/site/public/storagedaddy/assets/AIContext.png",
+          "storagedaddy/site/public/storagedaddy/assets/StorageDaddy.png"
+        ]
+      },
+      "destination": {
+        "id": "product-hunt",
+        "url": "https://www.producthunt.com/posts/new",
+        "accountSlug": "sarthak-agrawal1",
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Resume the authenticated StorageDaddy draft, select exactly Open Source, Developer Tools and Productivity, add the three approved existing assets, complete maker/extras fields without new claims, publish, and record the final Product Hunt URL. Stop on payment, CAPTCHA, a second existing StorageDaddy listing, or another changed required field.",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22",
+        "blockedReason": null
+      },
+      "timing": {"publishAt": null}
+    }
+  ],
+  "permissions": {
+    "repositoryWrites": [
+      "saas-maker/tooling/config/directory-submissions/campaigns/storagedaddy-product-hunt-launch.json"
+    ],
+    "commands": [
+      "node tooling/scripts/campaign-manifest.mjs preview --manifest tooling/config/directory-submissions/campaigns/storagedaddy-product-hunt-launch.json",
+      "node tooling/scripts/campaign-manifest.mjs approve --manifest tooling/config/directory-submissions/campaigns/storagedaddy-product-hunt-launch.json --decided-by Sarthak --decision-reference <reference>",
+      "node tooling/scripts/campaign-manifest.mjs gate --manifest tooling/config/directory-submissions/campaigns/storagedaddy-product-hunt-launch.json --item product-hunt-launch-v2",
+      "node tooling/scripts/campaign-manifest.mjs record --manifest tooling/config/directory-submissions/campaigns/storagedaddy-product-hunt-launch.json --item product-hunt-launch-v2 --outcome <outcome> --provider product-hunt --result-url <url>"
+    ],
+    "publishCommands": []
+  },
+  "exclusions": [
+    {"destinationId": "hacker-news", "reason": "Owner explicitly excluded Hacker News from this distribution exercise."},
+    {"destinationId": "linkedin", "reason": "Owner explicitly excluded LinkedIn from this distribution exercise."}
+  ],
+  "measurement": {
+    "attribution": "Use the exact Product Hunt UTM URL, the final Product Hunt launch URL, App Health source/session/download.clicked totals, Microsoft Clarity human sessions and GitHub visitors, referrers and stars.",
+    "metrics": [
+      "Product Hunt-referred human sessions",
+      "App Health download.clicked events",
+      "GitHub visitors, Product Hunt referrer traffic and stars",
+      "Substantive Product Hunt comments"
+    ],
+    "checkpoints": [
+      "72 hours: inspect attributed human sessions, discussion quality and download intent",
+      "7 days: continue only if Product Hunt produced five human sessions plus one meaningful action or substantive comment",
+      "28 days: compare like-for-like Clarity, App Health and GitHub windows",
+      "Stop: unexpected payment, CAPTCHA, duplicate listing, predominantly bot traffic or another required-field mismatch"
+    ]
+  }
+}

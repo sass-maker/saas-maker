@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "balanced", "reasoning": "low" },
+  "minimum": { "intelligence": "economy", "reasoning": "low" },
+  "degradation": "allow",
+  "rationale": "Deterministic image resizing and head wiring; only source selection needs judgment."
+}

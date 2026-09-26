@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "balanced", "reasoning": "high" },
+  "minimum": { "intelligence": "balanced", "reasoning": "medium" },
+  "degradation": "allow",
+  "rationale": "Pattern matching with confirmation passes; reasoning matters more than generation quality."
+}

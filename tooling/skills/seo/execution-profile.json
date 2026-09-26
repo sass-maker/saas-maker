@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "frontier", "reasoning": "high" },
+  "minimum": { "intelligence": "balanced", "reasoning": "medium" },
+  "degradation": "ask",
+  "rationale": "Cross-lane action selection trades product judgement against measured evidence; weak ranking picks the wrong move."
+}

@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "frontier", "reasoning": "medium" },
+  "minimum": { "intelligence": "balanced", "reasoning": "medium" },
+  "degradation": "ask",
+  "rationale": "Charm is taste; a weak pass produces trying-too-hard copy that makes the product worse."
+}

@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "frontier", "reasoning": "high" },
+  "minimum": { "intelligence": "balanced", "reasoning": "medium" },
+  "degradation": "ask",
+  "rationale": "Choosing the right piece and writing with information gain is the whole value; weak selection produces filler."
+}

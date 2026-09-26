@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "frontier", "reasoning": "high" },
+  "minimum": { "intelligence": "balanced", "reasoning": "high" },
+  "degradation": "ask",
+  "rationale": "The value is a high bar against false positives; weak judgment files noise and trains the team to ignore findings."
+}

@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "balanced", "reasoning": "medium" },
+  "minimum": { "intelligence": "economy", "reasoning": "medium" },
+  "degradation": "allow",
+  "rationale": "The contract is fixed and verified by a deterministic audit; implementation follows templates and adapters, so moderate reasoning suffices."
+}

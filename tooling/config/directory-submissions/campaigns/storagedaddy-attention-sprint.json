@@ -1,0 +1,293 @@
+{
+  "$schema": "fleet.approved-campaign-manifest.v1",
+  "version": 1,
+  "campaign": {
+    "id": "storagedaddy-attention-sprint",
+    "kind": "launch_campaign",
+    "projectId": "storagedaddy",
+    "title": "StorageDaddy attention sprint without Hacker News or LinkedIn",
+    "objective": "Learn which non-Hacker-News, non-LinkedIn surfaces send qualified people to a free, open-source Mac storage analyzer for developers. Measure human sessions, source visits, beta-download intent and useful feedback rather than treating submissions, clones or page views as success.",
+    "createdAt": "2026-09-22",
+    "sourceRevision": "storagedaddy d71be6dbbfbb6e819e803b3b723a6d360f64749a; public Worker d5bdba04-a62c-4ea9-91cb-a76ec5616f00"
+  },
+  "sources": [
+    {
+      "id": "product-truth",
+      "type": "product-truth",
+      "reference": "storagedaddy/PRODUCT.md and storagedaddy/site/PRODUCT.md; signed and notarized Apple-silicon beta, MIT source, local scanning, reviewed cleanup, no native-app telemetry",
+      "verifiedAt": "2026-09-22"
+    },
+    {
+      "id": "traffic-baseline",
+      "type": "baseline-measurement",
+      "reference": "App Health public live view at 2026-09-22 23:18 IST: 2 sessions, 4 page views, 0 product events in 24h; source Unknown for all four views",
+      "verifiedAt": "2026-09-22"
+    },
+    {
+      "id": "github-baseline",
+      "type": "baseline-measurement",
+      "reference": "GitHub API collected 2026-09-22T17:48:31.682Z: 0 stars, 36 views/6 visitors, 240 clones/122 unique cloners over 14d; referrers storagedaddy.significanthobbies.com 10, github.com 3, reddit.com 2",
+      "verifiedAt": "2026-09-22"
+    },
+    {
+      "id": "measurement-proof",
+      "type": "runtime-verification",
+      "reference": "Live StorageDaddy page loaded Microsoft Clarity project ymdrqo4jyc and received HTTP 204 from the Clarity collection endpoint after Worker d5bdba04-a62c-4ea9-91cb-a76ec5616f00",
+      "verifiedAt": "2026-09-22"
+    },
+    {
+      "id": "channel-policy-proof",
+      "type": "live-channel-verification",
+      "reference": "Product Hunt help, AlternativeTo FAQ, BetaList support, r/MacApps September 2026 App Pile rules, Indie Hackers product database and iCHAIT/awesome-macOS contribution policy checked live on 2026-09-22",
+      "verifiedAt": "2026-09-22"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step-1-launch-surfaces",
+      "label": "1 - Launch on Product Hunt and publish the exact X post with separate attribution",
+      "itemKeys": ["product-hunt-launch", "x-launch-post"]
+    },
+    {
+      "id": "step-2-mac-community",
+      "label": "2 - After the first 72-hour read, post the policy-compliant r/MacApps megathread comment",
+      "itemKeys": ["reddit-macapps-app-pile"]
+    },
+    {
+      "id": "step-3-durable-profiles",
+      "label": "3 - Submit durable profiles to Indie Hackers and AlternativeTo",
+      "itemKeys": ["indie-hackers-product", "alternativeto-listing"]
+    },
+    {
+      "id": "step-4-earned-placement",
+      "label": "4 - Open one standards-compliant awesome-macOS pull request",
+      "itemKeys": ["awesome-macos-pr"]
+    }
+  ],
+  "items": [
+    {
+      "key": "product-hunt-launch",
+      "kind": "launch-post",
+      "tier": "flagship",
+      "title": "Product Hunt launch - StorageDaddy",
+      "content": {
+        "body": "Name: StorageDaddy\n\nTagline: See what is eating your developer Mac before deleting it.\n\nDescription: StorageDaddy is a free, open-source native Mac storage analyzer for developers. It maps folders, build outputs, dependency stores, caches and recognized Claude/Codex session archives, then keeps cleanup candidates reviewable before anything moves to Trash. Scanning stays local and the native app has no telemetry.\n\nMaker comment: I built StorageDaddy because a large folder is not automatically junk. General disk maps are useful, but developer storage needs more context: which project owns this build output, whether a dependency store is replaceable, whether a cache is active, and whether local AI sessions should be archived before cleanup. The current beta is native, Apple-silicon only, free and MIT licensed. I would especially value feedback on the classifications and what evidence you would need before trusting a storage tool.\n\nTopics: Mac, Developer Tools, Open Source, Productivity.",
+        "fields": {
+          "name": "StorageDaddy",
+          "tagline": "See what is eating your developer Mac before deleting it.",
+          "productUrl": "https://storagedaddy.significanthobbies.com/?utm_source=producthunt&utm_medium=launch&utm_campaign=storagedaddy-attention-2026-09",
+          "repositoryUrl": "https://github.com/sarthakagrawal927/storagedaddy"
+        },
+        "assets": [
+          "storagedaddy/site/public/storagedaddy/assets/storage-explorer.png",
+          "storagedaddy/site/public/storagedaddy/assets/AIContext.png",
+          "storagedaddy/site/public/storagedaddy/assets/StorageDaddy.png"
+        ]
+      },
+      "destination": {
+        "id": "product-hunt",
+        "url": "https://www.producthunt.com/posts/new",
+        "accountSlug": null,
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Owner or Arvind uses the connected Product Hunt account, submits the exact fields and three existing product assets, then records the final launch URL. Stop on changed fields, payment, CAPTCHA or uncertain prior-listing state.",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22",
+        "blockedReason": "signin and maker-profile state must be confirmed at execution"
+      },
+      "timing": {"publishAt": null}
+    },
+    {
+      "key": "x-launch-post",
+      "kind": "social-post",
+      "tier": "flagship",
+      "title": "X launch post - StorageDaddy",
+      "content": {
+        "body": "Shipped StorageDaddy, a free open-source Mac storage analyzer for developers. It maps builds, dependencies, caches and local AI sessions before review-first cleanup.\n\nhttps://storagedaddy.significanthobbies.com/?utm_source=x&utm_medium=social&utm_campaign=sd",
+        "fields": {
+          "meaningfulOutcome": "At least five X-referred human sessions plus one repository visit, beta-download event or substantive reply within seven days."
+        },
+        "assets": ["storagedaddy/site/public/storagedaddy/assets/storage-explorer.png"]
+      },
+      "destination": {
+        "id": "x",
+        "url": "https://x.com/compose/post",
+        "accountSlug": null,
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Owner or Arvind posts the exact text and screenshot from the connected owner account and records the final post URL; do not ask for likes, reposts or artificial engagement.",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22",
+        "blockedReason": "connected owner account must be confirmed at execution"
+      },
+      "timing": {"publishAt": null}
+    },
+    {
+      "key": "reddit-macapps-app-pile",
+      "kind": "community-comment",
+      "tier": "secondary",
+      "title": "r/MacApps September App Pile - policy-compliant developer comment",
+      "content": {
+        "body": "StorageDaddy: developer-focused storage analysis for Mac\n\nProblem: Developer storage disappears into build outputs, dependency stores, caches and local AI session history, while a generic size map still leaves you to decide what is safe to remove.\n\nComparison: DaisyDisk is more mature and polished for general disk exploration. StorageDaddy is free and open source, adds developer-specific classifications and recognized Claude/Codex session archives, and keeps cleanup review-first.\n\nPricing: $0. Free and MIT licensed. Apple silicon and macOS 14+ beta: https://storagedaddy.significanthobbies.com/?utm_source=reddit&utm_medium=community&utm_campaign=storagedaddy-attention-2026-09\n\nI am the developer. Scanning stays local and the native app has no telemetry. I would value honest feedback on the classifications and the review-before-Trash flow.",
+        "fields": {
+          "relationshipDisclosure": "I am the developer.",
+          "requiredFormat": "Problem, Comparison, Pricing",
+          "meaningfulOutcome": "At least five Reddit-referred human sessions plus one repository visit, beta-download event or substantive comment within seven days."
+        },
+        "assets": ["storagedaddy/site/public/storagedaddy/assets/storage-explorer.png"]
+      },
+      "destination": {
+        "id": "reddit-macapps-app-pile",
+        "url": "https://www.reddit.com/r/macapps/comments/1w4brkd/megathread_the_app_pile_september_2026/",
+        "accountSlug": null,
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Use the September App Pile megathread, not the main feed. Confirm the owner account has a verified email and sufficient r/MacApps participation; otherwise record signin or moderation risk and do not evade removal controls.",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22",
+        "blockedReason": "account eligibility and 30-day developer-promotion history require visible confirmation"
+      },
+      "timing": {"publishAt": null}
+    },
+    {
+      "key": "indie-hackers-product",
+      "kind": "directory-submission",
+      "tier": "secondary",
+      "title": "Indie Hackers product profile - StorageDaddy",
+      "content": {
+        "body": "Product: StorageDaddy\n\nTagline: Understand developer storage before deciding what to delete.\n\nDescription: StorageDaddy is a free, open-source native Mac app for developers whose builds, dependencies, caches and local AI session histories consume disk space. It maps the footprint, adds developer-specific context and keeps cleanup candidates reviewable. Scanning stays local; the native app has no telemetry.\n\nLooking for: Honest feedback on classifications, trust signals and the review-before-Trash workflow.",
+        "fields": {
+          "productUrl": "https://storagedaddy.significanthobbies.com/?utm_source=indiehackers&utm_medium=product_profile&utm_campaign=storagedaddy-attention-2026-09",
+          "businessModel": "Free",
+          "categories": "Open Source, Programming, Productivity, Utilities"
+        },
+        "assets": ["storagedaddy/site/public/storagedaddy/assets/StorageDaddy.png"]
+      },
+      "destination": {
+        "id": "indie-hackers",
+        "url": "https://www.indiehackers.com/products",
+        "accountSlug": null,
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Create or update one product profile using the exact fields. Do not manufacture revenue, customer counts or founder-story claims. Record the final public product URL only after it is visible.",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22",
+        "blockedReason": "signed-in account and current create-product flow must be confirmed"
+      },
+      "timing": {"publishAt": null}
+    },
+    {
+      "key": "alternativeto-listing",
+      "kind": "directory-submission",
+      "tier": "secondary",
+      "title": "AlternativeTo listing - StorageDaddy",
+      "content": {
+        "body": "Name: StorageDaddy\n\nPlatform: Mac\nLicense: Open Source, MIT\nOfficial website: https://storagedaddy.significanthobbies.com/\nSource: https://github.com/sarthakagrawal927/storagedaddy\n\nShort description: Free, open-source native Mac storage analyzer that adds developer-focused context for builds, dependency stores, caches and recognized local AI sessions.\n\nLong description: StorageDaddy helps developers understand persistent disk usage before deciding what to remove. It explores folders and developer footprints, preserves scan errors and uncertainty, and keeps cleanup candidates reviewable before moving anything to Trash. Scanning stays local and the native app has no telemetry.\n\nSuggested alternatives: DaisyDisk, GrandPerspective, Disk Inventory X and OmniDiskSweeper.\n\nTags: disk usage analyzer, storage analyzer, disk cleanup, developer tool, local-first.",
+        "fields": {
+          "officialWebsite": "https://storagedaddy.significanthobbies.com/",
+          "repositoryUrl": "https://github.com/sarthakagrawal927/storagedaddy",
+          "platform": "Mac",
+          "license": "Open Source, MIT"
+        },
+        "assets": [
+          "storagedaddy/site/public/storagedaddy/assets/StorageDaddy.png",
+          "storagedaddy/site/public/storagedaddy/assets/storage-explorer.png"
+        ]
+      },
+      "destination": {
+        "id": "alternativeto",
+        "url": "https://alternativeto.net/software/new/",
+        "accountSlug": null,
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Use AlternativeTo's Suggest new application flow from a verified owner account. Submit clean canonical URLs without UTM parameters, accept moderation, and record queued separately from a verified live listing.",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22",
+        "blockedReason": "verified email and signed-in owner account are required"
+      },
+      "timing": {"publishAt": null}
+    },
+    {
+      "key": "awesome-macos-pr",
+      "kind": "repository-contribution",
+      "tier": "manual",
+      "title": "Pull request adding StorageDaddy to iCHAIT/awesome-macOS Utilities",
+      "content": {
+        "body": "PR title: Add StorageDaddy to Utilities\n\nEntry, alphabetized between SSH Tunnel and Strongbox:\n- [StorageDaddy](https://storagedaddy.significanthobbies.com/) - Explore developer storage, review cleanup candidates, and archive local AI sessions. [![Open-Source Software][OSS Icon]](https://github.com/sarthakagrawal927/storagedaddy) ![Freeware][Freeware Icon]\n\nPR template:\n0. [x] I have read the Contribution Guidelines.\n1. [x] I confirm that I have read and understood the sections about AI-adjacent software. StorageDaddy's primary purpose is local storage analysis and reviewed cleanup; local AI-session archiving is one supporting capability, not an LLM interface or prompt wrapper.\n2. [x] Project URL: https://storagedaddy.significanthobbies.com/\n3. [x] Why should this project be added: StorageDaddy is a native, free and open-source macOS utility that helps developers understand builds, dependency stores, caches and other persistent storage before cleanup.\n4. [x] End all descriptions with a full stop/period.\n5. [x] Entry is ordered alphabetically.\n6. [x] Appropriate OSS and freeware icons are included.",
+        "fields": {
+          "repository": "https://github.com/iCHAIT/awesome-macOS",
+          "baseBranch": "master",
+          "section": "Utilities",
+          "trackingUrlForbidden": "true"
+        },
+        "assets": []
+      },
+      "destination": {
+        "id": "awesome-macos",
+        "url": "https://github.com/iCHAIT/awesome-macOS",
+        "accountSlug": "sarthakagrawal927",
+        "cost": "free"
+      },
+      "execution": {
+        "mode": "manual",
+        "action": "Fork if needed, add only the exact alphabetized README entry, open one pull request with the complete upstream template, and record its URL. Do not add tracking parameters or change unrelated upstream content.",
+        "requiresAuth": true,
+        "policyVerifiedAt": "2026-09-22",
+        "blockedReason": "external repository fork and pull request require the approved manifest gate"
+      },
+      "timing": {"publishAt": null}
+    }
+  ],
+  "permissions": {
+    "repositoryWrites": [
+      "saas-maker/tooling/config/directory-submissions/campaigns/storagedaddy-attention-sprint.json",
+      "saas-maker/tooling/config/directory-submissions/receipts.jsonl",
+      "saas-maker/tooling/config/directory-submissions/submissions.json",
+      "a single StorageDaddy entry in a fork of iCHAIT/awesome-macOS"
+    ],
+    "commands": [
+      "node tooling/scripts/campaign-manifest.mjs preview --manifest tooling/config/directory-submissions/campaigns/storagedaddy-attention-sprint.json",
+      "node tooling/scripts/campaign-manifest.mjs approve --manifest tooling/config/directory-submissions/campaigns/storagedaddy-attention-sprint.json --hash <approved-hash>",
+      "node tooling/scripts/campaign-manifest.mjs gate --manifest tooling/config/directory-submissions/campaigns/storagedaddy-attention-sprint.json --item <item-key>",
+      "node tooling/scripts/campaign-manifest.mjs record --manifest tooling/config/directory-submissions/campaigns/storagedaddy-attention-sprint.json --item <item-key> --outcome <outcome> --provider <provider> --result-url <url>",
+      "node site-health/apps/backend/scripts/github-metrics-collect.mjs --project storagedaddy"
+    ],
+    "publishCommands": []
+  },
+  "exclusions": [
+    {"destinationId": "hacker-news", "reason": "Owner explicitly excluded Hacker News from this distribution exercise on 2026-09-22."},
+    {"destinationId": "linkedin", "reason": "Owner explicitly excluded LinkedIn from this distribution exercise on 2026-09-22."},
+    {"destinationId": "betalist", "reason": "BetaList now requires payment for every submission; no campaign spend was authorized."},
+    {"destinationId": "reddit-macapps-main-feed", "reason": "StorageDaddy is not in the Mac App Store and its repository was created on 2026-09-10 with 0 stars; use the current App Pile megathread instead of testing moderation boundaries."},
+    {"destinationId": "macos-subreddit", "reason": "r/MacOS permits self-promotion only for Mac App Store applications; StorageDaddy is a direct signed/notarized beta."},
+    {"destinationId": "generic-ai-directories", "reason": "StorageDaddy is a storage utility with AI-session archiving, not an AI tool; AI-directory submissions would be misleading and low-fit."}
+  ],
+  "measurement": {
+    "attribution": "Use distinct Product Hunt, X, Reddit and Indie Hackers UTMs; native referrers for AlternativeTo and GitHub; App Health source/session/download.clicked totals; Microsoft Clarity human sessions and interaction behavior; and GitHub visitors, referrers and stars. Treat clones and bot sessions as automation signals, not product attention.",
+    "metrics": [
+      "Human sessions by attributed source",
+      "App Health download.clicked events by source",
+      "Clarity source sessions and meaningful journey completions",
+      "GitHub views, unique visitors, referring domains and stars",
+      "Substantive comments, replies or directory moderation feedback",
+      "Verified live placements and accepted referring domains"
+    ],
+    "checkpoints": [
+      "Before each item: refresh the StorageDaddy GitHub and traffic baseline and run the immutable manifest gate",
+      "72 hours after each launch/community item: attribute human sessions and discussion quality before opening the next channel",
+      "7 days after each item: retain the channel only if it produced five human sessions plus one meaningful action or substantive response, or a durable accepted listing",
+      "28 days: compare like-for-like Search Console, Clarity, App Health and GitHub windows; prioritize channels that created qualified attention",
+      "Stop: no attributed human sessions, an audience-policy mismatch, moderation rejection, predominantly bot/clone activity, unexpected payment, CAPTCHA or unclear account identity"
+    ]
+  }
+}
