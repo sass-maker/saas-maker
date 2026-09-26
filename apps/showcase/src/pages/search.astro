@@ -21,8 +21,16 @@ const groups = SEARCH_TYPES.map((type) => ({
   entries: SEARCH_INDEX.filter((entry) => entry.type === type),
 }));
 
-const haystack = (entry: SearchEntry) =>
-  `${entry.title} ${entry.summary} ${entry.keywords}`.toLowerCase();
+// Emit only keyword tokens that aren't already visible in the row — the rest
+// would be pure duplication since the script matches against textContent+href.
+const keywords = (entry: SearchEntry) => {
+  const visible = `${entry.title} ${entry.summary} ${entry.url}`.toLowerCase();
+  const delta = entry.keywords
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((token) => token && !visible.includes(token));
+  return delta.length ? delta.join(' ') : undefined;
+};
 ---
 
 <Layout
@@ -71,10 +79,9 @@ const haystack = (entry: SearchEntry) =>
           <h2 class="group-head">{group.label} <span>{group.entries.length}</span></h2>
           <ol class="search-results">
             {group.entries.map((entry) => (
-              <li data-hay={haystack(entry)}>
+              <li data-k={keywords(entry)}>
                 <a href={entry.url}>
                   <span class="result-title">{entry.title}</span>
-                  <span class="result-url">{entry.url}</span>
                   {entry.summary && <span class="result-summary">{entry.summary}</span>}
                 </a>
               </li>
@@ -87,14 +94,14 @@ const haystack = (entry: SearchEntry) =>
   </div>
 </Layout>
 
-<style>
+<style is:global>
   .search-shell {
     width: min(86rem, calc(100% - 3rem));
     margin-inline: auto;
     padding: clamp(2rem, 4vw, 3rem) 0 clamp(5rem, 9vw, 8rem);
   }
 
-  .search-controls {
+  .search-shell .search-controls {
     margin-top: 1.75rem;
     display: flex;
     flex-direction: column;
@@ -106,7 +113,7 @@ const haystack = (entry: SearchEntry) =>
     background: var(--bg);
   }
 
-  #search-input {
+  .search-shell #search-input {
     width: 100%;
     max-width: 42rem;
     padding: 0.7rem 1rem;
@@ -118,18 +125,18 @@ const haystack = (entry: SearchEntry) =>
     border-radius: 10px;
   }
 
-  #search-input:focus-visible {
+  .search-shell #search-input:focus-visible {
     outline: 2px solid var(--copper-hi);
     outline-offset: 2px;
   }
 
-  .search-types {
+  .search-shell .search-types {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
   }
 
-  .type-chip {
+  .search-shell .type-chip {
     padding: 0.3rem 0.75rem;
     font: inherit;
     font-size: 0.78rem;
@@ -142,32 +149,32 @@ const haystack = (entry: SearchEntry) =>
     cursor: pointer;
   }
 
-  .type-chip span {
+  .search-shell .type-chip span {
     color: var(--ink-muted);
     margin-left: 0.25rem;
   }
 
-  .type-chip[aria-pressed='true'] {
+  .search-shell .type-chip[aria-pressed='true'] {
     color: var(--surface);
     background: var(--ink);
     border-color: var(--ink);
   }
 
-  .search-count {
+  .search-shell .search-count {
     margin: 1.25rem 0 0;
     font-size: 0.82rem;
     color: var(--ink-muted);
   }
 
-  .search-group {
+  .search-shell .search-group {
     margin-top: 2rem;
   }
 
-  .search-group[hidden] {
+  .search-shell .search-group[hidden] {
     display: none;
   }
 
-  .group-head {
+  .search-shell .group-head {
     font-size: 0.85rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -175,12 +182,12 @@ const haystack = (entry: SearchEntry) =>
     margin-bottom: 0.5rem;
   }
 
-  .group-head span {
+  .search-shell .group-head span {
     color: var(--ink-soft);
     font-weight: 400;
   }
 
-  .search-results {
+  .search-shell .search-results {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -190,38 +197,44 @@ const haystack = (entry: SearchEntry) =>
     overflow: hidden;
   }
 
-  .search-results li[hidden] {
+  .search-shell .search-results li[hidden] {
     display: none;
   }
 
-  .search-results li + li {
+  .search-shell .search-results li + li {
     border-top: 1px solid var(--line);
   }
 
-  .search-results a {
-    display: grid;
-    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
-    gap: 0.25rem 1.25rem;
+  .search-shell .search-results a {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 1.25rem;
+    row-gap: 0.25rem;
     padding: 0.6rem 1.1rem;
     color: var(--ink);
     text-decoration: none;
   }
 
-  .search-results a:hover {
+  .search-shell .search-results a:hover {
     background: color-mix(in srgb, var(--ink) 4%, var(--surface));
   }
 
-  .result-title {
+  .search-shell .result-title {
     font-weight: 600;
+    flex: 0 1 22rem;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    order: 1;
   }
 
-  .result-url {
+  .search-shell .search-results a::after {
+    content: attr(href);
+    order: 2;
     font-size: 0.78rem;
     color: var(--ink-muted);
+    flex: 1 1 12rem;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -229,20 +242,15 @@ const haystack = (entry: SearchEntry) =>
     align-self: center;
   }
 
-  .result-summary {
-    grid-column: 1 / -1;
+  .search-shell .result-summary {
+    order: 3;
+    flex: 0 0 100%;
     font-size: 0.82rem;
     color: var(--ink-soft);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-  }
-
-  @media (max-width: 560px) {
-    .search-results a {
-      grid-template-columns: 1fr;
-    }
   }
 </style>
 
@@ -261,6 +269,14 @@ const haystack = (entry: SearchEntry) =>
   if (t && chips.some((c) => c.dataset.type === t)) {
     activeTypes.add(t);
     chips.find((c) => c.dataset.type === t)!.setAttribute('aria-pressed', 'true');
+  }
+
+  // Cache each row's haystack once: visible text (title + url + summary) plus
+  // the invisible keywords attribute — nothing is duplicated in the markup.
+  for (const row of rows) {
+    row.dataset.hay =
+      `${row.textContent} ${row.querySelector('a')!.getAttribute('href')} ${row.dataset.k ?? ''}`.toLowerCase();
+    row.removeAttribute('data-k');
   }
 
   function run() {
