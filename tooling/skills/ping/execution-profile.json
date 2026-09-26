@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "balanced", "reasoning": "low" },
+  "minimum": { "intelligence": "economy", "reasoning": "low" },
+  "degradation": "allow",
+  "rationale": "Drop-in client copy plus a single auth-hook integration against documented App Health patterns; multi-app wiring is mechanical."
+}
