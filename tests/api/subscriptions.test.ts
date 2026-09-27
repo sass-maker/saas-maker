@@ -166,6 +166,28 @@ describe('Hosted newsletter and waitlist capture', () => {
     );
   });
 
+  it('uses the server binding for catalog attribution and ignores client catalog IDs', async () => {
+    const send = vi.fn().mockResolvedValue(new Response(null, { status: 202 }));
+    vi.stubGlobal('fetch', send);
+    const first = vi.fn().mockResolvedValue({ catalog_project_id: 'fleet-catalog-id' });
+    const bind = vi.fn(() => ({ first }));
+    const db = { prepare: vi.fn(() => ({ bind })) };
+    const response = await postJoin(
+      { ...JOIN, catalog_project_id: 'client-chosen-id' },
+      { DB: db, APP_HEALTH_INGEST_KEY: 'synthetic-app-health-key' }
+    );
+    expect(response.status).toBe(202);
+    expect(bind).toHaveBeenCalledWith('project-1');
+    const payload = JSON.parse(send.mock.calls[0][1].body);
+    expect(payload.logs[0].props).toMatchObject({
+      project: 'fleet-catalog-id',
+      project_slug: 'product-one',
+      project_id: 'project-1',
+      catalog_project_id: 'fleet-catalog-id',
+    });
+    expect(payload.logs[0].props.catalog_project_id).not.toBe('client-chosen-id');
+  });
+
   it('does not emit an outcome for a duplicate or failed write', async () => {
     const send = vi.fn();
     vi.stubGlobal('fetch', send);

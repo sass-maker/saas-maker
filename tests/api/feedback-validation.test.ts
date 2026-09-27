@@ -128,6 +128,36 @@ describe('Feedback route validation with a mocked DB', () => {
     );
   });
 
+  it('adds only the server-bound catalog ID to App Health attribution', async () => {
+    const send = vi.fn().mockResolvedValue(new Response(null, { status: 202 }));
+    vi.stubGlobal('fetch', send);
+    const first = vi.fn().mockResolvedValue({ catalog_project_id: 'fleet-catalog-id' });
+    const bind = vi.fn(() => ({ first }));
+    const db = { prepare: vi.fn(() => ({ bind })) };
+    const res = await request(
+      '/v1/feedback',
+      {
+        method: 'POST',
+        headers: apiKeyHeaders(),
+        body: JSON.stringify({
+          title: 'Bug report', description: 'Broken CTA', type: 'bug',
+          catalog_project_id: 'client-chosen-id',
+        }),
+      },
+      { DB: db, APP_HEALTH_INGEST_KEY: 'test-ingest-key' }
+    );
+    expect(res.status).toBe(201);
+    expect(bind).toHaveBeenCalledWith(PROJECT.id);
+    const payload = JSON.parse(send.mock.calls[0][1].body);
+    expect(payload.logs[0].props).toMatchObject({
+      project: 'fleet-catalog-id',
+      project_slug: PROJECT.slug,
+      project_id: PROJECT.id,
+      catalog_project_id: 'fleet-catalog-id',
+    });
+    expect(payload.logs[0].props.catalog_project_id).not.toBe('client-chosen-id');
+  });
+
   it('keeps the submission successful when App Health delivery fails', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('collector unavailable')));
     const res = await request(

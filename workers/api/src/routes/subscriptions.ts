@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { getDb } from '../db';
 import { createPing } from '../lib/app-health-ping';
+import { tryGetCatalogProjectId } from '../lib/catalog-project-binding';
 import { CAPTURE_CONSENT_COPY_V1, CAPTURE_CONSENT_VERSION } from '../lib/capture-consent';
 import {
   getCaptureById,
@@ -104,14 +105,18 @@ subscriptions.post('/', requireApiKey, async (c) => {
     consentedAt: new Date().toISOString(),
   });
   if (result.joined && c.env.APP_HEALTH_INGEST_KEY) {
+    const projectId = c.get('projectId')!;
+    const catalogProjectId = await tryGetCatalogProjectId(c.env.DB, projectId);
     const deliver = createPing({
       key: c.env.APP_HEALTH_INGEST_KEY,
       environment: c.env.APP_HEALTH_ENVIRONMENT || 'production',
     })(kind === 'waitlist' ? 'waitlist.join' : 'newsletter.subscribe', {
       title: kind === 'waitlist' ? 'Waitlist joined' : 'Newsletter subscribed',
       props: {
-        project: c.get('project')?.slug ?? c.get('projectId')!,
-        project_id: c.get('projectId')!,
+        project: catalogProjectId ?? c.get('project')?.slug ?? projectId,
+        project_slug: c.get('project')?.slug ?? null,
+        project_id: projectId,
+        ...(catalogProjectId ? { catalog_project_id: catalogProjectId } : {}),
         kind,
       },
     });

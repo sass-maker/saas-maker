@@ -11,6 +11,7 @@ import { getDb } from '../db';
 import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
 import { apiError } from '../lib/errors';
 import { createPing } from '../lib/app-health-ping';
+import { tryGetCatalogProjectId } from '../lib/catalog-project-binding';
 import { storeScreenshot } from '../lib/screenshots';
 import { requireApiKey, requireInboxAuth } from '../middleware/auth';
 import type { Bindings, Variables } from '../types';
@@ -233,14 +234,17 @@ feedback.post('/', requireApiKey, async (c) => {
   });
 
   if (c.env.APP_HEALTH_INGEST_KEY) {
+    const catalogProjectId = await tryGetCatalogProjectId(c.env.DB, projectId);
     const deliver = createPing({
       key: c.env.APP_HEALTH_INGEST_KEY,
       environment: c.env.APP_HEALTH_ENVIRONMENT || 'production',
     })('feedback.submitted', {
       title: 'Feedback received',
       props: {
-        project: c.get('project')?.slug ?? projectId,
+        project: catalogProjectId ?? c.get('project')?.slug ?? projectId,
+        project_slug: c.get('project')?.slug ?? null,
         project_id: projectId,
+        ...(catalogProjectId ? { catalog_project_id: catalogProjectId } : {}),
         type: record.type,
       },
     });
