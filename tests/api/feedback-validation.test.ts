@@ -140,7 +140,9 @@ describe('Feedback route validation with a mocked DB', () => {
         method: 'POST',
         headers: apiKeyHeaders(),
         body: JSON.stringify({
-          title: 'Bug report', description: 'Broken CTA', type: 'bug',
+          title: 'Bug report',
+          description: 'Broken CTA',
+          type: 'bug',
           catalog_project_id: 'client-chosen-id',
         }),
       },

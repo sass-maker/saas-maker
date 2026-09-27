@@ -1,7 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import { afterEach, describe, expect, it } from 'vitest';
-import { getCatalogProjectId, tryGetCatalogProjectId } from '../../workers/api/src/lib/catalog-project-binding';
+import {
+  getCatalogProjectId,
+  tryGetCatalogProjectId,
+} from '../../workers/api/src/lib/catalog-project-binding';
 
 const migration = readFileSync(
   new URL('../../workers/api/migrations/0027_catalog_project_bindings.sql', import.meta.url),
@@ -41,7 +44,9 @@ describe('server-side Fleet catalog project bindings', () => {
   it('returns the catalog ID only for an explicitly bound SaaS Maker project', async () => {
     const { sqlite, d1 } = setup();
     sqlite
-      .prepare('INSERT INTO catalog_project_bindings (saas_maker_project_id, catalog_project_id) VALUES (?, ?)')
+      .prepare(
+        'INSERT INTO catalog_project_bindings (saas_maker_project_id, catalog_project_id) VALUES (?, ?)'
+      )
       .run('saas-project-1', 'fleet-project-1');
 
     expect(await getCatalogProjectId(d1, 'saas-project-1')).toBe('fleet-project-1');
@@ -50,7 +55,13 @@ describe('server-side Fleet catalog project bindings', () => {
 
   it('treats binding lookup failures as absent optional attribution', async () => {
     const brokenD1 = {
-      prepare: () => ({ bind: () => ({ first: async () => { throw new Error('database unavailable'); } }) }),
+      prepare: () => ({
+        bind: () => ({
+          first: async () => {
+            throw new Error('database unavailable');
+          },
+        }),
+      }),
     } as unknown as D1Database;
     await expect(tryGetCatalogProjectId(brokenD1, 'saas-project-1')).resolves.toBeNull();
   });
