@@ -9,7 +9,7 @@ from release_contract import validate_appcast, validate_checksum, validate_notar
 
 class DaddyReleaseContractTests(unittest.TestCase):
     def setUp(self):
-        self.profile = profile_for("performancedaddy", "sarthakagrawal927/performancedaddy")
+        self.profile = profile_for("performancedaddy", "Significant-Hobbies/performancedaddy")
         self.info = {
             "CFBundleIdentifier": self.profile["bundleId"],
             "CFBundleExecutable": self.profile["executable"],

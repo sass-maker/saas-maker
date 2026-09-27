@@ -12,7 +12,7 @@ class ReleasePreflightTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.app = "performancedaddy"
-        self.repository = "sarthakagrawal927/performancedaddy"
+        self.repository = "Significant-Hobbies/performancedaddy"
         self.git("init", "-b", "main")
         self.git("config", "user.name", "Test")
         self.git("config", "user.email", "test@example.invalid")
