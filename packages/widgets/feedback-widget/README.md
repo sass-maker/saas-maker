@@ -122,6 +122,15 @@ interface FeedbackSubmission {
 The success state appears only after the selected destination succeeds.
 Callback errors and URL ingestion failures are shown in the form.
 
+## Interaction and accessibility
+
+The floating trigger opens a right-side feedback panel on larger screens and a
+full-height sheet on small screens. The panel opens with focus in the form,
+keeps keyboard focus inside while open, closes with Escape or the close button,
+and returns focus to the trigger. Type choices expose their selected state to
+assistive technology; controls have visible keyboard focus and touch targets of
+at least 44 pixels. Motion is reduced when the visitor prefers reduced motion.
+
 ## Props
 
 | Prop | Type | Default | Description |

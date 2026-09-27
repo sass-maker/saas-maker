@@ -9,7 +9,7 @@
     "build:ideas": "python3 ideas/build.py",
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "pnpm build:ideas && astro build",
+    "build": "pnpm -F @saas-maker/newsletter-capture build && pnpm build:ideas && astro build",
     "build:showcase-only": "pnpm build:ideas && astro build",
     "deploy": "pnpm build && wrangler pages deploy dist --project-name saas-maker-home --branch main && node ../../scripts/smoke-prod.mjs --directory-only",
     "preview": "astro preview",

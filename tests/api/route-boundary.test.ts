@@ -2,7 +2,14 @@ import { describe, expect, it } from 'vitest';
 
 import app from '../../workers/api/src/index';
 
-const retainedPrefixes = ['/health', '/v1/auth', '/v1/projects', '/v1/feedback', '/v1/upload'];
+const retainedPrefixes = [
+  '/health',
+  '/v1/auth',
+  '/v1/projects',
+  '/v1/feedback',
+  '/v1/subscriptions',
+  '/v1/upload',
+];
 const retiredPrefixes = [
   '/v1/ai',
   '/v1/changelog',
@@ -24,7 +31,7 @@ const retiredPrefixes = [
 ];
 
 describe('SaaS Maker API boundary', () => {
-  it('registers only feedback, project-key, auth, upload, and health routes', () => {
+  it('registers the maintained capture, project-key, auth, upload, and health routes', () => {
     const paths = app.routes.map((route) => route.path);
 
     expect(paths.some((routePath) => routePath === '/health')).toBe(true);

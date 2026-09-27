@@ -1,10 +1,10 @@
 export const openApiDocument = {
   openapi: '3.1.0',
   info: {
-    title: 'SaaS Maker Feedback API',
+    title: 'SaaS Maker Capture API',
     version: '1.0.0',
     description:
-      'Submit customer feedback with a publishable project key and review it through the same authenticated JSON contract used by the private inbox and agents.',
+      'Submit product feedback or consented newsletter/waitlist requests with a publishable project key; review submissions through owner-authenticated JSON routes.',
   },
   servers: [{ url: 'https://api.sassmaker.com' }],
   paths: {
@@ -71,6 +71,67 @@ export const openApiDocument = {
           { name: 'page', in: 'query', schema: { type: 'integer', minimum: 1 } },
         ],
         responses: { '200': { description: 'Newest-first feedback page' } },
+      },
+    },
+    '/v1/subscriptions': {
+      post: {
+        summary: 'Join a product newsletter or waitlist',
+        security: [{ projectKey: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/JoinSubscription' },
+            },
+          },
+        },
+        responses: {
+          '202': { description: 'Request accepted; duplicate addresses receive the same response' },
+          '400': { description: 'Invalid payload or missing consent' },
+          '401': { description: 'Missing or invalid project key' },
+          '503': { description: 'Capture is not configured' },
+        },
+      },
+      get: {
+        summary: 'List active subscriptions and signed removal tokens for an owned project',
+        security: [{ bearerSession: [] }],
+        parameters: [
+          { name: 'project', in: 'query', required: true, schema: { type: 'string' } },
+          {
+            name: 'kind',
+            in: 'query',
+            schema: { type: 'string', enum: ['newsletter', 'waitlist'] },
+          },
+          { name: 'cursor', in: 'query', schema: { type: 'string', format: 'uuid' } },
+        ],
+        responses: {
+          '200': { description: 'Owner-scoped page of up to 100 active subscriptions' },
+          '503': { description: 'Capture is not configured' },
+        },
+      },
+    },
+    '/v1/subscriptions/unsubscribe': {
+      post: {
+        summary: 'Remove a subscription using its signed token',
+        security: [],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['id', 'token'],
+                properties: {
+                  id: { type: 'string', format: 'uuid' },
+                  token: { type: 'string', pattern: '^[a-f0-9]{64}$' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '202': { description: 'Request accepted without disclosing subscription state' },
+        },
       },
     },
     '/v1/feedback/inbox': {
@@ -153,6 +214,16 @@ export const openApiDocument = {
       },
     },
     schemas: {
+      JoinSubscription: {
+        type: 'object',
+        required: ['email', 'kind', 'consent'],
+        properties: {
+          email: { type: 'string', format: 'email', maxLength: 254 },
+          kind: { type: 'string', enum: ['newsletter', 'waitlist'] },
+          consent: { type: 'boolean', const: true },
+          source: { type: 'string', pattern: '^[a-z][a-z0-9_-]{0,63}$' },
+        },
+      },
       SubmitFeedback: {
         type: 'object',
         required: ['type', 'title', 'description'],

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mockDb = {
   getProjectByApiKey: vi.fn(),
@@ -53,6 +53,8 @@ beforeEach(() => {
   }));
 });
 
+afterEach(() => vi.unstubAllGlobals());
+
 describe('Feedback route validation with a mocked DB', () => {
   it('POST /v1/feedback with key but missing title returns 400', async () => {
     const res = await request('/v1/feedback', {
@@ -71,6 +73,8 @@ describe('Feedback route validation with a mocked DB', () => {
   });
 
   it('POST /v1/feedback accepts an anonymous submission', async () => {
+    const send = vi.fn();
+    vi.stubGlobal('fetch', send);
     const res = await request('/v1/feedback', {
       method: 'POST',
       headers: apiKeyHeaders(),
@@ -85,6 +89,74 @@ describe('Feedback route validation with a mocked DB', () => {
     expect(mockDb.createFeedback).toHaveBeenCalledWith(
       expect.objectContaining({ submitter_email: '' })
     );
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it('emits a limited App Health event only after a durable feedback write', async () => {
+    const send = vi.fn().mockResolvedValue(new Response(null, { status: 202 }));
+    vi.stubGlobal('fetch', send);
+
+    const res = await request(
+      '/v1/feedback',
+      {
+        method: 'POST',
+        headers: apiKeyHeaders(),
+        body: JSON.stringify({
+          title: 'Private title',
+          description: 'Private details',
+          submitter_email: 'private@example.com',
+          type: 'feature',
+        }),
+      },
+      { APP_HEALTH_INGEST_KEY: 'test-ingest-key' }
+    );
+
+    expect(res.status).toBe(201);
+    expect(mockDb.createFeedback).toHaveBeenCalledOnce();
+    expect(send).toHaveBeenCalledOnce();
+    const [url, init] = send.mock.calls[0];
+    expect(url).toBe('https://ingest.sassmaker.com/v1/logs');
+    const payload = JSON.parse(init.body);
+    expect(payload.logs).toHaveLength(1);
+    expect(payload.logs[0]).toMatchObject({
+      event: 'feedback.submitted',
+      title: 'Feedback received',
+      props: { project: 'acme', project_id: 'proj-1', type: 'feature' },
+    });
+    expect(JSON.stringify(payload)).not.toMatch(
+      /Private title|Private details|private@example\.com/
+    );
+  });
+
+  it('keeps the submission successful when App Health delivery fails', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('collector unavailable')));
+    const res = await request(
+      '/v1/feedback',
+      {
+        method: 'POST',
+        headers: apiKeyHeaders(),
+        body: JSON.stringify({ title: 'Bug', description: 'Details', type: 'bug' }),
+      },
+      { APP_HEALTH_INGEST_KEY: 'test-ingest-key' }
+    );
+    expect(res.status).toBe(201);
+  });
+
+  it('does not emit an event if the feedback write fails', async () => {
+    const send = vi.fn();
+    vi.stubGlobal('fetch', send);
+    mockDb.createFeedback.mockRejectedValueOnce(new Error('storage unavailable'));
+    const res = await request(
+      '/v1/feedback',
+      {
+        method: 'POST',
+        headers: apiKeyHeaders(),
+        body: JSON.stringify({ title: 'Bug', description: 'Details', type: 'bug' }),
+      },
+      { APP_HEALTH_INGEST_KEY: 'test-ingest-key' }
+    );
+    expect(res.status).toBe(500);
+    expect(send).not.toHaveBeenCalled();
   });
 
   it('POST /v1/feedback stores page and pinpoint context', async () => {

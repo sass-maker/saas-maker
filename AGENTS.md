@@ -12,9 +12,13 @@ SaaS Maker owns only:
 - the public scored ideas catalog under `/ideas`;
 - package documentation;
 - @saas-maker/feedback;
+- the owner-directed shared newsletter/waitlist capture component and hosted
+  subscription records for Fleet products; keep this distinct from feedback
+  and from any newsletter publishing or marketing queue;
 - @saas-maker/ai-chat-footer;
 - @saas-maker/portfolio-project-strip;
-- the feedback API, image upload, project keys, narrow auth, and private inbox.
+- the feedback and subscription APIs, image upload, project keys, narrow auth,
+  and private inbox.
 - public, credential-free reusable workflows, Fleet-owned skills, operator
   scripts, templates, and their capability directory under `tooling/`;
 - the launch-destination catalog at `/launchdesk`, rendered natively from the
@@ -34,8 +38,10 @@ Swarm, Reel Pipeline, CodeVetter, App Health, and Mobile Dev Cockpit remain
 independent products or repositories.
 
 Do not add product task systems, marketing queues, analytics dashboards,
-observability, App Health, AI gateways, testimonials, waitlists, Droid, or
-fleet-control features here. Shared tooling must remain public,
+observability products, AI gateways, testimonials, Droid, or fleet-control
+features here. A successful hosted feedback or subscription write may emit the
+owner-requested, privacy-limited App Health event; App Health owns alerts and
+reporting. Shared tooling must remain public,
 credential-free, provider-bounded, and independently validated.
 
 ## Commands

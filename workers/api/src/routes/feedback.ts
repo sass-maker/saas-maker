@@ -10,6 +10,7 @@ import { Hono, type Context } from 'hono';
 import { getDb } from '../db';
 import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
 import { apiError } from '../lib/errors';
+import { createPing } from '../lib/app-health-ping';
 import { storeScreenshot } from '../lib/screenshots';
 import { requireApiKey, requireInboxAuth } from '../middleware/auth';
 import type { Bindings, Variables } from '../types';
@@ -230,6 +231,26 @@ feedback.post('/', requireApiKey, async (c) => {
     client_version: body.client_version?.trim() || null,
     source: body.source?.trim() || 'api',
   });
+
+  if (c.env.APP_HEALTH_INGEST_KEY) {
+    const deliver = createPing({
+      key: c.env.APP_HEALTH_INGEST_KEY,
+      environment: c.env.APP_HEALTH_ENVIRONMENT || 'production',
+    })('feedback.submitted', {
+      title: 'Feedback received',
+      props: {
+        project: c.get('project')?.slug ?? projectId,
+        project_id: projectId,
+        type: record.type,
+      },
+    });
+    try {
+      c.executionCtx.waitUntil(deliver);
+    } catch {
+      // Local Hono request tests have no Worker execution context.
+      void deliver;
+    }
+  }
 
   return c.json(
     {

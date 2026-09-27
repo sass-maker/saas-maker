@@ -1,0 +1,112 @@
+{
+  "$schema": "fleet.design-review.v1",
+  "version": 1,
+  "project": "newsletter-capture",
+  "target": "Shared newsletter and waitlist footer component",
+  "surfaceMode": "operate",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "PRODUCT.md",
+    "design": "DESIGN.md"
+  },
+  "direction": {
+    "references": [
+      "SaaS Maker AI Chat Footer browser custom element",
+      "SaaS Maker Portfolio Project Strip browser custom element"
+    ],
+    "probes": [],
+    "selected": "02-direct-line",
+    "approval": "approved",
+    "before": "",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "SaaS Maker browser custom-element and footer patterns",
+      "sources": [
+        "https://github.com/sass-maker/saas-maker/tree/main/packages/ai-chat-footer/src/element.ts",
+        "https://github.com/sass-maker/saas-maker/tree/main/packages/portfolio-project-strip/src/element.ts"
+      ],
+      "runtime": "selective",
+      "customReplacement": {
+        "used": true,
+        "authorization": "owner-requested",
+        "reason": "Existing footer packages do not provide an accessible, consented email capture form; browser-native static integration is required across Fleet surfaces."
+      }
+    },
+    "contract": {
+      "purpose": "Give visitors a clear, low-friction way to request newsletter or waitlist email from a Fleet product footer, with consent captured alongside the address.",
+      "purposeSource": "PRODUCT.md",
+      "canonicalPurpose": "Give visitors a clear, low-friction way to request newsletter or waitlist email from a Fleet product footer, with consent captured alongside the address.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "Visitors who want product updates or early access, and Fleet product teams embedding the shared footer form.",
+      "job": "Choose newsletter or waitlist, enter an email address, explicitly consent, and submit once.",
+      "thesis": "A compact direct line in the existing product footer, with no promotional panel or new account step.",
+      "system": "Precise inherited typography, calm host-aware surfaces, semantic tokens, clear field labels, green success, and a single responsive row that stacks on narrow screens.",
+      "signature": "The consent sentence changes with the selected message kind, so visitors can see exactly what they are agreeing to before submitting.",
+      "risk": "A shared footer capture can feel promotional; keep it visually quiet, optional, and limited to one action."
+    }
+  },
+  "evidence": {
+    "screenshots": [
+      {
+        "width": 390,
+        "path": "artifacts/design/after-390.png"
+      },
+      {
+        "width": 768,
+        "path": "artifacts/design/after-768.png"
+      },
+      {
+        "width": 1440,
+        "path": "artifacts/design/after-1440.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "pnpm --filter @saas-maker/newsletter-capture check",
+      "status": "pass"
+    },
+    "critique": {
+      "score": 36,
+      "maximum": 40
+    },
+    "audit": {
+      "score": 18,
+      "maximum": 20
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": []
+    },
+    "comprehension": {
+      "status": "not-applicable",
+      "reviewer": "",
+      "answers": {
+        "product": "",
+        "audience": "",
+        "value": "",
+        "mechanism": "",
+        "proof": "",
+        "nextAction": ""
+      },
+      "purposeScore": {
+        "product": 0,
+        "audience": 0,
+        "value": 0,
+        "mechanism": 0,
+        "proof": 0,
+        "nextAction": 0,
+        "total": 0
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "keep",
+    "note": "Owner selected visual direction 02, Direct line: compact precise typography, calm surfaces, green success/status; newsletter/waitlist beside AI Chat Footer and Project Strip; feedback remains separate."
+  }
+}

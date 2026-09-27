@@ -6,6 +6,9 @@ export type Bindings = {
   DB: D1Database;
   FEEDBACK_IMAGES: R2Bucket;
   RATE_LIMITER?: { limit: (input: { key: string }) => Promise<{ success: boolean }> };
+  APP_HEALTH_INGEST_KEY?: string;
+  APP_HEALTH_ENVIRONMENT?: string;
+  CAPTURE_SIGNING_KEY?: string;
   LOCAL_AUTH_BYPASS?: string;
   SAASMAKER_LOCAL_SESSION_TOKEN?: string;
 };

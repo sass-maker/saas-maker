@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fleet capture components · direction study</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap');
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #eae9e5; color: #171b20; font-family: 'DM Sans', system-ui, sans-serif; }
+  button, input { font: inherit; }
+  button { cursor: default; }
+  .board { max-width: 1500px; margin: auto; padding: 36px 28px 70px; }
+  .board-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; border-bottom: 1px solid #aeb2b2; padding-bottom: 24px; margin-bottom: 26px; }
+  .eyebrow { font: 500 11px 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .12em; }
+  h1 { margin: 9px 0 0; font-size: clamp(32px, 4vw, 58px); letter-spacing: -.07em; line-height: 1; }
+  .board-head p { max-width: 360px; margin: 0; color: #5e6468; font-size: 14px; line-height: 1.5; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .option { min-width: 0; }
+  .frame { position: relative; min-height: 590px; overflow: hidden; border: 1px solid #bcc1bf; box-shadow: 0 14px 35px #1d242014; }
+  .caption { padding: 20px 3px 0; }
+  .caption h2 { font-size: 21px; letter-spacing: -.04em; margin: 4px 0 7px; }
+  .caption p { margin: 0 0 10px; line-height: 1.45; font-size: 13px; color: #52595c; }
+  .caption strong { color: #1b2325; }
+  .a { background: #171d1c; color: #e9ede4; padding: 27px; }
+  .a .top { display: flex; justify-content: space-between; border-bottom: 1px solid #747f784d; padding-bottom: 16px; }
+  .a .brand { font-weight: 700; letter-spacing: -.06em; font-size: 19px; }
+  .a .menu { font: 11px 'DM Mono', monospace; color: #a8b6ae; }
+  .a .hero { padding-top: 56px; }
+  .a .tag { color: #f4a169; }
+  .a h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(38px, 3.8vw, 60px); line-height: 1.04; letter-spacing: -.055em; margin: 22px 0 20px; }
+  .a .hero p { color: #acb9ae; font-size: 14px; max-width: 340px; line-height: 1.55; }
+  .a .proof { margin-top: 22px; padding: 12px 0; border-top: 1px solid #87938a66; border-bottom: 1px solid #87938a66; display: flex; gap: 10px; align-items: center; color: #d8e2d8; font: 11px 'DM Mono', monospace; }
+  .a .proof i { display: block; width: 7px; height: 7px; border-radius: 50%; background: #9ee3a6; box-shadow: 0 0 0 4px #9ee3a622; }
+  .a .form { margin-top: 34px; }
+  .a .form-title { font-family: 'Fraunces', Georgia, serif; font-size: 23px; letter-spacing: -.04em; }
+  .a .form-desc { color: #a8b6ae; margin: 8px 0 15px; font-size: 12px; line-height: 1.45; }
+  .a .input-row { display: flex; border-bottom: 1px solid #d7e5d8; }
+  .a input { min-width: 0; flex: 1; border: 0; outline: 0; color: white; background: transparent; padding: 12px 0; font-size: 14px; }
+  .a input::placeholder { color: #8e9d92; }
+  .a button { border: 0; background: #e99264; color: #161b1a; padding: 11px 16px; font-weight: 700; }
+  .a .fine { display: flex; justify-content: space-between; margin-top: 14px; color: #9faea1; font-size: 11px; }
+  .a .fine span:last-child { color: #e3ecdc; text-decoration: underline; text-underline-offset: 4px; }
+  .b { background: #f4f7f5; color: #15251d; padding: 24px; }
+  .b .top { display: flex; align-items: center; justify-content: space-between; font-size: 15px; font-weight: 700; letter-spacing: -.04em; }
+  .b .top em { background: #e1eee7; color: #206746; font: normal 10px 'DM Mono', monospace; border-radius: 99px; padding: 7px 9px; letter-spacing: .03em; }
+  .b .content { margin-top: 46px; }
+  .b .content h3 { font-size: clamp(34px, 3vw, 48px); letter-spacing: -.075em; line-height: 1.05; margin: 12px 0; }
+  .b .content p { color: #63736b; font-size: 13px; line-height: 1.5; max-width: 300px; }
+  .b .receipt { margin-top: 22px; display: flex; gap: 11px; }
+  .b .receipt div { flex: 1; border: 1px solid #d4e3d8; background: #fff; padding: 12px; }
+  .b .receipt b { display: block; font-size: 16px; letter-spacing: -.04em; }
+  .b .receipt small { display: block; margin-top: 4px; color: #738178; font-size: 10px; }
+  .b .sheet { position: absolute; bottom: 0; right: 0; left: 25px; background: white; border: 1px solid #c6dcd0; border-bottom: 0; border-radius: 20px 0 0 0; box-shadow: -18px -18px 55px #26483923; padding: 22px; }
+  .b .sheet-head { display: flex; justify-content: space-between; align-items: center; }
+  .b .sheet-head small { color: #287751; }
+  .b .sheet-head span { color: #8b9990; }
+  .b .sheet h4 { font-size: 26px; letter-spacing: -.065em; margin: 16px 0 5px; }
+  .b .sheet p { margin: 0 0 15px; font-size: 12px; color: #697b70; line-height: 1.4; }
+  .b .tabs { display: flex; border-bottom: 1px solid #dbe7df; gap: 21px; font-size: 12px; }
+  .b .tabs b { padding-bottom: 10px; border-bottom: 2px solid #317954; }
+  .b .tabs span { color: #7c8c81; }
+  .b .field { margin: 16px 0 11px; border: 1px solid #d6e2d9; padding: 12px; color: #87958b; font-size: 12px; }
+  .b button { width: 100%; border: 0; background: #235d40; color: white; padding: 13px; font-size: 12px; font-weight: 700; }
+  .b .privacy { font-size: 10px; margin-top: 10px; color: #8d9b91; }
+  .c { background: #ece6ff; color: #29125c; padding: 24px; }
+  .c:before { content: ''; position: absolute; width: 330px; height: 330px; border: 1px solid #4e309533; border-radius: 50%; top: 108px; right: -125px; box-shadow: 0 0 0 36px #9770dd18, 0 0 0 80px #9770dd0d; }
+  .c .top { display: flex; justify-content: space-between; align-items: center; font-weight: 800; letter-spacing: -.04em; }
+  .c .top span:last-child { font-size: 11px; background: #d8c8f9; padding: 7px 10px; border-radius: 8px; }
+  .c .intro { position: relative; margin-top: 45px; }
+  .c h3 { font-size: clamp(37px, 3.4vw, 55px); line-height: .99; letter-spacing: -.085em; margin: 12px 0 12px; max-width: 310px; }
+  .c .intro p { font-size: 13px; line-height: 1.5; max-width: 285px; color: #6d559d; }
+  .c .stack { position: relative; margin-top: 34px; }
+  .c .card { border: 2px solid #351c67; box-shadow: 7px 7px 0 #351c67; padding: 20px; background: #fefdfc; transform: rotate(-2deg); }
+  .c .card .label { display: inline-block; background: #d4fa78; padding: 5px 8px; color: #263013; }
+  .c .card h4 { font-size: 23px; letter-spacing: -.06em; margin: 15px 0 8px; }
+  .c .card p { font-size: 12px; line-height: 1.45; margin: 0 0 16px; color: #6c6180; }
+  .c .card .join { display: flex; gap: 8px; }
+  .c .card input { width: 0; flex: 1; padding: 11px; border: 1px solid #aca0bf; font-size: 11px; }
+  .c .card button { border: 0; background: #361967; color: white; padding: 11px 14px; font-size: 11px; font-weight: 700; }
+  .c .feedback { position: relative; margin: 26px 0 0 44px; background: #d4fa78; border: 2px solid #351c67; padding: 14px; box-shadow: 5px 5px 0 #351c67; transform: rotate(2deg); }
+  .c .feedback b { font-size: 14px; }
+  .c .feedback p { margin: 5px 0 0; color: #4b5040; font-size: 11px; }
+  .c .privacy { margin-top: 31px; color: #695393; font: 10px 'DM Mono', monospace; }
+  @media (max-width: 1050px) { .grid { grid-template-columns: 1fr; } .frame { max-width: 480px; } .option { display: grid; grid-template-columns: minmax(0,480px) minmax(0,1fr); gap: 22px; align-items: start; } .caption { padding-top: 4px; } }
+  @media (max-width: 650px) { .board { padding: 20px 15px 45px; } .board-head { display: block; } .board-head p { margin-top: 15px; } .option { display: block; } .frame { min-height: 580px; } .caption { padding: 16px 3px 24px; } }
+</style>
+<main class="board">
+  <header class="board-head">
+    <div><div class="eyebrow">Fleet capture system · direction study</div><h1>One invitation, 55 voices.</h1></div>
+    <p>Visual proposals for a configurable newsletter or waitlist invitation and the existing feedback flow. Copy shown is representative CodeVetter content, not a live sign-up promise.</p>
+  </header>
+  <div class="grid">
+    <section class="option">
+      <div class="frame a">
+        <div class="top"><span class="brand">CodeVetter<span style="color:#eb9e72">.</span></span><span class="menu">THE PRODUCT &nbsp;↗</span></div>
+        <div class="hero"><div class="eyebrow tag">FIELD NOTES / 001</div><h3>Confidence is<br>earned in the run.</h3><p>Local-first verification for AI-written changes. Follow the work behind each release and the evidence that made it ship.</p><div class="proof"><i></i> Signed macOS release · inspectable benchmark</div></div>
+        <div class="form"><div class="form-title">Get the build notes.</div><div class="form-desc">Occasional product updates. Clear unsubscribe. No account required.</div><div class="input-row"><input aria-label="Email for direction preview" placeholder="Your email address"><button>Subscribe ↗</button></div><div class="fine"><span>Only updates from CodeVetter.</span><span>Send feedback ↗</span></div></div>
+      </div>
+      <div class="caption"><div class="eyebrow">01 / Editorial chapter</div><h2>The product’s own publication</h2><p><strong>Job:</strong> invite serious visitors to follow a live product, with feedback as a quiet adjacent action. Serif headline, dark canvas, restrained rule lines, and an evidence strip make it feel authored. Inline form stays in page flow.</p><p><strong>Risk:</strong> requires thoughtful placement and product-specific copy on every site; weak copy will make the large composition feel empty.</p></div>
+    </section>
+    <section class="option">
+      <div class="frame b">
+        <div class="top"><span>● &nbsp;CodeVetter</span><em>LOCAL-FIRST</em></div>
+        <div class="content"><div class="eyebrow" style="color:#3f8c61">PRODUCT CONTACT</div><h3>Help shape the next useful release.</h3><p>Verify an agent change on your Mac. Tell us where the result saved you time—or where it missed.</p><div class="receipt"><div><b>1.14.3</b><small>Signed Mac build</small></div><div><b>Benchmark</b><small>Open evidence</small></div></div></div>
+        <div class="sheet"><div class="sheet-head"><small class="eyebrow">CODEVETTER / DIRECT LINE</small><span>×</span></div><h4>Stay in the loop.</h4><p>Release updates for people checking AI-written code.</p><div class="tabs"><b>Updates</b><span>Feedback</span><span>Report a bug</span></div><div class="field">Email address</div><button>Get product updates →</button><div class="privacy">Product updates only · unsubscribe anytime</div></div>
+      </div>
+      <div class="caption"><div class="eyebrow">02 / Direct line</div><h2>A compact product contact center</h2><p><strong>Job:</strong> provide one consistent entry point across dense apps and marketing pages. A restrained corner trigger opens a side sheet with explicit Updates, Feedback, and Bug states. Clean sans type and green status cues borrow from product verification.</p><p><strong>Risk:</strong> a shared overlay can compete with an app’s own navigation; placement and mobile safe areas need careful per-product checks.</p></div>
+    </section>
+    <section class="option">
+      <div class="frame c">
+        <div class="top"><span>CodeVetter ✳</span><span>VERIFY THE WORK</span></div>
+        <div class="intro"><div class="eyebrow">OPEN CHANNEL / 03</div><h3>Good tools get better with people.</h3><p>Follow the verification experiments. Show us a case where the proof was thin.</p></div>
+        <div class="stack"><div class="card"><span class="label eyebrow">✳ &nbsp;GET UPDATES</span><h4>Stay close to the build.</h4><p>Short notes when a meaningful new capability ships.</p><div class="join"><input aria-label="Email for direction preview" placeholder="you@example.com"><button>Count me in ↗</button></div></div><div class="feedback"><b>↗ &nbsp; Have a real example?</b><p>Send feedback with page context or a screenshot.</p></div></div>
+        <div class="privacy">ONE PRODUCT · TWO CLEAR CHOICES · YOUR INBOX</div>
+      </div>
+      <div class="caption"><div class="eyebrow">03 / Open channel</div><h2>A visible two-action invitation</h2><p><strong>Job:</strong> make both following and feedback hard to miss on expressive consumer pages. Layered cards, a vivid signal color, and a separate feedback tile keep the two intents distinct. Inline by default; the feedback tile opens the existing form.</p><p><strong>Risk:</strong> playful geometry may overwhelm serious or native-adjacent products; it needs strict brand adaptation rather than one universal skin.</p></div>
+    </section>
+  </div>
+</main>
+</html>

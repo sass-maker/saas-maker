@@ -38,6 +38,7 @@ export const TriggerButton: React.FC<TriggerButtonProps> = ({
       className={`smw-trigger ${positionClass}`}
       style={{ '--smw-accent': accentColor } as React.CSSProperties}
       onClick={onClick}
+      aria-haspopup="dialog"
       aria-label={triggerText}
     >
       <MegaphoneIcon />

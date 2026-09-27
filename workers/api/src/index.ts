@@ -4,6 +4,7 @@ import { Bindings, Variables } from './types';
 import { auth } from './routes/auth';
 import { projects } from './routes/projects';
 import { feedback } from './routes/feedback';
+import { subscriptions } from './routes/subscriptions';
 import { upload } from './routes/upload';
 import { rateLimit } from './middleware/rate-limit';
 import { openApiDocument } from './openapi';
@@ -55,8 +56,45 @@ function isAllowedOrigin(origin: string): boolean {
   return false;
 }
 
+function isPublicCaptureRequest(path: string, method: string, requestedMethod: string): boolean {
+  const publicPath =
+    path === '/v1/feedback' ||
+    path === '/v1/subscriptions' ||
+    path === '/v1/subscriptions/unsubscribe';
+  return publicPath && (method === 'POST' || (method === 'OPTIONS' && requestedMethod === 'POST'));
+}
+
+// Publishable project keys are designed for product-owned browser forms. Keep
+// credentialed owner routes on the narrower allowlist below.
+function isWebOrigin(origin: string): boolean {
+  try {
+    const parsed = new URL(origin);
+    return (
+      parsed.origin === origin &&
+      (parsed.protocol === 'https:' ||
+        (parsed.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(parsed.hostname)))
+    );
+  } catch {
+    return false;
+  }
+}
+
 app.use('*', async (c, next) => {
   const origin = c.req.header('Origin') || '';
+  if (
+    isPublicCaptureRequest(
+      c.req.path,
+      c.req.method,
+      c.req.header('Access-Control-Request-Method') || ''
+    ) &&
+    isWebOrigin(origin)
+  ) {
+    return cors({
+      origin,
+      allowMethods: ['POST', 'OPTIONS'],
+      allowHeaders: ['Content-Type', 'X-Project-Key'],
+    })(c, next);
+  }
   const allowedOrigin = isAllowedOrigin(origin) ? origin : 'https://app.sassmaker.com';
   const corsMiddleware = cors({
     origin: allowedOrigin,
@@ -81,6 +119,7 @@ app.use('/v1/*', rateLimit({ limit: 100, period: 60 }));
 app.route('/v1/auth', auth);
 app.route('/v1/projects', projects);
 app.route('/v1/feedback', feedback);
+app.route('/v1/subscriptions', subscriptions);
 app.route('/v1/upload', upload);
 
 export default app;

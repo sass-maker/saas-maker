@@ -137,7 +137,7 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
   if (submitted) {
     return (
       <div className="smw-submit-success">
-        <div className="smw-submit-success__icon" style={{ color: accentColor }}>
+        <div className="smw-submit-success__icon" aria-hidden="true">
           <CheckIcon />
         </div>
         <h3 className="smw-submit-success__title">Thank you!</h3>
@@ -160,14 +160,17 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
     <form className="smw-submit-form" onSubmit={handleSubmit}>
       {/* Type selector */}
       <div className="smw-field">
-        <label className="smw-label">Type</label>
-        <div className="smw-type-selector">
+        <div className="smw-label" id="smw-type-label">
+          Type
+        </div>
+        <div className="smw-type-selector" role="group" aria-labelledby="smw-type-label">
           {types.map((type) => (
             <button
               key={type}
               type="button"
               className={`smw-type-btn smw-type-btn--${type} ${selectedType === type ? 'smw-type-btn--active' : ''}`}
               onClick={() => setSelectedType(type)}
+              aria-pressed={selectedType === type}
             >
               <span className="smw-type-btn__emoji">{TYPE_CONFIG[type].emoji}</span>
               {TYPE_CONFIG[type].label}
@@ -301,7 +304,11 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
       </div>
 
       {/* Error */}
-      {error && <p className="smw-error">{error}</p>}
+      {error && (
+        <p className="smw-error" role="alert">
+          {error}
+        </p>
+      )}
 
       {/* Submit */}
       <button

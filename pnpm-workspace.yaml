@@ -1,6 +1,7 @@
 packages:
   - 'packages/widgets/feedback-widget'
   - 'packages/ai-chat-footer'
+  - 'packages/newsletter-capture'
   - 'packages/portfolio-project-strip'
   - 'apps/cockpit'
   - 'apps/showcase'

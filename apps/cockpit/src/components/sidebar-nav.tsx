@@ -1,12 +1,13 @@
 'use client';
 
-import { FolderKanban, MessageSquare } from 'lucide-react';
+import { FolderKanban, MessageSquare, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { label: 'Feedback inbox', href: '/projects/feedback', icon: MessageSquare },
+  { label: 'Subscribers', href: '/projects/subscribers', icon: Users },
   { label: 'Project keys', href: '/projects', icon: FolderKanban },
 ] as const;
 

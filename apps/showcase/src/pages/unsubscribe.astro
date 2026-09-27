@@ -1,0 +1,69 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Unsubscribe — SaaS Maker" description="Stop newsletter or waitlist emails from a Fleet product.">
+  <Nav />
+  <main class="legal-page" id="main-content">
+    <a href="/" class="legal-back">← SaaS Maker</a>
+    <h1>Unsubscribe</h1>
+    <p>Stop the email updates you signed up for. This link does not change any other subscription.</p>
+    <button id="unsubscribe-button" type="button" disabled>Unsubscribe</button>
+    <p id="unsubscribe-status" role="status" aria-live="polite">Checking your link…</p>
+  </main>
+  <Footer />
+
+  <style>
+  #unsubscribe-button {
+    min-height: 44px;
+    margin-top: 1.5rem;
+    padding: 0.7rem 1.25rem;
+    border: 1px solid currentColor;
+    border-radius: 0.4rem;
+    background: var(--ink);
+    color: var(--bg);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  #unsubscribe-button:disabled { opacity: 0.55; cursor: not-allowed; }
+  #unsubscribe-button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+  </style>
+
+  <script is:inline>
+  (() => {
+    const button = document.getElementById('unsubscribe-button');
+    const status = document.getElementById('unsubscribe-status');
+    const params = new URLSearchParams(location.hash.slice(1));
+    const id = params.get('id') || '';
+    const token = params.get('token') || '';
+    history.replaceState(null, '', location.pathname);
+    if (!/^[0-9a-f-]{36}$/i.test(id) || !/^[0-9a-f]{64}$/.test(token)) {
+      status.textContent = 'This unsubscribe link is invalid. Please use the link in your email.';
+      return;
+    }
+    button.disabled = false;
+    status.textContent = 'Ready to unsubscribe.';
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      status.textContent = 'Unsubscribing…';
+      try {
+        const response = await fetch('https://api.sassmaker.com/v1/subscriptions/unsubscribe', {
+          method: 'POST',
+          credentials: 'omit',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, token }),
+        });
+        if (!response.ok) throw new Error('Unsubscribe request failed');
+        status.textContent = 'Request received. If this link matches an active subscription, those updates are stopped.';
+      } catch {
+        button.disabled = false;
+        status.textContent = 'We could not unsubscribe you right now. Please try again.';
+      }
+    });
+  })();
+  </script>
+</Layout>
