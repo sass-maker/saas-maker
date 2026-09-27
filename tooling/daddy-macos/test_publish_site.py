@@ -13,7 +13,7 @@ from verify_live import verify
 
 class PublishSiteTests(unittest.TestCase):
     def fixture(self, root: Path, app: str):
-        repository = ("Significant-Hobbies/performancedaddy" if app == "performancedaddy"
+        repository = (f"Significant-Hobbies/{app}" if app in ("storagedaddy", "performancedaddy")
                       else f"sarthakagrawal927/{app}")
         profile = profile_for(app, repository)
         site = root / "site"

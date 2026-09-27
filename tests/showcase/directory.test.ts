@@ -50,17 +50,17 @@ describe('verified public Fleet directory', () => {
     // StorageDaddy is intentionally MIT open-source: its public repository
     // link is shareable anatomy, not private state.
     expect(storagedaddy).toMatchObject({
-      repositoryUrl: 'https://github.com/sarthakagrawal927/storagedaddy',
-      roadmapUrl: 'https://github.com/sarthakagrawal927/storagedaddy/issues',
+      repositoryUrl: 'https://github.com/Significant-Hobbies/storagedaddy',
+      roadmapUrl: 'https://github.com/Significant-Hobbies/storagedaddy/issues',
     });
     expect(storagedaddy).not.toHaveProperty('changelogUrl');
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'web-playables')
-    ).toMatchObject({ lifecycle: 'inactive', shareable: true, group: 'past' });
+    ).toMatchObject({ lifecycle: 'active', shareable: true, group: 'current' });
     const rolepatch = catalog.directory.find(
       (project: { id: string }) => project.id === 'rolepatch'
     );
-    expect(rolepatch).toMatchObject({ lifecycle: 'inactive', shareable: true, group: 'past' });
+    expect(rolepatch).toMatchObject({ lifecycle: 'active', shareable: true, group: 'current' });
     expect(rolepatch.description).toContain('guest resume-tailoring experiment');
     expect(rolepatch.purposeContract.proof).toContain(
       'Account sync and broader application tools remain unqualified'
@@ -70,7 +70,7 @@ describe('verified public Fleet directory', () => {
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'nomad-data-adventure')
     ).toMatchObject({
-      lifecycle: 'inactive',
+      lifecycle: 'active',
       category: 'experimental',
       url: 'https://nomad.significanthobbies.com/',
     });
@@ -80,8 +80,8 @@ describe('verified public Fleet directory', () => {
       lifecycle: 'active',
       category: 'experimental',
       group: 'current',
-      deployed: false,
-      url: 'https://github.com/sarthakagrawal927/ph-catalog',
+      deployed: true,
+      url: 'https://ph.significanthobbies.com',
       repositoryUrl: 'https://github.com/sarthakagrawal927/ph-catalog',
     });
     for (const heldId of [
