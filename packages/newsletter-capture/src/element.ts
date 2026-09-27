@@ -1,8 +1,10 @@
 import {
+  type CaptureConfig,
   type CaptureKind,
   CONSENT_COPY_V1,
   DEFAULT_API_BASE_URL,
   DEFAULT_SOURCE,
+  fetchCaptureConfig,
   normalizeApiBaseUrl,
   submitSubscription,
   validateSubscriptionRequest,
@@ -105,6 +107,7 @@ export function registerNewsletterCapture(): void {
     static observedAttributes = [
       'product-name',
       'project-key',
+      'catalog-id',
       'kind',
       'source',
       'api-base-url',
@@ -120,13 +123,37 @@ export function registerNewsletterCapture(): void {
     private consentInput?: HTMLInputElement;
     private submitButton?: HTMLButtonElement;
     private status?: HTMLParagraphElement;
+    // Resolved publishable key for catalog-id mode. Cleared on disconnect or
+    // when attributes change so a stale async response cannot mutate state.
+    private resolvedProjectKey = '';
+    private configState: 'idle' | 'loading' | 'ready' | 'error' = 'idle';
+    // Monotonic token guarding against stale config fetches across disconnect,
+    // reconnect, and attribute changes. Only the latest token may apply state.
+    private configToken = 0;
+    private abortController?: AbortController;
 
     connectedCallback(): void {
       this.render();
+      void this.loadConfigIfNeeded();
     }
 
-    attributeChangedCallback(): void {
-      if (this.isConnected) this.render();
+    disconnectedCallback(): void {
+      this.configToken += 1;
+      this.abortController?.abort();
+      this.abortController = undefined;
+      this.resolvedProjectKey = '';
+      this.configState = 'idle';
+    }
+
+    attributeChangedCallback(name: string): void {
+      if (!this.isConnected) return;
+      this.render();
+      // project-key or catalog-id changes invalidate any resolved key.
+      if (name === 'project-key' || name === 'catalog-id' || name === 'api-base-url') {
+        this.resolvedProjectKey = '';
+        this.configState = 'idle';
+        void this.loadConfigIfNeeded();
+      }
     }
 
     private render(): void {
@@ -235,6 +262,77 @@ export function registerNewsletterCapture(): void {
       return this.getAttribute('product-name')?.trim() || 'Product';
     }
 
+    /**
+     * Resolve the publishable project key for catalog-id mode. Explicit
+     * project-key always wins and skips the fetch. Lifecycle-safe: a monotonic
+     * token discards stale responses after disconnect or attribute changes,
+     * and an AbortSignal cancels the in-flight request on disconnect.
+     */
+    private async loadConfigIfNeeded(): Promise<void> {
+      // Explicit project-key mode: no config fetch, no pending state.
+      const explicitKey = (this.getAttribute('project-key') || '').trim();
+      if (explicitKey) {
+        this.resolvedProjectKey = '';
+        this.configState = 'idle';
+        this.updateConfigStatus();
+        return;
+      }
+      const catalogId = (this.getAttribute('catalog-id') || '').trim();
+      if (!catalogId) {
+        this.resolvedProjectKey = '';
+        this.configState = 'idle';
+        this.updateConfigStatus();
+        return;
+      }
+      if (this.configState === 'loading' || this.configState === 'ready') return;
+
+      const token = ++this.configToken;
+      this.abortController?.abort();
+      this.abortController = new AbortController();
+      this.configState = 'loading';
+      this.updateConfigStatus();
+
+      try {
+        const config: CaptureConfig = await fetchCaptureConfig(catalogId, {
+          apiBaseUrl: this.getAttribute('api-base-url') || DEFAULT_API_BASE_URL,
+          signal: this.abortController.signal,
+        });
+        if (token !== this.configToken || !this.isConnected) return;
+        this.resolvedProjectKey = config.api_key;
+        this.configState = 'ready';
+        this.updateConfigStatus();
+      } catch (error) {
+        if ((error as Error)?.name === 'AbortError') return;
+        if (token !== this.configToken || !this.isConnected) return;
+        this.resolvedProjectKey = '';
+        this.configState = 'error';
+        this.updateConfigStatus();
+      }
+    }
+
+    private updateConfigStatus(): void {
+      if (!this.status) return;
+      if (this.configState === 'loading') {
+        this.status.textContent = 'Preparing signup form…';
+        this.status.dataset.state = 'loading';
+      } else if (this.configState === 'error') {
+        this.status.textContent = 'This signup form is not configured yet.';
+        this.status.dataset.state = 'error';
+      } else if (this.configState === 'idle' && !this.hasExplicitOrResolvedKey()) {
+        // No project-key and no catalog-id: leave a quiet not-configured note.
+        this.status.textContent = 'This signup form is not configured yet.';
+        this.status.dataset.state = 'error';
+      } else if (this.configState !== 'idle') {
+        // ready or stale-loading cleared back to ready: clear config status.
+        this.status.textContent = '';
+        delete this.status.dataset.state;
+      }
+    }
+
+    private hasExplicitOrResolvedKey(): boolean {
+      return Boolean((this.getAttribute('project-key') || '').trim() || this.resolvedProjectKey);
+    }
+
     private updateConsentCopy(copy: Element): void {
       copy.replaceChildren();
       const kind = this.currentKind();
@@ -274,6 +372,17 @@ export function registerNewsletterCapture(): void {
       if (!this.form || !this.emailInput || !this.consentInput) return;
       if (!this.form.reportValidity()) return;
 
+      // project-key takes precedence; fall back to the catalog-id-resolved key.
+      const projectKey = (this.getAttribute('project-key') || '').trim() || this.resolvedProjectKey;
+      if (!projectKey) {
+        if (this.configState === 'loading') {
+          this.setStatus('Preparing signup form…', 'loading');
+        } else {
+          this.setStatus('This signup form is not configured yet.', 'error');
+        }
+        return;
+      }
+
       let input: ReturnType<typeof validateSubscriptionRequest>;
       let apiBaseUrl = DEFAULT_API_BASE_URL;
       try {
@@ -300,10 +409,7 @@ export function registerNewsletterCapture(): void {
       this.form.setAttribute('aria-busy', 'true');
       this.setStatus('Sending your request…', 'loading');
       try {
-        await submitSubscription(input, {
-          projectKey: this.getAttribute('project-key') || '',
-          apiBaseUrl,
-        });
+        await submitSubscription(input, { projectKey, apiBaseUrl });
         this.form.reset();
         if (this.kindSelect) this.kindSelect.value = validKind(this.getAttribute('kind'));
         this.updateSubmitLabel();

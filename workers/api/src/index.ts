@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { Bindings, Variables } from './types';
 import { auth } from './routes/auth';
+import { captureConfig } from './routes/capture-config';
 import { projects } from './routes/projects';
 import { feedback } from './routes/feedback';
 import { subscriptions } from './routes/subscriptions';
@@ -64,6 +65,18 @@ function isPublicCaptureRequest(path: string, method: string, requestedMethod: s
   return publicPath && (method === 'POST' || (method === 'OPTIONS' && requestedMethod === 'POST'));
 }
 
+// Public, credential-free config read for the newsletter-capture element's
+// catalog-id mode. Like the capture POST paths, it is noncredentialed and open
+// to any HTTPS web origin; owner reads stay on the narrower allowlist below.
+function isPublicCaptureConfigRequest(
+  path: string,
+  method: string,
+  requestedMethod: string
+): boolean {
+  const match = path === '/v1/capture-config' || path.startsWith('/v1/capture-config/');
+  return match && (method === 'GET' || (method === 'OPTIONS' && requestedMethod === 'GET'));
+}
+
 // Publishable project keys are designed for product-owned browser forms. Keep
 // credentialed owner routes on the narrower allowlist below.
 function isWebOrigin(origin: string): boolean {
@@ -95,6 +108,19 @@ app.use('*', async (c, next) => {
       allowHeaders: ['Content-Type', 'X-Project-Key'],
     })(c, next);
   }
+  if (
+    isPublicCaptureConfigRequest(
+      c.req.path,
+      c.req.method,
+      c.req.header('Access-Control-Request-Method') || ''
+    ) &&
+    isWebOrigin(origin)
+  ) {
+    return cors({
+      origin,
+      allowMethods: ['GET', 'OPTIONS'],
+    })(c, next);
+  }
   const allowedOrigin = isAllowedOrigin(origin) ? origin : 'https://app.sassmaker.com';
   const corsMiddleware = cors({
     origin: allowedOrigin,
@@ -117,6 +143,7 @@ app.get('/openapi.json', (c) => c.json(openApiDocument));
 app.use('/v1/*', rateLimit({ limit: 100, period: 60 }));
 
 app.route('/v1/auth', auth);
+app.route('/v1/capture-config', captureConfig);
 app.route('/v1/projects', projects);
 app.route('/v1/feedback', feedback);
 app.route('/v1/subscriptions', subscriptions);

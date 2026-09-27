@@ -4,7 +4,8 @@ import type { NewsletterCaptureProps } from './types';
 
 type NativeCaptureProps = {
   'product-name': string;
-  'project-key': string;
+  'project-key'?: string;
+  'catalog-id'?: string;
   kind?: string;
   'allow-kind-selection'?: string;
   source?: string;
@@ -22,6 +23,7 @@ export function NewsletterCapture(props: NewsletterCaptureProps) {
   return createElement(NewsletterCaptureElement, {
     'product-name': props.productName,
     'project-key': props.projectKey,
+    'catalog-id': props.catalogId,
     kind: props.kind,
     'allow-kind-selection': props.allowKindSelection ? '' : undefined,
     source: props.source,

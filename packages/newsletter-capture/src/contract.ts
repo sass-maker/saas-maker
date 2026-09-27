@@ -2,8 +2,16 @@ export const DEFAULT_API_BASE_URL = 'https://api.sassmaker.com';
 export const DEFAULT_SOURCE = 'footer';
 export const EMAIL_MAX_LENGTH = 254;
 export const SOURCE_PATTERN = /^[a-z][a-z0-9_-]{0,63}$/;
+export const CATALOG_ID_PATTERN = /^[a-z][a-z0-9_-]{0,63}$/;
 
 export type CaptureKind = 'newsletter' | 'waitlist';
+
+/** Publishable config resolved from a Fleet catalog id via GET /v1/capture-config. */
+export interface CaptureConfig {
+  api_key: string;
+  name: string;
+  slug: string;
+}
 
 /** Versioned consent copy. Bump the version and server snapshot before changing it. */
 export const CONSENT_COPY_V1: Readonly<Record<CaptureKind, string>> = {
@@ -109,4 +117,58 @@ export async function submitSubscription(
     }
     throw new Error('Your request could not be sent. Please try again later.');
   }
+}
+
+/**
+ * Resolve a Fleet catalog id to the bound project's publishable capture config
+ * via GET /v1/capture-config/:catalogId. Used by the custom element's catalog-id
+ * mode to obtain the publishable project key when project-key is absent. The
+ * publishable key is never logged; transport and config-load failures become a
+ * single safe retry message so the host form can surface them.
+ */
+export async function fetchCaptureConfig(
+  catalogId: string,
+  options: { apiBaseUrl?: string; fetcher?: typeof fetch; signal?: AbortSignal } = {}
+): Promise<CaptureConfig> {
+  const id = catalogId.trim();
+  if (!id || !CATALOG_ID_PATTERN.test(id)) {
+    throw new Error('This signup form is not configured yet.');
+  }
+
+  const apiBaseUrl = normalizeApiBaseUrl(options.apiBaseUrl ?? DEFAULT_API_BASE_URL);
+  const fetcher = options.fetcher ?? fetch;
+  let response: Response;
+  try {
+    response = await fetcher(`${apiBaseUrl}/v1/capture-config/${encodeURIComponent(id)}`, {
+      method: 'GET',
+      credentials: 'omit',
+      signal: options.signal,
+    });
+  } catch (error) {
+    if ((error as Error)?.name === 'AbortError') throw error;
+    throw new Error('Unable to reach the signup service. Please try again.', { cause: error });
+  }
+
+  if (!response.ok) {
+    // 404 covers unknown, malformed, and unbound ids; treat all as not configured.
+    throw new Error('This signup form is not configured yet.');
+  }
+
+  let body: unknown;
+  try {
+    body = await response.json();
+  } catch (error) {
+    throw new Error('Unable to reach the signup service. Please try again.', { cause: error });
+  }
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    throw new Error('This signup form is not configured yet.');
+  }
+  const config = body as Record<string, unknown>;
+  const apiKey = typeof config.api_key === 'string' ? config.api_key.trim() : '';
+  const name = typeof config.name === 'string' ? config.name.trim() : '';
+  const slug = typeof config.slug === 'string' ? config.slug.trim() : '';
+  if (!apiKey || !name || !slug) {
+    throw new Error('This signup form is not configured yet.');
+  }
+  return { api_key: apiKey, name, slug };
 }

@@ -3,6 +3,7 @@ import test from 'node:test';
 
 import {
   DEFAULT_API_BASE_URL,
+  fetchCaptureConfig,
   normalizeApiBaseUrl,
   submitSubscription,
   validateSubscriptionRequest,
@@ -111,5 +112,78 @@ test('submission turns API and transport failures into safe retry guidance', asy
       }
     ),
     /Unable to reach the signup service/
+  );
+});
+
+test('fetchCaptureConfig resolves a bound catalog id to the publishable config', async () => {
+  const calls = [];
+  const config = await fetchCaptureConfig('acme', {
+    apiBaseUrl: 'https://api.example.com/',
+    fetcher: async (url, init) => {
+      calls.push({ url, init });
+      return new Response(JSON.stringify({ api_key: 'pk_acme', name: 'Acme', slug: 'acme' }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      });
+    },
+  });
+  assert.deepEqual(config, { api_key: 'pk_acme', name: 'Acme', slug: 'acme' });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].url, 'https://api.example.com/v1/capture-config/acme');
+  assert.equal(calls[0].init.method, 'GET');
+  assert.equal(calls[0].init.credentials, 'omit');
+});
+
+test('fetchCaptureConfig rejects malformed catalog ids before any network call', async () => {
+  let called = false;
+  await assert.rejects(
+    fetchCaptureConfig('Bad-Id!', {
+      fetcher: async () => {
+        called = true;
+        return new Response(null, { status: 200 });
+      },
+    }),
+    /not configured/
+  );
+  assert.equal(called, false);
+});
+
+test('fetchCaptureConfig treats unknown/unbound (404) and bad bodies as not configured', async () => {
+  await assert.rejects(
+    fetchCaptureConfig('not-bound', {
+      fetcher: async () => new Response(null, { status: 404 }),
+    }),
+    /not configured/
+  );
+  await assert.rejects(
+    fetchCaptureConfig('acme', {
+      fetcher: async () =>
+        new Response(JSON.stringify({ api_key: 'pk_acme' }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
+    }),
+    /not configured/
+  );
+});
+
+test('fetchCaptureConfig surfaces transport failures as a safe retry message and never logs the key', async () => {
+  await assert.rejects(
+    fetchCaptureConfig('acme', {
+      fetcher: async () => {
+        throw new TypeError('secret transport detail');
+      },
+    }),
+    /Unable to reach the signup service/
+  );
+  // AbortError must propagate verbatim so the element can discard stale loads.
+  const abort = new DOMException('aborted', 'AbortError');
+  await assert.rejects(
+    fetchCaptureConfig('acme', {
+      fetcher: async () => {
+        throw abort;
+      },
+    }),
+    /aborted/
   );
 });

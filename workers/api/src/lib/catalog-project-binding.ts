@@ -12,6 +12,24 @@ export async function getCatalogProjectId(
   return row?.catalog_project_id ?? null;
 }
 
+/**
+ * Return the SaaS Maker project id bound to a Fleet catalog id, if any.
+ * Used by the public capture-config read endpoint to resolve a publishable
+ * project key from a catalog id alone; never returns unbound or unknown ids.
+ */
+export async function getSaasMakerProjectIdByCatalogId(
+  db: D1Database,
+  catalogProjectId: string
+): Promise<string | null> {
+  const row = await db
+    .prepare(
+      'SELECT saas_maker_project_id FROM catalog_project_bindings WHERE catalog_project_id = ?'
+    )
+    .bind(catalogProjectId)
+    .first<{ saas_maker_project_id: string }>();
+  return row?.saas_maker_project_id ?? null;
+}
+
 /** Optional attribution must not fail a successful feedback or subscription write. */
 export async function tryGetCatalogProjectId(
   db: D1Database,

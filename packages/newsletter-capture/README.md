@@ -29,6 +29,33 @@ Only the publishable project key belongs in browser markup. Set an optional
 `api-base-url` to the HTTPS API origin when using a compatible proxy or
 development server; the default is `https://api.sassmaker.com`.
 
+### Catalog-id mode
+
+When a Fleet product is bound to a SaaS Maker project through the
+`catalog_project_bindings` table, the element can resolve the publishable key
+from a canonical catalog id alone. Use `catalog-id` instead of `project-key`:
+
+```html
+<saas-maker-newsletter-capture
+  product-name="Acme"
+  catalog-id="acme"
+  source="footer"
+></saas-maker-newsletter-capture>
+```
+
+The element calls `GET /v1/capture-config/:catalogId`, which returns only the
+bound project's publishable `api_key` and minimal display metadata (`name`,
+`slug`). It never returns owner/user data, private tokens, or unbound
+projects. Unknown, malformed, and unbound ids all return the same 404 shape;
+the form shows a neutral "not configured" status and prevents submission.
+
+The resolved key is held only in memory for the current element instance; it is
+not logged, stored, or sent anywhere except the existing `POST /v1/subscriptions`
+contract. `project-key` takes precedence when both attributes are present, so
+existing explicit-key integrations keep working unchanged. Config loading is
+lifecycle-safe: a disconnect or attribute change cancels the in-flight request
+and discards stale responses before they can mutate the form.
+
 ## Footer placement with Fleet components
 
 Keep capture as its own region alongside the AI chat footer and portfolio
@@ -125,13 +152,15 @@ saas-maker-newsletter-capture {
 ```
 
 Attributes and React props: `product-name` / `productName`, `project-key` /
-`projectKey`, `kind`, `allow-kind-selection` / `allowKindSelection`, `source`,
-`api-base-url` / `apiBaseUrl`, `privacy-url` / `privacyUrl`, `label`, and
-`theme`. Kind defaults to `newsletter`; set `kind="waitlist"` (or
-`kind="waitlist"` in React) for a fixed waitlist form. Set
-`allow-kind-selection` or `allowKindSelection` only when visitors should choose
-between both options. Consent text, description, and submit label follow the
-selected or configured kind.
+`projectKey`, `catalog-id` / `catalogId`, `kind`, `allow-kind-selection` /
+`allowKindSelection`, `source`, `api-base-url` / `apiBaseUrl`, `privacy-url` /
+`privacyUrl`, `label`, and `theme`. Provide either `project-key` or
+`catalog-id`; `project-key` takes precedence when both are present. Kind
+defaults to `newsletter`; set `kind="waitlist"` (or `kind="waitlist"` in
+React) for a fixed waitlist form. Set `allow-kind-selection` or
+`allowKindSelection` only when visitors should choose between both options.
+Consent text, description, and submit label follow the selected or
+configured kind.
 
 ## License
 

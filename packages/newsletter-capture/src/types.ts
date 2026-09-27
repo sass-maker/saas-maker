@@ -3,8 +3,17 @@ import type { CaptureKind } from './contract';
 export interface NewsletterCaptureProps {
   /** Product identity shown in the form heading and consent statement. */
   productName: string;
-  /** Publishable SaaS Maker project key for this product. */
-  projectKey: string;
+  /**
+   * Publishable SaaS Maker project key for this product. Takes precedence over
+   * `catalogId` when both are present. Omit to resolve the key from `catalogId`.
+   */
+  projectKey?: string;
+  /**
+   * Canonical Fleet catalog id bound to a SaaS Maker project. The element
+   * resolves the publishable key via GET /v1/capture-config/:catalogId before
+   * the first submit. Ignored when `projectKey` is set.
+   */
+  catalogId?: string;
   /** Initial selection. Visitors can change this in the form. */
   kind?: CaptureKind;
   /** Let visitors choose either kind instead of fixing this embed to `kind`. */

@@ -134,6 +134,33 @@ export const openApiDocument = {
         },
       },
     },
+    '/v1/capture-config/{catalogId}': {
+      get: {
+        summary: 'Resolve a Fleet catalog id to a publishable capture config',
+        description:
+          'Returns the bound project publishable api key and minimal display metadata for the newsletter-capture element catalog-id mode. Public, credential-free, CORS-open to HTTPS web origins, bounded cached. Never returns owner/user data, private tokens, or unbound projects.',
+        security: [],
+        parameters: [
+          {
+            name: 'catalogId',
+            in: 'path',
+            required: true,
+            schema: { type: 'string', pattern: '^[a-z][a-z0-9_-]{0,63}$' },
+          },
+        ],
+        responses: {
+          '200': {
+            description: 'Publishable api key, product name, and slug for the bound project',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/CaptureConfig' },
+              },
+            },
+          },
+          '404': { description: 'Unknown, malformed, or unbound catalog id' },
+        },
+      },
+    },
     '/v1/feedback/inbox': {
       get: {
         summary: 'Alias of GET /v1/feedback for the owner inbox',
@@ -241,6 +268,17 @@ export const openApiDocument = {
           anchor: { type: 'object' },
           client_version: { type: 'string' },
           source: { type: 'string' },
+        },
+      },
+      CaptureConfig: {
+        type: 'object',
+        required: ['api_key', 'name', 'slug'],
+        description:
+          'Publishable browser key and minimal display metadata for a bound catalog id. No owner or user data.',
+        properties: {
+          api_key: { type: 'string', description: 'Publishable project key (pk_…)' },
+          name: { type: 'string', description: 'Product display name' },
+          slug: { type: 'string', description: 'Project slug' },
         },
       },
     },

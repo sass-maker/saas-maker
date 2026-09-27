@@ -5,6 +5,7 @@ import app from '../../workers/api/src/index';
 const retainedPrefixes = [
   '/health',
   '/v1/auth',
+  '/v1/capture-config',
   '/v1/projects',
   '/v1/feedback',
   '/v1/subscriptions',
