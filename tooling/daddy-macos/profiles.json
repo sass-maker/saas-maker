@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "apps": {
     "storagedaddy": {
-      "repository": "sarthakagrawal927/storagedaddy",
+      "repository": "Significant-Hobbies/storagedaddy",
       "executable": "StorageDaddy",
       "bundleId": "local.fleet.storagedaddy",
       "testArguments": [],
