@@ -45,6 +45,7 @@ export const fieldMap = {
   databaseResources: 'deployment.databaseResources',
   metrics: 'deployment.metrics',
   public: 'presentation.public',
+  systems: 'systems',
 };
 
 function lookup(object, path) {

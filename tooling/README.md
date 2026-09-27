@@ -113,9 +113,11 @@ MCP follow-up — are indexed in
 paths and verifies that each named browser surface loads the project strip
 before Ask AI, carries both loaders, and has no active `data-compose=false`
 opt-out. Dated retirement exceptions stay visible and become blocking when
-their recorded debt disappears, preventing stale exceptions. The exact Fleet
-surface receipt remains beside Site Health's private canonical catalog rather
-than being duplicated in this public repository. From the SaaS Maker root,
+their recorded debt disappears, preventing stale exceptions. The Fleet surface
+receipt at `../site-health/apps/backend/config/footer-surfaces.json` is a
+generated output of the canonical catalog (`pnpm catalog:sync`); edit
+`projects[].systems.footerSurfaces` in the catalog, never the manifest. From
+the SaaS Maker root,
 `pnpm tooling:footers` runs that Fleet-owned receipt when the sibling checkout
 is available.
 

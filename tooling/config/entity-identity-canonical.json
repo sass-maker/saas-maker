@@ -1,6 +1,5 @@
 {
   "$comment": "Canonical identity decisions for SAR-9. This file is the record of what was DECIDED and why; tooling/scripts/entity-identity-apply.mjs is what writes those decisions into site-health/apps/backend/config/projects.json. Add a decision here rather than hand-editing the catalog, so the reason a name changed survives the commit that changed it. Run the applier with --check in CI to detect drift back.",
-
   "authorityOrder": {
     "$comment": "When sources disagree on a product's public NAME, this is the tiebreak, highest first. It is not a preference — it is which source a model actually reads when it resolves the entity.",
     "order": [
@@ -13,14 +12,12 @@
     ],
     "note": "A completed, deployed, committed rename is not a two-source disagreement to escalate. It is internal records failing to follow the product. Escalate only when the live surface is itself ambiguous or the rename is not evidenced in the owning repo."
   },
-
   "rules": {
     "registryDescriptionMirrorsPublic": {
       "$comment": "geoIdentities entries carried no description field at all, which is why entity-identity-diff reported a description conflict on literally every surface: the registry had nothing to compare. The registry is the record third-party corrections quote from, so it has to carry the one-liner. Source of truth is projects[].public.description.",
       "enabled": true
     }
   },
-
   "pricingStates": {
     "$comment": "What each pricing.state asserts. Written down because the honest answer to 'this product charges nothing today but promises nothing' looked like a schema gap, and it is not one: that is exactly 'published' pointing at the page that says so. Reaching for 'free' instead would convert a careful non-promise into a permanent commitment the product never made.",
     "published": "A pricing/access declaration exists at `url`. Says nothing about the price itself — it says the answer is published, go read it. Correct for free-today-no-promise and for paid alike.",
@@ -29,7 +26,6 @@
     "not-applicable": "The product has no pricing surface by nature: a dataset, a CLI, an internal tool.",
     "probe": "tooling/scripts/entity-identity-live.mjs fetches /pricing on every registry surface and flags states that disagree with what is live."
   },
-
   "decisions": [
     {
       "id": "email-manager",
@@ -72,7 +68,9 @@
       "decidedAt": "2026-09-05",
       "decidedBy": "SAR-9",
       "name": "SaaS Maker",
-      "addAliases": ["Foundry"],
+      "addAliases": [
+        "Foundry"
+      ],
       "authority": "already canonical in every internal record",
       "evidence": [
         "https://sassmaker.com returns <title>SaaS Maker — Fleet products and shared tooling</title> (probed 2026-09-05)",
@@ -86,7 +84,10 @@
       "id": "on-record",
       "decidedAt": "2026-09-05",
       "decidedBy": "SAR-9",
-      "pricing": { "state": "published", "url": "https://podcasts.highsignal.app/pricing" },
+      "pricing": {
+        "state": "published",
+        "url": "https://podcasts.highsignal.app/pricing"
+      },
       "authority": "deployed public surface",
       "evidence": [
         "https://podcasts.highsignal.app/pricing returns 200 with <title>Access and pricing: High Signal Podcasts</title> and <h1>Browse the public index without an account or charge.</h1> (probed 2026-09-05)",
@@ -101,7 +102,10 @@
       "id": "rolepatch",
       "decidedAt": "2026-09-05",
       "decidedBy": "SAR-9",
-      "pricing": { "state": "published", "url": "https://rolepatch.com/pricing" },
+      "pricing": {
+        "state": "published",
+        "url": "https://rolepatch.com/pricing"
+      },
       "authority": "deployed public surface",
       "evidence": [
         "https://rolepatch.com/pricing returns 200 with <title>Pricing | RolePatch</title> (probed 2026-09-05)",
@@ -115,7 +119,10 @@
       "id": "pace",
       "decidedAt": "2026-09-05",
       "decidedBy": "SAR-9",
-      "pricing": { "state": "published", "url": "https://heypace.app/pricing" },
+      "pricing": {
+        "state": "published",
+        "url": "https://heypace.app/pricing"
+      },
       "authority": "deployed public surface",
       "evidence": [
         "https://heypace.app/pricing returns 200 with <title>Pricing — Pace</title> (probed 2026-09-05)",
@@ -140,7 +147,6 @@
       "rationale": "Two agent-facing channels (/llms.txt and /api/ai) already agree on 'DRank'; the catalog said 'Drank'. The owner ruled 'DRank' canonical in sass-maker/drank#14, so the catalog follows the product. The retired 'Drank' is kept as an alias for internal identity resolution; aliases are internal-only and re-assert nothing publicly."
     }
   ],
-
   "verifiedNoChangeNeeded": [
     {
       "id": "pace",

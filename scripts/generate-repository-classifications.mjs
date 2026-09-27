@@ -14,7 +14,9 @@ const categories = new Set([
   'paused-experiment',
   'archived-work',
 ]);
-const rows = review.repositories.map((repository) => {
+const cohortRows = review.repositories.filter((repository) => !repository.postCohort);
+const addedRows = review.repositories.filter((repository) => repository.postCohort);
+const rows = cohortRows.map((repository) => {
   const project = repository.projectId ? projects.get(repository.projectId) : null;
   if (repository.projectId && !project) throw new Error(`Missing project: ${repository.projectId}`);
   const category = project ? project.portfolio.futureForm : repository.futureForm;
@@ -60,6 +62,21 @@ const markdown = [
       `| [${row.repository}](${row.url}) | ${row.category ?? 'Pending confirmation'} | ${row.shareable == null ? 'Unverified' : row.shareable ? 'Yes' : 'No'} |`
   ),
   '',
+  ...(addedRows.length
+    ? [
+        '## Post-cohort additions',
+        '',
+        'Repositories added to the review after the original 82-repository cohort.',
+        '',
+        '| Repository | Category | Shareable |',
+        '| --- | --- | --- |',
+        ...addedRows.map(
+          (repository) =>
+            `| [${repository.originalRepository}](${repository.githubVerification?.url ?? `https://github.com/${repository.currentRepository}`}) | ${repository.futureForm ?? 'Pending confirmation'} | ${repository.lifecycle?.shareable == null ? 'Unverified' : repository.lifecycle.shareable ? 'Yes' : 'No'} |`
+        ),
+        '',
+      ]
+    : []),
 ].join('\n');
 const path = new URL('../catalog/generated/repository-classifications.md', import.meta.url);
 if (process.argv.includes('--check')) {

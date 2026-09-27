@@ -245,8 +245,8 @@
         "TypeScript",
         "Cloudflare Pages"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -288,8 +288,8 @@
         "Cloudflare Workers",
         "D1"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -329,8 +329,8 @@
         "TypeScript",
         "Cloudflare Pages"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -458,8 +458,8 @@
         "Cloudflare Workers",
         "D1"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -470,6 +470,7 @@
       ],
       "url": "https://podcasts.highsignal.app",
       "repositoryUrl": "https://github.com/Significant-Hobbies/on-record",
+      "changelogUrl": "https://podcasts.highsignal.app/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/on-record/issues",
       "firstCommitAt": "2026-08-24",
       "latestCommitAt": "2026-09-22"
@@ -500,8 +501,8 @@
         "Cloudflare Workers",
         "D1"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -512,6 +513,7 @@
       ],
       "url": "https://issues.sarthakagrawal.dev",
       "repositoryUrl": "https://github.com/sarthakagrawal927/issue-pages",
+      "changelogUrl": "https://issues.sarthakagrawal.dev/changelog",
       "roadmapUrl": "https://github.com/sarthakagrawal927/issue-pages/issues",
       "firstCommitAt": "2026-08-25",
       "latestCommitAt": "2026-09-07"
@@ -541,8 +543,8 @@
         "React",
         "TypeScript"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -553,50 +555,10 @@
       ],
       "url": "https://papers.highsignal.app",
       "repositoryUrl": "https://github.com/High-Signal-App/research-papers",
+      "changelogUrl": "https://papers.highsignal.app/changelog",
       "roadmapUrl": "https://github.com/High-Signal-App/research-papers/issues",
       "firstCommitAt": "2026-05-30",
       "latestCommitAt": "2026-09-10"
-    },
-    {
-      "id": "materia",
-      "name": "Materia",
-      "description": "An educational body-and-remedy reference with condition-specific research citations and explicit uncertainty.",
-      "makerNote": "I want to make anatomy explorable and connect body concerns to clear, evidence-based information about treatments and remedies.",
-      "purposeContract": {
-        "purpose": "Materia explores an anatomy-led, evidence-graded reference for understanding body concerns, treatments, and remedies.",
-        "audience": "People seeking a clearer educational map from a body concern to bounded, source-backed information.",
-        "outcome": "Understand relevant anatomy and compare remedy evidence without mistaking the product for medical diagnosis.",
-        "mechanism": "An interactive body-system model links concerns to structured remedy pages with explicit evidence grades and safety limits.",
-        "proof": "A technically ambitious reference exists, but sustained evidence quality, medical safety, and content maintenance are unresolved.",
-        "nextAction": "Preserved experiment; no current work or obligation to resume."
-      },
-      "kind": "experiment",
-      "category": "experimental",
-      "form": "Interactive experiment",
-      "platforms": [
-        "Web"
-      ],
-      "technologies": [
-        "Astro",
-        "React",
-        "Three.js",
-        "Cloudflare Pages"
-      ],
-      "group": "past",
-      "lifecycle": "inactive",
-      "shareable": true,
-      "deployed": false,
-      "deploymentProviders": [
-        "Cloudflare Pages"
-      ],
-      "domains": [
-        "materia.significanthobbies.com"
-      ],
-      "url": "https://materia.significanthobbies.com",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/materia",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/materia/issues",
-      "firstCommitAt": "2026-06-21",
-      "latestCommitAt": "2026-09-06"
     },
     {
       "id": "knowledge-base",
@@ -757,8 +719,8 @@
         "Vite",
         "Cloudflare Pages"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -974,8 +936,8 @@
         "Cloudflare Workers",
         "D1"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -1149,8 +1111,8 @@
         "Astro",
         "Cloudflare Pages"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -1161,6 +1123,7 @@
       ],
       "url": "https://mashup.highsignal.app",
       "repositoryUrl": "https://github.com/sass-maker/mashup",
+      "changelogUrl": "https://mashup.highsignal.app/changelog",
       "roadmapUrl": "https://github.com/sass-maker/mashup/issues",
       "firstCommitAt": "2026-07-25",
       "latestCommitAt": "2026-09-07"
@@ -1194,10 +1157,14 @@
       "group": "current",
       "lifecycle": "active",
       "shareable": true,
-      "deployed": false,
-      "deploymentProviders": [],
-      "domains": [],
-      "url": "https://github.com/sarthakagrawal927/ph-catalog",
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages"
+      ],
+      "domains": [
+        "ph.significanthobbies.com"
+      ],
+      "url": "https://ph.significanthobbies.com",
       "repositoryUrl": "https://github.com/sarthakagrawal927/ph-catalog",
       "roadmapUrl": "https://github.com/sarthakagrawal927/ph-catalog/issues",
       "firstCommitAt": "2026-08-31",
@@ -1228,8 +1195,8 @@
         "Vite",
         "Cloudflare Pages"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -1240,6 +1207,7 @@
       ],
       "url": "https://idle.aliveville.com",
       "repositoryUrl": "https://github.com/sarthakagrawal927/web-playables",
+      "changelogUrl": "https://idle.aliveville.com/changelog",
       "roadmapUrl": "https://github.com/sarthakagrawal927/web-playables/issues",
       "firstCommitAt": "2026-07-10",
       "latestCommitAt": "2026-09-07"
@@ -1310,8 +1278,8 @@
         "Cloudflare Pages",
         "IssuePages"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -1352,8 +1320,8 @@
         "Cloudflare Workers",
         "R2"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -1365,6 +1333,7 @@
       ],
       "url": "https://reddit-insights.highsignal.app",
       "repositoryUrl": "https://github.com/High-Signal-App/research-subreddit",
+      "changelogUrl": "https://reddit-insights.highsignal.app/changelog",
       "roadmapUrl": "https://github.com/High-Signal-App/research-subreddit/issues",
       "firstCommitAt": "2026-08-07",
       "latestCommitAt": "2026-09-18"
@@ -1441,8 +1410,8 @@
         "HTML",
         "CSS"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -1497,8 +1466,8 @@
         "storagedaddy.significanthobbies.com"
       ],
       "url": "https://storage.daddyrad.com/",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/storagedaddy",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/storagedaddy/issues",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/storagedaddy",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/storagedaddy/issues",
       "firstCommitAt": "2026-09-13",
       "latestCommitAt": "2026-09-20"
     },
@@ -1542,8 +1511,8 @@
         "browserdaddy.significanthobbies.com"
       ],
       "url": "https://browser.daddyrad.com/",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/browserdaddy",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/browserdaddy/issues",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/browserdaddy",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/browserdaddy/issues",
       "firstCommitAt": "2026-09-19",
       "latestCommitAt": "2026-09-22"
     },
@@ -1587,8 +1556,8 @@
         "performancedaddy.significanthobbies.com"
       ],
       "url": "https://performance.daddyrad.com/",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/performancedaddy",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/performancedaddy/issues",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/performancedaddy",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/performancedaddy/issues",
       "firstCommitAt": "2026-09-20",
       "latestCommitAt": "2026-09-23"
     },
@@ -1619,8 +1588,8 @@
         "Playwright",
         "Maestro"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -1631,6 +1600,7 @@
       ],
       "url": "https://browser-agents.sarthakagrawal.dev/",
       "repositoryUrl": "https://github.com/sarthakagrawal927/agent-testing",
+      "changelogUrl": "https://browser-agents.sarthakagrawal.dev/changelog",
       "roadmapUrl": "https://github.com/sarthakagrawal927/agent-testing/issues",
       "firstCommitAt": "2026-09-20",
       "latestCommitAt": "2026-09-20"
@@ -1672,8 +1642,8 @@
         "context.daddyrad.com"
       ],
       "url": "https://context.daddyrad.com/",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/contextdaddy",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/contextdaddy/issues",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/contextdaddy",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/contextdaddy/issues",
       "firstCommitAt": "2026-09-13",
       "latestCommitAt": "2026-09-26"
     },
@@ -1711,8 +1681,8 @@
         "www.daddyrad.com"
       ],
       "url": "https://daddyrad.com/",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/daddyrad",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/daddyrad/issues",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/daddyrad",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/daddyrad/issues",
       "firstCommitAt": "2026-09-25",
       "latestCommitAt": "2026-09-25"
     },
@@ -1976,6 +1946,31 @@
       }
     },
     {
+      "id": "agent-testing",
+      "name": "Browser Agent Testing",
+      "description": "A completed local web and iOS experiment comparing browser-agent speed, cost, reliability and defect detection against independent verification.",
+      "url": "https://browser-agents.sarthakagrawal.dev/",
+      "tier": "secondary",
+      "category": "experimental",
+      "priority": "P4",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "experiment",
+      "changelogUrl": "https://browser-agents.sarthakagrawal.dev/changelog",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/agent-testing",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/agent-testing/issues",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "Browser Agent Testing compares local web and native UI automation with reproducible, product-owned verification.",
+        "audience": "Coding agents and maintainers comparing local browser and native UI testing tools.",
+        "outcome": "Choose faster and cheaper test strategies without silently losing functional or visual defect detection.",
+        "mechanism": "Bounded manifests and receipts run saved or adaptive workflows, then independent product verifiers check UI, persistence, process and visual outcomes.",
+        "proof": "The completed experiment publishes a sourced 79-tool catalogue, 26 measured journey arms with 118 verified completions across 129 attempts, seven additional probes, ten retained experiment records, exact observed pins and a live agent-first guide. The measured evidence retains Playwright and Maestro as baselines.",
+        "nextAction": "Explore the finished experiment or clone the public repository; replay a documented arm only when a concrete product change justifies it."
+      }
+    },
+    {
       "id": "browserdaddy",
       "name": "BrowserDaddy",
       "description": "A local-first Mac browsing intelligence app for a unified history archive and real attention tracking.",
@@ -2099,7 +2094,7 @@
       "category": "experimental",
       "priority": "P2",
       "spotlight": false,
-      "lifecycle": "inactive",
+      "lifecycle": "active",
       "shareable": true,
       "maturity": "experiment",
       "changelogUrl": "https://git.significanthobbies.com/changelog",
@@ -2166,6 +2161,56 @@
       }
     },
     {
+      "id": "on-record",
+      "name": "High Signal Podcasts",
+      "description": "Search evidenced podcast claims and follow links back to the original episode or publication.",
+      "url": "https://podcasts.highsignal.app",
+      "tier": "secondary",
+      "category": "media",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "experiment",
+      "changelogUrl": "https://podcasts.highsignal.app/changelog",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/on-record",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/on-record/issues",
+      "pillarId": "learn",
+      "purposeContract": {
+        "purpose": "High Signal Podcasts indexes evidenced claims, recommendations, books, and tools mentioned by notable podcast guests.",
+        "audience": "People who want useful ideas from important podcasts without listening to every episode end to end.",
+        "outcome": "Find what a person actually said or recommended and trace it back to the source episode.",
+        "mechanism": "A source-backed corpus extracts attributable claims and organizes them into people, topics, books, tools, and emerging signals.",
+        "proof": "The public corpus is live with 11,624 published claims, 294 named references, and 1,190 episodes with evidence.",
+        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+      }
+    },
+    {
+      "id": "issue-pages",
+      "name": "IssuePages",
+      "description": "Read public GitHub issues as focused articles; publishing requires repository-owner access.",
+      "url": "https://issues.sarthakagrawal.dev",
+      "tier": "secondary",
+      "category": "experimental",
+      "priority": "P4",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "experiment",
+      "changelogUrl": "https://issues.sarthakagrawal.dev/changelog",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/issue-pages",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/issue-pages/issues",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "IssuePages turns a GitHub issue into a readable, searchable public page.",
+        "audience": "A builder or writer who wants lightweight publishing while keeping GitHub as the editing workflow.",
+        "outcome": "Publish and update a durable page without adopting a separate CMS.",
+        "mechanism": "An owner-approved issue is rendered into a public page with edit, archive, search, and source-link behavior.",
+        "proof": "The owner-only production pilot has proven the issue-to-page loop at issues.sarthakagrawal.dev.",
+        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+      }
+    },
+    {
       "id": "karte",
       "name": "Karte",
       "description": "A creator-owned public profile that answers visitor questions and preserves context for better inbound.",
@@ -2199,7 +2244,7 @@
       "category": "utility",
       "priority": "P4",
       "spotlight": false,
-      "lifecycle": "inactive",
+      "lifecycle": "active",
       "shareable": true,
       "maturity": "maintained",
       "changelogUrl": "https://mail.significanthobbies.com/changelog",
@@ -2299,7 +2344,7 @@
       "category": "media",
       "priority": "P4",
       "spotlight": false,
-      "lifecycle": "inactive",
+      "lifecycle": "active",
       "shareable": true,
       "maturity": "experiment",
       "changelogUrl": "https://tv.significanthobbies.com/changelog",
@@ -2316,6 +2361,29 @@
       }
     },
     {
+      "id": "mashup",
+      "name": "Mashup",
+      "description": "Two playable examples of a local media-editing pipeline, with captions and inspectable source and approval receipts.",
+      "url": "https://mashup.highsignal.app",
+      "tier": "secondary",
+      "category": "experimental",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "changelogUrl": "https://mashup.highsignal.app/changelog",
+      "repositoryUrl": "https://github.com/sass-maker/mashup",
+      "roadmapUrl": "https://github.com/sass-maker/mashup/issues",
+      "purposeContract": {
+        "purpose": "Mashup turns an owned creator archive into coherent topic-specific compilations while keeping every edit inspectable.",
+        "audience": "A creator or operator assembling comedy, motivation, podcast, or clipping compilations from approved media.",
+        "outcome": "Find, approve, sequence, and render useful clips without losing source provenance or editorial control.",
+        "mechanism": "A local pipeline combines archive analysis, clipping, editable EDLs, source receipts, approval boundaries, and deterministic rendering.",
+        "proof": "The first public Startups proof assembles a source-faithful 47-second argument from four beats across three Creative Commons podcast episodes, with captions and media receipts.",
+        "nextAction": "Preserved experiment; no current work or obligation to resume."
+      }
+    },
+    {
       "id": "chatgpt-memory-insights",
       "name": "Memory Map",
       "description": "A browser-local experiment for importing a ChatGPT export, exploring semantic themes and search, and optionally saving analysis on your device.",
@@ -2324,7 +2392,7 @@
       "category": "utility",
       "priority": "P2",
       "spotlight": false,
-      "lifecycle": "inactive",
+      "lifecycle": "active",
       "shareable": true,
       "maturity": "experiment",
       "changelogUrl": "https://chatgpt.significanthobbies.com/changelog",
@@ -2349,7 +2417,7 @@
       "category": "experimental",
       "priority": "P2",
       "spotlight": false,
-      "lifecycle": "inactive",
+      "lifecycle": "active",
       "shareable": true,
       "maturity": "experiment",
       "repositoryUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure",
@@ -2415,7 +2483,7 @@
       "id": "ph-catalog",
       "name": "PH Catalog",
       "description": "A resumable local Product Hunt catalogue and analytics experiment with a privacy-safe synthetic demo.",
-      "url": "https://github.com/sarthakagrawal927/ph-catalog",
+      "url": "https://ph.significanthobbies.com",
       "tier": "secondary",
       "category": "experimental",
       "priority": "P2",
@@ -2436,6 +2504,54 @@
       }
     },
     {
+      "id": "reddit-insights",
+      "name": "Reddit Insights",
+      "description": "Search a dated snapshot of 93 Reddit communities in your browser, with links to original posts and explicit provenance limits.",
+      "url": "https://reddit-insights.highsignal.app",
+      "tier": "secondary",
+      "category": "experimental",
+      "priority": "P4",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "changelogUrl": "https://reddit-insights.highsignal.app/changelog",
+      "repositoryUrl": "https://github.com/High-Signal-App/research-subreddit",
+      "roadmapUrl": "https://github.com/High-Signal-App/research-subreddit/issues",
+      "purposeContract": {
+        "purpose": "Reddit Insights studies how topics, signals, and emotional tone inside a subreddit change over time.",
+        "audience": "A researcher or product operator following a specific community longitudinally.",
+        "outcome": "Recognize recurring shifts and emerging concerns from a retained body of subreddit evidence.",
+        "mechanism": "A bounded collector stores attributable snapshots and derives recurring insight views without claiming unavailable history.",
+        "proof": "The collector and snapshot model exist, but reliable lawful access to historical Reddit data remains the central blocker.",
+        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+      }
+    },
+    {
+      "id": "research-papers",
+      "name": "Research Papers",
+      "description": "Search academic papers and follow original sources; account-based research chat is not yet qualified.",
+      "url": "https://papers.highsignal.app",
+      "tier": "secondary",
+      "category": "media",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "experiment",
+      "changelogUrl": "https://papers.highsignal.app/changelog",
+      "repositoryUrl": "https://github.com/High-Signal-App/research-papers",
+      "roadmapUrl": "https://github.com/High-Signal-App/research-papers/issues",
+      "pillarId": "learn",
+      "purposeContract": {
+        "purpose": "Research Papers is a structured, searchable library for discovering and interrogating academic and market research.",
+        "audience": "The Fleet owner investigating a concrete product, technical, or market question.",
+        "outcome": "Find relevant papers and retrieve grounded context from a large retained corpus.",
+        "mechanism": "A curated research dataset is indexed for search and retrieval-assisted analysis with source structure intact.",
+        "proof": "The corpus and discovery system are essentially complete and available when a real research question appears.",
+        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+      }
+    },
+    {
       "id": "rolepatch",
       "name": "RolePatch",
       "description": "A guest resume-tailoring experiment with a reviewable diff and browser-local document exports.",
@@ -2444,7 +2560,7 @@
       "category": "utility",
       "priority": "P2",
       "spotlight": false,
-      "lifecycle": "inactive",
+      "lifecycle": "active",
       "shareable": true,
       "maturity": "maintained",
       "changelogUrl": "https://rolepatch.com/changelog",
@@ -2494,7 +2610,7 @@
       "category": "media",
       "priority": "P4",
       "spotlight": false,
-      "lifecycle": "inactive",
+      "lifecycle": "active",
       "shareable": true,
       "maturity": "experiment",
       "changelogUrl": "https://sarthakagrawal.dev/changelog",
@@ -2631,6 +2747,29 @@
         "proof": "A fresh guest can complete a graded TypeScript drill and return to saved code in the same browser. Account sync and AI-graded mastery require sign-in and remain separately unqualified.",
         "nextAction": "Try a coding drill as a guest; progress stays in this browser. Use the issue tracker for account-sync qualification limits."
       }
+    },
+    {
+      "id": "web-playables",
+      "name": "Web Playables",
+      "description": "Small browser-playable game experiments.",
+      "url": "https://idle.aliveville.com",
+      "tier": "secondary",
+      "category": "experimental",
+      "priority": "P4",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "changelogUrl": "https://idle.aliveville.com/changelog",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/web-playables",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/web-playables/issues",
+      "purposeContract": {
+        "purpose": "Web Playables is a small laboratory for learning how browser and YouTube-ready games are designed, packaged, and distributed.",
+        "audience": "A builder studying reusable HTML5 game mechanics and portable distribution constraints.",
+        "outcome": "Prototype a mechanic once and ship it as a normal web game and a submission-ready playable package.",
+        "mechanism": "A reusable gamekit supplies loops, saves, offline progress, platform adapters, and builds for a small games hub.",
+        "proof": "The research goal produced a working gamekit, a live idle game, and YouTube-compatible packaging; the project is now parked.",
+        "nextAction": "Preserved experiment; no current work or obligation to resume."
+      }
     }
   ],
   "pastProjects": [
@@ -2650,91 +2789,6 @@
         "nextAction": "Copy a documented badge example into a README."
       },
       "lifecycle": "inactive"
-    },
-    {
-      "id": "agent-testing",
-      "name": "Browser Agent Testing",
-      "description": "A completed local web and iOS experiment comparing browser-agent speed, cost, reliability and defect detection against independent verification.",
-      "lifecycle": "inactive",
-      "category": "experimental",
-      "shareable": true,
-      "repositoryUrl": "https://github.com/sarthakagrawal927/agent-testing",
-      "purposeContract": {
-        "purpose": "Browser Agent Testing compares local web and native UI automation with reproducible, product-owned verification.",
-        "audience": "Coding agents and maintainers comparing local browser and native UI testing tools.",
-        "outcome": "Choose faster and cheaper test strategies without silently losing functional or visual defect detection.",
-        "mechanism": "Bounded manifests and receipts run saved or adaptive workflows, then independent product verifiers check UI, persistence, process and visual outcomes.",
-        "proof": "The completed experiment publishes a sourced 79-tool catalogue, 26 measured journey arms with 118 verified completions across 129 attempts, seven additional probes, ten retained experiment records, exact observed pins and a live agent-first guide. The measured evidence retains Playwright and Maestro as baselines.",
-        "nextAction": "Explore the finished experiment or clone the public repository; replay a documented arm only when a concrete product change justifies it."
-      }
-    },
-    {
-      "id": "on-record",
-      "name": "High Signal Podcasts",
-      "description": "Search evidenced podcast claims and follow links back to the original episode or publication.",
-      "lifecycle": "inactive",
-      "category": "media",
-      "shareable": true,
-      "repositoryUrl": "https://github.com/Significant-Hobbies/on-record",
-      "purposeContract": {
-        "purpose": "High Signal Podcasts indexes evidenced claims, recommendations, books, and tools mentioned by notable podcast guests.",
-        "audience": "People who want useful ideas from important podcasts without listening to every episode end to end.",
-        "outcome": "Find what a person actually said or recommended and trace it back to the source episode.",
-        "mechanism": "A source-backed corpus extracts attributable claims and organizes them into people, topics, books, tools, and emerging signals.",
-        "proof": "The public corpus is live with 11,624 published claims, 294 named references, and 1,190 episodes with evidence.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-      }
-    },
-    {
-      "id": "issue-pages",
-      "name": "IssuePages",
-      "description": "Read public GitHub issues as focused articles; publishing requires repository-owner access.",
-      "lifecycle": "inactive",
-      "category": "experimental",
-      "shareable": true,
-      "repositoryUrl": "https://github.com/sarthakagrawal927/issue-pages",
-      "purposeContract": {
-        "purpose": "IssuePages turns a GitHub issue into a readable, searchable public page.",
-        "audience": "A builder or writer who wants lightweight publishing while keeping GitHub as the editing workflow.",
-        "outcome": "Publish and update a durable page without adopting a separate CMS.",
-        "mechanism": "An owner-approved issue is rendered into a public page with edit, archive, search, and source-link behavior.",
-        "proof": "The owner-only production pilot has proven the issue-to-page loop at issues.sarthakagrawal.dev.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-      }
-    },
-    {
-      "id": "mashup",
-      "name": "Mashup",
-      "description": "Two playable examples of a local media-editing pipeline, with captions and inspectable source and approval receipts.",
-      "lifecycle": "inactive",
-      "category": "experimental",
-      "shareable": true,
-      "repositoryUrl": "https://github.com/sass-maker/mashup",
-      "purposeContract": {
-        "purpose": "Mashup turns an owned creator archive into coherent topic-specific compilations while keeping every edit inspectable.",
-        "audience": "A creator or operator assembling comedy, motivation, podcast, or clipping compilations from approved media.",
-        "outcome": "Find, approve, sequence, and render useful clips without losing source provenance or editorial control.",
-        "mechanism": "A local pipeline combines archive analysis, clipping, editable EDLs, source receipts, approval boundaries, and deterministic rendering.",
-        "proof": "The first public Startups proof assembles a source-faithful 47-second argument from four beats across three Creative Commons podcast episodes, with captions and media receipts.",
-        "nextAction": "Preserved experiment; no current work or obligation to resume."
-      }
-    },
-    {
-      "id": "materia",
-      "name": "Materia",
-      "description": "An educational body-and-remedy reference with condition-specific research citations and explicit uncertainty.",
-      "lifecycle": "inactive",
-      "category": "experimental",
-      "shareable": true,
-      "repositoryUrl": "https://github.com/sarthakagrawal927/materia",
-      "purposeContract": {
-        "purpose": "Materia explores an anatomy-led, evidence-graded reference for understanding body concerns, treatments, and remedies.",
-        "audience": "People seeking a clearer educational map from a body concern to bounded, source-backed information.",
-        "outcome": "Understand relevant anatomy and compare remedy evidence without mistaking the product for medical diagnosis.",
-        "mechanism": "An interactive body-system model links concerns to structured remedy pages with explicit evidence grades and safety limits.",
-        "proof": "A technically ambitious reference exists, but sustained evidence quality, medical safety, and content maintenance are unresolved.",
-        "nextAction": "Preserved experiment; no current work or obligation to resume."
-      }
     },
     {
       "id": "pinpoint",
@@ -2771,40 +2825,6 @@
       "lifecycle": "inactive"
     },
     {
-      "id": "reddit-insights",
-      "name": "Reddit Insights",
-      "description": "Search a dated snapshot of 93 Reddit communities in your browser, with links to original posts and explicit provenance limits.",
-      "lifecycle": "inactive",
-      "category": "experimental",
-      "shareable": true,
-      "repositoryUrl": "https://github.com/High-Signal-App/research-subreddit",
-      "purposeContract": {
-        "purpose": "Reddit Insights studies how topics, signals, and emotional tone inside a subreddit change over time.",
-        "audience": "A researcher or product operator following a specific community longitudinally.",
-        "outcome": "Recognize recurring shifts and emerging concerns from a retained body of subreddit evidence.",
-        "mechanism": "A bounded collector stores attributable snapshots and derives recurring insight views without claiming unavailable history.",
-        "proof": "The collector and snapshot model exist, but reliable lawful access to historical Reddit data remains the central blocker.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-      }
-    },
-    {
-      "id": "research-papers",
-      "name": "Research Papers",
-      "description": "Search academic papers and follow original sources; account-based research chat is not yet qualified.",
-      "lifecycle": "inactive",
-      "category": "media",
-      "shareable": true,
-      "repositoryUrl": "https://github.com/High-Signal-App/research-papers",
-      "purposeContract": {
-        "purpose": "Research Papers is a structured, searchable library for discovering and interrogating academic and market research.",
-        "audience": "The Fleet owner investigating a concrete product, technical, or market question.",
-        "outcome": "Find relevant papers and retrieve grounded context from a large retained corpus.",
-        "mechanism": "A curated research dataset is indexed for search and retrieval-assisted analysis with source structure intact.",
-        "proof": "The corpus and discovery system are essentially complete and available when a real research question appears.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-      }
-    },
-    {
       "id": "society-relay",
       "name": "Society Relay",
       "description": "A fixture-driven community repair-planning experiment with human approval, work orders and calendar export.",
@@ -2820,23 +2840,6 @@
         "nextAction": "Run the documented fixture demo from the public repository."
       },
       "lifecycle": "inactive"
-    },
-    {
-      "id": "web-playables",
-      "name": "Web Playables",
-      "description": "Small browser-playable game experiments.",
-      "lifecycle": "inactive",
-      "category": "experimental",
-      "shareable": true,
-      "repositoryUrl": "https://github.com/sarthakagrawal927/web-playables",
-      "purposeContract": {
-        "purpose": "Web Playables is a small laboratory for learning how browser and YouTube-ready games are designed, packaged, and distributed.",
-        "audience": "A builder studying reusable HTML5 game mechanics and portable distribution constraints.",
-        "outcome": "Prototype a mechanic once and ship it as a normal web game and a submission-ready playable package.",
-        "mechanism": "A reusable gamekit supplies loops, saves, offline progress, platform adapters, and builds for a small games hub.",
-        "proof": "The research goal produced a working gamekit, a live idle game, and YouTube-compatible packaging; the project is now parked.",
-        "nextAction": "Preserved experiment; no current work or obligation to resume."
-      }
     }
   ]
 }

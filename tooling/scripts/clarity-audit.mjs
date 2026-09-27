@@ -77,6 +77,7 @@ const SKIPPED_DIRECTORIES = new Set([
   'dist',
   'node_modules',
   'out',
+  'output',
   'playwright-report',
   'target',
   'test-results',

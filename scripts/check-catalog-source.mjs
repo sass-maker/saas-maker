@@ -26,9 +26,10 @@ if (!isDeepStrictEqual(JSON.parse(readFileSync(generated, 'utf8')), catalog))
 const projects = new Map(catalog.projects.map((project) => [project.id, project]));
 if (projects.size !== catalog.projects.length) throw new Error('Duplicate project identity');
 const repositories = catalog.repositoryReview.repositories;
+const cohort = repositories.filter((row) => !row.postCohort);
 if (
-  repositories.length !== 82 ||
-  new Set(repositories.map((row) => row.originalRepository)).size !== 82
+  cohort.length !== 82 ||
+  new Set(repositories.map((row) => row.originalRepository)).size !== repositories.length
 ) {
   throw new Error('The original review must retain all 82 repository identities');
 }

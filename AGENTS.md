@@ -4,8 +4,10 @@
 
 SaaS Maker owns only:
 
-- the single owner-local portfolio catalog at `catalog/projects.json` and its
-  generated, filtered public exports;
+- the single owner-local portfolio catalog at `catalog/projects.json`, its
+  generated, filtered public exports, and every per-system policy manifest that
+  `catalog:sync` emits from its `systems` sections (tooling config files
+  included — they are generated outputs, never hand-edited);
 - the public product directory;
 - the public scored ideas catalog under `/ideas`;
 - package documentation;

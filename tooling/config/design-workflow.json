@@ -12,7 +12,11 @@
       "maximumReferences": 3,
       "minimumDirectionProbes": 0,
       "maximumDirectionProbes": 3,
-      "acceptedDirectionDecisions": ["agent-selected", "approved", "delegated"]
+      "acceptedDirectionDecisions": [
+        "agent-selected",
+        "approved",
+        "delegated"
+      ]
     }
   },
   "qualityGate": {
@@ -24,8 +28,16 @@
       "p0": 0,
       "p1": 0
     },
-    "requiredViewportWidths": [390, 768, 1440],
-    "acceptedOwnerDecisions": ["agent-selected", "keep", "delegated"],
+    "requiredViewportWidths": [
+      390,
+      768,
+      1440
+    ],
+    "acceptedOwnerDecisions": [
+      "agent-selected",
+      "keep",
+      "delegated"
+    ],
     "detectorPosture": "advisory",
     "requirePassingProjectCheck": true
   },

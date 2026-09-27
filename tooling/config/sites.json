@@ -150,6 +150,136 @@
       "id": "what-it-takes-to-win",
       "url": "https://paths.significanthobbies.com",
       "probePath": "/"
+    },
+    {
+      "id": "live",
+      "url": "https://live.significanthobbies.com",
+      "probePath": "/"
+    },
+    {
+      "id": "gitstat",
+      "url": "https://git.significanthobbies.com",
+      "probePath": "/"
+    },
+    {
+      "id": "on-record",
+      "url": "https://podcasts.highsignal.app",
+      "probePath": "/"
+    },
+    {
+      "id": "issue-pages",
+      "url": "https://issues.sarthakagrawal.dev",
+      "probePath": "/"
+    },
+    {
+      "id": "ios-landings",
+      "url": "https://apps.significanthobbies.com",
+      "probePath": "/"
+    },
+    {
+      "id": "ai-game",
+      "url": "https://aliveville.com",
+      "probePath": "/"
+    },
+    {
+      "id": "mashup",
+      "url": "https://mashup.highsignal.app",
+      "probePath": "/"
+    },
+    {
+      "id": "open-historia",
+      "url": "https://historia.aliveville.com",
+      "probePath": "/"
+    },
+    {
+      "id": "ph-catalog",
+      "url": "https://ph.significanthobbies.com",
+      "probePath": "/"
+    },
+    {
+      "id": "web-playables",
+      "url": "https://idle.aliveville.com",
+      "probePath": "/"
+    },
+    {
+      "id": "field-track",
+      "url": "https://field-track.sassmaker.com",
+      "probePath": "/"
+    },
+    {
+      "id": "reddit-insights",
+      "url": "https://reddit-insights.highsignal.app",
+      "probePath": "/"
+    },
+    {
+      "id": "anchor",
+      "url": "https://anchor.significanthobbies.com",
+      "probePath": "/"
+    },
+    {
+      "id": "nomad-data-adventure",
+      "url": "https://nomad.significanthobbies.com",
+      "probePath": "/"
+    },
+    {
+      "id": "storagedaddy",
+      "url": "https://storage.daddyrad.com",
+      "probePath": "/"
+    },
+    {
+      "id": "browserdaddy",
+      "url": "https://browser.daddyrad.com",
+      "probePath": "/"
+    },
+    {
+      "id": "performancedaddy",
+      "url": "https://performance.daddyrad.com",
+      "probePath": "/"
+    },
+    {
+      "id": "unified-portfolio",
+      "url": "https://money.significanthobbies.com",
+      "probePath": "/"
+    },
+    {
+      "id": "meme-lab",
+      "url": "https://memes.significanthobbies.com",
+      "probePath": "/"
+    },
+    {
+      "id": "agent-testing",
+      "url": "https://browser-agents.sarthakagrawal.dev",
+      "probePath": "/"
+    },
+    {
+      "id": "nutrition-formula-engine",
+      "url": "https://formula.significanthobbies.com",
+      "probePath": "/"
+    },
+    {
+      "id": "every-song-is-a-website",
+      "url": "https://music.significanthobbies.com",
+      "probePath": "/"
+    },
+    {
+      "id": "contextdaddy",
+      "url": "https://context.daddyrad.com",
+      "probePath": "/"
+    },
+    {
+      "id": "war-chest",
+      "url": "https://warchest.significanthobbies.com",
+      "probePath": "/"
+    },
+    {
+      "id": "mentionpilot",
+      "url": "https://mention.highsignal.app",
+      "probePath": "/"
+    },
+    {
+      "id": "daddyrad",
+      "url": "https://daddyrad.com",
+      "probePath": "/"
     }
   ]
 }

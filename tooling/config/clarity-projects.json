@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "schema": "fleet.clarity-registry.v2",
-  "updatedAt": "2026-09-26",
+  "updatedAt": "2026-09-27",
   "legacySharedId": "y39u4kk9oq",
   "note": "Complete public receipt keyed by the 69-entry Fleet catalog inspected on 2026-09-22. browserSurfaces is the canonical browser coverage contract; wiredFiles is a compatibility projection and must match it exactly. Source integration and live deployment remain separate gates. Verify with: node scripts/clarity-audit.mjs --check",
   "unmappedProjects": [
@@ -247,7 +247,7 @@
       "clarityId": "y6btb1ecvz",
       "hostname": "ai-gateway.sassmaker.com",
       "wiredFiles": [],
-      "reason": "The gateway is a retiring compatibility service; do not add new analytics while its decommission is pending.",
+      "reason": "Actively used internal infrastructure: the capability-aware free-tier gateway and its spend/infra reporting are in active use; the auth-gated Worker exposes no public browser product surface to tag.",
       "browserSurfaces": []
     },
     {
@@ -629,7 +629,7 @@
       "clarityId": "y6bv5ous5y",
       "hostname": "aliveville.com",
       "wiredFiles": [],
-      "reason": "Intentionally unwired: the product is inactive, requires explicit reactivation, and its live marketing surface is marked do-not-modify.",
+      "reason": "Intentionally unwired: reactivated 2026-09-27, but the live marketing surface remains marked do-not-modify; wiring requires an explicit owner decision via clarity-fleet-rollout.",
       "browserSurfaces": []
     },
     {
@@ -726,7 +726,7 @@
       "clarityId": "y6bvtr9hri",
       "hostname": "historia.aliveville.com",
       "wiredFiles": [],
-      "reason": "Intentionally unwired while the owner classifies this parked landing as adopt, keep, or retire under the shared landing-engine program.",
+      "reason": "Intentionally unwired: reactivated 2026-09-27 as a secondary landing under the shared landing-engine program; analytics not installed pending an explicit wiring decision.",
       "browserSurfaces": []
     },
     {
@@ -758,7 +758,7 @@
       "wiredFiles": [
         "web-playables/apps/hub/index.html"
       ],
-      "reason": "Clarity covers only the parked public hub; the playable game, embeddable build, and YouTube certification bundle remain analytics-free.",
+      "reason": "Clarity covers only the public hub; the playable game, embeddable build, and YouTube certification bundle remain analytics-free.",
       "browserSurfaces": [
         {
           "kind": "landing",
@@ -901,7 +901,7 @@
       "clarityId": "ymdtktqqxv",
       "hostname": "nomad.significanthobbies.com",
       "wiredFiles": [],
-      "reason": "Inactive public experiment with no current local checkout; retain its dedicated Clarity identity without inventing or changing a surface.",
+      "reason": "Active public experiment with no current local checkout; retain its dedicated Clarity identity without inventing or changing a surface.",
       "browserSurfaces": []
     },
     {
@@ -1016,7 +1016,7 @@
       "clarityId": "ymdukwth4b",
       "hostname": "browser-agents.sarthakagrawal.dev",
       "wiredFiles": [],
-      "reason": "Inactive testing surface retained for reference; do not add analytics until the project is explicitly reactivated.",
+      "reason": "Testing surface reactivated 2026-09-27; analytics remain unwired pending an explicit owner wiring decision.",
       "browserSurfaces": []
     },
     {

@@ -18,6 +18,7 @@ Each of the 72 product identities has these sections (optional fields stay absen
 | `repositories` | Local/source paths, repository URL, visibility and aliases |
 | `deployment` | Deployment status, domains, authentication, targets and database dependencies |
 | `presentation` | Public listing metadata and directory details, including the original maker note |
+| `systems` | Per-project policy for each downstream system manifest (Clarity receipt, footer surfaces, GEO queries, actions policy, AI-visibility, journeys, PSI target, site probe) |
 | `retainedFields` | Any unmapped fields, retained verbatim rather than discarded |
 
 `classification.futureForm` is the owner classification.
@@ -54,6 +55,25 @@ pnpm --dir ../site-health docs:projects
 - `generated/operations.json`: private, generated compatibility view for existing
   tools. Site Health's `apps/backend/config/projects.json` links here. Never edit
   either path. It is a disposable output, not a classification source.
+- Per-system policy manifests are generated in place by `catalog:sync` from the
+  `systems` sections: `tooling/config/{clarity-projects,clarity-journeys,
+  clarity-capabilities,sites,entity-identity-canonical,entity-identity-sources,
+  ai-client-standard,design-workflow}.json` and Site Health's
+  `apps/backend/config/{footer-surfaces,geo-observatory,project-actions-policy,
+  ai-visibility,psi-portfolio-targets,root-brands,root-search-queries,
+  search-console,indexnow,capabilities}.json`. Never hand-edit these; edit the
+  catalog and re-sync. Fleet-global blocks live under top-level `systems`;
+  per-project entries live under `projects[].systems`. Each ordered manifest
+  stores its `order` list so regeneration is stable.
+
+Every project declares all eight per-project systems keys. A value of
+`{"absent": "<reason>"}` records an intentional non-entry — it documents the
+posture in the catalog without emitting anything to that manifest, and the
+generated manifest simply drops it. Active projects carry their live policy or
+an absent reason; inactive projects carry the same eight cells with
+inactive-scoped reasons (and an explicit `ignored` actions policy), so every
+project's systems posture is explicit: a real entry, or a written reason there
+is none.
 
 The public website and GitHub profile consume the hosted filtered export at
 `https://sassmaker.com/portfolio.json`. Public builds do not read the raw catalog.
