@@ -11,7 +11,73 @@ const check = process.argv.includes('--check');
 
 const source = JSON.parse(readFileSync(catalogPath, 'utf8'));
 const systems = source.systems ?? {};
-const projectsById = new Map(source.projects.map((project) => [project.id, project]));
+
+// Capture policy is explicit for every primary/active product. Keep evidence
+// tied to the canonical catalog so a policy cannot silently outlive its basis.
+const captureApps = new Set(['newsletter', 'waitlist', 'not-applicable', 'undetermined']);
+const captureConfidence = new Set(['high', 'medium', 'low']);
+const captureFields = new Set(['applicability', 'confidence', 'rationale', 'evidence']);
+const captureEvidenceFields = new Set(['field', 'value']);
+const captureConfigFields = new Set(['schemaVersion', 'purpose', 'sourceIssue', 'order']);
+const captureConfig = systems.capturePolicy ?? {};
+if (
+  Object.keys(captureConfig).some((field) => !captureConfigFields.has(field)) ||
+  captureConfig.schemaVersion !== 1 ||
+  !captureConfig.purpose?.trim() ||
+  !captureConfig.sourceIssue?.trim() ||
+  !Array.isArray(captureConfig.order)
+) {
+  throw new Error('Invalid or unknown fields in capture policy configuration');
+}
+const captureCohort = source.projects.filter((project) =>
+  ['primary', 'active'].includes(project.lifecycle?.status)
+);
+if (
+  captureCohort.length !== captureConfig.order.length ||
+  captureCohort.some((project, index) => captureConfig.order[index] !== project.id)
+) {
+  throw new Error('Capture policy order must exactly match the primary/active catalog cohort');
+}
+for (const project of captureCohort) {
+  const policy = project.systems?.capture;
+  if (!policy || !captureApps.has(policy.applicability))
+    throw new Error(`Missing or invalid capture applicability: ${project.id}`);
+  if (Object.keys(policy).some((field) => !captureFields.has(field)))
+    throw new Error(`Unknown capture policy field: ${project.id}`);
+  if (!captureConfidence.has(policy.confidence) || !policy.rationale?.trim())
+    throw new Error(`Incomplete capture policy: ${project.id}`);
+  if (!Array.isArray(policy.evidence) || policy.evidence.length === 0)
+    throw new Error(`Capture policy needs catalog evidence: ${project.id}`);
+  const evidenceFields = new Set();
+  for (const evidence of policy.evidence) {
+    if (
+      Object.keys(evidence).some((field) => !captureEvidenceFields.has(field)) ||
+      !evidence.field ||
+      !Object.hasOwn(evidence, 'value') ||
+      evidenceFields.has(evidence.field)
+    )
+      throw new Error(`Malformed capture evidence: ${project.id}`);
+    evidenceFields.add(evidence.field);
+    const actual = evidence.field.split('.').reduce((value, key) => value?.[key], project);
+    if (actual === undefined || !isDeepStrictEqual(actual, evidence.value))
+      throw new Error(`Stale capture evidence for ${project.id}: ${evidence.field}`);
+  }
+  if (
+    policy.applicability === 'waitlist' &&
+    !policy.evidence.some(
+      ({ field, value }) =>
+        /purposeContract\.(purpose|proof|nextAction)|sharing\.evidence\.reason/.test(field) &&
+        typeof value === 'string' &&
+        /unreleased|not yet (?:available|launched)|pre[- ]launch|coming soon/i.test(value)
+    )
+  ) {
+    throw new Error(`Waitlist requires direct unreleased-offering evidence: ${project.id}`);
+  }
+}
+for (const project of source.projects) {
+  if (!['primary', 'active'].includes(project.lifecycle?.status) && project.systems?.capture)
+    throw new Error(`Capture policy is out of scope for ${project.id}`);
+}
 
 const systemEntries = (key) => {
   const found = new Map();
@@ -166,6 +232,18 @@ outputs.set('saas-maker/tooling/config/ai-client-standard.json', systems.aiClien
 outputs.set('saas-maker/tooling/config/design-workflow.json', systems.designWorkflow ?? {});
 outputs.set('site-health/apps/backend/config/indexnow.json', systems.indexNow ?? {});
 outputs.set('site-health/apps/backend/config/capabilities.json', systems.capabilities ?? {});
+
+{
+  const config = captureConfig;
+  const { order: _order, ...policy } = config;
+  outputs.set('saas-maker/tooling/config/capture-projects.json', {
+    ...policy,
+    projects: emitProjectKeyed(
+      config,
+      new Map(captureCohort.map((project) => [project.id, project.systems.capture]))
+    ),
+  });
+}
 
 const stale = [];
 for (const [relative, value] of outputs) {

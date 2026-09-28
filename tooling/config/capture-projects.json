@@ -1,0 +1,1491 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Capture applicability for every primary or active Fleet product. Product availability is never inferred as an unreleased waitlist.",
+  "sourceIssue": "https://github.com/sass-maker/saas-maker/issues/156",
+  "projects": [
+    {
+      "id": "codevetter",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a native product without a proven capture placement. Do not infer an in-app or landing-page integration.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "primary"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "macOS"
+          ]
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Published 1.14.3 DMG matched GitHub SHA-256, passed strict signature and Gatekeeper notarization checks, and was installed and launched from /Applications. The previous 1.12.0 native-preview bundle was preserved separately. The earlier bounded CLI review receipt remains historical; current full native workflow and in-app Sparkle installation were not exercised in this audit."
+        }
+      ]
+    },
+    {
+      "id": "pace",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "classification.kind",
+          "value": "product"
+        }
+      ]
+    },
+    {
+      "id": "posttrainllm",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "primary"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web",
+            "Local"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "PostTrainLLM turns local model-training experiments into measured, reproducible recipes for useful specialist language models."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Qualifies for the working browser demo only; native factory and Mac distribution remain unverified."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "site-health",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "classification.kind",
+          "value": "platform"
+        }
+      ]
+    },
+    {
+      "id": "live",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "Live helps a person turn passive wanting into a life they can deliberately imagine, plan, and experience."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Production guest onboarding, bucket-list add/complete and local reload persistence passed. Existing Google OAuth callback is repaired; owner login and Hub return pass. Exact dc0ad9b5 is deployed at 100%, with quality, full browser CI and deployment smokes green. Owner bucket-list opens without DOB onboarding; a synthetic item was imported, completed, reloaded, reopened, reloaded, deleted and confirmed absent after reload. Original owner records were preserved. Receipts: docs/qualification/live-guest-core-2026-09-11.json and docs/qualification/live-bucket-owner-core-2026-09-11.json."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "chatgpt-connections",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "classification.kind",
+          "value": "platform"
+        }
+      ]
+    },
+    {
+      "id": "saas-maker",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web",
+            "API"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "SaaS Maker is the public product studio and reusable tooling workshop for the Fleet portfolio."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Public directory and shared projection only. This does not qualify every listed product beyond its stated scope or the separate maker API, inbox and authenticated tooling. Shared 21-project public catalog feed, website release and GitHub profile synchronization published and verified on 2026-09-10; SaaS Maker issue #108 records the receipts. September 11 public directory release 956aa73b is live through Pages deployment31e4f241; clean isolated checkout, guard6/6, exact-head CI,30-page build and4/4 production smoke passed. The shared /projects.json feed now includes the verified Live bucket-list description. Receipt: docs/qualification/saas-maker-public-catalog-2026-09-11.json."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "gitstat",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "GitStat explains how engineering effort, contribution history, and code churn are distributed across many repositories."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "One public profile; private repositories untested."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "fleet-social",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "classification.kind",
+          "value": "product"
+        }
+      ]
+    },
+    {
+      "id": "email-manager",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web",
+            "API"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "Kinetic helps a person understand who fills their Gmail inbox and deliberately reduce unwanted volume."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "September 11 ordinary existing-account Google OAuth completed with the requested gmail.readonly and identity scopes. 500 messages cached and indexed to 100%; sender search returned 25 results and a generic semantic query returned 50. After reload the mailbox remained connected and indexed, and the same query returned 50 results. No email write actions or message contents retained. Personal use is qualified; broad public sharing remains false. Account switching and a forced expired-token refresh were not separately exercised. Existing historical broader permissions were displayed as already granted; the current request was Gmail read-only plus identity. Receipt: docs/qualification/kinetic-owner-core-2026-09-11.json."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "chatgpt-memory-insights",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "Memory Map turns an exported AI conversation history into a private map of recurring themes, facts, emotions, and change."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "2026-09-10 live isolated Chromium: real compact embeddings completed for 12/12 conversations, 12/12 prompts and 2/2 facts; relevant herb search; explicit save; reload and relevant TypeScript search; 390px layout without document overflow; confirmed forget and reload returned to import. No page errors. Synthetic data only; telemetry writes blocked; browser closed. Shareable as the owner-selected finished browser-local experiment. Large/split archives, multilingual and cross-browser behavior, optional local chat generation and post-initialization GPU failures remain outside this verified core; issue #37 remains open for broader acceptance."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "free-ai",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "classification.kind",
+          "value": "platform"
+        }
+      ]
+    },
+    {
+      "id": "high-signal",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web",
+            "API"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "High Signal turns scattered technology, startup, finance, and market sources into an evidence-backed daily intelligence brief."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "One useful operator-curated edition passed semantic publication, two independent evidence origins, installed MCP daily/detail reads and live homepage-to-proof navigation. Both Workers now serve exact main 4505493 at 100%, with CI and Docs green. ADMIN_TOKEN rotation reached all consumers; new token 200, old token 401, fresh Modal read 200. Reliable unattended acquisition remains unverified in issue 133, so broad sharing readiness stays false. Browser /review remains blocked at Cloudflare Access; the exact owner Cloudflare account requires a password login before its documented Email OTP fallback can be restored. Credential rotation itself is verified."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "on-record",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Bounded sample, not full corpus attribution audit. Home labels some counts cached; original publisher has paid content and browser appeared signed in there; no paid content bypassed."
+        }
+      ]
+    },
+    {
+      "id": "issue-pages",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "New issue publication not tested or required for retained read-only surface."
+        }
+      ]
+    },
+    {
+      "id": "research-papers",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Public static index and bounded paper-intent answer evidence retained. Existing Turnstile widget secret and missing production-only hostname allowlist restored under explicit owner approval; deployment34500247191 and public smoke passed. Protected general-answer success remains unverified: both headless and headed isolated browsers received no response token. Private research functions untested."
+        }
+      ]
+    },
+    {
+      "id": "knowledge-base",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "classification.kind",
+          "value": "platform"
+        }
+      ]
+    },
+    {
+      "id": "significanthobbies",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web",
+            "API",
+            "Swift package"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "Significant Hobbies is the shared home and privacy-aware control plane for five independently owned personal applications."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "The existing Google OAuth client now includes the Live callback while preserving existing callbacks. Personal Google login returns to the private Hub and its authenticated five-app summaries; Anchor shows 35 existing records. Public directory includes exactly Live, Calorie, Setline, Kith and Anchor without Journal. Hub navigation and owner summary core passed. This does not certify fresh cross-device writes for every native app. Receipt: docs/qualification/live-hub-owner-core-2026-09-11.json. Sharing remains limited to the personal Hub; broader native sync claims are not certified by this check."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "anime-list",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web",
+            "API"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "Anime List helps anime and manga fans filter a large catalogue, discover what fits, and maintain a personal watchlist."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Real Google login, hosted watchlist writes/reload persistence, account switching and auth/write-failure recovery remain unqualified under issue 89."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "looptv",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web",
+            "TV"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "LoopTV turns curated YouTube channels into a calmer, lean-back television experience."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "No blocker to scoped guest viewing/search. Hosted desktop/mobile acceptance passed and #51 closed; representative-video and synthetic-error limits remain explicit."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "reader",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Source 90bc39768fcb773f91ecde87549aa3e5a4b3cb51 is deployed at 100% as Worker f5e1f86a-a051-4bc1-a6a2-cd91af8b2be9 after CI34273051317, Docs34273051412 and Deploy34273454449. Independent concurrent notes merge atomically; conflicting same-note edits retain the draft with 409. Seven synthetic-account browser/handler cases cover board editing, save retry, reload and isolation. Fresh September 9 ordinary 390px guest URL-import flow reaches Google's normal credential entry without redirect_uri_mismatch; no credentials or article/PDF writes occurred. Completed Google callback/session and real-account cloud URL/PDF import, reading, annotation, reopen and account recovery remain unqualified under #55. Synthetic account checks and guest handoff do not establish that journey. Concurrent board-document and AI-conversation merging are outside the note-merge guarantee."
+        }
+      ]
+    },
+    {
+      "id": "swe-interview-prep",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "SWE Interview Prep is a personal learning OS that turns software-engineering study into retained, artifact-backed understanding."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "September 11 production isolated Chrome check passed concept review, authored tokenizer drill grading, save/solved progress, practice execution and self-review. Reload retained code, solved attempts and Learning / 1-of-5 confidence. Current-head CI, Docs and Pages deployment are green. Google login, hosted sync/recovery, account isolation and AI explain-back/grading were not exercised; this acceptance is the browser-local learning loop. Receipt: docs/qualification/swe-guest-learning-core-2026-09-11.json."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "calorie",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a native product without a proven capture placement. Do not infer an in-app or landing-page integration.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "iOS",
+            "API"
+          ]
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Physical iPhone food/water persistence and independent local journals passed; fixtures cleaned and normal Release restored. Real-account sync remains unverified. Release update 2026-09-12: App Store Connect confirms external TestFlight 1.0.0 (5) Waiting for Review. Public invitation https://testflight.apple.com/join/zWVrHCAV is created but cannot accept testers until Apple approves a build. Build 8 submission was blocked by its beta Xcode version. The submitted build is an earlier binary; the preceding device evidence does not establish exact-build qualification for build 5."
+        }
+      ]
+    },
+    {
+      "id": "setline",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a native product without a proven capture placement. Do not infer an in-app or landing-page integration.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "iOS"
+          ]
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Physical iPhone workout, rest adjustment, interruption, relaunch and completion passed with isolated data; fixture cleaned and normal Release restored. Real-account sync remains unverified. Release update 2026-09-12: App Store Connect confirms external TestFlight 1.0.0 (4) Waiting for Review. Public invitation https://testflight.apple.com/join/XbN6GHGe is created but cannot accept testers until Apple approves a build. The submitted build is an earlier binary; the preceding device evidence does not establish exact-build qualification for build 4."
+        }
+      ]
+    },
+    {
+      "id": "kith",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a native product without a proven capture placement. Do not infer an in-app or landing-page integration.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "iOS"
+          ]
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Physical iPhone add/edit/delete and relaunch persistence passed with an isolated person/notes fixture; fixture cleaned and normal Release restored. Real-account sync remains unverified. Release update 2026-09-12: App Store Connect confirms external TestFlight 1.0.0 (4) Waiting for Review. Public invitation https://testflight.apple.com/join/3MSdUvCf is created but cannot accept testers until Apple approves a build. The submitted build is an earlier binary; the preceding device evidence does not establish exact-build qualification for build 4."
+        }
+      ]
+    },
+    {
+      "id": "ios-landings",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "classification.kind",
+          "value": "platform"
+        }
+      ]
+    },
+    {
+      "id": "rolepatch",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web",
+            "API"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "RolePatch tailors a resume and supporting application material to the evidence and language of a specific job."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Fresh September 11 production Chrome check passed synthetic resume + job description -> actual AI tailoring -> reviewed diff -> save -> reload -> text, HTML and Word-compatible exports. Sampled changes introduced no unsupported employers, metrics, skills or qualifications. Guest personal-tool core qualifies; hosted account sync, job discovery, URL scraping and imports remain outside this refreshed scope. Existing historical verification and issue 68 retain the broader limits."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "karte",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web",
+            "API"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "Karte gives a creator or independent operator a public profile that answers visitor questions and preserves context for better inbound."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Runtime 11e0655 passed 208 tests/full quality, CI 34484075756 and deployment 34484093920. Earlier 85df536 interactive tests verified owner login/edit/public propagation, guest chat and logout, with synthetic data cleanup. September 11 scoped content cleanup matched all 15 guarded updates, preserved observed row counts and untargeted fields, corrected current project links/context and booking, and hid placeholder/duplicate presentation. Source 2a1927bd passed current-head CI 34543299285; no runtime redeploy required for this seed/document change. Public profile fits 390px and 1440px. First-time creator and customer custom-domain acceptance remain open in issue 82. Historical timeline and generated cached modes were retained; whole-history reconciliation was not claimed. September12 source745254f is deployed after217 tests, exact CI34647291900 and deploy34647565894. Chat/import storage failures now preserve drafts and allow retry; live fault-injected browser checks pass390/1440. The stale edge HTML/chunk defect is fixed; an unmocked scratch draft reaches login with private no-store HTML and zero failed chunks. No signup or profile write was performed; first-time authenticated creation and customer domains remain open. Receipt: ../saas-maker/.fleet-local/karte-creator-handoff-20260912.json."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "starboard",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web",
+            "API"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "Starboard makes a large GitHub Stars collection useful for personal exploration and project-aware tool discovery."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Public discovery remains scoped-shareable; saved/private workflows remain untested. Scheduled embedding failed401; source auth contract is fixed, but matching operator token provisioning and verified scheduled recovery remain under #107."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "ai-game",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Preserved experiment; no current work or obligation to resume."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Source dd3bdd9c7d37873e9314af01332c487299045907 has successful CI34111889148 and Docs34111889253. Retained local scripted qualification now proves setup clock hold, physical movement to Pip, a news interaction creating NPC memory, and actual browser save/reload restoration. Local font/notice regression proves geometry and movement survive blocked font lookup and repeated notices remain bounded. Fresh September 9 hosted390 guest world selector loads without page errors or horizontal overflow; model download hosts were deliberately blocked and Kokoro disclosed fallback. No hosted gameplay or provider inference was performed. Held experiment remains nonshareable under #30. Local scripted memory/save and blocked-font tests do not qualify deployed gameplay, Worker/local API parity, model-backed conversation/recall, voice/GPU or human fun/pacing. Hosted pass stops at world selection with model downloads blocked. Movement/combat input is keyboard-based; touch-only gameplay is unqualified. No new game-polish campaign or release is implied."
+        }
+      ]
+    },
+    {
+      "id": "app-health",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web",
+            "API"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "App Health helps product teams understand web traffic, intentional user actions, and application health across their projects."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Production Google signup, returning login, sign-out and project creation verified; own signup/project milestone logs remain exactly one each. Known analytics traffic returned 3 sessions, 4 page views and 2 named events without duplicate-batch inflation, with correct 1h/24h boundaries and referral sources. Public live page and revocation verified. JavaScript SDK 0.4.0 published and artifact integrity checked. See app-health/docs/release-2026-09-12.md; broader analytics parity and remotely published Swift package remain follow-up work."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "mashup",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Preserved experiment; no current work or obligation to resume."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Public finished-example playback, exact media receipts and corrected desktop/mobile captions pass. Automatic editorial selection, source installation and the real creator/operator pilot remain unqualified under #11."
+        }
+      ]
+    },
+    {
+      "id": "motion",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Treat it as a held prototype; reopen around physical-device testing of one genuinely fun control loop."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Held physical-play experiment; any future functioning-game claim still needs camera/control/device evidence."
+        }
+      ]
+    },
+    {
+      "id": "open-historia",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Preserved experiment; no current work or obligation to resume."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Guest checkpoint persistence and desktop/mobile layout repairs are deployed from 9445110fc7857238eadff2de27804deca754f380 as Worker e529a943-f06e-4529-9323-dd3a384d5fc7 at100%, deployment21a0e2d9-30a1-4636-a6f5-c884b501a960. The September9 receipt proves six viewport sizes without panel overlap or branch-control collisions, 44px branch targets, public asset parity and actual guest Save/reload preserving three snapshots, relations, summary and selected branch. Earlier real guest AI turns also proved checkpoint memory and branch parent continuity. Final tests/docs-only HEAD6b7fa8f883f261291a5c32a47516f06b18668da0 passed CI34327732410 on the first attempt with22 browser and87 unit tests, after an explicitly recorded earlier flaky run. Historical faction/scenario coherence, geography and authenticated cloud saves/account isolation remain unqualified under #27. Keep inactive/nonshareable; these repairs do not establish a coherent complete campaign."
+        }
+      ]
+    },
+    {
+      "id": "ph-catalog",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "classification.kind",
+          "value": "experiment"
+        }
+      ]
+    },
+    {
+      "id": "web-playables",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Preserved experiment; no current work or obligation to resume."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Existing save used; fresh onboarding, mobile/touch, full balance and YouTube certification remain unverified. Shared footer assets now exclude retired projects; the game itself was not requalified in this release wave."
+        }
+      ]
+    },
+    {
+      "id": "what-it-takes-to-win",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "One profile/source checked; full corpus not fact-checked."
+        }
+      ]
+    },
+    {
+      "id": "sarthakagrawal-personal",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The public surface is a personal portfolio with contact paths; a newsletter or unreleased offering is not evidenced.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.form",
+          "value": "Portfolio website"
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Explore the current work and résumé or use the listed contact paths; do not infer stale focus areas from older copy."
+        }
+      ]
+    },
+    {
+      "id": "field-track",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "classification.kind",
+          "value": "product"
+        }
+      ]
+    },
+    {
+      "id": "reddit-insights",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Hosted historical source-linked search/navigation and one original-source comparison pass. Incomplete capture provenance and full-corpus fidelity remain explicit; no live-monitoring claim."
+        }
+      ]
+    },
+    {
+      "id": "anchor",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "macOS",
+            "iOS",
+            "watchOS",
+            "Web"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "Anchor helps a person plan a realistic day, follow the current intention, and learn why the day lived differed from the day planned."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Installed Mac build25 at5856714 passed interactive schedule/focus/pause/resume/free decline/distraction/finish/history and a same-store relaunch persistence check. Physical iPhone core flow passed; latest installed normal Release launch was build23 in native-minimum-phone-20260911.json. Owner normal data was untouched. Personal single-device core acceptance is complete. Public Mac notarization/distribution and cross-device production CloudKit continuity remain separately unverified; shareable stays false. Receipt: docs/qualification/anchor-mac-minimum-2026-09-11.json. September12 landing-only correction published from ios-landings4135729 as Pages155ccf31: HTML, Markdown and agent metadata accurately describe the existing build20 private-iCloud note behavior. Native download is unchanged; this does not close release issue52. September12 fresh installed-bundle checks confirm build25 and a valid strict/deep signature, but Gatekeeper rejects it as Unnotarized Developer ID (exit3). Public build25 distribution remains blocked. Qualification correction committed as50b2d27; issue52 remains open."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "nomad-data-adventure",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "Help people explore and compare places to live using a saved city dataset."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Shareable, completed experiment. Canonical HTTPS domain, live city search and source JSON verified on 2026-09-13. Desktop/mobile workflows, exact-commit CI and deployment gates passed; GitHub Pages is disabled."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "storagedaddy",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "macOS",
+            "Web"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "storagedaddy helps developers understand and review local storage through a native visual scanner, developer classifications and verified, deliberate cleanup."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Public 0.1.3 build110 download returned 7,124,560 bytes with SHA-256 d2e0109d189869d6425d8c30d50ca1e3365c3b66ec76270f3fdedbedffa4baee, matching the Developer ID signed, Apple notarized, stapled DMG from protected manual run 36180923620. The live Sparkle feed and update enclosure matched the qualified signed artifacts. An isolated build106-to-108 Sparkle update and native scan were observed; build110 has not been installed for a new journey."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "browserdaddy",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "macOS",
+            "Web"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "BrowserDaddy helps people understand their browsing history and attention locally across browsers."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Public 0.3.1 build9 download returned 7,600,563 bytes with SHA-256 017c8eb5f92dcacdf2e5ede3ade4c3f159658739df0f2774f6b894855fad676f, matching the Developer ID signed, Apple notarized, stapled DMG from protected manual run 36183142078. The live Sparkle feed and update enclosure matched the qualified signed artifacts. An isolated build4-to-6 Sparkle update and native journey were observed; build9 has not been installed for a new journey."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "performancedaddy",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "macOS",
+            "Web"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "PerformanceDaddy helps developers inspect local processes, ports and measured slowdown signals before taking action."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Public 0.2.3 build8 download returned 7,466,879 bytes with SHA-256 97f91011f7c1791090e4a35459df20168ca00b091db975a602039f878a1907fb, matching the Developer ID signed, Apple notarized, stapled DMG from protected manual run 36183263765. The live Sparkle feed and update enclosure matched the qualified signed artifacts. An isolated build3-to-5 Sparkle update and native journey were observed; build8 has not been installed for a new journey."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "slow-serp",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "classification.kind",
+          "value": "platform"
+        }
+      ]
+    },
+    {
+      "id": "unified-portfolio",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "classification.kind",
+          "value": "product"
+        }
+      ]
+    },
+    {
+      "id": "meme-lab",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web",
+            "Local"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "Rank reaction memes against a pasted comment and evaluate local-model selection honestly."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Corrected 3,000-reference meme-selection playground verified on 2026-09-22. The live catalogue contains 1,805 static memes and 1,195 usage-backed reaction GIFs with no National Gallery artwork or inert editing canvases. The Worker returns one primary result plus four scored backups, exposes searchable pagination and a technical explainer, and retains one-tap feedback for 30 days. Worker version fa5fa091-6db6-42cb-a644-ebac8c721ff6 is live at 100% traffic from main commit a86faa861d54e13c1065b98c2094a0776bff7ebf. Health reports 3,000 catalogue records, the live sitemap exposes 3,003 canonical URLs, IndexNow accepted all 31 batches, and Google Search Console accepted the sitemap."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "agent-testing",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "classification.kind",
+          "value": "experiment"
+        }
+      ]
+    },
+    {
+      "id": "nutrition-formula-engine",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "Formula Composition Engine converts reviewed manufacturing formulas into theoretical macro, micronutrient, active-moiety, preservative, and missing-evidence reports."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "The canonical Cloudflare Custom Domain, root, Recent formulas, case-study and health routes, valid calculation, public D1 formula list and history, reusable-ingredient persistence, TLS, DNS, and current 100% SHA-tagged Worker deployment were verified. The separate case-study page shows 26 products and all 55 supported published ingredient and nutrient comparisons. Thirty-eight browser/data tests, 84 engine/API tests, the frozen 66-case benchmark, Ruff, production build, design review, and Cloudflare dry-run passed. Results remain theoretical and are not laboratory validation, regulatory classification, or government approval."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "every-song-is-a-website",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "Every Song Is a Website gives each song a curated visual world — a shareable URL with embedded video, licensed lyrics, and playful interactions."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "contextdaddy",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "macOS",
+            "Web"
+          ]
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "Help developers inspect coding-agent context, skill exposure, usage, and available local telemetry."
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Public 0.2.1 build 10 verified at https://context.daddyrad.com/download and GitHub release v0.2.1-10. SHA-256 e43afdb396041f0abb6bdbcad718eb74c09745612574124adb49088331e36940 matches the Developer ID signed, Apple notarized DMG from protected release run 36259190197, source b04f3c423341a8ec421933835569c3019c3355ba. Installed to /Applications/ContextDaddy.app and launched; Gatekeeper accepted the notarized app. Guided Skills onboarding, bounded scrolling including legacy scrollbars, and Devin in unified Local History. Manual updates only. Installed Skills library populated; rescan and guided selection passed. Discovery retains explicit entry/depth coverage limits."
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "war-chest",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "classification.kind",
+          "value": "experiment"
+        }
+      ]
+    },
+    {
+      "id": "mentionpilot",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The owner evidence says the listed web hostname did not resolve and a current public user journey is unverified; availability and capture placement remain unknown.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.platforms",
+          "value": [
+            "Web",
+            "API"
+          ]
+        },
+        {
+          "field": "sharing.evidence.reason",
+          "value": "Owner reactivated the product. The API health endpoint returned HTTP 200, while the repository-listed Pages web URL did not resolve in this check. Public product usability and ownership of similarly named external domains remain unverified."
+        }
+      ]
+    },
+    {
+      "id": "daddyrad",
+      "applicability": "undetermined",
+      "confidence": "medium",
+      "rationale": "The public surface is an umbrella landing that routes visitors to separate apps; no subscription program for the umbrella is evidenced.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "classification.kind",
+          "value": "platform"
+        },
+        {
+          "field": "presentation.directory.purposeContract.purpose",
+          "value": "DaddyRad is the umbrella home for the daddy series of native macOS utilities."
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Visit daddyrad.com and pick an app."
+        }
+      ]
+    }
+  ]
+}
