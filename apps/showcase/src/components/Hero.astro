@@ -24,7 +24,7 @@ const PLAQUE_TONES = ['cobalt', 'oxblood', 'amber'];
     <h1 id="studio-title">{STUDIO_PROFILE.headline}</h1>
     <div class="studio-hero-aside">
       <p class="studio-intro">{STUDIO_PROFILE.oneLine}</p>
-      <a class="studio-thesis-link" href="/projects">
+      <a class="studio-thesis-link" href="/projects" data-app-health-event="directory_opened">
         Explore the complete directory <span aria-hidden="true">→</span>
       </a>
       <p class="studio-status">
@@ -40,6 +40,7 @@ const PLAQUE_TONES = ['cobalt', 'oxblood', 'amber'];
         <a
           class={`ledger-plaque ledger-plaque--${PLAQUE_TONES[index % PLAQUE_TONES.length]}`}
           href={project.href}
+          data-app-health-event="spotlight_opened"
         >
           <span class="ledger-count">{String(index + 1).padStart(2, '0')}</span>
           <strong>{project.name}</strong>
