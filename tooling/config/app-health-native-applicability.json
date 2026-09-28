@@ -6,19 +6,19 @@
       "id": "codevetter",
       "nativeSessions": "applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "pace",
       "nativeSessions": "applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "posttrainllm",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "site-health",
@@ -66,7 +66,7 @@
       "id": "chatgpt-memory-insights",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "free-ai",
@@ -96,7 +96,7 @@
       "id": "research-papers",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "applicable"
     },
     {
       "id": "knowledge-base",
@@ -120,7 +120,7 @@
       "id": "looptv",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "reader",
@@ -156,7 +156,7 @@
       "id": "ios-landings",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "rolepatch",
@@ -180,7 +180,7 @@
       "id": "ai-game",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "applicable"
     },
     {
       "id": "app-health",
@@ -204,7 +204,7 @@
       "id": "open-historia",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "applicable"
     },
     {
       "id": "ph-catalog",
@@ -216,13 +216,13 @@
       "id": "web-playables",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "what-it-takes-to-win",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "sarthakagrawal-personal",
@@ -240,7 +240,7 @@
       "id": "reddit-insights",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "applicable"
     },
     {
       "id": "anchor",
@@ -258,19 +258,19 @@
       "id": "storagedaddy",
       "nativeSessions": "applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "browserdaddy",
       "nativeSessions": "applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "performancedaddy",
       "nativeSessions": "applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "slow-serp",
@@ -288,19 +288,19 @@
       "id": "meme-lab",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "applicable"
     },
     {
       "id": "agent-testing",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "nutrition-formula-engine",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "applicable"
     },
     {
       "id": "every-song-is-a-website",
@@ -312,7 +312,7 @@
       "id": "contextdaddy",
       "nativeSessions": "applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "war-chest",
@@ -330,7 +330,7 @@
       "id": "daddyrad",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     }
   ]
 }

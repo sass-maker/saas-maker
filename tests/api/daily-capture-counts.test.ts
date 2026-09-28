@@ -239,23 +239,24 @@ describe('daily PII-free capture receipts', () => {
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'applicable'
       )
-    ).toHaveLength(23);
+    ).toHaveLength(29);
     expect(
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'not_applicable'
       )
-    ).toHaveLength(12);
+    ).toHaveLength(26);
     expect(
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'unknown'
       )
-    ).toHaveLength(20);
+    ).toHaveLength(0);
     expect(result.serverRequestsApplicabilityByCatalogId.gitstat).toBe('applicable');
     expect(result.serverRequestsApplicabilityByCatalogId['swe-interview-prep']).toBe('applicable');
     expect(result.serverRequestsApplicabilityByCatalogId['every-song-is-a-website']).toBe(
       'not_applicable'
     );
-    expect(result.serverRequestsApplicabilityByCatalogId['reddit-insights']).toBe('unknown');
+    expect(result.serverRequestsApplicabilityByCatalogId['reddit-insights']).toBe('applicable');
+    expect(result.serverRequestsApplicabilityByCatalogId.codevetter).toBe('not_applicable');
     expect(
       Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
         (value) => value === 'applicable'
