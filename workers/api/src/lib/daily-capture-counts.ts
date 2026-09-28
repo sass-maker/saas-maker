@@ -17,6 +17,7 @@ export type DailyCaptureCounts = {
   /** Project applicability from the catalog-generated policy; no rationale or evidence leaves this private API. */
   applicabilityByCatalogId: Record<string, CaptureApplicability>;
   nativeSessionsApplicabilityByCatalogId: Record<string, MetricApplicability>;
+  browserVisitorsApplicabilityByCatalogId: Record<string, MetricApplicability>;
 };
 
 type AggregateRow = {
@@ -113,6 +114,7 @@ export async function getDailyCaptureCounts(
   );
   const applicabilityByCatalogId: Record<string, CaptureApplicability> = {};
   const nativeSessionsApplicabilityByCatalogId: Record<string, MetricApplicability> = {};
+  const browserVisitorsApplicabilityByCatalogId: Record<string, MetricApplicability> = {};
   for (const id of catalogIds) {
     const applicability = policyById.get(id);
     if (applicability) applicabilityByCatalogId[id] = applicability;
@@ -132,10 +134,26 @@ export async function getDailyCaptureCounts(
     const applicability = nativePolicyById.get(id);
     if (applicability) nativeSessionsApplicabilityByCatalogId[id] = applicability;
   }
+  const browserPolicyById = new Map<string, MetricApplicability>(
+    nativeApplicability.products.map(
+      ({ id, browserVisitors }) =>
+        [
+          id,
+          (browserVisitors === 'not-applicable'
+            ? 'not_applicable'
+            : 'applicable') as MetricApplicability,
+        ] as const
+    )
+  );
+  for (const id of catalogIds) {
+    const applicability = browserPolicyById.get(id);
+    if (applicability) browserVisitorsApplicabilityByCatalogId[id] = applicability;
+  }
   return {
     coverageStart,
     applicabilityByCatalogId,
     nativeSessionsApplicabilityByCatalogId,
+    browserVisitorsApplicabilityByCatalogId,
     rows: result.results
       .filter((row): row is AggregateRow & { catalog_id: string } => row.catalog_id !== null)
       .map((row) => ({

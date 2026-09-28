@@ -1,226 +1,281 @@
 {
   "schemaVersion": 1,
-  "purpose": "Native sessions apply to catalogued native app and game forms; missing telemetry remains unknown.",
+  "purpose": "Native sessions and browser visitors apply only to their catalogued product surfaces; missing telemetry remains unknown.",
   "products": [
     {
       "id": "codevetter",
-      "nativeSessions": "applicable"
+      "nativeSessions": "applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "pace",
-      "nativeSessions": "applicable"
+      "nativeSessions": "applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "posttrainllm",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "site-health",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "live",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "chatgpt-connections",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "saas-maker",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "gitstat",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "fleet-social",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "email-manager",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "chatgpt-memory-insights",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "free-ai",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "high-signal",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "on-record",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "issue-pages",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "research-papers",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "knowledge-base",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "significanthobbies",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "anime-list",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "looptv",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "reader",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "swe-interview-prep",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "calorie",
-      "nativeSessions": "applicable"
+      "nativeSessions": "applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "setline",
-      "nativeSessions": "applicable"
+      "nativeSessions": "applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "kith",
-      "nativeSessions": "applicable"
+      "nativeSessions": "applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "ios-landings",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "rolepatch",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "karte",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "starboard",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "ai-game",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "app-health",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "mashup",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "motion",
-      "nativeSessions": "applicable"
+      "nativeSessions": "applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "open-historia",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "ph-catalog",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "web-playables",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "what-it-takes-to-win",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "sarthakagrawal-personal",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "field-track",
-      "nativeSessions": "applicable"
+      "nativeSessions": "applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "reddit-insights",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "anchor",
-      "nativeSessions": "applicable"
+      "nativeSessions": "applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "nomad-data-adventure",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "storagedaddy",
-      "nativeSessions": "applicable"
+      "nativeSessions": "applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "browserdaddy",
-      "nativeSessions": "applicable"
+      "nativeSessions": "applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "performancedaddy",
-      "nativeSessions": "applicable"
+      "nativeSessions": "applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "slow-serp",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "not-applicable"
     },
     {
       "id": "unified-portfolio",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "meme-lab",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "agent-testing",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "nutrition-formula-engine",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "every-song-is-a-website",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "contextdaddy",
-      "nativeSessions": "applicable"
+      "nativeSessions": "applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "war-chest",
-      "nativeSessions": "applicable"
+      "nativeSessions": "applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "mentionpilot",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     },
     {
       "id": "daddyrad",
-      "nativeSessions": "not-applicable"
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable"
     }
   ]
 }

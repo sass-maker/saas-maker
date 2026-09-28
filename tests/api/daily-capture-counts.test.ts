@@ -152,6 +152,7 @@ describe('daily PII-free capture receipts', () => {
       coverageStart: '2019-12-31',
       applicabilityByCatalogId: {},
       nativeSessionsApplicabilityByCatalogId: {},
+      browserVisitorsApplicabilityByCatalogId: {},
       rows: [
         { catalogId: 'alpha-app', feedback: 1, newsletter: 1, waitlist: 0 },
         { catalogId: 'beta-app', feedback: 0, newsletter: 0, waitlist: 1 },
@@ -186,6 +187,7 @@ describe('daily PII-free capture receipts', () => {
       coverageStart: '2019-12-31',
       applicabilityByCatalogId: {},
       nativeSessionsApplicabilityByCatalogId: {},
+      browserVisitorsApplicabilityByCatalogId: {},
       rows: [{ catalogId: 'alpha-app', feedback: null, newsletter: null, waitlist: null }],
     });
 
@@ -229,6 +231,7 @@ describe('daily PII-free capture receipts', () => {
 
     expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(55);
     expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(55);
+    expect(Object.keys(result.browserVisitorsApplicabilityByCatalogId)).toHaveLength(55);
     expect(
       Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
         (value) => value === 'applicable'
@@ -243,6 +246,16 @@ describe('daily PII-free capture receipts', () => {
     expect(result.nativeSessionsApplicabilityByCatalogId['field-track']).toBe('applicable');
     expect(result.nativeSessionsApplicabilityByCatalogId['slow-serp']).toBe('not_applicable');
     expect(result.nativeSessionsApplicabilityByCatalogId['agent-testing']).toBe('not_applicable');
+    const browserNotApplicable = Object.entries(result.browserVisitorsApplicabilityByCatalogId)
+      .filter(([, applicability]) => applicability === 'not_applicable')
+      .map(([id]) => id)
+      .sort();
+    expect(browserNotApplicable).toEqual(['slow-serp']);
+    expect(result.browserVisitorsApplicabilityByCatalogId['chatgpt-connections']).toBe(
+      'applicable'
+    );
+    expect(result.browserVisitorsApplicabilityByCatalogId['fleet-social']).toBe('applicable');
+    expect(result.browserVisitorsApplicabilityByCatalogId['unified-portfolio']).toBe('applicable');
     expect(
       Object.fromEntries(
         ['pace', 'free-ai', 'knowledge-base', 'ios-landings', 'ph-catalog'].map((id) => [

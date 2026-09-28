@@ -96,9 +96,23 @@ const appHealthNativeProducts = captureCohort.map((project) => {
   }
   const hasNativePlatform = platforms.some((platform) => nativePlatforms.has(platform));
   const hasNativeAppForm = hasNativePlatform && /\b(app|game)\b/i.test(form);
+  // A product website is a browser surface even when the underlying product
+  // is native. Only the catalog's explicit non-browser form, missing Web
+  // platform, absent site target, and absent visual footer surface together
+  // establish browser N/A.
+  const hasCataloguedSite = typeof project.systems?.site?.url === 'string';
+  const hasVisualFooter =
+    Array.isArray(project.systems?.footerSurfaces) &&
+    project.systems.footerSurfaces.some(
+      ({ kind, state }) => kind === 'visual' && state === 'required'
+    );
+  const browserForm = /\b(web|website|browser|dashboard)\b/i.test(form);
+  const hasBrowserSurface =
+    platforms.includes('Web') || hasCataloguedSite || hasVisualFooter || browserForm;
   return {
     id: project.id,
     nativeSessions: hasNativeAppForm ? 'applicable' : 'not-applicable',
+    browserVisitors: hasBrowserSurface ? 'applicable' : 'not-applicable',
   };
 });
 for (const project of source.projects) {
@@ -273,7 +287,7 @@ outputs.set('site-health/apps/backend/config/capabilities.json', systems.capabil
   outputs.set('saas-maker/tooling/config/app-health-native-applicability.json', {
     schemaVersion: 1,
     purpose:
-      'Native sessions apply to catalogued native app and game forms; missing telemetry remains unknown.',
+      'Native sessions and browser visitors apply only to their catalogued product surfaces; missing telemetry remains unknown.',
     products: appHealthNativeProducts,
   });
 }
