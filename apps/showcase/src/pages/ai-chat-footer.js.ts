@@ -199,7 +199,6 @@ const source = `(() => {
     try {
       const response = await fetch('https://api.sassmaker.com/v1/capture-config/' + catalogId, {
         headers: { accept: 'application/json' },
-        credentials: 'omit',
       });
       if (!response.ok) return;
       const config = await response.json();
