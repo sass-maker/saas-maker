@@ -1,3 +1,5 @@
+import capturePolicy from '../../../../tooling/config/capture-projects.json';
+
 export type DailyCaptureCountRow = {
   catalogId: string;
   feedback: number | null;
@@ -5,9 +7,13 @@ export type DailyCaptureCountRow = {
   waitlist: number | null;
 };
 
+export type CaptureApplicability = 'newsletter' | 'waitlist' | 'not-applicable' | 'undetermined';
+
 export type DailyCaptureCounts = {
   coverageStart: string | null;
   rows: DailyCaptureCountRow[];
+  /** Project applicability from the catalog-generated policy; no rationale or evidence leaves this private API. */
+  applicabilityByCatalogId: Record<string, CaptureApplicability>;
 };
 
 type AggregateRow = {
@@ -96,8 +102,20 @@ export async function getDailyCaptureCounts(
     .all<AggregateRow>();
 
   const coverageStart = result.results[0]?.coverage_start ?? null;
+  const policyById = new Map<string, CaptureApplicability>(
+    capturePolicy.projects.map(({ id, applicability }) => [
+      id,
+      applicability as CaptureApplicability,
+    ])
+  );
+  const applicabilityByCatalogId: Record<string, CaptureApplicability> = {};
+  for (const id of catalogIds) {
+    const applicability = policyById.get(id);
+    if (applicability) applicabilityByCatalogId[id] = applicability;
+  }
   return {
     coverageStart,
+    applicabilityByCatalogId,
     rows: result.results
       .filter((row): row is AggregateRow & { catalog_id: string } => row.catalog_id !== null)
       .map((row) => ({

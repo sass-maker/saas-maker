@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import { afterEach, describe, expect, it } from 'vitest';
 import { getDailyCaptureCounts } from '../../workers/api/src/lib/daily-capture-counts';
+import capturePolicy from '../../tooling/config/capture-projects.json';
 
 const migration = readFileSync(
   new URL('../../workers/api/migrations/0028_daily_capture_receipts.sql', import.meta.url),
@@ -148,6 +149,7 @@ describe('daily PII-free capture receipts', () => {
     const result = await getDailyCaptureCounts(d1, '2020-01-01', ['alpha-app', 'beta-app']);
     expect(result).toEqual({
       coverageStart: '2019-12-31',
+      applicabilityByCatalogId: {},
       rows: [
         { catalogId: 'alpha-app', feedback: 1, newsletter: 1, waitlist: 0 },
         { catalogId: 'beta-app', feedback: 0, newsletter: 0, waitlist: 1 },
@@ -180,6 +182,7 @@ describe('daily PII-free capture receipts', () => {
     ]);
     expect(beforeCoverage).toEqual({
       coverageStart: '2019-12-31',
+      applicabilityByCatalogId: {},
       rows: [{ catalogId: 'alpha-app', feedback: null, newsletter: null, waitlist: null }],
     });
 
@@ -213,5 +216,60 @@ describe('daily PII-free capture receipts', () => {
         Array.from({ length: 56 }, () => 'alpha-app')
       )
     ).rejects.toThrow('1 to 55 IDs');
+  });
+
+  it('returns canonical capture applicability for all 55 products, including internal newsletter exceptions', async () => {
+    const { d1 } = setup();
+    const projects = capturePolicy.projects;
+    const catalogIds = projects.map(({ id }) => id);
+    const result = await getDailyCaptureCounts(d1, '2020-01-01', catalogIds);
+
+    expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(55);
+    expect(
+      Object.fromEntries(
+        ['pace', 'free-ai', 'knowledge-base', 'ios-landings', 'ph-catalog'].map((id) => [
+          id,
+          result.applicabilityByCatalogId[id],
+        ])
+      )
+    ).toEqual({
+      pace: 'newsletter',
+      'free-ai': 'newsletter',
+      'knowledge-base': 'newsletter',
+      'ios-landings': 'newsletter',
+      'ph-catalog': 'newsletter',
+    });
+    const internalNewsletterIds = projects
+      .filter(
+        ({ applicability, evidence }) =>
+          applicability === 'newsletter' &&
+          evidence.some(({ field, value }) => field === 'purpose.audience' && value === 'internal')
+      )
+      .map(({ id }) => id)
+      .sort();
+    expect(internalNewsletterIds).toEqual([
+      'free-ai',
+      'ios-landings',
+      'knowledge-base',
+      'pace',
+      'ph-catalog',
+    ]);
+
+    const notApplicable = Object.entries(result.applicabilityByCatalogId)
+      .filter(([, applicability]) => applicability === 'not-applicable')
+      .map(([id]) => id)
+      .sort();
+    expect(notApplicable).toEqual([
+      'agent-testing',
+      'chatgpt-connections',
+      'field-track',
+      'fleet-social',
+      'site-health',
+      'slow-serp',
+      'unified-portfolio',
+      'war-chest',
+    ]);
+    expect(Object.values(result.applicabilityByCatalogId)).not.toContain('waitlist');
+    expect(Object.values(result.applicabilityByCatalogId)).not.toContain('undetermined');
   });
 });
