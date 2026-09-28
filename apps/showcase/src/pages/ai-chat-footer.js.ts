@@ -3,6 +3,7 @@ import claudeLogo from '../../../../packages/ai-chat-footer/src/assets/provider-
 import geminiLogo from '../../../../packages/ai-chat-footer/src/assets/provider-logos/gemini.jpg?inline';
 import grokLogo from '../../../../packages/ai-chat-footer/src/assets/provider-logos/grok.jpg?inline';
 import perplexityLogo from '../../../../packages/ai-chat-footer/src/assets/provider-logos/perplexity.jpg?inline';
+import capturePolicy from '../../../../tooling/config/capture-projects.json';
 
 const providerLogos = {
   claude: claudeLogo,
@@ -12,10 +13,17 @@ const providerLogos = {
   grok: grokLogo,
 };
 
+const autoCaptureKinds = Object.fromEntries(
+  capturePolicy.projects
+    .filter(({ applicability }) => applicability === 'newsletter' || applicability === 'waitlist')
+    .map(({ id, applicability }) => [id, applicability])
+);
+
 const source = `(() => {
   'use strict';
 
   const PROVIDER_LOGOS = ${JSON.stringify(providerLogos)};
+  const AUTO_CAPTURE_KINDS = ${JSON.stringify(autoCaptureKinds)};
   const PROVIDERS = [
     ['claude', 'Claude', (prompt) => 'https://claude.ai/new?q=' + encodeURIComponent(prompt)],
     ['chatgpt', 'ChatGPT', (prompt) => 'https://chatgpt.com/?q=' + encodeURIComponent(prompt)],
@@ -195,6 +203,8 @@ const source = `(() => {
     if (script.dataset.capture === 'false' || extension.dataset.capturePending === 'true' || document.querySelector('saas-maker-newsletter-capture')) return;
     const catalogId = strip.getAttribute('current-project');
     if (!catalogId || !/^[a-z0-9-]+$/.test(catalogId)) return;
+    const captureKind = AUTO_CAPTURE_KINDS[catalogId];
+    if (!captureKind) return;
     extension.dataset.capturePending = 'true';
     try {
       const response = await fetch('https://api.sassmaker.com/v1/capture-config/' + catalogId, {
@@ -208,10 +218,7 @@ const source = `(() => {
       capture.setAttribute('project-key', config.api_key);
       capture.setAttribute('catalog-id', catalogId);
       capture.setAttribute('product-name', script.dataset.name || config.name || catalogId);
-      capture.setAttribute('kind', script.dataset.captureKind === 'waitlist' ? 'waitlist' : 'newsletter');
-      if (script.dataset.captureChoice === 'true') {
-        capture.setAttribute('allow-kind-selection', '');
-      }
+      capture.setAttribute('kind', captureKind);
       capture.setAttribute('source', 'fleet-footer');
       capture.setAttribute('privacy-url', 'https://sassmaker.com/privacy');
       capture.slot = 'capture';
