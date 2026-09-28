@@ -37,11 +37,6 @@
       "probePath": "/"
     },
     {
-      "id": "drank",
-      "url": "https://domains.sassmaker.com",
-      "probePath": "/"
-    },
-    {
       "id": "email-manager",
       "url": "https://mail.significanthobbies.com",
       "probePath": "/"
@@ -49,11 +44,6 @@
     {
       "id": "free-ai",
       "url": "https://ai-gateway.sassmaker.com",
-      "probePath": "/"
-    },
-    {
-      "id": "india-standards",
-      "url": "https://india-standards.significanthobbies.com",
       "probePath": "/"
     },
     {
@@ -72,11 +62,6 @@
       "probePath": "/"
     },
     {
-      "id": "local-ai-video-studio",
-      "url": "https://local-ai-video-studio.sassmaker.com",
-      "probePath": "/"
-    },
-    {
       "id": "looptv",
       "url": "https://tv.significanthobbies.com",
       "probePath": "/"
@@ -89,16 +74,6 @@
     {
       "id": "motion",
       "url": "https://motion.significanthobbies.com",
-      "probePath": "/"
-    },
-    {
-      "id": "agent-office",
-      "url": "https://office-os.sassmaker.com",
-      "probePath": "/"
-    },
-    {
-      "id": "psi-swarm",
-      "url": "https://performance.sassmaker.com",
       "probePath": "/"
     },
     {
