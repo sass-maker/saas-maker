@@ -208,8 +208,10 @@ const source = `(() => {
       capture.setAttribute('project-key', config.api_key);
       capture.setAttribute('catalog-id', catalogId);
       capture.setAttribute('product-name', script.dataset.name || config.name || catalogId);
-      capture.setAttribute('kind', 'newsletter');
-      capture.setAttribute('allow-kind-selection', '');
+      capture.setAttribute('kind', script.dataset.captureKind === 'waitlist' ? 'waitlist' : 'newsletter');
+      if (script.dataset.captureChoice === 'true') {
+        capture.setAttribute('allow-kind-selection', '');
+      }
       capture.setAttribute('source', 'fleet-footer');
       capture.setAttribute('privacy-url', 'https://sassmaker.com/privacy');
       capture.slot = 'capture';
