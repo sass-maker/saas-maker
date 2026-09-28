@@ -8,6 +8,12 @@ export default defineConfig({
         find: /^@\//,
         replacement: `${fileURLToPath(new URL('./apps/cockpit/src/', import.meta.url))}`,
       },
+      {
+        find: /^cloudflare:workers$/,
+        replacement: fileURLToPath(
+          new URL('./tests/helpers/cloudflare-workers.ts', import.meta.url)
+        ),
+      },
     ],
   },
   test: {

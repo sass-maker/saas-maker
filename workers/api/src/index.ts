@@ -9,6 +9,7 @@ import { subscriptions } from './routes/subscriptions';
 import { upload } from './routes/upload';
 import { rateLimit } from './middleware/rate-limit';
 import { openApiDocument } from './openapi';
+export { PrivateMetrics } from './entrypoints/private-metrics';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
