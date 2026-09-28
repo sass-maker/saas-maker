@@ -1,4 +1,5 @@
 import capturePolicy from '../../../../tooling/config/capture-projects.json';
+import nativeApplicability from '../../../../tooling/config/app-health-native-applicability.json';
 
 export type DailyCaptureCountRow = {
   catalogId: string;
@@ -8,12 +9,14 @@ export type DailyCaptureCountRow = {
 };
 
 export type CaptureApplicability = 'newsletter' | 'waitlist' | 'not-applicable' | 'undetermined';
+export type MetricApplicability = 'applicable' | 'not_applicable';
 
 export type DailyCaptureCounts = {
   coverageStart: string | null;
   rows: DailyCaptureCountRow[];
   /** Project applicability from the catalog-generated policy; no rationale or evidence leaves this private API. */
   applicabilityByCatalogId: Record<string, CaptureApplicability>;
+  nativeSessionsApplicabilityByCatalogId: Record<string, MetricApplicability>;
 };
 
 type AggregateRow = {
@@ -109,13 +112,30 @@ export async function getDailyCaptureCounts(
     ])
   );
   const applicabilityByCatalogId: Record<string, CaptureApplicability> = {};
+  const nativeSessionsApplicabilityByCatalogId: Record<string, MetricApplicability> = {};
   for (const id of catalogIds) {
     const applicability = policyById.get(id);
     if (applicability) applicabilityByCatalogId[id] = applicability;
   }
+  const nativePolicyById = new Map<string, MetricApplicability>(
+    nativeApplicability.products.map(
+      ({ id, nativeSessions }) =>
+        [
+          id,
+          (nativeSessions === 'not-applicable'
+            ? 'not_applicable'
+            : 'applicable') as MetricApplicability,
+        ] as const
+    )
+  );
+  for (const id of catalogIds) {
+    const applicability = nativePolicyById.get(id);
+    if (applicability) nativeSessionsApplicabilityByCatalogId[id] = applicability;
+  }
   return {
     coverageStart,
     applicabilityByCatalogId,
+    nativeSessionsApplicabilityByCatalogId,
     rows: result.results
       .filter((row): row is AggregateRow & { catalog_id: string } => row.catalog_id !== null)
       .map((row) => ({

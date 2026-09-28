@@ -74,6 +74,33 @@ for (const project of captureCohort) {
     throw new Error(`Waitlist requires direct unreleased-offering evidence: ${project.id}`);
   }
 }
+
+// Native-session applicability is derived from catalogued product form and
+// platform, not from telemetry receipts. Native-looking platform tags on a
+// CLI or a benchmark guide do not make that product a native app.
+const nativePlatforms = new Set([
+  'macOS',
+  'iOS',
+  'iPadOS',
+  'Android',
+  'watchOS',
+  'tvOS',
+  'visionOS',
+]);
+const appHealthNativeProducts = captureCohort.map((project) => {
+  const directory = project.presentation?.directory;
+  const form = directory?.form;
+  const platforms = directory?.platforms;
+  if (typeof form !== 'string' || !Array.isArray(platforms) || platforms.length === 0) {
+    throw new Error(`Native-session applicability needs catalog form and platforms: ${project.id}`);
+  }
+  const hasNativePlatform = platforms.some((platform) => nativePlatforms.has(platform));
+  const hasNativeAppForm = hasNativePlatform && /\b(app|game)\b/i.test(form);
+  return {
+    id: project.id,
+    nativeSessions: hasNativeAppForm ? 'applicable' : 'not-applicable',
+  };
+});
 for (const project of source.projects) {
   if (!['primary', 'active'].includes(project.lifecycle?.status) && project.systems?.capture)
     throw new Error(`Capture policy is out of scope for ${project.id}`);
@@ -242,6 +269,12 @@ outputs.set('site-health/apps/backend/config/capabilities.json', systems.capabil
       config,
       new Map(captureCohort.map((project) => [project.id, project.systems.capture]))
     ),
+  });
+  outputs.set('saas-maker/tooling/config/app-health-native-applicability.json', {
+    schemaVersion: 1,
+    purpose:
+      'Native sessions apply to catalogued native app and game forms; missing telemetry remains unknown.',
+    products: appHealthNativeProducts,
   });
 }
 

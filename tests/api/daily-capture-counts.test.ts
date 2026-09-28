@@ -3,6 +3,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { afterEach, describe, expect, it } from 'vitest';
 import { getDailyCaptureCounts } from '../../workers/api/src/lib/daily-capture-counts';
 import capturePolicy from '../../tooling/config/capture-projects.json';
+import nativeApplicability from '../../tooling/config/app-health-native-applicability.json';
 
 const migration = readFileSync(
   new URL('../../workers/api/migrations/0028_daily_capture_receipts.sql', import.meta.url),
@@ -150,6 +151,7 @@ describe('daily PII-free capture receipts', () => {
     expect(result).toEqual({
       coverageStart: '2019-12-31',
       applicabilityByCatalogId: {},
+      nativeSessionsApplicabilityByCatalogId: {},
       rows: [
         { catalogId: 'alpha-app', feedback: 1, newsletter: 1, waitlist: 0 },
         { catalogId: 'beta-app', feedback: 0, newsletter: 0, waitlist: 1 },
@@ -183,6 +185,7 @@ describe('daily PII-free capture receipts', () => {
     expect(beforeCoverage).toEqual({
       coverageStart: '2019-12-31',
       applicabilityByCatalogId: {},
+      nativeSessionsApplicabilityByCatalogId: {},
       rows: [{ catalogId: 'alpha-app', feedback: null, newsletter: null, waitlist: null }],
     });
 
@@ -225,6 +228,21 @@ describe('daily PII-free capture receipts', () => {
     const result = await getDailyCaptureCounts(d1, '2020-01-01', catalogIds);
 
     expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(55);
+    expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(55);
+    expect(
+      Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
+        (value) => value === 'applicable'
+      )
+    ).toHaveLength(13);
+    expect(
+      Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
+        (value) => value === 'not_applicable'
+      )
+    ).toHaveLength(42);
+    expect(nativeApplicability.products).toHaveLength(55);
+    expect(result.nativeSessionsApplicabilityByCatalogId['field-track']).toBe('applicable');
+    expect(result.nativeSessionsApplicabilityByCatalogId['slow-serp']).toBe('not_applicable');
+    expect(result.nativeSessionsApplicabilityByCatalogId['agent-testing']).toBe('not_applicable');
     expect(
       Object.fromEntries(
         ['pace', 'free-ai', 'knowledge-base', 'ios-landings', 'ph-catalog'].map((id) => [

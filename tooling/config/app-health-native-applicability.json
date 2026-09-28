@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Native sessions apply to catalogued native app and game forms; missing telemetry remains unknown.",
+  "products": [
+    {
+      "id": "codevetter",
+      "nativeSessions": "applicable"
+    },
+    {
+      "id": "pace",
+      "nativeSessions": "applicable"
+    },
+    {
+      "id": "posttrainllm",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "site-health",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "live",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "chatgpt-connections",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "saas-maker",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "gitstat",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "fleet-social",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "email-manager",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "chatgpt-memory-insights",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "free-ai",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "high-signal",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "on-record",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "issue-pages",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "research-papers",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "knowledge-base",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "significanthobbies",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "anime-list",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "looptv",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "reader",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "swe-interview-prep",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "calorie",
+      "nativeSessions": "applicable"
+    },
+    {
+      "id": "setline",
+      "nativeSessions": "applicable"
+    },
+    {
+      "id": "kith",
+      "nativeSessions": "applicable"
+    },
+    {
+      "id": "ios-landings",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "rolepatch",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "karte",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "starboard",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "ai-game",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "app-health",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "mashup",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "motion",
+      "nativeSessions": "applicable"
+    },
+    {
+      "id": "open-historia",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "ph-catalog",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "web-playables",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "what-it-takes-to-win",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "sarthakagrawal-personal",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "field-track",
+      "nativeSessions": "applicable"
+    },
+    {
+      "id": "reddit-insights",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "anchor",
+      "nativeSessions": "applicable"
+    },
+    {
+      "id": "nomad-data-adventure",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "storagedaddy",
+      "nativeSessions": "applicable"
+    },
+    {
+      "id": "browserdaddy",
+      "nativeSessions": "applicable"
+    },
+    {
+      "id": "performancedaddy",
+      "nativeSessions": "applicable"
+    },
+    {
+      "id": "slow-serp",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "unified-portfolio",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "meme-lab",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "agent-testing",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "nutrition-formula-engine",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "every-song-is-a-website",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "contextdaddy",
+      "nativeSessions": "applicable"
+    },
+    {
+      "id": "war-chest",
+      "nativeSessions": "applicable"
+    },
+    {
+      "id": "mentionpilot",
+      "nativeSessions": "not-applicable"
+    },
+    {
+      "id": "daddyrad",
+      "nativeSessions": "not-applicable"
+    }
+  ]
+}
