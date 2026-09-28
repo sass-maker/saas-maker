@@ -5,9 +5,9 @@
   "projects": [
     {
       "id": "codevetter",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog describes a native product without a proven capture placement. Do not infer an in-app or landing-page integration.",
+      "rationale": "An explicit newsletter form exists at codevetter/apps/landing-page-astro/src/components/Footer.astro. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -31,9 +31,9 @@
     },
     {
       "id": "pace",
-      "applicability": "not-applicable",
-      "confidence": "high",
-      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "An explicit newsletter form exists at pace/website/src/layouts/BaseLayout.astro. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -318,9 +318,9 @@
     },
     {
       "id": "free-ai",
-      "applicability": "not-applicable",
-      "confidence": "high",
-      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "An explicit newsletter form exists at free-ai/site/src/pages/index.astro. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -373,9 +373,9 @@
     },
     {
       "id": "on-record",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "rationale": "An explicit newsletter form exists at on-record/apps/web/src/layouts/Base.astro. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -393,9 +393,9 @@
     },
     {
       "id": "issue-pages",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "rationale": "An explicit newsletter form exists at issue-pages/src/ui/templates.ts. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -413,9 +413,9 @@
     },
     {
       "id": "research-papers",
-      "applicability": "undetermined",
-      "confidence": "medium",
-      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "applicability": "newsletter",
+      "confidence": "high",
+      "rationale": "An explicit newsletter form exists at research-papers/web/src/pages/index.astro. The live public page renders the form. Invite only occasional notes when the public snapshot, reading paths, or cited-answer demo materially changes. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -433,9 +433,9 @@
     },
     {
       "id": "knowledge-base",
-      "applicability": "not-applicable",
-      "confidence": "high",
-      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "An explicit newsletter form exists at knowledge-base/landing-astro/src/pages/index.astro. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -559,9 +559,9 @@
     },
     {
       "id": "reader",
-      "applicability": "undetermined",
-      "confidence": "medium",
-      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "applicability": "newsletter",
+      "confidence": "high",
+      "rationale": "An explicit newsletter form exists at reader/landing-astro/src/pages/index.astro. The live public page renders the form. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -613,9 +613,9 @@
     },
     {
       "id": "calorie",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog describes a native product without a proven capture placement. Do not infer an in-app or landing-page integration.",
+      "rationale": "An explicit newsletter form exists at calorie/marketing/index.html. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -640,9 +640,9 @@
     },
     {
       "id": "setline",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog describes a native product without a proven capture placement. Do not infer an in-app or landing-page integration.",
+      "rationale": "The public product site has a bound project identity and shared footer. Offer occasional notes only when the product materially changes; do not imply a planned release or recurring cadence.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -666,9 +666,9 @@
     },
     {
       "id": "kith",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog describes a native product without a proven capture placement. Do not infer an in-app or landing-page integration.",
+      "rationale": "The public product site has a bound project identity and shared footer. Offer occasional notes only when the product materially changes; do not imply a planned release or recurring cadence.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -692,9 +692,9 @@
     },
     {
       "id": "ios-landings",
-      "applicability": "not-applicable",
-      "confidence": "high",
-      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "An explicit newsletter form exists at ios-landings/src/layouts/SiteLayout.astro. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -817,9 +817,9 @@
     },
     {
       "id": "ai-game",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "rationale": "The public product site has a bound project identity and shared footer. Offer occasional notes only when the product materially changes; do not imply a planned release or recurring cadence.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -872,9 +872,9 @@
     },
     {
       "id": "mashup",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "rationale": "The public product site has a bound project identity and shared footer. Offer occasional notes only when the product materially changes; do not imply a planned release or recurring cadence.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -892,9 +892,9 @@
     },
     {
       "id": "motion",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "rationale": "The public product site has a bound project identity and shared footer. Offer occasional notes only when the product materially changes; do not imply a planned release or recurring cadence.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -912,9 +912,9 @@
     },
     {
       "id": "open-historia",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "rationale": "The public product site has a bound project identity and shared footer. Offer occasional notes only when the product materially changes; do not imply a planned release or recurring cadence.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -932,9 +932,9 @@
     },
     {
       "id": "ph-catalog",
-      "applicability": "not-applicable",
-      "confidence": "high",
-      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "An explicit newsletter form exists at ph-catalog/landing/index.html. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -952,9 +952,9 @@
     },
     {
       "id": "web-playables",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "rationale": "The public product site has a bound project identity and shared footer. Offer occasional notes only when the product materially changes; do not imply a planned release or recurring cadence.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -972,9 +972,9 @@
     },
     {
       "id": "what-it-takes-to-win",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "rationale": "The public product site has a bound project identity and shared footer. Offer occasional notes only when the product materially changes; do not imply a planned release or recurring cadence.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -992,9 +992,9 @@
     },
     {
       "id": "sarthakagrawal-personal",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The public surface is a personal portfolio with contact paths; a newsletter or unreleased offering is not evidenced.",
+      "rationale": "The public portfolio site has a bound project identity and shared footer; offer occasional notes about substantive studio or project changes without promising a schedule.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -1032,9 +1032,9 @@
     },
     {
       "id": "reddit-insights",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog describes a finished, preserved, or held experiment without an ongoing update commitment; a newsletter placement is not evidenced.",
+      "rationale": "An explicit newsletter form exists at reddit-insights/scripts/build-pages.mjs. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -1442,9 +1442,9 @@
     },
     {
       "id": "mentionpilot",
-      "applicability": "undetermined",
-      "confidence": "medium",
-      "rationale": "The owner evidence says the listed web hostname did not resolve and a current public user journey is unverified; availability and capture placement remain unknown.",
+      "applicability": "newsletter",
+      "confidence": "high",
+      "rationale": "An explicit newsletter form exists at mentionpilot/apps/web/src/app/page.tsx. The live public page renders the form. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -1465,9 +1465,9 @@
     },
     {
       "id": "daddyrad",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The public surface is an umbrella landing that routes visitors to separate apps; no subscription program for the umbrella is evidenced.",
+      "rationale": "An explicit newsletter form exists at daddyrad/site/public/index.html. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
