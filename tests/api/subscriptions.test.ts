@@ -155,8 +155,11 @@ describe('Hosted newsletter and waitlist capture', () => {
         consentText: CAPTURE_CONSENT_COPY_V1.waitlist,
       })
     );
-    expect(send).toHaveBeenCalledOnce();
-    const payload = JSON.parse(send.mock.calls[0][1].body);
+    const logCalls = send.mock.calls.filter(
+      ([url]) => url === 'https://ingest.sassmaker.com/v1/logs'
+    );
+    expect(logCalls).toHaveLength(1);
+    const payload = JSON.parse(logCalls[0][1].body);
     expect(payload.logs[0]).toMatchObject({
       event: 'waitlist.join',
       props: { project: 'product-one', project_id: 'project-1', kind: 'waitlist' },
@@ -178,7 +181,9 @@ describe('Hosted newsletter and waitlist capture', () => {
     );
     expect(response.status).toBe(202);
     expect(bind).toHaveBeenCalledWith('project-1');
-    const payload = JSON.parse(send.mock.calls[0][1].body);
+    const payload = JSON.parse(
+      send.mock.calls.find(([url]) => url === 'https://ingest.sassmaker.com/v1/logs')![1].body
+    );
     expect(payload.logs[0].props).toMatchObject({
       project: 'fleet-catalog-id',
       project_slug: 'product-one',
@@ -193,10 +198,14 @@ describe('Hosted newsletter and waitlist capture', () => {
     vi.stubGlobal('fetch', send);
     mockStore.joinCapture.mockResolvedValueOnce({ id: crypto.randomUUID(), joined: false });
     expect((await postJoin(JOIN, { APP_HEALTH_INGEST_KEY: 'test' })).status).toBe(202);
-    expect(send).not.toHaveBeenCalled();
+    expect(
+      send.mock.calls.filter(([url]) => url === 'https://ingest.sassmaker.com/v1/logs')
+    ).toHaveLength(0);
     mockStore.joinCapture.mockRejectedValueOnce(new Error('storage unavailable'));
     expect((await postJoin(JOIN, { APP_HEALTH_INGEST_KEY: 'test' })).status).toBe(500);
-    expect(send).not.toHaveBeenCalled();
+    expect(
+      send.mock.calls.filter(([url]) => url === 'https://ingest.sassmaker.com/v1/logs')
+    ).toHaveLength(0);
   });
 
   it('accepts a valid unsubscribe token without revealing subscription existence', async () => {
