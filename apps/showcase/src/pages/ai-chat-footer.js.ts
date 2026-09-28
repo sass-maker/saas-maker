@@ -208,7 +208,7 @@ const source = `(() => {
       const capture = document.createElement('saas-maker-newsletter-capture');
       capture.setAttribute('project-key', config.api_key);
       capture.setAttribute('catalog-id', catalogId);
-      capture.setAttribute('product-name', config.name || script.dataset.name || catalogId);
+      capture.setAttribute('product-name', script.dataset.name || config.name || catalogId);
       capture.setAttribute('kind', 'newsletter');
       capture.setAttribute('allow-kind-selection', '');
       capture.setAttribute('source', 'fleet-footer');
