@@ -147,6 +147,7 @@ const source = `(() => {
         .projects-head span { color: color-mix(in srgb, currentColor 72%, transparent); font-size: .64rem; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
         .projects-head a { display: inline-flex; min-height: 2.75rem; align-items: center; color: inherit; font-size: .72rem; font-weight: 680; text-underline-offset: .22em; }
         .projects-head a:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+        .capture { grid-column: 1 / -1; min-width: 0; }
         ::slotted(*) { min-width: 0; }
         @media (max-width: 760px) {
           .extension { grid-template-columns: minmax(0, 1fr); }
@@ -175,7 +176,12 @@ const source = `(() => {
       const projectsSlot = document.createElement('slot');
       projectsSlot.name = 'projects';
       projects.append(projectsHead, projectsSlot);
-      region.append(ai, projects);
+      const capture = document.createElement('div');
+      capture.className = 'capture';
+      const captureSlot = document.createElement('slot');
+      captureSlot.name = 'capture';
+      capture.append(captureSlot);
+      region.append(ai, projects, capture);
       root.append(style, region);
     }
   }
@@ -185,6 +191,39 @@ const source = `(() => {
   }
 
   const script = document.currentScript;
+  const mountCapture = async (extension, strip) => {
+    if (script.dataset.capture === 'false' || extension.dataset.capturePending === 'true' || document.querySelector('saas-maker-newsletter-capture')) return;
+    const catalogId = strip.getAttribute('current-project');
+    if (!catalogId || !/^[a-z0-9-]+$/.test(catalogId)) return;
+    extension.dataset.capturePending = 'true';
+    try {
+      const response = await fetch('https://api.sassmaker.com/v1/capture-config/' + catalogId, {
+        headers: { accept: 'application/json' },
+        credentials: 'omit',
+      });
+      if (!response.ok) return;
+      const config = await response.json();
+      if (!config || typeof config.api_key !== 'string' || !/^pk_[a-z0-9]+$/.test(config.api_key)) return;
+      if (document.querySelector('saas-maker-newsletter-capture')) return;
+      const capture = document.createElement('saas-maker-newsletter-capture');
+      capture.setAttribute('project-key', config.api_key);
+      capture.setAttribute('catalog-id', catalogId);
+      capture.setAttribute('product-name', config.name || script.dataset.name || catalogId);
+      capture.setAttribute('kind', 'newsletter');
+      capture.setAttribute('allow-kind-selection', '');
+      capture.setAttribute('source', 'fleet-footer');
+      capture.setAttribute('privacy-url', 'https://sassmaker.com/privacy');
+      capture.slot = 'capture';
+      extension.append(capture);
+      if (!customElements.get('saas-maker-newsletter-capture')) {
+        const loader = document.createElement('script');
+        loader.type = 'module';
+        loader.src = 'https://sassmaker.com/newsletter-capture.js';
+        loader.crossOrigin = 'anonymous';
+        document.head.append(loader);
+      }
+    } catch {} finally { delete extension.dataset.capturePending; }
+  };
   const mount = () => {
     if (!script || script.dataset.auto === 'false') return;
     const footer = document.querySelector('ai-chat-footer') || document.createElement('ai-chat-footer');
@@ -203,6 +242,7 @@ const source = `(() => {
       strip.slot = 'projects';
       extension.append(footer, strip);
       if (!extension.isConnected) document.body.append(extension);
+      void mountCapture(extension, strip);
       return true;
     };
     if (compose()) return;
