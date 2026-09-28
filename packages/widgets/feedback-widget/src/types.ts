@@ -36,6 +36,10 @@ export interface FeedbackWidgetCommonProps {
   requireConsent?: boolean;
   /** Privacy policy linked from the consent disclosure. */
   privacyUrl?: string;
+  /** Internal embed controls used by the shared-footer launcher. */
+  initiallyOpen?: boolean;
+  hideTrigger?: boolean;
+  openSignal?: number;
 }
 
 export interface FeedbackCallbackDestination {

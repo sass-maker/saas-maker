@@ -13,6 +13,23 @@ const providerLogos = {
   grok: grokLogo,
 };
 
+const feedbackLauncherCss = `
+  [data-saas-maker-feedback-launcher] {
+    position: fixed; z-index: 2147483646; right: max(20px, env(safe-area-inset-right));
+    bottom: max(20px, env(safe-area-inset-bottom)); min-width: 44px; min-height: 44px;
+    padding: 0 15px; border: 1px solid #d6d9df; border-radius: 12px; background: #fff;
+    color: #20232a; box-shadow: 0 5px 18px rgb(16 28 20 / .14), 0 1px 3px rgb(16 28 20 / .08);
+    font-family: inherit; font-size: 14px; font-weight: 650; line-height: 1.2;
+    cursor: pointer; transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+  [data-saas-maker-feedback-launcher]:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 22px rgb(16 28 20 / .16), 0 2px 5px rgb(16 28 20 / .1); }
+  [data-saas-maker-feedback-launcher]:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
+  [data-saas-maker-feedback-launcher]:disabled { cursor: wait; opacity: .75; }
+  [data-saas-maker-feedback-root] .saas-maker-feedback-status { position: fixed; right: 20px; bottom: 72px; z-index: 2147483646; color: #a32929; font: 12px/1.4 system-ui, sans-serif; }
+  @media (prefers-color-scheme: dark) { [data-saas-maker-feedback-launcher] { border-color: #42433c; background: #20211d; color: #f2f1e9; } }
+  @media (prefers-reduced-motion: reduce) { [data-saas-maker-feedback-launcher] { transition: none; } }
+`;
+
 const autoCaptureKinds = Object.fromEntries(
   capturePolicy.projects
     .filter(({ applicability }) => applicability === 'newsletter' || applicability === 'waitlist')
@@ -234,25 +251,103 @@ const source = `(() => {
   };
   const mountFeedback = (apiKey) => {
     if (script.dataset.feedback === 'false' || document.querySelector('[data-saas-maker-feedback-root]')) return;
+    const hasExistingWidget = (host) => Array.from(document.querySelectorAll('[data-feedback-widget]'))
+      .some((widget) => !host.contains(widget));
+    if (hasExistingWidget(document.createElement('div'))) return;
     const host = document.createElement('div');
     host.dataset.saasMakerFeedbackRoot = 'true';
+    const launcher = document.createElement('button');
+    launcher.type = 'button';
+    launcher.dataset.saasMakerFeedbackLauncher = 'true';
+    launcher.setAttribute('aria-label', 'Give feedback');
+    launcher.textContent = 'Feedback';
+    const status = document.createElement('span');
+    status.className = 'saas-maker-feedback-status';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    const widgetRoot = document.createElement('div');
+    widgetRoot.dataset.saasMakerFeedbackMount = 'true';
+    host.append(launcher, status, widgetRoot);
+    const style = document.createElement('style');
+    style.dataset.saasMakerFeedbackStyle = 'true';
+    style.textContent = ${JSON.stringify(feedbackLauncherCss)};
+    document.head.append(style);
     document.body.append(host);
     const pageUrl = window.location.origin + window.location.pathname;
     const productTitle = document.title || script.dataset.name || 'Product';
-    const mount = () => {
-      const api = window.SaasMakerFeedback;
-      if (typeof api?.mountSharedFooterFeedback === 'function') {
-        api.mountSharedFooterFeedback(host, { apiKey, pageUrl, pageTitle: productTitle });
-      } else {
-        host.remove();
+    const options = { apiKey, pageUrl, pageTitle: productTitle };
+    let active = true;
+    let loading = false;
+    let mounted = false;
+    let observer;
+    let loader;
+    const removeLauncher = () => {
+      if (!active) return;
+      active = false;
+      observer?.disconnect();
+      loader?.remove();
+      window.SaasMakerFeedback?.unmountSharedFooterFeedback?.(widgetRoot);
+      host.remove();
+      style.remove();
+      if (launcher.dataset.activated === 'true') {
+        document.querySelector('[data-feedback-widget] .smw-trigger')?.focus();
       }
     };
-    const loader = document.createElement('script');
-    loader.src = 'https://sassmaker.com/feedback-launcher.js';
-    loader.crossOrigin = 'anonymous';
-    loader.onload = mount;
-    loader.onerror = () => host.remove();
-    document.head.append(loader);
+    const openWidget = () => {
+      if (!active || hasExistingWidget(host)) { removeLauncher(); return; }
+      const api = window.SaasMakerFeedback;
+      if (mounted && typeof api?.openSharedFooterFeedback === 'function') {
+        api.openSharedFooterFeedback(widgetRoot, options);
+        return;
+      }
+      if (loading) return;
+      if (typeof api?.mountSharedFooterFeedback === 'function') {
+        api.mountSharedFooterFeedback(widgetRoot, options);
+        mounted = true;
+        launcher.textContent = 'Feedback';
+        launcher.disabled = false;
+        status.textContent = '';
+        return;
+      }
+      loading = true;
+      launcher.disabled = true;
+      launcher.textContent = 'Loading…';
+      loader = document.createElement('script');
+      loader.src = 'https://sassmaker.com/feedback-launcher.js';
+      loader.crossOrigin = 'anonymous';
+      loader.onload = () => {
+        loading = false;
+        if (!active || hasExistingWidget(host)) { removeLauncher(); return; }
+        const loadedApi = window.SaasMakerFeedback;
+        if (typeof loadedApi?.mountSharedFooterFeedback !== 'function') {
+          launcher.disabled = false;
+          launcher.textContent = 'Feedback';
+          status.textContent = 'Feedback could not load. Try again.';
+          loader.remove();
+          return;
+        }
+        loadedApi.mountSharedFooterFeedback(widgetRoot, options);
+        mounted = true;
+        launcher.disabled = false;
+        launcher.textContent = 'Feedback';
+      };
+      loader.onerror = () => {
+        loading = false;
+        launcher.disabled = false;
+        launcher.textContent = 'Feedback';
+        status.textContent = 'Feedback could not load. Try again.';
+        loader.remove();
+      };
+      document.head.append(loader);
+    };
+    launcher.addEventListener('click', () => {
+      launcher.dataset.activated = 'true';
+      openWidget();
+    });
+    observer = new MutationObserver(() => {
+      if (active && hasExistingWidget(host)) removeLauncher();
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
   };
   const mount = () => {
     if (!script || script.dataset.auto === 'false') return;

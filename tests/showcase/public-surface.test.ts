@@ -30,6 +30,10 @@ describe('SaaS Maker public source boundary', () => {
     expect(source).toMatch(/mountFeedback\(config\.api_key\)/);
     expect(source).toMatch(/script\.dataset\.feedback === 'false'/);
     expect(source).toMatch(/feedback-launcher\.js/);
+    expect(source).toMatch(/data-feedback-widget/);
+    expect(source).toMatch(/new MutationObserver/);
+    expect(source).toMatch(/launcher\.addEventListener\('click'/);
+    expect(source).toMatch(/openSharedFooterFeedback/);
     expect(source).toMatch(/AUTO_CAPTURE_KINDS\[catalogId\]/);
     expect(source).not.toMatch(/strip\.remove\(\)/);
     expect(source).not.toMatch(/analytics|localStorage|credential/i);

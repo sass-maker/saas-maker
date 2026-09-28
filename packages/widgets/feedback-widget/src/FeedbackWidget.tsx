@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ElementPicker } from './components/ElementPicker';
 import { Modal } from './components/Modal';
 import { TriggerButton } from './components/TriggerButton';
@@ -29,8 +29,11 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
   pageContext,
   requireConsent = false,
   privacyUrl,
+  initiallyOpen = false,
+  hideTrigger = false,
+  openSignal = 0,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(initiallyOpen);
   // Picking overlays the page; we keep the modal mounted (hidden) so the user's
   // in-progress title/description survive the round-trip and the captured anchor
   // lands back in the same form.
@@ -72,18 +75,24 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
   const themeClass =
     theme === 'light' ? 'smw--light' : theme === 'dark' ? 'smw--dark' : 'smw--auto';
 
+  useEffect(() => {
+    if (openSignal > 0) setIsOpen(true);
+  }, [openSignal]);
+
   return (
     <div
       data-feedback-widget=""
       className={`smw-root ${themeClass}`}
       style={{ '--smw-accent': accentColor } as React.CSSProperties}
     >
-      <TriggerButton
-        onClick={() => setIsOpen(true)}
-        position={position}
-        accentColor={accentColor}
-        triggerText={triggerText}
-      />
+      {!hideTrigger && (
+        <TriggerButton
+          onClick={() => setIsOpen(true)}
+          position={position}
+          accentColor={accentColor}
+          triggerText={triggerText}
+        />
+      )}
       <Modal
         isOpen={isOpen}
         hidden={picking}

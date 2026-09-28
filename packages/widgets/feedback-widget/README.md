@@ -178,6 +178,11 @@ Shared footer embeds disable Pinpoint and submit only the origin and path as
 page context, omitting query strings and fragments. Email, name, and screenshots
 remain optional and are sent only when the visitor supplies them.
 
+The shared footer first renders a small accessible launcher and downloads this
+React widget only after the visitor activates it. If the host page already has
+an element marked `data-feedback-widget`, the shared launcher stays hidden; a
+late React mount is also detected while the page hydrates.
+
 ## Compatibility
 
 - React 18 and React 19
