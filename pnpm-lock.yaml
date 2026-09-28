@@ -215,6 +215,9 @@ importers:
 
   workers/api:
     dependencies:
+      '@saas-maker/app-health':
+        specifier: https://github.com/sass-maker/app-health/releases/download/node-v0.4.0/saas-maker-app-health-0.4.0.tgz
+        version: https://github.com/sass-maker/app-health/releases/download/node-v0.4.0/saas-maker-app-health-0.4.0.tgz(express@5.2.1)(hono@4.12.15)
       hono:
         specifier: 4.12.15
         version: 4.12.15
@@ -2673,6 +2676,18 @@ packages:
     resolution: {integrity: sha512-Nd/SgG27WoA9e+/TdK74KnHz852TLa94ovOYySo/yMPuTmpckK/jIF2jSwS3g7ELSKXK13/cVdmg1Z/DaCWKxA==}
     cpu: [x64]
     os: [win32]
+
+  '@saas-maker/app-health@https://github.com/sass-maker/app-health/releases/download/node-v0.4.0/saas-maker-app-health-0.4.0.tgz':
+    resolution: {tarball: https://github.com/sass-maker/app-health/releases/download/node-v0.4.0/saas-maker-app-health-0.4.0.tgz}
+    version: 0.4.0
+    peerDependencies:
+      express: '>=4.19.0 <6'
+      hono: '>=4.10.0 <5'
+    peerDependenciesMeta:
+      express:
+        optional: true
+      hono:
+        optional: true
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
@@ -9126,6 +9141,11 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.60.2':
     optional: true
+
+  '@saas-maker/app-health@https://github.com/sass-maker/app-health/releases/download/node-v0.4.0/saas-maker-app-health-0.4.0.tgz(express@5.2.1)(hono@4.12.15)':
+    optionalDependencies:
+      express: 5.2.1
+      hono: 4.12.15
 
   '@sec-ant/readable-stream@0.4.1': {}
 

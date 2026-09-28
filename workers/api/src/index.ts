@@ -8,10 +8,14 @@ import { feedback } from './routes/feedback';
 import { subscriptions } from './routes/subscriptions';
 import { upload } from './routes/upload';
 import { rateLimit } from './middleware/rate-limit';
+import { appHealthEndpoints } from './lib/app-health-endpoints';
 import { openApiDocument } from './openapi';
 export { PrivateMetrics } from './entrypoints/private-metrics';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
+
+// Observe API route templates only. Health probes and OpenAPI reads are not usage.
+app.use('/v1/*', appHealthEndpoints);
 
 app.onError((err, c) => {
   console.error(`[${c.get('requestId') || 'unknown'}] Unhandled error:`, err.message, err.stack);

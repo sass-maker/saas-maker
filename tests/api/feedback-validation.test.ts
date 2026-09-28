@@ -113,8 +113,11 @@ describe('Feedback route validation with a mocked DB', () => {
 
     expect(res.status).toBe(201);
     expect(mockDb.createFeedback).toHaveBeenCalledOnce();
-    expect(send).toHaveBeenCalledOnce();
-    const [url, init] = send.mock.calls[0];
+    const logCalls = send.mock.calls.filter(
+      ([url]) => url === 'https://ingest.sassmaker.com/v1/logs'
+    );
+    expect(logCalls).toHaveLength(1);
+    const [url, init] = logCalls[0];
     expect(url).toBe('https://ingest.sassmaker.com/v1/logs');
     const payload = JSON.parse(init.body);
     expect(payload.logs).toHaveLength(1);
@@ -150,7 +153,9 @@ describe('Feedback route validation with a mocked DB', () => {
     );
     expect(res.status).toBe(201);
     expect(bind).toHaveBeenCalledWith(PROJECT.id);
-    const payload = JSON.parse(send.mock.calls[0][1].body);
+    const payload = JSON.parse(
+      send.mock.calls.find(([url]) => url === 'https://ingest.sassmaker.com/v1/logs')![1].body
+    );
     expect(payload.logs[0].props).toMatchObject({
       project: 'fleet-catalog-id',
       project_slug: PROJECT.slug,
@@ -188,7 +193,9 @@ describe('Feedback route validation with a mocked DB', () => {
       { APP_HEALTH_INGEST_KEY: 'test-ingest-key' }
     );
     expect(res.status).toBe(500);
-    expect(send).not.toHaveBeenCalled();
+    expect(
+      send.mock.calls.filter(([url]) => url === 'https://ingest.sassmaker.com/v1/logs')
+    ).toHaveLength(0);
   });
 
   it('POST /v1/feedback stores page and pinpoint context', async () => {
