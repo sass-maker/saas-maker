@@ -9,7 +9,7 @@ export type DailyCaptureCountRow = {
 };
 
 export type CaptureApplicability = 'newsletter' | 'waitlist' | 'not-applicable' | 'undetermined';
-export type MetricApplicability = 'applicable' | 'not_applicable';
+export type MetricApplicability = 'applicable' | 'not_applicable' | 'unknown';
 
 export type DailyCaptureCounts = {
   coverageStart: string | null;
@@ -18,6 +18,7 @@ export type DailyCaptureCounts = {
   applicabilityByCatalogId: Record<string, CaptureApplicability>;
   nativeSessionsApplicabilityByCatalogId: Record<string, MetricApplicability>;
   browserVisitorsApplicabilityByCatalogId: Record<string, MetricApplicability>;
+  serverRequestsApplicabilityByCatalogId: Record<string, MetricApplicability>;
 };
 
 type AggregateRow = {
@@ -115,6 +116,7 @@ export async function getDailyCaptureCounts(
   const applicabilityByCatalogId: Record<string, CaptureApplicability> = {};
   const nativeSessionsApplicabilityByCatalogId: Record<string, MetricApplicability> = {};
   const browserVisitorsApplicabilityByCatalogId: Record<string, MetricApplicability> = {};
+  const serverRequestsApplicabilityByCatalogId: Record<string, MetricApplicability> = {};
   for (const id of catalogIds) {
     const applicability = policyById.get(id);
     if (applicability) applicabilityByCatalogId[id] = applicability;
@@ -149,11 +151,26 @@ export async function getDailyCaptureCounts(
     const applicability = browserPolicyById.get(id);
     if (applicability) browserVisitorsApplicabilityByCatalogId[id] = applicability;
   }
+  const serverPolicyById = new Map<string, MetricApplicability>(
+    nativeApplicability.products.map(({ id, serverRequests }): [string, MetricApplicability] => [
+      id,
+      serverRequests === 'not-applicable'
+        ? 'not_applicable'
+        : serverRequests === 'applicable'
+          ? 'applicable'
+          : 'unknown',
+    ])
+  );
+  for (const id of catalogIds) {
+    const applicability = serverPolicyById.get(id);
+    if (applicability) serverRequestsApplicabilityByCatalogId[id] = applicability;
+  }
   return {
     coverageStart,
     applicabilityByCatalogId,
     nativeSessionsApplicabilityByCatalogId,
     browserVisitorsApplicabilityByCatalogId,
+    serverRequestsApplicabilityByCatalogId,
     rows: result.results
       .filter((row): row is AggregateRow & { catalog_id: string } => row.catalog_id !== null)
       .map((row) => ({

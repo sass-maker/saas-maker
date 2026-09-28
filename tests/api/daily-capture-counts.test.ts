@@ -153,6 +153,7 @@ describe('daily PII-free capture receipts', () => {
       applicabilityByCatalogId: {},
       nativeSessionsApplicabilityByCatalogId: {},
       browserVisitorsApplicabilityByCatalogId: {},
+      serverRequestsApplicabilityByCatalogId: {},
       rows: [
         { catalogId: 'alpha-app', feedback: 1, newsletter: 1, waitlist: 0 },
         { catalogId: 'beta-app', feedback: 0, newsletter: 0, waitlist: 1 },
@@ -188,6 +189,7 @@ describe('daily PII-free capture receipts', () => {
       applicabilityByCatalogId: {},
       nativeSessionsApplicabilityByCatalogId: {},
       browserVisitorsApplicabilityByCatalogId: {},
+      serverRequestsApplicabilityByCatalogId: {},
       rows: [{ catalogId: 'alpha-app', feedback: null, newsletter: null, waitlist: null }],
     });
 
@@ -232,6 +234,28 @@ describe('daily PII-free capture receipts', () => {
     expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(55);
     expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(55);
     expect(Object.keys(result.browserVisitorsApplicabilityByCatalogId)).toHaveLength(55);
+    expect(Object.keys(result.serverRequestsApplicabilityByCatalogId)).toHaveLength(55);
+    expect(
+      Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
+        (value) => value === 'applicable'
+      )
+    ).toHaveLength(23);
+    expect(
+      Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
+        (value) => value === 'not_applicable'
+      )
+    ).toHaveLength(12);
+    expect(
+      Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
+        (value) => value === 'unknown'
+      )
+    ).toHaveLength(20);
+    expect(result.serverRequestsApplicabilityByCatalogId.gitstat).toBe('applicable');
+    expect(result.serverRequestsApplicabilityByCatalogId['swe-interview-prep']).toBe('applicable');
+    expect(result.serverRequestsApplicabilityByCatalogId['every-song-is-a-website']).toBe(
+      'not_applicable'
+    );
+    expect(result.serverRequestsApplicabilityByCatalogId['reddit-insights']).toBe('unknown');
     expect(
       Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
         (value) => value === 'applicable'

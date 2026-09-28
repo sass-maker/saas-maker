@@ -87,7 +87,7 @@ const nativePlatforms = new Set([
   'tvOS',
   'visionOS',
 ]);
-const appHealthNativeProducts = captureCohort.map((project) => {
+const appHealthMetricProducts = captureCohort.map((project) => {
   const directory = project.presentation?.directory;
   const form = directory?.form;
   const platforms = directory?.platforms;
@@ -109,15 +109,22 @@ const appHealthNativeProducts = captureCohort.map((project) => {
   const browserForm = /\b(web|website|browser|dashboard)\b/i.test(form);
   const hasBrowserSurface =
     platforms.includes('Web') || hasCataloguedSite || hasVisualFooter || browserForm;
+  const serverRequests = project.systems?.appHealth?.serverRequests;
+  if (!['applicable', 'not-applicable', 'unknown'].includes(serverRequests)) {
+    throw new Error(`Server-request applicability needs a catalog decision: ${project.id}`);
+  }
   return {
     id: project.id,
     nativeSessions: hasNativeAppForm ? 'applicable' : 'not-applicable',
     browserVisitors: hasBrowserSurface ? 'applicable' : 'not-applicable',
+    serverRequests,
   };
 });
 for (const project of source.projects) {
   if (!['primary', 'active'].includes(project.lifecycle?.status) && project.systems?.capture)
     throw new Error(`Capture policy is out of scope for ${project.id}`);
+  if (!['primary', 'active'].includes(project.lifecycle?.status) && project.systems?.appHealth)
+    throw new Error(`App Health policy is out of scope for ${project.id}`);
 }
 
 const systemEntries = (key) => {
@@ -287,8 +294,8 @@ outputs.set('site-health/apps/backend/config/capabilities.json', systems.capabil
   outputs.set('saas-maker/tooling/config/app-health-native-applicability.json', {
     schemaVersion: 1,
     purpose:
-      'Native sessions and browser visitors apply only to their catalogued product surfaces; missing telemetry remains unknown.',
-    products: appHealthNativeProducts,
+      'Native sessions, browser visitors, and server requests apply only to their catalogued product surfaces; missing telemetry remains unknown.',
+    products: appHealthMetricProducts,
   });
 }
 
