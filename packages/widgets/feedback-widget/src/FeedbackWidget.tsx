@@ -26,6 +26,9 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
   accentColor = DEFAULT_ACCENT,
   triggerText = DEFAULT_TRIGGER_TEXT,
   enablePointing = true,
+  pageContext,
+  requireConsent = false,
+  privacyUrl,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   // Picking overlays the page; we keep the modal mounted (hidden) so the user's
@@ -92,6 +95,9 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
         types={resolvedTypes}
         accentColor={accentColor}
         enablePointing={enablePointing}
+        pageContext={pageContext}
+        requireConsent={requireConsent}
+        privacyUrl={privacyUrl}
         anchor={anchor}
         onStartPick={startPick}
         onClearAnchor={clearAnchor}

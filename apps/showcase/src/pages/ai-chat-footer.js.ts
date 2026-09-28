@@ -200,11 +200,10 @@ const source = `(() => {
 
   const script = document.currentScript;
   const mountCapture = async (extension, strip) => {
-    if (script.dataset.capture === 'false' || extension.dataset.capturePending === 'true' || document.querySelector('saas-maker-newsletter-capture')) return;
+    if (extension.dataset.capturePending === 'true') return;
     const catalogId = strip.getAttribute('current-project');
     if (!catalogId || !/^[a-z0-9-]+$/.test(catalogId)) return;
     const captureKind = AUTO_CAPTURE_KINDS[catalogId];
-    if (!captureKind) return;
     extension.dataset.capturePending = 'true';
     try {
       const response = await fetch('https://api.sassmaker.com/v1/capture-config/' + catalogId, {
@@ -213,7 +212,8 @@ const source = `(() => {
       if (!response.ok) return;
       const config = await response.json();
       if (!config || typeof config.api_key !== 'string' || !/^pk_[a-z0-9]+$/.test(config.api_key)) return;
-      if (document.querySelector('saas-maker-newsletter-capture')) return;
+      mountFeedback(config.api_key);
+      if (script.dataset.capture === 'false' || !captureKind || document.querySelector('saas-maker-newsletter-capture')) return;
       const capture = document.createElement('saas-maker-newsletter-capture');
       capture.setAttribute('project-key', config.api_key);
       capture.setAttribute('catalog-id', catalogId);
@@ -231,6 +231,28 @@ const source = `(() => {
         document.head.append(loader);
       }
     } catch {} finally { delete extension.dataset.capturePending; }
+  };
+  const mountFeedback = (apiKey) => {
+    if (script.dataset.feedback === 'false' || document.querySelector('[data-saas-maker-feedback-root]')) return;
+    const host = document.createElement('div');
+    host.dataset.saasMakerFeedbackRoot = 'true';
+    document.body.append(host);
+    const pageUrl = window.location.origin + window.location.pathname;
+    const productTitle = document.title || script.dataset.name || 'Product';
+    const mount = () => {
+      const api = window.SaasMakerFeedback;
+      if (typeof api?.mountSharedFooterFeedback === 'function') {
+        api.mountSharedFooterFeedback(host, { apiKey, pageUrl, pageTitle: productTitle });
+      } else {
+        host.remove();
+      }
+    };
+    const loader = document.createElement('script');
+    loader.src = 'https://sassmaker.com/feedback-launcher.js';
+    loader.crossOrigin = 'anonymous';
+    loader.onload = mount;
+    loader.onerror = () => host.remove();
+    document.head.append(loader);
   };
   const mount = () => {
     if (!script || script.dataset.auto === 'false') return;

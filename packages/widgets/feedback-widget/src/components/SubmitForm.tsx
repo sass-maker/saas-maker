@@ -15,6 +15,9 @@ interface SubmitFormProps {
   anchor?: ElementAnchor | null;
   onStartPick?: () => void;
   onClearAnchor?: () => void;
+  pageContext?: { url: string; title: string };
+  requireConsent?: boolean;
+  privacyUrl?: string;
 }
 
 const TYPE_CONFIG: Record<FeedbackType, { label: string; emoji: string }> = {
@@ -50,6 +53,9 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
   anchor,
   onStartPick,
   onClearAnchor,
+  pageContext,
+  requireConsent = false,
+  privacyUrl,
 }) => {
   const [selectedType, setSelectedType] = useState<FeedbackType>(types[0] || 'feedback');
   const [title, setTitle] = useState('');
@@ -59,6 +65,7 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
   const [name, setName] = useState(userName || '');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [consented, setConsented] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const resetForm = useCallback(() => {
@@ -69,6 +76,7 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
     if (!userEmail) setEmail('');
     if (!userName) setName('');
     setError(null);
+    setConsented(false);
   }, [types, userEmail, userName]);
 
   const handleSubmit = useCallback(
@@ -89,6 +97,10 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
         setError('Description is required.');
         return;
       }
+      if (requireConsent && !consented) {
+        setError('Please confirm consent before sending your feedback.');
+        return;
+      }
 
       setSubmitting(true);
       try {
@@ -97,8 +109,8 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
           title: title.trim(),
           description: description.trim(),
           page: {
-            url: typeof window === 'undefined' ? '' : window.location.href,
-            title: typeof document === 'undefined' ? '' : document.title,
+            url: pageContext?.url ?? (typeof window === 'undefined' ? '' : window.location.href),
+            title: pageContext?.title ?? (typeof document === 'undefined' ? '' : document.title),
           },
         };
         if (resolvedEmail.trim()) payload.email = resolvedEmail.trim();
@@ -128,6 +140,9 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
       userEmail,
       userName,
       requireEmail,
+      requireConsent,
+      consented,
+      pageContext,
       anchor,
       resetForm,
       onClearAnchor,
@@ -302,6 +317,31 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
           />
         )}
       </div>
+
+      {/* Error */}
+      {requireConsent && (
+        <label className="smw-consent">
+          <input
+            type="checkbox"
+            checked={consented}
+            onChange={(event) => setConsented(event.target.checked)}
+            required
+          />
+          <span>
+            I agree to send this feedback and the page details above to SaaS Maker.
+            {privacyUrl && (
+              <>
+                {' '}
+                Read the{' '}
+                <a href={privacyUrl} target="_blank" rel="noopener noreferrer">
+                  privacy policy
+                </a>
+                .
+              </>
+            )}
+          </span>
+        </label>
+      )}
 
       {/* Error */}
       {error && (

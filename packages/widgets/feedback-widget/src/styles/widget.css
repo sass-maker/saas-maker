@@ -286,6 +286,28 @@
   gap: 6px;
 }
 
+[data-feedback-widget] .smw-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: .65rem;
+  color: var(--smw-text-muted);
+  font-size: .8rem;
+  line-height: 1.45;
+}
+
+[data-feedback-widget] .smw-consent input {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  margin: .15rem 0 0;
+  accent-color: var(--smw-accent);
+}
+
+[data-feedback-widget] .smw-consent a {
+  color: inherit;
+  text-underline-offset: .18em;
+}
+
 [data-feedback-widget] .smw-label {
   font-size: 13px;
   font-weight: 600;

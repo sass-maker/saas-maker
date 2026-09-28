@@ -148,6 +148,9 @@ at least 44 pixels. Motion is reduced when the visitor prefers reduced motion.
 | `accentColor` | `string` | `#1464ff` | Accent color |
 | `triggerText` | `string` | Feedback | Trigger label |
 | `enablePointing` | `boolean` | `true` | Enable Pinpoint |
+| `pageContext` | `FeedbackPageContext` | browser page | Override submitted page URL and title |
+| `requireConsent` | `boolean` | `false` | Require confirmation before submission |
+| `privacyUrl` | `string` | — | Link from the consent disclosure |
 
 ## Pinpoint
 
@@ -168,6 +171,12 @@ Your product controls the endpoint, authentication, destination, and retention
 policy. Disclose collected feedback, identity fields, screenshots, and
 page-element context in your own privacy policy where appropriate. Never place
 a secret in client-side widget configuration.
+
+When `requireConsent` is enabled, the widget requires an unchecked-by-default
+confirmation before sending and can link to the product's privacy policy.
+Shared footer embeds disable Pinpoint and submit only the origin and path as
+page context, omitting query strings and fragments. Email, name, and screenshots
+remain optional and are sent only when the visitor supplies them.
 
 ## Compatibility
 

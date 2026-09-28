@@ -19,6 +19,9 @@ interface ModalProps {
   anchor?: ElementAnchor | null;
   onStartPick?: () => void;
   onClearAnchor?: () => void;
+  pageContext?: { url: string; title: string };
+  requireConsent?: boolean;
+  privacyUrl?: string;
 }
 
 const CloseIcon: React.FC = () => (
@@ -51,6 +54,9 @@ export const Modal: React.FC<ModalProps> = ({
   anchor,
   onStartPick,
   onClearAnchor,
+  pageContext,
+  requireConsent,
+  privacyUrl,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
@@ -163,6 +169,9 @@ export const Modal: React.FC<ModalProps> = ({
             anchor={anchor}
             onStartPick={onStartPick}
             onClearAnchor={onClearAnchor}
+            pageContext={pageContext}
+            requireConsent={requireConsent}
+            privacyUrl={privacyUrl}
           />
         </div>
       </div>

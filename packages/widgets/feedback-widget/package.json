@@ -29,11 +29,12 @@
   },
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --external react --external react-dom",
+    "build:launcher": "tsup --config tsup.launcher.config.ts",
     "typecheck": "tsc --noEmit",
     "typecheck:contracts": "tsc -p tsconfig.test.json",
     "lint": "biome check .",
     "test": "node --test test/*.test.mjs",
-    "check": "pnpm typecheck && pnpm typecheck:contracts && pnpm lint && pnpm build && pnpm test && pnpm pack --dry-run"
+    "check": "pnpm typecheck && pnpm typecheck:contracts && pnpm lint && pnpm build && pnpm build:launcher && pnpm test && pnpm pack --dry-run"
   },
   "peerDependencies": {
     "react": ">=18 <20",

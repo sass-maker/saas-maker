@@ -27,9 +27,22 @@ describe('SaaS Maker public source boundary', () => {
     expect(source).toMatch(/strip\.setAttribute\('integrated'/);
     expect(source).toMatch(/footer\.slot = 'ai'/);
     expect(source).toMatch(/strip\.slot = 'projects'/);
+    expect(source).toMatch(/mountFeedback\(config\.api_key\)/);
+    expect(source).toMatch(/script\.dataset\.feedback === 'false'/);
+    expect(source).toMatch(/feedback-launcher\.js/);
+    expect(source).toMatch(/AUTO_CAPTURE_KINDS\[catalogId\]/);
     expect(source).not.toMatch(/strip\.remove\(\)/);
     expect(source).not.toMatch(/analytics|localStorage|credential/i);
     expect(() => new Function(source)).not.toThrow();
+  });
+
+  it('resolves feedback keys independently of newsletter policy', async () => {
+    const source = await readShowcase('src/pages/ai-chat-footer.js.ts');
+    const lookup = source.indexOf('mountFeedback(config.api_key)');
+    const newsletterGate = source.indexOf("script.dataset.capture === 'false' || !captureKind");
+    expect(lookup).toBeGreaterThanOrEqual(0);
+    expect(newsletterGate).toBeGreaterThan(lookup);
+    expect(source).toMatch(/window\.location\.origin \+ window\.location\.pathname/);
   });
 
   it('exposes the canonical standalone source without exposing Fleet', async () => {

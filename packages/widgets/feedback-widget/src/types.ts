@@ -30,6 +30,12 @@ export interface FeedbackWidgetCommonProps {
   triggerText?: string;
   /** Allow pointing at a page element to capture selector, text, source, and URL. */
   enablePointing?: boolean;
+  /** Product-controlled page context, useful for omitting query and fragment data. */
+  pageContext?: FeedbackPageContext;
+  /** Require explicit consent before sending. */
+  requireConsent?: boolean;
+  /** Privacy policy linked from the consent disclosure. */
+  privacyUrl?: string;
 }
 
 export interface FeedbackCallbackDestination {
