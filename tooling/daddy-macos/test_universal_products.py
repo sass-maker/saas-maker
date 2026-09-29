@@ -23,7 +23,7 @@ class UniversalProductsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             with self.assertRaisesRegex(ValueError, "not configured"):
-                make_universal("contextdaddy", "sarthakagrawal927/contextdaddy", root, root / "Release")
+                make_universal("contextdaddy", "Significant-Hobbies/contextdaddy", root, root / "Release")
             with self.assertRaisesRegex(ValueError, "Wrong repository"):
                 make_universal("performancedaddy", "someone/other", root, root / "Release")
 

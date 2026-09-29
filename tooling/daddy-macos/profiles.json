@@ -35,7 +35,7 @@
       "updateBaseUrl": "https://browser.daddyrad.com/updates/"
     },
     "contextdaddy": {
-      "repository": "sarthakagrawal927/contextdaddy",
+      "repository": "Significant-Hobbies/contextdaddy",
       "executable": "ContextDaddy",
       "bundleId": "com.significanthobbies.contextdaddy",
       "testArguments": ["--skip", "DesignSnapshotTests"],
