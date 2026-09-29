@@ -96,6 +96,17 @@ const appHealthMetricProducts = captureCohort.map((project) => {
   }
   const hasNativePlatform = platforms.some((platform) => nativePlatforms.has(platform));
   const hasNativeAppForm = hasNativePlatform && /\b(app|game)\b/i.test(form);
+  const declaredNativeSessions = project.systems?.appHealth?.nativeSessions;
+  if (hasNativeAppForm && !['applicable', 'not-applicable'].includes(declaredNativeSessions)) {
+    throw new Error(
+      `Native-session applicability needs an explicit catalog decision: ${project.id}`
+    );
+  }
+  if (!hasNativeAppForm && declaredNativeSessions !== undefined) {
+    throw new Error(
+      `Native-session applicability is only allowed for native app/game forms: ${project.id}`
+    );
+  }
   // A product website is a browser surface even when the underlying product
   // is native. Only the catalog's explicit non-browser form, missing Web
   // platform, absent site target, and absent visual footer surface together
@@ -115,7 +126,7 @@ const appHealthMetricProducts = captureCohort.map((project) => {
   }
   return {
     id: project.id,
-    nativeSessions: hasNativeAppForm ? 'applicable' : 'not-applicable',
+    nativeSessions: hasNativeAppForm ? declaredNativeSessions : 'not-applicable',
     browserVisitors: hasBrowserSurface ? 'applicable' : 'not-applicable',
     serverRequests,
   };
