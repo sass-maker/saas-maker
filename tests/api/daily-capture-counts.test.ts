@@ -261,14 +261,32 @@ describe('daily PII-free capture receipts', () => {
       Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
         (value) => value === 'applicable'
       )
-    ).toHaveLength(13);
+    ).toHaveLength(0);
     expect(
       Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
         (value) => value === 'not_applicable'
       )
-    ).toHaveLength(42);
+    ).toHaveLength(55);
     expect(nativeApplicability.products).toHaveLength(55);
-    expect(result.nativeSessionsApplicabilityByCatalogId['field-track']).toBe('applicable');
+    const nativeProducts = [
+      'codevetter',
+      'pace',
+      'calorie',
+      'setline',
+      'kith',
+      'motion',
+      'field-track',
+      'anchor',
+      'storagedaddy',
+      'browserdaddy',
+      'performancedaddy',
+      'contextdaddy',
+      'war-chest',
+    ];
+    expect(nativeProducts).toHaveLength(13);
+    for (const id of nativeProducts) {
+      expect(result.nativeSessionsApplicabilityByCatalogId[id]).toBe('not_applicable');
+    }
     expect(result.nativeSessionsApplicabilityByCatalogId['slow-serp']).toBe('not_applicable');
     expect(result.nativeSessionsApplicabilityByCatalogId['agent-testing']).toBe('not_applicable');
     const browserNotApplicable = Object.entries(result.browserVisitorsApplicabilityByCatalogId)

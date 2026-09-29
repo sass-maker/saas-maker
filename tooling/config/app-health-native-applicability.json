@@ -4,13 +4,13 @@
   "products": [
     {
       "id": "codevetter",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
     },
     {
       "id": "pace",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
     },
@@ -136,19 +136,19 @@
     },
     {
       "id": "calorie",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "applicable"
     },
     {
       "id": "setline",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
     },
     {
       "id": "kith",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
     },
@@ -196,7 +196,7 @@
     },
     {
       "id": "motion",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
     },
@@ -232,7 +232,7 @@
     },
     {
       "id": "field-track",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "applicable"
     },
@@ -244,7 +244,7 @@
     },
     {
       "id": "anchor",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
     },
@@ -256,19 +256,19 @@
     },
     {
       "id": "storagedaddy",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
     },
     {
       "id": "browserdaddy",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
     },
     {
       "id": "performancedaddy",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
     },
@@ -310,13 +310,13 @@
     },
     {
       "id": "contextdaddy",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
     },
     {
       "id": "war-chest",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
     },
