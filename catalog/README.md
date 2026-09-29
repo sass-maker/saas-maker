@@ -65,6 +65,16 @@ pnpm --dir ../site-health docs:projects
   catalog and re-sync. Fleet-global blocks live under top-level `systems`;
   per-project entries live under `projects[].systems`. Each ordered manifest
   stores its `order` list so regeneration is stable.
+- `tooling/config/app-health-native-applicability.json` is generated from
+  `projects[].systems.appHealth` alongside those policy manifests.
+
+App Health browser visitors are inferred from catalogued browser surfaces.
+Projects with no reportable browser audience may set
+`systems.appHealth.browserVisitors` to an explicit `not-applicable` policy with
+a non-empty `reason` and a `sourceIssue` URL. The generated
+`tooling/config/app-health-native-applicability.json` carries that reason and
+issue reference. This affects applicability labels only; an observed positive
+visitor count remains visible.
 
 Every project declares all eight per-project systems keys. A value of
 `{"absent": "<reason>"}` records an intentional non-entry — it documents the
