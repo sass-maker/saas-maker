@@ -239,18 +239,19 @@ describe('daily PII-free capture receipts', () => {
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'applicable'
       )
-    ).toHaveLength(29);
+    ).toHaveLength(28);
     expect(
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'not_applicable'
       )
-    ).toHaveLength(26);
+    ).toHaveLength(27);
     expect(
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'unknown'
       )
     ).toHaveLength(0);
     expect(result.serverRequestsApplicabilityByCatalogId.gitstat).toBe('applicable');
+    expect(result.serverRequestsApplicabilityByCatalogId['ai-game']).toBe('not_applicable');
     expect(result.serverRequestsApplicabilityByCatalogId['swe-interview-prep']).toBe('applicable');
     expect(result.serverRequestsApplicabilityByCatalogId['every-song-is-a-website']).toBe(
       'not_applicable'
