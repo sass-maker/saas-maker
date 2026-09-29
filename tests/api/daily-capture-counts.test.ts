@@ -293,11 +293,25 @@ describe('daily PII-free capture receipts', () => {
       .filter(([, applicability]) => applicability === 'not_applicable')
       .map(([id]) => id)
       .sort();
-    expect(browserNotApplicable).toEqual(['slow-serp']);
+    expect(browserNotApplicable).toEqual([
+      'fleet-social',
+      'ios-landings',
+      'site-health',
+      'slow-serp',
+      'war-chest',
+    ]);
+    for (const id of ['fleet-social', 'ios-landings', 'site-health', 'war-chest']) {
+      const policy = nativeApplicability.products.find((product) => product.id === id);
+      expect(policy?.browserVisitors).toBe('not-applicable');
+      expect(policy?.browserVisitorsReason).toBeTruthy();
+      expect(policy?.browserVisitorsSourceIssue).toBe(
+        'https://github.com/sass-maker/app-health/issues/91'
+      );
+      expect(result.browserVisitorsApplicabilityByCatalogId[id]).toBe('not_applicable');
+    }
     expect(result.browserVisitorsApplicabilityByCatalogId['chatgpt-connections']).toBe(
       'applicable'
     );
-    expect(result.browserVisitorsApplicabilityByCatalogId['fleet-social']).toBe('applicable');
     expect(result.browserVisitorsApplicabilityByCatalogId['unified-portfolio']).toBe('applicable');
     expect(
       Object.fromEntries(
