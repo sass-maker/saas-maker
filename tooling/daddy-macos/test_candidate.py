@@ -10,7 +10,7 @@ class DaddyCandidateProfilesTests(unittest.TestCase):
     def test_all_four_profiles_bind_to_their_own_repository(self):
         for app in ("storagedaddy", "performancedaddy", "browserdaddy", "contextdaddy"):
             with self.subTest(app=app):
-                repository = (f"Significant-Hobbies/{app}" if app in ("storagedaddy", "performancedaddy")
+                repository = (f"Significant-Hobbies/{app}" if app in ("storagedaddy", "performancedaddy", "contextdaddy")
                               else f"sarthakagrawal927/{app}")
                 profile = profile_for(app, repository)
                 self.assertEqual(profile["repository"], repository)
@@ -20,6 +20,8 @@ class DaddyCandidateProfilesTests(unittest.TestCase):
             profile_for("browserdaddy", "sarthakagrawal927/performancedaddy")
         with self.assertRaisesRegex(ValueError, "Wrong repository"):
             profile_for("storagedaddy", "sarthakagrawal927/storagedaddy")
+        with self.assertRaisesRegex(ValueError, "Wrong repository"):
+            profile_for("contextdaddy", "sarthakagrawal927/contextdaddy")
         with self.assertRaisesRegex(ValueError, "Unknown Daddy app"):
             profile_for("anotherdaddy", "sarthakagrawal927/anotherdaddy")
 
