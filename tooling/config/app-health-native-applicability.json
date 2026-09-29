@@ -186,7 +186,7 @@
       "id": "ai-game",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "applicable"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "app-health",
