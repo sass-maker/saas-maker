@@ -115,23 +115,24 @@ Use the canonical `identity.priority` in Site Health to decide how much bespoke
 craft and validation time a surface receives. Priority changes depth, not
 truthfulness or basic usability.
 
-- **P1 / flagship:** benchmark against Fleet's strongest surfaces. Require a
+- **P1 / flagship:** benchmark against strong original product references that
+  fit the surface's job and the owner-selected direction. Require a
   product-specific composition and proof artifact, complete interaction states,
-  all three responsive viewports, the strongest project checks, and a visual
-  target of at least 90/100.
+  all three responsive viewports and the strongest project checks. Record how
+  the rendered result meets the benchmark, beyond a passing rubric total.
 - **P2 / active:** require polished production quality and a recognisable
   product identity, but prefer selective adaptation over a new design system.
-  Target at least 85/100 visual quality with the standard responsive and project
-  checks.
+  Use the standard responsive, rendered-review and project checks.
 - **P3 / secondary:** use a proven upstream composition with real product
-  content and one product-specific signature. Target at least 80/100 and run the
+  content and one product-specific signature. Run the
   smallest checks that cover the changed surface.
 - **P4 / parked or exploratory:** use the shared template or one upstream block,
-  keep the implementation intentionally small, and target at least 75/100. Do
+  keep the implementation intentionally small and coherent with the direction. Do
   not spend flagship-level time inventing bespoke art direction for a held
   experiment.
 
-Every priority must still pass the 85/100 product-purpose gate, accurately state
+Every priority must still pass the applicable design-review gates; Persuade
+surfaces must pass the separate 85/100 product-purpose gate. Accurately state
 lifecycle and commercial availability, preserve accessible navigation and
 focus, avoid responsive overflow, and keep the primary action functional.
 

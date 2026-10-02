@@ -27,7 +27,8 @@ Choose the smallest output that resolves the decision:
 
 - **Reference brief:** attributable sources, anti-references, and project-native
   principles; default for research-only work.
-- **Direction set:** two or three materially different concepts using the same
+- **Direction set:** three or four materially different concepts for a Fleet
+  overhaul (honor a narrower count only for standalone research), using the same
   real content and evaluation scenario. Vary composition, hierarchy,
   typography, density, color role, and interaction thesis—not superficial
   palettes on one template.
@@ -38,9 +39,13 @@ Choose the smallest output that resolves the decision:
 
 ## 3. Search broadly, then narrow
 
-Read [the research contract](references/research-contract.md). Use current web
-research and the parent [source map](../design-engineering/references/source-map.md)
-to discover candidates. Search by the actual interaction, content type,
+Read [the research contract](references/research-contract.md). When external
+references are requested or the parent workflow requires a reference quality
+bar, use current web research and the relevant entries in the parent
+[source map](../design-engineering/references/source-map.md) to discover
+candidates. A direction set built from sufficient existing product/design
+context does not otherwise require fresh external research; identify retained
+references as prior context rather than claiming a new inspection. Search by the actual interaction, content type,
 audience, and mood rather than only by product category.
 
 Survey enough candidates to reveal patterns, then keep only two or three
@@ -68,7 +73,7 @@ to trace.
 Use static direction probes unless interaction or responsive behavior is the
 decision. When the owner requests or approves working probes for an overhaul:
 
-1. Create two or three materially different probes with the project's existing
+1. Create three or four materially different probes for a Fleet overhaul with the project's existing
    stack, tokens, components, assets, and representative content.
 2. Put them behind one temporary comparison surface or switcher that is absent
    from production navigation, analytics, search indexing, and normal user

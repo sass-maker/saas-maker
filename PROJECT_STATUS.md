@@ -25,6 +25,18 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-10-02 — Fleet design workflow v2 (#172).** New design passes require
+  three or four distinct overhaul directions and attributable owner selection,
+  with separate implementation preflight and completion checks. Required slop
+  checkpoints cover direction review, the first render and the final render;
+  scores remain advisory. Paired landing/app products require a shared system,
+  paired previews, rendered continuity and the CTA/onboarding/first-value path.
+  The output contract requires visible results and concrete rendered fixes.
+  Historical receipts remain historical. The existing native macOS evidence
+  profile is preserved. A scoped Codex routing reminder is available; native
+  hook review/trust remains required, and receipt checks do not enforce tool
+  timing or establish visual quality or owner acceptance.
+
 - **2026-10-02 — Local website slop-score tooling.** Added a credential-free
   runner pinned to a reviewed slop-detect source revision, with isolated setup,
   rendered-page design/copy evidence and explicit scan-failure reporting.
@@ -312,6 +324,8 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Features (shipped)
 
+- Fleet design workflow v2 with owner-selected direction previews, preflight,
+  rendered review, slop checkpoints and landing/application continuity evidence.
 - Canonical `/studio` identity with a personal position on AI, representative
   catalog-backed work, honest studio boundaries, selective commission path,
   matching Markdown/API projections, and entity-correct structured data.

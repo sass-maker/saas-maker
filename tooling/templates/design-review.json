@@ -1,6 +1,6 @@
 {
-  "$schema": "fleet.design-review.v1",
-  "version": 1,
+  "$schema": "fleet.design-review.v2",
+  "version": 2,
   "project": "replace-with-project-id",
   "target": "replace-with-reviewed-surface",
   "surfaceMode": "operate",
@@ -11,14 +11,30 @@
     "design": "DESIGN.md"
   },
   "direction": {
+    "productSurfaces": {
+      "scope": "pending",
+      "landing": "",
+      "app": "",
+      "reason": ""
+    },
+    "pairedPreview": {
+      "landing": "",
+      "app": ""
+    },
+    "source": "existing",
     "references": [],
     "probes": [],
     "selected": "existing-design",
     "approval": "not-required",
+    "ownerEvidence": {
+      "path": "",
+      "quote": ""
+    },
+    "supplied": "",
     "before": "artifacts/design/before.png",
     "library": {
       "strategy": "upstream-first",
-      "primary": "tailwind-plus",
+      "primary": "",
       "sources": [],
       "runtime": "none",
       "customReplacement": {
@@ -38,11 +54,49 @@
       "thesis": "",
       "system": "",
       "signature": "",
-      "risk": ""
+      "risk": "",
+      "qualityBar": ""
     }
   },
   "evidence": {
     "platform": "web",
+    "productContinuity": {
+      "status": "pending",
+      "reason": "",
+      "reviewer": "",
+      "report": "artifacts/design/product-continuity.md",
+      "surfaces": {
+        "landing": "artifacts/design/landing.png",
+        "app": "artifacts/design/app.png"
+      },
+      "checks": {
+        "designSystem": { "status": "pending", "observation": "" },
+        "identity": { "status": "pending", "observation": "" },
+        "vocabulary": { "status": "pending", "observation": "" },
+        "productTruth": { "status": "pending", "observation": "" },
+        "handoff": { "status": "pending", "observation": "" }
+      }
+    },
+    "slopScale": {
+      "platform": "web",
+      "posture": "advisory",
+      "reason": "",
+      "checkpoints": []
+    },
+    "visualReview": {
+      "status": "pending",
+      "reviewer": "",
+      "direction": "",
+      "report": "artifacts/design/review.md",
+      "checks": {
+        "hierarchy": { "status": "pending", "observation": "" },
+        "typography": { "status": "pending", "observation": "" },
+        "composition": { "status": "pending", "observation": "" },
+        "identity": { "status": "pending", "observation": "" },
+        "interaction": { "status": "pending", "observation": "" },
+        "responsive": { "status": "pending", "observation": "" }
+      }
+    },
     "screenshots": [
       {
         "width": 390,
@@ -63,11 +117,13 @@
     },
     "critique": {
       "score": 0,
-      "maximum": 40
+      "maximum": 40,
+      "dimensions": { "hierarchy": 0, "typography": 0, "composition": 0, "identity": 0, "interaction": 0, "responsive": 0 }
     },
     "audit": {
       "score": 0,
-      "maximum": 20
+      "maximum": 20,
+      "dimensions": { "purpose": 0, "accessibility": 0, "behavior": 0, "responsive": 0, "performance": 0 }
     },
     "unresolved": {
       "p0": 0,
@@ -101,7 +157,7 @@
     }
   },
   "ownerFeedback": {
-    "decision": "agent-selected",
-    "note": "The agent selected the direction; no owner approval was required."
+    "decision": "not-required",
+    "note": "Preserve work follows the existing direction; this is not owner acceptance of the result."
   }
 }
