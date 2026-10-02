@@ -351,6 +351,7 @@ const source = `(() => {
         mounted = true;
         launcher.disabled = false;
         launcher.textContent = launcherLabel;
+        status.textContent = '';
       };
       loader.onerror = () => {
         loading = false;
