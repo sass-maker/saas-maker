@@ -87,6 +87,13 @@ export function percentile(values, fraction) {
   return sorted[Math.min(Math.max(rank, 1), sorted.length) - 1];
 }
 
+function metricNumber(value) {
+  if (typeof value !== 'number' && typeof value !== 'string') return null;
+  if (typeof value === 'string' && value.trim() === '') return null;
+  const number = Number(value);
+  return Number.isFinite(number) && number >= 0 ? number : null;
+}
+
 function hostOf(url) {
   try {
     return new URL(url).hostname.replace(/^www\./, '');
@@ -116,9 +123,11 @@ export function readDistribution(historyPath, { tag = null, since = null } = {})
     for (const row of rows) {
       const domain = hostOf(row.url);
       if (!domain) continue;
+      const timestamp = metricNumber(row.started_at);
+      if (timestamp === null || !Number.isFinite(new Date(timestamp).getTime())) continue;
       const bucket = byDomain.get(domain) ?? { runs: [], observedAt: null };
       bucket.runs.push(row);
-      bucket.observedAt = new Date(Number(row.started_at)).toISOString();
+      bucket.observedAt = new Date(timestamp).toISOString();
       byDomain.set(domain, bucket);
     }
     return byDomain;
@@ -163,14 +172,15 @@ export function buildDelta(targets, byDomain) {
   return targets.map((target) => {
     const bucket = byDomain.get(target.domain) ?? null;
     const runs = bucket?.runs ?? [];
+    const values = (metric) => runs.map((run) => metricNumber(run[metric])).filter((value) => value !== null);
     const measured = {
-      score: percentile(runs.map((run) => Number(run.performance_score)).filter(Number.isFinite), 0.5),
-      lcp: percentile(runs.map((run) => Number(run.lcp)).filter(Number.isFinite), 0.75),
-      cls: percentile(runs.map((run) => Number(run.cls)).filter(Number.isFinite), 0.75),
-      tbt: percentile(runs.map((run) => Number(run.tbt)).filter(Number.isFinite), 0.75),
-      ttfb: percentile(runs.map((run) => Number(run.ttfb)).filter(Number.isFinite), 0.75),
-      fcp: percentile(runs.map((run) => Number(run.fcp)).filter(Number.isFinite), 0.75),
-      si: percentile(runs.map((run) => Number(run.si)).filter(Number.isFinite), 0.75),
+      score: percentile(values('performance_score'), 0.5),
+      lcp: percentile(values('lcp'), 0.75),
+      cls: percentile(values('cls'), 0.75),
+      tbt: percentile(values('tbt'), 0.75),
+      ttfb: percentile(values('ttfb'), 0.75),
+      fcp: percentile(values('fcp'), 0.75),
+      si: percentile(values('si'), 0.75),
     };
     const verdicts = Object.fromEntries(
       Object.keys(THRESHOLDS).map((metric) => [metric, verdict(metric, measured[metric])]),
@@ -180,6 +190,8 @@ export function buildDelta(targets, byDomain) {
       .map(([metric]) => metric);
     const failingVitals = failing.filter((metric) => VITALS.includes(metric));
     const measuredAny = runs.length > 0;
+    const incomplete = Object.values(verdicts).includes('not-measured') || runs.some((run) =>
+      ['performance_score', 'lcp', 'cls', 'tbt'].some((metric) => metricNumber(run[metric]) === null));
     const cause = measuredAny && failing.length > 0 ? dominantCause(measured) : null;
     const severity = Object.keys(THRESHOLDS)
       .reduce((total, metric) => total + overshoot(metric, measured[metric]), 0);
@@ -195,7 +207,9 @@ export function buildDelta(targets, byDomain) {
       failingVitals,
       status: !measuredAny
         ? 'not-measured'
-        : failing.length === 0
+        : incomplete
+          ? 'incomplete'
+          : failing.length === 0
           ? 'fast-enough'
           : failingVitals.length === 0
             ? 'score-only'
@@ -235,15 +249,15 @@ function describe(row) {
 }
 
 function report(rows) {
-  const measured = rows.filter((row) => row.status !== 'not-measured');
+  const measured = rows.filter((row) => !['not-measured', 'incomplete'].includes(row.status));
   const behindVitals = measured.filter((row) => row.failingVitals.length > 0);
   const scoreOnly = measured.filter((row) => row.status === 'score-only');
   const lines = [
     `Measured ${measured.length}/${rows.length} targets — `
-    + `${behindVitals.length} below Core Web Vitals, ${scoreOnly.length} passing vitals but under a 90 score, `
+    + `${behindVitals.length} below lab LCP/CLS/TBT thresholds, ${scoreOnly.length} passing lab thresholds but under a 90 score, `
     + `${measured.length - behindVitals.length - scoreOnly.length} clear.`,
     '',
-    'Below Core Web Vitals, ranked by impact against effort:',
+    'Below lab thresholds, ranked by impact against effort (INP/field CWV not measured):',
     '',
   ];
   for (const row of behindVitals) lines.push(...describe(row));
@@ -254,6 +268,10 @@ function report(rows) {
   const unmeasured = rows.filter((row) => row.status === 'not-measured');
   if (unmeasured.length > 0) {
     lines.push(`Not measured: ${unmeasured.map((row) => row.projectId).join(', ')}`);
+  }
+  const incomplete = rows.filter((row) => row.status === 'incomplete');
+  if (incomplete.length > 0) {
+    lines.push(`Incomplete metrics (not a passing verdict): ${incomplete.map((row) => row.projectId).join(', ')}`);
   }
   return lines.join('\n');
 }

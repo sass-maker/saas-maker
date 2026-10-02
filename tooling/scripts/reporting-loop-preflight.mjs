@@ -173,29 +173,41 @@ function loadLedger() {
     .map((line) => JSON.parse(line));
 }
 
-function activeRootKeys() {
-  const contract = JSON.parse(readFileSync(ROOT_QUERIES, 'utf8'));
-  const keys = new Set();
+export function activeGeoQueryKeys(contract, config) {
+  const rootKeys = new Set();
+  const amendedStatuses = new Map();
   for (const root of contract.roots) {
     for (const query of root.queries) {
-      if (query.status === 'active') keys.add(`${root.projectId}|${query.id}`);
+      amendedStatuses.set(`${root.projectId}|${query.id}`, query.status);
+      if (query.status === 'active') rootKeys.add(`${root.projectId}|${query.id}`);
     }
   }
-  return keys;
-}
-
-function activeBroadKeys() {
-  const config = JSON.parse(readFileSync(BROAD_QUERIES, 'utf8'));
-  const keys = new Set();
+  // Mirror the recorder's status precedence: root amendments retire broad qids.
+  // Counting the raw broad file otherwise demands observations the recorder rejects.
+  const broadKeys = new Set();
   for (const product of config.products ?? []) {
     for (const query of product.queries ?? []) {
-      if ((query.status ?? 'active') === 'active') keys.add(`${product.id}|${query.qid}`);
+      const key = `${product.id}|${query.qid}`;
+      if ((amendedStatuses.get(key) ?? query.status ?? 'active') === 'active') broadKeys.add(key);
     }
   }
-  return keys;
+  return { rootKeys, broadKeys };
 }
 
-function checkGeoLedger(now) {
+export function geoCoverage({ seen, rootKeys, broadKeys, monthly, state }) {
+  const requiredKeys = monthly ? new Set([...rootKeys, ...broadKeys]) : rootKeys;
+  const missingKeys = [...requiredKeys].filter((key) => !seen.has(key));
+  return {
+    state: missingKeys.length === 0 ? state : monthly ? 'fail' : state === 'ok' ? 'warn' : state,
+    rootHits: [...rootKeys].filter((key) => seen.has(key)).length,
+    broadHits: [...broadKeys].filter((key) => seen.has(key)).length,
+    requiredHits: requiredKeys.size - missingKeys.length,
+    requiredExpected: requiredKeys.size,
+    missingKeys,
+  };
+}
+
+function checkGeoLedger(now, monthly) {
   const ledger = loadLedger();
   if (ledger.length === 0) {
     record('geo-ledger', 'GEO ledger freshness', 'fail', 'ledger is empty');
@@ -207,22 +219,28 @@ function checkGeoLedger(now) {
   const state = ageState(age, AGE_BUDGET_DAYS.geo);
 
   const seen = new Set(ledger.filter((entry) => entry.date === latest).map((e) => `${e.product}|${e.qid}`));
-  const rootKeys = activeRootKeys();
-  const rootHits = [...rootKeys].filter((key) => seen.has(key)).length;
-  const broadKeys = activeBroadKeys();
-  const broadHits = [...broadKeys].filter((key) => seen.has(key)).length;
+  const { rootKeys, broadKeys } = activeGeoQueryKeys(
+    JSON.parse(readFileSync(ROOT_QUERIES, 'utf8')),
+    JSON.parse(readFileSync(BROAD_QUERIES, 'utf8')),
+  );
+  const coverage = geoCoverage({ seen, rootKeys, broadKeys, monthly, state });
+  const { rootHits, broadHits } = coverage;
 
   const scope = rootHits === rootKeys.size ? 'complete root contract' : `partial root contract (${rootHits}/${rootKeys.size})`;
   record(
     'geo-ledger',
     'GEO ledger freshness',
-    rootHits === rootKeys.size ? state : state === 'ok' ? 'warn' : state,
+    coverage.state,
     `last run ${latest} (${age}d ago, budget ${AGE_BUDGET_DAYS.geo}d) — ${seen.size} observations, ` +
       `${scope}, broad set ${broadHits}/${broadKeys.size}` +
+      (monthly ? `, required union ${coverage.requiredHits}/${coverage.requiredExpected}` : '') +
+      (monthly && coverage.missingKeys.length > 0
+        ? '. INCOMPLETE: monthly GEO needs the complete active root/broad union; do not report a portfolio trend from a partial run.'
+        : '') +
       (state === 'fail'
         ? '. STALE: the weekly routine has not landed a run. Check the routine fired AND the recorder still starts.'
         : ''),
-    { latestDate: latest, ageDays: age, observations: seen.size, rootHits, rootExpected: rootKeys.size, broadHits, broadExpected: broadKeys.size, runDates: dates.length },
+    { latestDate: latest, ageDays: age, observations: seen.size, rootHits, rootExpected: rootKeys.size, broadHits, broadExpected: broadKeys.size, requiredHits: coverage.requiredHits, requiredExpected: coverage.requiredExpected, missingKeys: coverage.missingKeys, runDates: dates.length },
   );
 }
 
@@ -450,7 +468,7 @@ function main() {
 
   if (checkPaths()) {
     checkRecorderSmoke(noSmoke);
-    checkGeoLedger(now);
+    checkGeoLedger(now, monthly);
     if (monthly) {
       const store = openStoreReadOnly();
       const panelInfo = checkPanelIntegrity();
@@ -488,10 +506,12 @@ function main() {
   process.exit(0);
 }
 
-try {
-  main();
-} catch (error) {
-  console.error(`reporting-loop-preflight crashed: ${error?.stack ?? error}`);
-  console.error('A crashing preflight is itself the SAR-2 failure mode. Treat this as a FAIL, not as silence.');
-  process.exit(2);
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  try {
+    main();
+  } catch (error) {
+    console.error(`reporting-loop-preflight crashed: ${error?.stack ?? error}`);
+    console.error('A crashing preflight is itself the SAR-2 failure mode. Treat this as a FAIL, not as silence.');
+    process.exit(2);
+  }
 }
