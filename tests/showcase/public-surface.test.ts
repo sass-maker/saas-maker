@@ -27,7 +27,7 @@ describe('SaaS Maker public source boundary', () => {
     expect(source).toMatch(/strip\.setAttribute\('integrated'/);
     expect(source).toMatch(/footer\.slot = 'ai'/);
     expect(source).toMatch(/strip\.slot = 'projects'/);
-    expect(source).toMatch(/mountFeedback\(config\.api_key\)/);
+    expect(source).toMatch(/mountFeedback\(config\.api_key, extension\)/);
     expect(source).toMatch(/script\.dataset\.feedback === 'false'/);
     expect(source).toMatch(/feedback-launcher\.js/);
     expect(source).toMatch(/data-feedback-widget/);
@@ -42,7 +42,7 @@ describe('SaaS Maker public source boundary', () => {
 
   it('resolves feedback keys independently of newsletter policy', async () => {
     const source = await readShowcase('src/pages/ai-chat-footer.js.ts');
-    const lookup = source.indexOf('mountFeedback(config.api_key)');
+    const lookup = source.indexOf('mountFeedback(config.api_key, extension)');
     const newsletterGate = source.indexOf("script.dataset.capture === 'false' || !captureKind");
     expect(lookup).toBeGreaterThanOrEqual(0);
     expect(newsletterGate).toBeGreaterThan(lookup);

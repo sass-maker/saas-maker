@@ -86,12 +86,23 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
       style={{ '--smw-accent': accentColor } as React.CSSProperties}
     >
       {!hideTrigger && (
-        <TriggerButton
-          onClick={() => setIsOpen(true)}
-          position={position}
-          accentColor={accentColor}
-          triggerText={triggerText}
-        />
+        <section
+          className={`smw-support smw-support--${position}`}
+          aria-label="Feedback and support"
+        >
+          <div className="smw-support__copy">
+            <h2 className="smw-support__title">Help shape this product.</h2>
+            <p className="smw-support__description">
+              Have a question or an idea? Reach the team here, without covering the apps.
+            </p>
+          </div>
+          <TriggerButton
+            onClick={() => setIsOpen(true)}
+            position={position}
+            accentColor={accentColor}
+            triggerText={triggerText}
+          />
+        </section>
       )}
       <Modal
         isOpen={isOpen}

@@ -124,8 +124,7 @@ Callback errors and URL ingestion failures are shown in the form.
 
 ## Interaction and accessibility
 
-The floating trigger opens a right-side feedback panel on larger screens and a
-full-height sheet on small screens. The panel opens with focus in the form,
+The in-flow support section opens the feedback dialog. The dialog opens with focus in the form,
 keeps keyboard focus inside while open, closes with Escape or the close button,
 and returns focus to the trigger. Type choices expose their selected state to
 assistive technology; controls have visible keyboard focus and touch targets of
@@ -143,10 +142,10 @@ at least 44 pixels. Motion is reduced when the visitor prefers reduced motion.
 | `userName` | `string` | — | Pre-filled name |
 | `requireEmail` | `boolean` | `false` | Require an email before submission |
 | `types` | `FeedbackType[]` | bug, feature, feedback | Allowed types |
-| `position` | bottom-right or bottom-left | bottom-right | Trigger position |
+| `position` | bottom-right or bottom-left | bottom-right | Align the trigger right or left inside the support section |
 | `theme` | light, dark, or auto | auto | Color theme |
 | `accentColor` | `string` | `#1464ff` | Accent color |
-| `triggerText` | `string` | Feedback | Trigger label |
+| `triggerText` | `string` | Send feedback | Trigger label |
 | `enablePointing` | `boolean` | `true` | Enable Pinpoint |
 | `pageContext` | `FeedbackPageContext` | browser page | Override submitted page URL and title |
 | `requireConsent` | `boolean` | `false` | Require confirmation before submission |

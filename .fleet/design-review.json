@@ -2,60 +2,87 @@
   "$schema": "fleet.design-review.v1",
   "version": 1,
   "project": "saas-maker",
-  "target": "IssuePages repository publication on public product detail pages",
-  "mode": "preserve",
+  "target": "shared-feedback-support-section",
+  "surfaceMode": "operate",
+  "mode": "overhaul",
   "register": "product",
   "context": {
-    "product": "apps/showcase/PRODUCT.md",
+    "product": "packages/widgets/feedback-widget/README.md",
     "design": "apps/showcase/DESIGN.md"
   },
   "direction": {
-    "references": [],
-    "probes": [],
-    "selected": "existing-design",
-    "approval": "not-required",
-    "before": "artifacts/design/project-detail-before-1440.png"
+    "references": ["Owner-selected Feedback A preview"],
+    "probes": [{ "id": "a", "path": ".fleet/design/feedback-a.html" }],
+    "selected": "a",
+    "approval": "approved",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "existing",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": ""
+      }
+    },
+    "contract": {
+      "purpose": "Keep Fleet feedback reachable without obscuring product actions, titles, or newsletter controls.",
+      "purposeSource": "Feedback issue #163 and owner-approved direction contract",
+      "canonicalPurpose": "One shared in-flow footer support section opens the existing feedback dialog while preserving each product's own page and newsletter experience.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "Visitors using products that include the shared footer integration or React package",
+      "job": "Send a question, bug report, or product idea without losing their place or covering page controls.",
+      "thesis": "Feedback belongs beside footer support and newsletter actions in normal page flow.",
+      "system": "Existing shared AI/project footer composition, neutral border and surface tokens, and React widget styles; no new runtime dependency.",
+      "signature": "A product-specific support card in document flow, followed by the site's newsletter controls.",
+      "risk": "The action is less immediately discoverable than a persistent floating button."
+    }
   },
   "evidence": {
     "screenshots": [
-      {
-        "width": 390,
-        "path": "artifacts/design/after-390.png"
-      },
-      {
-        "width": 768,
-        "path": "artifacts/design/after-768.png"
-      },
-      {
-        "width": 1440,
-        "path": "artifacts/design/after-1440.png"
-      }
+      { "width": 390, "path": "artifacts/feedback-review/daddyrad-390.png" },
+      { "width": 768, "path": "artifacts/feedback-review/daddyrad-768.png" },
+      { "width": 1440, "path": "artifacts/feedback-review/daddyrad-1440.png" },
+      { "width": 390, "path": "artifacts/feedback-review/issuepages-reader-390.png" },
+      { "width": 768, "path": "artifacts/feedback-review/issuepages-reader-768.png" },
+      { "width": 1440, "path": "artifacts/feedback-review/issuepages-reader-1440.png" },
+      { "width": 390, "path": "artifacts/feedback-review/issuepages-dialog-390.png" }
     ],
     "projectCheck": {
-      "command": "pnpm test && pnpm build:showcase",
+      "command": "pnpm --dir apps/showcase typecheck; pnpm --dir packages/widgets/feedback-widget typecheck, typecheck:contracts, test, build, build:launcher; Playwright-free Chrome CDP fixtures for IssuePages and DaddyRad at 390/768/1440 plus load-failure recovery and dialog-open checks",
       "status": "pass"
     },
-    "critique": {
-      "score": 40,
-      "maximum": 40
-    },
-    "audit": {
-      "score": 20,
-      "maximum": 20
-    },
-    "unresolved": {
-      "p0": 0,
-      "p1": 0
-    },
-    "detector": {
-      "posture": "advisory",
-      "findings": [
-        "The detector returned zero findings. Independent review resolved hierarchy, contrast, touch-target, layout-shift, and runtime-fallback findings; blocked-script fallback evidence is captured in artifacts/design/fallback-390.png."
-      ]
+    "critique": { "score": 34, "maximum": 40 },
+    "audit": { "score": 18, "maximum": 20 },
+    "unresolved": { "p0": 0, "p1": 0 },
+    "detector": { "posture": "advisory", "findings": [] },
+    "comprehension": {
+      "status": "not-applicable",
+      "reviewer": "",
+      "answers": {
+        "product": "",
+        "audience": "",
+        "value": "",
+        "mechanism": "",
+        "proof": "",
+        "nextAction": ""
+      },
+      "purposeScore": {
+        "product": 0,
+        "audience": 0,
+        "value": 0,
+        "mechanism": 0,
+        "proof": 0,
+        "nextAction": 0,
+        "total": 0
+      },
+      "mismatches": []
     }
   },
   "ownerFeedback": {
-    "decision": "delegated",
-    "note": "Owner approved the feature and delegated implementation in the established preserve lane."
+    "decision": "keep",
+    "note": "Owner explicitly selected Feedback direction A (Footer support section) on 2026-10-02."
   }
 }

@@ -33,6 +33,20 @@ try {
     if (!['persuade', 'operate', 'read', 'experience'].includes(surfaceMode)) {
       throw new Error('--surface-mode must be persuade, operate, read, or experience');
     }
+    const platform = args.platform ?? 'web';
+    if (!['web', 'native-macos'].includes(platform)) {
+      throw new Error('--platform must be web or native-macos');
+    }
+    const minimum = Number(args['supported-minimum-width']);
+    if (platform === 'native-macos' && (
+      !/^\d+$/.test(args['supported-minimum-width'] ?? '')
+      || !Number.isSafeInteger(minimum) || minimum < 600
+    )) {
+      throw new Error('--supported-minimum-width must be an integer at least 600 for native-macos');
+    }
+    if (platform === 'web' && args['supported-minimum-width'] !== undefined) {
+      throw new Error('--supported-minimum-width requires --platform native-macos');
+    }
 
     const destination = path.join(projectRoot, '.fleet/design-review.json');
     await mkdir(path.dirname(destination), { recursive: true });
@@ -46,6 +60,15 @@ try {
     receipt.surfaceMode = surfaceMode;
     receipt.mode = mode;
     receipt.register = register;
+    if (platform === 'native-macos') {
+      receipt.evidence.platform = platform;
+      receipt.evidence.supportedMinimumWidth = minimum;
+      receipt.evidence.screenshots = [0, 200, 400].map((offset) => ({
+        width: Math.min(minimum + offset, Number.MAX_SAFE_INTEGER),
+        height: null,
+        path: `artifacts/design/after-native-${offset}.png`,
+      }));
+    }
     receipt.direction.approval = mode === 'preserve' ? 'not-required' : 'agent-selected';
     if (mode === 'preserve') {
       receipt.direction.library.primary = 'existing-project-system';

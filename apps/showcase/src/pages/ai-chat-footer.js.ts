@@ -15,18 +15,21 @@ const providerLogos = {
 
 const feedbackLauncherCss = `
   [data-saas-maker-feedback-launcher] {
-    position: fixed; z-index: 2147483646; right: max(20px, env(safe-area-inset-right));
-    bottom: max(20px, env(safe-area-inset-bottom)); min-width: 44px; min-height: 44px;
-    padding: 0 15px; border: 1px solid #d6d9df; border-radius: 12px; background: #fff;
-    color: #20232a; box-shadow: 0 5px 18px rgb(16 28 20 / .14), 0 1px 3px rgb(16 28 20 / .08);
-    font-family: inherit; font-size: 14px; font-weight: 650; line-height: 1.2;
-    cursor: pointer; transition: transform 160ms ease, box-shadow 160ms ease;
+    display: inline-flex; min-width: 44px; min-height: 44px; align-items: center; justify-content: center;
+    padding: .65rem 1rem; border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+    border-radius: .65rem; background: transparent; color: inherit; font: inherit;
+    font-weight: 680; line-height: 1.3; cursor: pointer; text-align: center;
+    transition: background-color 160ms ease, border-color 160ms ease;
   }
-  [data-saas-maker-feedback-launcher]:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 22px rgb(16 28 20 / .16), 0 2px 5px rgb(16 28 20 / .1); }
+  [data-saas-maker-feedback-root] { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1rem; width: min(100% - 2rem, 72rem); margin: 1.25rem auto; padding: 1.25rem; border: 1px solid color-mix(in srgb, currentColor 18%, transparent); border-radius: 1rem; background: color-mix(in srgb, currentColor 4%, transparent); color: inherit; font-family: inherit; font-size: 14px; line-height: 1.45; }
+  [data-saas-maker-feedback-root] .saas-maker-feedback-copy { min-width: 0; }
+  [data-saas-maker-feedback-root] h2 { margin: 0; font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 720; letter-spacing: -.025em; line-height: 1.2; }
+  [data-saas-maker-feedback-root] p { margin: .4rem 0 0; color: color-mix(in srgb, currentColor 76%, transparent); }
+  [data-saas-maker-feedback-launcher]:hover:not(:disabled) { border-color: color-mix(in srgb, currentColor 36%, transparent); background: color-mix(in srgb, currentColor 6%, transparent); }
   [data-saas-maker-feedback-launcher]:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
   [data-saas-maker-feedback-launcher]:disabled { cursor: wait; opacity: .75; }
-  [data-saas-maker-feedback-root] .saas-maker-feedback-status { position: fixed; right: 20px; bottom: 72px; z-index: 2147483646; color: #a32929; font: 12px/1.4 system-ui, sans-serif; }
-  @media (prefers-color-scheme: dark) { [data-saas-maker-feedback-launcher] { border-color: #42433c; background: #20211d; color: #f2f1e9; } }
+  [data-saas-maker-feedback-root] .saas-maker-feedback-status { grid-column: 1 / -1; color: #a32929; font: 12px/1.4 system-ui, sans-serif; }
+  @media (max-width: 560px) { [data-saas-maker-feedback-root] { grid-template-columns: minmax(0, 1fr); } [data-saas-maker-feedback-launcher] { width: 100%; } }
   @media (prefers-reduced-motion: reduce) { [data-saas-maker-feedback-launcher] { transition: none; } }
 `;
 
@@ -159,6 +162,7 @@ const source = `(() => {
           --fleet-footer-surface: color-mix(in srgb, currentColor 3%, transparent);
           display: block;
           width: 100%;
+          grid-column: 1 / -1;
           border-block-start: 1px solid var(--fleet-footer-border);
           background: var(--fleet-footer-surface);
           color: inherit;
@@ -173,6 +177,7 @@ const source = `(() => {
         .projects-head a { display: inline-flex; min-height: 2.75rem; align-items: center; color: inherit; font-size: .72rem; font-weight: 680; text-underline-offset: .22em; }
         .projects-head a:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
         .capture { grid-column: 1 / -1; min-width: 0; }
+        .support { grid-column: 1 / -1; min-width: 0; }
         ::slotted(*) { min-width: 0; }
         @media (max-width: 760px) {
           .extension { grid-template-columns: minmax(0, 1fr); }
@@ -206,7 +211,12 @@ const source = `(() => {
       const captureSlot = document.createElement('slot');
       captureSlot.name = 'capture';
       capture.append(captureSlot);
-      region.append(ai, projects, capture);
+      const support = document.createElement('div');
+      support.className = 'support';
+      const supportSlot = document.createElement('slot');
+      supportSlot.name = 'support';
+      support.append(supportSlot);
+      region.append(ai, projects, support, capture);
       root.append(style, region);
     }
   }
@@ -229,7 +239,7 @@ const source = `(() => {
       if (!response.ok) return;
       const config = await response.json();
       if (!config || typeof config.api_key !== 'string' || !/^pk_[a-z0-9]+$/.test(config.api_key)) return;
-      mountFeedback(config.api_key);
+      mountFeedback(config.api_key, extension);
       if (script.dataset.capture === 'false' || !captureKind || document.querySelector('saas-maker-newsletter-capture')) return;
       const capture = document.createElement('saas-maker-newsletter-capture');
       capture.setAttribute('project-key', config.api_key);
@@ -249,30 +259,41 @@ const source = `(() => {
       }
     } catch {} finally { delete extension.dataset.capturePending; }
   };
-  const mountFeedback = (apiKey) => {
+  const mountFeedback = (apiKey, extension) => {
     if (script.dataset.feedback === 'false' || document.querySelector('[data-saas-maker-feedback-root]')) return;
     const hasExistingWidget = (host) => Array.from(document.querySelectorAll('[data-feedback-widget]'))
       .some((widget) => !host.contains(widget));
     if (hasExistingWidget(document.createElement('div'))) return;
-    const host = document.createElement('div');
+    const host = document.createElement('section');
     host.dataset.saasMakerFeedbackRoot = 'true';
+    host.slot = 'support';
+    host.setAttribute('aria-label', 'Feedback and support');
+    const copy = document.createElement('div');
+    copy.className = 'saas-maker-feedback-copy';
+    const heading = document.createElement('h2');
+    heading.textContent = 'Help shape ' + (script.dataset.name || 'this product') + '.';
+    const description = document.createElement('p');
+    description.textContent = 'Have a question or an idea? Reach the team here, without covering the apps.';
+    copy.append(heading, description);
     const launcher = document.createElement('button');
     launcher.type = 'button';
     launcher.dataset.saasMakerFeedbackLauncher = 'true';
-    launcher.setAttribute('aria-label', 'Give feedback');
-    launcher.textContent = 'Feedback';
+    const launcherLabel = 'Send feedback ↗';
+    launcher.setAttribute('aria-haspopup', 'dialog');
+    launcher.setAttribute('aria-label', 'Send feedback');
+    launcher.textContent = launcherLabel;
     const status = document.createElement('span');
     status.className = 'saas-maker-feedback-status';
     status.setAttribute('role', 'status');
     status.setAttribute('aria-live', 'polite');
     const widgetRoot = document.createElement('div');
     widgetRoot.dataset.saasMakerFeedbackMount = 'true';
-    host.append(launcher, status, widgetRoot);
+    host.append(copy, launcher, status, widgetRoot);
     const style = document.createElement('style');
     style.dataset.saasMakerFeedbackStyle = 'true';
     style.textContent = ${JSON.stringify(feedbackLauncherCss)};
     document.head.append(style);
-    document.body.append(host);
+    extension.append(host);
     const pageUrl = window.location.origin + window.location.pathname;
     const productTitle = document.title || script.dataset.name || 'Product';
     const options = { apiKey, pageUrl, pageTitle: productTitle };
@@ -304,7 +325,7 @@ const source = `(() => {
       if (typeof api?.mountSharedFooterFeedback === 'function') {
         api.mountSharedFooterFeedback(widgetRoot, options);
         mounted = true;
-        launcher.textContent = 'Feedback';
+        launcher.textContent = launcherLabel;
         launcher.disabled = false;
         status.textContent = '';
         return;
@@ -321,7 +342,7 @@ const source = `(() => {
         const loadedApi = window.SaasMakerFeedback;
         if (typeof loadedApi?.mountSharedFooterFeedback !== 'function') {
           launcher.disabled = false;
-          launcher.textContent = 'Feedback';
+          launcher.textContent = launcherLabel;
           status.textContent = 'Feedback could not load. Try again.';
           loader.remove();
           return;
@@ -329,12 +350,12 @@ const source = `(() => {
         loadedApi.mountSharedFooterFeedback(widgetRoot, options);
         mounted = true;
         launcher.disabled = false;
-        launcher.textContent = 'Feedback';
+        launcher.textContent = launcherLabel;
       };
       loader.onerror = () => {
         loading = false;
         launcher.disabled = false;
-        launcher.textContent = 'Feedback';
+        launcher.textContent = launcherLabel;
         status.textContent = 'Feedback could not load. Try again.';
         loader.remove();
       };
@@ -366,7 +387,17 @@ const source = `(() => {
       strip.setAttribute('integrated', '');
       strip.slot = 'projects';
       extension.append(footer, strip);
-      if (!extension.isConnected) document.body.append(extension);
+      if (!extension.isConnected) {
+        const capture = document.querySelector('saas-maker-newsletter-capture');
+        const pageFooter = capture?.closest('footer') || document.querySelector('footer');
+        if (pageFooter?.parentElement) {
+          pageFooter.parentElement.insertBefore(extension, pageFooter);
+        } else if (capture && !pageFooter) {
+          capture.parentElement?.insertBefore(extension, capture);
+        } else {
+          document.body.append(extension);
+        }
+      }
       void mountCapture(extension, strip);
       return true;
     };
