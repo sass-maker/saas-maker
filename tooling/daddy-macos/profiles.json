@@ -24,7 +24,7 @@
       "updateBaseUrl": "https://performance.daddyrad.com/updates/"
     },
     "browserdaddy": {
-      "repository": "sarthakagrawal927/browserdaddy",
+      "repository": "Significant-Hobbies/browserdaddy",
       "executable": "BrowserDaddy",
       "bundleId": "com.significanthobbies.browserdaddy",
       "testArguments": [],

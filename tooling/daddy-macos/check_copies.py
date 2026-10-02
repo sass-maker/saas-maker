@@ -17,8 +17,7 @@ def main() -> int:
     args = parser.parse_args()
     for app in APPS:
         try:
-            repository = (f"Significant-Hobbies/{app}" if app in ("storagedaddy", "performancedaddy", "contextdaddy")
-                          else f"sarthakagrawal927/{app}")
+            repository = f"Significant-Hobbies/{app}"
             profile_for(app, repository)
             check_shared_copies(app, args.fleet_root / app)
         except ValueError as error:
