@@ -38,12 +38,13 @@ const searchableText = (project: DirectoryProject) =>
 const currentCount = DIRECTORY_GROUPS.find((group) => group.id === 'current')?.projects.length ?? 0;
 const featuredCount = DIRECTORY_GROUPS.find((group) => group.id === 'featured')?.projects.length ?? 0;
 const pastCount = DIRECTORY_GROUPS.find((group) => group.id === 'past')?.projects.length ?? 0;
+const projectCountLabel = (count: number) => `${count} ${count === 1 ? 'project' : 'projects'}`;
 const projectProfilePath = (project: DirectoryProject) =>
   project.id === 'saas-maker' ? '/' : `/p/${project.id}`;
 ---
 
 <Layout
-  title={`${DIRECTORY_COUNT} projects — SaaS Maker directory`}
+  title={`${projectCountLabel(DIRECTORY_COUNT)} — SaaS Maker directory`}
   description="Working Fleet experiments and reference projects, grouped by current focus and paused work."
 >
   <!--
@@ -65,9 +66,9 @@ const projectProfilePath = (project: DirectoryProject) =>
             Paused work can still be useful; inclusion does not imply a finished product.
           </p>
         </div>
-        <div class="directory-count-pane" aria-label={`${DIRECTORY_COUNT} projects`}>
+        <div class="directory-count-pane" aria-label={`${projectCountLabel(DIRECTORY_COUNT)} total`}>
           <strong>{DIRECTORY_COUNT}</strong>
-          <span>projects</span>
+          <span>total {DIRECTORY_COUNT === 1 ? 'project' : 'projects'}</span>
           <small>{featuredCount} featured · {currentCount} current · {pastCount} paused</small>
         </div>
       </header>
@@ -118,7 +119,7 @@ const projectProfilePath = (project: DirectoryProject) =>
         </div>
 
         <div class="directory-result-line">
-          <p id="directory-result-count" aria-live="polite">Showing all {DIRECTORY_COUNT} projects</p>
+          <p id="directory-result-count" aria-live="polite">Showing all {projectCountLabel(DIRECTORY_COUNT)}</p>
           <button id="directory-reset" type="button">Reset filters</button>
         </div>
       </section>
@@ -128,7 +129,7 @@ const projectProfilePath = (project: DirectoryProject) =>
           <section class="directory-section" data-directory-section={group.id} aria-labelledby={`directory-${group.id}`}>
             <header class="directory-section-head">
               <div>
-                <p>{group.projects.length} projects</p>
+                <p data-directory-section-count>{projectCountLabel(group.projects.length)}</p>
                 <h2 id={`directory-${group.id}`}>{group.label}</h2>
               </div>
               <p>{group.description}</p>
@@ -288,7 +289,7 @@ const projectProfilePath = (project: DirectoryProject) =>
       </aside>
 
       <button class="directory-filter-return" data-directory-filter-return hidden type="button">
-        <span data-filter-return-count>{DIRECTORY_COUNT}</span> results · Filters
+        <span data-filter-return-count>{DIRECTORY_COUNT}</span> <span data-filter-return-label>{DIRECTORY_COUNT === 1 ? 'result' : 'results'}</span> · Filters
       </button>
     </main>
     <Footer />
@@ -300,6 +301,7 @@ const projectProfilePath = (project: DirectoryProject) =>
   const controls = document.querySelector<HTMLElement>('[data-directory-controls]');
   const filterReturn = document.querySelector<HTMLButtonElement>('[data-directory-filter-return]');
   const filterReturnCount = document.querySelector<HTMLElement>('[data-filter-return-count]');
+  const filterReturnLabel = document.querySelector<HTMLElement>('[data-filter-return-label]');
   const search = document.querySelector<HTMLInputElement>('#directory-search');
   const form = document.querySelector<HTMLSelectElement>('#directory-form');
   const platform = document.querySelector<HTMLSelectElement>('#directory-platform');
@@ -323,6 +325,7 @@ const projectProfilePath = (project: DirectoryProject) =>
   }
 
   const normalize = (value: string) => value.trim().toLocaleLowerCase();
+  const projectCountLabel = (count: number) => `${count} ${count === 1 ? 'project' : 'projects'}`;
 
   function updateDirectory() {
     const query = normalize(search?.value ?? '');
@@ -341,14 +344,26 @@ const projectProfilePath = (project: DirectoryProject) =>
     }
 
     for (const section of sections) {
-      section.hidden = !section.querySelector('[data-directory-row]:not([hidden])');
+      const sectionRows = [...section.querySelectorAll<HTMLElement>('[data-directory-row]')];
+      const sectionVisible = sectionRows.filter((row) => !row.hidden).length;
+      section.hidden = sectionVisible === 0;
+      const count = section.querySelector<HTMLElement>('[data-directory-section-count]');
+      if (count) {
+        count.textContent =
+          sectionVisible === sectionRows.length
+            ? projectCountLabel(sectionVisible)
+            : `${projectCountLabel(sectionVisible)} of ${sectionRows.length} total`;
+      }
     }
 
     if (resultCount) {
       resultCount.textContent =
-        visible === rows.length ? `Showing all ${visible} projects` : `Showing ${visible} of ${rows.length} projects`;
+        visible === rows.length
+          ? `Showing all ${projectCountLabel(visible)}`
+          : `Showing ${projectCountLabel(visible)} of ${rows.length} total`;
     }
     if (filterReturnCount) filterReturnCount.textContent = String(visible);
+    if (filterReturnLabel) filterReturnLabel.textContent = visible === 1 ? 'result' : 'results';
     if (empty) empty.hidden = visible !== 0;
     if (root) root.hidden = visible === 0;
   }
