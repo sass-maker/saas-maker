@@ -36,8 +36,9 @@ Return:
 2. **References** — two or three entries with source, lesson, and avoid note.
 3. **Anti-reference** — at least one named pattern or example and why.
 4. **Direction principles** — three to five project-native rules.
-5. **Direction set** — only when multiple concepts are requested; define two or
-   three materially distinct concepts using the same content and evaluation
+5. **Direction set** — when multiple concepts are requested or required by a
+   Fleet overhaul; define three or four materially distinct concepts for an
+   overhaul (honor a narrower standalone research brief), using the same content and evaluation
    scenario, with differences deeper than palette swaps.
 6. **Probe brief** — only when probes are requested; define materially distinct
    static or code probes without prescribing a screenshot trace.
@@ -69,7 +70,7 @@ Use code probes only when static evidence cannot demonstrate the interaction or
 responsive decision. Record:
 
 - why working code is necessary;
-- two or three probe ids and project-relative paths;
+- three or four probe ids and project-relative paths for a Fleet overhaul;
 - the temporary comparison surface and how it stays out of production
   navigation, analytics, indexing, and normal user journeys;
 - the shared content and evaluation scenario;
