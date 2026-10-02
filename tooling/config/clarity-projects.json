@@ -188,16 +188,9 @@
       "repo": "drank",
       "clarityId": "y6bt519ewi",
       "hostname": "domains.sassmaker.com",
-      "tag": "drank",
-      "wiredFiles": [
-        "drank/app/layout.tsx"
-      ],
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "drank/app/layout.tsx"
-        }
-      ]
+      "wiredFiles": [],
+      "reason": "Archived and undeployed product with no maintained browser-delivered surface; its historical Clarity identity is retained without claiming current source wiring.",
+      "browserSurfaces": []
     },
     {
       "id": "email-manager",
@@ -322,16 +315,9 @@
       "repo": "everythingrated",
       "clarityId": "y6btfbf6sv",
       "hostname": "ratings.highsignal.app",
-      "tag": "everythingrated",
-      "wiredFiles": [
-        "everythingrated/apps/web/src/app/layout.tsx"
-      ],
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "everythingrated/apps/web/src/app/layout.tsx"
-        }
-      ]
+      "wiredFiles": [],
+      "reason": "Archived and undeployed experiment with no maintained browser-delivered surface; its historical Clarity identity is retained without claiming current source wiring.",
+      "browserSurfaces": []
     },
     {
       "id": "research-papers",
@@ -408,16 +394,9 @@
       "repo": "india-standards",
       "clarityId": "y6btzgl5r3",
       "hostname": "india-standards.significanthobbies.com",
-      "tag": "india-standards",
-      "wiredFiles": [
-        "india-standards/app/layout.tsx"
-      ],
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "india-standards/app/layout.tsx"
-        }
-      ]
+      "wiredFiles": [],
+      "reason": "Archived and undeployed product with no maintained browser-delivered surface; its historical Clarity identity is retained without claiming current source wiring.",
+      "browserSurfaces": []
     },
     {
       "id": "anime-list",
@@ -628,9 +607,37 @@
       "repo": "aliveville",
       "clarityId": "y6bv5ous5y",
       "hostname": "aliveville.com",
-      "wiredFiles": [],
-      "reason": "Intentionally unwired: reactivated 2026-09-27, but the live marketing surface remains marked do-not-modify; wiring requires an explicit owner decision via clarity-fleet-rollout.",
-      "browserSurfaces": []
+      "wiredFiles": [
+        "aliveville/astro-landing/src/layouts/Layout.astro",
+        "aliveville/astro-landing/src/layouts/LegalLayout.astro",
+        "aliveville/astro-landing/src/pages/index.astro",
+        "aliveville/astro-landing/src/pages/ai-world-simulator.astro",
+        "aliveville/web3d/index.html"
+      ],
+      "reason": "Wired 2026-10-02 after explicit owner decision: Clarity covers all public Astro landing pages (each page is standalone — the shared Layout.astro is currently unreferenced — plus LegalLayout for privacy/terms) and the /game/ browser client; the game root is masked before collection so world content is not uploaded.",
+      "browserSurfaces": [
+        {
+          "kind": "landing",
+          "file": "aliveville/astro-landing/src/layouts/Layout.astro"
+        },
+        {
+          "kind": "landing",
+          "file": "aliveville/astro-landing/src/layouts/LegalLayout.astro"
+        },
+        {
+          "kind": "landing",
+          "file": "aliveville/astro-landing/src/pages/index.astro"
+        },
+        {
+          "kind": "landing",
+          "file": "aliveville/astro-landing/src/pages/ai-world-simulator.astro"
+        },
+        {
+          "kind": "browser-app",
+          "file": "aliveville/web3d/index.html",
+          "mask": "root"
+        }
+      ]
     },
     {
       "id": "protein-index",
@@ -725,9 +732,22 @@
       "repo": "open-historia",
       "clarityId": "y6bvtr9hri",
       "hostname": "historia.aliveville.com",
-      "wiredFiles": [],
-      "reason": "Intentionally unwired: reactivated 2026-09-27 as a secondary landing under the shared landing-engine program; analytics not installed pending an explicit wiring decision.",
-      "browserSurfaces": []
+      "wiredFiles": [
+        "open-historia/landing-astro/src/layouts/Layout.astro",
+        "open-historia/app.html"
+      ],
+      "reason": "Wired 2026-10-02 after explicit owner decision: Clarity covers the Astro landing and the SPA shell; the application root is masked before collection so player commands and game content are not uploaded.",
+      "browserSurfaces": [
+        {
+          "kind": "landing",
+          "file": "open-historia/landing-astro/src/layouts/Layout.astro"
+        },
+        {
+          "kind": "browser-app",
+          "file": "open-historia/app.html",
+          "mask": "root"
+        }
+      ]
     },
     {
       "id": "companion-robot",
@@ -889,10 +909,18 @@
       "name": "PH Catalog",
       "repo": "ph-catalog",
       "clarityId": "ymdtaonrgw",
-      "hostname": "github.com",
-      "wiredFiles": [],
-      "reason": "Undeployed local catalogue and analytics toolkit with no public browser-delivered surface to tag.",
-      "browserSurfaces": []
+      "hostname": "ph.significanthobbies.com",
+      "tag": "ph-catalog",
+      "wiredFiles": [
+        "ph-catalog/landing/index.html"
+      ],
+      "reason": "Clarity covers only the public privacy-safe synthetic demo; the full local catalogue, DuckDB database, and analytics data remain outside browser analytics.",
+      "browserSurfaces": [
+        {
+          "kind": "landing",
+          "file": "ph-catalog/landing/index.html"
+        }
+      ]
     },
     {
       "id": "nomad-data-adventure",
