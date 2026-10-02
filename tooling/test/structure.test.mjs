@@ -39,6 +39,7 @@ const activeScripts = new Set([
   'psi-swarm-fleet.mjs',
   'public-profile.mjs',
   'reporting-loop-preflight.mjs',
+  'slop-score.mjs',
   'unlink-project-agent-assets.sh',
   'validate-tooling.mjs',
   'verify-local.mjs',

@@ -51,6 +51,23 @@ The former copy-to-fork `templates/ios-landing` is
 [retired](templates/ios-landing/DEPRECATED.md). Scaffolding an iOS landing page
 means adding a product directory to the factory, not forking a template.
 
+## Local website slop score
+
+Score a running localhost or public website using the pinned, rendered-page
+slop-detect engine. No account or AI API key is needed. Install once, then scan:
+
+```bash
+node scripts/slop-score.mjs setup
+node scripts/slop-score.mjs http://localhost:3000 --copy
+```
+
+Git, Bun and Node 20+ are required. Installation goes into a user-local cache,
+outside the checked-out repository. Results include per-pattern evidence and
+version provenance; scores remain advisory. The
+[comparison and usage guide](docs/slop-score.md) explains the selection,
+limitations, options and JSON output. Agents can discover the runner as
+`script:slop-score` through `fleet-capabilities.mjs`.
+
 ## Public monitoring
 
 The repository also runs checks whose source and inputs are already public:

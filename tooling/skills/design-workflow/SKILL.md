@@ -222,6 +222,15 @@ unclear or incorrect product promise. Scores are floors, not proof of taste.
 Detector findings are advisory. Record them, but never rewrite an intentional
 `DESIGN.md` decision only to silence an aesthetic heuristic.
 
+For meaningful web reviews, also run the pinned local
+[slop-score runner](../../docs/slop-score.md) on the running before/after surface
+when available. Use `node <tooling-root>/scripts/slop-score.mjs <url> --json`.
+Record the source pin, definitions version, preset, viewport, score and triggered
+evidence alongside the review. Keep this fingerprint advisory and separate from
+purpose, critique and audit scores; it is not a completion gate. A failed or
+blocked scan is unknown, never Clean. Preserve intentional design choices and
+do not substitute score reduction for responsive browser review.
+
 ## 4. Close with a decision record
 
 For overhaul work, owner selection is a required approval gate. Record `keep`

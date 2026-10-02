@@ -43,6 +43,7 @@ test('standalone capability catalog has valid roots and execution profiles', () 
       'scripts/git-health.sh',
       'scripts/github-priority-queue.mjs',
       'scripts/link-project-agent-assets.sh',
+      'scripts/slop-score.mjs',
       'scripts/unlink-project-agent-assets.sh',
       'scripts/validate-tooling.mjs',
       'scripts/verify-local.mjs',

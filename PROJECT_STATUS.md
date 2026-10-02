@@ -25,6 +25,14 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-10-02 — Local website slop-score tooling.** Added a credential-free
+  runner pinned to a reviewed slop-detect source revision, with isolated setup,
+  rendered-page design/copy evidence and explicit scan-failure reporting.
+  Indexed as `script:slop-score` in the public capability catalog and linked from
+  the design-review skill as an advisory before/after signal. The public
+  [usage guide](tooling/docs/slop-score.md) includes standalone setup and the
+  comparison against alternative tools. Scores do not gate design completion.
+
 - **2026-09-26 — Launchdesk research backlog burn-down continued.** New
   `playbook-research` batches covered DR 48 through DR 32 of the
   `needs-research` queue: ~70 new per-platform playbooks this cycle plus
