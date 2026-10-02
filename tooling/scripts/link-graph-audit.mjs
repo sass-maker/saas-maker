@@ -158,6 +158,14 @@ async function collectSitemapPages(options) {
       issues.push({ url: canonicalSitemap, status: response.status, error: response.error });
       continue;
     }
+    if (!/<(?:urlset|sitemapindex)\b/iu.test(response.body)) {
+      issues.push({
+        url: canonicalSitemap,
+        status: response.status,
+        error: 'response is not a sitemap document',
+      });
+      continue;
+    }
     for (const raw of response.body.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/giu)) {
       let url;
       try {

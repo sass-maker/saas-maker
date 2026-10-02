@@ -26,6 +26,19 @@ test('extractAnchorHrefs keeps HTTP anchors and removes fragments', () => {
   ]);
 });
 
+test('auditLinkGraph rejects a 200 HTML fallback instead of reporting an empty success', async () => {
+  const result = await auditLinkGraph({
+    sitemap: 'https://example.test/sitemap-index.xml',
+    fetchImpl: async () => response(200, '<!doctype html><html><h1>Home</h1></html>'),
+  });
+  assert.equal(result.summary.sitemapPages, 0);
+  assert.deepEqual(result.issues.sitemap, [{
+    url: 'https://example.test/sitemap-index.xml',
+    status: 200,
+    error: 'response is not a sitemap document',
+  }]);
+});
+
 test('auditLinkGraph reports internal errors, redirects, orphans, and external errors', async () => {
   const pages = new Map([
     ['http://127.0.0.1:4000/sitemap.xml', response(200, '<urlset><url><loc>https://example.test/</loc></url></urlset>')],
