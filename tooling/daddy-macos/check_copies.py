@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check app-owned copies of canonical Daddy macOS utilities."""
+"""Read-only byte-copy check using candidate.SHARED_COPIES (including appcast_core)."""
 
 import argparse
 from pathlib import Path

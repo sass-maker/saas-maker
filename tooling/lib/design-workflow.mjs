@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 
 const POLICY_SCHEMA = 'fleet.design-workflow.v1';
 const RECEIPT_SCHEMA = 'fleet.design-review.v1';
@@ -154,9 +155,79 @@ function validateOverhaulDirection(direction, rules, root, pathExists, errors) {
   }
 }
 
-function validateReviewEvidence(evidence, policy, enforceMinimumScores, root, pathExists, errors) {
+function validateNativeEvidence(evidence, context, root, pathExists, readEvidenceFile, errors) {
+  const minimum = evidence.supportedMinimumWidth;
+  if (!Number.isSafeInteger(minimum) || minimum < 600) {
+    errors.push('native-macos supportedMinimumWidth must be an integer at least 600');
+  }
+  const designPath = context?.design ?? 'DESIGN.md';
+  requireEvidencePath(designPath, 'context.design', root, pathExists, errors);
+  try {
+    const resolved = path.resolve(root, designPath);
+    const relative = path.relative(root, resolved);
+    if (relative.startsWith('..') || path.isAbsolute(relative)) throw new Error('outside project');
+    const document = readEvidenceFile(resolved, 'utf8');
+    if (!/^Platform:\s*native-macos\s*$/m.test(document)) {
+      errors.push('context.design must document Platform: native-macos');
+    }
+    const documented = document.match(/^Supported minimum width:\s*(\d+)\s*$/m);
+    if (!documented || Number(documented[1]) !== minimum) {
+      errors.push('context.design must document the matching Supported minimum width');
+    }
+  } catch {
+    errors.push('native-macos context.design must be readable');
+  }
+
+  const screenshots = evidence.screenshots;
+  if (!Array.isArray(screenshots) || screenshots.length < 3) {
+    errors.push('native-macos requires at least three distinct actual screenshots');
+    return;
+  }
+  const paths = new Set();
+  const images = new Set();
+  for (const [index, screenshot] of screenshots.entries()) {
+    const label = `native screenshot.${index}`;
+    if (!Number.isSafeInteger(screenshot?.width) || screenshot.width < minimum) {
+      errors.push(`${label} width must be an integer at or above supportedMinimumWidth`);
+    }
+    if (!Number.isSafeInteger(screenshot?.height) || screenshot.height < 1) {
+      errors.push(`${label} height must be a positive integer`);
+    }
+    requireEvidencePath(screenshot?.path, label, root, pathExists, errors);
+    if (typeof screenshot?.path !== 'string' || !screenshot.path.trim()) continue;
+    const resolved = path.resolve(root, screenshot.path);
+    const relative = path.relative(root, resolved);
+    if (relative.startsWith('..') || path.isAbsolute(relative)) continue;
+    if (paths.has(resolved)) errors.push(`${label} must use a distinct screenshot path`);
+    paths.add(resolved);
+    try {
+      const bytes = readEvidenceFile(resolved);
+      const png = bytes.subarray(0, 8).equals(Buffer.from('89504e470d0a1a0a', 'hex'));
+      const jpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+      const webp = bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WEBP';
+      if (!png && !jpeg && !webp) errors.push(`${label} must be a PNG, JPEG, or WebP image`);
+      const hash = createHash('sha256').update(bytes).digest('hex');
+      if (images.has(hash)) errors.push(`${label} must contain a distinct screenshot image`);
+      images.add(hash);
+    } catch {
+      errors.push(`${label} image must be readable`);
+    }
+  }
+  if (!screenshots.some((entry) => entry?.width === minimum)) {
+    errors.push('native-macos requires a screenshot at supportedMinimumWidth');
+  }
+  if (new Set(screenshots.map((entry) => entry?.width)).size < 3) {
+    errors.push('native-macos requires at least three distinct window widths');
+  }
+}
+
+function validateReviewEvidence(evidence, context, policy, enforceMinimumScores, root, pathExists, readEvidenceFile, errors) {
   const screenshots = evidence.screenshots ?? [];
-  for (const width of policy.qualityGate.requiredViewportWidths) {
+  if (evidence.platform === 'native-macos') {
+    validateNativeEvidence(evidence, context, root, pathExists, readEvidenceFile, errors);
+  } else if (evidence.platform !== undefined && evidence.platform !== 'web') {
+    errors.push('evidence.platform must be web or native-macos when specified');
+  } else for (const width of policy.qualityGate.requiredViewportWidths) {
     const screenshot = screenshots.find((entry) => entry?.width === width);
     if (!screenshot) {
       errors.push(`missing required viewport ${width}`);
@@ -258,6 +329,7 @@ function validateLibrarySourcing(library, errors) {
 export function validateDesignReview(receipt, policyInput, {
   projectRoot,
   pathExists = existsSync,
+  readEvidenceFile = readFileSync,
   enforceMinimumScores = true,
 } = {}) {
   const policy = validateDesignWorkflowPolicy(policyInput);
@@ -296,10 +368,12 @@ export function validateDesignReview(receipt, policyInput, {
 
   validateReviewEvidence(
     receipt?.evidence ?? {},
+    receipt?.context,
     policy,
     enforceMinimumScores,
     root,
     pathExists,
+    readEvidenceFile,
     errors,
   );
 

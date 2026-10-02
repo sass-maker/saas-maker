@@ -42,6 +42,7 @@
     }
   },
   "evidence": {
+    "platform": "web",
     "screenshots": [
       {
         "width": 390,

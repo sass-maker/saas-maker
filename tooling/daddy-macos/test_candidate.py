@@ -2,8 +2,10 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
-from candidate import check_shared_copies, profile_for
+from candidate import SHARED_COPIES, check_shared_copies, profile_for
+from check_copies import main as check_copies_main
 
 
 class DaddyCandidateProfilesTests(unittest.TestCase):
@@ -43,6 +45,8 @@ class DaddyCandidateProfilesTests(unittest.TestCase):
             shared.mkdir()
             (shared / "worker-core.mjs").write_text("original")
             (shared / "sparkle_core.py").write_text("sparkle")
+            (shared / "appcast_core.py").write_text("appcast")
+            (root / "scripts/appcast_core.py").write_text("appcast")
             (root / "scripts/sparkle_core.py").write_text("sparkle")
             with self.assertRaisesRegex(ValueError, "Missing shared Daddy utility"):
                 check_shared_copies("browserdaddy", root, shared)
@@ -51,6 +55,31 @@ class DaddyCandidateProfilesTests(unittest.TestCase):
                 check_shared_copies("browserdaddy", root, shared)
             (root / "site/worker-core.mjs").write_text("original")
             check_shared_copies("browserdaddy", root, shared)
+            (root / "scripts/appcast_core.py").write_text("changed appcast")
+            with self.assertRaisesRegex(ValueError, "Shared Daddy utility drift: scripts/appcast_core.py"):
+                check_shared_copies("browserdaddy", root, shared)
+
+    def test_appcast_copy_manifest_covers_only_the_three_sparkle_apps(self):
+        for app in ("storagedaddy", "performancedaddy", "browserdaddy"):
+            self.assertIn(("appcast_core.py", "scripts/appcast_core.py"), SHARED_COPIES[app])
+        self.assertEqual(SHARED_COPIES["contextdaddy"], [])
+        with tempfile.TemporaryDirectory() as directory:
+            check_shared_copies("contextdaddy", Path(directory))
+
+    def test_four_app_copy_cli_passes_integrated_fixture_and_rejects_new_copy_drift(self):
+        shared = Path(__file__).with_name("shared")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for app, copies in SHARED_COPIES.items():
+                for canonical, destination in copies:
+                    target = root / app / destination
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_bytes((shared / canonical).read_bytes())
+            with patch('sys.argv', ['check_copies.py', '--fleet-root', str(root)]), \
+                 patch('builtins.print'):
+                self.assertEqual(check_copies_main(), 0)
+                (root / 'performancedaddy/scripts/appcast_core.py').write_bytes(b'drift')
+                self.assertEqual(check_copies_main(), 1)
 
 
 if __name__ == "__main__":

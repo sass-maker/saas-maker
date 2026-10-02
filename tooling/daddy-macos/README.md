@@ -32,11 +32,51 @@ The `shared/` files are the canonical sources. App copies keep local packaging i
 
 | Canonical file | App copies |
 | --- | --- |
+| `shared/appcast_core.py` | `storagedaddy`, `performancedaddy`, `browserdaddy`: `scripts/appcast_core.py` (apply alongside the wrapper patches below) |
 | `shared/sparkle_core.py` | `storagedaddy`, `performancedaddy`, `browserdaddy`: `scripts/sparkle_core.py` |
 | `shared/prepare-memory-pack.py` | `storagedaddy`: `scripts/prepare-memory-pack.py`; ContextDaddy's current local feature branch also has this copy, but public `main` does not |
 | `shared/worker-core.mjs` | `performancedaddy`, `browserdaddy`: `site/worker-core.mjs` |
 
 When changing a canonical file, copy it into the listed apps and run `python3 -m unittest test_candidate test_release_contract test_release_preflight` here, the affected app's smallest test, and the four-app copy check. The candidate workflow rejects a diverged copy. The app's wrapper, key, hostname, helper inputs, and product tests remain app-owned.
+
+### Shared appcast validation (#151)
+
+`shared/appcast_core.py` selects exactly one regular DMG, rejects missing,
+malformed or ambiguous checksum records, verifies the post-staple digest before
+staging, and verifies the staged bytes again after copying and feed generation.
+The fresh feed must contain exactly one enclosure with the exact app-supplied
+download URL, staged byte length, and a base64 Ed25519 signature decoding to 64
+bytes. This validates signature shape; it does not verify the signature against
+the app's public key or qualify an Apple release. No credentials, subprocesses,
+providers, or app identity policy enter the shared module.
+
+Reviewable patches are in `app-wrapper-patches/storagedaddy.patch`,
+`app-wrapper-patches/performancedaddy.patch`, and
+`app-wrapper-patches/browserdaddy.patch`. They retain each app's existing
+qualification, filename/URL policy, configuration check, and signing invocation.
+StorageDaddy retains its signed/notarized/stapled receipt gate; the other two
+retain their codesign and stapler gates. ContextDaddy is unchanged and gains
+neither an appcast copy nor Sparkle.
+
+The parent must apply each patch in its app repository and copy the canonical
+`shared/appcast_core.py` to `scripts/appcast_core.py` in the same integration.
+Until that happens, candidate/copy checks intentionally fail on the missing new
+copy. Run the app's existing tests and the four-app copy check after integration;
+publish the reviewed shared revision and update caller pins through the normal
+review flow. Unpublished source and mock tests do not close #151 or establish
+real signed-feed/public-key/installed-update acceptance. Those protected
+integration and release gates remain app-owned.
+
+From the repository root, run the credential-free fixtures with:
+
+```bash
+python3 -B -m unittest discover -s tooling/daddy-macos/shared -p 'test_appcast*.py'
+```
+
+The wrapper tests reconstruct their inspected baseline from full-context patches,
+check/apply the patches only inside temporary fixtures, and mock configuration,
+Apple tools and Sparkle generation with an empty synthetic environment. They
+never invoke signing tools or access real keys.
 
 ## Local checks
 
