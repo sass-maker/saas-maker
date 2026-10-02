@@ -1,9 +1,42 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import test from 'node:test';
-import { activeGeoQueryKeys, geoCoverage } from '../scripts/reporting-loop-preflight.mjs';
+import { activeGeoQueryKeys, clarityReceiptScope, geoCoverage } from '../scripts/reporting-loop-preflight.mjs';
 
 const rootKeys = new Set(['product|brand', 'product|domain']);
 const broadKeys = new Set(['product|brand', 'product|problem']);
+
+test('CLI flushes a complete JSON report even when the preflight fails', () => {
+  const result = spawnSync(process.execPath, [
+    new URL('../scripts/reporting-loop-preflight.mjs', import.meta.url).pathname,
+    '--monthly', '--json', '--no-smoke',
+  ], { encoding: 'utf8', timeout: 20_000 });
+  assert.ok([0, 1].includes(result.status), result.stderr);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.scope, 'monthly');
+  assert.ok(Array.isArray(report.checks));
+  assert.ok(report.checks.length > 0);
+  assert.ok(['ok', 'warn', 'fail'].includes(report.verdict));
+});
+
+test('Clarity receipt coverage excludes inactive/unwired history but retains drift and gaps', () => {
+  const wired = { clarityId: 'synthetic', browserSurfaces: [{ kind: 'landing' }] };
+  const catalog = { projects: [
+    { id: 'current', lifecycle: { status: 'active' }, systems: { clarity: wired } },
+    { id: 'missing', lifecycle: { status: 'primary' }, systems: { clarity: wired } },
+    { id: 'inactive', lifecycle: { status: 'inactive' }, systems: { clarity: wired } },
+    { id: 'unwired', lifecycle: { status: 'active' }, systems: { clarity: { clarityId: 'synthetic' } } },
+  ] };
+  const keys = ['current', 'inactive', 'unwired', 'orphan'].map((id) =>
+    ({ key: `evidence-refresh:clarity:${id}`, value_json: '{}' }));
+  const search = { key: 'evidence-refresh:search:portfolio', value_json: '{}' };
+  const result = clarityReceiptScope([...keys, search], catalog);
+  assert.equal(result.eligible, 2);
+  assert.deepEqual(result.excluded, ['inactive', 'unwired']);
+  assert.deepEqual(result.orphaned, ['orphan']);
+  assert.deepEqual(result.missing, ['missing']);
+  assert.deepEqual(result.rows.map((row) => row.key), [keys[0].key, keys[3].key, search.key]);
+});
 
 test('root amendments retire legacy broad queries in the same way as the recorder', () => {
   const config = { products: [{ id: 'product', origin: 'https://example.com', queries: [
