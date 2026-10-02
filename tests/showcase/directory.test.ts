@@ -1,10 +1,183 @@
 import { readFile } from 'node:fs/promises';
+import { runInNewContext } from 'node:vm';
+import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 import { DIRECTORY_PROJECTS, directoryFormFamilies } from '../../apps/showcase/src/data/directory';
 
 async function readRepository(relativePath: string) {
   return readFile(new URL(`../../${relativePath}`, import.meta.url), 'utf8');
 }
+
+// Execute the page's real client script against a small synthetic directory.
+async function directoryHarness(groups = ['current', 'current', 'current', 'past']) {
+  class Element {
+    hidden = false;
+    value = '';
+    textContent = '';
+    dataset: Record<string, string> = {};
+    attributes: Record<string, string> = {};
+    listeners: Record<string, () => void> = {};
+    focused = false;
+    children: Element[] = [];
+    count?: Element;
+    addEventListener(event: string, listener: () => void) {
+      this.listeners[event] = listener;
+    }
+    setAttribute(name: string, value: string) {
+      this.attributes[name] = value;
+    }
+    focus() {
+      this.focused = true;
+    }
+    getBoundingClientRect() {
+      return { bottom: 1 };
+    }
+    querySelectorAll() {
+      return this.children;
+    }
+    querySelector(selector: string) {
+      return selector === '[data-directory-section-count]' ? this.count : null;
+    }
+    fire(event: string) {
+      this.listeners[event]?.();
+    }
+  }
+  const selectors = [
+    '[data-directory-root]',
+    '[data-directory-controls]',
+    '[data-directory-filter-return]',
+    '[data-filter-return-count]',
+    '[data-filter-return-label]',
+    '#directory-search',
+    '#directory-form',
+    '#directory-platform',
+    '#directory-result-count',
+    '#directory-reset',
+    '[data-directory-empty]',
+    '[data-empty-reset]',
+  ];
+  const elements = Object.fromEntries(selectors.map((selector) => [selector, new Element()]));
+  const rows = groups.map((group, index) => {
+    const row = new Element();
+    row.dataset = {
+      group,
+      form: index === 1 ? 'CLI' : 'Web|Library',
+      platforms: index === 2 ? 'macOS' : 'Web|Local',
+      search: index === 3 ? 'beta archive' : 'alpha experiment',
+    };
+    return row;
+  });
+  const sections = [...new Set(groups)].map((group) => {
+    const section = new Element();
+    section.children = rows.filter((row) => row.dataset.group === group);
+    section.count = new Element();
+    section.count.textContent = `${section.children.length} projects`;
+    return section;
+  });
+  const buttons = ['all', ...new Set(groups)].map((group) => {
+    const button = new Element();
+    button.dataset.groupFilter = group;
+    return button;
+  });
+  const page = await readRepository('apps/showcase/src/pages/projects.astro');
+  const script = page.match(/<script>([\s\S]*?)<\/script>/)?.[1];
+  expect(script).toBeTruthy();
+  runInNewContext(
+    ts.transpileModule(script!, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText,
+    {
+      document: {
+        querySelector: (selector: string) => elements[selector],
+        querySelectorAll: (selector: string) =>
+          ({
+            '[data-directory-row]': rows,
+            '[data-directory-section]': sections,
+            '[data-group-filter]': buttons,
+          })[selector],
+      },
+      window: { addEventListener() {} },
+    }
+  );
+  return { elements, rows, sections, buttons };
+}
+
+describe('directory visible counts', () => {
+  it('counts the intersection of search, form, platform and lifecycle filters', async () => {
+    const { elements, rows, sections, buttons } = await directoryHarness();
+    elements['#directory-search'].value = '  ALPHA  ';
+    elements['#directory-search'].fire('input');
+    expect(sections[0].count?.textContent).toBe('3 projects');
+    expect(sections[1].hidden).toBe(true);
+    elements['#directory-form'].value = 'Web';
+    elements['#directory-form'].fire('change');
+    expect(sections[0].count?.textContent).toBe('2 projects of 3 total');
+    elements['#directory-platform'].value = 'Web';
+    elements['#directory-platform'].fire('change');
+    buttons[1].fire('click');
+
+    expect(rows.map((row) => row.hidden)).toEqual([false, true, true, true]);
+    expect(sections[0].count?.textContent).toBe('1 project of 3 total');
+    expect(sections[1].count?.textContent).toBe('0 projects of 1 total');
+    expect(elements['#directory-result-count'].textContent).toBe('Showing 1 project of 4 total');
+    expect(elements['[data-filter-return-count]'].textContent).toBe('1');
+    expect(elements['[data-filter-return-label]'].textContent).toBe('result');
+    expect(elements['[data-directory-empty]'].hidden).toBe(true);
+
+    buttons[0].fire('click');
+    elements['#directory-search'].value = '';
+    elements['#directory-search'].fire('input');
+    expect(elements['#directory-result-count'].textContent).toBe('Showing 2 projects of 4 total');
+    expect(sections[1].hidden).toBe(false);
+    buttons[1].fire('click');
+    expect(elements['#directory-result-count'].textContent).toBe('Showing 1 project of 4 total');
+    expect(sections[1].hidden).toBe(true);
+  });
+
+  it.each([
+    '#directory-reset',
+    '[data-empty-reset]',
+  ])('clears zero results through %s', async (reset) => {
+    const { elements, rows, sections, buttons } = await directoryHarness();
+    elements['#directory-search'].value = 'missing';
+    elements['#directory-form'].value = 'CLI';
+    elements['#directory-platform'].value = 'macOS';
+    buttons[2].fire('click');
+    expect(elements['#directory-result-count'].textContent).toBe('Showing 0 projects of 4 total');
+    expect(elements['[data-filter-return-label]'].textContent).toBe('results');
+    expect(elements['[data-directory-root]'].hidden).toBe(true);
+    expect(elements['[data-directory-empty]'].hidden).toBe(false);
+    expect(sections.every((section) => section.hidden)).toBe(true);
+    expect(sections[0].count?.textContent).toBe('0 projects of 3 total');
+
+    elements[reset].fire('click');
+    expect(rows.every((row) => !row.hidden)).toBe(true);
+    expect(sections.every((section) => !section.hidden)).toBe(true);
+    expect(sections.map((section) => section.count?.textContent)).toEqual([
+      '3 projects',
+      '1 project',
+    ]);
+    expect(elements['#directory-result-count'].textContent).toBe('Showing all 4 projects');
+    expect(elements['[data-filter-return-count]'].textContent).toBe('4');
+    expect(elements['[data-directory-root]'].hidden).toBe(false);
+    expect(elements['[data-directory-empty]'].hidden).toBe(true);
+    for (const selector of ['#directory-search', '#directory-form', '#directory-platform']) {
+      expect(elements[selector].value).toBe('');
+    }
+    expect(buttons.map((button) => button.attributes['aria-pressed'])).toEqual([
+      'true',
+      'false',
+      'false',
+    ]);
+    expect(elements['#directory-search'].focused).toBe(true);
+  });
+
+  it('uses singular labels when the complete directory has one project', async () => {
+    const { elements, sections } = await directoryHarness(['current']);
+    elements['#directory-reset'].fire('click');
+    expect(elements['#directory-result-count'].textContent).toBe('Showing all 1 project');
+    expect(sections[0].count?.textContent).toBe('1 project');
+    expect(elements['[data-filter-return-label]'].textContent).toBe('result');
+  });
+});
 
 describe('verified public Fleet directory', () => {
   it('projects only shareable identities with privacy-safe anatomy', async () => {
@@ -145,6 +318,8 @@ describe('verified public Fleet directory', () => {
     expect(page).toMatch(/Latest retained commit/);
     expect(page).toMatch(/Prominent tools/);
     expect(page).toMatch(/data-directory-filter-return/);
+    expect(page).toContain('data-directory-section-count');
+    expect(page).toContain("total {DIRECTORY_COUNT === 1 ? 'project' : 'projects'}");
     expect(page).toMatch(/Shareable does not mean finished/);
     expect(data).toMatch(/publicCatalog\.directory/);
     expect(nav).toMatch(/href="\/projects"/);
