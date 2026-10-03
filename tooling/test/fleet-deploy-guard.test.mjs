@@ -13,38 +13,49 @@ const docsSource = 'name: CI\non: [push]\njobs:\n  docs:\n    runs-on: ubuntu-la
 
 export function exercise(options = {}) {
   const root = mkdtempSync(join(tmpdir(), 'fleet-guard-test-'));
-  const project = join(root, 'sample');
+  const fleetRoot = options.symlinkRoot ? join(root, 'physical-fleet-root') : root;
+  const project = join(fleetRoot, 'sample');
+  const repository = options.linkedWorktree ? join(fleetRoot, 'repository') : project;
+  const rootAlias = join(root, 'fleet-root-alias');
   const bin = join(root, 'bin');
-  mkdirSync(join(project, '.github/workflows'), { recursive: true });
+  mkdirSync(fleetRoot, { recursive: true });
+  mkdirSync(join(repository, '.github/workflows'), { recursive: true });
   mkdirSync(bin);
   const git = (...args) => {
-    const result = spawnSync('git', args, { cwd: project, encoding: 'utf8' });
+    const result = spawnSync('git', args, { cwd: repository, encoding: 'utf8' });
     assert.equal(result.status, 0, result.stderr);
     return result.stdout.trim();
   };
   try {
-    writeFileSync(join(project, 'wrangler.json'), '{"name":"synthetic-target"}');
-    writeFileSync(join(project, 'package.json'), JSON.stringify({ scripts: options.scripts || { quality: 'pnpm test', test: 'vitest run' } }));
+    if (options.symlinkRoot) {
+      mkdirSync(join(repository, 'apps/cockpit'), { recursive: true });
+      writeFileSync(join(repository, 'apps/cockpit/wrangler.toml'), 'name = "synthetic-target"\n');
+      symlinkSync(fleetRoot, rootAlias);
+    } else writeFileSync(join(repository, 'wrangler.json'), '{"name":"synthetic-target"}');
+    writeFileSync(join(repository, 'package.json'), JSON.stringify({ scripts: options.scripts || { quality: 'pnpm test', test: 'vitest run' } }));
     for (const [directory, scripts] of Object.entries(options.packages || {})) {
-      mkdirSync(join(project, directory), { recursive: true });
-      writeFileSync(join(project, directory, 'package.json'), JSON.stringify({ scripts }));
+      mkdirSync(join(repository, directory), { recursive: true });
+      writeFileSync(join(repository, directory, 'package.json'), JSON.stringify({ scripts }));
     }
     if (options.externalPackage) {
       const external = join(root, 'outside');
       mkdirSync(external);
       writeFileSync(join(external, 'package.json'), JSON.stringify({ scripts: { build: 'astro build' } }));
-      symlinkSync(external, join(project, 'website'));
+      symlinkSync(external, join(repository, 'website'));
     }
-    writeFileSync(join(project, ci.path), options.ciSource ?? ciSource);
-    writeFileSync(join(project, docs.path), docsSource);
-    if (options.ignoredPackage) writeFileSync(join(project, '.gitignore'), 'website/package.json\n');
-    git('init', '-b', 'main');
+    writeFileSync(join(repository, ci.path), options.ciSource ?? ciSource);
+    writeFileSync(join(repository, docs.path), docsSource);
+    if (options.ignoredPackage) writeFileSync(join(repository, '.gitignore'), 'website/package.json\n');
+    git('init', '-b', options.linkedWorktree ? 'fixture-source' : 'main');
     git('add', '.');
     git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-m', 'synthetic fixture');
     git('remote', 'add', 'origin', 'https://github.com/example/sample.git');
     const sha = git('rev-parse', 'HEAD');
     git('update-ref', 'refs/remotes/origin/main', sha);
-    git('branch', '--set-upstream-to=origin/main', 'main');
+    if (options.linkedWorktree) {
+      git('branch', '--track', 'main', 'origin/main');
+      git('worktree', 'add', project, 'main');
+    } else git('branch', '--set-upstream-to=origin/main', 'main');
     const run = (workflow, overrides = {}) => ({ id: workflow.id * 10, workflow_id: workflow.id, run_attempt: 1, head_sha: sha, head_branch: 'main', event: 'push', status: 'completed', conclusion: 'success', ...overrides });
     const runs = options.runs ? options.runs(run) : [run(docs), run(ci)];
     const definitions = options.definitions ?? [ci, docs];
@@ -70,7 +81,7 @@ else process.exit(3);
     chmodSync(join(bin, 'gh'), 0o755);
     return spawnSync('bash', [guard, 'sample', ...(options.force ? ['--force'] : [])], {
       encoding: 'utf8',
-      env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, FLEET_ROOT_OVERRIDE: root, GUARD_FIXTURE: fixturePath },
+      env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, FLEET_ROOT_OVERRIDE: options.symlinkRoot ? rootAlias : fleetRoot, GUARD_FIXTURE: fixturePath },
       timeout: 10000,
     });
   } finally {
@@ -97,6 +108,18 @@ test('all exact-head push workflows green with source-backed package test passes
   const result = exercise();
   assert.equal(result.status, 0, result.stdout + result.stderr);
   assert.match(result.stdout, /2 push workflows, 1 build\/test definitions/);
+});
+
+test('a real linked worktree with a .git file runs the readiness gates', () => {
+  const result = exercise({ linkedWorktree: true });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /2 push workflows, 1 build\/test definitions/);
+});
+
+test('a symlinked Fleet root resolves nested worktree deployment configs', () => {
+  const result = exercise({ linkedWorktree: true, symlinkRoot: true });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /CF target\s+✓ (?:name = )?(?:"synthetic-target"|synthetic-target) \(subdir\)/);
 });
 
 test('a workflow named CI that only validates docs does not prove build/test CI', () => {
