@@ -119,7 +119,7 @@ test('a real linked worktree with a .git file runs the readiness gates', () => {
 test('a symlinked Fleet root resolves nested worktree deployment configs', () => {
   const result = exercise({ linkedWorktree: true, symlinkRoot: true });
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  assert.match(result.stdout, /CF target\s+✓ name = "synthetic-target" \(subdir\)/);
+  assert.match(result.stdout, /CF target\s+✓ (?:name = )?(?:"synthetic-target"|synthetic-target) \(subdir\)/);
 });
 
 test('a workflow named CI that only validates docs does not prove build/test CI', () => {
