@@ -5,6 +5,20 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { saveCatalog } from './catalog-store.mjs';
 import { compatibilityCatalog, structureCatalog } from './catalog-schema.mjs';
+import { validateFeedbackApplicability } from './capture-policy-validation.mjs';
+
+test('feedback applicability is optional and accepts only the metric status enum', () => {
+  assert.doesNotThrow(() => validateFeedbackApplicability(undefined, 'example'));
+  for (const applicability of ['applicable', 'not_applicable', 'unknown']) {
+    assert.doesNotThrow(() => validateFeedbackApplicability(applicability, 'example'));
+  }
+  for (const applicability of [null, 'newsletter', 'not-applicable', 'unsupported']) {
+    assert.throws(
+      () => validateFeedbackApplicability(applicability, 'example'),
+      /Invalid feedback applicability: example/
+    );
+  }
+});
 
 test('maintenance writes preserve structured storage and reject stale or unmapped edits', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'catalog-schema-'));

@@ -4,6 +4,7 @@
 
 import { isDeepStrictEqual } from 'node:util';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { validateFeedbackApplicability } from './capture-policy-validation.mjs';
 
 const catalogPath = new URL('../catalog/projects.json', import.meta.url);
 const fleetRoot = new URL('../../', import.meta.url);
@@ -16,7 +17,13 @@ const systems = source.systems ?? {};
 // tied to the canonical catalog so a policy cannot silently outlive its basis.
 const captureApps = new Set(['newsletter', 'waitlist', 'not-applicable', 'undetermined']);
 const captureConfidence = new Set(['high', 'medium', 'low']);
-const captureFields = new Set(['applicability', 'confidence', 'rationale', 'evidence']);
+const captureFields = new Set([
+  'applicability',
+  'confidence',
+  'rationale',
+  'evidence',
+  'feedbackApplicability',
+]);
 const captureEvidenceFields = new Set(['field', 'value']);
 const captureConfigFields = new Set(['schemaVersion', 'purpose', 'sourceIssue', 'order']);
 const captureConfig = systems.capturePolicy ?? {};
@@ -44,6 +51,7 @@ for (const project of captureCohort) {
     throw new Error(`Missing or invalid capture applicability: ${project.id}`);
   if (Object.keys(policy).some((field) => !captureFields.has(field)))
     throw new Error(`Unknown capture policy field: ${project.id}`);
+  validateFeedbackApplicability(policy.feedbackApplicability, project.id);
   if (!captureConfidence.has(policy.confidence) || !policy.rationale?.trim())
     throw new Error(`Incomplete capture policy: ${project.id}`);
   if (!Array.isArray(policy.evidence) || policy.evidence.length === 0)

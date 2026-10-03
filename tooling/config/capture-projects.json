@@ -102,7 +102,8 @@
           "field": "classification.kind",
           "value": "platform"
         }
-      ]
+      ],
+      "feedbackApplicability": "applicable"
     },
     {
       "id": "live",
@@ -1218,7 +1219,7 @@
         },
         {
           "field": "sharing.evidence.reason",
-          "value": "Public 0.2.3 build8 download returned 7,466,879 bytes with SHA-256 97f91011f7c1791090e4a35459df20168ca00b091db975a602039f878a1907fb, matching the Developer ID signed, Apple notarized, stapled DMG from protected manual run 36183263765. The live Sparkle feed and update enclosure matched the qualified signed artifacts. An isolated build3-to-5 Sparkle update and native journey were observed; build8 has not been installed for a new journey."
+          "value": "Public 0.2.16 build21 published 2026-10-02 from 439d06490d3e135942d4decc62fb96c9ddca0ced. Independent https://performance.daddyrad.com/download bytes match SHA-256 f1ff1f8a59499220a102d2eebcb4182ee61de55b13d4365568afcd0894766098 and the release asset. Signed Sparkle feed, universal architectures, Developer ID signature, Apple notarization, staple and local launch verified. Live native UI acceptance remains unverified because the automation provider cannot start; installed build20 was not replaced. No 10x whole-app memory reduction is claimed."
         },
         {
           "field": "deployment.status",
@@ -1244,7 +1245,8 @@
           "field": "classification.kind",
           "value": "platform"
         }
-      ]
+      ],
+      "feedbackApplicability": "not_applicable"
     },
     {
       "id": "unified-portfolio",
@@ -1289,7 +1291,7 @@
         },
         {
           "field": "presentation.directory.purposeContract.purpose",
-          "value": "Rank reaction memes against a pasted comment and evaluate local-model selection honestly."
+          "value": "Turn one pasted comment or situation into a useful meme immediately."
         },
         {
           "field": "sharing.evidence.reason",
@@ -1438,7 +1440,8 @@
           "field": "classification.kind",
           "value": "experiment"
         }
-      ]
+      ],
+      "feedbackApplicability": "not_applicable"
     },
     {
       "id": "mentionpilot",
@@ -1484,6 +1487,30 @@
         {
           "field": "presentation.directory.purposeContract.nextAction",
           "value": "Visit daddyrad.com and pick an app."
+        }
+      ]
+    },
+    {
+      "id": "digital-life",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "Owner-local research experiment; no public newsletter or waitlist.",
+      "evidence": [
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        }
+      ]
+    },
+    {
+      "id": "human-v2",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "Local-only prototype; no public newsletter or waitlist. Reassess for a public release.",
+      "evidence": [
+        {
+          "field": "deployment.status",
+          "value": "local-only"
         }
       ]
     }
