@@ -16,6 +16,8 @@ export type DailyCaptureCounts = {
   rows: DailyCaptureCountRow[];
   /** Project applicability from the catalog-generated policy; no rationale or evidence leaves this private API. */
   applicabilityByCatalogId: Record<string, CaptureApplicability>;
+  /** Feedback surface applicability; missing policy remains unknown. */
+  feedbackApplicabilityByCatalogId: Record<string, MetricApplicability>;
   nativeSessionsApplicabilityByCatalogId: Record<string, MetricApplicability>;
   browserVisitorsApplicabilityByCatalogId: Record<string, MetricApplicability>;
   serverRequestsApplicabilityByCatalogId: Record<string, MetricApplicability>;
@@ -31,6 +33,28 @@ type AggregateRow = {
 
 const MAX_CATALOG_IDS = 55;
 const CATALOG_ID_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;
+
+type FeedbackPolicyProject = { id: string; feedbackApplicability?: string };
+
+export function mapFeedbackApplicabilityByCatalogId(
+  catalogIds: readonly string[],
+  projects: readonly FeedbackPolicyProject[]
+): Record<string, MetricApplicability> {
+  const policyById = new Map(
+    projects.map(({ id, feedbackApplicability }) => [id, feedbackApplicability])
+  );
+  return Object.fromEntries(
+    catalogIds.map((id) => {
+      const applicability = policyById.get(id);
+      return [
+        id,
+        applicability === 'applicable' || applicability === 'not_applicable'
+          ? applicability
+          : 'unknown',
+      ];
+    })
+  );
+}
 
 function currentIndiaDay(): string {
   const parts = new Intl.DateTimeFormat('en-CA', {
@@ -121,6 +145,10 @@ export async function getDailyCaptureCounts(
     const applicability = policyById.get(id);
     if (applicability) applicabilityByCatalogId[id] = applicability;
   }
+  const feedbackApplicabilityByCatalogId = mapFeedbackApplicabilityByCatalogId(
+    catalogIds,
+    capturePolicy.projects
+  );
   const nativePolicyById = new Map<string, MetricApplicability>(
     nativeApplicability.products.map(
       ({ id, nativeSessions }) =>
@@ -168,6 +196,7 @@ export async function getDailyCaptureCounts(
   return {
     coverageStart,
     applicabilityByCatalogId,
+    feedbackApplicabilityByCatalogId,
     nativeSessionsApplicabilityByCatalogId,
     browserVisitorsApplicabilityByCatalogId,
     serverRequestsApplicabilityByCatalogId,

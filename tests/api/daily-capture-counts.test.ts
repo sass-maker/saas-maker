@@ -1,7 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import { afterEach, describe, expect, it } from 'vitest';
-import { getDailyCaptureCounts } from '../../workers/api/src/lib/daily-capture-counts';
+import {
+  getDailyCaptureCounts,
+  mapFeedbackApplicabilityByCatalogId,
+} from '../../workers/api/src/lib/daily-capture-counts';
 import capturePolicy from '../../tooling/config/capture-projects.json';
 import nativeApplicability from '../../tooling/config/app-health-native-applicability.json';
 
@@ -151,6 +154,10 @@ describe('daily PII-free capture receipts', () => {
     expect(result).toEqual({
       coverageStart: '2019-12-31',
       applicabilityByCatalogId: {},
+      feedbackApplicabilityByCatalogId: {
+        'alpha-app': 'unknown',
+        'beta-app': 'unknown',
+      },
       nativeSessionsApplicabilityByCatalogId: {},
       browserVisitorsApplicabilityByCatalogId: {},
       serverRequestsApplicabilityByCatalogId: {},
@@ -187,6 +194,10 @@ describe('daily PII-free capture receipts', () => {
     expect(beforeCoverage).toEqual({
       coverageStart: '2019-12-31',
       applicabilityByCatalogId: {},
+      feedbackApplicabilityByCatalogId: {
+        'alpha-app': 'unknown',
+        'unknown-app': 'unknown',
+      },
       nativeSessionsApplicabilityByCatalogId: {},
       browserVisitorsApplicabilityByCatalogId: {},
       serverRequestsApplicabilityByCatalogId: {},
@@ -194,6 +205,9 @@ describe('daily PII-free capture receipts', () => {
     });
 
     const coveredQuietDay = await getDailyCaptureCounts(d1, '2019-12-31', ['beta-app']);
+    expect(coveredQuietDay.feedbackApplicabilityByCatalogId).toEqual({
+      'beta-app': 'unknown',
+    });
     expect(coveredQuietDay.rows).toEqual([
       { catalogId: 'beta-app', feedback: 0, newsletter: 0, waitlist: 0 },
     ]);
@@ -227,11 +241,20 @@ describe('daily PII-free capture receipts', () => {
 
   it('returns canonical capture applicability for all 55 products, including internal newsletter exceptions', async () => {
     const { d1 } = setup();
-    const projects = capturePolicy.projects;
-    const catalogIds = projects.map(({ id }) => id);
+    const reportProjects = capturePolicy.projects.slice(0, 55);
+    const catalogIds = reportProjects.map(({ id }) => id);
     const result = await getDailyCaptureCounts(d1, '2020-01-01', catalogIds);
 
     expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(55);
+    expect(Object.keys(result.feedbackApplicabilityByCatalogId)).toHaveLength(55);
+    expect(result.feedbackApplicabilityByCatalogId['site-health']).toBe('applicable');
+    expect(result.feedbackApplicabilityByCatalogId['slow-serp']).toBe('not_applicable');
+    expect(result.feedbackApplicabilityByCatalogId['war-chest']).toBe('not_applicable');
+    expect(
+      Object.entries(result.feedbackApplicabilityByCatalogId)
+        .filter(([id]) => !['site-health', 'slow-serp', 'war-chest'].includes(id))
+        .map(([, applicability]) => applicability)
+    ).toEqual(Array.from({ length: 52 }, () => 'unknown'));
     expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(55);
     expect(Object.keys(result.browserVisitorsApplicabilityByCatalogId)).toHaveLength(55);
     expect(Object.keys(result.serverRequestsApplicabilityByCatalogId)).toHaveLength(55);
@@ -328,7 +351,7 @@ describe('daily PII-free capture receipts', () => {
       'ios-landings': 'newsletter',
       'ph-catalog': 'newsletter',
     });
-    const internalNewsletterIds = projects
+    const internalNewsletterIds = reportProjects
       .filter(
         ({ applicability, evidence }) =>
           applicability === 'newsletter' &&
@@ -360,5 +383,29 @@ describe('daily PII-free capture receipts', () => {
     ]);
     expect(Object.values(result.applicabilityByCatalogId)).not.toContain('waitlist');
     expect(Object.values(result.applicabilityByCatalogId)).not.toContain('undetermined');
+  });
+
+  it('maps only requested feedback policies, defaults missing decisions to unknown, and keeps counts separate', async () => {
+    const requested = ['site-health', 'slow-serp', 'war-chest', 'unclassified'];
+    const mapping = mapFeedbackApplicabilityByCatalogId(requested, [
+      { id: 'site-health', feedbackApplicability: 'applicable' },
+      { id: 'slow-serp', feedbackApplicability: 'not_applicable' },
+      { id: 'war-chest', feedbackApplicability: 'not_applicable' },
+      { id: 'outside-request', feedbackApplicability: 'applicable' },
+    ]);
+    expect(mapping).toEqual({
+      'site-health': 'applicable',
+      'slow-serp': 'not_applicable',
+      'war-chest': 'not_applicable',
+      unclassified: 'unknown',
+    });
+    expect(Object.keys(mapping)).toEqual(requested);
+
+    const { sqlite, d1 } = setup();
+    sqlite
+      .prepare('INSERT INTO feedback (id, project_id, created_at) VALUES (?, ?, ?)')
+      .run('feedback-count', 'project-1', '2020-01-01T08:00:00Z');
+    const result = await getDailyCaptureCounts(d1, '2020-01-01', ['alpha-app']);
+    expect(result.rows[0]).toMatchObject({ catalogId: 'alpha-app', feedback: 1 });
   });
 });
