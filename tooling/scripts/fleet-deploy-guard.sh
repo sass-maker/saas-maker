@@ -61,6 +61,8 @@ if ! is_git_worktree_root "$DIR"; then
   fi
 fi
 
+DIR="$(cd "$DIR" && pwd -P)"
+PROJECT_DIR="$(cd "$PROJECT_DIR" && pwd -P)"
 cd "$DIR"
 
 pass=0

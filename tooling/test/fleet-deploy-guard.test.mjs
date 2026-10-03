@@ -13,9 +13,12 @@ const docsSource = 'name: CI\non: [push]\njobs:\n  docs:\n    runs-on: ubuntu-la
 
 export function exercise(options = {}) {
   const root = mkdtempSync(join(tmpdir(), 'fleet-guard-test-'));
-  const project = join(root, 'sample');
-  const repository = options.linkedWorktree ? join(root, 'repository') : project;
+  const fleetRoot = options.symlinkRoot ? join(root, 'physical-fleet-root') : root;
+  const project = join(fleetRoot, 'sample');
+  const repository = options.linkedWorktree ? join(fleetRoot, 'repository') : project;
+  const rootAlias = join(root, 'fleet-root-alias');
   const bin = join(root, 'bin');
+  mkdirSync(fleetRoot, { recursive: true });
   mkdirSync(join(repository, '.github/workflows'), { recursive: true });
   mkdirSync(bin);
   const git = (...args) => {
@@ -24,7 +27,11 @@ export function exercise(options = {}) {
     return result.stdout.trim();
   };
   try {
-    writeFileSync(join(repository, 'wrangler.json'), '{"name":"synthetic-target"}');
+    if (options.symlinkRoot) {
+      mkdirSync(join(repository, 'apps/cockpit'), { recursive: true });
+      writeFileSync(join(repository, 'apps/cockpit/wrangler.toml'), 'name = "synthetic-target"\n');
+      symlinkSync(fleetRoot, rootAlias);
+    } else writeFileSync(join(repository, 'wrangler.json'), '{"name":"synthetic-target"}');
     writeFileSync(join(repository, 'package.json'), JSON.stringify({ scripts: options.scripts || { quality: 'pnpm test', test: 'vitest run' } }));
     for (const [directory, scripts] of Object.entries(options.packages || {})) {
       mkdirSync(join(repository, directory), { recursive: true });
@@ -74,7 +81,7 @@ else process.exit(3);
     chmodSync(join(bin, 'gh'), 0o755);
     return spawnSync('bash', [guard, 'sample', ...(options.force ? ['--force'] : [])], {
       encoding: 'utf8',
-      env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, FLEET_ROOT_OVERRIDE: root, GUARD_FIXTURE: fixturePath },
+      env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, FLEET_ROOT_OVERRIDE: options.symlinkRoot ? rootAlias : fleetRoot, GUARD_FIXTURE: fixturePath },
       timeout: 10000,
     });
   } finally {
@@ -107,6 +114,12 @@ test('a real linked worktree with a .git file runs the readiness gates', () => {
   const result = exercise({ linkedWorktree: true });
   assert.equal(result.status, 0, result.stdout + result.stderr);
   assert.match(result.stdout, /2 push workflows, 1 build\/test definitions/);
+});
+
+test('a symlinked Fleet root resolves nested worktree deployment configs', () => {
+  const result = exercise({ linkedWorktree: true, symlinkRoot: true });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /CF target\s+✓ name = "synthetic-target" \(subdir\)/);
 });
 
 test('a workflow named CI that only validates docs does not prove build/test CI', () => {
