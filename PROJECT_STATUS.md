@@ -25,6 +25,13 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-10-03 — Agent workspace tooling (#179).** Added a dependency-free
+  CLI for linked writer worktrees, shared-store frozen pinned-pnpm installs,
+  owner/task/heartbeat records, concurrency and disk admission limits,
+  reversible close receipts, and dry-run legacy inventory. Fleet and
+  managed-workspace instructions route agents through the helper. Focused
+  lifecycle/concurrency tests passed. No deployment or legacy-folder deletion.
+
 - **2026-10-02 — Fleet design workflow v2 (#172).** New design passes require
   three or four distinct overhaul directions and attributable owner selection,
   with separate implementation preflight and completion checks. Required slop

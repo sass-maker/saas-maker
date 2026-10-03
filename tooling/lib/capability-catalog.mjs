@@ -44,6 +44,7 @@ const ACTIVE_OPERATOR_SCRIPTS = new Set([
   'audit.mjs',
   'check-github-actions-policy.mjs',
   'fleet-capabilities.mjs',
+  'fleet-workspace.mjs',
   'git-health.sh',
   'github-priority-queue.mjs',
   'link-project-agent-assets.sh',

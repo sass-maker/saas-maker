@@ -40,6 +40,7 @@ test('standalone capability catalog has valid roots and execution profiles', () 
       'scripts/audit.mjs',
       'scripts/check-github-actions-policy.mjs',
       'scripts/fleet-capabilities.mjs',
+      'scripts/fleet-workspace.mjs',
       'scripts/git-health.sh',
       'scripts/github-priority-queue.mjs',
       'scripts/link-project-agent-assets.sh',
