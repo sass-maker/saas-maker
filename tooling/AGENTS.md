@@ -53,3 +53,12 @@ credential-free catalog entrypoint.
 
 Use Node.js 20 or newer. The repository intentionally has no npm runtime or
 development dependencies.
+
+## Agent workspace lifecycle
+
+Use `scripts/fleet-workspace.mjs` (installed as `fleet-workspace`) for linked
+writer worktrees, frozen pinned-pnpm installs through the persistent shared
+store, and bounded heavy commands. Review-only agents reuse source. Keep owner,
+task and heartbeat metadata outside Git; respect concurrency and disk budgets.
+Run `close --dry-run` and `gc --dry-run` at completion. Never discard dirty,
+unpublished, active or unknown work. See [agent-workspaces.md](docs/agent-workspaces.md).
