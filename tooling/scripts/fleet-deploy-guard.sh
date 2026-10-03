@@ -29,7 +29,15 @@ done
 DIR="$ROOT/$PROJECT"
 PROJECT_DIR="$DIR"
 
-if [[ ! -d "$DIR/.git" ]]; then
+is_git_worktree_root() {
+  local directory="$1"
+  local repository_root
+  [[ -d "$directory" && ( -d "$directory/.git" || -f "$directory/.git" ) ]] || return 1
+  repository_root="$(git -C "$directory" rev-parse --show-toplevel 2>/dev/null)" || return 1
+  [[ "$repository_root" == "$(cd "$directory" && pwd -P)" ]]
+}
+
+if ! is_git_worktree_root "$DIR"; then
   registry="$ROOT/site-health/apps/backend/config/projects.json"
   repo_path=""
   if [[ -d "$ROOT/.git" && -f "$registry" ]] && command -v jq >/dev/null 2>&1; then
