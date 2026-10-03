@@ -241,7 +241,8 @@ describe('daily PII-free capture receipts', () => {
 
   it('returns canonical capture applicability for all 55 products, including internal newsletter exceptions', async () => {
     const { d1 } = setup();
-    const catalogIds = capturePolicy.projects.slice(0, 55).map(({ id }) => id);
+    const reportProjects = capturePolicy.projects.slice(0, 55);
+    const catalogIds = reportProjects.map(({ id }) => id);
     const result = await getDailyCaptureCounts(d1, '2020-01-01', catalogIds);
 
     expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(55);
@@ -350,7 +351,7 @@ describe('daily PII-free capture receipts', () => {
       'ios-landings': 'newsletter',
       'ph-catalog': 'newsletter',
     });
-    const internalNewsletterIds = projects
+    const internalNewsletterIds = reportProjects
       .filter(
         ({ applicability, evidence }) =>
           applicability === 'newsletter' &&
