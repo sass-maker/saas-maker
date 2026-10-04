@@ -1,0 +1,392 @@
+{
+  "$schema": "fleet.design-review.v2",
+  "version": 2,
+  "project": "saas-maker",
+  "target": "Shared Art terrace footer, original per-project art and explicit product integrations; #180",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": ".fleet-local/footer180-directions/PRODUCT.md",
+    "design": ".fleet-local/footer180-directions/DESIGN.md"
+  },
+  "direction": {
+    "productSurfaces": {
+      "scope": "paired",
+      "landing": "a-atlas-landing.html; b-atlas-landing.html; c-atlas-landing.html",
+      "app": "a-atlas-app.html; b-atlas-app.html; c-atlas-app.html",
+      "reason": "Local static app-density probes use actual Atlas field-boundary text, not a private mart or hosted app. CodeVetter landing uses native desktop identity; desktop UI is not changed."
+    },
+    "pairedPreview": {
+      "landing": "",
+      "app": ""
+    },
+    "source": "comparison",
+    "references": [
+      "direction-contracts.md",
+      "/tmp/fleet-finish-wave-20261002/shared-footer-architecture/architecture-proposal.md"
+    ],
+    "probes": [
+      {
+        "id": "a",
+        "path": ".fleet-local/footer180-directions/captures/a-atlas-landing-1440.png",
+        "pairedApp": ".fleet-local/footer180-directions/captures/a-atlas-app-1440.png",
+        "otherIdentity": ".fleet-local/footer180-directions/captures/a-codevetter-landing-1440.png",
+        "mobile": ".fleet-local/footer180-directions/captures/a-atlas-landing-390.png",
+        "thesis": "Generous framed project illustration with quiet help and discovery.",
+        "layout": "Art first, moderate editorial CTA row, separated three-disclosure utility rail, curated studio row and native footer.",
+        "typography": "Product-native display and body: Atlas Georgia/forest/paper; CodeVetter system sans/true black/amber; mono for small labels only.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-directions/captures/a-atlas-landing-1440.png",
+          "app": ".fleet-local/footer180-directions/captures/a-atlas-app-1440.png"
+        }
+      },
+      {
+        "id": "b",
+        "path": ".fleet-local/footer180-directions/captures/b-atlas-landing-1440.png",
+        "pairedApp": ".fleet-local/footer180-directions/captures/b-atlas-app-1440.png",
+        "otherIdentity": ".fleet-local/footer180-directions/captures/b-codevetter-landing-1440.png",
+        "mobile": ".fleet-local/footer180-directions/captures/b-atlas-landing-390.png",
+        "thesis": "An asymmetric studio workbench pairs art with explicit services.",
+        "layout": "Large side illustration plate and editorial CTA, vertical service index beside project rows, native footer.",
+        "typography": "Product-native display and body: Atlas Georgia/forest/paper; CodeVetter system sans/true black/amber; mono for small labels only.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-directions/captures/b-atlas-landing-1440.png",
+          "app": ".fleet-local/footer180-directions/captures/b-atlas-app-1440.png"
+        }
+      },
+      {
+        "id": "c",
+        "path": ".fleet-local/footer180-directions/captures/c-atlas-landing-1440.png",
+        "pairedApp": ".fleet-local/footer180-directions/captures/c-atlas-app-1440.png",
+        "otherIdentity": ".fleet-local/footer180-directions/captures/c-codevetter-landing-1440.png",
+        "mobile": ".fleet-local/footer180-directions/captures/c-atlas-landing-390.png",
+        "thesis": "A full-width illustrated final scene followed by a concise afterword.",
+        "layout": "Short CTA header, full-bleed art, lower disclosure bar and compact studio index, native footer.",
+        "typography": "Product-native display and body: Atlas Georgia/forest/paper; CodeVetter system sans/true black/amber; mono for small labels only.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-directions/captures/c-atlas-landing-1440.png",
+          "app": ".fleet-local/footer180-directions/captures/c-atlas-app-1440.png"
+        }
+      }
+    ],
+    "selected": "a",
+    "approval": "approved",
+    "ownerEvidence": {
+      "path": ".fleet-local/footer180-directions/owner-selection.json",
+      "quote": "go for it"
+    },
+    "supplied": "",
+    "before": "",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "none",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "Custom project art and composition requested by owner; standard controls preserve native/current primitives."
+      }
+    },
+    "contract": {
+      "purpose": "Help product visitors take one appropriate next step, find optional support and exploration, and recognize each product through original artwork.",
+      "purposeSource": "Owner footer consolidation and custom-art brief; existing package contracts and actual PH/CodeVetter product sources recorded in sources.json.",
+      "canonicalPurpose": "Shared product-footer composition; per-product purpose contracts verified from canonical catalog and repository.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "Visitors to applicable Fleet public landings and users of browser app surfaces.",
+      "job": "Finish the product page clearly; make optional help, updates, feedback, discovery and navigation reachable.",
+      "thesis": "One shared composition system, generous unique art for each project, product-native color/type and task-appropriate density.",
+      "system": "Three complete comparable systems detailed in direction-contracts.md; same literal content, services and art across each.",
+      "signature": "Original pixel art representing a research cabinet or evidence workshop; dedicated image frame rather than controls laid over busy art.",
+      "risk": "Art creates vertical weight; mitigate with intentional mobile focus and shallower app frames. Disclosures add one step to optional utility.",
+      "qualityBar": "Rendered product identity and hierarchy, readable mobile art/controls, truthful local/public boundaries, preserved consent and native routes. Scores cannot establish acceptance."
+    }
+  },
+  "evidence": {
+    "platform": "web",
+    "productContinuity": {
+      "status": "pending-production-implementation",
+      "reason": "Direction probes demonstrate paired density, identity and vocabulary. Actual implemented landing/app runtime and first-value handoff remain to be qualified after selection.",
+      "reviewer": "",
+      "report": ".fleet-local/footer180-directions/sources.json",
+      "surfaces": {
+        "landing": ".fleet-local/footer180-directions/captures/a-atlas-landing-1440.png",
+        "app": ".fleet-local/footer180-directions/captures/a-atlas-app-1440.png"
+      },
+      "checks": {
+        "designSystem": {
+          "status": "pending",
+          "observation": ""
+        },
+        "identity": {
+          "status": "pending",
+          "observation": ""
+        },
+        "vocabulary": {
+          "status": "pending",
+          "observation": ""
+        },
+        "productTruth": {
+          "status": "pending",
+          "observation": ""
+        },
+        "handoff": {
+          "status": "pending",
+          "observation": ""
+        }
+      }
+    },
+    "slopScale": {
+      "platform": "web",
+      "posture": "advisory",
+      "reason": "Pinned local scan on all 9 static direction surfaces; no production quality or owner acceptance inferred.",
+      "checkpoints": [
+        {
+          "stage": "directions",
+          "direction": "a",
+          "status": "scanned",
+          "report": ".fleet-local/footer180-directions/slop-direction-a-selection.json",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:8897/a-atlas-landing.html http://127.0.0.1:8897/a-atlas-app.html http://127.0.0.1:8897/a-codevetter-landing.html --json",
+          "findingsReview": "Atlas paper/serif and CodeVetter true-black identity preserve actual product systems; native disclosures serve real optional utilities. Sparse uppercase labels retained intentionally. No detected low-contrast text. Advisory score is not owner acceptance."
+        },
+        {
+          "stage": "directions",
+          "direction": "b",
+          "status": "scanned",
+          "report": ".fleet-local/footer180-directions/slop-direction-b-selection.json",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:8897/b-atlas-landing.html http://127.0.0.1:8897/b-atlas-app.html http://127.0.0.1:8897/b-codevetter-landing.html --json",
+          "findingsReview": "Atlas paper/serif and CodeVetter true-black identity preserve actual product systems; native disclosures serve real optional utilities. Sparse uppercase labels retained intentionally. No detected low-contrast text. Advisory score is not owner acceptance."
+        },
+        {
+          "stage": "directions",
+          "direction": "c",
+          "status": "scanned",
+          "report": ".fleet-local/footer180-directions/slop-direction-c-selection.json",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:8897/c-atlas-landing.html http://127.0.0.1:8897/c-atlas-app.html http://127.0.0.1:8897/c-codevetter-landing.html --json",
+          "findingsReview": "Atlas paper/serif and CodeVetter true-black identity preserve actual product systems; native disclosures serve real optional utilities. Sparse uppercase labels retained intentionally. No detected low-contrast text. Advisory score is not owner acceptance."
+        },
+        {
+          "stage": "iteration",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:63970/snapshots/actual-light-1440.html http://127.0.0.1:63970/snapshots/explicit-dark-1440.html --json",
+          "report": ".fleet-local/footer180-slop/iteration.json",
+          "findingsReview": "Safe frozen snapshots of actual compiled loader renders, with original local styles/assets and declarative Shadow DOM; scripts and remote automatic requests removed, API behavior separately mocked. Extractor does not traverse all shadow internals (reports detailsCount0 despite three actual utilities), so missing flags are not clean evidence. Underlying body-dark heuristic does not describe the paper workshop footer captured in actual-light. Preserve native surface identity. Direct review found tall stacked studio links in the wide right column; replace with container-aware three-column links while keeping narrow containers stacked. Runtime exposed stalled/disconnected loading and cached failed module retries; fixes and their actual cases are being verified. Homepage CTA was not slotted by Astro conditional output; explicit data-fleet-footer-cta anchor now added, actual rebuilt proof pending. Advisory scan does not establish visual quality or owner acceptance."
+        },
+        {
+          "stage": "final",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:50641/snapshots/actual-light-1440.html http://127.0.0.1:50641/snapshots/explicit-dark-1440.html --json",
+          "report": ".fleet-local/footer180-slop/final.json",
+          "findingsReview": "Frozen local snapshots of final compiled shared loader and SaaS Maker homepage CTA with current checked-in public studio catalog. Advisory extractor does not traverse all shadow internals; zero or absent flags cannot establish quality. Root direct desktop/mobile review confirms visible unchanged pilot terms, three compact service disclosures, container-aware studio columns on wide screens and stacked narrow links, and preserved native footer. Oversized element screenshot skip-link overlay is a capture artifact: normal unfocused390/1440 viewport screenshots and hidden DOM bounds are verified; intentional keyboard focus remains visible. Actual 15 surface and 12 lifecycle cases prove no overflow/page errors and existing consent/referral/provider boundaries. This checkpoint qualifies only the shared component and SaaS Maker sample; other Fleet callers/art metadata rollout, paired product surfaces and owner final acceptance remain pending."
+        }
+      ]
+    },
+    "visualReview": {
+      "status": "direction-review-only",
+      "reviewer": "Root plus independent remaining_source agent",
+      "direction": "Three comparisons; no selected system",
+      "report": ".fleet-local/footer180-directions/review-final.md",
+      "checks": {
+        "hierarchy": {
+          "status": "pending",
+          "observation": ""
+        },
+        "typography": {
+          "status": "pending",
+          "observation": ""
+        },
+        "composition": {
+          "status": "pending",
+          "observation": ""
+        },
+        "identity": {
+          "status": "pending",
+          "observation": ""
+        },
+        "interaction": {
+          "status": "pending",
+          "observation": ""
+        },
+        "responsive": {
+          "status": "pending",
+          "observation": ""
+        }
+      }
+    },
+    "screenshots": [
+      {
+        "width": 390,
+        "path": ".fleet-local/footer180-directions/captures/a-atlas-landing-390.png"
+      },
+      {
+        "width": 768,
+        "path": ".fleet-local/footer180-directions/captures/a-atlas-landing-768.png"
+      },
+      {
+        "width": 1440,
+        "path": ".fleet-local/footer180-directions/captures/a-atlas-landing-1440.png"
+      },
+      {
+        "width": 390,
+        "path": ".fleet-local/footer180-directions/captures/a-atlas-app-390.png"
+      },
+      {
+        "width": 768,
+        "path": ".fleet-local/footer180-directions/captures/a-atlas-app-768.png"
+      },
+      {
+        "width": 1440,
+        "path": ".fleet-local/footer180-directions/captures/a-atlas-app-1440.png"
+      },
+      {
+        "width": 390,
+        "path": ".fleet-local/footer180-directions/captures/a-codevetter-landing-390.png"
+      },
+      {
+        "width": 768,
+        "path": ".fleet-local/footer180-directions/captures/a-codevetter-landing-768.png"
+      },
+      {
+        "width": 1440,
+        "path": ".fleet-local/footer180-directions/captures/a-codevetter-landing-1440.png"
+      },
+      {
+        "width": 390,
+        "path": ".fleet-local/footer180-directions/captures/b-atlas-landing-390.png"
+      },
+      {
+        "width": 768,
+        "path": ".fleet-local/footer180-directions/captures/b-atlas-landing-768.png"
+      },
+      {
+        "width": 1440,
+        "path": ".fleet-local/footer180-directions/captures/b-atlas-landing-1440.png"
+      },
+      {
+        "width": 390,
+        "path": ".fleet-local/footer180-directions/captures/b-atlas-app-390.png"
+      },
+      {
+        "width": 768,
+        "path": ".fleet-local/footer180-directions/captures/b-atlas-app-768.png"
+      },
+      {
+        "width": 1440,
+        "path": ".fleet-local/footer180-directions/captures/b-atlas-app-1440.png"
+      },
+      {
+        "width": 390,
+        "path": ".fleet-local/footer180-directions/captures/b-codevetter-landing-390.png"
+      },
+      {
+        "width": 768,
+        "path": ".fleet-local/footer180-directions/captures/b-codevetter-landing-768.png"
+      },
+      {
+        "width": 1440,
+        "path": ".fleet-local/footer180-directions/captures/b-codevetter-landing-1440.png"
+      },
+      {
+        "width": 390,
+        "path": ".fleet-local/footer180-directions/captures/c-atlas-landing-390.png"
+      },
+      {
+        "width": 768,
+        "path": ".fleet-local/footer180-directions/captures/c-atlas-landing-768.png"
+      },
+      {
+        "width": 1440,
+        "path": ".fleet-local/footer180-directions/captures/c-atlas-landing-1440.png"
+      },
+      {
+        "width": 390,
+        "path": ".fleet-local/footer180-directions/captures/c-atlas-app-390.png"
+      },
+      {
+        "width": 768,
+        "path": ".fleet-local/footer180-directions/captures/c-atlas-app-768.png"
+      },
+      {
+        "width": 1440,
+        "path": ".fleet-local/footer180-directions/captures/c-atlas-app-1440.png"
+      },
+      {
+        "width": 390,
+        "path": ".fleet-local/footer180-directions/captures/c-codevetter-landing-390.png"
+      },
+      {
+        "width": 768,
+        "path": ".fleet-local/footer180-directions/captures/c-codevetter-landing-768.png"
+      },
+      {
+        "width": 1440,
+        "path": ".fleet-local/footer180-directions/captures/c-codevetter-landing-1440.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "node capture.mjs (27 local renders, 9 mocked interaction journeys); artifact hashes retained",
+      "status": "direction-probes-pass; production checks pending"
+    },
+    "critique": {
+      "score": 0,
+      "maximum": 40,
+      "dimensions": {
+        "hierarchy": 0,
+        "typography": 0,
+        "composition": 0,
+        "identity": 0,
+        "interaction": 0,
+        "responsive": 0
+      }
+    },
+    "audit": {
+      "score": 0,
+      "maximum": 20,
+      "dimensions": {
+        "purpose": 0,
+        "accessibility": 0,
+        "behavior": 0,
+        "responsive": 0,
+        "performance": 0
+      }
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": []
+    },
+    "comprehension": {
+      "status": "not-applicable",
+      "reviewer": "",
+      "answers": {
+        "product": "",
+        "audience": "",
+        "value": "",
+        "mechanism": "",
+        "proof": "",
+        "nextAction": ""
+      },
+      "purposeScore": {
+        "product": 0,
+        "audience": 0,
+        "value": 0,
+        "mechanism": 0,
+        "proof": 0,
+        "nextAction": 0,
+        "total": 0
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "approved",
+    "note": "Proceeding with recommended A \u2014 Art terrace; exact owner reply and surrounding recommendation recorded in owner-selection.json."
+  },
+  "productionOwner": "saas-maker",
+  "phase": "Implementation; managed capacity restored, shared package/metadata checks and built-loader iteration in progress; full migration and final review open."
+}
