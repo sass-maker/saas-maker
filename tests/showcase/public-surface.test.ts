@@ -156,9 +156,9 @@ describe('SaaS Maker public source boundary', () => {
     expect(fleet).toMatch(/<h2 id="learning-title"/);
     expect(fleet).not.toMatch(/ACTIVE_GROUPS|PAST_PROJECTS|catalog-row|archive-wall/);
     expect(fleet).not.toMatch(/project identities|accounted for once/);
-    expect(layout).toMatch(/src="\/project-strip\.js"/);
+    expect(layout).toMatch(/src="\/project-strip\.js\?v=precise-[a-f0-9]{8}"/);
     expect(layout).toMatch(/data-project="saas-maker"/);
-    expect(layout).toMatch(/src="\/ai-chat-footer\.js"/);
+    expect(layout).toMatch(/src="\/ai-chat-footer\.js\?v=precise-[a-f0-9]{8}"/);
     expect(routes).toMatch(/# Products in focus/);
     expect(routes).toMatch(/# Complete directory/);
     expect(routes).toMatch(/CORE\.flatMap/);
