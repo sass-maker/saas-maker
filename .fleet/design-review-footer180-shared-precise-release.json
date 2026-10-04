@@ -111,7 +111,7 @@
     "slopScale": {
       "platform": "web",
       "posture": "advisory",
-      "reason": "No browser/scanner render or score invented; native letterform specimen is separate evidence.",
+      "reason": "Pinned headless scanner blocked by CUA-only browser policy; actual CUA review recorded separately. Score remains unknown.",
       "checkpoints": [
         {
           "stage": "directions",
@@ -139,67 +139,119 @@
           "report": ".fleet-local/footer180-typography-study/direction-c-scan-blocked.json",
           "reason": "Prior native browser action rejected file:// preview URLs by security policy and explicitly forbade browser/CDP/alternate-surface workarounds. No such workaround or browser/scanner launch attempted in this font-study round.",
           "findingsReview": "Actual glyph specimen and source/asset guards reviewed; integrated rendered hierarchy and mobile behavior remain unknown."
+        },
+        {
+          "stage": "iteration",
+          "status": "blocked",
+          "command": "Pinned slop-score not executed: CUA-only browser policy",
+          "report": ".fleet-local/shared-precise-reconciliation-20261004/iteration-slop-blocked.json",
+          "reason": "Browser interactions must use cua_repl; pinned scanner uses its own browser and cannot run under this policy. No alternate browser/CDP workaround used.",
+          "findingsReview": "Initial rendered review found768directory filter-return overlap; fixed in3c9897b and rechecked actual widths."
+        },
+        {
+          "stage": "final",
+          "status": "blocked",
+          "command": "Pinned slop-score not executed: CUA-only browser policy",
+          "report": ".fleet-local/shared-precise-reconciliation-20261004/final-slop-blocked.json",
+          "reason": "Browser interactions must use cua_repl; pinned scanner uses its own browser and cannot run under this policy. No alternate browser/CDP workaround used.",
+          "findingsReview": "Final actual home/directory390/768/1440 captures reviewed; normalviewport art and keyboard strip confirmed. Automated slop score unknown."
         }
       ]
     },
     "visualReview": {
-      "status": "pending",
-      "reviewer": "precise-core-audit",
+      "status": "pass",
+      "reviewer": "root",
       "direction": "c",
       "report": ".fleet-local/shared-precise-reconciliation-20261004/render-review.md",
       "checks": {
         "hierarchy": {
-          "status": "pending",
-          "observation": "Typeface specimen reviewed; this does not verify integrated browser rendering."
+          "status": "pass",
+          "observation": "Native grouped product links and feedback left; editable question and open consented updates right. Compact16px service headings avoid competing with the large SaaS Maker signature."
         },
         "typography": {
-          "status": "pending",
-          "observation": "Typeface specimen reviewed; this does not verify integrated browser rendering."
+          "status": "pass",
+          "observation": "Rendered Geist navigation, monospace labels,16px email/question controls and strong product wordmark; readable mobile line lengths and visible focus outlines."
         },
         "composition": {
-          "status": "pending",
-          "observation": "Typeface specimen reviewed; this does not verify integrated browser rendering."
+          "status": "pass",
+          "observation": "Split closes into a full-width original courtyard illustration and final single studio strip. Directory filter-return control now clears the bottom strip at all three widths."
         },
         "identity": {
-          "status": "pending",
-          "observation": "Typeface specimen reviewed; this does not verify integrated browser rendering."
+          "status": "pass",
+          "observation": "SaaS Maker native routes, source/pilot claims and contact preserved; original studio workbench art and paper/forest tokens retained across home and directory."
         },
         "interaction": {
-          "status": "pending",
-          "observation": "Typeface specimen reviewed; this does not verify integrated browser rendering."
+          "status": "pass",
+          "observation": "Edited question propagates to all5provider hrefs; empty signup triggers required email/focus; consent remains unchecked. Feedback opens with title focus and required fields, closes back to launcher. Studio ArrowRight scrolls40px on mobile; directory return restores search focus at768. No submission or external AI handoff performed."
         },
         "responsive": {
-          "status": "pending",
-          "observation": "Typeface specimen reviewed; this does not verify integrated browser rendering."
+          "status": "pass",
+          "observation": "Actual AgentTab widths390/768/1440 asserted on home and directory; one host, no document overflow, art loaded at2170px natural width. Actual390viewport confirms the illustration; full-region crops can include offscreen fixed skip controls/black tail/temporarily blank compositor art and are not viewport-overlap evidence."
         }
       }
     },
-    "screenshots": [],
+    "screenshots": [
+      {
+        "width": 390,
+        "path": ".fleet-local/shared-precise-reconciliation-20261004/final-captures/home-final-390.jpg",
+        "surface": "home"
+      },
+      {
+        "width": 768,
+        "path": ".fleet-local/shared-precise-reconciliation-20261004/final-captures/home-final-768.jpg",
+        "surface": "home"
+      },
+      {
+        "width": 1440,
+        "path": ".fleet-local/shared-precise-reconciliation-20261004/final-captures/home-final-1440.jpg",
+        "surface": "home"
+      },
+      {
+        "width": 390,
+        "path": ".fleet-local/shared-precise-reconciliation-20261004/final-captures/directory-final-390.jpg",
+        "surface": "directory"
+      },
+      {
+        "width": 768,
+        "path": ".fleet-local/shared-precise-reconciliation-20261004/final-captures/directory-final-768.jpg",
+        "surface": "directory"
+      },
+      {
+        "width": 1440,
+        "path": ".fleet-local/shared-precise-reconciliation-20261004/final-captures/directory-final-1440.jpg",
+        "surface": "directory"
+      },
+      {
+        "width": 390,
+        "path": ".fleet-local/shared-precise-reconciliation-20261004/final-captures/home-viewport-390-final.jpg",
+        "surface": "home actual viewport"
+      }
+    ],
     "projectCheck": {
-      "command": "pnpm check:shared-packages (49 inner tests/type/contracts/lint/build/pack stages passed); node --test scripts/catalog-schema.test.mjs packages/fleet-footer/test/composition.test.mjs (10 passed); pnpm exec vitest run tests/showcase/public-surface.test.ts tests/showcase/public-products.test.ts tests/showcase/classic-browser-bundle.test.ts (25 passed); node scripts/sync-fleet-public-products.mjs --validate (43 public identities); node scripts/check-docs.mjs; pnpm build:showcase (1195 pages, actual child exit 0)",
-      "status": "passed"
+      "command": "pnpm check:shared-packages (49 inner tests/type/contracts/lint/build/pack stages passed); node --test scripts/catalog-schema.test.mjs packages/fleet-footer/test/composition.test.mjs (10 passed); pnpm exec vitest run tests/showcase/public-surface.test.ts tests/showcase/public-products.test.ts tests/showcase/classic-browser-bundle.test.ts (25 passed); node scripts/sync-fleet-public-products.mjs --validate (43 public identities); node scripts/check-docs.mjs; pnpm build:showcase (1195 pages, actual child exit 0); final maintained build:showcase-only1195pages child0; directory-source-contracts9pass; all51served manifest assets match",
+      "status": "pass"
     },
     "critique": {
-      "score": 0,
+      "score": 34,
       "maximum": 40,
       "dimensions": {
-        "hierarchy": 0,
-        "typography": 0,
-        "composition": 0,
-        "identity": 0,
-        "interaction": 0,
-        "responsive": 0
+        "hierarchy": 7,
+        "typography": 7,
+        "composition": 7,
+        "identity": 7,
+        "interaction": 3,
+        "responsive": 3
       }
     },
     "audit": {
-      "score": 0,
+      "score": 17,
       "maximum": 20,
       "dimensions": {
-        "purpose": 0,
-        "accessibility": 0,
-        "behavior": 0,
-        "responsive": 0,
-        "performance": 0
+        "purpose": 4,
+        "accessibility": 5,
+        "behavior": 4,
+        "responsive": 3,
+        "performance": 1
       }
     },
     "unresolved": {
@@ -244,7 +296,8 @@
       "buildResult": ".fleet-local/shared-precise-reconciliation-20261004/build-result.json",
       "hostedResult": ".fleet-local/shared-precise-reconciliation-20261004/hosted-result.json",
       "outerManagerStatus": "Package and build wrapper cleanup: kill EPERM after successful child stages. Hosted wrapper: workspace reserve gate after actual child exit 0. Source qualification is based on recorded child results; outer wrappers did not exit 0.",
-      "visualGate": "Pending actual CUA Chrome HTTP review by root; draft source PR is not visual completion or deployment approval."
+      "visualGate": "Actual CUA Chrome home and directory review passed; not production deployment proof.",
+      "finalBuildResult": ".fleet-local/shared-precise-reconciliation-20261004/html-final-result.json"
     }
   },
   "ownerFeedback": {
