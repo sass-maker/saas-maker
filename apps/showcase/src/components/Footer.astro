@@ -1,26 +1,113 @@
 ---
-import GitHubIcon from './GitHubIcon.astro';
+import Commission from './Commission.astro';
 import { GITHUB_REPO_URL } from '../data/links';
+const { showCommission = false } = Astro.props;
 const OWNER_URL = 'https://sarthakagrawal.dev';
 const isChangelog = Astro.url.pathname.startsWith('/changelog');
 ---
-<footer class="footer">
+<fleet-footer-extension
+  product-name="SaaS Maker"
+  font-base="/fonts/fleet-footer-precise-v1/"
+  theme="light"
+  art-src="/footer-art/saas-maker.webp"
+  art-alt="A pixel art studio courtyard with a central craft table, tools, and shelves of finished and unfinished models."
+  art-width="2170"
+  art-height="725"
+  art-position="50% 50%"
+  art-credit="Original illustration for SaaS Maker"
+>
+  {showCommission && <div slot="cta" data-fleet-footer-cta><Commission contained /></div>}
+<footer class="footer" slot="navigation" data-fleet-footer-navigation>
   <div class="footer-brand">
     <span class="brand-mark sm" aria-hidden="true">S</span>
     <span>Built and maintained by <a href={OWNER_URL} target="_blank" rel="noopener noreferrer">Sarthak Agrawal</a></span>
   </div>
-  <div class="footer-links">
-    <a href="/changelog" aria-current={isChangelog ? 'page' : undefined}>Changelog</a>
-    <a href="/learnings">Learnings</a>
-    <a href="/ranks">Ranks</a>
-    <a href="/privacy">Privacy</a>
-    <a href="/terms">Terms</a>
-    <a
-      href={GITHUB_REPO_URL}
-      aria-label="GitHub repository"
-      title="GitHub repository"
-      target="_blank"
-      rel="noopener noreferrer"><GitHubIcon /></a>
-  </div>
-  <p class="footer-tagline">Curious products. Real domains. Work that keeps moving.</p>
+  <nav class="footer-groups" aria-label="SaaS Maker resources">
+    <div>
+      <h2 data-fleet-footer-group-label>Explore</h2>
+      <a href="/projects">Products</a>
+      <a href="/tools">Shared tooling</a>
+      <a href="/ideas">Ideas</a>
+      <a href="/launchdesk">LaunchDesk</a>
+      <a href="/funding">Funding</a>
+    </div>
+    <div>
+      <h2 data-fleet-footer-group-label>Journal</h2>
+      <a href="/changelog" aria-current={isChangelog ? 'page' : undefined}>Changelog</a>
+      <a href="/learnings">Learnings</a>
+      <a href="/ranks">Ranks</a>
+    </div>
+    <div>
+      <h2 data-fleet-footer-group-label>Studio</h2>
+      <a href={OWNER_URL} target="_blank" rel="noopener noreferrer">Sarthak Agrawal</a>
+      <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">Source</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+    </div>
+  </nav>
+  <p class="footer-tagline" data-fleet-footer-legal>Curious products. Real domains. Work that keeps moving.</p>
 </footer>
+</fleet-footer-extension>
+
+<style>
+  fleet-footer-extension {
+    display: block;
+    color: inherit;
+    --fleet-footer-canvas: var(--workshop-ground, var(--fleet-footer-native-canvas, #fafaf9));
+    --fleet-footer-lower: var(--workshop-ground, var(--fleet-footer-native-canvas, #fafaf9));
+  }
+  .footer.footer {
+    display: block;
+    width: 100%;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    font-family: var(--fleet-footer-ui-font, system-ui, sans-serif);
+  }
+  .footer-brand {
+    align-items: center;
+    font-size: .875rem;
+  }
+  .footer-brand a {
+    text-underline-offset: .2em;
+  }
+  .footer-groups {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+  .footer-groups > div {
+    min-width: 0;
+  }
+  .footer-groups h2 {
+    margin: 0 0 .5rem;
+    font: 400 .75rem/1.5 var(--fleet-footer-label-font, ui-monospace, monospace);
+    letter-spacing: 0;
+  }
+  .footer-groups a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    width: fit-content;
+    max-width: 100%;
+    font-size: .875rem;
+    line-height: 1.5;
+  }
+  .footer-tagline {
+    margin: 1.5rem 0 0;
+    font-size: .75rem;
+    line-height: 1.6;
+  }
+  @media (max-width: 760px) {
+    .footer-brand {
+      align-items: flex-start;
+    }
+  }
+  @media (max-width: 480px) {
+    .footer-groups {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem 1rem;
+    }
+  }
+</style>

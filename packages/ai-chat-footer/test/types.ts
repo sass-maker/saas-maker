@@ -12,6 +12,7 @@ const full: AIChatFooterProps = {
   providers: ['claude', 'chatgpt'],
   label: 'Ask AI',
   theme: 'dark',
+  layout: 'compact',
   className: 'my-footer',
 };
 
@@ -20,6 +21,12 @@ const promptFunction: AIChatFooterProps = {
   companyUrl: 'https://acme.com',
   prompt: ({ companyName, companyUrl }, provider) =>
     `Ask ${provider} about ${companyName} at ${companyUrl}`,
+};
+
+const question: AIChatFooterProps = {
+  ...minimal,
+  layout: 'question',
+  questionPlaceholder: 'What would you like to know?',
 };
 
 // @ts-expect-error companyName is required.
@@ -35,5 +42,6 @@ const missingUrl: AIChatFooterProps = {
 void minimal;
 void full;
 void promptFunction;
+void question;
 void missingCompany;
 void missingUrl;

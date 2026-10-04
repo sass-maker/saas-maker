@@ -61,6 +61,7 @@ export function PortfolioProjectStrip({
   theme = 'auto',
   className = '',
   speed = 42,
+  layout,
 }: PortfolioProjectStripProps) {
   const initialProjects = useMemo(
     () => normalizeProjects(projects ?? DEFAULT_PROJECTS),
@@ -94,6 +95,82 @@ export function PortfolioProjectStrip({
   const items = shouldLoop ? [...visibleProjects, ...visibleProjects] : visibleProjects;
   const themeAttr = theme === 'auto' ? undefined : theme;
   const duration = Number.isFinite(speed) ? Math.max(20, speed) : 42;
+
+  if (layout === 'studio') {
+    return (
+      <aside
+        className={`portfolio-project-strip ${className}`}
+        data-theme={themeAttr}
+        data-layout="studio"
+        aria-label={label}
+      >
+        <div
+          className="portfolio-project-strip__studio"
+          // biome-ignore lint/a11y/noNoninteractiveTabindex: This scroll region needs focus for native arrow-key scrolling.
+          tabIndex={0}
+          role="region"
+          aria-label="Studio project links; scroll with arrow keys"
+        >
+          <span className="portfolio-project-strip__studio-label">From the studio</span>
+          <ul className="portfolio-project-strip__studio-links">
+            {visibleProjects.slice(0, 3).map((project) => (
+              <li key={project.id}>
+                <span className="portfolio-project-strip__studio-dot" aria-hidden="true">
+                  ·
+                </span>
+                <a
+                  href={withReferralSource(project.url, currentProjectId)}
+                  className="portfolio-project-strip__link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${project.name} (opens in a new tab)`}
+                  title={project.description || project.name}
+                >
+                  {project.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <span className="portfolio-project-strip__studio-dot" aria-hidden="true">
+            ·
+          </span>
+          <a className="portfolio-project-strip__link" href="https://sassmaker.com/projects">
+            All projects ↗
+          </a>
+        </div>
+      </aside>
+    );
+  }
+
+  if (layout === 'curated') {
+    return (
+      <aside
+        className={`portfolio-project-strip ${className}`}
+        data-theme={themeAttr}
+        data-layout="curated"
+        aria-label={label}
+      >
+        <ul className="portfolio-project-strip__curated">
+          {visibleProjects.slice(0, 3).map((project) => (
+            <li key={project.id}>
+              <a
+                href={withReferralSource(project.url, currentProjectId)}
+                className="portfolio-project-strip__link"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${project.name} (opens in a new tab)`}
+              >
+                {project.name}
+              </a>
+              {project.description ? (
+                <p className="portfolio-project-strip__description">{project.description}</p>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      </aside>
+    );
+  }
 
   return (
     <aside

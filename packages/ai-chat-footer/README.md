@@ -147,3 +147,17 @@ control:
 ## License
 
 MIT
+
+### Shared footer presentation
+
+Use `layout="compact"` (React or browser attribute) to stack the intro and provider actions inside a narrow shared-footer disclosure. Omit it to retain the standalone layout.
+
+### Editable question layout
+
+Set `layout="question"` on the React component or `<ai-chat-footer>` to let
+visitors edit the configured prompt before opening an assistant. The same
+icon-only links update as they type; no request, storage or analytics is added.
+The textarea is labelled, uses 16px text and keeps its value across other
+metadata changes or reconnects. Changing product identity starts a fresh
+product question. React supports `questionPlaceholder`; the browser attribute
+is `question-placeholder`.

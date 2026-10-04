@@ -78,6 +78,21 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
+    "id": "agent-testing",
+    "name": "Browser Agent Testing",
+    "url": "https://browser-agents.sarthakagrawal.dev/",
+    "description": "A completed local web and iOS experiment comparing browser-agent speed, cost, reliability and defect detection against independent verification.",
+    "tier": "secondary",
+    "priority": "P4",
+    "category": "experimental",
+    "maturity": "experiment",
+    "spotlight": false,
+    "pillarId": "build",
+    "domains": [
+      "browser-agents.sarthakagrawal.dev"
+    ]
+  },
+  {
     "id": "browserdaddy",
     "name": "BrowserDaddy",
     "url": "https://browser.daddyrad.com/",
@@ -197,6 +212,36 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
+    "id": "on-record",
+    "name": "High Signal Podcasts",
+    "url": "https://podcasts.highsignal.app",
+    "description": "Search evidenced podcast claims and follow links back to the original episode or publication.",
+    "tier": "secondary",
+    "priority": "P2",
+    "category": "media",
+    "maturity": "experiment",
+    "spotlight": false,
+    "pillarId": "learn",
+    "domains": [
+      "podcasts.highsignal.app"
+    ]
+  },
+  {
+    "id": "issue-pages",
+    "name": "IssuePages",
+    "url": "https://issues.sarthakagrawal.dev",
+    "description": "Read public GitHub issues as focused articles; publishing requires repository-owner access.",
+    "tier": "secondary",
+    "priority": "P4",
+    "category": "experimental",
+    "maturity": "experiment",
+    "spotlight": false,
+    "pillarId": "build",
+    "domains": [
+      "issues.sarthakagrawal.dev"
+    ]
+  },
+  {
     "id": "karte",
     "name": "Karte",
     "url": "https://karte.cc",
@@ -287,6 +332,19 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
+    "id": "mashup",
+    "name": "Mashup",
+    "url": "https://mashup.highsignal.app",
+    "description": "Two playable examples of a local media-editing pipeline, with captions and inspectable source and approval receipts.",
+    "tier": "secondary",
+    "priority": "P2",
+    "category": "experimental",
+    "spotlight": false,
+    "domains": [
+      "mashup.highsignal.app"
+    ]
+  },
+  {
     "id": "chatgpt-memory-insights",
     "name": "Memory Map",
     "url": "https://chatgpt.significanthobbies.com",
@@ -349,7 +407,7 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
   {
     "id": "ph-catalog",
     "name": "PH Catalog",
-    "url": "https://github.com/sarthakagrawal927/ph-catalog",
+    "url": "https://ph.significanthobbies.com",
     "description": "A resumable local Product Hunt catalogue and analytics experiment with a privacy-safe synthetic demo.",
     "tier": "secondary",
     "priority": "P2",
@@ -358,7 +416,35 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     "spotlight": false,
     "pillarId": "build",
     "domains": [
-      "github.com"
+      "ph.significanthobbies.com"
+    ]
+  },
+  {
+    "id": "reddit-insights",
+    "name": "Reddit Insights",
+    "url": "https://reddit-insights.highsignal.app",
+    "description": "Search a dated snapshot of 93 Reddit communities in your browser, with links to original posts and explicit provenance limits.",
+    "tier": "secondary",
+    "priority": "P4",
+    "category": "experimental",
+    "spotlight": false,
+    "domains": [
+      "reddit-insights.highsignal.app"
+    ]
+  },
+  {
+    "id": "research-papers",
+    "name": "Research Papers",
+    "url": "https://papers.highsignal.app",
+    "description": "Search academic papers and follow original sources; account-based research chat is not yet qualified.",
+    "tier": "secondary",
+    "priority": "P2",
+    "category": "media",
+    "maturity": "experiment",
+    "spotlight": false,
+    "pillarId": "learn",
+    "domains": [
+      "papers.highsignal.app"
     ]
   },
   {
@@ -479,6 +565,19 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     "pillarId": "learn",
     "domains": [
       "learn.significanthobbies.com"
+    ]
+  },
+  {
+    "id": "web-playables",
+    "name": "Web Playables",
+    "url": "https://idle.aliveville.com",
+    "description": "Small browser-playable game experiments.",
+    "tier": "secondary",
+    "priority": "P4",
+    "category": "experimental",
+    "spotlight": false,
+    "domains": [
+      "idle.aliveville.com"
     ]
   }
 ];

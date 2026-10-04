@@ -165,3 +165,7 @@ configured kind.
 ## License
 
 MIT
+
+### Shared footer presentation
+
+Use `layout="compact"` (React or browser attribute) to stack the form inside a narrow shared-footer disclosure. This presentation attribute does not rebuild the browser form when changed; consent, identity, pending configuration and request behavior stay unchanged.

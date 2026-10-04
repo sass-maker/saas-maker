@@ -1,4 +1,7 @@
-<section class="studio-commission" aria-labelledby="commission-title">
+---
+const { contained = false } = Astro.props;
+---
+<section class:list={["studio-commission", { contained }]} aria-labelledby="commission-title">
   <div>
     <p class="studio-kicker">A focused engineering pilot</p>
     <h2 id="commission-title">Verify one AI-built feature before release.</h2>
@@ -21,3 +24,64 @@
     <span aria-hidden="true">↗</span>
   </a>
 </section>
+
+<style>
+  .studio-commission.contained {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr);
+    background: transparent;
+    color: inherit;
+  }
+  .contained .studio-kicker {
+    font: 400 .75rem/1.5 var(--fleet-footer-label-font, ui-monospace, monospace);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .studio-commission.contained h2 {
+    max-width: 30ch;
+    margin-top: .5rem;
+    font-size: 1.25rem;
+    line-height: 1.3;
+    letter-spacing: -.02em;
+  }
+  .studio-commission.contained > div > p:last-child {
+    margin-top: .75rem;
+    color: inherit;
+    font-size: .875rem;
+    line-height: 1.6;
+  }
+  .contained .studio-commission-email {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem .75rem;
+    min-height: 44px;
+    width: fit-content;
+    max-width: 100%;
+    padding: .5rem 0;
+    border: 0;
+    text-decoration: underline;
+    text-underline-offset: .2em;
+  }
+  .contained .studio-commission-email > span:first-child {
+    color: inherit;
+    font: 400 .75rem/1.5 var(--fleet-footer-label-font, ui-monospace, monospace);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .contained .studio-commission-email strong {
+    font-size: .9375rem;
+    font-weight: 500;
+  }
+  .contained .studio-commission-email > span:last-child {
+    color: inherit;
+    font-size: 1rem;
+  }
+  .contained .studio-commission-email:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+</style>

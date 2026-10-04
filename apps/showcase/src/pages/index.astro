@@ -5,7 +5,6 @@ import Hero from '../components/Hero.astro';
 import TokenWorld from '../components/TokenWorld.astro';
 import Fleet from '../components/Fleet.astro';
 import Spec from '../components/Spec.astro';
-import Commission from '../components/Commission.astro';
 import Footer from '../components/Footer.astro';
 import { STUDIO_PROFILE } from '../data/studio';
 
@@ -30,8 +29,7 @@ import { STUDIO_PROFILE } from '../data/studio';
       <Fleet />
       <Spec />
       <TokenWorld />
-      <Commission />
     </main>
-    <Footer />
+    <Footer showCommission />
   </div>
 </Layout>
