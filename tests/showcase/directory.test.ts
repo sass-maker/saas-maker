@@ -19,6 +19,8 @@ async function directoryHarness(groups = ['current', 'current', 'current', 'past
     attributes: Record<string, string> = {};
     listeners: Record<string, () => void> = {};
     focused = false;
+    bounds = { top: 0, bottom: 1 };
+    scrollOptions?: { behavior: string; block: string };
     children: Element[] = [];
     count?: Element;
     addEventListener(event: string, listener: () => void) {
@@ -31,7 +33,10 @@ async function directoryHarness(groups = ['current', 'current', 'current', 'past
       this.focused = true;
     }
     getBoundingClientRect() {
-      return { bottom: 1 };
+      return this.bounds;
+    }
+    scrollIntoView(options: { behavior: string; block: string }) {
+      this.scrollOptions = options;
     }
     querySelectorAll() {
       return this.children;
@@ -46,6 +51,7 @@ async function directoryHarness(groups = ['current', 'current', 'current', 'past
   const selectors = [
     '[data-directory-root]',
     '[data-directory-controls]',
+    'fleet-footer-extension',
     '[data-directory-filter-return]',
     '[data-filter-return-count]',
     '[data-filter-return-label]',
@@ -58,6 +64,18 @@ async function directoryHarness(groups = ['current', 'current', 'current', 'past
     '[data-empty-reset]',
   ];
   const elements = Object.fromEntries(selectors.map((selector) => [selector, new Element()]));
+  elements['fleet-footer-extension'].bounds = { top: 1200, bottom: 1600 };
+  const windowListeners: Record<string, () => void> = {};
+  const window = {
+    innerHeight: 800,
+    addEventListener(event: string, listener: () => void) {
+      windowListeners[event] = listener;
+    },
+    matchMedia: () => ({ matches: true }),
+    setTimeout(callback: () => void) {
+      callback();
+    },
+  };
   const rows = groups.map((group, index) => {
     const row = new Element();
     row.dataset = {
@@ -95,13 +113,54 @@ async function directoryHarness(groups = ['current', 'current', 'current', 'past
             '[data-group-filter]': buttons,
           })[selector],
       },
-      window: { addEventListener() {} },
+      window,
     }
   );
-  return { elements, rows, sections, buttons };
+  return {
+    elements,
+    rows,
+    sections,
+    buttons,
+    window,
+    fireWindow: (event: string) => windowListeners[event]?.(),
+  };
 }
 
 describe('directory visible counts', () => {
+  it('keeps Filters useful through the list and clears the footer on scroll, resize and filtering', async () => {
+    const { elements, window, fireWindow } = await directoryHarness();
+    const controls = elements['[data-directory-controls]'];
+    const footer = elements['fleet-footer-extension'];
+    const returnButton = elements['[data-directory-filter-return]'];
+    expect(returnButton.hidden).toBe(true);
+
+    controls.bounds = { top: -200, bottom: -20 };
+    fireWindow('scroll');
+    expect(returnButton.hidden).toBe(false);
+    returnButton.fire('click');
+    expect(controls.scrollOptions).toEqual({ behavior: 'auto', block: 'start' });
+    expect(elements['#directory-search'].focused).toBe(true);
+
+    footer.bounds = { top: 799, bottom: 1200 };
+    fireWindow('scroll');
+    expect(returnButton.hidden).toBe(true);
+    footer.bounds.top = 800;
+    fireWindow('scroll');
+    expect(returnButton.hidden).toBe(false);
+    window.innerHeight = 1000;
+    fireWindow('resize');
+    expect(returnButton.hidden).toBe(true);
+
+    footer.bounds = { top: 1200, bottom: 1600 };
+    window.innerHeight = 800;
+    fireWindow('scroll');
+    expect(returnButton.hidden).toBe(false);
+    footer.bounds = { top: 400, bottom: 1000 };
+    elements['#directory-search'].value = 'alpha';
+    elements['#directory-search'].fire('input');
+    expect(returnButton.hidden).toBe(true);
+  });
+
   it('counts the intersection of search, form, platform and lifecycle filters', async () => {
     const { elements, rows, sections, buttons } = await directoryHarness();
     elements['#directory-search'].value = '  ALPHA  ';
