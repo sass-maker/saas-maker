@@ -139,11 +139,17 @@ test('same-value attributes preserve studio nodes; successful refresh restores d
     strip.setAttribute('current-project', 'current');
     assert.equal(root.querySelector('.studio-line'), line);
     assert.equal(root.activeElement, focused);
-    globalThis.fetch = async () =>
-      new Response(
+    const requests = [];
+    globalThis.fetch = async (url, options) => {
+      requests.push({ url, options });
+      return new Response(
         JSON.stringify([...projects, { id: 'bad', name: 'Unsafe', url: 'javascript:alert(1)' }])
       );
+    };
     await strip.revalidate();
+    assert.equal(requests[0].url, 'https://catalog.example/projects.json');
+    assert.equal(requests[0].options.cache, 'no-cache');
+    assert.equal(requests[0].options.headers.accept, 'application/json');
     const refreshed = root.querySelector('.studio-line');
     assert.notEqual(refreshed, line);
     assert.equal(refreshed.scrollLeft, 180);

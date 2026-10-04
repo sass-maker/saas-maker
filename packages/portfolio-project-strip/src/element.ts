@@ -270,7 +270,7 @@ export function registerPortfolioProjectStrip(): void {
         const response = await fetch(catalogUrl, {
           signal: controller.signal,
           headers: { accept: 'application/json' },
-          cache: 'force-cache',
+          cache: 'no-cache',
         });
         if (!response.ok) return;
         const projects = normalizeProjects(await response.json());

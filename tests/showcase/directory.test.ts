@@ -3,6 +3,7 @@ import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 import { DIRECTORY_PROJECTS, directoryFormFamilies } from '../../apps/showcase/src/data/directory';
+import { GET as getProjectStripScript } from '../../apps/showcase/src/pages/project-strip.js';
 
 async function readRepository(relativePath: string) {
   return readFile(new URL(`../../${relativePath}`, import.meta.url), 'utf8');
@@ -328,12 +329,14 @@ describe('verified public Fleet directory', () => {
   });
 
   it('revalidates the shared project strip catalog', async () => {
-    const script = await readRepository('apps/showcase/src/pages/project-strip.js.ts');
+    const response = getProjectStripScript();
+    const script = await response.text();
 
-    expect(script).toMatch(
-      /fetch\(CATALOG_URL, \{ headers: \{ accept: 'application\/json' \}, cache: 'no-cache'/
-    );
-    expect(script).not.toContain("cache: 'force-cache'");
+    expect(response.headers.get('content-type')).toContain('text/javascript');
+    expect(script).toMatch(/fetch\(catalogUrl,\s*\{/);
+    expect(script).toMatch(/accept:\s*["']application\/json["']/);
+    expect(script).toMatch(/cache:\s*["']no-cache["']/);
+    expect(script).not.toMatch(/cache:\s*["']force-cache["']/);
   });
 
   it('keeps established web identities discoverable through the public form families', () => {
