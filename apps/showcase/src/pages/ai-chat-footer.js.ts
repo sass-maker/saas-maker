@@ -326,12 +326,11 @@ const source = `(() => {
         api.mountSharedFooterFeedback(widgetRoot, options);
         mounted = true;
         launcher.textContent = launcherLabel;
-        launcher.disabled = false;
         status.textContent = '';
         return;
       }
       loading = true;
-      launcher.disabled = true;
+      launcher.setAttribute('aria-busy', 'true');
       launcher.textContent = 'Loading…';
       loader = document.createElement('script');
       loader.src = 'https://sassmaker.com/feedback-launcher.js';
@@ -341,7 +340,7 @@ const source = `(() => {
         if (!active || hasExistingWidget(host)) { removeLauncher(); return; }
         const loadedApi = window.SaasMakerFeedback;
         if (typeof loadedApi?.mountSharedFooterFeedback !== 'function') {
-          launcher.disabled = false;
+          launcher.removeAttribute('aria-busy');
           launcher.textContent = launcherLabel;
           status.textContent = 'Feedback could not load. Try again.';
           loader.remove();
@@ -349,13 +348,13 @@ const source = `(() => {
         }
         loadedApi.mountSharedFooterFeedback(widgetRoot, options);
         mounted = true;
-        launcher.disabled = false;
+        launcher.removeAttribute('aria-busy');
         launcher.textContent = launcherLabel;
         status.textContent = '';
       };
       loader.onerror = () => {
         loading = false;
-        launcher.disabled = false;
+        launcher.removeAttribute('aria-busy');
         launcher.textContent = launcherLabel;
         status.textContent = 'Feedback could not load. Try again.';
         loader.remove();
