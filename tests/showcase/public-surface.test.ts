@@ -13,16 +13,18 @@ describe('SaaS Maker public source boundary', () => {
 
     expect(response.headers.get('access-control-allow-origin')).toBe('*');
     expect(response.headers.get('content-type')).toBe('text/javascript; charset=utf-8');
-    expect(source).toMatch(/customElements\.define\('ai-chat-footer'/);
+    expect(source).toMatch(/AI_CHAT_FOOTER_TAG = ["']ai-chat-footer["']/);
+    expect(source).toMatch(/registerAIChatFooter\(\)/);
     expect(source).toMatch(/Explore .+ with AI/);
     expect(source).toMatch(/createProviderLogo/);
     expect(source).toMatch(/dataset\.aiProvider/);
-    expect(source).toMatch(/link\.title = providerName/);
+    expect(source).toMatch(/link\.title = PROVIDER_NAMES/);
     expect(source).not.toMatch(/createTextNode\(providerName\)/);
     expect(source.match(/data:image\/jpeg;base64,/g)).toHaveLength(5);
-    expect(source).toMatch(/document\.createElement\('img'\)/);
+    expect(source).toMatch(/document\.createElement\(["']img["']\)/);
     expect(source).not.toMatch(/createProviderIcon|CHATGPT_SEGMENT|provider-color/);
-    expect(source).toMatch(/More from the studio/);
+    expect(source).toMatch(/strip\.setAttribute\('layout', 'studio'\)/);
+    expect(source).toMatch(/footer\.setAttribute\('layout', 'question'\)/);
     expect(source).toMatch(/customElements\.define\('fleet-footer-extension'/);
     expect(source).toMatch(/strip\.setAttribute\('integrated'/);
     expect(source).toMatch(/footer\.slot = 'ai'/);
@@ -34,9 +36,13 @@ describe('SaaS Maker public source boundary', () => {
     expect(source).toMatch(/new MutationObserver/);
     expect(source).toMatch(/launcher\.addEventListener\('click'/);
     expect(source).toMatch(/openSharedFooterFeedback/);
+    expect(source).toMatch(/launcher\.setAttribute\('aria-busy', 'true'\)/);
+    expect(source).toMatch(/launcher\.removeAttribute\('aria-busy'\)/);
+    expect(source).not.toMatch(/launcher\.disabled\s*=/);
     expect(source).toMatch(/AUTO_CAPTURE_KINDS\[catalogId\]/);
     expect(source).not.toMatch(/strip\.remove\(\)/);
     expect(source).not.toMatch(/analytics|localStorage|credential/i);
+    expect(source).not.toMatch(/^\s*(?:import|export)\s/m);
     expect(() => new Function(source)).not.toThrow();
   });
 

@@ -1,9 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 import {
   DEFAULT_API_BASE_URL,
   fetchCaptureConfig,
+  NewsletterCapture,
   normalizeApiBaseUrl,
   submitSubscription,
   validateSubscriptionRequest,
@@ -186,4 +189,16 @@ test('fetchCaptureConfig surfaces transport failures as a safe retry message and
     }),
     /aborted/
   );
+});
+
+test('React compact layout forwards only presentation and retains capture attributes', () => {
+  const props = { productName: 'Acme', catalogId: 'acme', kind: 'newsletter', source: 'acme' };
+  const standard = renderToStaticMarkup(createElement(NewsletterCapture, props));
+  const compact = renderToStaticMarkup(
+    createElement(NewsletterCapture, { ...props, layout: 'compact' })
+  );
+  assert.doesNotMatch(standard, /layout=/);
+  assert.match(compact, /layout="compact"/);
+  assert.equal(compact.replace(' layout="compact"', ''), standard);
+  assert.doesNotMatch(compact, /allow-kind-selection|project-key=/);
 });

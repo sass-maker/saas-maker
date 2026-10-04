@@ -25,6 +25,8 @@ export interface PortfolioProjectStripProps {
   label?: string;
   theme?: PortfolioTheme;
   className?: string;
+  /** Three stable links as a descriptive grid or a single studio line. */
+  layout?: 'curated' | 'studio';
   /** Marquee duration in seconds. */
   speed?: number;
 }

@@ -18,6 +18,16 @@
         "proof": "Published macOS 1.14.3 is signed and notarized; its DMG hash and local installation were verified. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
         "nextAction": "Try the current Mac release on a small local repository. Use the documented manual update path until in-app installation is qualified."
       },
+      "footerArt": {
+        "src": "/footer-art/codevetter.webp",
+        "width": 2172,
+        "height": 724,
+        "alt": "Finely drawn dark verification bench with task and change folios, a central bounded execution chamber, and retained evidence to the right.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for CodeVetter",
+        "sha256": "36588b9c1d0a02b0b04b0d8e9cbeb9661440b2927d7e9a12f7b6a0e176fae910"
+      },
       "kind": "product",
       "category": "utility",
       "form": "Desktop app",
@@ -60,6 +70,16 @@
         "mechanism": "A local macOS agent combines voice interaction, screen context, and device-side tools.",
         "proof": "The public 0.3.19 preview is downloadable and the native implementation includes voice, screen context, local planning, and macOS actions; signed-release hardware smoke and sustained daily use remain unproven.",
         "nextAction": "Download the current Mac preview, test one recurring voice-and-screen workflow, and judge it against Pace's visible local and off-device trust boundary."
+      },
+      "footerArt": {
+        "src": "/footer-art/pace.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "HeyPace: A quiet personal voice-assistance desk centers a microphone beside an unbranded monitor and empty chair. A short blue physical ribbon links voice to the visible workspace; a lamp, folded note and small local tools complete the wings.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for HeyPace",
+        "sha256": "bd1345b1c0e70d17bfa143564ccd89b21781185664dc1b90f9be1727908a9b8d"
       },
       "kind": "product",
       "category": "experimental",
@@ -104,6 +124,16 @@
         "proof": "The project contains working browser and Mac-local experiments, evaluation infrastructure, and reproducible training paths.",
         "nextAction": "Explore the measured recipes and follow new experiments as they produce reproducible proof rather than scale claims."
       },
+      "footerArt": {
+        "src": "/footer-art/posttrainllm.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "PostTrainLLM: A specialist-model recipe atelier centers a measured recipe tray and paired comparison samples. Sorted local material enters a modest experimental apparatus; a comparison notebook and source cabinet remain distinct at the wings.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for PostTrainLLM",
+        "sha256": "63c2514f2a3e4e225277cda029a8cc990836ca91c53e213b418b0f4a12040f7c"
+      },
       "kind": "product",
       "category": "utility",
       "form": "Research platform",
@@ -147,6 +177,16 @@
         "proof": "The product is independently owned, in active dogfooding, and retains its established data and authentication boundary.",
         "nextAction": "Open Live and use the catalogue, search, and suggestions to add or act on something you genuinely want to experience."
       },
+      "footerArt": {
+        "src": "/footer-art/live.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "Live: An inhabited life atlas centers a reachable path junction beside an open blank possibility list. One chosen gold footpath leads toward modest activities: a garden, workshop and distant lookout. The illustration invites a next move without depicting completed achievements.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Live",
+        "sha256": "3db0af1bc73641894adbaf7ca36fdd01c23a289abd70f31d9deddd024bbc95c0"
+      },
       "kind": "product",
       "category": "media",
       "form": "Web app",
@@ -188,6 +228,16 @@
         "mechanism": "A generated public directory and native launch-destination catalog sit beside shared feedback, UI, workflow, skill, and automation tooling maintained through real Fleet use.",
         "proof": "It publishes the canonical privacy-safe project directory, serves the provenance-bearing /launchdesk catalog, and houses packages and tooling used by multiple independent repositories.",
         "nextAction": "Explore the complete directory or open the public tooling catalogue; product-specific work continues in each owning repository."
+      },
+      "footerArt": {
+        "src": "/footer-art/saas-maker.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "SaaS Maker: A product studio courtyard centers an active craft table where small software-inspired models are made and inspected. Varied finished and unfinished models occupy a quiet exhibition shelf; useful tools remain on the outer workbenches.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for SaaS Maker",
+        "sha256": "f2a322b87d983ad130458cf2bb1117fd4caa91aca7686988265eaf5d605ed528"
       },
       "kind": "product",
       "category": "media",
@@ -233,6 +283,16 @@
         "proof": "The maintained dashboard answers the owner’s recurring repository-distribution questions and is considered functionally complete.",
         "nextAction": "Use the dashboard for a concrete portfolio question; request new analysis only when an unanswered recurring question appears."
       },
+      "footerArt": {
+        "src": "/footer-art/gitstat.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "GitStat: A contribution-history weaving station centers a loom. Distinct repository threads enter it from separate spools and form a chronological fabric while preserving their individual routes. A folded timeline rests beside the loom.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for GitStat",
+        "sha256": "86458fee72b8d765c773dedfaf5bdb235ef80dd82d6fe024ef341a6483450eff"
+      },
       "kind": "product",
       "category": "experimental",
       "form": "Web app",
@@ -274,6 +334,16 @@
         "mechanism": "A private Gmail workspace combines local semantic search, sender aggregation, and user-confirmed unsubscribe workflows.",
         "proof": "The maintained application performs its intended search, sender-insight, and unsubscribe jobs in regular use.",
         "nextAction": "Open the private workspace and investigate a sender or search question; no speculative feature expansion is planned."
+      },
+      "footerArt": {
+        "src": "/footer-art/email-manager.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "Kinetic: A deliberate inbox sorting desk centers one selected sealed envelope and a hand-operated review tray. Different sender-sized envelope groups occupy the wings; no sender identity or message content is visible.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Kinetic",
+        "sha256": "608d95ab7e52b1aa43650828a4f2032bdc5bef686a715ea573931595594aeaa9"
       },
       "kind": "product",
       "category": "utility",
@@ -318,6 +388,16 @@
         "proof": "A useful browser-local dashboard exists today; deeper shift analysis and additional export sources remain active work.",
         "nextAction": "Import a ChatGPT export locally and explore the resulting private map; the source archive stays in the browser."
       },
+      "footerArt": {
+        "src": "/footer-art/chatgpt-memory-insights.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "Memory Map: A cool cartography workshop centers an open transit-like atlas and a source slip physically connected to one route. A boxed conversation archive and folded map margins occupy the wings. It is analytical mapping rather than warm nostalgia stationery.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Memory Map",
+        "sha256": "f546bcbf4be31048005badd75e8d9583df38a79dfcfab7c5c1d5f086808260b7"
+      },
       "kind": "product",
       "category": "utility",
       "form": "Web app",
@@ -358,6 +438,16 @@
         "mechanism": "A capability-aware gateway routes compatible requests across supported free-tier providers with fallback behavior.",
         "proof": "The gateway works for internal consumers and is maintained as shared infrastructure rather than an independent feature product.",
         "nextAction": "Use the compatible gateway from a named consumer; add providers only when they improve capability, reliability, or capacity."
+      },
+      "footerArt": {
+        "src": "/footer-art/free-ai.webp",
+        "width": 2172,
+        "height": 724,
+        "alt": "Free AI: A small routing junction centers one request parcel and a manual track switch. Several bounded tracks lead to modest endpoints; an obvious alternative bypasses one closed gate without promising unlimited throughput.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Free AI",
+        "sha256": "26a88d2ef0d56bd1cd3a8f974faf4de0b73fc7a737242b22db53c45070f855a8"
       },
       "kind": "platform",
       "category": "utility",
@@ -402,6 +492,16 @@
         "proof": "The product focus and daily-brief surface exist, but regular owner use has not yet validated what deserves continued investment.",
         "nextAction": "Read and dogfood the Daily Brief; resume feature work only when repeated use exposes a concrete deficiency."
       },
+      "footerArt": {
+        "src": "/footer-art/high-signal.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "High Signal: A signal-watch desk centers one daily sheet whose physical source ribbons remain visible. Scattered public-source slips pass through a narrow sorting aperture; a restrained tuning instrument and loose paper occupy the wings.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for High Signal",
+        "sha256": "073b92cd7e9d6e90a77f21c46aad762544406b606019fc4c40ecb898ae528bf2"
+      },
       "kind": "product",
       "category": "media",
       "form": "Intelligence web app",
@@ -444,6 +544,16 @@
         "mechanism": "A source-backed corpus extracts attributable claims and organizes them into people, topics, books, tools, and emerging signals.",
         "proof": "The public corpus is live with 11,624 published claims, 294 named references, and 1,190 episodes with evidence.",
         "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+      },
+      "footerArt": {
+        "src": "/footer-art/on-record.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "High Signal Podcasts: An oral-history research room centers a claim card connected to its source reel. A microphone, attribution slips and referenced books remain distinct around it, emphasizing source-linked claims rather than a podcast directory.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for High Signal Podcasts",
+        "sha256": "10ab36994c185216c85d76ed31664227ba1a6f49e65af28e82a7822cb5c82171"
       },
       "kind": "product",
       "category": "media",
@@ -488,6 +598,16 @@
         "proof": "The owner-only production pilot has proven the issue-to-page loop at issues.sarthakagrawal.dev.",
         "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
       },
+      "footerArt": {
+        "src": "/footer-art/issue-pages.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "IssuePages: A modest publishing press centers a folded issue sheet and deliberate approval lever. The sheet moves toward an openly readable display stand; a plain source folio sits on the other side. Keep the apparatus small and ordinary.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for IssuePages",
+        "sha256": "3bbaf28600b6060aa4911d09fa6ac7383d6c3b79e30f9b3ca61ae3a102610110"
+      },
       "kind": "experiment",
       "category": "experimental",
       "form": "Issue-backed publishing website",
@@ -531,6 +651,16 @@
         "proof": "The corpus and discovery system are essentially complete and available when a real research question appears.",
         "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
       },
+      "footerArt": {
+        "src": "/footer-art/research-papers.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "Research Papers: A research reading gallery centers one open paper under a study lamp, with a visible citation thread leading back to its scholarly shelf. Indexed volumes, a magnifier and restrained specimen trays frame the study area.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Research Papers",
+        "sha256": "709c788faeb58d1de55ec50b53e35eb1b57a05754eccc499334c2e577e0a7f6b"
+      },
       "kind": "product",
       "category": "media",
       "form": "Research library",
@@ -572,6 +702,16 @@
         "mechanism": "A shared RAG service performs corpus-aware search, ranking, citation, and schema-constrained retrieval behind a private boundary.",
         "proof": "The service has healthy Fleet consumers and already operates as the shared cited-retrieval layer.",
         "nextAction": "Connect it only for a concrete consumer need; change the infrastructure when retrieval evidence shows a real failure."
+      },
+      "footerArt": {
+        "src": "/footer-art/knowledge-base.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "Knowledge Base: A private reading vault centers an index drawer retrieving one page while its provenance ribbon stays attached to the source volume. Closed specialist books sit behind a modest privacy partition in the wings.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Knowledge Base",
+        "sha256": "418cd23e703c38e823c4f90fd48185ad7e87faeb8a512e9f0059085eaf4d39b2"
       },
       "kind": "platform",
       "category": "utility",
@@ -618,6 +758,16 @@
         "proof": "The canonical Hub lists five maintained apps. Journal is removed from the product lineup; Journal and Habits source/data compatibility history remains retained. Private cross-app use still needs hosted qualification.",
         "nextAction": "Open the Hub to reach the five apps; current work focuses on unified authentication and safe cross-app summaries."
       },
+      "footerArt": {
+        "src": "/footer-art/significanthobbies.webp",
+        "width": 2159,
+        "height": 728,
+        "alt": "Significant Hobbies: A shared courtyard centers a common path and table connecting five independent personal rooms. Each room retains a separate doorway and its own interior character; no room's contents flow into another.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Significant Hobbies",
+        "sha256": "793590b059e352e9a8a381f3d0074b5994b64e9596cfbc8dde0e1268fc161f3d"
+      },
       "kind": "product",
       "category": "utility",
       "form": "Personal-app Hub",
@@ -661,6 +811,16 @@
         "mechanism": "Multi-field search, shareable filters, seasonal discovery, taste tools, schedules, and signed-in watchlists operate over a large synced catalogue.",
         "proof": "The production app serves roughly 35,000 titles and is frequently used; broader community features are intentionally out of scope.",
         "nextAction": "Search the catalogue or use the watchlist; maintenance focuses on data quality and core discovery reliability."
+      },
+      "footerArt": {
+        "src": "/footer-art/anime-list.webp",
+        "width": 2168,
+        "height": 725,
+        "alt": "Anime List: An original animation-club room centers a personal watch shelf and one invented illustrated story card. A projector, original abstract story panels and a seasonal moon-cycle window frame the scene.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Anime List",
+        "sha256": "b2370994f1f05837bada8d4bd232dbdf8f809e06da6fa9bac3f5817c188c119e"
       },
       "kind": "product",
       "category": "media",
@@ -706,6 +866,16 @@
         "proof": "The maintained product is complete for its intended viewing loop and already handles common catalogue failures.",
         "nextAction": "Open a curated channel and watch; future changes are limited to catalogue health or a proven viewing need."
       },
+      "footerArt": {
+        "src": "/footer-art/looptv.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "LoopTV: A calm lean-back screening nook centers one comfortable chair facing a fictional abstract screen. A simple channel selector, unbranded reels and an empty alternate slot show deliberate simplicity and unavailable content without drama.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for LoopTV",
+        "sha256": "647e371670bb62c6e39c8a843a714a9d2ff3f4001876719a9b63a7c380ba8cb5"
+      },
       "kind": "product",
       "category": "media",
       "form": "Web app",
@@ -748,6 +918,16 @@
         "mechanism": "An evidence-gated Concept → Drill → Build → Review → Apply loop combines retrieval practice, Feynman explain-backs, roadmaps, and adaptive review.",
         "proof": "A fresh guest can complete a graded TypeScript drill and return to saved code in the same browser. Account sync and AI-graded mastery require sign-in and remain separately unqualified.",
         "nextAction": "Try a coding drill as a guest; progress stays in this browser. Use the issue tracker for account-sync qualification limits."
+      },
+      "footerArt": {
+        "src": "/footer-art/swe-interview-prep.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "SWE Interview Prep: A practical learning workshop centers a small built artifact and review notebook. Concept sketches, a drill jig and an application folio form a physical sequence in the wings; the journey ends with evidence rather than a trophy.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for SWE Interview Prep",
+        "sha256": "af4490398f221a4b2d06931416938f53b49195dfc755c9bd22fdd4719b8de795"
       },
       "kind": "product",
       "category": "media",
@@ -792,6 +972,16 @@
         "mechanism": "A local-first iPhone journal records food and four core nutrients, applies visible formulas, and offers optional private sync.",
         "proof": "The maintained app is functionally complete, connected to the Hub family, and designed so recommendations trace to visible rules.",
         "nextAction": "Log a meal or daily measurement in the app; change the product only when repeated use reveals a concrete gap."
+      },
+      "footerArt": {
+        "src": "/footer-art/calorie.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "Calorie: A modest food-journal table centers a fictional meal, transparent measuring vessel and blank daily notebook. Ordinary ingredients and a loose optional marker sit aside, making the journal useful without mandatory targets.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Calorie",
+        "sha256": "4ecabb617faef59d62c87543ef02acce505f937eb8b6bf513c5b51b9e00ead74"
       },
       "kind": "product",
       "category": "utility",
@@ -838,6 +1028,16 @@
         "proof": "The focused workout loop is under active native development and is being validated through real sessions.",
         "nextAction": "Run an authored workout in Setline and let actual session friction determine the next product change."
       },
+      "footerArt": {
+        "src": "/footer-art/setline.webp",
+        "width": 2172,
+        "height": 724,
+        "alt": "Setline: An empty training station centers an authored set card, dumbbell and simple rest timer. A second blank actual-result card remains separate on the bench; the space suggests one set at a time.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Setline",
+        "sha256": "75f737ad788ed05fbfde4f0193096f358d959a07130fcab6025639f7fcb0bd64"
+      },
       "kind": "product",
       "category": "utility",
       "form": "iOS app",
@@ -881,6 +1081,16 @@
         "proof": "The device-first native product is built around a distinctive constellation model and is in active personal use validation.",
         "nextAction": "Use Kith with real relationships and let recurring memory and follow-through needs guide improvements."
       },
+      "footerArt": {
+        "src": "/footer-art/kith.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "Kith: A warm relationship courtyard centers a blank note and the nearest pair of chairs. Additional chosen chairs sit at different comfortable distances; discreet keepsake boxes suggest remembered moments without a social feed.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Kith",
+        "sha256": "c765483ebe2957edea7c90b5abd7e3db585433e3b7895be8c983070474fd905f"
+      },
       "kind": "product",
       "category": "utility",
       "form": "iOS app",
@@ -922,6 +1132,16 @@
         "mechanism": "Paste a resume and job description, review the generated changes, save in the browser, and export the current document.",
         "proof": "The guest resume, tailoring, review, save/reload and local document-export path has been verified with synthetic examples. Account sync and broader application tools remain unqualified.",
         "nextAction": "Try the guest workflow for one job, review every proposed claim, and export the version you want to use."
+      },
+      "footerArt": {
+        "src": "/footer-art/rolepatch.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "RolePatch: A careful application-tailoring desk centers a plain resume sheet beside a job-description card, joined by removable revision strips. A source folder and separate review tray occupy the sides, making approval visible before action.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for RolePatch",
+        "sha256": "0992326235de3d6c14e9f881f1725020f693924d790fb25689aaf181c7093c8b"
       },
       "kind": "product",
       "category": "utility",
@@ -965,6 +1185,16 @@
         "mechanism": "A designed profile combines greeting-card presentation, owner-published context, structured links, visitor questions, contact handoff, and a small grounded agent.",
         "proof": "The individual profile and conversational foundation are strong; company positioning and repeated company use remain the next validation.",
         "nextAction": "Explore the existing profile experience; company adoption should wait for a focused workflow and a real company test."
+      },
+      "footerArt": {
+        "src": "/footer-art/karte.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "Karte: A creator-owned welcome alcove centers a portfolio folio and visitor-question envelope. A restrained gold doorway opens toward public work while a closed drawer keeps private notes separate.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Karte",
+        "sha256": "82a259b668d1e6507173483dd10368d0304b6923099a8afeb1b5d2850ca134fb"
       },
       "kind": "product",
       "category": "utility",
@@ -1010,6 +1240,16 @@
         "proof": "Core sync, search, organization, and project-aware discovery are largely complete and under focused active improvement.",
         "nextAction": "Connect or explore a Stars collection and use a current project question to drive discovery; avoid unrelated alert or reporting scope."
       },
+      "footerArt": {
+        "src": "/footer-art/starboard.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "Starboard: A project-aware charting bench centers an unfinished vessel model beside one deliberately selected tool. A star-chart folio and organized tool cabinet fill the wings; unused tools remain visibly optional.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Starboard",
+        "sha256": "69d07d109488dfbc3d3f589f9a880e0c6b4d5b337d895ce700e0b9dc6fccb9b9"
+      },
       "kind": "product",
       "category": "utility",
       "form": "Web app",
@@ -1052,6 +1292,16 @@
         "mechanism": "A small browser tracker and explicit named events feed workspace-scoped analytics; service SDKs and OTLP add aggregate endpoint health in the same dashboard.",
         "proof": "Production Google signup, returning login, sign-out and project creation verified; own signup/project milestone logs remain exactly one each. Known analytics traffic returned 3 sessions, 4 page views and 2 named events without duplicate-batch inflation, with correct 1h/24h boundaries and referral sources. Public live page and revocation verified. JavaScript SDK 0.4.0 published and artifact integrity checked. See app-health/docs/release-2026-09-12.md; broader analytics parity and remotely published Swift package remain follow-up work.",
         "nextAction": "Sign in with Google, add a project and environment, then install only the analytics, endpoint, or logging capability you need."
+      },
+      "footerArt": {
+        "src": "/footer-art/app-health.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "App Health: A request-and-event relay station centers a single parcel at an inspection desk. Separate request rails and closed diagnostic drawers remain bounded, distinct from Site Health's whole-portfolio project inventory scene.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for App Health",
+        "sha256": "d89c904afcbb6b379ecdb0aeb394609af83c63f1703f637dec6df5e5fde08886"
       },
       "kind": "product",
       "category": "utility",
@@ -1097,6 +1347,16 @@
         "proof": "The first public Startups proof assembles a source-faithful 47-second argument from four beats across three Creative Commons podcast episodes, with captions and media receipts.",
         "nextAction": "Preserved experiment; no current work or obligation to resume."
       },
+      "footerArt": {
+        "src": "/footer-art/mashup.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "Mashup: A local editing bench centers an assembled filmstrip and cutting surface. Original abstract frames, owned-source reels and retained cut slips surround an editable sequence folio.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Mashup",
+        "sha256": "4bd8e37d6d4f21cc22402f8e7450a50afecce0adfe5517a59e2d6a5a55821be5"
+      },
       "kind": "experiment",
       "category": "experimental",
       "form": "Local media tool with public proof",
@@ -1141,6 +1401,16 @@
         "proof": "All 88 tests pass. The three-record fictional offline demo exercises the real parser and database path, produces a verified Zstandard-compressed Parquet snapshot and refuses to overwrite an existing non-sample catalogue.",
         "nextAction": "Finish the bounded experiment, document the repeatable local workflow and then mark the project inactive as a completed experiment."
       },
+      "footerArt": {
+        "src": "/footer-art/ph-catalog.webp",
+        "width": 2172,
+        "height": 724,
+        "alt": "Finely drawn research cabinet containing original product objects and separate source cards, with a central structured folio and separate annotation slip.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for PH Catalog",
+        "sha256": "ca1786d2519cfafa52e2ff7ba5faecb41407f93c230b092b7c55a5febbceb945"
+      },
       "kind": "experiment",
       "category": "experimental",
       "form": "Local catalogue and analytics toolkit",
@@ -1182,6 +1452,16 @@
         "mechanism": "A reusable gamekit supplies loops, saves, offline progress, platform adapters, and builds for a small games hub.",
         "proof": "The research goal produced a working gamekit, a live idle game, and YouTube-compatible packaging; the project is now parked.",
         "nextAction": "Preserved experiment; no current work or obligation to resume."
+      },
+      "footerArt": {
+        "src": "/footer-art/web-playables.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "Web Playables: A browser-game packaging workshop centers an original miniature level and save capsule. Distinct playable-world props sit in open frames beside an offline travel case and modest packaging tools.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Web Playables",
+        "sha256": "75ee5d1549bebbc3507e5e945c3a93ad88befbdce46982bbee0c35d592ac9bc8"
       },
       "kind": "experiment",
       "category": "experimental",
@@ -1225,6 +1505,16 @@
         "proof": "The publication contains thousands of documented early-breakthrough paths, visible methodology, and ongoing source-linked profile coverage.",
         "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
       },
+      "footerArt": {
+        "src": "/footer-art/what-it-takes-to-win.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "Paths: A landscape of unequal starting conditions centers a route fork and comparison folio. Paths from varied shelters meet obstacles and reach different ordinary vantage points; there is no crowned winner.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Paths",
+        "sha256": "7d3ad09814045ad9fc23bec710750cbad0591721ee31d4ed1439d89ed965cff6"
+      },
       "kind": "product",
       "category": "media",
       "form": "Research publication",
@@ -1265,6 +1555,16 @@
         "mechanism": "A maintained portfolio connects current positioning to selected projects, writing, résumé evidence, and public profiles.",
         "proof": "The public site is complete and satisfactory as the canonical professional record; updates follow changes in the underlying work.",
         "nextAction": "Explore the current work and résumé or use the listed contact paths; do not infer stale focus areas from older copy."
+      },
+      "footerArt": {
+        "src": "/footer-art/sarthakagrawal-personal.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "Sarthak Agrawal: A personal maker's workroom centers a selected-work folio and writing notebook. A few original project studies, a restrained bookshelf and useful craft tools show work without inventing a portrait or biography.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Sarthak Agrawal",
+        "sha256": "cfb1f34a025880332ad02bbbb617ce8ccd427073391e203ac92bcb56d6d72462"
       },
       "kind": "product",
       "category": "media",
@@ -1307,6 +1607,16 @@
         "mechanism": "A bounded collector stores attributable snapshots and derives recurring insight views without claiming unavailable history.",
         "proof": "The collector and snapshot model exist, but reliable lawful access to historical Reddit data remains the central blocker.",
         "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+      },
+      "footerArt": {
+        "src": "/footer-art/reddit-insights.webp",
+        "width": 2172,
+        "height": 724,
+        "alt": "Reddit Insights: A community research bulletin board centers one unlettered day folder with a source-linked discussion card inside its boundary. Separate community drawers and empty unobserved-day slots make captured scope visible.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Reddit Insights",
+        "sha256": "bf2ac20dedbae952868f879468c851773f0dc40291a43376990f3608fe1f950b"
       },
       "kind": "experiment",
       "category": "experimental",
@@ -1351,6 +1661,16 @@
         "mechanism": "Native apps combine schedule blocks, recurring routines, wall-clock focus sessions, interruption evidence, and an end-of-day divergence review.",
         "proof": "Public notarized Mac build 20 remains available; local build 25 has passed a bounded personal workflow but Gatekeeper rejects it as unnotarized, so it is not a public update.",
         "nextAction": "Use Anchor through a real day and review the divergence evidence; let repeated lived patterns decide the next change."
+      },
+      "footerArt": {
+        "src": "/footer-art/anchor.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "Anchor: A day-planning terrace centers the crossing between a planned stepping-stone path and a real-life detour. A pause bench, simple clock, task tokens and end-of-day notebook make interruptions ordinary.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Anchor",
+        "sha256": "efcbdc055f2e6aa2fd4822868019c132a5bb27125ce90641cae8919954ef9926"
       },
       "kind": "product",
       "category": "utility",
@@ -1398,6 +1718,16 @@
         "proof": "Completed experiment verified at https://nomad.significanthobbies.com/ on September 13, commit e763b02. Six data tests, exact-commit CI and six release gates passed. Live search, comparison and downloads verified; 390px mobile layout checked. GitHub Pages disabled.",
         "nextAction": "Share and use the completed explorer at nomad.significanthobbies.com; no active expansion or collection roadmap."
       },
+      "footerArt": {
+        "src": "/footer-art/nomad-data-adventure.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "Nomad Data Adventure: A saved-place comparison table centers two original miniature city landscapes and a comparison foldout. Fictional coast and hill, closed dataset folders and a travel bag show tradeoffs rather than an ideal destination.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Nomad Data Adventure",
+        "sha256": "487f4de10060e4594f602009c0fe54e8569fa0753a7d5fde94a648e618f78d30"
+      },
       "kind": "experiment",
       "category": "experimental",
       "form": "Static city explorer",
@@ -1439,6 +1769,16 @@
         "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer insights, reviewed cache cleanup and compact AI conversation exports. Sparkle provides signed macOS update checks.",
         "proof": "The public signed Sparkle feed and download serve notarized 0.1.3 build110 with matching DMG bytes. An isolated build106-to-108 Sparkle update and native scan were observed; build110 has not been installed for a new journey.",
         "nextAction": "Download during free early access at storage.daddyrad.com, scan a folder, and review what to archive or move to Trash."
+      },
+      "footerArt": {
+        "src": "/footer-art/storagedaddy.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "storagedaddy: A storage cartographer's attic centers a spatial map and magnifier. Developer project crates, ordinary storage parcels and generic build-artifact packages occupy the wings; a separate review basket remains untouched.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for storagedaddy",
+        "sha256": "9164eb6b49796a5263e6741ca85d51ceec01b42fac68aeb5647f90eb3d3fa8c5"
       },
       "kind": "experiment",
       "category": "utility",
@@ -1483,6 +1823,16 @@
         "mechanism": "A native local Mac app extracts browser archives, watches focus and classifies topics only after explicit opt-in.",
         "proof": "The public signed Sparkle feed and download serve notarized 0.3.1 build9 with matching DMG bytes. An isolated build4-to-6 Sparkle update and native journey were observed; build9 has not been installed for a new journey.",
         "nextAction": "Download the current public Mac build or use the signed update feed from an older public installation; private-window filtering remains unqualified."
+      },
+      "footerArt": {
+        "src": "/footer-art/browserdaddy.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "BrowserDaddy: An original tab-carrying guide centers a local archive folio along a history path. A distinct clock alcove represents measured attention separately, framed by quiet forest materials rather than another product's storage boxes.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for BrowserDaddy",
+        "sha256": "78388a8f3fd4e4e92bc0860de3ce7d03fd231ef9527322912cfe14fa91edbf80"
       },
       "kind": "experiment",
       "category": "utility",
@@ -1529,6 +1879,16 @@
         "proof": "The public signed Sparkle feed and download serve notarized 0.2.3 build8 with matching DMG bytes. An isolated build3-to-5 Sparkle update and native journey were observed; build8 has not been installed for a new journey.",
         "nextAction": "Read the public landing and use the current GitHub release for a Mac install; review measured evidence before acting on a diagnosis."
       },
+      "footerArt": {
+        "src": "/footer-art/performancedaddy.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "PerformanceDaddy: A calm local diagnostic bench centers one mechanical symptom specimen and an observation lens. Modest measured instruments, process-like gears and port sockets surround a deliberately untouched review-only action handle.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for PerformanceDaddy",
+        "sha256": "74af2c7952c555a8737187a46fbd6393c7f58bfd2fb9124cbea5fec82909a8d8"
+      },
       "kind": "experiment",
       "category": "utility",
       "form": "macOS app",
@@ -1574,6 +1934,16 @@
         "proof": "The completed experiment publishes a sourced 79-tool catalogue, 26 measured journey arms with 118 verified completions across 129 attempts, seven additional probes, ten retained experiment records, exact observed pins and a live agent-first guide. The measured evidence retains Playwright and Maestro as baselines.",
         "nextAction": "Explore the finished experiment or clone the public repository; replay a documented arm only when a concrete product change justifies it."
       },
+      "footerArt": {
+        "src": "/footer-art/agent-testing.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "Browser Agent Testing: A compact experiment reading bench centers a retained evidence envelope and two plainly fictional viewport studies. One route folio supplies context; no extra control-room props or active app shell are invented.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Browser Agent Testing",
+        "sha256": "9fe38d1d06d641d0d42e79460e68ed02b44f29631d7ebc16a265881567e8ba79"
+      },
       "kind": "experiment",
       "category": "experimental",
       "form": "Completed benchmark and static guide",
@@ -1618,6 +1988,16 @@
         "proof": "Public 0.2.1 build 10 verified at https://context.daddyrad.com/download and GitHub release v0.2.1-10. SHA-256 e43afdb396041f0abb6bdbcad718eb74c09745612574124adb49088331e36940 matches the Developer ID signed, Apple notarized DMG from protected release run 36259190197, source b04f3c423341a8ec421933835569c3019c3355ba. Installed to /Applications/ContextDaddy.app and launched; Gatekeeper accepted the notarized app. Guided Skills onboarding, bounded scrolling including legacy scrollbars, and Devin in unified Local History. Manual updates only. Discovery does not prove live prompt use. Installed Skills library populated; rescan and guided selection passed. Discovery retains explicit entry/depth coverage limits.",
         "nextAction": "Download the signed 0.2.1 beta; open Skills and follow Guide. Updates are manual downloads."
       },
+      "footerArt": {
+        "src": "/footer-art/contextdaddy.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "ContextDaddy: An instruction-library workshop centers exposed skill cards in one rack and actual usage receipts in a separate ledger. A small window reveals incomplete observation; provenance tabs and a closed configuration drawer keep boundaries visible.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for ContextDaddy",
+        "sha256": "81de7c1273d8b842a1456495296807b5310b3998d0f0be16d4a7616596365301"
+      },
       "kind": "product",
       "category": "utility",
       "form": "macOS app",
@@ -1659,6 +2039,16 @@
         "mechanism": "A small Cloudflare Worker serves a static landing on the apex and redirects www; each app repository owns its subdomain.",
         "proof": "HTTPS 200 at daddyrad.com and public routes for all four app subdomains verified 2026-09-25.",
         "nextAction": "Visit daddyrad.com and pick an app."
+      },
+      "footerArt": {
+        "src": "/footer-art/daddyrad.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "DaddyRad: A local utility courtyard centers one shared entrance surrounded by four distinct small inspection bays: storage parcels, browsing folios, performance instruments and context cards. Each bay remains bounded and original.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for DaddyRad",
+        "sha256": "ca705e3d83cb8847aad25b07b61996392b1cdf72c845158a1e5134b39345edc8"
       },
       "kind": "platform",
       "category": "utility",
@@ -1845,6 +2235,16 @@
         "mechanism": "Local-first review combines repository context, executable checks, targeted evaluation, and inspectable verification receipts.",
         "proof": "Published macOS 1.14.3 is signed and notarized; its DMG hash and local installation were verified. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
         "nextAction": "Try the current Mac release on a small local repository. Use the documented manual update path until in-app installation is qualified."
+      },
+      "footerArt": {
+        "src": "/footer-art/codevetter.webp",
+        "width": 2172,
+        "height": 724,
+        "alt": "Finely drawn dark verification bench with task and change folios, a central bounded execution chamber, and retained evidence to the right.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for CodeVetter",
+        "sha256": "36588b9c1d0a02b0b04b0d8e9cbeb9661440b2927d7e9a12f7b6a0e176fae910"
       }
     },
     {
@@ -1870,6 +2270,16 @@
         "mechanism": "A local factory joins datasets, training methods, evaluation, experiment tracking, and inference into repeatable recipes.",
         "proof": "The project contains working browser and Mac-local experiments, evaluation infrastructure, and reproducible training paths.",
         "nextAction": "Explore the measured recipes and follow new experiments as they produce reproducible proof rather than scale claims."
+      },
+      "footerArt": {
+        "src": "/footer-art/posttrainllm.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "PostTrainLLM: A specialist-model recipe atelier centers a measured recipe tray and paired comparison samples. Sorted local material enters a modest experimental apparatus; a comparison notebook and source cabinet remain distinct at the wings.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for PostTrainLLM",
+        "sha256": "63c2514f2a3e4e225277cda029a8cc990836ca91c53e213b418b0f4a12040f7c"
       }
     },
     {
@@ -1893,6 +2303,16 @@
         "mechanism": "Native apps combine schedule blocks, recurring routines, wall-clock focus sessions, interruption evidence, and an end-of-day divergence review.",
         "proof": "Public notarized Mac build 20 remains available; local build 25 has passed a bounded personal workflow but Gatekeeper rejects it as unnotarized, so it is not a public update.",
         "nextAction": "Use Anchor through a real day and review the divergence evidence; let repeated lived patterns decide the next change."
+      },
+      "footerArt": {
+        "src": "/footer-art/anchor.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "Anchor: A day-planning terrace centers the crossing between a planned stepping-stone path and a real-life detour. A pause bench, simple clock, task tokens and end-of-day notebook make interruptions ordinary.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Anchor",
+        "sha256": "efcbdc055f2e6aa2fd4822868019c132a5bb27125ce90641cae8919954ef9926"
       }
     },
     {
@@ -1918,6 +2338,16 @@
         "mechanism": "Multi-field search, shareable filters, seasonal discovery, taste tools, schedules, and signed-in watchlists operate over a large synced catalogue.",
         "proof": "The production app serves roughly 35,000 titles and is frequently used; broader community features are intentionally out of scope.",
         "nextAction": "Search the catalogue or use the watchlist; maintenance focuses on data quality and core discovery reliability."
+      },
+      "footerArt": {
+        "src": "/footer-art/anime-list.webp",
+        "width": 2168,
+        "height": 725,
+        "alt": "Anime List: An original animation-club room centers a personal watch shelf and one invented illustrated story card. A projector, original abstract story panels and a seasonal moon-cycle window frame the scene.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Anime List",
+        "sha256": "b2370994f1f05837bada8d4bd232dbdf8f809e06da6fa9bac3f5817c188c119e"
       }
     },
     {
@@ -1943,6 +2373,16 @@
         "mechanism": "A small browser tracker and explicit named events feed workspace-scoped analytics; service SDKs and OTLP add aggregate endpoint health in the same dashboard.",
         "proof": "Production Google signup, returning login, sign-out and project creation verified; own signup/project milestone logs remain exactly one each. Known analytics traffic returned 3 sessions, 4 page views and 2 named events without duplicate-batch inflation, with correct 1h/24h boundaries and referral sources. Public live page and revocation verified. JavaScript SDK 0.4.0 published and artifact integrity checked. See app-health/docs/release-2026-09-12.md; broader analytics parity and remotely published Swift package remain follow-up work.",
         "nextAction": "Sign in with Google, add a project and environment, then install only the analytics, endpoint, or logging capability you need."
+      },
+      "footerArt": {
+        "src": "/footer-art/app-health.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "App Health: A request-and-event relay station centers a single parcel at an inspection desk. Separate request rails and closed diagnostic drawers remain bounded, distinct from Site Health's whole-portfolio project inventory scene.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for App Health",
+        "sha256": "d89c904afcbb6b379ecdb0aeb394609af83c63f1703f637dec6df5e5fde08886"
       }
     },
     {
@@ -1968,6 +2408,16 @@
         "mechanism": "Bounded manifests and receipts run saved or adaptive workflows, then independent product verifiers check UI, persistence, process and visual outcomes.",
         "proof": "The completed experiment publishes a sourced 79-tool catalogue, 26 measured journey arms with 118 verified completions across 129 attempts, seven additional probes, ten retained experiment records, exact observed pins and a live agent-first guide. The measured evidence retains Playwright and Maestro as baselines.",
         "nextAction": "Explore the finished experiment or clone the public repository; replay a documented arm only when a concrete product change justifies it."
+      },
+      "footerArt": {
+        "src": "/footer-art/agent-testing.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "Browser Agent Testing: A compact experiment reading bench centers a retained evidence envelope and two plainly fictional viewport studies. One route folio supplies context; no extra control-room props or active app shell are invented.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Browser Agent Testing",
+        "sha256": "9fe38d1d06d641d0d42e79460e68ed02b44f29631d7ebc16a265881567e8ba79"
       }
     },
     {
@@ -1990,6 +2440,16 @@
         "mechanism": "A native local Mac app extracts browser archives, watches focus and classifies topics only after explicit opt-in.",
         "proof": "The public signed Sparkle feed and download serve notarized 0.3.1 build9 with matching DMG bytes. An isolated build4-to-6 Sparkle update and native journey were observed; build9 has not been installed for a new journey.",
         "nextAction": "Download the current public Mac build or use the signed update feed from an older public installation; private-window filtering remains unqualified."
+      },
+      "footerArt": {
+        "src": "/footer-art/browserdaddy.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "BrowserDaddy: An original tab-carrying guide centers a local archive folio along a history path. A distinct clock alcove represents measured attention separately, framed by quiet forest materials rather than another product's storage boxes.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for BrowserDaddy",
+        "sha256": "78388a8f3fd4e4e92bc0860de3ce7d03fd231ef9527322912cfe14fa91edbf80"
       }
     },
     {
@@ -2015,6 +2475,16 @@
         "mechanism": "A local-first iPhone journal records food and four core nutrients, applies visible formulas, and offers optional private sync.",
         "proof": "The maintained app is functionally complete, connected to the Hub family, and designed so recommendations trace to visible rules.",
         "nextAction": "Log a meal or daily measurement in the app; change the product only when repeated use reveals a concrete gap."
+      },
+      "footerArt": {
+        "src": "/footer-art/calorie.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "Calorie: A modest food-journal table centers a fictional meal, transparent measuring vessel and blank daily notebook. Ordinary ingredients and a loose optional marker sit aside, making the journal useful without mandatory targets.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Calorie",
+        "sha256": "4ecabb617faef59d62c87543ef02acce505f937eb8b6bf513c5b51b9e00ead74"
       }
     },
     {
@@ -2036,6 +2506,16 @@
         "mechanism": "A native Mac app combines bounded discovery, previewed local skill management with recovery, offline usage history, and local OpenTelemetry views.",
         "proof": "Public 0.2.1 build 10 verified at https://context.daddyrad.com/download and GitHub release v0.2.1-10. SHA-256 e43afdb396041f0abb6bdbcad718eb74c09745612574124adb49088331e36940 matches the Developer ID signed, Apple notarized DMG from protected release run 36259190197, source b04f3c423341a8ec421933835569c3019c3355ba. Installed to /Applications/ContextDaddy.app and launched; Gatekeeper accepted the notarized app. Guided Skills onboarding, bounded scrolling including legacy scrollbars, and Devin in unified Local History. Manual updates only. Discovery does not prove live prompt use. Installed Skills library populated; rescan and guided selection passed. Discovery retains explicit entry/depth coverage limits.",
         "nextAction": "Download the signed 0.2.1 beta; open Skills and follow Guide. Updates are manual downloads."
+      },
+      "footerArt": {
+        "src": "/footer-art/contextdaddy.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "ContextDaddy: An instruction-library workshop centers exposed skill cards in one rack and actual usage receipts in a separate ledger. A small window reveals incomplete observation; provenance tabs and a closed configuration drawer keep boundaries visible.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for ContextDaddy",
+        "sha256": "81de7c1273d8b842a1456495296807b5310b3998d0f0be16d4a7616596365301"
       }
     },
     {
@@ -2058,6 +2538,16 @@
         "mechanism": "A small Cloudflare Worker serves a static landing on the apex and redirects www; each app repository owns its subdomain.",
         "proof": "HTTPS 200 at daddyrad.com and public routes for all four app subdomains verified 2026-09-25.",
         "nextAction": "Visit daddyrad.com and pick an app."
+      },
+      "footerArt": {
+        "src": "/footer-art/daddyrad.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "DaddyRad: A local utility courtyard centers one shared entrance surrounded by four distinct small inspection bays: storage parcels, browsing folios, performance instruments and context cards. Each bay remains bounded and original.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for DaddyRad",
+        "sha256": "ca705e3d83cb8847aad25b07b61996392b1cdf72c845158a1e5134b39345edc8"
       }
     },
     {
@@ -2083,6 +2573,16 @@
         "mechanism": "A capability-aware gateway routes compatible requests across supported free-tier providers with fallback behavior.",
         "proof": "The gateway works for internal consumers and is maintained as shared infrastructure rather than an independent feature product.",
         "nextAction": "Use the compatible gateway from a named consumer; add providers only when they improve capability, reliability, or capacity."
+      },
+      "footerArt": {
+        "src": "/footer-art/free-ai.webp",
+        "width": 2172,
+        "height": 724,
+        "alt": "Free AI: A small routing junction centers one request parcel and a manual track switch. Several bounded tracks lead to modest endpoints; an obvious alternative bypasses one closed gate without promising unlimited throughput.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Free AI",
+        "sha256": "26a88d2ef0d56bd1cd3a8f974faf4de0b73fc7a737242b22db53c45070f855a8"
       }
     },
     {
@@ -2108,6 +2608,16 @@
         "mechanism": "A GitHub analytics dashboard aggregates commits, churn, collaboration, and AI-assisted work across the portfolio.",
         "proof": "The maintained dashboard answers the owner’s recurring repository-distribution questions and is considered functionally complete.",
         "nextAction": "Use the dashboard for a concrete portfolio question; request new analysis only when an unanswered recurring question appears."
+      },
+      "footerArt": {
+        "src": "/footer-art/gitstat.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "GitStat: A contribution-history weaving station centers a loom. Distinct repository threads enter it from separate spools and form a chronological fabric while preserving their individual routes. A folded timeline rests beside the loom.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for GitStat",
+        "sha256": "86458fee72b8d765c773dedfaf5bdb235ef80dd82d6fe024ef341a6483450eff"
       }
     },
     {
@@ -2133,6 +2643,16 @@
         "mechanism": "A local macOS agent combines voice interaction, screen context, and device-side tools.",
         "proof": "The public 0.3.19 preview is downloadable and the native implementation includes voice, screen context, local planning, and macOS actions; signed-release hardware smoke and sustained daily use remain unproven.",
         "nextAction": "Download the current Mac preview, test one recurring voice-and-screen workflow, and judge it against Pace's visible local and off-device trust boundary."
+      },
+      "footerArt": {
+        "src": "/footer-art/pace.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "HeyPace: A quiet personal voice-assistance desk centers a microphone beside an unbranded monitor and empty chair. A short blue physical ribbon links voice to the visible workspace; a lamp, folded note and small local tools complete the wings.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for HeyPace",
+        "sha256": "bd1345b1c0e70d17bfa143564ccd89b21781185664dc1b90f9be1727908a9b8d"
       }
     },
     {
@@ -2158,6 +2678,16 @@
         "mechanism": "The product collects multiple sources, groups related events, and derives a concise brief with visible evidence.",
         "proof": "The product focus and daily-brief surface exist, but regular owner use has not yet validated what deserves continued investment.",
         "nextAction": "Read and dogfood the Daily Brief; resume feature work only when repeated use exposes a concrete deficiency."
+      },
+      "footerArt": {
+        "src": "/footer-art/high-signal.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "High Signal: A signal-watch desk centers one daily sheet whose physical source ribbons remain visible. Scattered public-source slips pass through a narrow sorting aperture; a restrained tuning instrument and loose paper occupy the wings.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for High Signal",
+        "sha256": "073b92cd7e9d6e90a77f21c46aad762544406b606019fc4c40ecb898ae528bf2"
       }
     },
     {
@@ -2183,6 +2713,16 @@
         "mechanism": "A source-backed corpus extracts attributable claims and organizes them into people, topics, books, tools, and emerging signals.",
         "proof": "The public corpus is live with 11,624 published claims, 294 named references, and 1,190 episodes with evidence.",
         "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+      },
+      "footerArt": {
+        "src": "/footer-art/on-record.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "High Signal Podcasts: An oral-history research room centers a claim card connected to its source reel. A microphone, attribution slips and referenced books remain distinct around it, emphasizing source-linked claims rather than a podcast directory.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for High Signal Podcasts",
+        "sha256": "10ab36994c185216c85d76ed31664227ba1a6f49e65af28e82a7822cb5c82171"
       }
     },
     {
@@ -2208,6 +2748,16 @@
         "mechanism": "An owner-approved issue is rendered into a public page with edit, archive, search, and source-link behavior.",
         "proof": "The owner-only production pilot has proven the issue-to-page loop at issues.sarthakagrawal.dev.",
         "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+      },
+      "footerArt": {
+        "src": "/footer-art/issue-pages.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "IssuePages: A modest publishing press centers a folded issue sheet and deliberate approval lever. The sheet moves toward an openly readable display stand; a plain source folio sits on the other side. Keep the apparatus small and ordinary.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for IssuePages",
+        "sha256": "3bbaf28600b6060aa4911d09fa6ac7383d6c3b79e30f9b3ca61ae3a102610110"
       }
     },
     {
@@ -2233,6 +2783,16 @@
         "mechanism": "A designed profile combines greeting-card presentation, owner-published context, structured links, visitor questions, contact handoff, and a small grounded agent.",
         "proof": "The individual profile and conversational foundation are strong; company positioning and repeated company use remain the next validation.",
         "nextAction": "Explore the existing profile experience; company adoption should wait for a focused workflow and a real company test."
+      },
+      "footerArt": {
+        "src": "/footer-art/karte.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "Karte: A creator-owned welcome alcove centers a portfolio folio and visitor-question envelope. A restrained gold doorway opens toward public work while a closed drawer keeps private notes separate.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Karte",
+        "sha256": "82a259b668d1e6507173483dd10368d0304b6923099a8afeb1b5d2850ca134fb"
       }
     },
     {
@@ -2258,6 +2818,16 @@
         "mechanism": "A private Gmail workspace combines local semantic search, sender aggregation, and user-confirmed unsubscribe workflows.",
         "proof": "The maintained application performs its intended search, sender-insight, and unsubscribe jobs in regular use.",
         "nextAction": "Open the private workspace and investigate a sender or search question; no speculative feature expansion is planned."
+      },
+      "footerArt": {
+        "src": "/footer-art/email-manager.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "Kinetic: A deliberate inbox sorting desk centers one selected sealed envelope and a hand-operated review tray. Different sender-sized envelope groups occupy the wings; no sender identity or message content is visible.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Kinetic",
+        "sha256": "608d95ab7e52b1aa43650828a4f2032bdc5bef686a715ea573931595594aeaa9"
       }
     },
     {
@@ -2283,6 +2853,16 @@
         "mechanism": "A private constellation home organizes closeness, standing notes, and a chronological memory log for each person.",
         "proof": "The device-first native product is built around a distinctive constellation model and is in active personal use validation.",
         "nextAction": "Use Kith with real relationships and let recurring memory and follow-through needs guide improvements."
+      },
+      "footerArt": {
+        "src": "/footer-art/kith.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "Kith: A warm relationship courtyard centers a blank note and the nearest pair of chairs. Additional chosen chairs sit at different comfortable distances; discreet keepsake boxes suggest remembered moments without a social feed.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Kith",
+        "sha256": "c765483ebe2957edea7c90b5abd7e3db585433e3b7895be8c983070474fd905f"
       }
     },
     {
@@ -2308,6 +2888,16 @@
         "mechanism": "A shared RAG service performs corpus-aware search, ranking, citation, and schema-constrained retrieval behind a private boundary.",
         "proof": "The service has healthy Fleet consumers and already operates as the shared cited-retrieval layer.",
         "nextAction": "Connect it only for a concrete consumer need; change the infrastructure when retrieval evidence shows a real failure."
+      },
+      "footerArt": {
+        "src": "/footer-art/knowledge-base.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "Knowledge Base: A private reading vault centers an index drawer retrieving one page while its provenance ribbon stays attached to the source volume. Closed specialist books sit behind a modest privacy partition in the wings.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Knowledge Base",
+        "sha256": "418cd23e703c38e823c4f90fd48185ad7e87faeb8a512e9f0059085eaf4d39b2"
       }
     },
     {
@@ -2333,6 +2923,16 @@
         "mechanism": "The independent app combines a bucket list, goals, discovery, search, and suggestions around one private life catalogue.",
         "proof": "The product is independently owned, in active dogfooding, and retains its established data and authentication boundary.",
         "nextAction": "Open Live and use the catalogue, search, and suggestions to add or act on something you genuinely want to experience."
+      },
+      "footerArt": {
+        "src": "/footer-art/live.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "Live: An inhabited life atlas centers a reachable path junction beside an open blank possibility list. One chosen gold footpath leads toward modest activities: a garden, workshop and distant lookout. The illustration invites a next move without depicting completed achievements.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Live",
+        "sha256": "3db0af1bc73641894adbaf7ca36fdd01c23a289abd70f31d9deddd024bbc95c0"
       }
     },
     {
@@ -2358,6 +2958,16 @@
         "mechanism": "A TV-like random player uses curated channels, focused search, and resilient handling of unavailable videos.",
         "proof": "The maintained product is complete for its intended viewing loop and already handles common catalogue failures.",
         "nextAction": "Open a curated channel and watch; future changes are limited to catalogue health or a proven viewing need."
+      },
+      "footerArt": {
+        "src": "/footer-art/looptv.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "LoopTV: A calm lean-back screening nook centers one comfortable chair facing a fictional abstract screen. A simple channel selector, unbranded reels and an empty alternate slot show deliberate simplicity and unavailable content without drama.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for LoopTV",
+        "sha256": "647e371670bb62c6e39c8a843a714a9d2ff3f4001876719a9b63a7c380ba8cb5"
       }
     },
     {
@@ -2381,6 +2991,16 @@
         "mechanism": "A local pipeline combines archive analysis, clipping, editable EDLs, source receipts, approval boundaries, and deterministic rendering.",
         "proof": "The first public Startups proof assembles a source-faithful 47-second argument from four beats across three Creative Commons podcast episodes, with captions and media receipts.",
         "nextAction": "Preserved experiment; no current work or obligation to resume."
+      },
+      "footerArt": {
+        "src": "/footer-art/mashup.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "Mashup: A local editing bench centers an assembled filmstrip and cutting surface. Original abstract frames, owned-source reels and retained cut slips surround an editable sequence folio.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Mashup",
+        "sha256": "4bd8e37d6d4f21cc22402f8e7450a50afecce0adfe5517a59e2d6a5a55821be5"
       }
     },
     {
@@ -2406,6 +3026,16 @@
         "mechanism": "The browser computes structured conversation analysis locally from an imported export and presents linked historical views.",
         "proof": "A useful browser-local dashboard exists today; deeper shift analysis and additional export sources remain active work.",
         "nextAction": "Import a ChatGPT export locally and explore the resulting private map; the source archive stays in the browser."
+      },
+      "footerArt": {
+        "src": "/footer-art/chatgpt-memory-insights.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "Memory Map: A cool cartography workshop centers an open transit-like atlas and a source slip physically connected to one route. A boxed conversation archive and folded map margins occupy the wings. It is analytical mapping rather than warm nostalgia stationery.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Memory Map",
+        "sha256": "f546bcbf4be31048005badd75e8d9583df38a79dfcfab7c5c1d5f086808260b7"
       }
     },
     {
@@ -2430,6 +3060,16 @@
         "mechanism": "Static HTML, CSS, JavaScript and JSON served by Cloudflare Pages; all filtering and comparisons run in the browser.",
         "proof": "Completed experiment verified at https://nomad.significanthobbies.com/ on September 13, commit e763b02. Six data tests, exact-commit CI and six release gates passed. Live search, comparison and downloads verified; 390px mobile layout checked. GitHub Pages disabled.",
         "nextAction": "Share and use the completed explorer at nomad.significanthobbies.com; no active expansion or collection roadmap."
+      },
+      "footerArt": {
+        "src": "/footer-art/nomad-data-adventure.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "Nomad Data Adventure: A saved-place comparison table centers two original miniature city landscapes and a comparison foldout. Fictional coast and hill, closed dataset folders and a travel bag show tradeoffs rather than an ideal destination.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Nomad Data Adventure",
+        "sha256": "487f4de10060e4594f602009c0fe54e8569fa0753a7d5fde94a648e618f78d30"
       }
     },
     {
@@ -2455,6 +3095,16 @@
         "mechanism": "A guided research exhibit connects source-linked life events and early-breakthrough paths through what people brought, were handed, and were surrounded by.",
         "proof": "The publication contains thousands of documented early-breakthrough paths, visible methodology, and ongoing source-linked profile coverage.",
         "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+      },
+      "footerArt": {
+        "src": "/footer-art/what-it-takes-to-win.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "Paths: A landscape of unequal starting conditions centers a route fork and comparison folio. Paths from varied shelters meet obstacles and reach different ordinary vantage points; there is no crowned winner.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Paths",
+        "sha256": "7d3ad09814045ad9fc23bec710750cbad0591721ee31d4ed1439d89ed965cff6"
       }
     },
     {
@@ -2477,6 +3127,16 @@
         "mechanism": "A native local Mac app records bounded CPU, memory, thermal, process and socket observations with reviewed stop controls.",
         "proof": "The public signed Sparkle feed and download serve notarized 0.2.3 build8 with matching DMG bytes. An isolated build3-to-5 Sparkle update and native journey were observed; build8 has not been installed for a new journey.",
         "nextAction": "Read the public landing and use the current GitHub release for a Mac install; review measured evidence before acting on a diagnosis."
+      },
+      "footerArt": {
+        "src": "/footer-art/performancedaddy.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "PerformanceDaddy: A calm local diagnostic bench centers one mechanical symptom specimen and an observation lens. Modest measured instruments, process-like gears and port sockets surround a deliberately untouched review-only action handle.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for PerformanceDaddy",
+        "sha256": "74af2c7952c555a8737187a46fbd6393c7f58bfd2fb9124cbea5fec82909a8d8"
       }
     },
     {
@@ -2501,6 +3161,16 @@
         "mechanism": "A Python pipeline normalizes public product records into DuckDB and Parquet, while a read-only local UI serves aggregate analytics.",
         "proof": "All 88 tests pass. The three-record fictional offline demo exercises the real parser and database path, produces a verified Zstandard-compressed Parquet snapshot and refuses to overwrite an existing non-sample catalogue.",
         "nextAction": "Finish the bounded experiment, document the repeatable local workflow and then mark the project inactive as a completed experiment."
+      },
+      "footerArt": {
+        "src": "/footer-art/ph-catalog.webp",
+        "width": 2172,
+        "height": 724,
+        "alt": "Finely drawn research cabinet containing original product objects and separate source cards, with a central structured folio and separate annotation slip.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for PH Catalog",
+        "sha256": "ca1786d2519cfafa52e2ff7ba5faecb41407f93c230b092b7c55a5febbceb945"
       }
     },
     {
@@ -2524,6 +3194,16 @@
         "mechanism": "A bounded collector stores attributable snapshots and derives recurring insight views without claiming unavailable history.",
         "proof": "The collector and snapshot model exist, but reliable lawful access to historical Reddit data remains the central blocker.",
         "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+      },
+      "footerArt": {
+        "src": "/footer-art/reddit-insights.webp",
+        "width": 2172,
+        "height": 724,
+        "alt": "Reddit Insights: A community research bulletin board centers one unlettered day folder with a source-linked discussion card inside its boundary. Separate community drawers and empty unobserved-day slots make captured scope visible.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Reddit Insights",
+        "sha256": "bf2ac20dedbae952868f879468c851773f0dc40291a43376990f3608fe1f950b"
       }
     },
     {
@@ -2549,6 +3229,16 @@
         "mechanism": "A curated research dataset is indexed for search and retrieval-assisted analysis with source structure intact.",
         "proof": "The corpus and discovery system are essentially complete and available when a real research question appears.",
         "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+      },
+      "footerArt": {
+        "src": "/footer-art/research-papers.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "Research Papers: A research reading gallery centers one open paper under a study lamp, with a visible citation thread leading back to its scholarly shelf. Indexed volumes, a magnifier and restrained specimen trays frame the study area.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Research Papers",
+        "sha256": "709c788faeb58d1de55ec50b53e35eb1b57a05754eccc499334c2e577e0a7f6b"
       }
     },
     {
@@ -2574,6 +3264,16 @@
         "mechanism": "Paste a resume and job description, review the generated changes, save in the browser, and export the current document.",
         "proof": "The guest resume, tailoring, review, save/reload and local document-export path has been verified with synthetic examples. Account sync and broader application tools remain unqualified.",
         "nextAction": "Try the guest workflow for one job, review every proposed claim, and export the version you want to use."
+      },
+      "footerArt": {
+        "src": "/footer-art/rolepatch.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "RolePatch: A careful application-tailoring desk centers a plain resume sheet beside a job-description card, joined by removable revision strips. A source folder and separate review tray occupy the sides, making approval visible before action.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for RolePatch",
+        "sha256": "0992326235de3d6c14e9f881f1725020f693924d790fb25689aaf181c7093c8b"
       }
     },
     {
@@ -2599,6 +3299,16 @@
         "mechanism": "A generated public directory and native launch-destination catalog sit beside shared feedback, UI, workflow, skill, and automation tooling maintained through real Fleet use.",
         "proof": "It publishes the canonical privacy-safe project directory, serves the provenance-bearing /launchdesk catalog, and houses packages and tooling used by multiple independent repositories.",
         "nextAction": "Explore the complete directory or open the public tooling catalogue; product-specific work continues in each owning repository."
+      },
+      "footerArt": {
+        "src": "/footer-art/saas-maker.webp",
+        "width": 2170,
+        "height": 725,
+        "alt": "SaaS Maker: A product studio courtyard centers an active craft table where small software-inspired models are made and inspected. Varied finished and unfinished models occupy a quiet exhibition shelf; useful tools remain on the outer workbenches.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for SaaS Maker",
+        "sha256": "f2a322b87d983ad130458cf2bb1117fd4caa91aca7686988265eaf5d605ed528"
       }
     },
     {
@@ -2624,6 +3334,16 @@
         "mechanism": "A maintained portfolio connects current positioning to selected projects, writing, résumé evidence, and public profiles.",
         "proof": "The public site is complete and satisfactory as the canonical professional record; updates follow changes in the underlying work.",
         "nextAction": "Explore the current work and résumé or use the listed contact paths; do not infer stale focus areas from older copy."
+      },
+      "footerArt": {
+        "src": "/footer-art/sarthakagrawal-personal.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "Sarthak Agrawal: A personal maker's workroom centers a selected-work folio and writing notebook. A few original project studies, a restrained bookshelf and useful craft tools show work without inventing a portrait or biography.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Sarthak Agrawal",
+        "sha256": "cfb1f34a025880332ad02bbbb617ce8ccd427073391e203ac92bcb56d6d72462"
       }
     },
     {
@@ -2649,6 +3369,16 @@
         "mechanism": "A native iOS workout player sequences exercises, timers, targets, and completed performance without turning the session into data entry.",
         "proof": "The focused workout loop is under active native development and is being validated through real sessions.",
         "nextAction": "Run an authored workout in Setline and let actual session friction determine the next product change."
+      },
+      "footerArt": {
+        "src": "/footer-art/setline.webp",
+        "width": 2172,
+        "height": 724,
+        "alt": "Setline: An empty training station centers an authored set card, dumbbell and simple rest timer. A second blank actual-result card remains separate on the bench; the space suggests one set at a time.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Setline",
+        "sha256": "75f737ad788ed05fbfde4f0193096f358d959a07130fcab6025639f7fcb0bd64"
       }
     },
     {
@@ -2674,6 +3404,16 @@
         "mechanism": "A Hub, backend, and typed sync contracts exchange privacy-safe summaries and semantic actions while each app keeps its own source and data.",
         "proof": "The canonical Hub lists five maintained apps. Journal is removed from the product lineup; Journal and Habits source/data compatibility history remains retained. Private cross-app use still needs hosted qualification.",
         "nextAction": "Open the Hub to reach the five apps; current work focuses on unified authentication and safe cross-app summaries."
+      },
+      "footerArt": {
+        "src": "/footer-art/significanthobbies.webp",
+        "width": 2159,
+        "height": 728,
+        "alt": "Significant Hobbies: A shared courtyard centers a common path and table connecting five independent personal rooms. Each room retains a separate doorway and its own interior character; no room's contents flow into another.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Significant Hobbies",
+        "sha256": "793590b059e352e9a8a381f3d0074b5994b64e9596cfbc8dde0e1268fc161f3d"
       }
     },
     {
@@ -2699,6 +3439,16 @@
         "mechanism": "Synchronization, search, tags, lists, semantic retrieval, and project-aware recommendations operate over the user’s saved repositories.",
         "proof": "Core sync, search, organization, and project-aware discovery are largely complete and under focused active improvement.",
         "nextAction": "Connect or explore a Stars collection and use a current project question to drive discovery; avoid unrelated alert or reporting scope."
+      },
+      "footerArt": {
+        "src": "/footer-art/starboard.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "Starboard: A project-aware charting bench centers an unfinished vessel model beside one deliberately selected tool. A star-chart folio and organized tool cabinet fill the wings; unused tools remain visibly optional.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Starboard",
+        "sha256": "69d07d109488dfbc3d3f589f9a880e0c6b4d5b337d895ce700e0b9dc6fccb9b9"
       }
     },
     {
@@ -2721,6 +3471,16 @@
         "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer insights, reviewed cache cleanup and compact AI conversation exports. Sparkle provides signed macOS update checks.",
         "proof": "The public signed Sparkle feed and download serve notarized 0.1.3 build110 with matching DMG bytes. An isolated build106-to-108 Sparkle update and native scan were observed; build110 has not been installed for a new journey.",
         "nextAction": "Download during free early access at storage.daddyrad.com, scan a folder, and review what to archive or move to Trash."
+      },
+      "footerArt": {
+        "src": "/footer-art/storagedaddy.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "storagedaddy: A storage cartographer's attic centers a spatial map and magnifier. Developer project crates, ordinary storage parcels and generic build-artifact packages occupy the wings; a separate review basket remains untouched.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for storagedaddy",
+        "sha256": "9164eb6b49796a5263e6741ca85d51ceec01b42fac68aeb5647f90eb3d3fa8c5"
       }
     },
     {
@@ -2746,6 +3506,16 @@
         "mechanism": "An evidence-gated Concept → Drill → Build → Review → Apply loop combines retrieval practice, Feynman explain-backs, roadmaps, and adaptive review.",
         "proof": "A fresh guest can complete a graded TypeScript drill and return to saved code in the same browser. Account sync and AI-graded mastery require sign-in and remain separately unqualified.",
         "nextAction": "Try a coding drill as a guest; progress stays in this browser. Use the issue tracker for account-sync qualification limits."
+      },
+      "footerArt": {
+        "src": "/footer-art/swe-interview-prep.webp",
+        "width": 2171,
+        "height": 724,
+        "alt": "SWE Interview Prep: A practical learning workshop centers a small built artifact and review notebook. Concept sketches, a drill jig and an application folio form a physical sequence in the wings; the journey ends with evidence rather than a trophy.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for SWE Interview Prep",
+        "sha256": "af4490398f221a4b2d06931416938f53b49195dfc755c9bd22fdd4719b8de795"
       }
     },
     {
@@ -2769,6 +3539,16 @@
         "mechanism": "A reusable gamekit supplies loops, saves, offline progress, platform adapters, and builds for a small games hub.",
         "proof": "The research goal produced a working gamekit, a live idle game, and YouTube-compatible packaging; the project is now parked.",
         "nextAction": "Preserved experiment; no current work or obligation to resume."
+      },
+      "footerArt": {
+        "src": "/footer-art/web-playables.webp",
+        "width": 2169,
+        "height": 725,
+        "alt": "Web Playables: A browser-game packaging workshop centers an original miniature level and save capsule. Distinct playable-world props sit in open frames beside an offline travel case and modest packaging tools.",
+        "focalX": 50,
+        "focalY": 50,
+        "credit": "Original illustration for Web Playables",
+        "sha256": "75ee5d1549bebbc3507e5e945c3a93ad88befbdce46982bbee0c35d592ac9bc8"
       }
     }
   ],

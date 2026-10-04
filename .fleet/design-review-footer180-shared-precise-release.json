@@ -1,0 +1,256 @@
+{
+  "$schema": "fleet.design-review.v2",
+  "version": 2,
+  "project": "saas-maker",
+  "target": "Shared Precise browser footer composition and SaaS Maker native home/directory footers",
+  "surfaceMode": "read",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "packages/fleet-footer/PRODUCT.md",
+    "design": "packages/fleet-footer/DESIGN.md"
+  },
+  "direction": {
+    "productSurfaces": {
+      "scope": "standalone",
+      "landing": "SaaS Maker public home and /projects directory footer contexts",
+      "app": "",
+      "reason": "The shared composition is a backend-free browser utility with no standalone operating application. Native/private operating applications and SaaS Maker private inbox are unchanged. Home and interactive public directory provide two native contexts for the same footer."
+    },
+    "pairedPreview": {
+      "landing": ".fleet-local/footer180-typography-study/Atlas-font-study.html",
+      "app": ".fleet-local/footer180-typography-study/Atlas-app-font-study.html"
+    },
+    "source": "comparison",
+    "references": [
+      "https://www.footer.design/sites/leedlime",
+      "https://leedlime.com/",
+      "https://vercel.com/geist/typography"
+    ],
+    "probes": [
+      {
+        "id": "a",
+        "name": "Quiet editorial",
+        "path": ".fleet-local/footer180-typography-study/a-Atlas-font-study.html",
+        "thesis": "Uniform regular directory links and real monospace editorial labels make the existing split feel quieter; medium sans utility headings and a Newsreader Atlas signature give deliberate contrast.",
+        "layout": "Existing product-left/services-right split, personalized full-width scene and distributed final strip; type hierarchy changes emphasis and density without replacing owner-specified section architecture.",
+        "typography": "Inter14px routes/18px medium services/16px controls; Geist Mono12px tracked caps; Newsreader Atlas signature.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-typography-study/a-Atlas-font-study.html",
+          "app": ".fleet-local/footer180-typography-study/a-Atlas-app-font-study.html"
+        },
+        "contract": ".fleet-local/footer180-typography-study/direction-a.json"
+      },
+      {
+        "id": "b",
+        "name": "Studio",
+        "path": ".fleet-local/footer180-typography-study/b-Atlas-font-study.html",
+        "thesis": "Instrument Sans makes the existing split more human and open; larger primary destinations, natural-case labels and lighter service emphasis establish an editorial studio hierarchy.",
+        "layout": "Existing product-left/services-right split, personalized full-width scene and distributed final strip; type hierarchy changes emphasis and density without replacing owner-specified section architecture.",
+        "typography": "Instrument Sans18px primary/15px secondary/20px medium services/16px controls/13px natural-case labels; Newsreader Atlas signature.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-typography-study/b-Atlas-font-study.html",
+          "app": ".fleet-local/footer180-typography-study/b-Atlas-app-font-study.html"
+        },
+        "contract": ".fleet-local/footer180-typography-study/direction-b.json"
+      },
+      {
+        "id": "c",
+        "name": "Precise",
+        "path": ".fleet-local/footer180-typography-study/c-Atlas-font-study.html",
+        "thesis": "A compact Geist hierarchy gives technical product navigation a measured primary emphasis; monospace labels and smaller semibold utility headings favor functional precision.",
+        "layout": "Existing product-left/services-right split, personalized full-width scene and distributed final strip; type hierarchy changes emphasis and density without replacing owner-specified section architecture.",
+        "typography": "Geist15px primary/14px secondary/16px semibold services/16px controls; Geist Mono12px tracked caps; Newsreader Atlas signature.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-typography-study/c-Atlas-font-study.html",
+          "app": ".fleet-local/footer180-typography-study/c-Atlas-app-font-study.html"
+        },
+        "contract": ".fleet-local/footer180-typography-study/direction-c.json"
+      }
+    ],
+    "selected": "c",
+    "approval": "approved",
+    "ownerEvidence": {
+      "path": ".fleet-local/footer180-precise-release/owner-selection.md",
+      "quote": "Okay let's go with precise. Release it for every project. I guess we have done improving things. Now we have deprecating returns."
+    },
+    "supplied": "",
+    "before": ".fleet-local/footer180-hybrid-preview/h1-ph-landing.html",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [
+        "https://vercel.com/geist/typography"
+      ],
+      "runtime": "none",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "Native project-owned controls and routes preserved. Fonts are OFL preview assets, not new runtime dependencies or proprietary reference code."
+      }
+    },
+    "contract": {
+      "purpose": "Preserve actual native routes, contact actions, editable assistant handoffs, consented updates and final studio discovery in the selected Precise composition.",
+      "purposeSource": ".fleet-local/footer180-typography-study/reference-brief.md",
+      "canonicalPurpose": "Backend-free browser footer composition retaining host state and product identity.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "Public Fleet visitors and applicable browser product users; SaaS Maker visitors reviewing public products and reusable tools.",
+      "job": "Close the actual SaaS Maker home and directory with compact native grouped navigation, real service controls, the product signature and original illustration, then a single final studio line.",
+      "thesis": "Implement selected Precise: compact Geist navigation, Geist Mono category labels, open AI and updates, product-native signature bleeding into original art, final full-width studio line.",
+      "system": "Selected C across the catalog-required browser surfaces; preserve product-specific tokens and actual service lifecycle.",
+      "signature": "Newsreader Atlas signature fades into the original detailed cabinet; CodeVetter uses its treatment sans signature over the original evidence chamber.",
+      "risk": "Asynchronous capture/feedback loads and intermediate footer widths can expose focus or wrapping regressions; inspect actual HTTP build and retain explicit unavailable/retry states.",
+      "qualityBar": "No nested narrow email column, no oversized CTA panel, no dropped native routes or consent state. Geist UI, Geist Mono labels, real16px inputs,44px targets, original SaaS Maker art and one final studio line; no document overflow at390/768/1440px."
+    }
+  },
+  "evidence": {
+    "platform": "web",
+    "productContinuity": {
+      "status": "not-applicable",
+      "reason": "The shared composition is a backend-free browser utility with no standalone operating application. Native/private operating applications and SaaS Maker private inbox are unchanged. Home and interactive public directory provide two native contexts for the same footer."
+    },
+    "slopScale": {
+      "platform": "web",
+      "posture": "advisory",
+      "reason": "No browser/scanner render or score invented; native letterform specimen is separate evidence.",
+      "checkpoints": [
+        {
+          "stage": "directions",
+          "direction": "a",
+          "status": "blocked",
+          "command": "Pinned slop-score not executed: browser-policy limitation",
+          "report": ".fleet-local/footer180-typography-study/direction-a-scan-blocked.json",
+          "reason": "Prior native browser action rejected file:// preview URLs by security policy and explicitly forbade browser/CDP/alternate-surface workarounds. No such workaround or browser/scanner launch attempted in this font-study round.",
+          "findingsReview": "Actual glyph specimen and source/asset guards reviewed; integrated rendered hierarchy and mobile behavior remain unknown."
+        },
+        {
+          "stage": "directions",
+          "direction": "b",
+          "status": "blocked",
+          "command": "Pinned slop-score not executed: browser-policy limitation",
+          "report": ".fleet-local/footer180-typography-study/direction-b-scan-blocked.json",
+          "reason": "Prior native browser action rejected file:// preview URLs by security policy and explicitly forbade browser/CDP/alternate-surface workarounds. No such workaround or browser/scanner launch attempted in this font-study round.",
+          "findingsReview": "Actual glyph specimen and source/asset guards reviewed; integrated rendered hierarchy and mobile behavior remain unknown."
+        },
+        {
+          "stage": "directions",
+          "direction": "c",
+          "status": "blocked",
+          "command": "Pinned slop-score not executed: browser-policy limitation",
+          "report": ".fleet-local/footer180-typography-study/direction-c-scan-blocked.json",
+          "reason": "Prior native browser action rejected file:// preview URLs by security policy and explicitly forbade browser/CDP/alternate-surface workarounds. No such workaround or browser/scanner launch attempted in this font-study round.",
+          "findingsReview": "Actual glyph specimen and source/asset guards reviewed; integrated rendered hierarchy and mobile behavior remain unknown."
+        }
+      ]
+    },
+    "visualReview": {
+      "status": "pending",
+      "reviewer": "precise-core-audit",
+      "direction": "c",
+      "report": ".fleet-local/shared-precise-reconciliation-20261004/render-review.md",
+      "checks": {
+        "hierarchy": {
+          "status": "pending",
+          "observation": "Typeface specimen reviewed; this does not verify integrated browser rendering."
+        },
+        "typography": {
+          "status": "pending",
+          "observation": "Typeface specimen reviewed; this does not verify integrated browser rendering."
+        },
+        "composition": {
+          "status": "pending",
+          "observation": "Typeface specimen reviewed; this does not verify integrated browser rendering."
+        },
+        "identity": {
+          "status": "pending",
+          "observation": "Typeface specimen reviewed; this does not verify integrated browser rendering."
+        },
+        "interaction": {
+          "status": "pending",
+          "observation": "Typeface specimen reviewed; this does not verify integrated browser rendering."
+        },
+        "responsive": {
+          "status": "pending",
+          "observation": "Typeface specimen reviewed; this does not verify integrated browser rendering."
+        }
+      }
+    },
+    "screenshots": [],
+    "projectCheck": {
+      "command": "pnpm check:shared-packages (49 inner tests/type/contracts/lint/build/pack stages passed); node --test scripts/catalog-schema.test.mjs packages/fleet-footer/test/composition.test.mjs (10 passed); pnpm exec vitest run tests/showcase/public-surface.test.ts tests/showcase/public-products.test.ts tests/showcase/classic-browser-bundle.test.ts (25 passed); node scripts/sync-fleet-public-products.mjs --validate (43 public identities); node scripts/check-docs.mjs; pnpm build:showcase (1195 pages, actual child exit 0)",
+      "status": "passed"
+    },
+    "critique": {
+      "score": 0,
+      "maximum": 40,
+      "dimensions": {
+        "hierarchy": 0,
+        "typography": 0,
+        "composition": 0,
+        "identity": 0,
+        "interaction": 0,
+        "responsive": 0
+      }
+    },
+    "audit": {
+      "score": 0,
+      "maximum": 20,
+      "dimensions": {
+        "purpose": 0,
+        "accessibility": 0,
+        "behavior": 0,
+        "responsive": 0,
+        "performance": 0
+      }
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": []
+    },
+    "comprehension": {
+      "status": "not-applicable",
+      "reviewer": "",
+      "answers": {
+        "product": "",
+        "audience": "",
+        "value": "",
+        "mechanism": "",
+        "proof": "",
+        "nextAction": ""
+      },
+      "purposeScore": {
+        "product": 0,
+        "audience": 0,
+        "value": 0,
+        "mechanism": 0,
+        "proof": 0,
+        "nextAction": 0,
+        "total": 0
+      },
+      "mismatches": []
+    },
+    "masterSelection": {
+      "receipt": ".fleet/design-review-footer180-precise-release.json",
+      "sha256": "994d939a06cf85e9b4bd896b999411723b81fc92fc7308e08109267076b68669",
+      "selected": "c",
+      "ownerQuote": "Okay let's go with precise. Release it for every project. I guess we have done improving things. Now we have deprecating returns.",
+      "reconciliationBase": "d86edd1612b9125961546fa36b464714df95365b"
+    },
+    "sourceQualification": {
+      "report": ".fleet-local/shared-precise-reconciliation-20261004/release-allowlist.json",
+      "buildResult": ".fleet-local/shared-precise-reconciliation-20261004/build-result.json",
+      "hostedResult": ".fleet-local/shared-precise-reconciliation-20261004/hosted-result.json",
+      "outerManagerStatus": "Package and build wrapper cleanup: kill EPERM after successful child stages. Hosted wrapper: workspace reserve gate after actual child exit 0. Source qualification is based on recorded child results; outer wrappers did not exit 0.",
+      "visualGate": "Pending actual CUA Chrome HTTP review by root; draft source PR is not visual completion or deployment approval."
+    }
+  },
+  "ownerFeedback": {
+    "decision": "keep",
+    "note": "Okay let's go with precise. Release it for every project. I guess we have done improving things. Now we have deprecating returns."
+  }
+}

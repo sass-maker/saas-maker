@@ -63,14 +63,19 @@ export function registerAIChatFooter(): void {
       'prompt',
       'providers',
       'theme',
+      'layout',
+      'question-placeholder',
     ];
+
+    private questionValue?: string;
+    private questionContext = '';
 
     connectedCallback() {
       this.render();
     }
 
-    attributeChangedCallback() {
-      if (this.isConnected) this.render();
+    attributeChangedCallback(_name: string, previous: string | null, next: string | null) {
+      if (previous !== next && this.isConnected) this.render();
     }
 
     render() {
@@ -80,9 +85,18 @@ export function registerAIChatFooter(): void {
         this.getAttribute('product-url') ||
         this.getAttribute('company-url') ||
         window.location.origin;
-      const label = this.getAttribute('label') || `Explore ${companyName} with AI`;
+      const questionLayout = this.getAttribute('layout') === 'question';
+      const label =
+        this.getAttribute('label') ||
+        (questionLayout ? `Ask AI about ${companyName}` : `Explore ${companyName} with AI`);
       const promptTemplate = this.getAttribute('prompt') || DEFAULT_PROMPT_TEMPLATE;
       const prompt = interpolate(promptTemplate, companyName, companyUrl);
+      const questionContext = JSON.stringify([companyName, companyUrl]);
+      if (this.questionContext !== questionContext) {
+        this.questionValue = undefined;
+        this.questionContext = questionContext;
+      }
+      const question = this.questionValue ?? prompt;
       const providers = normalizeProviderIds(this.getAttribute('providers'));
       const theme = this.getAttribute('theme');
       const root = this.shadowRoot ?? this.attachShadow({ mode: 'open' });
@@ -119,6 +133,20 @@ export function registerAIChatFooter(): void {
         a:focus-visible { outline: 2px solid var(--ai-footer-focus); outline-offset: 2px; }
         a img { display: block; width: 2rem; height: 2rem; border-radius: .625rem; object-fit: cover; }
         @media (max-width: 1000px) { .footer { grid-template-columns: minmax(0, 1fr); gap: 1rem; } ul { justify-content: flex-start; } }
+        :host([layout='compact']) .footer { grid-template-columns: minmax(0, 1fr); gap: 1rem; padding: 0; }
+        :host([layout='compact']) ul { flex-wrap: wrap; justify-content: flex-start; }
+        :host([layout='question']) { min-width: 0; font-family: var(--fleet-footer-ui-font, inherit); }
+        :host([layout='question']) .footer { grid-template-columns: minmax(0, 1fr); align-items: start; gap: .8rem; padding: 0; }
+        :host([layout='question']) .intro { display: block; }
+        :host([layout='question']) .signal { display: none; }
+        :host([layout='question']) .label { font-size: 1rem; font-weight: 600; letter-spacing: -.015em; line-height: 1.4; }
+        :host([layout='question']) .description { font-size: .75rem; }
+        .question { display: grid; gap: .45rem; min-width: 0; }
+        .question span { color: var(--ai-footer-muted); font-family: var(--fleet-footer-label-font, var(--fleet-footer-mono-font, inherit)); font-size: .75rem; line-height: 1.5; }
+        textarea { display: block; box-sizing: border-box; width: 100%; min-width: 0; min-height: 5rem; padding: .7rem .8rem; border: 1px solid var(--ai-footer-border); border-radius: .25rem; background: transparent; color: inherit; font: inherit; font-size: 1rem; line-height: 1.55; resize: vertical; }
+        textarea::placeholder { color: var(--ai-footer-muted); opacity: 1; }
+        textarea:focus-visible { outline: 2px solid var(--ai-footer-focus); outline-offset: 2px; }
+        :host([layout='question']) ul { flex-wrap: wrap; justify-content: flex-start; gap: .65rem; }
         @media (prefers-reduced-motion: reduce) { a { transition: background-color 150ms ease, border-color 150ms ease; } a:hover { transform: none; } }
       `;
 
@@ -147,11 +175,28 @@ export function registerAIChatFooter(): void {
       intro.append(signal, copy);
       region.append(intro);
 
+      let textarea: HTMLTextAreaElement | undefined;
+      if (questionLayout) {
+        const field = document.createElement('label');
+        field.className = 'question';
+        const fieldLabel = document.createElement('span');
+        fieldLabel.textContent = 'Your question';
+        textarea = document.createElement('textarea');
+        textarea.rows = 3;
+        textarea.maxLength = 2000;
+        textarea.value = question;
+        textarea.placeholder =
+          this.getAttribute('question-placeholder') || 'Ask a question about this product…';
+        field.append(fieldLabel, textarea);
+        region.append(field);
+      }
+
       const list = document.createElement('ul');
+      const providerLinks: [AIChatProvider, HTMLAnchorElement][] = [];
       for (const provider of providers) {
         const item = document.createElement('li');
         const link = document.createElement('a');
-        link.href = getProviderUrl(provider, prompt);
+        link.href = getProviderUrl(provider, questionLayout ? question : prompt);
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
         link.dataset.aiProvider = provider;
@@ -164,7 +209,15 @@ export function registerAIChatFooter(): void {
         link.append(createProviderLogo(provider));
         item.append(link);
         list.append(item);
+        providerLinks.push([provider, link]);
       }
+      textarea?.addEventListener('input', () => {
+        if (!textarea) return;
+        this.questionValue = textarea.value;
+        for (const [provider, link] of providerLinks) {
+          link.href = getProviderUrl(provider, this.questionValue);
+        }
+      });
       region.append(list);
       root.append(style, region);
     }

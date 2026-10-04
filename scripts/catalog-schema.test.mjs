@@ -123,3 +123,31 @@ test('edits in the source drive the legacy consumers without a second classifica
   assert.equal(result.portfolio.futureForm, 'personal-tool');
   assert.equal(result.lifecycle.shareable, true);
 });
+
+test('optional footer artwork survives both storage directions without defaults', () => {
+  const art = {
+    src: '/footer-art/example.png',
+    width: 2048,
+    height: 683,
+    alt: 'An original product workshop.',
+    focalX: 50,
+    focalY: 45,
+    credit: 'Original pixel artwork.',
+    sha256: 'b'.repeat(64),
+  };
+  const original = { projects: [{ id: 'example', footerArt: art }, { id: 'absent' }] };
+  const source = structureCatalog(original);
+  assert.deepEqual(source.projects[0].presentation.footerArt, art);
+  assert.equal(Object.hasOwn(source.projects[1], 'presentation'), false);
+  assert.deepEqual(compatibilityCatalog(source), original);
+  assert.deepEqual(structureCatalog(compatibilityCatalog(source)), source);
+  source.projects[0].presentation.footerArt.focalX = 62.5;
+  assert.equal(compatibilityCatalog(source).projects[0].footerArt.focalX, 62.5);
+  assert.equal(original.projects[0].footerArt.focalX, 50);
+  // Storage remains lossless even for invalid optional values; the public
+  // projection owns strict publication validation, rather than this mapping.
+  for (const footerArt of [null, {}, { future: 'retained exactly' }]) {
+    const input = { projects: [{ id: 'example', footerArt }] };
+    assert.deepEqual(compatibilityCatalog(structureCatalog(input)), input);
+  }
+});

@@ -23,6 +23,14 @@ copy instead of expanding them into cards.
 
 ## Host integration
 
+The owner-selected Precise composition uses the opt-in `question` layout:
+a 16px semibold heading, a labelled 16px textarea and the same icon-only
+44px assistant controls. It consumes `--fleet-footer-ui-font` and
+`--fleet-footer-label-font` from the composition; standalone layouts keep their
+existing host typography. Editing changes real handoff URLs immediately.
+Other metadata and reconnects retain the visitor's question; changing product
+identity resets it to that product's configured prompt.
+
 Inherit the host's text color and typography. Use `currentColor`, subtle mixed
 borders and surfaces, and a configurable focus color. Do not introduce a new
 brand palette, full-height footer, background image, or decorative animation.

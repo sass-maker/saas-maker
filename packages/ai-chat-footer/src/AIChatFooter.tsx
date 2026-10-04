@@ -1,3 +1,4 @@
+import { useId, useState } from 'react';
 import * as icons from './icons';
 import { createProviderRegistry, DEFAULT_PROMPT_TEMPLATE, DEFAULT_PROVIDERS } from './providers';
 import type { AIChatFooterProps, AIChatProvider, PromptContext } from './types';
@@ -32,17 +33,30 @@ export function AIChatFooter({
   companyUrl,
   prompt,
   providers = DEFAULT_PROVIDERS,
-  label = `Explore ${companyName} with AI`,
+  label,
   theme = 'auto',
+  layout,
+  questionPlaceholder = 'Ask a question about this product…',
   className = '',
 }: AIChatFooterProps) {
   const themeAttr = theme === 'auto' ? undefined : theme;
   const ctx: PromptContext = { companyName, companyUrl };
+  const questionLayout = layout === 'question';
+  const questionId = useId();
+  const questionContext = JSON.stringify([companyName, companyUrl]);
+  const [editedQuestion, setEditedQuestion] = useState<{ context: string; value: string }>();
+  const question =
+    editedQuestion?.context === questionContext
+      ? editedQuestion.value
+      : resolvePrompt(prompt, ctx, providers[0] ?? DEFAULT_PROVIDERS[0]);
+  const headingLabel =
+    label ?? (questionLayout ? `Ask AI about ${companyName}` : `Explore ${companyName} with AI`);
 
   return (
     <div
       className={`ai-chat-footer ${className}`}
       data-theme={themeAttr}
+      data-layout={layout}
       role="region"
       aria-label="Ask AI about this product"
     >
@@ -53,16 +67,31 @@ export function AIChatFooter({
           </svg>
         </span>
         <div>
-          <h2 className="ai-chat-footer__label">{label}</h2>
+          <h2 className="ai-chat-footer__label">{headingLabel}</h2>
           <p className="ai-chat-footer__description">
             Open a pre-filled question in a new tab with the assistant you already use.
           </p>
         </div>
       </div>
+      {questionLayout ? (
+        <label className="ai-chat-footer__question" htmlFor={questionId}>
+          <span>Your question</span>
+          <textarea
+            id={questionId}
+            rows={3}
+            maxLength={2000}
+            value={question}
+            placeholder={questionPlaceholder}
+            onChange={(event) =>
+              setEditedQuestion({ context: questionContext, value: event.currentTarget.value })
+            }
+          />
+        </label>
+      ) : null}
       <ul className="ai-chat-footer__icons">
         {providers.map((id) => {
           const config = registry[id];
-          const resolved = resolvePrompt(prompt, ctx, id);
+          const resolved = questionLayout ? question : resolvePrompt(prompt, ctx, id);
           const href = config.buildUrl(resolved);
           const actionLabel = `Ask ${config.name} about ${companyName} (opens in a new tab)`;
 

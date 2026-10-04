@@ -1,0 +1,9 @@
+# Precise C
+
+Use one compact two-column close: product-native routes/CTA/feedback left, editable AI then always-open updates right. Native legal belongs in the navigation slot, before the illustration. The signature shares the illustration's quiet upper wall through a product-colored fade. The single names-only studio line follows the scene and is literally last. No utility disclosures, repeated prompt chips, studio cards, pitch copy or small caption over the busy illustration.
+
+Geist is the compact UI family; Geist Mono400 labels are12px; service headings are16px/600. Native secondary links are14px/400, optional marked primary links15px/500 and44px targets. Atlas's signature uses Newsreader400; other products retain their signature identity through explicit font/name/style hooks. Colors remain inherited and host-owned. The supplied local fonts have genuine variable weight axes; no fabricated font or synthetic weight is needed.
+
+The desktop illustration is a generous full-width panorama, approximately432–560px high. Mobile has a declared focal crop and380px scene; app scenes are405px desktop/325px phone. Hosts can override these lengths for product-specific identity. Unconfigured art collapses the empty scene while retaining the signature; image errors remain explicit and a changed source can recover. Unknown capture configuration exposes loading, unavailable and manual retry; an actual capture child remains visible with no disclosure and retains its state.
+
+Use the existing native links/forms/details and child component primitives. The composition only provides slots, type context and scoped route hooks; it does not clone links, rewrite values, move live nodes, supply a form API or manufacture success. Typography remains a single paired landing/app system with a deliberately smaller app signature and suppressed marketing CTA.
