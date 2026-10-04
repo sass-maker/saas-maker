@@ -295,6 +295,8 @@ export class AgentWorkspaces {
     let child;
     const signals = new Map();
     let timer;
+    let budgetCheck = Promise.resolve();
+    let checkingBudgets = false;
     let limitError;
     const signalChild = (signal) => {
       if (!child?.pid) return;
@@ -314,11 +316,19 @@ export class AgentWorkspaces {
         signals.set(signal, handler); process.on(signal, handler);
       }
       timer = setInterval(() => {
-        if (id) this.heartbeat(id).catch((error) => console.error(error.message));
-        try { this.budgets(repo); }
-        catch (error) { limitError = error; signalChild('SIGTERM'); }
+        if (checkingBudgets) return budgetCheck;
+        checkingBudgets = true;
+        // Finish the heartbeat's registry-lock cleanup before synchronous disk scans.
+        budgetCheck = (async () => {
+          if (id) await this.heartbeat(id).catch((error) => console.error(error.message));
+          try { this.budgets(repo); }
+          catch (error) { limitError = error; signalChild('SIGTERM'); }
+        })().catch((error) => { limitError = error; }).finally(() => { checkingBudgets = false; });
+        return budgetCheck;
       }, 15_000);
       const code = await completion;
+      clearInterval(timer);
+      await budgetCheck;
       if (limitError) throw limitError;
       await this.locked(() => {
         if (id) { const row = this.record(id); row.heartbeatAt = now(); row.lastCommandAt = now(); row.lastExitCode = code; this.write(row); }
@@ -327,6 +337,7 @@ export class AgentWorkspaces {
       return { exitCode: code, storeDir: this.policy().storeDir };
     } finally {
       clearInterval(timer);
+      await budgetCheck;
       for (const [signal, handler] of signals) process.off(signal, handler);
       await this.locked(() => {
         // Keep the lease if a detached descendant is still using the process group.
