@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { buildPublicProducts } from '../../scripts/public-products.mjs';
+import { structureCatalog } from '../../scripts/catalog-schema.mjs';
+import { validateProjection } from '../../scripts/sync-fleet-public-products.mjs';
+import { resolveFooterArt, validateFooterArt } from '../../packages/fleet-footer/src/artwork.mjs';
 
 function catalog() {
   const projects = ['primary', 'active', 'inactive', 'unverified'].map((id) => ({
@@ -253,5 +256,207 @@ describe('shareability projection boundary', () => {
         expect(input).toEqual(before);
       }
     }
+  });
+});
+
+function artwork(id = 'primary') {
+  return {
+    src: `/footer-art/${id}.webp`,
+    width: 2048,
+    height: 683,
+    alt: 'A local evidence workshop with an inspection lens and source receipts.',
+    focalX: 50,
+    focalY: 52.5,
+    credit: 'Original pixel artwork for this product.',
+    sha256: 'a'.repeat(64),
+  };
+}
+
+describe('optional public footer artwork', () => {
+  it('roundtrips canonical presentation artwork without changing source or schema', () => {
+    const input = structureCatalog(catalog());
+    input.projects[0].presentation.footerArt = artwork();
+    const before = structuredClone(input);
+    const output = buildPublicProducts(input);
+    expect(output.schemaVersion).toBe(5);
+    expect(output.products.find(({ id }) => id === 'primary')?.footerArt).toEqual(artwork());
+    expect(output.directory.find(({ id }) => id === 'primary')?.footerArt).toEqual(artwork());
+    expect(input).toEqual(before);
+    expect(resolveFooterArt(output, 'primary')).toEqual(artwork());
+    expect(resolveFooterArt(output, 'active')).toBeUndefined();
+    expect(JSON.stringify(output)).not.toContain('presentation');
+    const legacy = catalog();
+    Reflect.set(legacy.projects[0], 'footerArt', artwork());
+    expect(
+      buildPublicProducts(legacy).products.find(({ id }) => id === 'primary')?.footerArt
+    ).toEqual(artwork());
+  });
+
+  it('keeps unconfigured artwork absent and never publishes hidden source artwork', () => {
+    const input = structureCatalog(catalog());
+    input.projects[3].presentation.footerArt = { src: '/Users/fictional/private.png' };
+    const output = buildPublicProducts(input);
+    expect(output.products.every((entry) => !Object.hasOwn(entry, 'footerArt'))).toBe(true);
+    expect(output.directory.every((entry) => !Object.hasOwn(entry, 'footerArt'))).toBe(true);
+    expect(resolveFooterArt(output, 'unverified')).toBeUndefined();
+    expect(validateFooterArt(undefined, 'primary')).toBeUndefined();
+    expect(() => validateFooterArt(null, 'primary')).toThrow('metadata object');
+  });
+
+  it('uses one canonical family for every evidenced caller alias, including PNG', () => {
+    for (const [caller, owner] of [
+      ['memory-map', 'chatgpt-memory-insights'],
+      ['high-signal-podcasts', 'on-record'],
+      ['portfolio', 'sarthakagrawal-personal'],
+      ['aliveville', 'ai-game'],
+    ]) {
+      const art = { ...artwork(owner), src: `/footer-art/${owner}.png` };
+      const projection = { directory: [{ id: owner, footerArt: art }] };
+      expect(resolveFooterArt(projection, caller)).toEqual(art);
+      expect(resolveFooterArt(projection, owner)).toEqual(art);
+      expect(validateFooterArt(art, caller)).toEqual(art);
+    }
+    expect(
+      resolveFooterArt(
+        { products: [{ id: 'aliveville', footerArt: artwork('ai-game') }] },
+        'aliveville'
+      )
+    ).toEqual(artwork('ai-game'));
+    expect(
+      resolveFooterArt(
+        {
+          directory: [
+            { id: 'primary', footerArt: { ...artwork(), src: 'https://example.invalid/art.png' } },
+          ],
+        },
+        'primary'
+      )
+    ).toBeUndefined();
+    expect(resolveFooterArt({}, 'unknown')).toBeUndefined();
+  });
+
+  it('rejects remote, secret, private, traversal and mismatched asset paths', () => {
+    for (const src of [
+      'https://example.invalid/art.png?token=fictional',
+      'https://user:fictional@example.invalid/art.png',
+      '//example.invalid/art.png',
+      'data:image/png;base64,AAAA',
+      'file:///Users/fictional/art.png',
+      '/Users/fictional/art.png',
+      '/footer-art/../primary.png',
+      '/footer-art/%2e%2e/primary.png',
+      '/footer-art/primary.png?token=fictional',
+      '/footer-art/primary.png#fragment',
+      '/footer-art/other.png',
+      '/footer-art/primary.svg',
+    ]) {
+      const input = structureCatalog(catalog());
+      input.projects[0].presentation.footerArt = { ...artwork(), src };
+      expect(() => buildPublicProducts(input)).toThrow('canonical relative public asset path');
+    }
+  });
+
+  it('rejects invalid dimensions, focal coordinates, hashes and nonpublic text', () => {
+    for (const invalid of [
+      { width: 0 },
+      { width: 4097 },
+      { height: -1 },
+      { height: 1.5 },
+      { width: '2048' },
+      { focalX: -1 },
+      { focalY: 101 },
+      { focalX: Number.NaN },
+      { focalY: Number.POSITIVE_INFINITY },
+      { focalX: '50' },
+      { sha256: 'a'.repeat(63) },
+      { sha256: 'z'.repeat(64) },
+      { alt: '<img src=x>' },
+      { alt: '' },
+      { alt: 'A'.repeat(321) },
+      { credit: 'Bearer fictional-token' },
+      { credit: '/Users/fictional/art.png' },
+      { credit: 'https://example.invalid?secret=fictional' },
+      { credit: 'token=fictional' },
+      { credit: 'Original\nprivate note' },
+    ]) {
+      expect(() => validateFooterArt({ ...artwork(), ...invalid }, 'primary')).toThrow(
+        'footerArt:'
+      );
+    }
+    expect(
+      validateFooterArt({ ...artwork(), width: 1, height: 4096, focalX: 0, focalY: 100 }, 'primary')
+    ).toMatchObject({ width: 1, height: 4096, focalX: 0, focalY: 100 });
+    expect(() =>
+      validateFooterArt({ ...artwork(), internalSource: '/private/fictional' }, 'primary')
+    ).toThrow('unsupported field');
+    const missing = artwork();
+    Reflect.deleteProperty(missing, 'sha256');
+    expect(() => validateFooterArt(missing, 'primary')).toThrow('missing sha256');
+  });
+
+  it('validates existing public projection schemas without import-time sync writes', () => {
+    const product = {
+      id: 'primary',
+      name: 'Primary',
+      description: 'A useful product.',
+      url: 'https://primary.example',
+      footerArt: artwork(),
+    };
+    expect(() =>
+      validateProjection({ schemaVersion: 1, products: [product] }, 'fixture')
+    ).not.toThrow();
+    expect(() =>
+      validateProjection(
+        {
+          schemaVersion: 1,
+          products: [{ ...product, footerArt: { ...artwork(), ownerNotes: 'fictional' } }],
+        },
+        'fixture'
+      )
+    ).toThrow('unsupported field');
+    const purposeContract = Object.fromEntries(
+      ['purpose', 'audience', 'outcome', 'mechanism', 'proof', 'nextAction'].map((field) => [
+        field,
+        'Explicit bounded fixture evidence.',
+      ])
+    );
+    const directory = {
+      id: 'primary',
+      name: 'Primary',
+      description: 'A useful product.',
+      makerNote: 'A bounded fixture.',
+      form: 'Web app',
+      group: 'current',
+      lifecycle: 'active',
+      purposeContract,
+      footerArt: artwork(),
+    };
+    expect(() =>
+      validateProjection(
+        { schemaVersion: 5, products: [product], directory: [directory], pastProjects: [] },
+        'fixture'
+      )
+    ).not.toThrow();
+    expect(() =>
+      validateProjection(
+        {
+          schemaVersion: 5,
+          products: [product],
+          directory: [{ ...directory, footerArt: { ...artwork(), focalX: 101 } }],
+        },
+        'fixture'
+      )
+    ).toThrow('focalX');
+    expect(() =>
+      validateProjection(
+        {
+          schemaVersion: 5,
+          products: [product],
+          directory: [directory],
+          pastProjects: [{ id: 'primary', footerArt: { ...artwork(), src: '/tmp/fictional.png' } }],
+        },
+        'fixture'
+      )
+    ).toThrow('canonical relative public asset path');
   });
 });

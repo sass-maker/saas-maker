@@ -13,6 +13,7 @@ type NativeCaptureProps = {
   'privacy-url'?: string;
   label?: string;
   theme?: 'light' | 'dark';
+  layout?: 'compact';
   class?: string;
 };
 
@@ -31,6 +32,7 @@ export function NewsletterCapture(props: NewsletterCaptureProps) {
     'privacy-url': props.privacyUrl,
     label: props.label,
     theme: props.theme,
+    layout: props.layout,
     class: props.className,
   });
 }

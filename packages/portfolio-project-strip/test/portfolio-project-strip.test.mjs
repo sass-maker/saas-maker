@@ -77,3 +77,110 @@ test('adds referral source without mutating canonical destination state', () => 
   assert.equal(withReferralSource(canonical), canonical);
   assert.equal(withReferralSource('not a url', 'codevetter'), 'not a url');
 });
+
+test('curated layout renders only three stable noncurrent links with descriptions and existing referrals', () => {
+  const markup = renderToStaticMarkup(
+    createElement(PortfolioProjectStrip, {
+      catalogUrl: '',
+      currentProjectId: 'current',
+      layout: 'curated',
+      projects: [
+        { id: 'current', name: 'Current', url: 'https://current.example' },
+        {
+          id: 'one',
+          name: 'One',
+          url: 'https://one.example/path?campaign=launch#details',
+          description: 'First <project>',
+        },
+        { id: 'one', name: 'Duplicate', url: 'https://duplicate.example' },
+        { id: 'bad', name: 'Unsafe', url: 'javascript:alert(1)' },
+        { id: 'two', name: 'Two', url: 'https://two.example', description: 'Second project' },
+        { id: 'three', name: 'Three', url: 'https://three.example' },
+        { id: 'four', name: 'Fourth', url: 'https://four.example' },
+      ],
+    })
+  );
+  assert.match(markup, /data-layout="curated"/);
+  assert.equal((markup.match(/<a /g) ?? []).length, 3);
+  assert.ok(markup.indexOf('>One<') < markup.indexOf('>Two<'));
+  assert.ok(markup.indexOf('>Two<') < markup.indexOf('>Three<'));
+  assert.match(markup, /First &lt;project&gt;/);
+  assert.match(markup, /campaign=launch&amp;ref=current#details/);
+  assert.doesNotMatch(
+    markup,
+    />Current<|>Fourth<|>Duplicate<|>Unsafe<|__duplicate|data-loop|role="tooltip"/
+  );
+});
+
+test('curated short and empty lists preserve bounded absence without cloning', () => {
+  const props = { catalogUrl: '', layout: 'curated', currentProjectId: 'current' };
+  assert.equal(
+    renderToStaticMarkup(
+      createElement(PortfolioProjectStrip, {
+        ...props,
+        projects: [{ id: 'current', name: 'Current', url: 'https://current.example' }],
+      })
+    ),
+    ''
+  );
+  const single = renderToStaticMarkup(
+    createElement(PortfolioProjectStrip, {
+      ...props,
+      projects: [{ id: 'one', name: 'One', url: 'https://one.example' }],
+    })
+  );
+  assert.equal((single.match(/<a /g) ?? []).length, 1);
+  assert.doesNotMatch(single, /__duplicate|data-loop/);
+});
+
+test('studio is one static labelled line of safe noncurrent links and the directory', () => {
+  const markup = renderToStaticMarkup(
+    createElement(PortfolioProjectStrip, {
+      layout: 'studio',
+      currentProjectId: 'current',
+      catalogUrl: '',
+      projects: [
+        { id: 'current', name: 'Current', url: 'https://current.example' },
+        {
+          id: 'one',
+          name: 'One',
+          url: 'https://one.example/?campaign=launch#details',
+          description: 'One detail',
+        },
+        { id: 'one', name: 'Duplicate', url: 'https://duplicate.example' },
+        { id: 'bad', name: 'Unsafe', url: 'javascript:alert(1)' },
+        { id: 'two', name: 'Two', url: 'https://two.example' },
+        { id: 'three', name: 'Three', url: 'https://three.example' },
+        { id: 'four', name: 'Fourth', url: 'https://four.example' },
+      ],
+    })
+  );
+  assert.match(markup, /data-layout="studio"/);
+  assert.match(markup, /From the studio/);
+  assert.match(
+    markup,
+    /tabindex="0" role="region" aria-label="Studio project links; scroll with arrow keys"/
+  );
+  assert.equal((markup.match(/<a /g) ?? []).length, 4);
+  assert.match(markup, /campaign=launch&amp;ref=current#details/);
+  assert.match(markup, /href="https:\/\/sassmaker.com\/projects"/);
+  assert.match(markup, /title="One detail"/);
+  assert.doesNotMatch(
+    markup,
+    />Current<|>Duplicate<|>Unsafe<|>Fourth<|>One detail<|__duplicate|__description|data-loop/
+  );
+});
+
+test('studio remains absent when every safe project is current', () => {
+  assert.equal(
+    renderToStaticMarkup(
+      createElement(PortfolioProjectStrip, {
+        layout: 'studio',
+        catalogUrl: '',
+        currentProjectId: 'one',
+        projects: [{ id: 'one', name: 'One', url: 'https://one.example' }],
+      })
+    ),
+    ''
+  );
+});

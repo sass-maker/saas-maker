@@ -28,6 +28,7 @@ const styleText = `
     min-width: 0;
     color: var(--newsletter-capture-text);
     font: inherit;
+    font-family: var(--fleet-footer-ui-font, inherit);
   }
   :host([theme='light']) { --newsletter-capture-text:#292824; --newsletter-capture-muted:#686860; --newsletter-capture-border:#d8d8cf; --newsletter-capture-surface:#f7f7f2; --newsletter-capture-focus:#1d4ed8; --newsletter-capture-action:#176b43; --newsletter-capture-action-text:#fff; --newsletter-capture-success:#187347; --newsletter-capture-error:#a32929; }
   :host([theme='dark']) { --newsletter-capture-text:#f2f1e9; --newsletter-capture-muted:#a7a69c; --newsletter-capture-border:#42433c; --newsletter-capture-surface:#20211d; --newsletter-capture-focus:#93c5fd; --newsletter-capture-action:#9bd7b5; --newsletter-capture-action-text:#14271c; --newsletter-capture-success:#a8e2bd; --newsletter-capture-error:#ffaaa3; }
@@ -73,6 +74,21 @@ const styleText = `
     .form--fixed .field--email { grid-column: 1; }
     .submit { width: 100%; }
   }
+  :host([integrated]) .frame { border-top: 0; }
+  :host([integrated]) h2 { font-size: 16px; font-weight: 600; letter-spacing: -.02em; }
+  :host([integrated]) .field-label { font-family: var(--fleet-footer-mono-font, monospace); font-size: 12px; font-weight: 400; letter-spacing: .04em; }
+  :host([integrated]) input[type='email'], :host([integrated]) select { font-size: 16px; }
+  :host([integrated]) .consent-copy { font-size: 12px; }
+  :host([integrated]) .submit { font-size: 14px; font-weight: 500; }
+
+  :host([layout='compact']) .frame { padding: 0; }
+  :host([layout='compact']) .layout { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  :host([layout='compact']) form { grid-template-columns: minmax(0, 1fr); }
+  :host([layout='compact']) form.form--fixed { grid-template-columns: minmax(0, 1fr) auto; }
+  :host([layout='compact']) .field--email, :host([layout='compact']) .field--kind, :host([layout='compact']) .submit { grid-column: 1; }
+  :host([layout='compact']) .submit { width: 100%; }
+  :host([layout='compact']) .form--fixed .submit { grid-column: 2; width: auto; }
+  @media (max-width: 26rem) { :host([layout='compact']) form.form--fixed { grid-template-columns: minmax(0, 1fr); } :host([layout='compact']) .form--fixed .submit { grid-column: 1; width: 100%; } }
   @media (prefers-reduced-motion: reduce) {
     .submit { transition: none; }
     .submit:hover:not(:disabled) { transform: none; }
@@ -131,9 +147,12 @@ export function registerNewsletterCapture(): void {
     // reconnect, and attribute changes. Only the latest token may apply state.
     private configToken = 0;
     private abortController?: AbortController;
+    private renderedConfig = '';
+    private submissionToken = 0;
+    private submissionStatusOwned = false;
 
     connectedCallback(): void {
-      this.render();
+      if (!this.form || this.renderedConfig !== this.configSignature()) this.render();
       void this.loadConfigIfNeeded();
     }
 
@@ -156,7 +175,14 @@ export function registerNewsletterCapture(): void {
       }
     }
 
+    private configSignature(): string {
+      return JSON.stringify(
+        NewsletterCaptureElement.observedAttributes.map((name) => [name, this.getAttribute(name)])
+      );
+    }
+
     private render(): void {
+      this.submissionStatusOwned = false;
       const root = this.shadowRoot ?? this.attachShadow({ mode: 'open' });
       root.replaceChildren();
 
@@ -256,6 +282,7 @@ export function registerNewsletterCapture(): void {
       this.emailInput.addEventListener('input', () => this.setStatus('', ''));
       this.consentInput.addEventListener('change', () => this.setStatus('', ''));
       form.addEventListener('submit', (event) => void this.onSubmit(event));
+      this.renderedConfig = this.configSignature();
     }
 
     private productName(): string {
@@ -311,7 +338,7 @@ export function registerNewsletterCapture(): void {
     }
 
     private updateConfigStatus(): void {
-      if (!this.status) return;
+      if (!this.status || this.submissionStatusOwned) return;
       if (this.configState === 'loading') {
         this.status.textContent = 'Preparing signup form…';
         this.status.dataset.state = 'loading';
@@ -362,6 +389,7 @@ export function registerNewsletterCapture(): void {
 
     private setStatus(message: string, state: 'loading' | 'success' | 'error' | ''): void {
       if (!this.status) return;
+      if (!message) this.submissionStatusOwned = false;
       this.status.textContent = message;
       if (state) this.status.dataset.state = state;
       else delete this.status.dataset.state;
@@ -405,18 +433,26 @@ export function registerNewsletterCapture(): void {
       }
 
       if (!this.submitButton) return;
+      const form = this.form;
+      const config = this.configSignature();
+      const token = ++this.submissionToken;
+      const isCurrentSubmission = () =>
+        this.form === form && this.configSignature() === config && this.submissionToken === token;
       this.submitButton.disabled = true;
-      this.form.setAttribute('aria-busy', 'true');
+      this.submissionStatusOwned = true;
+      form.setAttribute('aria-busy', 'true');
       this.setStatus('Sending your request…', 'loading');
       try {
         await submitSubscription(input, { projectKey, apiBaseUrl });
-        this.form.reset();
+        if (!isCurrentSubmission()) return;
+        form.reset();
         if (this.kindSelect) this.kindSelect.value = validKind(this.getAttribute('kind'));
         this.updateSubmitLabel();
         const consentCopy = this.form.querySelector('.consent-copy');
         if (consentCopy) this.updateConsentCopy(consentCopy);
         this.setStatus('Thanks. Your request has been received.', 'success');
       } catch (error) {
+        if (!isCurrentSubmission()) return;
         this.setStatus(
           error instanceof Error
             ? error.message
@@ -424,8 +460,10 @@ export function registerNewsletterCapture(): void {
           'error'
         );
       } finally {
-        this.submitButton.disabled = false;
-        this.form.setAttribute('aria-busy', 'false');
+        if (isCurrentSubmission()) {
+          this.submitButton.disabled = false;
+          form.setAttribute('aria-busy', 'false');
+        }
       }
     }
   }

@@ -6,5 +6,10 @@ export const Example = () => (
     currentProjectId="one"
     theme="dark"
     speed={60}
+    layout="curated"
   />
+);
+
+export const StudioExample = () => (
+  <PortfolioProjectStrip currentProjectId="one" layout="studio" catalogUrl="" />
 );

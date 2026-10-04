@@ -1,4 +1,7 @@
-<section class="studio-commission" aria-labelledby="commission-title">
+---
+const { contained = false } = Astro.props;
+---
+<section class:list={["studio-commission", { contained }]} aria-labelledby="commission-title">
   <div>
     <p class="studio-kicker">A focused engineering pilot</p>
     <h2 id="commission-title">Verify one AI-built feature before release.</h2>
@@ -21,3 +24,13 @@
     <span aria-hidden="true">↗</span>
   </a>
 </section>
+
+<style>
+  .studio-commission.contained { width:100%; margin:0; padding:0; gap:2rem; grid-template-columns:minmax(0,1.4fr) minmax(0,1fr); background:transparent; color:inherit; }
+  .studio-commission.contained h2 { max-width:25ch; margin-top:.5rem; font-size:clamp(1.65rem,3vw,2.5rem); line-height:1.12; }
+  .studio-commission.contained > div > p:last-child { margin-top:.85rem; color:inherit; font-size:.85rem; line-height:1.6; }
+  .contained .studio-commission-email { min-height:6rem; border-color:currentColor; }
+  .contained .studio-commission-email > span:first-child { color:inherit; font-size:.75rem; letter-spacing:0; text-transform:none; }
+  .contained .studio-commission-email > span:last-child { color:inherit; }
+  @media(max-width:760px) { .studio-commission.contained { grid-template-columns:minmax(0,1fr); gap:1rem; } }
+</style>

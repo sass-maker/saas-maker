@@ -30,7 +30,7 @@
     "catalog:table": "node scripts/generate-repository-classifications.mjs",
     "catalog:check-table": "node scripts/generate-repository-classifications.mjs --check",
     "check:docs": "node scripts/check-docs.mjs",
-    "test": "vitest run tests",
+    "test": "pnpm -F @saas-maker/ai-chat-footer build && pnpm -F @saas-maker/portfolio-project-strip build && vitest run tests",
     "lint": "biome check .",
     "typecheck": "turbo run typecheck",
     "smoke": "node scripts/smoke-prod.mjs",

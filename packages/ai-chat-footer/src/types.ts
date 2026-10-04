@@ -24,6 +24,10 @@ export interface AIChatFooterProps {
   label?: ReactNode;
   /** Color scheme. */
   theme?: Theme;
+  /** Compact dock or an editable question with the same provider handoffs. */
+  layout?: 'compact' | 'question';
+  /** Placeholder for the optional question textarea. */
+  questionPlaceholder?: string;
   /** Extra class applied to the root element. */
   className?: string;
 }

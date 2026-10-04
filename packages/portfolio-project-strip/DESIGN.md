@@ -73,6 +73,14 @@ rectilinear so it can join a footer without looking like an inserted card.
 
 ### Portfolio strip
 
+- The opt-in `studio` layout is the owner-selected Precise closing line: "From
+  the studio", three stable noncurrent links, then "All projects". It spans the
+  composition width, distributes links on wide screens and scrolls locally on
+  narrow screens. It does not animate or show descriptions/cards. The scroll
+  region and links retain keyboard focus treatment and 44px targets.
+- Studio typography consumes the composition's `--fleet-footer-ui-font` at
+  12px; host colors and the existing catalog/referral contract remain authoritative.
+
 - The visible surface contains only project links and quiet separators.
 - The project track clips at soft masked edges and pauses on hover or focus.
 - Touch-first and reduced-motion environments use a static, horizontally

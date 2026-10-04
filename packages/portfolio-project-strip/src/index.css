@@ -130,3 +130,97 @@
 @media (max-width: 560px) {
   .portfolio-project-strip__inner { padding: 0 0.875rem; }
 }
+
+.portfolio-project-strip[data-layout='curated'] {
+  container-type: inline-size;
+  border-block: 0;
+  background: transparent;
+}
+
+.portfolio-project-strip__curated {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.portfolio-project-strip__curated li { min-width: 0; }
+.portfolio-project-strip__curated .portfolio-project-strip__link {
+  font-size: 0.95rem;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.portfolio-project-strip__description {
+  margin: 0;
+  color: var(--portfolio-strip-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+
+@container (min-width: 560px) {
+  .portfolio-project-strip__curated {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+  }
+}
+
+.portfolio-project-strip[data-layout='studio'] {
+  min-width: 0;
+  max-width: 100%;
+  border-block: 0;
+  background: transparent;
+  font-family: var(--portfolio-strip-ui-font, var(--fleet-footer-ui-font, inherit));
+}
+.portfolio-project-strip__studio {
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.4rem;
+  padding: 0.4rem var(--portfolio-strip-edge, var(--fleet-footer-edge, 1.25rem));
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  scrollbar-width: thin;
+  scrollbar-color: var(--portfolio-strip-border) transparent;
+}
+.portfolio-project-strip__studio:focus-visible {
+  outline: 2px solid var(--portfolio-strip-focus);
+  outline-offset: -2px;
+}
+.portfolio-project-strip__studio-label,
+.portfolio-project-strip__studio > a,
+.portfolio-project-strip__studio-dot { flex: 0 0 auto; }
+.portfolio-project-strip__studio-label,
+.portfolio-project-strip__studio-dot { color: var(--portfolio-strip-muted); }
+.portfolio-project-strip__studio-links {
+  display: flex;
+  flex: 1 0 auto;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.portfolio-project-strip__studio-links li {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+.portfolio-project-strip__studio .portfolio-project-strip__link { font-size: inherit; }
+@media (max-width: 600px) {
+  .portfolio-project-strip__studio,
+  .portfolio-project-strip__studio-links,
+  .portfolio-project-strip__studio-links li { gap: 1rem; }
+}

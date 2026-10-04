@@ -1,7 +1,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const packageRoot = resolve(new URL('..', import.meta.url).pathname);
+const packageRoot = fileURLToPath(new URL('..', import.meta.url));
 const sourcePath = resolve(packageRoot, '../../catalog/generated/public.json');
 const outputPath = resolve(packageRoot, 'src/catalog.ts');
 const source = JSON.parse(await readFile(sourcePath, 'utf8'));

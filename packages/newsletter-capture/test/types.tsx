@@ -6,6 +6,7 @@ export const newsletterCaptureTypeContract = (
     projectKey="pk_example"
     kind="waitlist"
     allowKindSelection
+    layout="compact"
     source="acme"
     apiBaseUrl="https://api.example.com"
     privacyUrl="https://acme.example/privacy"

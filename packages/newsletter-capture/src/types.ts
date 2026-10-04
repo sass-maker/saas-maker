@@ -28,6 +28,8 @@ export interface NewsletterCaptureProps {
   label?: string;
   /** Optional host-aware light or dark semantic defaults. */
   theme?: 'light' | 'dark';
+  /** Stack fields inside a narrow shared-footer disclosure. */
+  layout?: 'compact';
   /** Optional class applied to the custom element host. */
   className?: string;
 }
