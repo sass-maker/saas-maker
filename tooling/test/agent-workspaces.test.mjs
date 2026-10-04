@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, symlinkSync, realpathSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
+import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import { spawnSync, spawn } from 'node:child_process';
 import { AgentWorkspaces, GiB, inventory } from '../lib/agent-workspaces.mjs';
@@ -129,6 +130,84 @@ test('heavy jobs enforce concurrency, block close and release leases after failu
   assert.equal(manager.jobs().length, 0);
 });
 
+test('periodic disk checks release the heartbeat lock and never overlap', async () => {
+  let observing = false;
+  let measurements = 0;
+  let manager;
+  const setup = fixture({ measure: () => {
+    if (observing) {
+      measurements += 1;
+      assert.equal(existsSync(join(manager.root, 'state.lock')), false, 'disk scan must not hold heartbeat lock');
+    }
+    return 0;
+  } });
+  manager = setup.manager;
+  const row = await setup.create('periodic');
+  const originalInterval = globalThis.setInterval;
+  const originalClear = globalThis.clearInterval;
+  let tick;
+  let heartbeats = 0;
+  const heartbeat = manager.heartbeat.bind(manager);
+  manager.heartbeat = async (...args) => { heartbeats += 1; return heartbeat(...args); };
+  globalThis.setInterval = (callback) => { tick = callback; return 1; };
+  globalThis.clearInterval = () => {};
+  let running;
+  try {
+    running = manager.run({ id: row.id, argv: [process.execPath, '-e', 'setTimeout(() => process.exit(0), 500)'] });
+    while (!tick) await new Promise((done) => setTimeout(done, 10));
+    observing = true;
+    const first = tick();
+    const second = tick();
+    await Promise.all([first, second]);
+    observing = false;
+    assert.equal(heartbeats, 1, 'concurrent ticks must share one heartbeat');
+    assert.ok(measurements > 0, 'periodic budget check must still execute');
+    assert.equal((await running).exitCode, 0);
+    assert.equal(manager.jobs().length, 0);
+  } finally {
+    observing = false;
+    await running?.catch(() => {});
+    globalThis.setInterval = originalInterval;
+    globalThis.clearInterval = originalClear;
+  }
+});
+
+test('command shutdown waits for an in-flight heartbeat before releasing its lease', async () => {
+  const { manager, create } = fixture();
+  const row = await create('shutdown');
+  const originalInterval = globalThis.setInterval;
+  const originalClear = globalThis.clearInterval;
+  let tick;
+  let release;
+  const gate = new Promise((done) => { release = done; });
+  const heartbeat = manager.heartbeat.bind(manager);
+  manager.heartbeat = async (...args) => { await gate; return heartbeat(...args); };
+  globalThis.setInterval = (callback) => { tick = callback; return 1; };
+  globalThis.clearInterval = () => {};
+  let running;
+  let finished = false;
+  try {
+    running = manager.run({ id: row.id, argv: [process.execPath, '-e', "setTimeout(() => require('fs').writeFileSync('exited.flag', 'done'), 100)"] });
+    running.then(() => { finished = true; }, () => { finished = true; });
+    while (!tick) await new Promise((done) => setTimeout(done, 10));
+    const checking = tick();
+    while (!existsSync(join(row.path, 'exited.flag'))) await new Promise((done) => setTimeout(done, 10));
+    await new Promise((done) => setTimeout(done, 100));
+    assert.equal(finished, false, 'completion must await periodic check');
+    assert.equal(manager.jobs().length, 1, 'lease stays owned until periodic check settles');
+    release();
+    await checking;
+    assert.equal((await running).exitCode, 0);
+    assert.equal(manager.jobs().length, 0);
+    assert.equal(existsSync(join(manager.root, 'state.lock')), false);
+  } finally {
+    release();
+    await running?.catch(() => {});
+    globalThis.setInterval = originalInterval;
+    globalThis.clearInterval = originalClear;
+  }
+});
+
 test('install requires an exact pnpm pin and lockfile, and generic run cannot bypass it', async () => {
   const { manager, create } = fixture();
   const row = await create('deps');
@@ -163,7 +242,7 @@ test('install arguments enforce one shared store, frozen lockfile and auto impor
 test('separate CLI processes serialize creates rather than losing manifests', async () => {
   const { manager, repo } = fixture();
   await manager.configure({ maxWriters: 1, minFreeBytes: 1 });
-  const cli = new URL('../scripts/fleet-workspace.mjs', import.meta.url).pathname;
+  const cli = fileURLToPath(new URL('../scripts/fleet-workspace.mjs', import.meta.url));
   function call(id) {
     return new Promise((done) => {
       const child = spawn(process.execPath, [cli, 'create', '--root', manager.root, '--id', id, '--repo', repo, '--owner', 'test', '--task', 'concurrent CLI']);
