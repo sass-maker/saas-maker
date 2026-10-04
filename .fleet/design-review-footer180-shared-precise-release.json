@@ -79,9 +79,7 @@
     "library": {
       "strategy": "upstream-first",
       "primary": "existing-project-system",
-      "sources": [
-        "https://vercel.com/geist/typography"
-      ],
+      "sources": ["https://vercel.com/geist/typography"],
       "runtime": "none",
       "customReplacement": {
         "used": false,
@@ -236,7 +234,7 @@
     },
     "masterSelection": {
       "receipt": ".fleet/design-review-footer180-precise-release.json",
-      "sha256": "994d939a06cf85e9b4bd896b999411723b81fc92fc7308e08109267076b68669",
+      "sha256": "b8c3ca99c65b85e8ffcc776ea3c094adf87e225fb796a011b1d199ff48ff7ae3",
       "selected": "c",
       "ownerQuote": "Okay let's go with precise. Release it for every project. I guess we have done improving things. Now we have deprecating returns.",
       "reconciliationBase": "d86edd1612b9125961546fa36b464714df95365b"

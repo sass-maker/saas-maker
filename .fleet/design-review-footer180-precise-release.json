@@ -79,9 +79,7 @@
     "library": {
       "strategy": "upstream-first",
       "primary": "existing-project-system",
-      "sources": [
-        "https://vercel.com/geist/typography"
-      ],
+      "sources": ["https://vercel.com/geist/typography"],
       "runtime": "none",
       "customReplacement": {
         "used": false,

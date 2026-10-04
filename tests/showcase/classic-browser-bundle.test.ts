@@ -3,7 +3,9 @@ import { classicBrowserBundle } from '../../apps/showcase/src/lib/classic-browse
 
 describe('classic browser entry adaptation', () => {
   it('retains registration while removing only a final export block', () => {
-    const source = classicBrowserBundle('function register() {}\nregister();\nexport { register };\n');
+    const source = classicBrowserBundle(
+      'function register() {}\nregister();\nexport { register };\n'
+    );
     expect(source).toContain('register();');
     expect(() => new Function(source)).not.toThrow();
   });
