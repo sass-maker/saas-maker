@@ -79,7 +79,34 @@ else if (url.includes('/actions/workflows?')) console.log(JSON.stringify(fixture
 else process.exit(3);
 `);
     chmodSync(join(bin, 'gh'), 0o755);
-    return spawnSync('bash', [guard, 'sample', ...(options.force ? ['--force'] : [])], {
+    const checkoutArgs = [];
+    if (options.linkedCheckout) {
+      const remote = join(root, 'origin.git');
+      const init = spawnSync('git', ['init', '--bare', remote], { encoding: 'utf8' });
+      assert.equal(init.status, 0, init.stderr);
+      git('push', remote, 'main');
+      const realGit = spawnSync('which', ['git'], { encoding: 'utf8' }).stdout.trim();
+      assert.ok(realGit);
+      writeFileSync(join(bin, 'git'), `#!/usr/bin/env node
+const { spawnSync } = require('node:child_process');
+const args = process.argv.slice(2);
+const selected = args[0] === 'ls-remote' && args[2] === 'origin'
+  ? ['ls-remote', '--exit-code', ${JSON.stringify(remote)}, 'refs/heads/main'] : args;
+const result = spawnSync(${JSON.stringify(realGit)}, selected, { stdio: 'inherit' });
+process.exit(result.status ?? 1);
+`);
+      chmodSync(join(bin, 'git'), 0o755);
+      const checkout = join(root, 'release');
+      git('worktree', 'add', '-b', 'agent/release', checkout, 'HEAD');
+      if (options.dirtyCheckout) writeFileSync(join(checkout, 'unpublished.txt'), 'unpublished');
+      if (options.advanceRemote) {
+        const ahead = git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid',
+          'commit-tree', 'HEAD^{tree}', '-p', 'HEAD', '-m', 'newer remote main');
+        git('push', remote, `${ahead}:refs/heads/main`);
+      }
+      checkoutArgs.push('--checkout', options.foreignCheckout ? bin : checkout);
+    }
+    return spawnSync('bash', [guard, 'sample', ...checkoutArgs, ...(options.force ? ['--force'] : [])], {
       encoding: 'utf8',
       env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, FLEET_ROOT_OVERRIDE: options.symlinkRoot ? rootAlias : fleetRoot, GUARD_FIXTURE: fixturePath },
       timeout: 10000,
@@ -382,4 +409,27 @@ test('absolute, parent and external symlink package paths stay unknown', () => {
 test('ignored package manifests cannot supply exact-source build evidence', () => {
   rejected({ ciSource: websiteDirectorySource, ignoredPackage: true,
     packages: { website: { build: 'astro build' } } }, /no successful source-backed/);
+});
+
+test('linked release checkout at current main preserves every readiness gate', () => {
+  const result = exercise({ linkedCheckout: true });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /linked checkout at current main/);
+  assert.match(result.stdout, /exact current origin\/main/);
+  assert.match(result.stdout, /2 push workflows, 1 build\/test definitions/);
+});
+
+test('linked release checkout rejects unpublished files and newer remote main', () => {
+  rejected({ linkedCheckout: true, dirtyCheckout: true }, /dirty/);
+  rejected({ linkedCheckout: true, advanceRemote: true }, /not verified current origin\/main/);
+});
+
+test('linked release checkout does not accept pending CI', () => {
+  rejected({ linkedCheckout: true, runs: run => [run(ci, { status: 'queued', conclusion: null })] }, /queued\/none/);
+});
+
+test('checkout selection cannot point outside the canonical repository', () => {
+  const result = exercise({ linkedCheckout: true, foreignCheckout: true });
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stdout, /not a linked worktree/);
 });

@@ -10,9 +10,10 @@ set -euo pipefail
 
 ROOT="${FLEET_ROOT_OVERRIDE:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}"
 FORCE=false
+CHECKOUT=""
 
 if [[ $# -lt 1 ]]; then
-  echo "Usage: fleet-deploy-guard.sh <project> [--force]" >&2
+  echo "Usage: fleet-deploy-guard.sh <project> [--checkout <linked-worktree>] [--force]" >&2
   exit 1
 fi
 
@@ -22,6 +23,7 @@ shift
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --force) FORCE=true; shift ;;
+    --checkout) [[ $# -ge 2 ]] || { echo "--checkout requires a path" >&2; exit 1; }; CHECKOUT="$2"; shift 2 ;;
     *) echo "Unknown arg: $1" >&2; exit 1 ;;
   esac
 done
@@ -63,6 +65,20 @@ fi
 
 DIR="$(cd "$DIR" && pwd -P)"
 PROJECT_DIR="$(cd "$PROJECT_DIR" && pwd -P)"
+# Managed release checkouts must belong to the selected canonical repository.
+# An arbitrary checkout cannot retarget the project guard.
+if [[ -n "$CHECKOUT" ]]; then
+  canonical_common=$(git -C "$DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+  checkout_common=$(git -C "$CHECKOUT" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+  if [[ -z "$canonical_common" || "$checkout_common" != "$canonical_common" || "$PROJECT_DIR" != "$DIR" ]]; then
+    echo "PROJECT: $PROJECT"
+    echo "  ✗ checkout is not a linked worktree of the selected standalone project"
+    exit 1
+  fi
+  DIR=$(git -C "$CHECKOUT" rev-parse --show-toplevel)
+  PROJECT_DIR="$DIR"
+fi
+
 cd "$DIR"
 
 pass=0
@@ -285,8 +301,15 @@ NODE
 
 # 1. On main branch?
 branch=$(git branch --show-current 2>/dev/null || echo "DETACHED")
+release_main_sha=""
+head_sha=$(git rev-parse HEAD 2>/dev/null || true)
+if [[ -n "$CHECKOUT" ]]; then
+  release_main_sha=$(git ls-remote --exit-code origin refs/heads/main 2>/dev/null | awk '$2 == "refs/heads/main" {print $1}' || true)
+fi
 if [[ "$branch" == "main" ]]; then
   check "Branch" "ok" "main"
+elif [[ -n "$CHECKOUT" && -n "$release_main_sha" && "$head_sha" == "$release_main_sha" ]]; then
+  check "Branch" "ok" "linked checkout at current main ($branch)"
 else
   check "Branch" "fail" "on $branch (not main)"
 fi
@@ -301,7 +324,13 @@ fi
 
 # 3. Synced with remote?
 upstream=$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null || true)
-if [[ -n "$upstream" ]]; then
+if [[ -n "$CHECKOUT" ]]; then
+  if [[ -n "$release_main_sha" && "$head_sha" == "$release_main_sha" ]]; then
+    check "Remote" "ok" "exact current origin/main"
+  else
+    check "Remote" "fail" "linked checkout is not verified current origin/main"
+  fi
+elif [[ -n "$upstream" ]]; then
   read -r behind ahead < <(git rev-list --left-right --count "$upstream...HEAD" 2>/dev/null || echo "0 0")
   if [[ "$ahead" -eq 0 && "$behind" -eq 0 ]]; then
     check "Remote" "ok" "synced"
