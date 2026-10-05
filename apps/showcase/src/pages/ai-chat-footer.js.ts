@@ -87,6 +87,7 @@ const source = `(() => {
       mountFeedback(config.api_key, extension);
       if (script.dataset.capture === 'false' || !captureKind || document.querySelector('saas-maker-newsletter-capture')) {
         extension.setAttribute('show-updates', 'false');
+        extension.setAttribute('capture-status', 'ready');
         extension.dataset.captureConfigured = 'true';
         return;
       }
@@ -122,6 +123,7 @@ const source = `(() => {
       if (!extension.isConnected) { extension.setAttribute('capture-status', 'unavailable'); return; }
       if (document.querySelector('saas-maker-newsletter-capture')) {
         extension.setAttribute('show-updates', 'false');
+        extension.setAttribute('capture-status', 'ready');
         extension.dataset.captureConfigured = 'true';
         return;
       }
