@@ -163,6 +163,93 @@ test('install arguments enforce one shared store, frozen lockfile and auto impor
   assert.equal(readFileSync(join(row.path, 'pnpm-lock.yaml'), 'utf8'), before);
 });
 
+test('lockfile-only generation uses pinned Corepack, shared defaults and no scripts', async () => {
+  const { manager, create } = fixture();
+  const row = await create('lockfile-only');
+  writeFileSync(join(row.path, 'package.json'), JSON.stringify({ packageManager: 'pnpm@10.33.2' }));
+  writeFileSync(join(row.path, 'pnpm-lock.yaml'), 'lockfileVersion: 9.0\n');
+  const before = readFileSync(join(row.path, 'pnpm-lock.yaml'), 'utf8');
+  const policy = manager.policy.bind(manager);
+  const storeDir = join(row.path, '.test-shared-store');
+  manager.policy = () => ({ ...policy(), storeDir });
+  let observed;
+  manager.run = async (options) => { observed = options; return { exitCode: 0 }; };
+
+  await manager.lockfileOnly({ id: row.id });
+
+  assert.deepEqual(observed, {
+    id: row.id,
+    repo: realpathSync(row.path),
+    argv: ['corepack', 'pnpm', 'install', '--lockfile-only', '--ignore-scripts', '--store-dir', storeDir, '--package-import-method', 'auto'],
+    installing: true,
+  });
+  assert.equal(readFileSync(join(row.path, 'pnpm-lock.yaml'), 'utf8'), before);
+  assert.equal(existsSync(join(row.path, 'node_modules')), false);
+});
+
+test('lockfile-only generation fails closed for invalid pins and missing lockfiles', async () => {
+  const { manager, create } = fixture();
+  const row = await create('lockfile-invalid');
+  writeFileSync(join(row.path, 'pnpm-lock.yaml'), 'lockfileVersion: 9.0\n');
+  let launches = 0;
+  manager.run = async () => { launches++; return { exitCode: 0 }; };
+
+  for (const packageManager of [undefined, 'pnpm', 'pnpm@next', 'pnpm@^10.33.2', 'npm@10.0.0']) {
+    writeFileSync(join(row.path, 'package.json'), JSON.stringify(packageManager === undefined ? {} : { packageManager }));
+    await assert.rejects(manager.lockfileOnly({ id: row.id }), /exact pnpm packageManager pin/);
+  }
+  assert.equal(launches, 0);
+
+  writeFileSync(join(row.path, 'package.json'), JSON.stringify({ packageManager: 'pnpm@10.33.2' }));
+  rmSync(join(row.path, 'pnpm-lock.yaml'));
+  await assert.rejects(manager.lockfileOnly({ id: row.id }), /existing regular pnpm-lock.yaml/);
+  assert.equal(existsSync(join(row.path, 'pnpm-lock.yaml')), false);
+  assert.equal(launches, 0);
+});
+
+test('lockfile-only generation rejects linked metadata and node_modules layouts before launch', async () => {
+  const { manager, create, folder } = fixture();
+  const row = await create('lockfile-links');
+  const outside = join(folder, 'outside'); mkdirSync(outside);
+  const packagePath = join(row.path, 'package.json');
+  const lockPath = join(row.path, 'pnpm-lock.yaml');
+  const outsidePackage = join(outside, 'package.json');
+  const outsideLock = join(outside, 'pnpm-lock.yaml');
+  const packageBytes = JSON.stringify({ packageManager: 'pnpm@10.33.2' });
+  const lockBytes = 'lockfileVersion: 9.0\n';
+  writeFileSync(outsidePackage, packageBytes);
+  writeFileSync(outsideLock, lockBytes);
+  let launches = 0;
+  manager.run = async () => { launches++; return { exitCode: 0 }; };
+
+  writeFileSync(packagePath, packageBytes); writeFileSync(lockPath, lockBytes);
+  rmSync(packagePath); symlinkSync(outsidePackage, packagePath);
+  await assert.rejects(manager.lockfileOnly({ id: row.id }), /regular package.json/);
+  assert.equal(readFileSync(outsidePackage, 'utf8'), packageBytes);
+
+  rmSync(packagePath); writeFileSync(packagePath, packageBytes);
+  rmSync(lockPath); symlinkSync(outsideLock, lockPath);
+  await assert.rejects(manager.lockfileOnly({ id: row.id }), /regular pnpm-lock.yaml/);
+  assert.equal(readFileSync(outsideLock, 'utf8'), lockBytes);
+
+  rmSync(lockPath); mkdirSync(lockPath);
+  await assert.rejects(manager.lockfileOnly({ id: row.id }), /regular pnpm-lock.yaml/);
+  rmSync(lockPath, { recursive: true }); writeFileSync(lockPath, lockBytes);
+
+  const nodeModules = join(row.path, 'node_modules');
+  symlinkSync(outside, nodeModules, 'dir');
+  await assert.rejects(manager.lockfileOnly({ id: row.id }), /separate node_modules/);
+  rmSync(nodeModules);
+  symlinkSync(join(outside, 'missing-target'), nodeModules, 'dir');
+  await assert.rejects(manager.lockfileOnly({ id: row.id }), /separate node_modules/);
+  rmSync(nodeModules);
+  mkdirSync(nodeModules); symlinkSync(outside, join(nodeModules, '.pnpm'), 'dir');
+  await assert.rejects(manager.lockfileOnly({ id: row.id }), /separate node_modules/);
+  assert.equal(readFileSync(outsidePackage, 'utf8'), packageBytes);
+  assert.equal(readFileSync(outsideLock, 'utf8'), lockBytes);
+  assert.equal(launches, 0);
+});
+
 function npmFixture(row, packageManager) {
   const manifest = { name: 'locked-npm-fixture', version: '1.0.0', ...(packageManager ? { packageManager } : {}) };
   writeFileSync(join(row.path, 'package.json'), JSON.stringify(manifest));

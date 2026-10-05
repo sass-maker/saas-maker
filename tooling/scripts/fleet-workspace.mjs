@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Manage agent writer worktrees, shared pinned-pnpm installs and bounded builds.
+// Manage agent writer worktrees, pinned-pnpm installs and bounded commands.
 // Private state stays outside repositories; cleanup is dry-run and close is reversible.
 import { parseArgs } from 'node:util';
 import { resolve } from 'node:path';
@@ -11,6 +11,7 @@ const help = `fleet-workspace <command> [options]
   heartbeat --id <id>
   status
   install (--id <id> | --repo <path>) [--offline]
+  lockfile-only --id <id>        Update an existing pnpm lockfile without installing.
   run (--id <id> | --repo <path>) -- <command> [args...]
   close --id <id> [--dry-run]      Check source and open files; retire reversibly.
   gc --dry-run                    Review managed workspaces; never deletes.
@@ -40,6 +41,7 @@ export async function main(argv = process.argv.slice(2)) {
     case 'heartbeat': result = await manager.heartbeat(opts.id); break;
     case 'status': result = manager.status(); break;
     case 'install': result = await manager.install(opts); break;
+    case 'lockfile-only': result = await manager.lockfileOnly(opts); break;
     case 'run': result = await manager.run({ ...opts, argv: commandArgs }); break;
     case 'close': result = await manager.close(opts.id, { dryRun: opts['dry-run'] }); break;
     case 'gc':
