@@ -204,6 +204,18 @@ test('explicit npm pin must match the installed version before launching npm ci'
   assert.deepEqual(observed.argv, ['npm', 'ci', '--cache', join(homedir(), '.npm')]);
 });
 
+test('native npm rejects integrity-suffixed pins before launching npm ci', async () => {
+  const { manager, create } = fixture();
+  const row = await create('npm-integrity-pin');
+  const version = spawnSync('npm', ['--version'], { encoding: 'utf8' });
+  assert.equal(version.status, 0, version.stderr);
+  npmFixture(row, `npm@${version.stdout.trim()}+sha512.abcdef`);
+  let launches = 0;
+  manager.run = async () => { launches++; return { exitCode: 0 }; };
+  await assert.rejects(manager.install({ id: row.id }), /Unsupported packageManager/);
+  assert.equal(launches, 0);
+});
+
 test('native npm never substitutes for explicit pnpm or unknown managers and rejects malformed locks', async () => {
   const { manager, create } = fixture();
   const row = await create('npm-contract');

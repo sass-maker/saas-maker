@@ -47,7 +47,8 @@ lock generation or manager activation is performed. A stale `pnpm-lock.yaml`
 does not take precedence over an npm lock in this case. Explicit pnpm pins
 always require the pnpm path; an explicit npm pin must match the installed
 `npm --version` or installation fails before `npm ci` launches. Malformed or
-unknown declarations fail closed.
+unknown declarations fail closed. Integrity-suffixed npm pins are not supported
+because the installer does not validate their declared integrity.
 Yarn/Bun still need separately scoped support or an explicit migration.
 The same workspace disk/reserve and heavy-command leases apply to npm installs.
 Direct `fleet-workspace run -- npm ci` remains rejected; use `install`.
