@@ -21,6 +21,7 @@ export const defaults = Object.freeze({
   maxWriters: 8, maxHeavyJobs: 2, maxWorkspaceBytes: 8 * GiB,
   maxTotalBytes: 40 * GiB, minFreeBytes: 20 * GiB, staleHours: 24,
 });
+const exactPnpmPin = /^pnpm@\d+\.\d+\.\d+(?:\+sha\d+\.[a-f0-9]+)?$/;
 export const defaultRoot = join(homedir(), 'Library', 'Application Support', 'Fleet', 'Agent Workspaces.noindex');
 
 function command(bin, args, cwd) {
@@ -394,7 +395,7 @@ export class AgentWorkspaces {
     }
     const manifest = json(join(repo, 'package.json'));
     const packageManager = manifest.packageManager;
-    if (/^pnpm@\d+\.\d+\.\d+(?:\+sha\d+\.[a-f0-9]+)?$/.test(packageManager ?? '')) {
+    if (exactPnpmPin.test(packageManager ?? '')) {
       if (!existsSync(join(repo, 'pnpm-lock.yaml'))) throw new Error('Requires a pnpm lockfile; do not generate or replace a lockfile during agent setup.');
       const storeDir = this.policy().storeDir;
       mkdirSync(storeDir, { recursive: true });
@@ -426,6 +427,35 @@ export class AgentWorkspaces {
     const args = ['npm', 'ci', '--cache', join(homedir(), '.npm')];
     if (offline) args.push('--offline');
     return this.run({ id, repo, argv: args, installing: true });
+  }
+  async lockfileOnly({ id }) {
+    if (!id) throw new Error('Lockfile-only generation requires --id for a managed workspace.');
+    const row = this.record(id);
+    if (row.state !== 'active') throw new Error('Lockfile-only generation requires an active workspace.');
+    const repo = realpathSync(resolve(row.path));
+    for (const path of [join(repo, 'node_modules'), join(repo, 'node_modules', '.pnpm')]) {
+      let pathStat;
+      try { pathStat = lstatSync(path); }
+      catch (error) { if (error.code === 'ENOENT') continue; throw error; }
+      if (pathStat.isSymbolicLink()) throw new Error('Keep a separate node_modules layout in each checkout; a shared mutable directory is not supported.');
+    }
+    const manifestPath = join(repo, 'package.json');
+    let manifestStat;
+    try { manifestStat = lstatSync(manifestPath); }
+    catch { throw new Error('Requires a regular package.json with an exact pnpm packageManager pin.'); }
+    if (!manifestStat.isFile() || manifestStat.isSymbolicLink()) throw new Error('Requires a regular package.json with an exact pnpm packageManager pin.');
+    const manifest = json(manifestPath);
+    if (!exactPnpmPin.test(manifest.packageManager ?? '')) throw new Error('Requires an exact pnpm packageManager pin for lockfile-only generation.');
+    const lockPath = join(repo, 'pnpm-lock.yaml');
+    let lockStat;
+    try { lockStat = lstatSync(lockPath); }
+    catch { throw new Error('Requires an existing regular pnpm-lock.yaml for lockfile-only generation.'); }
+    if (!lockStat.isFile() || lockStat.isSymbolicLink()) throw new Error('Requires an existing regular pnpm-lock.yaml for lockfile-only generation.');
+    const storeDir = this.policy().storeDir;
+    mkdirSync(storeDir, { recursive: true });
+    if (statSync(storeDir).dev !== statSync(repo).dev) throw new Error('The shared store and checkout must use the same filesystem.');
+    const args = ['pnpm', 'install', '--lockfile-only', '--ignore-scripts', '--store-dir', storeDir, '--package-import-method', 'auto'];
+    return this.run({ id, repo, argv: ['corepack', ...args], installing: true });
   }
   async run({ id, repo, argv, installing = false }) {
     if (!argv?.length) throw new Error('Provide a command after --.');

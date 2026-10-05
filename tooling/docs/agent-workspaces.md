@@ -2,7 +2,7 @@
 
 Use `fleet-workspace` for Fleet writer checkouts, dependency installs and heavy
 commands. It is a local Node CLI with no dependencies or provider access.
-Implementation tracking: [SaaS Maker #179](https://github.com/sass-maker/saas-maker/issues/179).
+Implementation tracking: [SaaS Maker #179](https://github.com/sass-maker/saas-maker/issues/179); lockfile-only follow-up: [#195](https://github.com/sass-maker/saas-maker/issues/195).
 
 Review-only agents inspect existing source. Create a linked Git worktree only
 when a task needs independent writes. This shares Git objects and keeps the
@@ -52,6 +52,18 @@ because the installer does not validate their declared integrity.
 Yarn/Bun still need separately scoped support or an explicit migration.
 The same workspace disk/reserve and heavy-command leases apply to npm installs.
 Direct `fleet-workspace run -- npm ci` remains rejected; use `install`.
+
+When a dependency change intentionally requires updating an existing pnpm
+lockfile, use `fleet-workspace lockfile-only --id <id>`. This command requires
+an active managed writer, regular non-symlink `package.json` and `pnpm-lock.yaml`
+files, an exact existing pnpm pin, and separate local `node_modules` layout; it
+runs the pinned Corepack pnpm with `install
+--lockfile-only --ignore-scripts` and the same persistent store/import defaults
+under the existing heavy-command lease and disk limits. It does not install
+packages into `node_modules` and cannot bootstrap a missing lockfile. Normal
+`install` stays frozen, and generic `run` continues to reject package-manager
+install/update commands. After intentional dependency edits, regenerate the
+lockfile first, review that diff, then run the ordinary frozen `install`.
 
 Configure the existing persistent store once, rather than creating per-task
 stores. Store and checkout must be on the same filesystem. Each worktree
