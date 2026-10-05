@@ -404,7 +404,7 @@ export class AgentWorkspaces {
       return this.run({ id, repo, argv: ['corepack', ...args], installing: true });
     }
     if (/^pnpm(?:@|$)/.test(packageManager ?? '')) throw new Error('Requires an exact pnpm packageManager pin; do not switch managers during agent setup.');
-    const npmPin = packageManager?.match(/^npm@(\d+\.\d+\.\d+)(?:\+sha\d+\.[a-f0-9]+)?$/)?.[1];
+    const npmPin = packageManager?.match(/^npm@(\d+\.\d+\.\d+)$/)?.[1];
     if (packageManager !== undefined && !npmPin) throw new Error('Unsupported packageManager; preserve the repository manager instead of implicitly migrating.');
     const lockPath = join(repo, 'package-lock.json');
     let lock;
