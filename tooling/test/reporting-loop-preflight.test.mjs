@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 import { activeGeoQueryKeys, clarityReceiptScope, geoCoverage } from '../scripts/reporting-loop-preflight.mjs';
 
 const rootKeys = new Set(['product|brand', 'product|domain']);
@@ -8,7 +9,7 @@ const broadKeys = new Set(['product|brand', 'product|problem']);
 
 test('CLI flushes a complete JSON report even when the preflight fails', () => {
   const result = spawnSync(process.execPath, [
-    new URL('../scripts/reporting-loop-preflight.mjs', import.meta.url).pathname,
+    fileURLToPath(new URL('../scripts/reporting-loop-preflight.mjs', import.meta.url)),
     '--monthly', '--json', '--no-smoke',
   ], { encoding: 'utf8', timeout: 20_000 });
   assert.ok([0, 1].includes(result.status), result.stderr);

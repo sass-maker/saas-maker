@@ -8,6 +8,13 @@ import { spawn, spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
+export class StaleWorkspaceSnapshotError extends Error {
+  constructor() {
+    super('Workspace identities changed during disk measurement; retry with a fresh measurement.');
+    this.name = 'StaleWorkspaceSnapshotError';
+  }
+}
+
 export const GiB = 1024 ** 3;
 export const defaults = Object.freeze({
   storeDir: join(homedir(), 'Library', 'pnpm', 'store'),
@@ -18,7 +25,7 @@ export const defaultRoot = join(homedir(), 'Library', 'Application Support', 'Fl
 
 function command(bin, args, cwd) {
   const result = spawnSync(bin, args, {
-    cwd, encoding: 'utf8', timeout: 60_000, maxBuffer: 32 * 1024 ** 2,
+    cwd, encoding: 'utf8', timeout: bin === 'du' ? 180_000 : 60_000, maxBuffer: 32 * 1024 ** 2,
     env: { ...process.env, GIT_OPTIONAL_LOCKS: '0', COREPACK_ENABLE_AUTO_PIN: '0' },
   });
   if (result.error || result.status !== 0) {
@@ -54,14 +61,92 @@ function alive(pid) {
   if (!Number.isInteger(pid) || pid < 1) return false;
   try { process.kill(pid, 0); return true; } catch (error) { return error.code !== 'ESRCH'; }
 }
-function jobAlive(job) {
-  if (alive(job.pid) || alive(job.childPid)) return true;
-  if (!job.childPid || process.platform === 'win32') return false;
-  try { process.kill(-job.childPid, 0); return true; } catch (error) { return error.code !== 'ESRCH'; }
+function processIdentities(pid, group = false) {
+  // Darwin ps provides second-resolution process births. Other platforms and
+  // failed/ambiguous observations stay unknown, never evidence of a dead job.
+  if (process.platform !== 'darwin') return null;
+  const result = spawnSync('ps', [group ? '-g' : '-p', String(pid), '-o', 'pid=,pgid=,lstart='], {
+    encoding: 'utf8', timeout: 2_000, maxBuffer: 1024 ** 2,
+    env: { ...process.env, LC_ALL: 'C', TZ: 'UTC' },
+  });
+  if (result.error || result.status !== 0) return null;
+  const rows = result.stdout.trim().split('\n').filter(Boolean).map((line) => {
+    const match = line.trim().match(/^(\d+)\s+(\d+)\s+(.+)$/);
+    if (!match) return null;
+    const bornAt = Date.parse(`${match[3]} UTC`);
+    return Number.isFinite(bornAt) ? { pid: Number(match[1]), pgid: Number(match[2]), bornAt } : null;
+  });
+  return rows.length && rows.every(Boolean) ? rows : null;
+}
+export function jobAlive(job, { probe = alive, identities = processIdentities } = {}) {
+  const startedAt = Date.parse(job.startedAt);
+  // Historical leases lack exact child births. Preserve a conservative minute
+  // for ps precision and a stalled immediate spawn; near-time reuse remains
+  // unknown/protected rather than incorrectly discarding a legitimate orphan.
+  const latestBirth = startedAt + 60_000;
+  const identity = (pid) => Number.isFinite(startedAt) ? identities(pid)?.find((row) => row.pid === pid) : null;
+  if (probe(job.pid)) {
+    const manager = identity(job.pid);
+    if (!manager || !Number.isFinite(manager.bornAt) || manager.bornAt <= latestBirth) return true;
+  }
+  let child;
+  if (probe(job.childPid)) {
+    child = identity(job.childPid);
+    if (!child || !Number.isFinite(child.bornAt) || child.bornAt <= latestBirth) return true;
+  }
+  if (!Number.isInteger(job.childPid) || job.childPid < 1 || process.platform === 'win32') return false;
+  // Keep legitimate orphan groups, including late-born descendants, when the
+  // original leader is absent. Reject reuse only with a proven new leader AND
+  // an entirely new group; missing identity/membership evidence fails closed.
+  const groupAlive = probe !== alive ? probe(-job.childPid) : (() => {
+    try { process.kill(-job.childPid, 0); return true; } catch (error) { return error.code !== 'ESRCH'; }
+  })();
+  if (!groupAlive) return false;
+  if (child && child.bornAt > latestBirth && child.pgid === job.childPid) {
+    const members = identities(job.childPid, true);
+    if (members?.length && members.every((row) => row && Number.isFinite(row.bornAt) && row.pgid === job.childPid && row.bornAt > latestBirth)) return false;
+  }
+  return true;
+}
+function requireBytes(value, label) {
+  if (!Number.isSafeInteger(value) || value < 0) throw new Error(`Invalid ${label} disk measurement`);
+  return value;
 }
 export function diskBytes(path) {
   if (!existsSync(path)) throw new Error(`Missing path: ${path}`);
-  return Number(command('du', ['-sk', path]).split(/\s/)[0]) * 1024;
+  return requireBytes(Number(command('du', ['-sk', path]).split(/\s/)[0]) * 1024, 'workspace');
+}
+// Complete, bounded measurement: no cached totals or retired-worktree exclusions.
+export function diskBytesAsync(path) {
+  if (!existsSync(path)) return Promise.reject(new Error(`Missing path: ${path}`));
+  return new Promise((done, fail) => {
+    const child = spawn('du', ['-sk', path], { stdio: ['ignore', 'pipe', 'pipe'] });
+    let stdout = ''; let stderr = ''; let failure;
+    const timer = setTimeout(() => {
+      failure = new Error('du -sk timed out after 180000ms');
+      failure.code = 'ETIMEDOUT'; child.kill('SIGKILL');
+    }, 180_000);
+    for (const [stream, collect] of [[child.stdout, (part) => { stdout += part; }], [child.stderr, (part) => { stderr += part; }]]) {
+      stream.on('data', (part) => {
+        collect(part);
+        if (stdout.length + stderr.length > 32 * 1024 ** 2 && !failure) {
+          failure = new Error('du -sk output exceeded its buffer limit'); child.kill('SIGKILL');
+        }
+      });
+    }
+    child.once('error', (error) => { clearTimeout(timer); fail(error); });
+    child.once('close', (code) => {
+      clearTimeout(timer);
+      const bytes = Number(stdout.trim().split(/\s/)[0]) * 1024;
+      if (failure) fail(failure);
+      else if (code !== 0) fail(new Error(`du -sk failed (${code}): ${stderr.trim()}`));
+      else if (!stdout.trim() || !Number.isSafeInteger(bytes) || bytes < 0) fail(new Error('du -sk returned an invalid measurement'));
+      else done(bytes);
+    });
+  });
+}
+function combinedError(primary, cleanup) {
+  return new AggregateError([primary, cleanup], `${primary.message}; cleanup also failed: ${cleanup.message}`, { cause: primary });
 }
 function validateId(id) {
   if (!/^[a-z0-9][a-z0-9._-]{0,79}$/.test(id ?? '')) throw new Error('Use a short lowercase workspace ID without slashes.');
@@ -158,25 +243,68 @@ export class AgentWorkspaces {
       return row;
     });
   }
-  budgets(path) {
+  identities() {
+    return JSON.stringify(this.records().map(({ id, state, path }) => ({ id, state, path })).sort((a, b) => a.id.localeCompare(b.id)));
+  }
+  async measureBudgets(path, phase) {
+    this.initialize();
+    const identities = this.identities();
+    const measure = async (target, role) => {
+      const started = Date.now();
+      try {
+        const bytes = await (this.measure === diskBytes ? diskBytesAsync(target) : this.measure(target));
+        if (!Number.isSafeInteger(bytes) || bytes < 0) throw new Error('Invalid disk measurement');
+        return bytes;
+      } catch (cause) {
+        throw new Error(`Disk measurement failed (${phase}, ${role}, ${Date.now() - started}ms): ${cause.message}`, { cause });
+      }
+    };
+    const bytes = existsSync(path) ? await measure(path, 'workspace') : 0;
+    const active = await measure(join(this.root, 'worktrees'), 'active-worktrees');
+    const retired = await measure(join(this.root, 'retired'), 'retired-worktrees');
+    return { bytes, total: active + retired, identities };
+  }
+  validateBudgets(snapshot) {
+    requireBytes(snapshot.bytes, 'workspace');
+    requireBytes(snapshot.total, 'total');
     const policy = this.policy();
-    const bytes = existsSync(path) ? this.measure(path) : 0;
-    const total = this.measure(join(this.root, 'worktrees')) + this.measure(join(this.root, 'retired'));
-    if (bytes > policy.maxWorkspaceBytes) throw new Error('Workspace exceeds its disk budget; review its artifacts before starting another command.');
-    if (total > policy.maxTotalBytes) throw new Error('Managed workspaces exceed the total disk budget (including retired worktrees).');
-    if (this.freeBytes() < policy.minFreeBytes) throw new Error('Available disk space is below the workspace reserve.');
-    return { bytes, total };
+    if (snapshot.bytes > policy.maxWorkspaceBytes) throw new Error('Workspace exceeds its disk budget; review its artifacts before starting another command.');
+    if (snapshot.total > policy.maxTotalBytes) throw new Error('Managed workspaces exceed the total disk budget (including retired worktrees).');
+    if (requireBytes(this.freeBytes(), 'free-space') < policy.minFreeBytes) throw new Error('Available disk space is below the workspace reserve.');
+    if (snapshot.identities !== undefined && snapshot.identities !== this.identities()) throw new StaleWorkspaceSnapshotError();
+    return snapshot;
+  }
+  async withFreshBudgets(path, phase, action = () => {}) {
+    // Only a changed identity snapshot is retriable. Unknown bytes, policy,
+    // reserve, lock and command-admission failures remain conservative failures.
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      const snapshot = await this.measureBudgets(path, phase);
+      try {
+        return await this.locked(() => {
+          this.validateBudgets(snapshot);
+          return action();
+        });
+      } catch (error) {
+        if (!(error instanceof StaleWorkspaceSnapshotError) || attempt === 3) throw error;
+      }
+    }
+  }
+  budgets(path) {
+    const bytes = existsSync(path) ? requireBytes(this.measure(path), 'workspace') : 0;
+    const total = requireBytes(this.measure(join(this.root, 'worktrees')), 'active-worktrees') + requireBytes(this.measure(join(this.root, 'retired')), 'retired-worktrees');
+    return this.validateBudgets({ bytes, total });
   }
   async create({ id, repo, owner, task, base = 'HEAD' }) {
     validateId(id); requireText(owner, 'owner'); requireText(task, 'task');
     repo = realpathSync(resolve(repo));
     const baseSha = git(repo, 'rev-parse', '--verify', '--end-of-options', `${base}^{commit}`);
+    const path = join(this.root, 'worktrees', id);
+    const snapshot = await this.measureBudgets(path, 'create');
     return this.locked(() => {
       if (this.records().some((row) => row.id === id)) throw new Error('Workspace ID already exists; reuse it or choose another.');
       const policy = this.policy();
       if (this.records().filter((row) => row.state !== 'closed').length >= policy.maxWriters) throw new Error('Writer workspace limit reached.');
-      const path = join(this.root, 'worktrees', id);
-      this.budgets(path);
+      this.validateBudgets(snapshot);
       if (existsSync(path)) throw new Error('Workspace path already exists.');
       const branch = `agent/${id}`;
       const commonDir = git(repo, 'rev-parse', '--path-format=absolute', '--git-common-dir');
@@ -200,7 +328,7 @@ export class AgentWorkspaces {
     });
   }
   inspect(row) {
-    const info = { ...row, reportedBytes: existsSync(row.path) ? this.measure(row.path) : null, blockers: [] };
+    const info = { ...row, reportedBytes: existsSync(row.path) ? requireBytes(this.measure(row.path), 'workspace') : null, blockers: [] };
     if (!existsSync(row.path)) { info.blockers.push('missing-worktree'); return info; }
     try {
       if (!lstatSync(join(row.path, '.git')).isFile()) throw new Error('Not a linked worktree');
@@ -219,8 +347,8 @@ export class AgentWorkspaces {
   }
   status() {
     const policy = this.policy();
-    const freeBytes = existsSync(this.root) ? this.freeBytes() : null;
-    const managedReportedBytes = existsSync(join(this.root, 'worktrees')) ? this.measure(join(this.root, 'worktrees')) + this.measure(join(this.root, 'retired')) : 0;
+    const freeBytes = existsSync(this.root) ? requireBytes(this.freeBytes(), 'free-space') : null;
+    const managedReportedBytes = existsSync(join(this.root, 'worktrees')) ? requireBytes(requireBytes(this.measure(join(this.root, 'worktrees')), 'active-worktrees') + requireBytes(this.measure(join(this.root, 'retired')), 'retired-worktrees'), 'total') : 0;
     return { policy, freeBytes, managedReportedBytes, belowFreeSpaceReserve: freeBytes !== null && freeBytes < policy.minFreeBytes, totalOverBudget: managedReportedBytes > policy.maxTotalBytes, workspaces: this.records().map((row) => {
       const info = this.inspect(row);
       info.stale = Date.now() - Date.parse(row.heartbeatAt) > policy.staleHours * 3_600_000;
@@ -265,14 +393,39 @@ export class AgentWorkspaces {
       if (existsSync(path) && lstatSync(path).isSymbolicLink()) throw new Error('Keep a separate node_modules layout in each checkout; a shared mutable directory is not supported.');
     }
     const manifest = json(join(repo, 'package.json'));
-    if (!/^pnpm@\d+\.\d+\.\d+(?:\+sha\d+\.[a-f0-9]+)?$/.test(manifest.packageManager ?? '')) throw new Error('Requires an exact pnpm packageManager pin; preserve existing package-manager contracts until explicitly migrated.');
-    if (!existsSync(join(repo, 'pnpm-lock.yaml'))) throw new Error('Requires a pnpm lockfile; do not generate or replace a lockfile during agent setup.');
-    const storeDir = this.policy().storeDir;
-    mkdirSync(storeDir, { recursive: true });
-    if (statSync(storeDir).dev !== statSync(repo).dev) throw new Error('The shared store and checkout must use the same filesystem.');
-    const args = ['pnpm', 'install', '--frozen-lockfile', '--store-dir', storeDir, '--package-import-method', 'auto'];
+    const packageManager = manifest.packageManager;
+    if (/^pnpm@\d+\.\d+\.\d+(?:\+sha\d+\.[a-f0-9]+)?$/.test(packageManager ?? '')) {
+      if (!existsSync(join(repo, 'pnpm-lock.yaml'))) throw new Error('Requires a pnpm lockfile; do not generate or replace a lockfile during agent setup.');
+      const storeDir = this.policy().storeDir;
+      mkdirSync(storeDir, { recursive: true });
+      if (statSync(storeDir).dev !== statSync(repo).dev) throw new Error('The shared store and checkout must use the same filesystem.');
+      const args = ['pnpm', 'install', '--frozen-lockfile', '--store-dir', storeDir, '--package-import-method', 'auto'];
+      if (offline) args.push('--offline');
+      return this.run({ id, repo, argv: ['corepack', ...args], installing: true });
+    }
+    if (/^pnpm(?:@|$)/.test(packageManager ?? '')) throw new Error('Requires an exact pnpm packageManager pin; do not switch managers during agent setup.');
+    const npmPin = packageManager?.match(/^npm@(\d+\.\d+\.\d+)(?:\+sha\d+\.[a-f0-9]+)?$/)?.[1];
+    if (packageManager !== undefined && !npmPin) throw new Error('Unsupported packageManager; preserve the repository manager instead of implicitly migrating.');
+    const lockPath = join(repo, 'package-lock.json');
+    let lock;
+    try {
+      if (!lstatSync(lockPath).isFile()) throw new Error('not a regular file');
+      lock = json(lockPath);
+    } catch { throw new Error('Requires a valid existing npm package-lock.json; do not generate or replace a lockfile during agent setup.'); }
+    const object = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
+    if (!object(lock) || ![1, 2, 3].includes(lock.lockfileVersion) ||
+        (lock.lockfileVersion === 1 ? !object(lock.dependencies) : !object(lock.packages) || !object(lock.packages['']))) {
+      throw new Error('Requires a valid existing npm package-lock.json with a supported lockfile version.');
+    }
+    if (npmPin) {
+      const installedVersion = command('npm', ['--version'], repo);
+      if (installedVersion !== npmPin) throw new Error(`Installed npm version ${installedVersion} does not match packageManager pin ${npmPin}.`);
+    }
+    // npm ci validates manifest/lock agreement and never rewrites the lockfile.
+    // The native persistent cache is shared; mutable node_modules remains local.
+    const args = ['npm', 'ci', '--cache', join(homedir(), '.npm')];
     if (offline) args.push('--offline');
-    return this.run({ id, repo, argv: ['corepack', ...args], installing: true });
+    return this.run({ id, repo, argv: args, installing: true });
   }
   async run({ id, repo, argv, installing = false }) {
     if (!argv?.length) throw new Error('Provide a command after --.');
@@ -284,8 +437,7 @@ export class AgentWorkspaces {
     repo = realpathSync(resolve(repo));
     const token = randomUUID();
     const jobPath = join(this.root, 'jobs', `${token}.json`);
-    await this.locked(() => {
-      this.budgets(repo);
+    await this.withFreshBudgets(repo, 'startup', () => {
       const active = this.jobs().filter(jobAlive);
       if (active.length >= this.policy().maxHeavyJobs) throw new Error('Heavy-command limit reached; wait for an existing job to finish.');
       if (active.some((job) => job.repo === repo)) throw new Error('Another managed command is using this checkout.');
@@ -298,6 +450,9 @@ export class AgentWorkspaces {
     let budgetCheck = Promise.resolve();
     let checkingBudgets = false;
     let limitError;
+    let primaryError;
+    let heartbeatCheck = Promise.resolve();
+    let heartbeating = false;
     const signalChild = (signal) => {
       if (!child?.pid) return;
       try { process.kill(process.platform === 'win32' ? child.pid : -child.pid, signal); }
@@ -316,33 +471,44 @@ export class AgentWorkspaces {
         signals.set(signal, handler); process.on(signal, handler);
       }
       timer = setInterval(() => {
+        if (limitError) return;
+        // Metadata heartbeats remain independent while an async scan is in flight.
+        if (id && !heartbeating) {
+          heartbeating = true;
+          heartbeatCheck = this.heartbeat(id).catch((error) => console.error(error.message)).finally(() => { heartbeating = false; });
+        }
         if (checkingBudgets) return budgetCheck;
         checkingBudgets = true;
-        // Finish the heartbeat's registry-lock cleanup before synchronous disk scans.
         budgetCheck = (async () => {
-          if (id) await this.heartbeat(id).catch((error) => console.error(error.message));
-          try { this.budgets(repo); }
-          catch (error) { limitError = error; signalChild('SIGTERM'); }
-        })().catch((error) => { limitError = error; }).finally(() => { checkingBudgets = false; });
+          await heartbeatCheck;
+          await this.withFreshBudgets(repo, 'periodic');
+        })().catch((error) => {
+          limitError = error;
+          console.error(error.message);
+          try { signalChild('SIGTERM'); } catch (cleanup) { limitError = combinedError(error, cleanup); }
+        }).finally(() => { checkingBudgets = false; });
         return budgetCheck;
       }, 15_000);
       const code = await completion;
       clearInterval(timer);
       await budgetCheck;
       if (limitError) throw limitError;
-      await this.locked(() => {
+      await this.withFreshBudgets(repo, 'post-command', () => {
         if (id) { const row = this.record(id); row.heartbeatAt = now(); row.lastCommandAt = now(); row.lastExitCode = code; this.write(row); }
-        this.budgets(repo);
       });
       return { exitCode: code, storeDir: this.policy().storeDir };
+    } catch (error) {
+      primaryError = error;
+      throw error;
     } finally {
       clearInterval(timer);
       await budgetCheck;
+      await heartbeatCheck;
       for (const [signal, handler] of signals) process.off(signal, handler);
-      await this.locked(() => {
+      try { await this.locked(() => {
         // Keep the lease if a detached descendant is still using the process group.
-        if (existsSync(jobPath) && !jobAlive({ pid: null, childPid: child?.pid })) unlinkSync(jobPath);
-      });
+        if (existsSync(jobPath) && !jobAlive({ pid: null, childPid: child?.pid, startedAt: json(jobPath).startedAt })) unlinkSync(jobPath);
+      }); } catch (cleanup) { throw primaryError ? combinedError(primaryError, cleanup) : cleanup; }
     }
   }
 }
