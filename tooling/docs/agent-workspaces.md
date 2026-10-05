@@ -30,14 +30,27 @@ fleet-workspace run --repo /path/to/product -- pnpm run test
 
 ## Dependencies
 
-The install command requires an exact `packageManager: pnpm@x.y.z` pin and an
-existing `pnpm-lock.yaml`. Corepack selects the repository's pnpm version.
+For pnpm repositories, the install command requires an exact
+`packageManager: pnpm@x.y.z` pin and an existing `pnpm-lock.yaml`. Corepack
+selects the repository's pnpm version.
 The command supplies `--frozen-lockfile`, the persistent store path and
 `--package-import-method auto`; `--offline` is optional for a warm store.
 Repository lockfiles, package-manager pins, registry/auth configuration and
 production settings are not rewritten by this tool. Different store formats
-can coexist under a persistent store. Existing npm/Yarn/Bun repositories need
-an explicitly scoped migration before using this installer.
+can coexist under a persistent store.
+
+Existing npm repositories use native `npm ci --cache ~/.npm`, with `--offline`
+when requested. This path requires a regular, valid existing `package-lock.json`
+(version1–3) and an absent or exact `npm@x.y.z` package-manager declaration.
+Native npm performs the frozen manifest/lock agreement check; no migration,
+lock generation or manager activation is performed. A stale `pnpm-lock.yaml`
+does not take precedence over an npm lock in this case. Explicit pnpm pins
+always require the pnpm path; an explicit npm pin must match the installed
+`npm --version` or installation fails before `npm ci` launches. Malformed or
+unknown declarations fail closed.
+Yarn/Bun still need separately scoped support or an explicit migration.
+The same workspace disk/reserve and heavy-command leases apply to npm installs.
+Direct `fleet-workspace run -- npm ci` remains rejected; use `install`.
 
 Configure the existing persistent store once, rather than creating per-task
 stores. Store and checkout must be on the same filesystem. Each worktree
@@ -118,3 +131,33 @@ prunes or deletes existing temporary folders. Check source, unpublished commits,
 active processes and required evidence before any separately authorized cleanup.
 Keep durable artifacts in their owning project's established evidence location;
 avoid retaining repeated generated builds as permanent recovery archives.
+
+### Disk measurement and registry contention
+
+Managed command admission, periodic checks, and postflight require fresh complete
+workspace, active-worktree, and retired-worktree measurements. Each `du -sk`
+measurement has a 180-second bound and runs asynchronously outside the registry
+lock. Unknown or failed measurements still fail closed; no totals are cached and
+retired worktrees remain included. Admission rechecks the current policy, free
+space reserve, material workspace identities, and heavy-job limits under the
+registry lock before registering its lease. Identity changes during a managed run scan
+trigger at most two retries (three complete fresh measurement attempts) before
+failing closed. Admission remains atomic; every retry remeasures all three
+roles outside the lock and rechecks current limits and free reserve under it.
+No old byte totals are used. A converging unrelated create/retirement does not
+terminate an otherwise valid child; continuous identity churn remains a
+conservative failure. Heartbeat timestamp changes do not invalidate the scan. Periodic scans never overlap, and metadata
+heartbeats continue while a scan is in flight. A failed measurement reports its
+phase and workspace role before stopping the owned command. Cleanup failures
+retain the original failure and their separate cause.
+
+Historical command leases remain recorded after a PID is recycled. On Darwin,
+heavy-job liveness compares bounded, C-locale UTC process births with lease
+registration (allowing a conservative 60 seconds for timestamp precision and
+a stalled immediate spawn). Near-time reuse remains unknown and protected,
+since historical leases do not record the exact child birth.
+A proven later process does not stand in for the original manager or child. A
+recycled process group is rejected only with a proven new leader and entirely
+new observed membership. Leaderless orphan groups, older original members, and
+unknown births/membership/platforms remain protected; this is not lease deletion
+or permission to signal unrelated processes.
