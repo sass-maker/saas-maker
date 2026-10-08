@@ -127,3 +127,19 @@ for (const provider of DEFAULT_PROVIDERS) {
     assert.ok(artwork.byteLength > 3000);
   });
 }
+
+test('compact layout is opt-in and preserves provider actions and accessible names', () => {
+  const props = {
+    companyName: 'Acme',
+    companyUrl: 'https://example.com',
+    providers: ['claude', 'grok'],
+  };
+  const standard = renderToStaticMarkup(createElement(AIChatFooter, props));
+  const compact = renderToStaticMarkup(
+    createElement(AIChatFooter, { ...props, layout: 'compact' })
+  );
+  assert.doesNotMatch(standard, /data-layout=/);
+  assert.match(compact, /data-layout="compact"/);
+  assert.deepEqual(compact.match(/href="[^"]+"/g), standard.match(/href="[^"]+"/g));
+  assert.deepEqual(compact.match(/aria-label="[^"]+"/g), standard.match(/aria-label="[^"]+"/g));
+});

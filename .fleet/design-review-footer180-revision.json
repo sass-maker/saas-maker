@@ -1,0 +1,268 @@
+{
+  "$schema": "fleet.design-review.v2",
+  "version": 2,
+  "project": "saas-maker",
+  "target": "Fleet footer graphic and structure revision after owner rejection",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "packages/fleet-footer/PRODUCT.md",
+    "design": "packages/fleet-footer/DESIGN.md"
+  },
+  "direction": {
+    "productSurfaces": {
+      "scope": "paired",
+      "landing": "Representative Atlas PH Catalog and CodeVetter landing closing sections",
+      "app": "PH public fictional sample and CodeVetter browser documentation variants",
+      "reason": "Browser-only shared component study. Native and private operating applications preserve their actual platform UI without a marketing footer."
+    },
+    "pairedPreview": {
+      "landing": "",
+      "app": ""
+    },
+    "source": "comparison",
+    "references": [],
+    "probes": [
+      {
+        "id": "a",
+        "name": "Panoramic studio",
+        "artifact": ".fleet-local/footer180-revision-directions/evidence/a/contact-landing.png",
+        "thesis": "A generous scenic final chapter joins one clear product next step to a single grounded support-and-studio plane.",
+        "layout": "Two-column native CTA above a full-width 400px panorama; a continuous lower semantic plane groups three disclosure controls, one studio row, and legal. Mobile uses a central panorama crop and compact list rows.",
+        "typography": "Atlas uses its established Georgia editorial display, CodeVetter its system sans; no shared brand font or palette.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-revision-directions/evidence/a/contact-landing.png",
+          "app": ".fleet-local/footer180-revision-directions/evidence/a/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-revision-directions/a-contract.json"
+      },
+      {
+        "id": "b",
+        "name": "Split studio",
+        "artifact": ".fleet-local/footer180-revision-directions/evidence/b/contact-landing.png",
+        "thesis": "A studio diptych makes product artwork and the product\u2019s next action equal partners. Support is a single quiet grouped rail; discovery and generous native navigation follow below.",
+        "layout": "Desktop 60/40 art/action split. Artwork fills a minimum 520px plane with object-fit cover and a centered subject crop, without frame labels. Mobile scene is 285px tall; app web contexts use a 340px desktop and 205px mobile art frame. Side wings are intentionally cropped; central evidence folio/magnifier stays the focal subject. Lower studio has three text links followed by product brand/navigation/legal. Mobile order is artwork, CTA, grouped support, compact studio and native legal.",
+        "typography": "PH retains forest ink on paper, system body and Georgia editorial serif display. CodeVetter uses its canonical Evidence Bench system sans, compact quiet documentation density and restrained amber action. Monospace is not used for prose.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-revision-directions/evidence/b/contact-landing.png",
+          "app": ".fleet-local/footer180-revision-directions/evidence/b/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-revision-directions/b/contract.json"
+      },
+      {
+        "id": "c",
+        "name": "Illustrated colophon",
+        "artifact": ".fleet-local/footer180-revision-directions/evidence/c/contact-landing.png",
+        "thesis": "An unmistakable product-name colophon occupies the full width; the original panorama is a large uninterrupted foreground plate. A slim action line and three clean editorial columns finish the page.",
+        "layout": "Full-width native wordmark \u2192 uninterrupted original scene \u2192 one horizontal action line \u2192 Discover / Help / Stay in the loop columns \u2192 native/legal end matter. The desktop columns remain two compact columns plus a full-width opt-in area on mobile. Quiet browser form shrinks identity and scene; no oversized app typography.",
+        "typography": "{'ph': 'Atlas native wordmark / PH Catalog metadata. Georgia serif display over paper/forest; system body and mono low-priority credits', 'codevetter': 'Native system sans with tight measured tracking; system body; mono only immutable-style caption'}",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-revision-directions/evidence/c/contact-landing.png",
+          "app": ".fleet-local/footer180-revision-directions/evidence/c/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-revision-directions/c/contract.json"
+      }
+    ],
+    "selected": "",
+    "approval": "pending",
+    "ownerEvidence": {
+      "path": "",
+      "quote": ""
+    },
+    "supplied": "",
+    "before": ".fleet-local/footer180-revision-directions/owner-rejection.json",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "",
+      "sources": [],
+      "runtime": "none",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": ""
+      }
+    },
+    "contract": {
+      "purpose": "Combine product next action, original artwork, support, updates, studio discovery and native navigation in one coherent closing section.",
+      "purposeSource": "packages/fleet-footer/PRODUCT.md and owner-rejection.json",
+      "canonicalPurpose": "A backend-free browser composition preserves product identity and existing component ownership.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "Visitors and browser users of active Fleet products.",
+      "job": "Finish the product story with a clear next action and organized secondary routes.",
+      "thesis": "Artwork contributes substantial space and composition; support and discovery share an intentional hierarchy.",
+      "system": "Three distinct proposals retain native product typography and semantic roles; one selected frame will remain shared across products.",
+      "signature": "Original product-mechanism artwork at architectural scale.",
+      "risk": "Large artwork and all footer capabilities can lengthen mobile pages; crop, density and grouping need direct rendered review.",
+      "qualityBar": "Owner rejected the lack of visible graphic and coherent structure. Reject small illustration plates, duplicated CTA stacks, generic utility piles, clipped subject matter and identity drift."
+    }
+  },
+  "evidence": {
+    "platform": "web",
+    "productContinuity": {
+      "status": "pending",
+      "reason": "Paired browser component contexts rendered; this direction decision does not qualify a real native app, provider-backed workflow, or the Fleet rollout.",
+      "reviewer": "",
+      "report": "artifacts/design/product-continuity.md",
+      "surfaces": {
+        "landing": "artifacts/design/landing.png",
+        "app": "artifacts/design/app.png"
+      },
+      "checks": {
+        "designSystem": {
+          "status": "pending",
+          "observation": ""
+        },
+        "identity": {
+          "status": "pending",
+          "observation": ""
+        },
+        "vocabulary": {
+          "status": "pending",
+          "observation": ""
+        },
+        "productTruth": {
+          "status": "pending",
+          "observation": ""
+        },
+        "handoff": {
+          "status": "pending",
+          "observation": ""
+        }
+      }
+    },
+    "slopScale": {
+      "platform": "web",
+      "posture": "advisory",
+      "reason": "Native accessible details, source-authored paper/black palettes and brand typography remain intentional. Pinned scans are advisory; direct rendered craft review determines whether the owner concern is addressed.",
+      "checkpoints": [
+        {
+          "stage": "directions",
+          "probe": "a",
+          "report": ".fleet-local/footer180-revision-directions/evidence/a/slop-directions.json",
+          "findings": "Previous undersized art plates were revised and recaptured. Native details and established product palette flags are reviewed as intentional; metrics do not imply owner acceptance."
+        },
+        {
+          "stage": "directions",
+          "probe": "b",
+          "report": ".fleet-local/footer180-revision-directions/evidence/b/slop-directions.json",
+          "findings": "Previous undersized art plates were revised and recaptured. Native details and established product palette flags are reviewed as intentional; metrics do not imply owner acceptance."
+        },
+        {
+          "stage": "directions",
+          "probe": "c",
+          "report": ".fleet-local/footer180-revision-directions/evidence/c/slop-directions.json",
+          "findings": "Previous undersized art plates were revised and recaptured. Native details and established product palette flags are reviewed as intentional; metrics do not imply owner acceptance."
+        }
+      ]
+    },
+    "visualReview": {
+      "status": "pending",
+      "reviewer": "",
+      "direction": "",
+      "report": "artifacts/design/review.md",
+      "checks": {
+        "hierarchy": {
+          "status": "pending",
+          "observation": ""
+        },
+        "typography": {
+          "status": "pending",
+          "observation": ""
+        },
+        "composition": {
+          "status": "pending",
+          "observation": ""
+        },
+        "identity": {
+          "status": "pending",
+          "observation": ""
+        },
+        "interaction": {
+          "status": "pending",
+          "observation": ""
+        },
+        "responsive": {
+          "status": "pending",
+          "observation": ""
+        }
+      }
+    },
+    "screenshots": [
+      {
+        "width": 390,
+        "path": "artifacts/design/after-390.png"
+      },
+      {
+        "width": 768,
+        "path": "artifacts/design/after-768.png"
+      },
+      {
+        "width": 1440,
+        "path": "artifacts/design/after-1440.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "replace-with-project-check",
+      "status": "pending"
+    },
+    "critique": {
+      "score": 0,
+      "maximum": 40,
+      "dimensions": {
+        "hierarchy": 0,
+        "typography": 0,
+        "composition": 0,
+        "identity": 0,
+        "interaction": 0,
+        "responsive": 0
+      }
+    },
+    "audit": {
+      "score": 0,
+      "maximum": 20,
+      "dimensions": {
+        "purpose": 0,
+        "accessibility": 0,
+        "behavior": 0,
+        "responsive": 0,
+        "performance": 0
+      }
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": []
+    },
+    "comprehension": {
+      "status": "not-applicable",
+      "reviewer": "",
+      "answers": {
+        "product": "",
+        "audience": "",
+        "value": "",
+        "mechanism": "",
+        "proof": "",
+        "nextAction": ""
+      },
+      "purposeScore": {
+        "product": 0,
+        "audience": 0,
+        "value": 0,
+        "mechanism": 0,
+        "proof": 0,
+        "nextAction": 0,
+        "total": 0
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "pending",
+    "note": ""
+  }
+}

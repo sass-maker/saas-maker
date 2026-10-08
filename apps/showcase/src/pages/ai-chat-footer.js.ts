@@ -1,3 +1,6 @@
+import publicProducts from '../../../../catalog/generated/public.json';
+import { resolveFooterArt } from '../../../../packages/fleet-footer/src/artwork.mjs';
+import { registerFleetFooter } from '../../../../packages/fleet-footer/src/element.mjs';
 import chatgptLogo from '../../../../packages/ai-chat-footer/src/assets/provider-logos/chatgpt.jpg?inline';
 import claudeLogo from '../../../../packages/ai-chat-footer/src/assets/provider-logos/claude.jpg?inline';
 import geminiLogo from '../../../../packages/ai-chat-footer/src/assets/provider-logos/gemini.jpg?inline';
@@ -15,18 +18,24 @@ const providerLogos = {
 
 const feedbackLauncherCss = `
   [data-saas-maker-feedback-launcher] {
-    position: fixed; z-index: 2147483646; right: max(20px, env(safe-area-inset-right));
-    bottom: max(20px, env(safe-area-inset-bottom)); min-width: 44px; min-height: 44px;
-    padding: 0 15px; border: 1px solid #d6d9df; border-radius: 12px; background: #fff;
-    color: #20232a; box-shadow: 0 5px 18px rgb(16 28 20 / .14), 0 1px 3px rgb(16 28 20 / .08);
-    font-family: inherit; font-size: 14px; font-weight: 650; line-height: 1.2;
-    cursor: pointer; transition: transform 160ms ease, box-shadow 160ms ease;
+    display: inline-flex; min-width: 44px; min-height: 44px; align-items: center; justify-content: center;
+    padding: .65rem 1rem; border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+    border-radius: .65rem; background: transparent; color: inherit; font: inherit;
+    font-weight: 680; line-height: 1.3; cursor: pointer; text-align: center;
+    transition: background-color 160ms ease, border-color 160ms ease;
   }
-  [data-saas-maker-feedback-launcher]:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 22px rgb(16 28 20 / .16), 0 2px 5px rgb(16 28 20 / .1); }
+  [data-saas-maker-feedback-root] { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1rem; width: min(100% - 2rem, 72rem); margin: 1.25rem auto; padding: 1.25rem; border: 1px solid color-mix(in srgb, currentColor 18%, transparent); border-radius: 1rem; background: color-mix(in srgb, currentColor 4%, transparent); color: inherit; font-family: inherit; font-size: 14px; line-height: 1.45; }
+  [data-saas-maker-feedback-root] .saas-maker-feedback-copy { min-width: 0; }
+  [data-saas-maker-feedback-root] h2 { margin: 0; font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 720; letter-spacing: -.025em; line-height: 1.2; }
+  [data-saas-maker-feedback-root] p { margin: .4rem 0 0; color: color-mix(in srgb, currentColor 76%, transparent); }
+  [data-saas-maker-feedback-launcher]:hover:not(:disabled) { border-color: color-mix(in srgb, currentColor 36%, transparent); background: color-mix(in srgb, currentColor 6%, transparent); }
   [data-saas-maker-feedback-launcher]:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
   [data-saas-maker-feedback-launcher]:disabled { cursor: wait; opacity: .75; }
-  [data-saas-maker-feedback-root] .saas-maker-feedback-status { position: fixed; right: 20px; bottom: 72px; z-index: 2147483646; color: #a32929; font: 12px/1.4 system-ui, sans-serif; }
-  @media (prefers-color-scheme: dark) { [data-saas-maker-feedback-launcher] { border-color: #42433c; background: #20211d; color: #f2f1e9; } }
+  [data-saas-maker-feedback-root] .saas-maker-feedback-status { grid-column: 1 / -1; color: #a32929; font: 12px/1.4 system-ui, sans-serif; }
+  [data-saas-maker-feedback-root][slot='feedback'] { display: block; width: 100%; margin: 0; padding: 0; border: 0; background: transparent; }
+  [data-saas-maker-feedback-root][slot='feedback'] [data-saas-maker-feedback-launcher] { width: 100%; margin-block-start: 1rem; }
+  [data-saas-maker-feedback-root][slot='feedback'] .saas-maker-feedback-status { display: block; margin-block-start: .5rem; }
+  @media (max-width: 560px) { [data-saas-maker-feedback-root] { grid-template-columns: minmax(0, 1fr); } [data-saas-maker-feedback-launcher] { width: 100%; } }
   @media (prefers-reduced-motion: reduce) { [data-saas-maker-feedback-launcher] { transition: none; } }
 `;
 
@@ -36,11 +45,27 @@ const autoCaptureKinds = Object.fromEntries(
     .map(({ id, applicability }) => [id, applicability])
 );
 
+const footerArt = Object.fromEntries(
+  [
+    ...new Set([
+      ...publicProducts.directory.map(({ id }) => id),
+      ...Object.keys(autoCaptureKinds),
+      'memory-map',
+      'high-signal-podcasts',
+      'portfolio',
+      'aliveville',
+    ]),
+  ]
+    .map((id) => [id, resolveFooterArt(publicProducts, id)])
+    .filter(([, artwork]) => artwork !== undefined)
+);
+
 const source = `(() => {
   'use strict';
 
   const PROVIDER_LOGOS = ${JSON.stringify(providerLogos)};
   const AUTO_CAPTURE_KINDS = ${JSON.stringify(autoCaptureKinds)};
+  const FOOTER_ART = ${JSON.stringify(footerArt)};
   const PROVIDERS = [
     ['claude', 'Claude', (prompt) => 'https://claude.ai/new?q=' + encodeURIComponent(prompt)],
     ['chatgpt', 'ChatGPT', (prompt) => 'https://chatgpt.com/?q=' + encodeURIComponent(prompt)],
@@ -100,6 +125,8 @@ const source = `(() => {
         a:focus-visible { outline: 2px solid var(--ai-footer-focus); outline-offset: 2px; }
         a img { display: block; width: 2rem; height: 2rem; border-radius: .625rem; object-fit: cover; }
         @media (max-width: 1000px) { aside { grid-template-columns: minmax(0, 1fr); gap: 1rem; } ul { justify-content: flex-start; } }
+        :host([layout='compact']) aside { grid-template-columns: minmax(0, 1fr); gap: 1rem; padding: 0; }
+        :host([layout='compact']) ul { flex-wrap: wrap; justify-content: flex-start; }
         @media (prefers-reduced-motion: reduce) { a { transition: background-color 150ms ease, border-color 150ms ease; } a:hover { transform: none; } }
       \`;
 
@@ -148,89 +175,73 @@ const source = `(() => {
 
   if (!customElements.get('ai-chat-footer')) customElements.define('ai-chat-footer', AIChatFooter);
 
-  class FleetFooterExtension extends HTMLElement {
-    connectedCallback() {
-      if (this.shadowRoot) return;
-      const root = this.attachShadow({ mode: 'open' });
-      const style = document.createElement('style');
-      style.textContent = \`
-        :host {
-          --fleet-footer-border: color-mix(in srgb, currentColor 16%, transparent);
-          --fleet-footer-surface: color-mix(in srgb, currentColor 3%, transparent);
-          display: block;
-          width: 100%;
-          border-block-start: 1px solid var(--fleet-footer-border);
-          background: var(--fleet-footer-surface);
-          color: inherit;
-          font: inherit;
-        }
-        * { box-sizing: border-box; }
-        .extension { display: grid; grid-template-columns: minmax(21rem, .72fr) minmax(0, 1.28fr); align-items: stretch; }
-        .ai { min-width: 0; border-inline-end: 1px solid var(--fleet-footer-border); }
-        .projects { display: grid; min-width: 0; align-content: center; }
-        .projects-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .8rem var(--fleet-footer-edge, 1rem) 0; }
-        .projects-head span { color: color-mix(in srgb, currentColor 72%, transparent); font-size: .64rem; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
-        .projects-head a { display: inline-flex; min-height: 2.75rem; align-items: center; color: inherit; font-size: .72rem; font-weight: 680; text-underline-offset: .22em; }
-        .projects-head a:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
-        .capture { grid-column: 1 / -1; min-width: 0; }
-        ::slotted(*) { min-width: 0; }
-        @media (max-width: 760px) {
-          .extension { grid-template-columns: minmax(0, 1fr); }
-          .ai { border-inline-end: 0; border-block-end: 1px solid var(--fleet-footer-border); }
-        }
-      \`;
-      const region = document.createElement('div');
-      region.className = 'extension';
-      region.setAttribute('role', 'region');
-      region.setAttribute('aria-label', 'Explore this product and more from the studio');
-      const ai = document.createElement('div');
-      ai.className = 'ai';
-      const aiSlot = document.createElement('slot');
-      aiSlot.name = 'ai';
-      ai.append(aiSlot);
-      const projects = document.createElement('div');
-      projects.className = 'projects';
-      const projectsHead = document.createElement('div');
-      projectsHead.className = 'projects-head';
-      const projectsLabel = document.createElement('span');
-      projectsLabel.textContent = 'More from the studio';
-      const projectsLink = document.createElement('a');
-      projectsLink.href = 'https://sassmaker.com/projects';
-      projectsLink.textContent = 'View all projects ↗';
-      projectsHead.append(projectsLabel, projectsLink);
-      const projectsSlot = document.createElement('slot');
-      projectsSlot.name = 'projects';
-      projects.append(projectsHead, projectsSlot);
-      const capture = document.createElement('div');
-      capture.className = 'capture';
-      const captureSlot = document.createElement('slot');
-      captureSlot.name = 'capture';
-      capture.append(captureSlot);
-      region.append(ai, projects, capture);
-      root.append(style, region);
-    }
-  }
-
-  if (!customElements.get('fleet-footer-extension')) {
-    customElements.define('fleet-footer-extension', FleetFooterExtension);
-  }
+  (${registerFleetFooter.toString()})();
 
   const script = document.currentScript;
+  const captureModuleAttempts = new WeakMap();
   const mountCapture = async (extension, strip) => {
-    if (extension.dataset.capturePending === 'true') return;
+    if (extension.dataset.capturePending === 'true' || extension.dataset.captureConfigured === 'true') return;
     const catalogId = strip.getAttribute('current-project');
     if (!catalogId || !/^[a-z0-9-]+$/.test(catalogId)) return;
     const captureKind = AUTO_CAPTURE_KINDS[catalogId];
+    const nativeCapture = document.querySelector('saas-maker-newsletter-capture');
+    const showUpdates = script.dataset.capture !== 'false' && Boolean(captureKind) && !nativeCapture;
+    extension.setAttribute('show-updates', String(showUpdates));
+    extension.setAttribute('capture-status', 'loading');
     extension.dataset.capturePending = 'true';
+    const controller = new AbortController();
+    const configTimeout = window.setTimeout(() => controller.abort(), 8000);
     try {
       const response = await fetch('https://api.sassmaker.com/v1/capture-config/' + catalogId, {
         headers: { accept: 'application/json' },
+        signal: controller.signal,
       });
-      if (!response.ok) return;
+      if (!response.ok) throw new Error('Capture unavailable');
       const config = await response.json();
-      if (!config || typeof config.api_key !== 'string' || !/^pk_[a-z0-9]+$/.test(config.api_key)) return;
-      mountFeedback(config.api_key);
-      if (script.dataset.capture === 'false' || !captureKind || document.querySelector('saas-maker-newsletter-capture')) return;
+      window.clearTimeout(configTimeout);
+      if (!config || typeof config.api_key !== 'string' || !/^pk_[a-z0-9]+$/.test(config.api_key)) throw new Error('Capture unavailable');
+      if (!extension.isConnected) { extension.setAttribute('capture-status', 'unavailable'); return; }
+      mountFeedback(config.api_key, extension);
+      if (script.dataset.capture === 'false' || !captureKind || document.querySelector('saas-maker-newsletter-capture')) {
+        extension.setAttribute('show-updates', 'false');
+        extension.dataset.captureConfigured = 'true';
+        return;
+      }
+      if (!customElements.get('saas-maker-newsletter-capture')) {
+        await new Promise((resolve, reject) => {
+          const loader = document.createElement('script');
+          loader.type = 'module';
+          const attempt = captureModuleAttempts.get(extension) || 0;
+          loader.src = 'https://sassmaker.com/newsletter-capture.js' + (attempt ? '?retry=' + attempt : '');
+          loader.crossOrigin = 'anonymous';
+          let settled = false;
+          let timeout;
+          const fail = () => {
+            if (settled) return;
+            settled = true;
+            window.clearTimeout(timeout);
+            captureModuleAttempts.set(extension, attempt + 1);
+            loader.remove();
+            reject(new Error('Capture unavailable'));
+          };
+          timeout = window.setTimeout(fail, 8000);
+          loader.onload = () => {
+            if (settled) return;
+            if (!customElements.get('saas-maker-newsletter-capture')) { fail(); return; }
+            settled = true;
+            window.clearTimeout(timeout);
+            resolve();
+          };
+          loader.onerror = fail;
+          document.head.append(loader);
+        });
+      }
+      if (!extension.isConnected) { extension.setAttribute('capture-status', 'unavailable'); return; }
+      if (document.querySelector('saas-maker-newsletter-capture')) {
+        extension.setAttribute('show-updates', 'false');
+        extension.dataset.captureConfigured = 'true';
+        return;
+      }
       const capture = document.createElement('saas-maker-newsletter-capture');
       capture.setAttribute('project-key', config.api_key);
       capture.setAttribute('catalog-id', catalogId);
@@ -238,41 +249,52 @@ const source = `(() => {
       capture.setAttribute('kind', captureKind);
       capture.setAttribute('source', 'fleet-footer');
       capture.setAttribute('privacy-url', 'https://sassmaker.com/privacy');
+      capture.setAttribute('layout', 'compact');
+      capture.setAttribute('integrated', '');
+      if (extension.getAttribute('theme')) capture.setAttribute('theme', extension.getAttribute('theme'));
       capture.slot = 'capture';
       extension.append(capture);
-      if (!customElements.get('saas-maker-newsletter-capture')) {
-        const loader = document.createElement('script');
-        loader.type = 'module';
-        loader.src = 'https://sassmaker.com/newsletter-capture.js';
-        loader.crossOrigin = 'anonymous';
-        document.head.append(loader);
-      }
-    } catch {} finally { delete extension.dataset.capturePending; }
+      extension.setAttribute('capture-status', 'ready');
+      extension.dataset.captureConfigured = 'true';
+    } catch {
+      extension.setAttribute('capture-status', 'unavailable');
+    } finally { window.clearTimeout(configTimeout); delete extension.dataset.capturePending; }
   };
-  const mountFeedback = (apiKey) => {
+  const mountFeedback = (apiKey, extension) => {
     if (script.dataset.feedback === 'false' || document.querySelector('[data-saas-maker-feedback-root]')) return;
     const hasExistingWidget = (host) => Array.from(document.querySelectorAll('[data-feedback-widget]'))
       .some((widget) => !host.contains(widget));
     if (hasExistingWidget(document.createElement('div'))) return;
-    const host = document.createElement('div');
+    const host = document.createElement('section');
     host.dataset.saasMakerFeedbackRoot = 'true';
+    host.slot = 'feedback';
+    host.setAttribute('aria-label', 'Feedback and support');
+    const copy = document.createElement('div');
+    copy.className = 'saas-maker-feedback-copy';
+    const heading = document.createElement('h2');
+    heading.textContent = 'Help shape ' + (script.dataset.name || 'this product') + '.';
+    const description = document.createElement('p');
+    description.textContent = 'Have a question or an idea? Reach the team here, without covering the apps.';
+    copy.append(heading, description);
     const launcher = document.createElement('button');
     launcher.type = 'button';
     launcher.dataset.saasMakerFeedbackLauncher = 'true';
-    launcher.setAttribute('aria-label', 'Give feedback');
-    launcher.textContent = 'Feedback';
+    const launcherLabel = 'Send feedback ↗';
+    launcher.setAttribute('aria-haspopup', 'dialog');
+    launcher.setAttribute('aria-label', 'Send feedback');
+    launcher.textContent = launcherLabel;
     const status = document.createElement('span');
     status.className = 'saas-maker-feedback-status';
     status.setAttribute('role', 'status');
     status.setAttribute('aria-live', 'polite');
     const widgetRoot = document.createElement('div');
     widgetRoot.dataset.saasMakerFeedbackMount = 'true';
-    host.append(launcher, status, widgetRoot);
+    host.append(copy, launcher, status, widgetRoot);
     const style = document.createElement('style');
     style.dataset.saasMakerFeedbackStyle = 'true';
     style.textContent = ${JSON.stringify(feedbackLauncherCss)};
     document.head.append(style);
-    document.body.append(host);
+    extension.append(host);
     const pageUrl = window.location.origin + window.location.pathname;
     const productTitle = document.title || script.dataset.name || 'Product';
     const options = { apiKey, pageUrl, pageTitle: productTitle };
@@ -304,12 +326,13 @@ const source = `(() => {
       if (typeof api?.mountSharedFooterFeedback === 'function') {
         api.mountSharedFooterFeedback(widgetRoot, options);
         mounted = true;
-        launcher.textContent = 'Feedback';
+        launcher.textContent = launcherLabel;
         launcher.disabled = false;
         status.textContent = '';
         return;
       }
       loading = true;
+      status.textContent = '';
       launcher.disabled = true;
       launcher.textContent = 'Loading…';
       loader = document.createElement('script');
@@ -321,7 +344,7 @@ const source = `(() => {
         const loadedApi = window.SaasMakerFeedback;
         if (typeof loadedApi?.mountSharedFooterFeedback !== 'function') {
           launcher.disabled = false;
-          launcher.textContent = 'Feedback';
+          launcher.textContent = launcherLabel;
           status.textContent = 'Feedback could not load. Try again.';
           loader.remove();
           return;
@@ -329,12 +352,13 @@ const source = `(() => {
         loadedApi.mountSharedFooterFeedback(widgetRoot, options);
         mounted = true;
         launcher.disabled = false;
-        launcher.textContent = 'Feedback';
+        launcher.textContent = launcherLabel;
+        status.textContent = '';
       };
       loader.onerror = () => {
         loading = false;
         launcher.disabled = false;
-        launcher.textContent = 'Feedback';
+        launcher.textContent = launcherLabel;
         status.textContent = 'Feedback could not load. Try again.';
         loader.remove();
       };
@@ -349,24 +373,76 @@ const source = `(() => {
     });
     observer.observe(document.documentElement, { childList: true, subtree: true });
   };
-  const mount = () => {
+  const mount = (authoredHost) => {
     if (!script || script.dataset.auto === 'false') return;
-    const footer = document.querySelector('ai-chat-footer') || document.createElement('ai-chat-footer');
+    const host = authoredHost instanceof HTMLElement && authoredHost.localName === 'fleet-footer-extension'
+      ? authoredHost : document.querySelector('fleet-footer-extension');
+    if (script.dataset.hostOnly === 'true' && !host) return;
+    const footer = host?.querySelector('ai-chat-footer') || document.querySelector('ai-chat-footer') || document.createElement('ai-chat-footer');
     footer.setAttribute('product-name', script.dataset.name || footer.getAttribute('product-name') || document.title || 'this product');
     footer.setAttribute('product-url', script.dataset.url || footer.getAttribute('product-url') || window.location.origin);
-    for (const attribute of ['label', 'prompt', 'providers', 'theme']) {
+    for (const attribute of ['label', 'prompt', 'providers', 'theme', 'layout']) {
       if (script.dataset[attribute]) footer.setAttribute(attribute, script.dataset[attribute]);
     }
     const compose = () => {
-      const strip = document.querySelector('portfolio-project-strip');
+      const strip = host?.querySelector('portfolio-project-strip') || document.querySelector('portfolio-project-strip');
       if (!strip || script.dataset.compose === 'false') return false;
-      const extension = document.querySelector('fleet-footer-extension') || document.createElement('fleet-footer-extension');
+      const extension = host || document.createElement('fleet-footer-extension');
+      extension.setAttribute('product-name', footer.getAttribute('product-name'));
+      if (script.dataset.surface) extension.setAttribute('surface', script.dataset.surface);
+      const theme = script.dataset.theme || footer.getAttribute('theme') || strip.getAttribute('theme');
+      if (theme) extension.setAttribute('theme', theme);
+      for (const name of ['src', 'alt', 'width', 'height', 'position', 'credit']) {
+        const value = script.dataset['art' + name[0].toUpperCase() + name.slice(1)];
+        if (value) extension.setAttribute('art-' + name, value);
+      }
+      const artwork = FOOTER_ART[strip.getAttribute('current-project')];
+      if (artwork) {
+        const defaults = {
+          src: new URL(artwork.src, 'https://sassmaker.com').href,
+          alt: artwork.alt,
+          width: artwork.width,
+          height: artwork.height,
+          position: artwork.focalX + '% ' + artwork.focalY + '%',
+          credit: artwork.credit,
+        };
+        for (const [name, value] of Object.entries(defaults)) {
+          if (!extension.hasAttribute('art-' + name)) extension.setAttribute('art-' + name, String(value));
+        }
+      }
+      const cta = extension.querySelector('[data-fleet-footer-cta]') || document.querySelector('[data-fleet-footer-cta]');
+      const navigation = extension.querySelector('[data-fleet-footer-navigation]') || document.querySelector('[data-fleet-footer-navigation]');
+      if (!extension.isConnected) {
+        const anchor = cta || navigation;
+        if (anchor?.parentElement && !anchor.contains(extension)) anchor.parentElement.insertBefore(extension, anchor);
+        else {
+          // Legacy insertion position only: unmarked native content is never adopted.
+          const capture = document.querySelector('saas-maker-newsletter-capture');
+          const pageFooter = capture?.closest('footer') || document.querySelector('footer');
+          if (pageFooter?.parentElement) pageFooter.parentElement.insertBefore(extension, pageFooter);
+          else if (capture?.parentElement) capture.parentElement.insertBefore(extension, capture);
+          else document.body.append(extension);
+        }
+      }
+      for (const [node, slot] of [[cta, 'cta'], [navigation, 'navigation']]) {
+        if (!node || node === extension || node.contains(extension)) continue;
+        node.slot = slot;
+        if (node.parentElement !== extension) extension.append(node);
+      }
       footer.setAttribute('integrated', '');
+      footer.setAttribute('layout', 'compact');
       footer.slot = 'ai';
       strip.setAttribute('integrated', '');
+      strip.setAttribute('layout', 'curated');
+      if (theme) { footer.setAttribute('theme', theme); strip.setAttribute('theme', theme); }
       strip.slot = 'projects';
-      extension.append(footer, strip);
-      if (!extension.isConnected) document.body.append(extension);
+      if (footer.parentElement !== extension) extension.append(footer);
+      if (strip.parentElement !== extension) extension.append(strip);
+      if (extension.dataset.captureRetryBound !== 'true') {
+        extension.dataset.captureRetryBound = 'true';
+        extension.addEventListener('capture-retry', () => void mountCapture(extension, strip));
+        extension.addEventListener('footer-connect', () => void mountCapture(extension, strip));
+      }
       void mountCapture(extension, strip);
       return true;
     };
@@ -382,6 +458,11 @@ const source = `(() => {
     observer.observe(document.body, { childList: true, subtree: true });
     stopWaiting = window.setTimeout(() => observer.disconnect(), 10000);
   };
+  document.addEventListener('footer-connect', (event) => {
+    const host = event.target;
+    if (host instanceof HTMLElement && host.localName === 'fleet-footer-extension' &&
+        script?.dataset.project && host.dataset.fleetFooterProject === script.dataset.project) mount(host);
+  });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount, { once: true });
   else mount();
 })();`;

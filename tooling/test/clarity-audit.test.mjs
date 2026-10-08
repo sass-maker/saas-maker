@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import test from 'node:test';
 
@@ -62,7 +63,7 @@ test('the shipped capability policy is complete and remains desired state, not p
   assert.equal(valid, true);
   const coverage = projectCapabilityCoverage(shipped, capabilityPolicy);
   assert.equal(coverage.projects, 72);
-  assert.equal(coverage.wiredProjects, 45);
+  assert.equal(coverage.wiredProjects, 43);
   assert.equal(coverage.capabilities.length, 17);
   assert.equal(coverage.providerVerifiedAssignments, 0);
   assert.ok(coverage.desiredAssignments > 0);
@@ -83,14 +84,14 @@ test('the shipped journey registry covers every wired surface with live-root evi
   const { valid, problems } = validateJourneyRegistry(journeys, shipped);
   assert.deepEqual(problems, []);
   assert.equal(valid, true);
-  assert.equal(journeys.projects.length, 45);
-  assert.equal(journeys.projects.filter((entry) => entry.state === 'ready').length, 45);
+  assert.equal(journeys.projects.length, 43);
+  assert.equal(journeys.projects.filter((entry) => entry.state === 'ready').length, 43);
   assert.equal(journeys.projects.filter((entry) => entry.state === 'discovery-required').length, 0);
 });
 
 test('journey registry rejects invented ready journeys and missing wired products', () => {
   const invented = structuredClone(journeys);
-  invented.projects.find((entry) => entry.id === 'drank').event.name = 'not a stable id';
+  invented.projects.find((entry) => entry.id === 'ph-catalog').event.name = 'not a stable id';
   assert.match(validateJourneyRegistry(invented, shipped).problems.join('\n'), /event.name/u);
 
   const missing = structuredClone(journeys);
@@ -413,6 +414,57 @@ test('an unrecorded tagged surface is only found with the opt-in fleet sweep', (
     ),
     true
   );
+});
+
+test('a registered id copied outside its canonical checkout still blocks without Git worktree proof', () => {
+  const registry = {
+    ...base,
+    projects: [base.projects.find((entry) => entry.id === 'alpha')],
+  };
+  const report = auditClarity({
+    registry,
+    fleetRoot: join(fixtures, 'alternate-fleet'),
+    projectPaths: new Map([['alpha', 'alpha']]),
+    selfRoot: cleanSelfRoot,
+    now,
+    scanFleet: true,
+  });
+
+  assert.equal(report.blocking.length, 1);
+  assert.match(report.blocking[0].message, /alpha-copy\/index\.html/u);
+});
+
+test('only a verified Git worktree is exempt; another canonical product sharing that ID still blocks', () => {
+  const root = mkdtempSync(join(tmpdir(), 'clarity-worktrees-'));
+  try {
+    const alpha = join(root, 'alpha');
+    mkdirSync(alpha);
+    assert.equal(spawnSync('git', ['init', alpha], { encoding: 'utf8' }).status, 0);
+    const tag = `<script src="https://www.clarity.ms/tag/${base.projects[0].clarityId}"></script>`;
+    writeFileSync(join(alpha, 'index.html'), tag);
+    const checkout = join(root, 'alpha-copy');
+    mkdirSync(checkout);
+    const metadata = join(alpha, '.git/worktrees/alpha-copy');
+    mkdirSync(metadata, { recursive: true });
+    writeFileSync(join(metadata, 'commondir'), '../..\n');
+    writeFileSync(join(metadata, 'HEAD'), 'ref: refs/heads/main\n');
+    writeFileSync(join(checkout, '.git'), `gitdir: ${metadata}\n`);
+    writeFileSync(join(metadata, 'gitdir'), `${join(checkout, '.git')}\n`);
+    writeFileSync(join(checkout, 'index.html'), tag);
+    const registry = { ...base, projects: [base.projects[0]] };
+    const input = { registry, fleetRoot: root, selfRoot: cleanSelfRoot, now, scanFleet: true };
+    const report = auditClarity(input);
+    assert.deepEqual(report.blocking, []);
+    assert.match(report.warnings.join('\n'), /alternate checkout/u);
+    const crossProduct = auditClarity({ ...input,
+      registry: { ...registry, projects: [...registry.projects,
+        { id: 'other-product', repo: 'alpha-copy', clarityId: null, wiredFiles: [], browserSurfaces: [], reason: 'unwired' },
+      ] },
+    });
+    assert.equal(crossProduct.blocking.some((entry) => entry.code === 'UNDECLARED_CLARITY_ID'), true);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test('omitPrivate counts private repositories without naming them', () => {

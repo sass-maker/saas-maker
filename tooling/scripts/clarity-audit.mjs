@@ -14,6 +14,7 @@
 // credentials. Sibling checkouts are inspected, never modified.
 
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { basename, dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -611,6 +612,27 @@ function catalogVisibility(metadata) {
   return new Map([...metadata].map(([id, entry]) => [id, entry.visibility]));
 }
 
+function commonGitDirectory(root) {
+  if (!existsSync(join(root, '.git'))) return null;
+  const result = spawnSync('git', ['rev-parse', '--path-format=absolute', '--git-common-dir'], {
+    cwd: root, encoding: 'utf8', timeout: 5000,
+  });
+  return result.status === 0 ? result.stdout.trim() : null;
+}
+
+function verifiedAlternateCheckout(hitPath, canonicalRoot, fleetRoot, canonicalRoots) {
+  // Loading another product's ID is never an alternate-checkout exemption.
+  if (canonicalRoots.some((root) => hitPath.startsWith(`${root}${sep}`))) return false;
+  const common = commonGitDirectory(canonicalRoot);
+  if (!common) return false;
+  let directory = dirname(hitPath);
+  while (directory !== fleetRoot && directory.startsWith(`${fleetRoot}${sep}`)) {
+    if (existsSync(join(directory, '.git'))) return commonGitDirectory(directory) === common;
+    directory = dirname(directory);
+  }
+  return false;
+}
+
 export function auditClarity({
   registry,
   capabilityPolicy = null,
@@ -651,7 +673,22 @@ export function auditClarity({
   }
 
   const undeclared = scanFleet && fleetPresent ? scanFleetForUndeclared(registry, fleetRoot) : [];
+  const canonicalRoots = registry.projects.map((project) =>
+    resolve(fleetRoot, projectPaths.get(project.id) ?? project.repo ?? project.id));
   for (const hit of undeclared) {
+    const owner = registry.projects.find((project) => project.id === hit.owner);
+    const canonicalPath = owner ? projectPaths.get(hit.owner) ?? owner.repo ?? owner.id : null;
+    const canonicalRoot = canonicalPath ? resolve(fleetRoot, canonicalPath) : null;
+    const hitPath = resolve(fleetRoot, hit.file);
+    const outsideCanonicalCheckout = canonicalRoot
+      && hitPath !== canonicalRoot
+      && !hitPath.startsWith(`${canonicalRoot}${sep}`);
+    if (outsideCanonicalCheckout && verifiedAlternateCheckout(hitPath, canonicalRoot, fleetRoot, canonicalRoots)) {
+      warnings.push(
+        `${hit.file} loads the registered ${hit.owner} Clarity project from an alternate checkout; only the cataloged checkout ${canonicalPath} is a deployment source.`
+      );
+      continue;
+    }
     findings.push(
       finding(
         'UNDECLARED_CLARITY_ID',

@@ -147,3 +147,7 @@ control:
 ## License
 
 MIT
+
+### Shared footer presentation
+
+Use `layout="compact"` (React or browser attribute) to stack the intro and provider actions inside a narrow shared-footer disclosure. Omit it to retain the standalone layout.

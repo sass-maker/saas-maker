@@ -20,12 +20,6 @@ import { readFileSync, writeFileSync, existsSync, appendFileSync } from 'node:fs
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-import { validateRootBrandContract } from '../../../site-health/apps/backend/lib/root-brand-contract.mjs';
-import {
-  activeObservatoryQueries,
-  mergeRootSearchQueriesIntoObservatory,
-  validateRootSearchQueryContract,
-} from '../../../site-health/apps/backend/lib/root-search-query-contract.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FLEET_ROOT = resolve(__dirname, '../../..');
@@ -39,7 +33,16 @@ const REPORT_PATH = join(SITE_HEALTH_BACKEND, 'docs/geo-observatory-latest.md');
 
 const CLASSES = new Set(['A', 'B', 'C']);
 
-function loadContracts() {
+function activeObservatoryQueries(product) {
+  return (product.queries ?? []).filter((query) => query.status !== 'historical');
+}
+
+async function loadContracts() {
+  // Operator execution uses Site Health's canonical contracts. Pure validation
+  // and report tests must also load in a standalone tooling checkout.
+  const { validateRootBrandContract } = await import('../../../site-health/apps/backend/lib/root-brand-contract.mjs');
+  const { mergeRootSearchQueriesIntoObservatory, validateRootSearchQueryContract } =
+    await import('../../../site-health/apps/backend/lib/root-search-query-contract.mjs');
   const observatory = JSON.parse(readFileSync(CONFIG_PATH, 'utf8'));
   const projects = JSON.parse(readFileSync(PROJECTS_PATH, 'utf8')).projects ?? [];
   const brands = validateRootBrandContract(
@@ -212,6 +215,21 @@ export function generateReport(ledger, cfg) {
   lines.push('Do not edit — regenerate via `geo-observatory-record.mjs`.');
   lines.push('');
 
+  const latestDate = dates.at(-1);
+  const activeKeys = cfg.products.flatMap((product) =>
+    activeObservatoryQueries(product).map((query) => `${product.id}|${query.qid}`));
+  const missing = activeKeys.filter((key) => !byKey.get(key)?.has(latestDate));
+  const covered = activeKeys.length - missing.length;
+  lines.push('## Collection coverage');
+  lines.push('');
+  lines.push(`Latest date: ${latestDate ?? 'none'}. Active root/broad union: ${covered}/${activeKeys.length} queries.`);
+  if (missing.length) {
+    lines.push('**INCOMPLETE broad run.** Missing observations are unmeasured, not class C. Do not report a full-portfolio rate or month-over-month trend. A weekly root-only run can still be complete for its narrower scope.');
+    lines.push(`Missing: ${missing.join(', ')}.`);
+  }
+  lines.push('Changes below are single-run observations, unconfirmed until they persist across another comparable run.');
+  lines.push('');
+
   // Movers: class change between last two dates
   if (dates.length >= 2) {
     const [prev, last] = dates.slice(-2);
@@ -281,8 +299,8 @@ export function generateReport(ledger, cfg) {
   return `${lines.join('\n')}\n`;
 }
 
-function main() {
-  const { config: cfg, rootQueries } = loadContracts();
+async function main() {
+  const { config: cfg, rootQueries } = await loadContracts();
   const args = process.argv.slice(2);
   const rootSearchMode = args[0] === '--root-search';
   const arg = rootSearchMode ? args[1] : args[0];
@@ -321,4 +339,4 @@ const invokedDirectly =
   process.argv[1] &&
   pathToFileURL(resolve(process.argv[1])).href === import.meta.url;
 
-if (invokedDirectly) main();
+if (invokedDirectly) await main();

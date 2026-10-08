@@ -70,4 +70,11 @@ describe('showcase middleware verb parity', () => {
     expect(config).toMatch(/trailingSlash: 'never'/);
     expect(config).toMatch(/format: 'file'/);
   });
+
+  it('keeps public directory email text inside Cloudflare exclusion markers', async () => {
+    const layout = await import('node:fs/promises').then((fs) =>
+      fs.readFile(new URL('../../apps/showcase/src/layouts/Layout.astro', import.meta.url), 'utf8')
+    );
+    expect(layout).toMatch(/<!--email_off-->\s*<slot\s*\/>\s*<!--\/email_off-->/);
+  });
 });

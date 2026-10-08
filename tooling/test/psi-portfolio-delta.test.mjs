@@ -120,3 +120,33 @@ test('a target with no runs is reported as not-measured rather than passing', ()
   assert.equal(row.runCount, 0);
   assert.equal(row.leverage, 0);
 });
+
+test('missing and invalid metrics cannot become a passing zero', () => {
+  const targets = [{ projectId: 'alpha', domain: 'alpha.test' }];
+  for (const missing of [null, undefined, '', ' ', false, [], {}, -1, Infinity]) {
+    const runs = [{ performance_score: 99, lcp: 1000, cls: missing, tbt: 0 }];
+    const [row] = buildDelta(targets, new Map([['alpha.test', { runs }]]));
+    assert.equal(row.measured.cls, null);
+    assert.equal(row.verdicts.cls, 'not-measured');
+    assert.equal(row.status, 'incomplete');
+  }
+  const runs = [{ performance_score: 99, lcp: 1000, cls: 0, tbt: 0 }];
+  const [valid] = buildDelta(targets, new Map([['alpha.test', { runs }]]));
+  assert.equal(valid.measured.cls, 0);
+  assert.equal(valid.status, 'fast-enough');
+  const [partial] = buildDelta(targets, new Map([['alpha.test', {
+    runs: [...runs, { performance_score: 99, lcp: 1000, cls: null, tbt: 0 }],
+  }]]));
+  assert.equal(partial.measured.cls, 0);
+  assert.equal(partial.status, 'incomplete');
+});
+
+test('a malformed history timestamp cannot erase valid samples', () => {
+  const history = historyWith([
+    { url: 'https://alpha.test/', startedAt: 1000, score: 99, lcp: 1000 },
+    { url: 'https://alpha.test/', startedAt: 'not-a-date', score: 10, lcp: 9000 },
+  ]);
+  const distribution = readDistribution(history);
+  assert.equal(distribution.get('alpha.test').runs.length, 1);
+  assert.equal(distribution.get('alpha.test').observedAt, '1970-01-01T00:00:01.000Z');
+});

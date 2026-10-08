@@ -1,0 +1,306 @@
+{
+  "$schema": "fleet.design-review.v2",
+  "version": 2,
+  "project": "saas-maker",
+  "target": "Polished signature footer after owner refinement request",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "packages/fleet-footer/PRODUCT.md",
+    "design": "packages/fleet-footer/DESIGN.md"
+  },
+  "direction": {
+    "productSurfaces": {
+      "scope": "paired",
+      "landing": "Atlas PH Catalog and CodeVetter representative closing sections",
+      "app": "PH fictional public sample and CodeVetter browser documentation variants",
+      "reason": "Public browser shared composition study. Native/private operating applications stay outside public marketing footer."
+    },
+    "pairedPreview": {
+      "landing": ".fleet-local/footer180-signature-footer/evidence/p1/pass-02/contact-landing.png",
+      "app": ".fleet-local/footer180-signature-footer/evidence/p1/pass-02/contact-app.png"
+    },
+    "source": "comparison",
+    "references": [],
+    "probes": [
+      {
+        "id": "p1",
+        "name": "Studio signature",
+        "path": ".fleet-local/footer180-signature-footer/evidence/p1/pass-02/contact-landing.png",
+        "thesis": "One closing composition, not a series of pitches: a compact open question/updates pair, one elegantly aligned real project rail, useful native route groups, and a single product-name signature grounded in terminal personalized artwork.",
+        "layout": "Desktop console/email1.45:1 pair; one rail; three compact useful native route groups; legal in lower negative-space bleed; literal last560px illustrated wordmark stage. Quiet web scales type/scene without repeating a landing CTA. Mobile keeps readable targets, two route columns with Connect spanning the full row, horizontal rail scroll inside container, full-width open console and opt-in. No artificial mobile height target.",
+        "typography": "Atlas Georgia/native paperforestcoral; CodeVetter native Evidence Bench sans/blackwhiteamber. One giant displayed wordmark only in terminal stage. Console textarea19px desktop/16mobile, route14px40/44targets, consent/legal12px, provider logos +names12px. Direct headings Ask about[product]/Product updates, no generic pitch.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-signature-footer/evidence/p1/pass-02/contact-landing.png",
+          "app": ".fleet-local/footer180-signature-footer/evidence/p1/pass-02/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-signature-footer/p1/contract.json"
+      },
+      {
+        "id": "d1",
+        "name": "Studio horizon",
+        "path": ".fleet-local/footer180-bleed-directions/evidence/d1/pass-01/contact-landing.png",
+        "thesis": "A useful open tools plane flows into a horizontal studio horizon, clear native route groups, and a continuous personalized illustrated ending. The art is the terminal atmosphere rather than a framed card.",
+        "layout": "Restrained two-column AI question console / open product-updates form \u2192 full-width horizontal project strip \u2192 grouped native navigation and legal \u2192 native wordmark \u2192 personalized terminal panorama. All controls/legal precede the image in DOM and visually. Mobile stacks the tools, preserves a keyboard-scrollable project strip and two-column native groups; the app/read variant reduces type, textarea and ending height.",
+        "typography": "{'ph': 'Atlas serif wordmark and moderate editorial tool headings, system body/control text', 'codevetter': 'Native system sans, measured tracking, mono reserved for small context labels'}",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-bleed-directions/evidence/d1/pass-01/contact-landing.png",
+          "app": ".fleet-local/footer180-bleed-directions/evidence/d1/pass-01/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-bleed-directions/d1/contract.json"
+      },
+      {
+        "id": "d2",
+        "name": "Studio ribbon",
+        "path": ".fleet-local/footer180-bleed-directions/evidence/d2/pass-01/contact-landing.png",
+        "thesis": "A continuous editorial footer gives discovery its own horizontal strip, exposes the AI question and email capture, and dissolves the closing identity into a product-specific scene.",
+        "layout": "Next action; horizontal studio rail; two-column AI context/composer; horizontal visible capture; grouped resource/support routes; legal and oversized wordmark bleeding into terminal panorama. Quiet browser variant suppresses marketing CTA and reduces scene/name density.",
+        "typography": "Atlas native Georgia with forest ink/paper; CodeVetter native system sans and amber. Navigation14px and prose14\u201315px, consent12px; no code/terminal text styling.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-bleed-directions/evidence/d2/pass-01/contact-landing.png",
+          "app": ".fleet-local/footer180-bleed-directions/evidence/d2/pass-01/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-bleed-directions/d2/contract.json"
+      },
+      {
+        "id": "d3",
+        "name": "Immersive studio",
+        "path": ".fleet-local/footer180-bleed-directions/evidence/d3/pass-02/contact-landing.png",
+        "thesis": "A continuous product-colored footer turns the studio and service infrastructure into readable editorial content. Discovery begins as a horizontal strip; native identity and structured routes lead into an exposed question console and an always-open opt-in row. A large terminal panorama dissolves upward into the same plane, without a framed artwork card.",
+        "layout": "Discovery strip \u2192 native wordmark + three route groups \u2192 visible AI console + direct feedback \u2192 always-open email row \u2192 native/legal \u2192 literal last art figure. Legal lives in the shaded upper bleed region; no controls overlay the lower busy illustration. App scales wordmark/console/image and omits repeated primary download/demo CTA.",
+        "typography": "Atlas Georgia large wordmark, native paper/forest/coral; CodeVetter true-black, native system sans and evidence-white wordmark, amber action/focus. UI prose and inputs retain system body type.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-bleed-directions/evidence/d3/pass-02/contact-landing.png",
+          "app": ".fleet-local/footer180-bleed-directions/evidence/d3/pass-02/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-bleed-directions/d3/contract.json"
+      }
+    ],
+    "selected": "",
+    "approval": "pending",
+    "ownerEvidence": {
+      "path": ".fleet-local/footer180-signature-footer/owner-request.md",
+      "quote": "Need a more polished variant."
+    },
+    "supplied": "",
+    "before": ".fleet-local/footer180-bleed-directions/evidence/final-review.md",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "none",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "Existing native inputs/buttons/links, source-owned provider URL builders/logos and horizontal discovery patterns; no new dependency/runtime or backend."
+      }
+    },
+    "contract": {
+      "purpose": "Merge product CTA, visible AI console, visible opt-in email, studio strip and coherent native routes into a continuous footer ending in personalized artwork.",
+      "purposeSource": ".fleet-local/footer180-signature-footer/owner-request.md",
+      "canonicalPurpose": "A backend-free browser composition preserves product identity and existing service/component ownership.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "Visitors and browser users of applicable Fleet products.",
+      "job": "Choose a next product action, edit a question for an existing assistant, opt into updates or find a studio/support route.",
+      "thesis": "One closing composition, not a series of pitches: a compact open question/updates pair, one elegantly aligned real project rail, useful native route groups, and a single product-name signature grounded in terminal personalized artwork.",
+      "system": "Desktop console/email1.45:1 pair; one rail; three compact useful native route groups; legal in lower negative-space bleed; literal last560px illustrated wordmark stage. Quiet web scales type/scene without repeating a landing CTA. Mobile keeps readable targets, two route columns with Connect spanning the full row, horizontal rail scroll inside container, full-width open console and opt-in. No artificial mobile height target.",
+      "signature": "Atlas provenance cabinet: original product objects and source cards, structured folio and separate annotation. CodeVetter task/source-change folios into bounded chamber with retained receipts. Wordmark sits above mechanism in quiet shared terminal wall; not repeated above utilities.",
+      "risk": "Terminal60px image-stage overlap starts within legal whitespace and the extended upper wall; giant wordmark must remain above central chamber/folio at768. Mobile center crop removes peripheral evidence trays. Retaining full native resources in a disclosure gives compact composition without dropping destinations. Compact utility row must not visually crush logo/provider spacing. Atlas upper cabinet detail is intentionally softened by the title fade; the lower central source folio/annotation must remain clear in rendered proof. CodeVetter geometry and chamber clearance are preserved.",
+      "qualityBar": "Desktop full closing around1000\u20131150px at1440, with560px terminal stage, rather than1600px utility stack.; Single displayed wordmark; no generic headings or repeated CTA.; Console and opt-in read as one deliberate side-by-side composition.; One real discover rail shares typography/baselines/gutters.; Native links14px, coherent groups, accessible40/44targets.; High contrast field borders,12px consent/legal.; No hard art rectangle seam, busy scene behind controls, or legal after art.; Core personalized mechanism fully visible below type."
+    }
+  },
+  "evidence": {
+    "platform": "web",
+    "productContinuity": {
+      "status": "pending",
+      "reason": "Paired representative browser closing sections only. This is not a deployed full product or native operating workflow qualification.",
+      "reviewer": "",
+      "report": ".fleet-local/footer180-signature-footer/evidence/final-review.md",
+      "surfaces": {
+        "landing": ".fleet-local/footer180-signature-footer/evidence/p1/pass-02/contact-landing.png",
+        "app": ".fleet-local/footer180-signature-footer/evidence/p1/pass-02/contact-app.png"
+      },
+      "checks": {
+        "designSystem": {
+          "status": "pending",
+          "observation": ""
+        },
+        "identity": {
+          "status": "pending",
+          "observation": ""
+        },
+        "vocabulary": {
+          "status": "pending",
+          "observation": ""
+        },
+        "productTruth": {
+          "status": "pending",
+          "observation": ""
+        },
+        "handoff": {
+          "status": "pending",
+          "observation": ""
+        }
+      }
+    },
+    "slopScale": {
+      "platform": "web",
+      "posture": "advisory",
+      "reason": "Native accessible controls, product palettes and typography preserved. Direct rendered craft and interactions decide defects; numeric heuristic scores do not establish owner acceptance.",
+      "checkpoints": [
+        {
+          "stage": "directions",
+          "direction": "p1",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:56377/p1-ph-landing.html http://127.0.0.1:56377/p1-ph-app.html http://127.0.0.1:56377/p1-codevetter-landing.html http://127.0.0.1:56377/p1-codevetter-app.html --json",
+          "report": ".fleet-local/footer180-signature-footer/evidence/p1/pass-02/slop-directions.json",
+          "findingsReview": "Direct craft review and current browser evidence recorded in final-review.md. Atlas hard image seam and hidden composer label corrected after first render. Original artwork and native palettes retained; provider execution remains unverified."
+        },
+        {
+          "stage": "directions",
+          "direction": "d1",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:58376/d1-ph-landing.html http://127.0.0.1:58376/d1-ph-app.html http://127.0.0.1:58376/d1-codevetter-landing.html http://127.0.0.1:58376/d1-codevetter-app.html --json",
+          "report": ".fleet-local/footer180-bleed-directions/evidence/d1/pass-01/slop-directions.json",
+          "findingsReview": "Readable editable AI and email controls, provider encoding, scrollable studio strip, route hierarchy, actual bleed, consent and mechanism crop reviewed. D3 faint boundaries/tiny mobile navigation/local-chip arrows were fixed and recaptured. Native palette/layout flags retained as intentional; provider execution remains unverified."
+        },
+        {
+          "stage": "directions",
+          "direction": "d2",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:55955/d2-ph-landing.html http://127.0.0.1:55955/d2-ph-app.html http://127.0.0.1:55955/d2-codevetter-landing.html http://127.0.0.1:55955/d2-codevetter-app.html --json",
+          "report": ".fleet-local/footer180-bleed-directions/evidence/d2/pass-01/slop-directions.json",
+          "findingsReview": "Readable editable AI and email controls, provider encoding, scrollable studio strip, route hierarchy, actual bleed, consent and mechanism crop reviewed. D3 faint boundaries/tiny mobile navigation/local-chip arrows were fixed and recaptured. Native palette/layout flags retained as intentional; provider execution remains unverified."
+        },
+        {
+          "stage": "directions",
+          "direction": "d3",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:59107/d3-ph-landing.html http://127.0.0.1:59107/d3-ph-app.html http://127.0.0.1:59107/d3-codevetter-landing.html http://127.0.0.1:59107/d3-codevetter-app.html --json",
+          "report": ".fleet-local/footer180-bleed-directions/evidence/d3/pass-02/slop-directions.json",
+          "findingsReview": "Readable editable AI and email controls, provider encoding, scrollable studio strip, route hierarchy, actual bleed, consent and mechanism crop reviewed. D3 faint boundaries/tiny mobile navigation/local-chip arrows were fixed and recaptured. Native palette/layout flags retained as intentional; provider execution remains unverified."
+        }
+      ]
+    },
+    "visualReview": {
+      "status": "pending",
+      "reviewer": "Independent render agent and root direct craft review",
+      "direction": "",
+      "report": ".fleet-local/footer180-signature-footer/evidence/final-review.md",
+      "checks": {
+        "hierarchy": {
+          "status": "pending",
+          "observation": ""
+        },
+        "typography": {
+          "status": "pending",
+          "observation": ""
+        },
+        "composition": {
+          "status": "pending",
+          "observation": ""
+        },
+        "identity": {
+          "status": "pending",
+          "observation": ""
+        },
+        "interaction": {
+          "status": "pending",
+          "observation": ""
+        },
+        "responsive": {
+          "status": "pending",
+          "observation": ""
+        }
+      },
+      "previewStatus": "pass"
+    },
+    "screenshots": [
+      {
+        "width": 390,
+        "path": ".fleet-local/footer180-signature-footer/evidence/p1/pass-02/ph-landing-390-closing.png"
+      },
+      {
+        "width": 768,
+        "path": ".fleet-local/footer180-signature-footer/evidence/p1/pass-02/ph-landing-768-closing.png"
+      },
+      {
+        "width": 1440,
+        "path": ".fleet-local/footer180-signature-footer/evidence/p1/pass-02/ph-landing-1440-closing.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "Managed 12-case browser matrix, current source guards, editable AI/provider URL handoffs, visible labels, native opt-in/no-send, keyboard studio rail and pinned direction scans.",
+      "status": "pass"
+    },
+    "critique": {
+      "score": 0,
+      "maximum": 40,
+      "dimensions": {
+        "hierarchy": 0,
+        "typography": 0,
+        "composition": 0,
+        "identity": 0,
+        "interaction": 0,
+        "responsive": 0
+      }
+    },
+    "audit": {
+      "score": 0,
+      "maximum": 20,
+      "dimensions": {
+        "purpose": 0,
+        "accessibility": 0,
+        "behavior": 0,
+        "responsive": 0,
+        "performance": 0
+      }
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": []
+    },
+    "comprehension": {
+      "status": "not-applicable",
+      "reviewer": "",
+      "answers": {
+        "product": "",
+        "audience": "",
+        "value": "",
+        "mechanism": "",
+        "proof": "",
+        "nextAction": ""
+      },
+      "purposeScore": {
+        "product": 0,
+        "audience": 0,
+        "value": 0,
+        "mechanism": 0,
+        "proof": 0,
+        "nextAction": 0,
+        "total": 0
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "pending",
+    "note": "Focused P1 refinement of prior comparison systems. Preview review only; no final owner acceptance, production migration or deployed qualification claimed."
+  },
+  "previewGate": {
+    "command": "node tooling/scripts/design-workflow.mjs check --project /Users/sarthak/Desktop/fleet/saas-maker --receipt .fleet/design-review-footer180-signature.json",
+    "exitCode": 1,
+    "state": "preview-ready-selection-pending",
+    "errors": [
+      "overhaul direction.selected must match a probe id",
+      "overhaul direction approval must be approved or explicitly delegated"
+    ],
+    "meaning": "Rendered preview evidence is complete. Production implementation preflight remains gated on owner direction selection; no implementation acceptance claimed."
+  }
+}

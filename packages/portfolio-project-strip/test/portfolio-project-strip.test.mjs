@@ -77,3 +77,58 @@ test('adds referral source without mutating canonical destination state', () => 
   assert.equal(withReferralSource(canonical), canonical);
   assert.equal(withReferralSource('not a url', 'codevetter'), 'not a url');
 });
+
+test('curated layout renders only three stable noncurrent links with descriptions and existing referrals', () => {
+  const markup = renderToStaticMarkup(
+    createElement(PortfolioProjectStrip, {
+      catalogUrl: '',
+      currentProjectId: 'current',
+      layout: 'curated',
+      projects: [
+        { id: 'current', name: 'Current', url: 'https://current.example' },
+        {
+          id: 'one',
+          name: 'One',
+          url: 'https://one.example/path?campaign=launch#details',
+          description: 'First <project>',
+        },
+        { id: 'one', name: 'Duplicate', url: 'https://duplicate.example' },
+        { id: 'bad', name: 'Unsafe', url: 'javascript:alert(1)' },
+        { id: 'two', name: 'Two', url: 'https://two.example', description: 'Second project' },
+        { id: 'three', name: 'Three', url: 'https://three.example' },
+        { id: 'four', name: 'Fourth', url: 'https://four.example' },
+      ],
+    })
+  );
+  assert.match(markup, /data-layout="curated"/);
+  assert.equal((markup.match(/<a /g) ?? []).length, 3);
+  assert.ok(markup.indexOf('>One<') < markup.indexOf('>Two<'));
+  assert.ok(markup.indexOf('>Two<') < markup.indexOf('>Three<'));
+  assert.match(markup, /First &lt;project&gt;/);
+  assert.match(markup, /campaign=launch&amp;ref=current#details/);
+  assert.doesNotMatch(
+    markup,
+    />Current<|>Fourth<|>Duplicate<|>Unsafe<|__duplicate|data-loop|role="tooltip"/
+  );
+});
+
+test('curated short and empty lists preserve bounded absence without cloning', () => {
+  const props = { catalogUrl: '', layout: 'curated', currentProjectId: 'current' };
+  assert.equal(
+    renderToStaticMarkup(
+      createElement(PortfolioProjectStrip, {
+        ...props,
+        projects: [{ id: 'current', name: 'Current', url: 'https://current.example' }],
+      })
+    ),
+    ''
+  );
+  const single = renderToStaticMarkup(
+    createElement(PortfolioProjectStrip, {
+      ...props,
+      projects: [{ id: 'one', name: 'One', url: 'https://one.example' }],
+    })
+  );
+  assert.equal((single.match(/<a /g) ?? []).length, 1);
+  assert.doesNotMatch(single, /__duplicate|data-loop/);
+});

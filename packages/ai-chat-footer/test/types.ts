@@ -12,6 +12,7 @@ const full: AIChatFooterProps = {
   providers: ['claude', 'chatgpt'],
   label: 'Ask AI',
   theme: 'dark',
+  layout: 'compact',
   className: 'my-footer',
 };
 

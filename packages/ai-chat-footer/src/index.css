@@ -138,3 +138,14 @@
 .ai-chat-footer[data-theme="dark"] {
   color-scheme: dark;
 }
+
+.ai-chat-footer[data-layout='compact'] {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0;
+}
+
+.ai-chat-footer[data-layout='compact'] .ai-chat-footer__icons {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}

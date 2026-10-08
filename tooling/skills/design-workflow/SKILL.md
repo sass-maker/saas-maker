@@ -1,6 +1,6 @@
 ---
 name: design-workflow
-description: Automatically use for meaningful Fleet visual or frontend design, including requests to design, redesign, beautify, modernize, polish, critique, or substantially improve a website, landing page, dashboard, app shell, onboarding flow, product UI, visual identity, layout, navigation, interaction, responsive system, theme, or component; also use when an interface is called ugly, generic, bland, template-like, amateur, or visually weak. Owns the required owner selection among three or four visual systems before overhaul implementation, plus product clarity, browser evidence, quality gates, and completion. Skip copy-only edits, invisible refactors, accessibility-only corrections, and trivial deterministic CSS fixes.
+description: Use before meaningful Fleet visual or frontend work and whenever the owner is unhappy with a design or calls it ugly, generic, bland, template-like, or weak. Owns direction selection, implementation preflight, rendered craft review, and completion. Excludes copy-only edits, invisible refactors, accessibility corrections, and trivial deterministic CSS fixes.
 ---
 
 # Fleet design workflow
@@ -9,6 +9,25 @@ This is Fleet's single implicit entry point for meaningful design work. Use
 Impeccable only as a supporting mechanics playbook. This skill owns direction,
 approval, implementation alignment, and completion. Project `PRODUCT.md` and
 `DESIGN.md` outrank generic component, palette, or detector recommendations.
+Editing this workflow's instructions or validators is tooling work; run the
+relevant tooling checks rather than a product visual-direction round.
+
+When the product has landing and app surfaces, apply
+[product continuity](references/product-continuity.md): inventory both, use one
+design system, select paired previews, and review their rendered identity,
+vocabulary, product truth and entry flow. Standalone work needs a reason.
+
+State the applicable lane and gates in the task plan before UI edits. Read this
+skill again when a task shifts into meaningful visual work. Prior skill reads, receipts or passing builds cannot qualify new work.
+The excluded copy-only, invisible-refactor, accessibility-correction, and trivial
+CSS tasks need ordinary scoped verification, not a receipt or the full design
+gates. A change that also alters composition, hierarchy, or interaction is not
+covered by that exception.
+The optional Codex `UserPromptSubmit` routing reminder is installed with
+`node <tooling-root>/scripts/install-skill-run-hook.mjs --design-routing`.
+Codex requires review/trust of that definition through `/hooks`; an installed
+definition is not proof of runtime activation. The reminder reinforces routing;
+the preflight and completion validators enforce receipt requirements, not taste.
 
 ## 0. Product-purpose gate
 
@@ -33,7 +52,7 @@ Record the canonical sentence and source in `direction.contract`. Compare all
 six purpose fields with repository-local `PRODUCT.md` or `PROJECT_STATUS.md`.
 Use `purposeAlignment: match` when they agree. If the repository has newer
 truth, use `repository-override`, record the exact drift in `driftNote`, and
-update the canonical Site Health contract in the same task before approving the
+update the canonical SaaS Maker catalog and regenerate its views in the same task before approving the
 landing page. A live page that contradicts audience, outcome, mechanism, proof,
 lifecycle, or next action cannot pass comprehension regardless of visual score.
 
@@ -67,13 +86,15 @@ for overhaul work even when one direction appears obviously strongest. Skip it
 only when the owner already supplied a sufficiently complete direction or
 explicitly delegated the choice in the current request.
 
-If `PRODUCT.md` or `DESIGN.md` is missing, run `$impeccable init` before
-meaningful work. Do not initialize untouched projects fleet-wide.
+If `PRODUCT.md` or `DESIGN.md` is missing, establish the missing product/design
+context before meaningful work. Use `$impeccable init` when available; otherwise
+write the context from the actual brief and repository evidence. Do not claim
+an unavailable skill ran or initialize untouched projects fleet-wide.
 
 Create the receipt:
 
 ```bash
-node scripts/design-workflow.mjs create \
+node <tooling-root>/scripts/design-workflow.mjs create \
   --project <project-root> \
   --mode <preserve|overhaul> \
   --register <brand|product> \
@@ -81,21 +102,71 @@ node scripts/design-workflow.mjs create \
   --target "<surface>"
 ```
 
-When invoked inside an independent child repo, call the same script through the
-relative Fleet root.
+`<tooling-root>` is the absolute path to `saas-maker/tooling` in this workspace;
+resolve it before running commands from an independent child repo. Receipts use
+`fleet.design-review.v2`. Keep a legacy receipt as historical evidence and use
+`--receipt .fleet/design-review-<task>.json` for a new pass; pass that same path
+to both gates. Do not overwrite or relabel historical evidence as a fresh review.
+Retain every referenced preview, capture and report through completion and future
+audit. Cleanup of temporary implementation code must preserve receipt evidence.
+
+Browser receipts use web viewports. For native macOS, read
+[the native evidence contract](references/native-evidence.md) before creating or reviewing a receipt.
 
 ## 2. Shape and build
 
 - Preserve: use the tracked system and before evidence as the contract.
-- Overhaul: record reference names, direction ids or probe paths, the owner's
-  selected direction, and `approved` or `delegated` in
-  `.fleet/design-review.json`. Do not record `agent-selected` unless an older
-  receipt requires the field; the owner-selection gate controls new work.
+- Overhaul: use `direction.source: comparison`, record three or four probes
+  with distinct visual artifact paths plus `thesis`, `layout`, and `typography`,
+  the selected id, and `approved` or `delegated`. Record the exact owner quote
+  and its attributable local decision record in `direction.ownerEvidence`.
+  For a complete owner-supplied direction, use `source: owner-supplied` with its
+  artifact in `direction.supplied`; for explicitly delegated selection, use
+  `source: delegated`. These are evidenced exceptions to the comparison round,
+  not interpretations of "finish", "improve", or "release". `agent-selected`
+  never passes a new overhaul.
 - Before coding, fill the receipt's direction contract: purpose, audience,
   screen job, visual thesis, role-based color/type/spacing/layout system, one
   memorable signature drawn from the product's world, and one deliberate risk
-  with a reason. Run a subject-swap test and revise any choice that would work
+  with a reason. Fill `qualityBar` with the concrete qualities this surface
+  must achieve and the owner's current concerns. Use repository-local identity
+  and the current brief; do not impose one Fleet-wide palette, layout, or mood.
+  If prior work disappointed the owner, name the failure and show how each
+  direction addresses it. Run a subject-swap test and revise any choice that would work
   unchanged for an unrelated product.
+- The agent owns establishing the quality standard. When the owner cannot name
+  a UI they like, inspect two or three strong original product references that
+  fit this surface's job, state what their composition/type/interaction does
+  well, and turn those observations into the quality bar and direction probes.
+  Record attributable references and an anti-reference in the direction brief.
+  Do not require the owner to supply inspiration or convert a reference's
+  branding into a Fleet-wide style. A selection chooses among already polished
+  alternatives; it is not a request for the owner to design them.
+- For each direction, show representative real content in a primary screen
+  and a second relevant context or state; for landing/app products, show both
+  using `probes[].surfaces` or `direction.pairedPreview`. Include compact-screen
+  behavior where relevant. Recommend one and explain its tradeoff; do not
+  silently implement it. A polished hero alone does not establish the system.
+- At direction review, run the [slop scale](../../docs/slop-score.md) on each
+  rendered web direction before presenting it. Review triggered evidence, fix
+  generic choices that conflict with the brief, and record intentional choices.
+  Save a `directions` checkpoint for each probe (or the supplied/delegated
+  direction). Static-only previews or unavailable scans need a recorded
+  limitation; never invent a score. Preflight requires these checkpoint records.
+- Before UI implementation, run:
+
+  ```bash
+  node <tooling-root>/scripts/design-workflow.mjs preflight --project <project-root>
+  ```
+
+  This checks context, the direction contract, source choice, and approval
+  evidence without requiring after screenshots or final scores. Direction
+  previews may be produced before it passes; production UI implementation may
+  begin only after it passes. A passing preflight is not completion.
+- After the first working web render, run the slop scale again and record the
+  `iteration` checkpoint before final polish. Use its actual triggered evidence
+  to guide a fix/review pass; do not postpone every scan until handoff. Re-scan
+  after material fixes and save a separate `final` checkpoint during review.
 - Use a specialist only when the task genuinely needs it. For the mandatory
   overhaul direction set, read `../design-inspiration/SKILL.md` and use its
   direction-set contract; external reference research remains optional. Use
@@ -120,6 +191,9 @@ relative Fleet root.
   authorization and a recorded upstream gap. Keep any runtime dependency to the
   smallest selective import. Apple-native interfaces are excluded from this web
   standard.
+- Reuse upstream interaction behavior and accessible primitives without letting
+  their demo composition become the product identity. Product-specific layout,
+  typography, art direction, and content remain the selected direction's job.
 - Use the same reference's priority-scaled delivery profile. P1 receives
   benchmark-grade bespoke composition and the deepest checks; lower priorities
   progressively reuse more of the selected upstream/template system. Priority
@@ -148,25 +222,16 @@ relative Fleet root.
   `../design-inspiration/SKILL.md`; research, probes, or generated boards are
   direction evidence, not a prerequisite for ordinary implementation.
 
-### When comparing design instructions or models
-
-Borrow the same-brief comparison approach from [WhichAI](https://www.whichai.dev/)
-only when an evaluation or exploration is requested. Hold the product brief,
-content, assets, framework, viewport, and effort budget constant; vary one
-instruction set or model at a time and record the configuration. Judge outputs
-without model labels where practical, using the existing purpose, visual,
-accessibility, interaction, and performance gates—not screenshots alone.
-Record useful differences and recurring failures in the existing receipt.
-One brief is directional evidence, not a general model ranking. WhichAI's
-personal taste rankings do not change Fleet's model defaults, and this method
-does not add a routine multi-variant step or authorize extra agents or spend.
+For requested instruction/model comparisons, use
+[the comparison contract](references/quality-rubric.md#instruction-or-model-comparisons) and preserve all design gates.
 
 ## 3. Review
 
 Before completion:
 
-1. Inspect the running surface in a browser.
-2. Capture after screenshots at 390, 768, and 1440 pixels.
+1. Inspect the running browser surface or native application.
+2. For web receipts, capture after screenshots at 390, 768, and 1440 pixels.
+   For native macOS, follow [the native evidence contract](references/native-evidence.md).
 3. For `Persuade` surfaces, run a fresh-visitor comprehension check:
    without reading the whole page, an independent reviewer must be able to
    state the product, intended audience, primary value, proof of the promise,
@@ -178,11 +243,27 @@ Before completion:
    honest next action and lifecycle 15. The minimum passing score is 85. Any
    material contradiction is a failure, even if the arithmetic total or visual
    scores would otherwise pass.
-4. Run `$impeccable critique`, fix all P0/P1 findings, then run
-   `$impeccable polish` and `$impeccable audit`.
+4. Review the rendered surface against the selected direction and `qualityBar`.
+   Use `$impeccable critique`, `polish`, and `audit` when available; otherwise
+   perform and name a direct review rather than inventing an invocation. Record
+   `evidence.visualReview` with reviewer, selected direction id, report path,
+   and checks for hierarchy, typography, composition, identity, interaction,
+   and responsive behavior. Every check needs a concrete observation; only
+   interaction can be `not-applicable`, with a reason. The report must name
+   observed defects, where they appear in rendered evidence, and how they were
+   fixed. Generic styling, weak composition, or deviation from the selected
+   direction is P1 when it undermines the brief, even if the UI works. Fix all
+   P0/P1 findings and inspect the result again. Never invent an independent
+   reviewer or equate a subjective self-score with owner acceptance.
+   Read [the review rubric](references/quality-rubric.md) before assigning scores.
+   Record dimension scores and evidence for the deductions; totals must match.
 5. Run the project's smallest relevant build/check.
 6. Fill the receipt with evidence paths, scores, unresolved counts, purpose
    comprehension result, and check command.
+
+For paired landing/app products, also require `evidence.productContinuity` with
+both rendered captures and passing concrete checks from its linked contract.
+Individual scores cannot compensate for a mismatched or unverified pair.
 
 The minimum floors come from `config/design-workflow.json`: purpose 85/100,
 critique 32/40, audit 16/20, and zero unresolved P0/P1. Purpose and visual
@@ -191,6 +272,19 @@ unclear or incorrect product promise. Scores are floors, not proof of taste.
 
 Detector findings are advisory. Record them, but never rewrite an intentional
 `DESIGN.md` decision only to silence an aesthetic heuristic.
+
+Run the pinned local [slop-score runner](../../docs/slop-score.md) on the final
+web render: `node <tooling-root>/scripts/slop-score.mjs <url> --json`.
+Retain before evidence when an existing surface is available. Save raw reports
+under the owning project's gitignored `.fleet-local/` directory and record
+`evidence.slopScale` using that document's checkpoint contract. Include finding
+dispositions and compare scores only with the same pin, definitions, preset,
+viewport and page state. Direction-review records gate overhaul preflight;
+iteration and final records gate completion for meaningful web work. The
+numeric score stays advisory and separate from purpose, critique and audit:
+there is no score ceiling. Failed/blocked scans remain unknown with concrete
+errors, and native surfaces require a justified web-scanner exemption. Preserve
+intentional choices; score reduction does not establish quality or acceptance.
 
 ## 4. Close with a decision record
 
@@ -204,9 +298,11 @@ question only when a material ambiguity would change product identity or scope.
 Validate:
 
 ```bash
-node scripts/design-workflow.mjs check --project <project-root>
+node <tooling-root>/scripts/design-workflow.mjs check --project <project-root>
 ```
 
 Do not claim the meaningful visual change is complete until this command
-passes. Report the lane, evidence, scores, owner decision, and any advisory
-detector findings.
+passes. Follow [the output contract](references/quality-rubric.md#deliver-the-rendered-work):
+show the rendered result, concrete fixes, remaining tradeoffs and verification.
+Distinguish the direction decision from owner acceptance. Scores and receipts
+support the deliverable; they do not establish its design quality.

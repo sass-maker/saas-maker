@@ -149,6 +149,15 @@ function homeMarkdown(): string {
     '@saas-maker/feedback is a React widget for bugs, feature requests, screenshots, and page-specific feedback.',
     '',
     `- Package overview: ${SITE_URL}/#package`,
+    '',
+    '## A focused engineering pilot',
+    '',
+    'Verify one AI-built feature before release. AI agents inspect one critical workflow in a TypeScript/Node application, run reproducible checks, and write a report of defects and verification limits. Sarthak is the contact for scope and payment.',
+    '',
+    '$500 USD: $250 to start and $250 on delivery, within three working days after scope and runnable setup are agreed. Fixes are separately scoped.',
+    '',
+    `- Real sample report: ${SITE_URL}/evidence/feature-verification-anime-list-2026-10-02.md`,
+    '- Discuss the pilot: team@sassmaker.com',
   ].join('\n');
 }
 

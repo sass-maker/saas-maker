@@ -19,8 +19,10 @@ classify coarsely, record honestly.
 
 1. **Load config**: choose the scope named by the caller.
    - **Scheduled weekly scope**: load only the active queries in
-     `site-health/apps/backend/config/root-search-queries.json`. This is the canonical ten
-     roots × four intents contract; do not add the legacy all-project queries.
+     `site-health/apps/backend/config/root-search-queries.json`. This is the canonical
+     roots × four intents contract; derive the expected observation count from its
+     active queries rather than hard-coding a root count, and do not add the legacy
+     all-project queries.
    - **Explicit broad/manual scope**: load
      `site-health/apps/backend/config/geo-observatory.json` plus the root contract.
    Never rephrase an existing query (`qid` history breaks); to track something
@@ -47,7 +49,7 @@ classify coarsely, record honestly.
 4. **Record**: write all entries to a temp JSON file
    (`[{date, product, qid, query, source: "web-search", class, top: [urls],
    notes}]`, date = today YYYY-MM-DD). For the scheduled weekly scope, require
-   exactly 40 entries on the same date, then run:
+   exactly one entry for every active root-contract query on the same date, then run:
    `node scripts/geo-observatory-record.mjs --root-search <file>`
    For an explicitly requested broad/manual scope, run:
    `node scripts/geo-observatory-record.mjs <file>`

@@ -1,0 +1,301 @@
+{
+  "$schema": "fleet.design-review.v2",
+  "version": 2,
+  "project": "saas-maker",
+  "target": "Split footer middle with icon-only assistants and terminal studio line",
+  "surfaceMode": "read",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "packages/fleet-footer/PRODUCT.md",
+    "design": "packages/fleet-footer/DESIGN.md"
+  },
+  "direction": {
+    "productSurfaces": {
+      "scope": "paired",
+      "landing": "Atlas PH Catalog and CodeVetter representative closing sections",
+      "app": "PH fictional public sample and CodeVetter browser documentation variants",
+      "reason": "Public browser shared composition study. Native/private operating applications stay outside public marketing footer."
+    },
+    "pairedPreview": {
+      "landing": ".fleet-local/footer180-split-directions/evidence/q1/pass-01/contact-landing.png",
+      "app": ".fleet-local/footer180-split-directions/evidence/q1/pass-01/contact-app.png"
+    },
+    "source": "comparison",
+    "references": [],
+    "probes": [
+      {
+        "id": "q1",
+        "name": "Compact directory",
+        "path": ".fleet-local/footer180-split-directions/evidence/q1/pass-01/contact-landing.png",
+        "thesis": "A compact readable native directory on the wider left shares one horizontal plane with a narrower always-open updates\u2192AI column. Product links are primary; service capability stays exposed without a five-provider text row or repeat prompt chips.",
+        "layout": "Desktop1.5:1 directory/services split, three14px native route columns, updates first and AI under one restrained rule. Phone stacks full-width product directory, updates, AI, then unchanged wordmark/art and one final studio line.",
+        "typography": "Exact native Georgia Atlas forest/paper/coral; CodeVetter system sans black/white/amber. One giant P1 wordmark remains anchored in terminal art; small native identity line above routes. Native secondary links14px40/44px targets; controls16px; visible question/consent12px.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-split-directions/evidence/q1/pass-01/contact-landing.png",
+          "app": ".fleet-local/footer180-split-directions/evidence/q1/pass-01/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-split-directions/q1/contract.json"
+      },
+      {
+        "id": "q2",
+        "name": "Editorial split",
+        "path": ".fleet-local/footer180-split-directions/evidence/q2/pass-01/contact-landing.png",
+        "thesis": "Native product destinations become large editorial links on the left, with quieter resources/connect rows beneath. The right starts with one composed question/icon dock, then a compact opt-in form. Hierarchy comes from scale and placement, rather than adding stacked pitch sections.",
+        "layout": "Desktop1.28:1 editorial/product-services split. Left primary links28px Atlas/25px Code, secondary14px resource/contact groups. Right question/icons first, updates beneath one rule. Phone preserves hierarchy with no oversized app identity; compact app lowers primary-link scale.",
+        "typography": "Exact native Georgia Atlas forest/paper/coral; CodeVetter system sans black/white/amber. One giant P1 wordmark remains anchored in terminal art; small native identity line above routes. Native secondary links14px40/44px targets; controls16px; visible question/consent12px.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-split-directions/evidence/q2/pass-01/contact-landing.png",
+          "app": ".fleet-local/footer180-split-directions/evidence/q2/pass-01/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-split-directions/q2/contract.json"
+      },
+      {
+        "id": "q3",
+        "name": "Quiet utility panel",
+        "path": ".fleet-local/footer180-split-directions/evidence/q3/pass-01/contact-landing.png",
+        "thesis": "Native product routes are the left anchor; a single restrained right-hand panel contains an editable assistant composer with an integrated icon dock and open email updates. The terminal signature fades into the retained illustration, followed only by one studio line.",
+        "layout": "Wider three-column product directory on left; restrained ruled right utility panel; question and icons share a native field boundary, with compact updates beneath. Tablet two route columns; phone product links then utilities. One literal bottom line scrolls locally.",
+        "typography": "Native Atlas Georgia/forest/paper/coral and CodeVetter ink/white/amber retained. Middle uses readable 14px routes, quiet 12px group labels, 16px question/email and 17px utility headings. Terminal P1 wordmark/art unchanged.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-split-directions/evidence/q3/pass-01/contact-landing.png",
+          "app": ".fleet-local/footer180-split-directions/evidence/q3/pass-01/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-split-directions/q3/contract.json"
+      }
+    ],
+    "selected": "",
+    "approval": "pending",
+    "ownerEvidence": {
+      "path": ".fleet-local/footer180-split-directions/owner-request.md",
+      "quote": "The left section would be the actual footer for the product. The right section would be the product updates and AI chat. We would have a nice image. At the very bottom we will have one simple strip and nothing more."
+    },
+    "supplied": "",
+    "before": ".fleet-local/footer180-signature-footer/evidence/final-review.md",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "none",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "Existing native inputs/buttons/links, source-owned provider URL builders/logos and horizontal discovery patterns; no new dependency/runtime or backend."
+      }
+    },
+    "contract": {
+      "purpose": "Let visitors use product-native footer routes, ask an external assistant about the product, opt into updates and discover studio projects through one final line.",
+      "purposeSource": ".fleet-local/footer180-split-directions/owner-request.md",
+      "canonicalPurpose": "A backend-free browser composition preserves product identity and existing service/component ownership.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "Visitors and browser users of applicable Fleet products.",
+      "job": "Use product routes on the left or edit a question/sign up on the right; finish with personalized artwork and a single studio line.",
+      "thesis": "A readable split between product navigation and useful controls replaces the stacked middle.",
+      "system": "Three distinct directory/editorial/quiet-panel middle arrangements retain product identity and unchanged terminal artwork.",
+      "signature": "Product-native giant wordmark fades into personalized art; one final single-line studio strip is the only content after it.",
+      "risk": "Desktop negative space and right-hand tool density vary; phone stacks content while preserving clear labels and touch targets.",
+      "qualityBar": "Product footer left, AI and open updates right, assistant icons only with accessible names/44px targets, zero duplicate prompt chips, unchanged smooth art fade, readable native links and unchecked consent, one simple studio line absolutely last."
+    }
+  },
+  "evidence": {
+    "platform": "web",
+    "productContinuity": {
+      "status": "pending",
+      "reason": "Paired representative public browser closing sections only; no full-product deployed flow or native/private operating UI acceptance claimed.",
+      "reviewer": "",
+      "report": ".fleet-local/footer180-split-directions/evidence/final-review.md",
+      "surfaces": {
+        "landing": ".fleet-local/footer180-split-directions/evidence/q1/pass-01/contact-landing.png",
+        "app": ".fleet-local/footer180-split-directions/evidence/q1/pass-01/contact-app.png"
+      },
+      "checks": {
+        "designSystem": {
+          "status": "pending",
+          "observation": ""
+        },
+        "identity": {
+          "status": "pending",
+          "observation": ""
+        },
+        "vocabulary": {
+          "status": "pending",
+          "observation": ""
+        },
+        "productTruth": {
+          "status": "pending",
+          "observation": ""
+        },
+        "handoff": {
+          "status": "pending",
+          "observation": ""
+        }
+      }
+    },
+    "slopScale": {
+      "platform": "web",
+      "posture": "advisory",
+      "reason": "Native identities, original artwork and proven controls retained. Fixed scanner viewport/pin is recorded accurately; direct craft review and owner preference decide quality.",
+      "checkpoints": [
+        {
+          "stage": "directions",
+          "direction": "q1",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:61545/q1-ph-landing.html http://127.0.0.1:61545/q1-ph-app.html http://127.0.0.1:61545/q1-codevetter-landing.html http://127.0.0.1:61545/q1-codevetter-app.html --json",
+          "report": ".fleet-local/footer180-split-directions/evidence/q1/pass-01/slop-directions.json",
+          "findingsReview": "See independent final-review.md and root-craft-review.md for direct review of split hierarchy, deliberate spacing, native palette, icon-only controls, consent, artwork and final studio line. Numeric scores are advisory; external assistant execution remains unverified."
+        },
+        {
+          "stage": "directions",
+          "direction": "q2",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:63242/q2-ph-landing.html http://127.0.0.1:63242/q2-ph-app.html http://127.0.0.1:63242/q2-codevetter-landing.html http://127.0.0.1:63242/q2-codevetter-app.html --json",
+          "report": ".fleet-local/footer180-split-directions/evidence/q2/pass-01/slop-directions.json",
+          "findingsReview": "See independent final-review.md and root-craft-review.md for direct review of split hierarchy, deliberate spacing, native palette, icon-only controls, consent, artwork and final studio line. Numeric scores are advisory; external assistant execution remains unverified."
+        },
+        {
+          "stage": "directions",
+          "direction": "q3",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:60019/q3-ph-landing.html http://127.0.0.1:60019/q3-ph-app.html http://127.0.0.1:60019/q3-codevetter-landing.html http://127.0.0.1:60019/q3-codevetter-app.html --json",
+          "report": ".fleet-local/footer180-split-directions/evidence/q3/pass-01/slop-directions.json",
+          "findingsReview": "See independent final-review.md and root-craft-review.md for direct review of split hierarchy, deliberate spacing, native palette, icon-only controls, consent, artwork and final studio line. Numeric scores are advisory; external assistant execution remains unverified."
+        }
+      ],
+      "scopeClarification": ".fleet-local/footer180-split-directions/evidence/scan-scope-clarification.md"
+    },
+    "visualReview": {
+      "status": "pending",
+      "reviewer": "Independent renderer and root direct craft review",
+      "direction": "",
+      "report": ".fleet-local/footer180-split-directions/evidence/final-review.md",
+      "checks": {
+        "hierarchy": {
+          "status": "pending",
+          "observation": ""
+        },
+        "typography": {
+          "status": "pending",
+          "observation": ""
+        },
+        "composition": {
+          "status": "pending",
+          "observation": ""
+        },
+        "identity": {
+          "status": "pending",
+          "observation": ""
+        },
+        "interaction": {
+          "status": "pending",
+          "observation": ""
+        },
+        "responsive": {
+          "status": "pending",
+          "observation": ""
+        }
+      },
+      "previewStatus": "pass"
+    },
+    "screenshots": [
+      {
+        "width": 390,
+        "path": ".fleet-local/footer180-split-directions/evidence/q1/pass-01/ph-landing-390-closing.png"
+      },
+      {
+        "width": 768,
+        "path": ".fleet-local/footer180-split-directions/evidence/q1/pass-01/ph-landing-768-closing.png"
+      },
+      {
+        "width": 1440,
+        "path": ".fleet-local/footer180-split-directions/evidence/q1/pass-01/ph-landing-1440-closing.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "36 current-source browser cases plus12 pinned direction scans; icon-only accessible names/44px targets, zero chips, split geometry, dynamic provider URL encoding, open email/consent/no-send, final strip order and keyboard scrolling.",
+      "status": "pass"
+    },
+    "critique": {
+      "score": 0,
+      "maximum": 40,
+      "dimensions": {
+        "hierarchy": 0,
+        "typography": 0,
+        "composition": 0,
+        "identity": 0,
+        "interaction": 0,
+        "responsive": 0
+      }
+    },
+    "audit": {
+      "score": 0,
+      "maximum": 20,
+      "dimensions": {
+        "purpose": 0,
+        "accessibility": 0,
+        "behavior": 0,
+        "responsive": 0,
+        "performance": 0
+      }
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": []
+    },
+    "comprehension": {
+      "status": "not-applicable",
+      "reviewer": "",
+      "answers": {
+        "product": "",
+        "audience": "",
+        "value": "",
+        "mechanism": "",
+        "proof": "",
+        "nextAction": ""
+      },
+      "purposeScore": {
+        "product": 0,
+        "audience": 0,
+        "value": 0,
+        "mechanism": 0,
+        "proof": 0,
+        "nextAction": 0,
+        "total": 0
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "pending",
+    "note": "Owner supplied four-zone refinement and delegated content placement. Three polished middle-section variants presented for preference; no final production direction inferred."
+  },
+  "previewGate": {
+    "command": "node tooling/scripts/design-workflow.mjs check --project /Users/sarthak/Desktop/fleet/saas-maker --receipt .fleet/design-review-footer180-split.json",
+    "exitCode": 1,
+    "state": "preview-ready-selection-pending",
+    "errors": [
+      "overhaul direction.selected must match a probe id",
+      "overhaul direction approval must be approved or explicitly delegated"
+    ],
+    "meaning": "Current direction previews and browser evidence are complete. Production direction selection and implementation acceptance remain pending."
+  },
+  "workspaceReview": {
+    "closeDryRun": {
+      "id": "footer-art-terrace-20261003",
+      "exitCode": 0,
+      "action": "keep",
+      "blockers": [
+        "dirty-or-untracked",
+        "open-files"
+      ]
+    },
+    "gcDryRun": {
+      "exitCode": 0,
+      "action": "read-only review; no worktrees retired or deleted"
+    }
+  }
+}

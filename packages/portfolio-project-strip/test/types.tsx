@@ -6,5 +6,6 @@ export const Example = () => (
     currentProjectId="one"
     theme="dark"
     speed={60}
+    layout="curated"
   />
 );

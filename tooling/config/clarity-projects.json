@@ -766,7 +766,7 @@
       "clarityId": "y6bw2z18xp",
       "hostname": "github.com",
       "wiredFiles": [],
-      "reason": "Undeployed project with no public browser-delivered surface.",
+      "reason": "Archived, undeployed research project with no maintained public browser-delivered surface; historical identity retained.",
       "browserSurfaces": []
     },
     {
@@ -851,7 +851,7 @@
       "wiredFiles": [
         "field-track/src/layouts/AppLayout.astro"
       ],
-      "reason": "Clarity covers only the credential-free synthetic manager demo; the public Worker has no production D1 binding and the native employee application is excluded.",
+      "reason": "Clarity covers only the credential-free synthetic manager demo; the public Worker has no production D1 binding and the native employee application is excluded. Owner-retired on 2026-10-08; retain this Clarity identity and historical attribution only.",
       "browserSurfaces": [
         {
           "kind": "combined",

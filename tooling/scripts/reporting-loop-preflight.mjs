@@ -44,6 +44,7 @@ const GEO_REPORT = join(BACKEND, 'docs/geo-observatory-latest.md');
 const ROOT_QUERIES = join(BACKEND, 'config/root-search-queries.json');
 const BROAD_QUERIES = join(BACKEND, 'config/geo-observatory.json');
 const AI_VISIBILITY = join(BACKEND, 'config/ai-visibility.json');
+const PROJECT_CATALOG = join(BACKEND, 'config/projects.json');
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 /** A collector still 'running' this long after it started has died, not stalled. */
@@ -105,6 +106,7 @@ function checkPaths() {
     ['geo ledger', GEO_LEDGER],
     ['root query contract', ROOT_QUERIES],
     ['ai-visibility config', AI_VISIBILITY],
+    ['canonical project catalog', PROJECT_CATALOG],
   ];
   const missing = required.filter(([, path]) => !existsSync(path));
   if (missing.length > 0) {
@@ -173,29 +175,41 @@ function loadLedger() {
     .map((line) => JSON.parse(line));
 }
 
-function activeRootKeys() {
-  const contract = JSON.parse(readFileSync(ROOT_QUERIES, 'utf8'));
-  const keys = new Set();
+export function activeGeoQueryKeys(contract, config) {
+  const rootKeys = new Set();
+  const amendedStatuses = new Map();
   for (const root of contract.roots) {
     for (const query of root.queries) {
-      if (query.status === 'active') keys.add(`${root.projectId}|${query.id}`);
+      amendedStatuses.set(`${root.projectId}|${query.id}`, query.status);
+      if (query.status === 'active') rootKeys.add(`${root.projectId}|${query.id}`);
     }
   }
-  return keys;
-}
-
-function activeBroadKeys() {
-  const config = JSON.parse(readFileSync(BROAD_QUERIES, 'utf8'));
-  const keys = new Set();
+  // Mirror the recorder's status precedence: root amendments retire broad qids.
+  // Counting the raw broad file otherwise demands observations the recorder rejects.
+  const broadKeys = new Set();
   for (const product of config.products ?? []) {
     for (const query of product.queries ?? []) {
-      if ((query.status ?? 'active') === 'active') keys.add(`${product.id}|${query.qid}`);
+      const key = `${product.id}|${query.qid}`;
+      if ((amendedStatuses.get(key) ?? query.status ?? 'active') === 'active') broadKeys.add(key);
     }
   }
-  return keys;
+  return { rootKeys, broadKeys };
 }
 
-function checkGeoLedger(now) {
+export function geoCoverage({ seen, rootKeys, broadKeys, monthly, state }) {
+  const requiredKeys = monthly ? new Set([...rootKeys, ...broadKeys]) : rootKeys;
+  const missingKeys = [...requiredKeys].filter((key) => !seen.has(key));
+  return {
+    state: missingKeys.length === 0 ? state : monthly ? 'fail' : state === 'ok' ? 'warn' : state,
+    rootHits: [...rootKeys].filter((key) => seen.has(key)).length,
+    broadHits: [...broadKeys].filter((key) => seen.has(key)).length,
+    requiredHits: requiredKeys.size - missingKeys.length,
+    requiredExpected: requiredKeys.size,
+    missingKeys,
+  };
+}
+
+function checkGeoLedger(now, monthly) {
   const ledger = loadLedger();
   if (ledger.length === 0) {
     record('geo-ledger', 'GEO ledger freshness', 'fail', 'ledger is empty');
@@ -207,22 +221,28 @@ function checkGeoLedger(now) {
   const state = ageState(age, AGE_BUDGET_DAYS.geo);
 
   const seen = new Set(ledger.filter((entry) => entry.date === latest).map((e) => `${e.product}|${e.qid}`));
-  const rootKeys = activeRootKeys();
-  const rootHits = [...rootKeys].filter((key) => seen.has(key)).length;
-  const broadKeys = activeBroadKeys();
-  const broadHits = [...broadKeys].filter((key) => seen.has(key)).length;
+  const { rootKeys, broadKeys } = activeGeoQueryKeys(
+    JSON.parse(readFileSync(ROOT_QUERIES, 'utf8')),
+    JSON.parse(readFileSync(BROAD_QUERIES, 'utf8')),
+  );
+  const coverage = geoCoverage({ seen, rootKeys, broadKeys, monthly, state });
+  const { rootHits, broadHits } = coverage;
 
   const scope = rootHits === rootKeys.size ? 'complete root contract' : `partial root contract (${rootHits}/${rootKeys.size})`;
   record(
     'geo-ledger',
     'GEO ledger freshness',
-    rootHits === rootKeys.size ? state : state === 'ok' ? 'warn' : state,
+    coverage.state,
     `last run ${latest} (${age}d ago, budget ${AGE_BUDGET_DAYS.geo}d) — ${seen.size} observations, ` +
       `${scope}, broad set ${broadHits}/${broadKeys.size}` +
+      (monthly ? `, required union ${coverage.requiredHits}/${coverage.requiredExpected}` : '') +
+      (monthly && coverage.missingKeys.length > 0
+        ? '. INCOMPLETE: monthly GEO needs the complete active root/broad union; do not report a portfolio trend from a partial run.'
+        : '') +
       (state === 'fail'
         ? '. STALE: the weekly routine has not landed a run. Check the routine fired AND the recorder still starts.'
         : ''),
-    { latestDate: latest, ageDays: age, observations: seen.size, rootHits, rootExpected: rootKeys.size, broadHits, broadExpected: broadKeys.size, runDates: dates.length },
+    { latestDate: latest, ageDays: age, observations: seen.size, rootHits, rootExpected: rootKeys.size, broadHits, broadExpected: broadKeys.size, requiredHits: coverage.requiredHits, requiredExpected: coverage.requiredExpected, missingKeys: coverage.missingKeys, runDates: dates.length },
   );
 }
 
@@ -332,14 +352,54 @@ function checkPanelLastRun(store, now, panelInfo) {
 // 5. Evidence-refresh receipts for the streams the monthly scorecard reads.
 // ---------------------------------------------------------------------------
 
+export function clarityReceiptScope(rows, catalog) {
+  const projects = new Map(catalog.projects.map((project) => [project.id, project]));
+  const eligible = new Set(catalog.projects.filter((project) => {
+    const lifecycle = project.lifecycle?.status ?? project.lifecycle;
+    const clarity = project.systems?.clarity;
+    return ['primary', 'active'].includes(lifecycle)
+      && Boolean(clarity?.clarityId && clarity.browserSurfaces?.length);
+  }).map((project) => project.id));
+  const prefix = 'evidence-refresh:clarity:';
+  const seen = new Set();
+  const excluded = [];
+  const orphaned = [];
+  const scopedRows = rows.filter((row) => {
+    if (!row.key.startsWith(prefix)) return true;
+    const projectId = row.key.slice(prefix.length);
+    if (!projects.has(projectId)) {
+      orphaned.push(projectId);
+      return true; // Keep receipt drift visible; never turn an orphan into a pass.
+    }
+    if (!eligible.has(projectId)) {
+      excluded.push(projectId);
+      return false;
+    }
+    seen.add(projectId);
+    return true;
+  });
+  return {
+    rows: scopedRows,
+    eligible: eligible.size,
+    excluded,
+    orphaned,
+    missing: [...eligible].filter((projectId) => !seen.has(projectId)),
+  };
+}
+
 function checkEvidenceReceipts(store, now) {
   if (!store) {
     record('evidence-receipts', 'Scorecard evidence streams', 'fail', 'evidence store unreadable');
     return;
   }
-  const rows = store
+  const unscopedRows = store
     .prepare("SELECT key, value_json FROM local_metadata WHERE key LIKE 'evidence-refresh:%'")
     .all();
+  const clarityScope = clarityReceiptScope(
+    unscopedRows,
+    JSON.parse(readFileSync(PROJECT_CATALOG, 'utf8')),
+  );
+  const rows = clarityScope.rows;
 
   /**
    * A family can be spread over many project scopes (clarity has 28). Grading
@@ -419,6 +479,16 @@ function checkEvidenceReceipts(store, now) {
     }
     if (neverSucceeded.length > 0) {
       notes.push(`${neverSucceeded.length} scope(s) never configured (not a regression)`);
+      if (state === 'ok') state = 'warn';
+    }
+    if (family === 'clarity') {
+      if (clarityScope.excluded.length > 0) {
+        notes.push(`${clarityScope.excluded.length} historical inactive/unwired scope(s) excluded`);
+      }
+      if (clarityScope.missing.length > 0 || clarityScope.orphaned.length > 0) {
+        state = 'fail';
+        notes.push(`${clarityScope.missing.length} eligible scope(s) never reported; ${clarityScope.orphaned.length} orphaned receipt(s)`);
+      }
     }
 
     const summary = Object.entries(tally)
@@ -433,7 +503,16 @@ function checkEvidenceReceipts(store, now) {
         `${oldestSuccessAge === null ? 'never' : `${oldestSuccessAge}d`} ago (budget ${budget}d)` +
         (notes.length > 0 ? ` — ${notes.join('; ')}` : '') +
         (worstFailure ? `. ${worstFailure.code}: ${worstFailure.message}`.slice(0, 300) : ''),
-      { family, scopes: receipts.length, tally, oldestSuccessAgeDays: oldestSuccessAge, neverConfigured: neverSucceeded.length },
+      {
+        family, scopes: receipts.length, tally, oldestSuccessAgeDays: oldestSuccessAge,
+        neverConfigured: neverSucceeded.length,
+        ...(family === 'clarity' ? {
+          eligibleScopes: clarityScope.eligible,
+          excludedScopeIds: clarityScope.excluded,
+          missingScopeIds: clarityScope.missing,
+          orphanedScopeIds: clarityScope.orphaned,
+        } : {}),
+      },
     );
   }
 }
@@ -450,7 +529,7 @@ function main() {
 
   if (checkPaths()) {
     checkRecorderSmoke(noSmoke);
-    checkGeoLedger(now);
+    checkGeoLedger(now, monthly);
     if (monthly) {
       const store = openStoreReadOnly();
       const panelInfo = checkPanelIntegrity();
@@ -483,15 +562,17 @@ function main() {
     }
   }
 
-  if (failed.length > 0) process.exit(1);
-  if (strict && warned.length > 0) process.exit(1);
-  process.exit(0);
+  // Let queued stdout flush before exiting; process.exit can truncate a JSON
+  // report piped to an operator or a downstream automation.
+  process.exitCode = failed.length > 0 || (strict && warned.length > 0) ? 1 : 0;
 }
 
-try {
-  main();
-} catch (error) {
-  console.error(`reporting-loop-preflight crashed: ${error?.stack ?? error}`);
-  console.error('A crashing preflight is itself the SAR-2 failure mode. Treat this as a FAIL, not as silence.');
-  process.exit(2);
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  try {
+    main();
+  } catch (error) {
+    console.error(`reporting-loop-preflight crashed: ${error?.stack ?? error}`);
+    console.error('A crashing preflight is itself the SAR-2 failure mode. Treat this as a FAIL, not as silence.');
+    process.exitCode = 2;
+  }
 }

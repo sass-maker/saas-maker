@@ -1,0 +1,222 @@
+{
+  "$schema": "fleet.design-review.v2",
+  "version": 2,
+  "project": "saas-maker",
+  "target": "Owner requested A+B hybrid typography artwork and full bottom strip",
+  "surfaceMode": "read",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "packages/fleet-footer/PRODUCT.md",
+    "design": "packages/fleet-footer/DESIGN.md"
+  },
+  "direction": {
+    "productSurfaces": {
+      "scope": "paired",
+      "landing": "Atlas/PH Catalog and CodeVetter public closing sections",
+      "app": "PH fictional public sample and CodeVetter web documentation",
+      "reason": "Shared browser footer preview; native/private operating applications are outside this composition study."
+    },
+    "pairedPreview": {
+      "landing": ".fleet-local/footer180-hybrid-preview/h1-ph-landing.html",
+      "app": ".fleet-local/footer180-hybrid-preview/h1-ph-app.html"
+    },
+    "source": "owner-supplied",
+    "references": [],
+    "probes": [],
+    "selected": "h1",
+    "approval": "pending",
+    "ownerEvidence": {
+      "path": ".fleet-local/footer180-hybrid-preview/owner-request.md",
+      "quote": "# H1 owner-request record\n\n2026-10-04. This is an owner-supplied hybrid preview. Production font, artwork and implementation acceptance remain pending.\n\nThe exact owner quote, supplied by the coordinating root agent, is:\n\n> I kind of feel the font is the only issue. Can you try higher-quality images? And make the strip completely full at the bottom. And apart from that can you mix the directions of first and second?\n\n\u201cFirst\u201d means q1 Compact directory; \u201csecond\u201d means q2 Editorial split. The requested hybrid is a preview, not final new-art/font acceptance or Fleet production acceptance.\n\nCombine q1's compact, grouped product routes on the left with q2's AI-first editable question, five icon-only assistant handoffs, and always-open product updates form on the right. Keep all native links and disclosures, visible question/email labels, required unchecked consent, accessible44px assistant controls, exact existing dynamic handoff/no-send behavior, and no repeated prompt chips.\n\nUse actual project-native system sans in the middle: restrained16\u201318px primary links,14px secondary routes, consistent12px labels/consent and16px fields. PH declares Inter but has no local font asset; this preview uses its honest system-ui fallback and does not claim Inter was loaded. CodeVetter uses the native SF/system fallback and600 service headings. Preserve the large Atlas serif/Code native signature, smooth fade and central scene clearance.\n\nThe studio row is the literal last visible/DOM region, full-bleed and distributed to both ends: From the studio \u00b7 HeyPace \u00b7 PostTrainLLM \u00b7 GitStat \u00b7 All projects \u2197. Use the real canonical destinations and names only. Narrow layouts keep readable one-line local scrolling and44px links rather than squeezing text.\n\nInitial UI source reused exact unchanged2172\u00d7724 v2 masters and is preserved at h1/initial-v2-source with SHA records. Its provisional browser run was cancelled before child launch once root's accepted finer-detail assets were available. The integrated source now uses exact v3 WebP siblings from artwork/v3-manifest.json with actual2172\u00d7724 dimensions and source/decoded equality evidence. These are finer-detail imagegen edits at the same native resolution; no fabricated4K, producer upscaling, sharpening, recoloring or raster editing. CSS, typography and interaction JS remain unchanged from the initial hybrid source. B owns the actual integrated renders and distinct scan checkpoints; source is frozen for that pass. Prior rounds and production remain untouched."
+    },
+    "supplied": ".fleet-local/footer180-hybrid-preview/h1/contract.json",
+    "before": ".fleet-local/footer180-split-directions/evidence/final-review.md",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "none",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "Existing project-owned controls, logos, routes and URL builders; no runtime or dependency added."
+      }
+    },
+    "contract": {
+      "purpose": "Preserve native product routes, AI handoff and updates in one shared closing composition.",
+      "purposeSource": ".fleet-local/footer180-hybrid-preview/owner-request.md",
+      "canonicalPurpose": "Backend-free browser footer preview retaining product identity and component ownership.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "Public Fleet visitors and browser product users.",
+      "job": "Use product links on the left, AI and updates on the right, then personalized artwork and the final full-width studio strip.",
+      "thesis": "Compact grouped native links receive restrained sans primary emphasis; a clean AI-first column and always-open updates share the same plane. One distributed full-bleed studio row concludes the existing personalized artwork signature.",
+      "system": "Desktop1.45:1 grouped routes/services. Three left14px columns with17px primary links. Right visible question, five icon-only assistants, restrained rule, opt-in form. Phone2 route columns plus full-width Connect, then readable services. Studio fills viewport width and distributes items; phone keeps readable local scrolling.",
+      "signature": "Exact qualified P1 smooth Atlas fade/folio and Code white wordmark/chamber clearance, followed by the literal last full-bleed studio row.",
+      "risk": "Desktop routes shorter than services leave deliberate breathing room; do not add filler. Icon-only assistants require accessible names/title plus truthful handoff instruction. Large scene preserves focal mechanism while desktop distributed strip needs narrow local-scroll fallback.",
+      "qualityBar": "Restrained native sans typography, personalized detailed artwork, distributed full-width bottom strip, accessible icon-only assistants and always-visible email field."
+    }
+  },
+  "evidence": {
+    "platform": "web",
+    "productContinuity": {
+      "status": "pending",
+      "reason": "Both paired browser contexts preserved in source; actual render/onboarding path remains unverified.",
+      "reviewer": "root",
+      "report": ".fleet-local/footer180-hybrid-preview/evidence/final-review.md",
+      "surfaces": {
+        "landing": ".fleet-local/footer180-hybrid-preview/h1-ph-landing.html",
+        "app": ".fleet-local/footer180-hybrid-preview/h1-ph-app.html"
+      },
+      "checks": {
+        "designSystem": {
+          "status": "pending",
+          "observation": "Source pair preserved; no executed browser evidence."
+        },
+        "identity": {
+          "status": "pending",
+          "observation": "Source pair preserved; no executed browser evidence."
+        },
+        "vocabulary": {
+          "status": "pending",
+          "observation": "Source pair preserved; no executed browser evidence."
+        },
+        "productTruth": {
+          "status": "pending",
+          "observation": "Source pair preserved; no executed browser evidence."
+        },
+        "handoff": {
+          "status": "pending",
+          "observation": "Source pair preserved; no executed browser evidence."
+        }
+      }
+    },
+    "slopScale": {
+      "platform": "web",
+      "posture": "advisory",
+      "reason": "Automated jobs blocked before launch by shared capacity and live registry locks; no scans or invented scores.",
+      "checkpoints": [
+        {
+          "stage": "directions",
+          "direction": "h1",
+          "status": "blocked",
+          "command": "Managed render-review.py with distinct scanner checkpoints (not executed)",
+          "report": ".fleet-local/footer180-hybrid-preview/evidence/prelaunch-gates.json",
+          "findingsReview": "Unknown: no scanner/browser child launched. Artwork and native route/source verification are separate evidence.",
+          "reason": "No child launched: Heavy-command limit reached, then repeated bounded registry-lock timeout with live unrelated owner. Native UI fallback separately rejected file:// URLs by browser security policy; no workaround attempted."
+        },
+        {
+          "stage": "iteration",
+          "status": "blocked",
+          "command": "Managed render-review.py with distinct scanner checkpoints (not executed)",
+          "report": ".fleet-local/footer180-hybrid-preview/evidence/prelaunch-gates.json",
+          "findingsReview": "Unknown: no scanner/browser child launched. Artwork and native route/source verification are separate evidence.",
+          "reason": "No child launched: Heavy-command limit reached, then repeated bounded registry-lock timeout with live unrelated owner. Native UI fallback separately rejected file:// URLs by browser security policy; no workaround attempted."
+        },
+        {
+          "stage": "final",
+          "status": "blocked",
+          "command": "Managed render-review.py with distinct scanner checkpoints (not executed)",
+          "report": ".fleet-local/footer180-hybrid-preview/evidence/prelaunch-gates.json",
+          "findingsReview": "Unknown: no scanner/browser child launched. Artwork and native route/source verification are separate evidence.",
+          "reason": "No child launched: Heavy-command limit reached, then repeated bounded registry-lock timeout with live unrelated owner. Native UI fallback separately rejected file:// URLs by browser security policy; no workaround attempted."
+        }
+      ]
+    },
+    "visualReview": {
+      "status": "pending",
+      "reviewer": "root and independent reviewers",
+      "direction": "h1",
+      "report": ".fleet-local/footer180-hybrid-preview/evidence/final-review.md",
+      "checks": {
+        "hierarchy": {
+          "status": "pending",
+          "observation": "Source and artwork reviewed; integrated browser render remains unverified."
+        },
+        "typography": {
+          "status": "pending",
+          "observation": "Source and artwork reviewed; integrated browser render remains unverified."
+        },
+        "composition": {
+          "status": "pending",
+          "observation": "Source and artwork reviewed; integrated browser render remains unverified."
+        },
+        "identity": {
+          "status": "pending",
+          "observation": "Source and artwork reviewed; integrated browser render remains unverified."
+        },
+        "interaction": {
+          "status": "pending",
+          "observation": "Source and artwork reviewed; integrated browser render remains unverified."
+        },
+        "responsive": {
+          "status": "pending",
+          "observation": "Source and artwork reviewed; integrated browser render remains unverified."
+        }
+      }
+    },
+    "screenshots": [],
+    "projectCheck": {
+      "command": "Source/hash verification in preserve-preview.py; browser matrix did not launch",
+      "status": "pending"
+    },
+    "critique": {
+      "score": 0,
+      "maximum": 40,
+      "dimensions": {
+        "hierarchy": 0,
+        "typography": 0,
+        "composition": 0,
+        "identity": 0,
+        "interaction": 0,
+        "responsive": 0
+      }
+    },
+    "audit": {
+      "score": 0,
+      "maximum": 20,
+      "dimensions": {
+        "purpose": 0,
+        "accessibility": 0,
+        "behavior": 0,
+        "responsive": 0,
+        "performance": 0
+      }
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": []
+    },
+    "comprehension": {
+      "status": "not-applicable",
+      "reviewer": "",
+      "answers": {
+        "product": "",
+        "audience": "",
+        "value": "",
+        "mechanism": "",
+        "proof": "",
+        "nextAction": ""
+      },
+      "purposeScore": {
+        "product": 0,
+        "audience": 0,
+        "value": 0,
+        "mechanism": 0,
+        "proof": 0,
+        "nextAction": 0,
+        "total": 0
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "pending",
+    "note": "Owner requested the A+B hybrid. Revised font/art preview acceptance and production rollout are pending."
+  }
+}

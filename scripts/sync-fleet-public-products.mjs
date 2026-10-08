@@ -2,8 +2,10 @@
 
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 import { buildPublicProducts } from './public-products.mjs';
+import { validateFooterArt } from '../packages/fleet-footer/src/artwork.mjs';
 
 const repoRoot = path.resolve(import.meta.dirname, '..');
 const fleetCatalog = path.resolve(
@@ -28,6 +30,7 @@ const PUBLIC_FIELDS = new Set([
   'roadmapUrl',
   'pillarId',
   'purposeContract',
+  'footerArt',
 ]);
 const REQUIRED_FIELDS = ['id', 'name', 'description', 'url'];
 const DIRECTORY_FIELDS = new Set([
@@ -39,6 +42,7 @@ const DIRECTORY_FIELDS = new Set([
   'makerNote',
   'logoUrl',
   'purposeContract',
+  'footerArt',
   'kind',
   'form',
   'platforms',
@@ -77,7 +81,7 @@ function assertNoPrivateData(value, trail = 'projection') {
   }
 }
 
-function validateProjection(parsed, sourcePath) {
+export function validateProjection(parsed, sourcePath) {
   if (![1, 2, 3, 4, 5].includes(parsed.schemaVersion) || !Array.isArray(parsed.products)) {
     throw new Error(`Unsupported Fleet public projection: ${sourcePath}`);
   }
@@ -96,6 +100,7 @@ function validateProjection(parsed, sourcePath) {
     }
     if (ids.has(product.id)) throw new Error(`public product ids must be unique: ${product.id}`);
     ids.add(product.id);
+    validateFooterArt(product.footerArt, product.id);
   }
   if (parsed.schemaVersion >= 3) {
     if (!Array.isArray(parsed.directory) || parsed.directory.length === 0) {
@@ -115,9 +120,13 @@ function validateProjection(parsed, sourcePath) {
         throw new Error(`public directory ids must be unique: ${project.id}`);
       }
       directoryIds.add(project.id);
+      validateFooterArt(project.footerArt, project.id);
       if (project.id !== 'ios-landings')
         validatePurposeContract(project.purposeContract, project.id);
     }
+  }
+  for (const project of parsed.pastProjects ?? []) {
+    validateFooterArt(project.footerArt, project.id);
   }
   assertNoPrivateData(parsed);
 }
@@ -138,34 +147,40 @@ function validatePurposeContract(contract, projectId) {
   }
 }
 
-if (process.argv.includes('--validate')) {
-  const checkedIn = await readFile(destination, 'utf8');
-  const parsed = JSON.parse(checkedIn);
-  validateProjection(parsed, destination);
-  console.log(
-    `SaaS Maker checked-in public catalog is valid (${parsed.directory?.length ?? parsed.products.length} identities)`
-  );
-  process.exit(0);
-}
-
-const catalog = JSON.parse(await readFile(fleetCatalog, 'utf8'));
-const projection = buildPublicProducts(catalog);
-validateProjection(projection, fleetCatalog);
-const rendered = `${JSON.stringify(projection, null, 2)}\n`;
-
-if (process.argv.includes('--check')) {
-  const current = await readFile(destination, 'utf8').catch(() => '');
-  if (current !== rendered) {
-    console.error('SaaS Maker public catalog is stale; run pnpm catalog:sync-public');
-    process.exitCode = 1;
-  } else {
+async function main() {
+  if (process.argv.includes('--validate')) {
+    const checkedIn = await readFile(destination, 'utf8');
+    const parsed = JSON.parse(checkedIn);
+    validateProjection(parsed, destination);
     console.log(
-      `SaaS Maker public catalog matches catalog/projects.json (${projection.directory?.length ?? projection.products.length} identities)`
+      `SaaS Maker checked-in public catalog is valid (${parsed.directory?.length ?? parsed.products.length} identities)`
+    );
+    return;
+  }
+
+  const catalog = JSON.parse(await readFile(fleetCatalog, 'utf8'));
+  const projection = buildPublicProducts(catalog);
+  validateProjection(projection, fleetCatalog);
+  const rendered = `${JSON.stringify(projection, null, 2)}\n`;
+
+  if (process.argv.includes('--check')) {
+    const current = await readFile(destination, 'utf8').catch(() => '');
+    if (current !== rendered) {
+      console.error('SaaS Maker public catalog is stale; run pnpm catalog:sync-public');
+      process.exitCode = 1;
+    } else {
+      console.log(
+        `SaaS Maker public catalog matches catalog/projects.json (${projection.directory?.length ?? projection.products.length} identities)`
+      );
+    }
+  } else {
+    await writeFile(destination, rendered);
+    console.log(
+      `Synced ${projection.directory?.length ?? projection.products.length} public identities from catalog/projects.json`
     );
   }
-} else {
-  await writeFile(destination, rendered);
-  console.log(
-    `Synced ${projection.directory?.length ?? projection.products.length} public identities from catalog/projects.json`
-  );
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+  await main();
 }

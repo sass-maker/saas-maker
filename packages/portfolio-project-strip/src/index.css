@@ -130,3 +130,42 @@
 @media (max-width: 560px) {
   .portfolio-project-strip__inner { padding: 0 0.875rem; }
 }
+
+.portfolio-project-strip[data-layout='curated'] {
+  container-type: inline-size;
+  border-block: 0;
+  background: transparent;
+}
+
+.portfolio-project-strip__curated {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.portfolio-project-strip__curated li { min-width: 0; }
+.portfolio-project-strip__curated .portfolio-project-strip__link {
+  font-size: 0.95rem;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.portfolio-project-strip__description {
+  margin: 0;
+  color: var(--portfolio-strip-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+
+@container (min-width: 560px) {
+  .portfolio-project-strip__curated {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+  }
+}

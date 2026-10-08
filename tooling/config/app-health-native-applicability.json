@@ -23,7 +23,9 @@
     {
       "id": "site-health",
       "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
+      "browserVisitors": "not-applicable",
+      "browserVisitorsReason": "Local-only internal operations dashboard has no public browser-delivered product surface.",
+      "browserVisitorsSourceIssue": "https://github.com/sass-maker/app-health/issues/91",
       "serverRequests": "not-applicable"
     },
     {
@@ -53,7 +55,9 @@
     {
       "id": "fleet-social",
       "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
+      "browserVisitors": "not-applicable",
+      "browserVisitorsReason": "Private single-tenant admin app behind Cloudflare Access; its internal owner sessions are outside the browser visitor audience.",
+      "browserVisitorsSourceIssue": "https://github.com/sass-maker/app-health/issues/91",
       "serverRequests": "applicable"
     },
     {
@@ -155,7 +159,9 @@
     {
       "id": "ios-landings",
       "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
+      "browserVisitors": "not-applicable",
+      "browserVisitorsReason": "Shared landing factory has no standalone visitor identity; its consumer pages report under their own product IDs.",
+      "browserVisitorsSourceIssue": "https://github.com/sass-maker/app-health/issues/91",
       "serverRequests": "not-applicable"
     },
     {
@@ -180,7 +186,7 @@
       "id": "ai-game",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "applicable"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "app-health",
@@ -229,12 +235,6 @@
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
-    },
-    {
-      "id": "field-track",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
     },
     {
       "id": "reddit-insights",
@@ -315,12 +315,6 @@
       "serverRequests": "not-applicable"
     },
     {
-      "id": "war-chest",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "not-applicable"
-    },
-    {
       "id": "mentionpilot",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
@@ -330,6 +324,12 @@
       "id": "daddyrad",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
+      "serverRequests": "not-applicable"
+    },
+    {
+      "id": "agent-inbox",
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "not-applicable",
       "serverRequests": "not-applicable"
     }
   ]

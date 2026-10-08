@@ -61,6 +61,7 @@ export function PortfolioProjectStrip({
   theme = 'auto',
   className = '',
   speed = 42,
+  layout,
 }: PortfolioProjectStripProps) {
   const initialProjects = useMemo(
     () => normalizeProjects(projects ?? DEFAULT_PROJECTS),
@@ -94,6 +95,36 @@ export function PortfolioProjectStrip({
   const items = shouldLoop ? [...visibleProjects, ...visibleProjects] : visibleProjects;
   const themeAttr = theme === 'auto' ? undefined : theme;
   const duration = Number.isFinite(speed) ? Math.max(20, speed) : 42;
+
+  if (layout === 'curated') {
+    return (
+      <aside
+        className={`portfolio-project-strip ${className}`}
+        data-theme={themeAttr}
+        data-layout="curated"
+        aria-label={label}
+      >
+        <ul className="portfolio-project-strip__curated">
+          {visibleProjects.slice(0, 3).map((project) => (
+            <li key={project.id}>
+              <a
+                href={withReferralSource(project.url, currentProjectId)}
+                className="portfolio-project-strip__link"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${project.name} (opens in a new tab)`}
+              >
+                {project.name}
+              </a>
+              {project.description ? (
+                <p className="portfolio-project-strip__description">{project.description}</p>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      </aside>
+    );
+  }
 
   return (
     <aside

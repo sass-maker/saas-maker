@@ -1,4 +1,5 @@
 import { compatibilityCatalog } from './catalog-schema.mjs';
+import { validateFooterArt } from '../packages/fleet-footer/src/artwork.mjs';
 
 const PRODUCT_FIELDS = new Set([
   'id',
@@ -17,6 +18,7 @@ const PRODUCT_FIELDS = new Set([
   'roadmapUrl',
   'pillarId',
   'purposeContract',
+  'footerArt',
 ]);
 
 const PAST_PROJECT_FIELDS = new Set([
@@ -28,6 +30,7 @@ const PAST_PROJECT_FIELDS = new Set([
   'lifecycle',
   'repositoryUrl',
   'purposeContract',
+  'footerArt',
 ]);
 const DIRECTORY_FIELDS = new Set([
   'category',
@@ -38,6 +41,7 @@ const DIRECTORY_FIELDS = new Set([
   'makerNote',
   'logoUrl',
   'purposeContract',
+  'footerArt',
   'kind',
   'form',
   'platforms',
@@ -84,6 +88,7 @@ export function buildPublicProducts(catalog) {
     if (!['utility', 'media', 'experimental'].includes(project.category)) {
       throw new Error(`${project.id}: invalid canonical category`);
     }
+    const footerArt = validateFooterArt(project.footerArt, project.id);
 
     if (metadata.listing === 'maintained') {
       const url = canonicalPublicUrl(project);
@@ -108,6 +113,7 @@ export function buildPublicProducts(catalog) {
           : {}),
         pillarId: metadata.pillarId,
         purposeContract: directoryMetadata[project.id].purposeContract,
+        ...(footerArt ? { footerArt } : {}),
       };
       if (metadata.repositoryUrl && project.repositoryVisibility !== 'public') {
         throw new Error(
@@ -136,6 +142,7 @@ export function buildPublicProducts(catalog) {
         shareable: true,
         repositoryUrl: metadata.repositoryUrl,
         purposeContract: directoryMetadata[project.id].purposeContract,
+        ...(footerArt ? { footerArt } : {}),
       };
       assertShape(output, PAST_PROJECT_FIELDS, ['id', 'name', 'description', 'repositoryUrl']);
       pastProjects.push(output);
@@ -163,6 +170,9 @@ export function buildPublicProducts(catalog) {
       makerNote: metadata.makerNote,
       ...(metadata.logoUrl ? { logoUrl: metadata.logoUrl } : {}),
       ...(metadata.purposeContract ? { purposeContract: metadata.purposeContract } : {}),
+      ...(project.footerArt === undefined
+        ? {}
+        : { footerArt: validateFooterArt(project.footerArt, project.id) }),
       kind: project.portfolio.kind,
       category: project.category,
       form: metadata.form,

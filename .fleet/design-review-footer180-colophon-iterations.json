@@ -1,0 +1,289 @@
+{
+  "$schema": "fleet.design-review.v2",
+  "version": 2,
+  "project": "saas-maker",
+  "target": "Footer C-family iterations: terminal personalized art",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "packages/fleet-footer/PRODUCT.md",
+    "design": "packages/fleet-footer/DESIGN.md"
+  },
+  "direction": {
+    "productSurfaces": {
+      "scope": "paired",
+      "landing": "Atlas PH Catalog and CodeVetter representative closing sections",
+      "app": "PH fictional public sample and CodeVetter browser documentation",
+      "reason": "Browser-only shared footer study; private/native applications remain outside public marketing-footer composition."
+    },
+    "pairedPreview": {
+      "landing": "",
+      "app": ""
+    },
+    "source": "comparison",
+    "references": [],
+    "probes": [
+      {
+        "id": "i1",
+        "name": "Open colophon",
+        "path": ".fleet-local/footer180-colophon-iterations-final/evidence/i1/pass-02/contact-landing.png",
+        "artifact": ".fleet-local/footer180-colophon-iterations-final/evidence/i1/pass-02/contact-landing.png",
+        "thesis": "Terminal personalized artwork finishes the page.",
+        "layout": "Giant Atlas/CodeVetter native wordmark \u2192 concise action line \u2192 Discover / Help / Updates \u2192 all native/legal links \u2192 original illustration as the literal last closing stage, with nothing below it.",
+        "typography": "{'ph': 'Atlas native wordmark / PH Catalog metadata. Georgia serif display over paper/forest; system body and mono low-priority credits', 'codevetter': 'Native system sans with tight measured tracking; system body; mono only immutable-style caption'}",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-colophon-iterations-final/evidence/i1/pass-02/contact-landing.png",
+          "app": ".fleet-local/footer180-colophon-iterations-final/evidence/i1/pass-02/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-colophon-iterations-final/i1/contract.json"
+      },
+      {
+        "id": "i2",
+        "name": "Editorial colophon",
+        "path": ".fleet-local/footer180-colophon-iterations-final/evidence/i2/pass-04/contact-landing.png",
+        "artifact": ".fleet-local/footer180-colophon-iterations-final/evidence/i2/pass-04/contact-landing.png",
+        "thesis": "Bring actions and support into a shorter editorial closing grid, ending with a large product-specific scene.",
+        "layout": "Restrained native wordmark, one compact next-action line, three utility/discovery columns, native legal followed by the final410pxdesktop/300pxmobile scene; app suppresses repeated marketing CTA and uses175\u2013180px scene.",
+        "typography": "Atlas native Georgia; CodeVetter system sans and action amber; less tight wordmark tracking and smaller editorial headings than C baseline.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-colophon-iterations-final/evidence/i2/pass-04/contact-landing.png",
+          "app": ".fleet-local/footer180-colophon-iterations-final/evidence/i2/pass-04/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-colophon-iterations-final/i2/contract.json"
+      },
+      {
+        "id": "i3",
+        "name": "Art-backed colophon",
+        "path": ".fleet-local/footer180-colophon-iterations-final/evidence/i3/pass-03/contact-landing.png",
+        "artifact": ".fleet-local/footer180-colophon-iterations-final/evidence/i3/pass-03/contact-landing.png",
+        "thesis": "Terminal personalized artwork finishes the page.",
+        "layout": "Landing action line \u2192 Discover / Help / Updates columns \u2192 native/navigation/legal \u2192 terminal art-backed wordmark. Quiet sample/docs variants omit the duplicated landing CTA section and start with compact columns. Nothing follows artwork. Landing scene620/520/360px desktop/tablet/mobile; app330px desktop and280px mobile. CodeVetter extends the quiet upper wall in CSS and places art beneath110/90/72px title air (app60/52px); backdrop remains one continuous dark plane so wordmark does not sit over chamber. Central crop remains intentional. CodeVetter quiet-mobile frame is320px to leave268px of actual illustrated bench after52px title air; Atlas quiet-mobile scene stays280px.",
+        "typography": "{'PH': 'Atlas Georgia serif wordmark, PH Catalog canonical metadata, forest/paper/coral semantic palette, system body.', 'CodeVetter': 'Native Evidence Bench system sans; true-black product canvas and evidence-white wordmark over dark personalized bench. Amber reserved for actions/focus.'}",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-colophon-iterations-final/evidence/i3/pass-03/contact-landing.png",
+          "app": ".fleet-local/footer180-colophon-iterations-final/evidence/i3/pass-03/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-colophon-iterations-final/i3/contract.json"
+      }
+    ],
+    "selected": "",
+    "approval": "pending",
+    "ownerEvidence": {
+      "path": ".fleet-local/footer180-colophon-iterations-final/iteration-contract.md",
+      "quote": "yes right direction more iterations please; image should be at end and personalized to product",
+      "scope": "End-image order and personalization are explicit; final variant choice and production acceptance remain pending."
+    },
+    "supplied": "",
+    "before": ".fleet-local/footer180-revision-directions/owner-rejection.json",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "none",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "Existing native HTML details, inputs, buttons and product type/color systems remain; this is a temporary composition study with no new component runtime."
+      }
+    },
+    "contract": {
+      "purpose": "Merge next action, AI help, feedback, updates, studio links and general footer into a coherent native closing section with personalized art last.",
+      "purposeSource": ".fleet-local/footer180-colophon-iterations-final/iteration-contract.md",
+      "canonicalPurpose": "Backend-free browser composition preserving existing component ownership.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "Visitors and browser users of applicable Fleet products.",
+      "job": "Choose the next product action or support route, then finish on original product-specific artwork.",
+      "thesis": "Compact structured support/navigation followed by a substantial terminal illustration.",
+      "system": "Three colophon refinements preserve native product typography and semantic palettes.",
+      "signature": "Atlas research cabinet and CodeVetter verification bench.",
+      "risk": "Mobile crops must retain the central mechanism; the artwork is conceptual rather than operational proof.",
+      "qualityBar": "No controls beneath art, no generic reused scenic content, no repeat marketing CTA in browser app context, explicit unchecked opt-in and no overflow."
+    }
+  },
+  "evidence": {
+    "platform": "web",
+    "productContinuity": {
+      "status": "pending",
+      "reason": "Rendered paired browser component contexts only; real native applications and public deployed Fleet release not qualified by this study.",
+      "reviewer": "",
+      "report": "artifacts/design/product-continuity.md",
+      "surfaces": {
+        "landing": "artifacts/design/landing.png",
+        "app": "artifacts/design/app.png"
+      },
+      "checks": {
+        "designSystem": {
+          "status": "pending",
+          "observation": ""
+        },
+        "identity": {
+          "status": "pending",
+          "observation": ""
+        },
+        "vocabulary": {
+          "status": "pending",
+          "observation": ""
+        },
+        "productTruth": {
+          "status": "pending",
+          "observation": ""
+        },
+        "handoff": {
+          "status": "pending",
+          "observation": ""
+        }
+      }
+    },
+    "slopScale": {
+      "platform": "web",
+      "posture": "advisory",
+      "reason": "Native details, established product colors and palette flags reviewed directly; scans do not establish taste or owner acceptance.",
+      "checkpoints": [
+        {
+          "stage": "directions",
+          "direction": "i1",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:62002/i1-ph-landing.html http://127.0.0.1:62002/i1-ph-app.html http://127.0.0.1:62002/i1-codevetter-landing.html http://127.0.0.1:62002/i1-codevetter-app.html --json",
+          "report": ".fleet-local/footer180-colophon-iterations-final/evidence/i1/pass-02/slop-directions.json",
+          "findingsReview": "Native accessible details and product-native paper/black palette remain intentional. Actual terminal scene, wordmark contrast, mobile crop, unchecked consent, keyboard behavior and source consistency were independently reviewed; typography/input contrast defects were fixed and recaptured. Final variant selection and production acceptance are pending."
+        },
+        {
+          "stage": "directions",
+          "direction": "i2",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:65326/i2-ph-landing.html http://127.0.0.1:65326/i2-ph-app.html http://127.0.0.1:65326/i2-codevetter-landing.html http://127.0.0.1:65326/i2-codevetter-app.html --json",
+          "report": ".fleet-local/footer180-colophon-iterations-final/evidence/i2/pass-04/slop-directions.json",
+          "findingsReview": "Native accessible details and product-native paper/black palette remain intentional. Actual terminal scene, wordmark contrast, mobile crop, unchecked consent, keyboard behavior and source consistency were independently reviewed; typography/input contrast defects were fixed and recaptured. Final variant selection and production acceptance are pending."
+        },
+        {
+          "stage": "directions",
+          "direction": "i3",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:49856/i3-ph-landing.html http://127.0.0.1:49856/i3-ph-app.html http://127.0.0.1:49856/i3-codevetter-landing.html http://127.0.0.1:49856/i3-codevetter-app.html --json",
+          "report": ".fleet-local/footer180-colophon-iterations-final/evidence/i3/pass-03/slop-directions.json",
+          "findingsReview": "Native accessible details and product-native paper/black palette remain intentional. Actual terminal scene, wordmark contrast, mobile crop, unchecked consent, keyboard behavior and source consistency were independently reviewed; typography/input contrast defects were fixed and recaptured. Final variant selection and production acceptance are pending."
+        }
+      ],
+      "historicalReview": ".fleet-local/footer180-colophon-iterations-final/evidence/first-checkpoint-review.json"
+    },
+    "visualReview": {
+      "status": "pending",
+      "reviewer": "Independent render agent and root direct craft review",
+      "direction": "",
+      "report": ".fleet-local/footer180-colophon-iterations-final/evidence/final-review.md",
+      "checks": {
+        "hierarchy": {
+          "status": "pending",
+          "observation": ""
+        },
+        "typography": {
+          "status": "pending",
+          "observation": ""
+        },
+        "composition": {
+          "status": "pending",
+          "observation": ""
+        },
+        "identity": {
+          "status": "pending",
+          "observation": ""
+        },
+        "interaction": {
+          "status": "pending",
+          "observation": ""
+        },
+        "responsive": {
+          "status": "pending",
+          "observation": ""
+        }
+      },
+      "previewStatus": "pass"
+    },
+    "screenshots": [
+      {
+        "width": 390,
+        "path": "artifacts/design/after-390.png"
+      },
+      {
+        "width": 768,
+        "path": "artifacts/design/after-768.png"
+      },
+      {
+        "width": 1440,
+        "path": "artifacts/design/after-1440.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "Managed render-review.py i1/i2/i3: 36 current-source cases, 12 final pinned scans, keyboard/local no-send checks, corrected actual visibility audit",
+      "status": "pass"
+    },
+    "critique": {
+      "score": 0,
+      "maximum": 40,
+      "dimensions": {
+        "hierarchy": 0,
+        "typography": 0,
+        "composition": 0,
+        "identity": 0,
+        "interaction": 0,
+        "responsive": 0
+      }
+    },
+    "audit": {
+      "score": 0,
+      "maximum": 20,
+      "dimensions": {
+        "purpose": 0,
+        "accessibility": 0,
+        "behavior": 0,
+        "responsive": 0,
+        "performance": 0
+      }
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": []
+    },
+    "comprehension": {
+      "status": "not-applicable",
+      "reviewer": "",
+      "answers": {
+        "product": "",
+        "audience": "",
+        "value": "",
+        "mechanism": "",
+        "proof": "",
+        "nextAction": ""
+      },
+      "purposeScore": {
+        "product": 0,
+        "audience": 0,
+        "value": 0,
+        "mechanism": 0,
+        "proof": 0,
+        "nextAction": 0,
+        "total": 0
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "pending",
+    "note": "Owner requested further colophon iterations, terminal artwork and product personalization; final variant has not been selected."
+  },
+  "previewGate": {
+    "status": "awaiting-owner-variant-selection",
+    "checkCommand": "node tooling/scripts/design-workflow.mjs check --project . --receipt .fleet/design-review-footer180-colophon-iterations.json",
+    "errors": [
+      "overhaul direction.selected must match a probe id",
+      "overhaul direction approval must be approved or explicitly delegated"
+    ],
+    "scope": "Preview round rendered and reviewed; production implementation and owner acceptance remain pending."
+  }
+}

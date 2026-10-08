@@ -98,7 +98,11 @@ const OG_IMAGE = `${SITE_URL}/og-image.svg`;
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
+    {/* Directory contacts are already public in JSON. Preserve their text and
+        mailto links instead of injecting crawler-visible email-protection 404s. */}
+    <!--email_off-->
     <slot />
+    <!--/email_off-->
     <script
       is:inline
       src="/project-strip.js"
@@ -109,6 +113,7 @@ const OG_IMAGE = `${SITE_URL}/og-image.svg`;
       is:inline
       src="/ai-chat-footer.js"
       data-name="SaaS Maker"
+      data-theme="light"
       defer
     ></script>
     <script is:inline>

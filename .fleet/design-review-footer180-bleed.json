@@ -1,0 +1,283 @@
+{
+  "$schema": "fleet.design-review.v2",
+  "version": 2,
+  "project": "saas-maker",
+  "target": "Bleeding footer variants with visible AI console, email and studio strip",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "packages/fleet-footer/PRODUCT.md",
+    "design": "packages/fleet-footer/DESIGN.md"
+  },
+  "direction": {
+    "productSurfaces": {
+      "scope": "paired",
+      "landing": "Atlas PH Catalog and CodeVetter representative closing sections",
+      "app": "PH fictional public sample and CodeVetter browser documentation variants",
+      "reason": "Public browser shared composition study. Native/private operating applications stay outside public marketing footer."
+    },
+    "pairedPreview": {
+      "landing": "",
+      "app": ""
+    },
+    "source": "comparison",
+    "references": [],
+    "probes": [
+      {
+        "id": "d1",
+        "name": "Studio horizon",
+        "path": ".fleet-local/footer180-bleed-directions/evidence/d1/pass-01/contact-landing.png",
+        "thesis": "A useful open tools plane flows into a horizontal studio horizon, clear native route groups, and a continuous personalized illustrated ending. The art is the terminal atmosphere rather than a framed card.",
+        "layout": "Restrained two-column AI question console / open product-updates form \u2192 full-width horizontal project strip \u2192 grouped native navigation and legal \u2192 native wordmark \u2192 personalized terminal panorama. All controls/legal precede the image in DOM and visually. Mobile stacks the tools, preserves a keyboard-scrollable project strip and two-column native groups; the app/read variant reduces type, textarea and ending height.",
+        "typography": "{'ph': 'Atlas serif wordmark and moderate editorial tool headings, system body/control text', 'codevetter': 'Native system sans, measured tracking, mono reserved for small context labels'}",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-bleed-directions/evidence/d1/pass-01/contact-landing.png",
+          "app": ".fleet-local/footer180-bleed-directions/evidence/d1/pass-01/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-bleed-directions/d1/contract.json"
+      },
+      {
+        "id": "d2",
+        "name": "Studio ribbon",
+        "path": ".fleet-local/footer180-bleed-directions/evidence/d2/pass-01/contact-landing.png",
+        "thesis": "A continuous editorial footer gives discovery its own horizontal strip, exposes the AI question and email capture, and dissolves the closing identity into a product-specific scene.",
+        "layout": "Next action; horizontal studio rail; two-column AI context/composer; horizontal visible capture; grouped resource/support routes; legal and oversized wordmark bleeding into terminal panorama. Quiet browser variant suppresses marketing CTA and reduces scene/name density.",
+        "typography": "Atlas native Georgia with forest ink/paper; CodeVetter native system sans and amber. Navigation14px and prose14\u201315px, consent12px; no code/terminal text styling.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-bleed-directions/evidence/d2/pass-01/contact-landing.png",
+          "app": ".fleet-local/footer180-bleed-directions/evidence/d2/pass-01/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-bleed-directions/d2/contract.json"
+      },
+      {
+        "id": "d3",
+        "name": "Immersive studio",
+        "path": ".fleet-local/footer180-bleed-directions/evidence/d3/pass-02/contact-landing.png",
+        "thesis": "A continuous product-colored footer turns the studio and service infrastructure into readable editorial content. Discovery begins as a horizontal strip; native identity and structured routes lead into an exposed question console and an always-open opt-in row. A large terminal panorama dissolves upward into the same plane, without a framed artwork card.",
+        "layout": "Discovery strip \u2192 native wordmark + three route groups \u2192 visible AI console + direct feedback \u2192 always-open email row \u2192 native/legal \u2192 literal last art figure. Legal lives in the shaded upper bleed region; no controls overlay the lower busy illustration. App scales wordmark/console/image and omits repeated primary download/demo CTA.",
+        "typography": "Atlas Georgia large wordmark, native paper/forest/coral; CodeVetter true-black, native system sans and evidence-white wordmark, amber action/focus. UI prose and inputs retain system body type.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-bleed-directions/evidence/d3/pass-02/contact-landing.png",
+          "app": ".fleet-local/footer180-bleed-directions/evidence/d3/pass-02/contact-app.png"
+        },
+        "contract": ".fleet-local/footer180-bleed-directions/d3/contract.json"
+      }
+    ],
+    "selected": "",
+    "approval": "pending",
+    "ownerEvidence": {
+      "path": ".fleet-local/footer180-bleed-directions/owner-request.md",
+      "quote": "The footer should ideally bleed into the image. Something like 3, but better. Where is the AI console in this? Waitlist should have an always-open text field. I like the strip-based approach to discover projects."
+    },
+    "supplied": "",
+    "before": ".fleet-local/footer180-colophon-iterations-final/evidence/final-review.md",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "none",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "Existing native inputs/buttons/links, source-owned provider URL builders/logos and horizontal discovery patterns; no new dependency/runtime or backend."
+      }
+    },
+    "contract": {
+      "purpose": "Merge product CTA, visible AI console, visible opt-in email, studio strip and coherent native routes into a continuous footer ending in personalized artwork.",
+      "purposeSource": ".fleet-local/footer180-bleed-directions/owner-request.md",
+      "canonicalPurpose": "A backend-free browser composition preserves product identity and existing service/component ownership.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "Visitors and browser users of applicable Fleet products.",
+      "job": "Choose a next product action, edit a question for an existing assistant, opt into updates or find a studio/support route.",
+      "thesis": "Open useful controls and a horizontal studio rail flow through a native editorial footer into a terminal illustration.",
+      "system": "Three different arrangements and text/composer treatments share native typography, product color roles and conceptual mechanism-specific art.",
+      "signature": "A smooth continuous footer/art transition with a real editable external AI handoff and immediately visible email.",
+      "risk": "Quiet upper artwork can extend behind the wordmark/legal; no busy focal objects behind controls. More visible controls increase mobile length.",
+      "qualityBar": "No hidden email/AI surface, no fake chat or launch-waitlist claim, clean route groups and strip, no overflow, explicit unchecked consent, personalized illustration last in DOM and clear rendered gradient."
+    }
+  },
+  "evidence": {
+    "platform": "web",
+    "productContinuity": {
+      "status": "pending",
+      "reason": "Paired representative browser closing sections only. This is not a deployed full product or native operating workflow qualification.",
+      "reviewer": "",
+      "report": "artifacts/design/product-continuity.md",
+      "surfaces": {
+        "landing": "artifacts/design/landing.png",
+        "app": "artifacts/design/app.png"
+      },
+      "checks": {
+        "designSystem": {
+          "status": "pending",
+          "observation": ""
+        },
+        "identity": {
+          "status": "pending",
+          "observation": ""
+        },
+        "vocabulary": {
+          "status": "pending",
+          "observation": ""
+        },
+        "productTruth": {
+          "status": "pending",
+          "observation": ""
+        },
+        "handoff": {
+          "status": "pending",
+          "observation": ""
+        }
+      }
+    },
+    "slopScale": {
+      "platform": "web",
+      "posture": "advisory",
+      "reason": "Native accessible controls, product palettes and typography preserved. Direct rendered craft and interactions decide defects; numeric heuristic scores do not establish owner acceptance.",
+      "checkpoints": [
+        {
+          "stage": "directions",
+          "direction": "d1",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:58376/d1-ph-landing.html http://127.0.0.1:58376/d1-ph-app.html http://127.0.0.1:58376/d1-codevetter-landing.html http://127.0.0.1:58376/d1-codevetter-app.html --json",
+          "report": ".fleet-local/footer180-bleed-directions/evidence/d1/pass-01/slop-directions.json",
+          "findingsReview": "Readable editable AI and email controls, provider encoding, scrollable studio strip, route hierarchy, actual bleed, consent and mechanism crop reviewed. D3 faint boundaries/tiny mobile navigation/local-chip arrows were fixed and recaptured. Native palette/layout flags retained as intentional; provider execution remains unverified."
+        },
+        {
+          "stage": "directions",
+          "direction": "d2",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:55955/d2-ph-landing.html http://127.0.0.1:55955/d2-ph-app.html http://127.0.0.1:55955/d2-codevetter-landing.html http://127.0.0.1:55955/d2-codevetter-app.html --json",
+          "report": ".fleet-local/footer180-bleed-directions/evidence/d2/pass-01/slop-directions.json",
+          "findingsReview": "Readable editable AI and email controls, provider encoding, scrollable studio strip, route hierarchy, actual bleed, consent and mechanism crop reviewed. D3 faint boundaries/tiny mobile navigation/local-chip arrows were fixed and recaptured. Native palette/layout flags retained as intentional; provider execution remains unverified."
+        },
+        {
+          "stage": "directions",
+          "direction": "d3",
+          "status": "scanned",
+          "command": "node /Users/sarthak/Desktop/fleet/saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:59107/d3-ph-landing.html http://127.0.0.1:59107/d3-ph-app.html http://127.0.0.1:59107/d3-codevetter-landing.html http://127.0.0.1:59107/d3-codevetter-app.html --json",
+          "report": ".fleet-local/footer180-bleed-directions/evidence/d3/pass-02/slop-directions.json",
+          "findingsReview": "Readable editable AI and email controls, provider encoding, scrollable studio strip, route hierarchy, actual bleed, consent and mechanism crop reviewed. D3 faint boundaries/tiny mobile navigation/local-chip arrows were fixed and recaptured. Native palette/layout flags retained as intentional; provider execution remains unverified."
+        }
+      ]
+    },
+    "visualReview": {
+      "status": "pending",
+      "reviewer": "Independent render agent and root direct craft review",
+      "direction": "",
+      "report": ".fleet-local/footer180-bleed-directions/evidence/final-review.md",
+      "checks": {
+        "hierarchy": {
+          "status": "pending",
+          "observation": ""
+        },
+        "typography": {
+          "status": "pending",
+          "observation": ""
+        },
+        "composition": {
+          "status": "pending",
+          "observation": ""
+        },
+        "identity": {
+          "status": "pending",
+          "observation": ""
+        },
+        "interaction": {
+          "status": "pending",
+          "observation": ""
+        },
+        "responsive": {
+          "status": "pending",
+          "observation": ""
+        }
+      },
+      "previewStatus": "pass"
+    },
+    "screenshots": [
+      {
+        "width": 390,
+        "path": "artifacts/design/after-390.png"
+      },
+      {
+        "width": 768,
+        "path": "artifacts/design/after-768.png"
+      },
+      {
+        "width": 1440,
+        "path": "artifacts/design/after-1440.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "Managed browser matrix d1/d2/d3: 36 current-source cases; AI custom prompt/chips/provider URL encoding; open email/native consent/local no-send; project strip keyboard scroll; pinned advisory scans.",
+      "status": "pass"
+    },
+    "critique": {
+      "score": 0,
+      "maximum": 40,
+      "dimensions": {
+        "hierarchy": 0,
+        "typography": 0,
+        "composition": 0,
+        "identity": 0,
+        "interaction": 0,
+        "responsive": 0
+      }
+    },
+    "audit": {
+      "score": 0,
+      "maximum": 20,
+      "dimensions": {
+        "purpose": 0,
+        "accessibility": 0,
+        "behavior": 0,
+        "responsive": 0,
+        "performance": 0
+      }
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": []
+    },
+    "comprehension": {
+      "status": "not-applicable",
+      "reviewer": "",
+      "answers": {
+        "product": "",
+        "audience": "",
+        "value": "",
+        "mechanism": "",
+        "proof": "",
+        "nextAction": ""
+      },
+      "purposeScore": {
+        "product": 0,
+        "audience": 0,
+        "value": 0,
+        "mechanism": 0,
+        "proof": 0,
+        "nextAction": 0,
+        "total": 0
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "pending",
+    "note": "Owner then requested: Need a more polished variant. Prior comparisons preserved; follow-up signature refinement is separate."
+  },
+  "previewGate": {
+    "status": "awaiting-owner-variant-selection",
+    "errors": [
+      "overhaul direction.selected must match a probe id",
+      "overhaul direction approval must be approved or explicitly delegated"
+    ],
+    "scope": "Rendered local previews; owner requested further polish rather than selecting a production implementation."
+  }
+}

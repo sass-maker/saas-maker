@@ -4,6 +4,7 @@
 
 import { isDeepStrictEqual } from 'node:util';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { validateFeedbackApplicability } from './capture-policy-validation.mjs';
 
 const catalogPath = new URL('../catalog/projects.json', import.meta.url);
 const fleetRoot = new URL('../../', import.meta.url);
@@ -16,7 +17,13 @@ const systems = source.systems ?? {};
 // tied to the canonical catalog so a policy cannot silently outlive its basis.
 const captureApps = new Set(['newsletter', 'waitlist', 'not-applicable', 'undetermined']);
 const captureConfidence = new Set(['high', 'medium', 'low']);
-const captureFields = new Set(['applicability', 'confidence', 'rationale', 'evidence']);
+const captureFields = new Set([
+  'applicability',
+  'confidence',
+  'rationale',
+  'evidence',
+  'feedbackApplicability',
+]);
 const captureEvidenceFields = new Set(['field', 'value']);
 const captureConfigFields = new Set(['schemaVersion', 'purpose', 'sourceIssue', 'order']);
 const captureConfig = systems.capturePolicy ?? {};
@@ -44,6 +51,7 @@ for (const project of captureCohort) {
     throw new Error(`Missing or invalid capture applicability: ${project.id}`);
   if (Object.keys(policy).some((field) => !captureFields.has(field)))
     throw new Error(`Unknown capture policy field: ${project.id}`);
+  validateFeedbackApplicability(policy.feedbackApplicability, project.id);
   if (!captureConfidence.has(policy.confidence) || !policy.rationale?.trim())
     throw new Error(`Incomplete capture policy: ${project.id}`);
   if (!Array.isArray(policy.evidence) || policy.evidence.length === 0)
@@ -108,9 +116,9 @@ const appHealthMetricProducts = captureCohort.map((project) => {
     );
   }
   // A product website is a browser surface even when the underlying product
-  // is native. Only the catalog's explicit non-browser form, missing Web
-  // platform, absent site target, and absent visual footer surface together
-  // establish browser N/A.
+  // is native. Explicit, evidence-backed N/A policy is reserved for internal,
+  // factory, local-only, or privacy-bounded products with no reportable
+  // browser audience.
   const hasCataloguedSite = typeof project.systems?.site?.url === 'string';
   const hasVisualFooter =
     Array.isArray(project.systems?.footerSurfaces) &&
@@ -120,6 +128,25 @@ const appHealthMetricProducts = captureCohort.map((project) => {
   const browserForm = /\b(web|website|browser|dashboard)\b/i.test(form);
   const hasBrowserSurface =
     platforms.includes('Web') || hasCataloguedSite || hasVisualFooter || browserForm;
+  const browserVisitorOverride = project.systems?.appHealth?.browserVisitors;
+  if (browserVisitorOverride !== undefined) {
+    const allowedFields = new Set(['applicability', 'reason', 'sourceIssue']);
+    if (
+      !browserVisitorOverride ||
+      typeof browserVisitorOverride !== 'object' ||
+      Array.isArray(browserVisitorOverride) ||
+      Object.keys(browserVisitorOverride).some((field) => !allowedFields.has(field)) ||
+      browserVisitorOverride.applicability !== 'not-applicable' ||
+      typeof browserVisitorOverride.reason !== 'string' ||
+      browserVisitorOverride.reason.trim().length < 20 ||
+      typeof browserVisitorOverride.sourceIssue !== 'string' ||
+      !/^https:\/\/github\.com\/[^/]+\/[^/]+\/issues\/\d+(?:#[A-Za-z0-9._-]+)?$/.test(
+        browserVisitorOverride.sourceIssue
+      )
+    ) {
+      throw new Error(`Invalid browser-visitor N/A override: ${project.id}`);
+    }
+  }
   const serverRequests = project.systems?.appHealth?.serverRequests;
   if (!['applicable', 'not-applicable', 'unknown'].includes(serverRequests)) {
     throw new Error(`Server-request applicability needs a catalog decision: ${project.id}`);
@@ -127,7 +154,15 @@ const appHealthMetricProducts = captureCohort.map((project) => {
   return {
     id: project.id,
     nativeSessions: hasNativeAppForm ? declaredNativeSessions : 'not-applicable',
-    browserVisitors: hasBrowserSurface ? 'applicable' : 'not-applicable',
+    browserVisitors:
+      browserVisitorOverride?.applicability ??
+      (hasBrowserSurface ? 'applicable' : 'not-applicable'),
+    ...(browserVisitorOverride
+      ? {
+          browserVisitorsReason: browserVisitorOverride.reason,
+          browserVisitorsSourceIssue: browserVisitorOverride.sourceIssue,
+        }
+      : {}),
     serverRequests,
   };
 });

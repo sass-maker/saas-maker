@@ -24,6 +24,8 @@ export interface AIChatFooterProps {
   label?: ReactNode;
   /** Color scheme. */
   theme?: Theme;
+  /** Stack the panel inside a narrow shared-footer disclosure. */
+  layout?: 'compact';
   /** Extra class applied to the root element. */
   className?: string;
 }

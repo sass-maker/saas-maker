@@ -119,6 +119,8 @@ export function registerAIChatFooter(): void {
         a:focus-visible { outline: 2px solid var(--ai-footer-focus); outline-offset: 2px; }
         a img { display: block; width: 2rem; height: 2rem; border-radius: .625rem; object-fit: cover; }
         @media (max-width: 1000px) { .footer { grid-template-columns: minmax(0, 1fr); gap: 1rem; } ul { justify-content: flex-start; } }
+        :host([layout='compact']) .footer { grid-template-columns: minmax(0, 1fr); gap: 1rem; padding: 0; }
+        :host([layout='compact']) ul { flex-wrap: wrap; justify-content: flex-start; }
         @media (prefers-reduced-motion: reduce) { a { transition: background-color 150ms ease, border-color 150ms ease; } a:hover { transform: none; } }
       `;
 

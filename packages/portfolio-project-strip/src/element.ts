@@ -12,7 +12,14 @@ export function registerPortfolioProjectStrip(): void {
   class PortfolioProjectStripElement extends HTMLElement {
     projects: readonly PortfolioProject[] = DEFAULT_PROJECTS;
 
-    static observedAttributes = ['current-project', 'catalog-url', 'label', 'speed', 'theme'];
+    static observedAttributes = [
+      'current-project',
+      'catalog-url',
+      'label',
+      'speed',
+      'theme',
+      'layout',
+    ];
 
     connectedCallback() {
       this.render();
@@ -29,9 +36,11 @@ export function registerPortfolioProjectStrip(): void {
       const parsedSpeed = Number(this.getAttribute('speed'));
       const speed =
         Number.isFinite(parsedSpeed) && parsedSpeed > 0 ? Math.max(20, parsedSpeed) : 42;
-      const projects = normalizeProjects(this.projects).filter(
+      const curated = this.getAttribute('layout') === 'curated';
+      const eligibleProjects = normalizeProjects(this.projects).filter(
         (project) => project.id !== currentProject
       );
+      const projects = curated ? eligibleProjects.slice(0, 3) : eligibleProjects;
       if (projects.length === 0) {
         this.hidden = true;
         return;
@@ -73,6 +82,12 @@ export function registerPortfolioProjectStrip(): void {
         a:hover { text-decoration: underline; text-underline-offset: .2em; }
         a:focus-visible { outline: 2px solid var(--portfolio-strip-focus); outline-offset: 2px; }
         .dot { padding: 0 .7rem; color: var(--portfolio-strip-muted); }
+        :host([layout='curated']) { border-block: 0; background: transparent; container-type: inline-size; }
+        .curated-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: .75rem; padding: 0; }
+        .curated-list li { display: block; white-space: normal; min-width: 0; }
+        .curated-list a { font-size: .95rem; font-weight: 650; overflow-wrap: anywhere; }
+        .description { margin: 0; color: var(--portfolio-strip-muted); font-size: .8125rem; line-height: 1.5; overflow-wrap: anywhere; }
+        @container (min-width: 560px) { .curated-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; align-items: start; } }
         @keyframes portfolio-strip-marquee { to { transform: translateX(-50%); } }
         @media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
           .track { animation: none; }
@@ -83,6 +98,31 @@ export function registerPortfolioProjectStrip(): void {
 
       const aside = document.createElement('aside');
       aside.setAttribute('aria-label', label);
+      if (curated) {
+        const list = document.createElement('ul');
+        list.className = 'curated-list';
+        for (const project of projects) {
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = withReferralSource(project.url, currentProject);
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.textContent = project.name;
+          link.setAttribute('aria-label', `${project.name} (opens in a new tab)`);
+          item.append(link);
+          if (project.description) {
+            const description = document.createElement('p');
+            description.className = 'description';
+            description.textContent = project.description;
+            item.append(description);
+          }
+          list.append(item);
+        }
+        aside.append(list);
+        root.append(style, aside);
+        return;
+      }
+
       const viewport = document.createElement('div');
       viewport.className = 'viewport';
       const track = document.createElement('div');

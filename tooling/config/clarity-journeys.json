@@ -486,22 +486,6 @@
       }
     },
     {
-      "id": "field-track",
-      "state": "ready",
-      "event": {
-        "name": "manager_dashboard_opened",
-        "text": "Manager dashboard",
-        "href": "/admin"
-      },
-      "funnel": {
-        "name": "discover_to_manager_demo",
-        "steps": [
-          "page:/",
-          "event:manager_dashboard_opened"
-        ]
-      }
-    },
-    {
       "id": "reddit-insights",
       "state": "ready",
       "event": {
@@ -521,15 +505,15 @@
       "id": "anchor",
       "state": "ready",
       "event": {
-        "name": "mac_beta_downloaded",
-        "text": "Download notarized Mac beta",
+        "name": "mac_beta_download_clicked",
+        "text": "Mac beta download clicked",
         "href": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg"
       },
       "funnel": {
         "name": "discover_to_download",
         "steps": [
           "page:/",
-          "event:mac_beta_downloaded"
+          "event:mac_beta_download_clicked"
         ]
       }
     },

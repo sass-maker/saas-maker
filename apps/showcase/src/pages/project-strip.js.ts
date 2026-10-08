@@ -54,6 +54,12 @@ const source = `(() => {
     .dot { padding: 0 .7rem; color: var(--portfolio-strip-muted); font-size: var(--portfolio-strip-separator-size); }
     .tooltip { position: absolute; z-index: 2; bottom: calc(100% + .5rem); left: 50%; width: max-content; max-width: min(22rem, 80vw); padding: .55rem .7rem; border: 1px solid var(--portfolio-strip-border); border-radius: .4rem; background: #171717; color: #f5f5f4; box-shadow: 0 8px 24px rgb(0 0 0 / .18); font-size: var(--portfolio-strip-tooltip-size); font-weight: 400; line-height: 1.35; pointer-events: none; transform: translateX(-50%); white-space: normal; }
     .tooltip[hidden] { display: none; }
+    :host([layout='curated']) { border-block: 0; background: transparent; container-type: inline-size; }
+    .curated-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: .75rem; padding: 0; }
+    .curated-list li { display: block; white-space: normal; min-width: 0; }
+    .curated-list a { font-size: .95rem; font-weight: 650; overflow-wrap: anywhere; }
+    .description { margin: 0; color: var(--portfolio-strip-muted); font-size: .8125rem; line-height: 1.5; overflow-wrap: anywhere; }
+    @container (min-width: 560px) { .curated-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; align-items: start; } }
     @keyframes portfolio-strip-marquee { to { transform: translateX(-50%); } }
     @media (prefers-reduced-motion: reduce) {
       .track { animation: none; }
@@ -94,6 +100,10 @@ const source = `(() => {
   };
 
   class PortfolioProjectStrip extends HTMLElement {
+    static observedAttributes = ['current-project', 'label', 'speed', 'theme', 'layout'];
+
+    attributeChangedCallback() { if (this.isConnected) this.render(); }
+
     constructor() {
       super();
       this.projects = INITIAL_PROJECTS;
@@ -109,7 +119,9 @@ const source = `(() => {
       const current = this.getAttribute('current-project') || '';
       const label = this.getAttribute('label') || 'Other projects by Sarthak';
       const speed = Math.max(20, Number(this.getAttribute('speed')) || 42);
-      const projects = validProjects(this.projects).filter((project) => project.id !== current);
+      const curated = this.getAttribute('layout') === 'curated';
+      const eligible = validProjects(this.projects).filter((project) => project.id !== current);
+      const projects = curated ? eligible.slice(0, 3) : eligible;
       if (!projects.length) { this.hidden = true; return; }
       this.hidden = false;
       const tooltip = document.createElement('div');
@@ -188,6 +200,33 @@ const source = `(() => {
 
       const aside = document.createElement('aside');
       aside.setAttribute('aria-label', label);
+      if (curated) {
+        const items = document.createElement('ul');
+        items.className = 'curated-list';
+        for (const project of projects) {
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = withReferralSource(project.url, current);
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.textContent = project.name;
+          link.setAttribute('aria-label', project.name + ' (opens in a new tab)');
+          item.append(link);
+          if (project.description) {
+            const description = document.createElement('p');
+            description.className = 'description';
+            description.textContent = project.description;
+            item.append(description);
+          }
+          items.append(item);
+        }
+        const style = document.createElement('style');
+        style.textContent = css;
+        aside.append(items);
+        this.shadowRoot.replaceChildren(style, aside);
+        return;
+      }
+
       const inner = document.createElement('div');
       inner.className = 'inner';
       viewport = document.createElement('div');
@@ -225,15 +264,26 @@ const source = `(() => {
 
   if (!customElements.get('portfolio-project-strip')) customElements.define('portfolio-project-strip', PortfolioProjectStrip);
   const script = document.currentScript;
-  const mount = () => {
-    if (!script || script.dataset.auto === 'false' || document.querySelector('portfolio-project-strip')) return;
+  const mount = (authoredHost) => {
+    if (!script || script.dataset.auto === 'false') return;
+    const host = authoredHost instanceof HTMLElement && authoredHost.localName === 'fleet-footer-extension'
+      ? authoredHost : document.querySelector('fleet-footer-extension');
+    if (script.dataset.hostOnly === 'true' && !host) return;
+    if (host?.querySelector('portfolio-project-strip') || (!host && document.querySelector('portfolio-project-strip'))) return;
     const strip = document.createElement('portfolio-project-strip');
     if (script.dataset.project) strip.setAttribute('current-project', script.dataset.project);
     if (script.dataset.label) strip.setAttribute('label', script.dataset.label);
     if (script.dataset.theme) strip.setAttribute('theme', script.dataset.theme);
     if (script.dataset.speed) strip.setAttribute('speed', script.dataset.speed);
-    document.body.append(strip);
+    if (script.dataset.layout) strip.setAttribute('layout', script.dataset.layout);
+    if (host) { strip.slot = 'projects'; host.append(strip); }
+    else document.body.append(strip);
   };
+  document.addEventListener('footer-connect', (event) => {
+    const host = event.target;
+    if (host instanceof HTMLElement && host.localName === 'fleet-footer-extension' &&
+        script?.dataset.project && host.dataset.fleetFooterProject === script.dataset.project) mount(host);
+  });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount, { once: true });
   else mount();
 })();`;

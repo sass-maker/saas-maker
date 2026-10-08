@@ -25,6 +25,8 @@ export interface PortfolioProjectStripProps {
   label?: string;
   theme?: PortfolioTheme;
   className?: string;
+  /** Show three stable plain links with descriptions instead of the marquee. */
+  layout?: 'curated';
   /** Marquee duration in seconds. */
   speed?: number;
 }

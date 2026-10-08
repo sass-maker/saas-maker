@@ -61,6 +61,7 @@ Commands:
   install-agents  Register Fleet support projects as OpenClaw agents.
   mobile          Show or configure mobile control surfaces.
   notify          Send or inspect a durable Fleet notification.
+  workspace       Manage writer worktrees, shared pnpm installs and build limits.
   check           Validate local OpenClaw, optional Hermes, Telegram, and security state.
   start           Start OpenClaw and notifications.
   pause           Stop OpenClaw and notifications.
@@ -234,6 +235,7 @@ case "${1:-}" in
   install-agents) "$FLEET_OPS_DIR/scripts/agent-bin/setup-openclaw-support-agents" "${@:2}" ;;
   mobile) "$FLEET_OPS_DIR/scripts/agent-bin/mobile-control" "${@:2}" ;;
   notify) "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notify" "${@:2}" ;;
+  workspace) "$FLEET_OPS_DIR/scripts/agent-bin/fleet-workspace" "${@:2}" ;;
   check)
     openclaw config validate
     openclaw plugins doctor

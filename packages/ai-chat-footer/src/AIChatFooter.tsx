@@ -34,6 +34,7 @@ export function AIChatFooter({
   providers = DEFAULT_PROVIDERS,
   label = `Explore ${companyName} with AI`,
   theme = 'auto',
+  layout,
   className = '',
 }: AIChatFooterProps) {
   const themeAttr = theme === 'auto' ? undefined : theme;
@@ -43,6 +44,7 @@ export function AIChatFooter({
     <div
       className={`ai-chat-footer ${className}`}
       data-theme={themeAttr}
+      data-layout={layout}
       role="region"
       aria-label="Ask AI about this product"
     >

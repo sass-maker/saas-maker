@@ -56,3 +56,7 @@ known, every outbound link gets `ref=<currentProjectId>` while the catalog URL
 remains canonical. Theme values are `light`, `dark`, and `auto`; CSS custom
 properties can be overridden on the component. The optional `label` prop names
 the region for assistive technology and is not rendered as visible copy.
+
+### Shared footer presentation
+
+Use `layout="curated"` (React or browser attribute) for the first three normalized noncurrent projects in catalog order, with visible descriptions and no marquee or cloned links. Existing referral URLs, bundled fallback and background catalog revalidation are retained. Omit it for the existing strip.

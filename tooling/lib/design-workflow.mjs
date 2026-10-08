@@ -1,14 +1,18 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 
-const POLICY_SCHEMA = 'fleet.design-workflow.v1';
-const RECEIPT_SCHEMA = 'fleet.design-review.v1';
+const POLICY_SCHEMA = 'fleet.design-workflow.v2';
+const RECEIPT_SCHEMA = 'fleet.design-review.v2';
 const MODES = new Set(['preserve', 'overhaul']);
 const REGISTERS = new Set(['brand', 'product']);
 const SURFACE_MODES = new Set(['persuade', 'operate', 'read', 'experience']);
 const COMPREHENSION_STATUSES = new Set(['pass', 'not-applicable']);
 const PURPOSE_ALIGNMENT_STATUSES = new Set(['match', 'repository-override']);
 const LIBRARY_RUNTIMES = new Set(['none', 'markup-only', 'selective', 'existing', 'full']);
+const CRAFT_DIMENSIONS = ['hierarchy', 'typography', 'composition', 'identity', 'interaction', 'responsive'];
+const AUDIT_DIMENSIONS = ['purpose', 'accessibility', 'behavior', 'responsive', 'performance'];
+const CONTINUITY_CHECKS = ['designSystem', 'identity', 'vocabulary', 'productTruth', 'handoff'];
 
 function validateOverhaulLane(overhaul, errors) {
   for (const field of [
@@ -35,8 +39,11 @@ function validateOverhaulLane(overhaul, errors) {
   ) {
     errors.push('overhaul direction-probe bounds are inverted');
   }
-  if (!sameMembers(overhaul?.acceptedDirectionDecisions, ['agent-selected', 'approved', 'delegated'])) {
-    errors.push('overhaul acceptedDirectionDecisions must be agent-selected, approved, and delegated');
+  if (overhaul?.minimumDirectionProbes !== 3 || overhaul?.maximumDirectionProbes !== 4) {
+    errors.push('overhaul comparison must require three or four direction probes');
+  }
+  if (!sameMembers(overhaul?.acceptedDirectionDecisions, ['approved', 'delegated'])) {
+    errors.push('overhaul acceptedDirectionDecisions must be approved and delegated');
   }
 }
 
@@ -54,6 +61,17 @@ function validateQualityGate(gate, errors) {
       errors.push(`qualityGate ${scoreField} must fit within ${maximumField}`);
     }
   }
+  for (const [field, dimensions, maximum] of [
+    ['critiqueWeights', CRAFT_DIMENSIONS, gate?.critiqueMaximum],
+    ['auditWeights', AUDIT_DIMENSIONS, gate?.auditMaximum],
+  ]) {
+    const weights = gate?.[field] ?? {};
+    if (!sameMembers(Object.keys(weights), dimensions)
+      || Object.values(weights).some((weight) => !Number.isSafeInteger(weight) || weight < 1)
+      || Object.values(weights).reduce((sum, weight) => sum + weight, 0) !== maximum) {
+      errors.push(`qualityGate ${field} must cover its review dimensions and total ${maximum}`);
+    }
+  }
   if (
     !Array.isArray(gate?.requiredViewportWidths)
     || gate.requiredViewportWidths.length < 2
@@ -61,14 +79,21 @@ function validateQualityGate(gate, errors) {
   ) {
     errors.push('qualityGate requiredViewportWidths must contain valid widths');
   }
-  if (!sameMembers(gate?.acceptedOwnerDecisions, ['agent-selected', 'keep', 'delegated'])) {
-    errors.push('qualityGate acceptedOwnerDecisions must be agent-selected, keep, and delegated');
+  if (!sameMembers(gate?.acceptedOwnerDecisions, ['not-required', 'keep', 'delegated'])) {
+    errors.push('qualityGate acceptedOwnerDecisions must be not-required, keep, and delegated');
   }
   if (gate?.detectorPosture !== 'advisory') {
     errors.push('qualityGate detectorPosture must be advisory');
   }
+  if (gate?.slopScale?.posture !== 'advisory'
+    || !sameMembers(gate?.slopScale?.requiredWebCheckpoints, ['directions', 'iteration', 'final'])) {
+    errors.push('qualityGate slopScale must require advisory directions, iteration, and final checkpoints');
+  }
   if (gate?.requirePassingProjectCheck !== true) {
     errors.push('qualityGate must require a passing project check');
+  }
+  if (gate?.requireProductContinuity !== true) {
+    errors.push('qualityGate must require landing-to-app product continuity');
   }
   for (const severity of ['p0', 'p1']) {
     if (gate?.maximumUnresolved?.[severity] !== 0) {
@@ -101,8 +126,8 @@ function validatePurposeGate(gate, errors) {
 
 export function validateDesignWorkflowPolicy(policy) {
   const errors = [];
-  if (policy?.$schema !== POLICY_SCHEMA || policy.version !== 1) {
-    errors.push(`policy must use ${POLICY_SCHEMA} version 1`);
+  if (policy?.$schema !== POLICY_SCHEMA || policy.version !== 2) {
+    errors.push(`policy must use ${POLICY_SCHEMA} version 2`);
   }
   if (!/^\d+\.\d+\.\d+$/.test(policy?.impeccableVersion ?? '')) {
     errors.push('policy impeccableVersion must be an exact semantic version');
@@ -123,6 +148,21 @@ export function validateDesignWorkflowPolicy(policy) {
 }
 
 function validateOverhaulDirection(direction, rules, root, pathExists, errors) {
+  const source = direction.source;
+  if (!['comparison', 'owner-supplied', 'delegated'].includes(source)) {
+    errors.push('overhaul direction.source must be comparison, owner-supplied, or delegated');
+  }
+  requireEvidencePath(direction.ownerEvidence?.path, 'direction.ownerEvidence', root, pathExists, errors);
+  if (!direction.ownerEvidence?.quote?.trim()) {
+    errors.push('overhaul requires the exact owner selection or delegation quote');
+  }
+  if (source === 'owner-supplied') {
+    requireEvidencePath(direction.supplied, 'direction.supplied', root, pathExists, errors);
+    if (direction.approval !== 'approved') errors.push('an owner-supplied direction requires approved status');
+  }
+  if (source === 'delegated' && direction.approval !== 'delegated') {
+    errors.push('a delegated direction requires explicit delegated status');
+  }
   const references = direction.references ?? [];
   const probes = direction.probes ?? [];
   if (!bounded(references.length, rules.minimumReferences, rules.maximumReferences)) {
@@ -131,10 +171,11 @@ function validateOverhaulDirection(direction, rules, root, pathExists, errors) {
   if (references.some((reference) => typeof reference !== 'string' || !reference.trim())) {
     errors.push('overhaul references must be non-empty names');
   }
-  if (!bounded(probes.length, rules.minimumDirectionProbes, rules.maximumDirectionProbes)) {
+  if (source === 'comparison' && !bounded(probes.length, rules.minimumDirectionProbes, rules.maximumDirectionProbes)) {
     errors.push(`overhaul requires ${rules.minimumDirectionProbes}-${rules.maximumDirectionProbes} direction probes`);
   }
   const probeIds = new Set();
+  const probePaths = new Set();
   for (const probe of probes) {
     if (!probe?.id?.trim() || probeIds.has(probe.id)) {
       errors.push('overhaul direction probes require unique ids');
@@ -142,6 +183,12 @@ function validateOverhaulDirection(direction, rules, root, pathExists, errors) {
       probeIds.add(probe.id);
     }
     requireEvidencePath(probe?.path, `direction.probes.${probe?.id ?? 'unknown'}`, root, pathExists, errors);
+    const probePath = typeof probe?.path === 'string' ? path.resolve(root, probe.path) : null;
+    if (probePaths.has(probePath)) errors.push('overhaul probes must use distinct visual artifacts');
+    probePaths.add(probePath);
+    for (const field of ['thesis', 'layout', 'typography']) {
+      if (!probe?.[field]?.trim()) errors.push(`direction probe ${probe?.id ?? 'unknown'} requires ${field}`);
+    }
   }
   if (probes.length > 0 && !probeIds.has(direction.selected)) {
     errors.push('overhaul direction.selected must match a probe id');
@@ -150,13 +197,83 @@ function validateOverhaulDirection(direction, rules, root, pathExists, errors) {
     errors.push('overhaul direction.selected is required when no probes are recorded');
   }
   if (!rules.acceptedDirectionDecisions.includes(direction.approval)) {
-    errors.push('overhaul direction approval must be agent-selected, approved, or delegated');
+    errors.push('overhaul direction approval must be approved or explicitly delegated');
   }
 }
 
-function validateReviewEvidence(evidence, policy, enforceMinimumScores, root, pathExists, errors) {
+function validateNativeEvidence(evidence, context, root, pathExists, readEvidenceFile, errors) {
+  const minimum = evidence.supportedMinimumWidth;
+  if (!Number.isSafeInteger(minimum) || minimum < 600) {
+    errors.push('native-macos supportedMinimumWidth must be an integer at least 600');
+  }
+  const designPath = context?.design ?? 'DESIGN.md';
+  requireEvidencePath(designPath, 'context.design', root, pathExists, errors);
+  try {
+    const resolved = path.resolve(root, designPath);
+    const relative = path.relative(root, resolved);
+    if (relative.startsWith('..') || path.isAbsolute(relative)) throw new Error('outside project');
+    const document = readEvidenceFile(resolved, 'utf8');
+    if (!/^Platform:\s*native-macos\s*$/m.test(document)) {
+      errors.push('context.design must document Platform: native-macos');
+    }
+    const documented = document.match(/^Supported minimum width:\s*(\d+)\s*$/m);
+    if (!documented || Number(documented[1]) !== minimum) {
+      errors.push('context.design must document the matching Supported minimum width');
+    }
+  } catch {
+    errors.push('native-macos context.design must be readable');
+  }
+
+  const screenshots = evidence.screenshots;
+  if (!Array.isArray(screenshots) || screenshots.length < 3) {
+    errors.push('native-macos requires at least three distinct actual screenshots');
+    return;
+  }
+  const paths = new Set();
+  const images = new Set();
+  for (const [index, screenshot] of screenshots.entries()) {
+    const label = `native screenshot.${index}`;
+    if (!Number.isSafeInteger(screenshot?.width) || screenshot.width < minimum) {
+      errors.push(`${label} width must be an integer at or above supportedMinimumWidth`);
+    }
+    if (!Number.isSafeInteger(screenshot?.height) || screenshot.height < 1) {
+      errors.push(`${label} height must be a positive integer`);
+    }
+    requireEvidencePath(screenshot?.path, label, root, pathExists, errors);
+    if (typeof screenshot?.path !== 'string' || !screenshot.path.trim()) continue;
+    const resolved = path.resolve(root, screenshot.path);
+    const relative = path.relative(root, resolved);
+    if (relative.startsWith('..') || path.isAbsolute(relative)) continue;
+    if (paths.has(resolved)) errors.push(`${label} must use a distinct screenshot path`);
+    paths.add(resolved);
+    try {
+      const bytes = readEvidenceFile(resolved);
+      const png = bytes.subarray(0, 8).equals(Buffer.from('89504e470d0a1a0a', 'hex'));
+      const jpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+      const webp = bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WEBP';
+      if (!png && !jpeg && !webp) errors.push(`${label} must be a PNG, JPEG, or WebP image`);
+      const hash = createHash('sha256').update(bytes).digest('hex');
+      if (images.has(hash)) errors.push(`${label} must contain a distinct screenshot image`);
+      images.add(hash);
+    } catch {
+      errors.push(`${label} image must be readable`);
+    }
+  }
+  if (!screenshots.some((entry) => entry?.width === minimum)) {
+    errors.push('native-macos requires a screenshot at supportedMinimumWidth');
+  }
+  if (new Set(screenshots.map((entry) => entry?.width)).size < 3) {
+    errors.push('native-macos requires at least three distinct window widths');
+  }
+}
+
+function validateReviewEvidence(evidence, context, policy, enforceMinimumScores, root, pathExists, readEvidenceFile, errors) {
   const screenshots = evidence.screenshots ?? [];
-  for (const width of policy.qualityGate.requiredViewportWidths) {
+  if (evidence.platform === 'native-macos') {
+    validateNativeEvidence(evidence, context, root, pathExists, readEvidenceFile, errors);
+  } else if (evidence.platform !== undefined && evidence.platform !== 'web') {
+    errors.push('evidence.platform must be web or native-macos when specified');
+  } else for (const width of policy.qualityGate.requiredViewportWidths) {
     const screenshot = screenshots.find((entry) => entry?.width === width);
     if (!screenshot) {
       errors.push(`missing required viewport ${width}`);
@@ -170,6 +287,7 @@ function validateReviewEvidence(evidence, policy, enforceMinimumScores, root, pa
     policy.qualityGate.critiqueMaximum,
     'critique',
     errors,
+    policy.qualityGate.critiqueWeights,
   );
   validateScore(
     evidence.audit,
@@ -177,10 +295,11 @@ function validateReviewEvidence(evidence, policy, enforceMinimumScores, root, pa
     policy.qualityGate.auditMaximum,
     'audit',
     errors,
+    policy.qualityGate.auditWeights,
   );
   for (const severity of ['p0', 'p1']) {
     const count = evidence?.unresolved?.[severity];
-    if (!Number.isSafeInteger(count) || count > policy.qualityGate.maximumUnresolved[severity]) {
+    if (!Number.isSafeInteger(count) || count < 0 || count > policy.qualityGate.maximumUnresolved[severity]) {
       errors.push(`unresolved ${severity.toUpperCase()} findings exceed the allowed maximum`);
     }
   }
@@ -207,8 +326,148 @@ function validateReviewEvidence(evidence, policy, enforceMinimumScores, root, pa
   }
 }
 
+function validateVisualReview(review, selected, root, pathExists, errors) {
+  if (review?.status !== 'pass') errors.push('a passing rendered visual review is required');
+  if (!review?.reviewer?.trim()) errors.push('a visual reviewer is required');
+  if (review?.direction !== selected) errors.push('visual review must assess the selected direction');
+  requireEvidencePath(review?.report, 'evidence.visualReview.report', root, pathExists, errors);
+  for (const dimension of CRAFT_DIMENSIONS) {
+    const check = review?.checks?.[dimension];
+    const allowed = dimension === 'interaction' ? ['pass', 'not-applicable'] : ['pass'];
+    if (!allowed.includes(check?.status) || !check?.observation?.trim()) {
+      errors.push(`visual review ${dimension} requires a passing observation${dimension === 'interaction' ? ' or a justified not-applicable result' : ''}`);
+    }
+  }
+}
+
+function validatePairedEvidence(surfaces, label, root, pathExists, errors) {
+  for (const role of ['landing', 'app']) {
+    requireEvidencePath(surfaces?.[role], `${label}.${role}`, root, pathExists, errors);
+  }
+  if (typeof surfaces?.landing === 'string' && typeof surfaces?.app === 'string'
+    && path.resolve(root, surfaces.landing) === path.resolve(root, surfaces.app)) {
+    errors.push(`${label} must show distinct landing and app evidence`);
+  }
+}
+
+function validateProductSurfaces(receipt, root, pathExists, errors) {
+  const surfaces = receipt.direction?.productSurfaces;
+  if (!['paired', 'standalone'].includes(surfaces?.scope)) {
+    errors.push('direction.productSurfaces scope must inventory paired landing/app or justified standalone work');
+    return;
+  }
+  if (surfaces.scope === 'standalone') {
+    if (!surfaces.reason?.trim()) errors.push('standalone productSurfaces requires why there is no landing/app counterpart');
+    if (surfaces.landing?.trim() && surfaces.app?.trim()) errors.push('products with both landing and app surfaces must use paired scope');
+    return;
+  }
+  for (const role of ['landing', 'app']) {
+    if (!surfaces[role]?.trim()) errors.push(`paired productSurfaces requires the ${role} location or route/state`);
+  }
+  if (receipt.mode !== 'overhaul') return;
+  if (receipt.direction.source === 'comparison') {
+    for (const probe of receipt.direction.probes ?? []) {
+      validatePairedEvidence(probe?.surfaces, `direction.probes.${probe?.id ?? 'unknown'}.surfaces`, root, pathExists, errors);
+    }
+  } else {
+    validatePairedEvidence(receipt.direction.pairedPreview, 'direction.pairedPreview', root, pathExists, errors);
+  }
+}
+
+function validateProductContinuity(receipt, root, pathExists, errors) {
+  const review = receipt.evidence?.productContinuity;
+  if (receipt.direction.productSurfaces.scope === 'standalone') {
+    if (review?.status !== 'not-applicable' || !review?.reason?.trim()) {
+      errors.push('standalone product continuity must record not-applicable with a reason');
+    }
+    return;
+  }
+  if (review?.status !== 'pass' || !review?.reviewer?.trim()) {
+    errors.push('paired surfaces require a named passing landing-to-app continuity review');
+  }
+  requireEvidencePath(review?.report, 'evidence.productContinuity.report', root, pathExists, errors);
+  validatePairedEvidence(review?.surfaces, 'evidence.productContinuity.surfaces', root, pathExists, errors);
+  for (const field of CONTINUITY_CHECKS) {
+    if (review?.checks?.[field]?.status !== 'pass' || !review?.checks?.[field]?.observation?.trim()) {
+      errors.push(`product continuity ${field} requires a passing concrete observation across landing and app`);
+    }
+  }
+}
+
+function validateSlopScale(receipt, phase, root, pathExists, readReport, errors) {
+  const scale = receipt.evidence?.slopScale;
+  if (scale?.posture !== 'advisory' || !['web', 'native'].includes(scale?.platform)) {
+    errors.push('evidence.slopScale requires advisory posture and web or native platform');
+    return [];
+  }
+  if (scale.platform === 'native') {
+    if (!scale.reason?.trim()) errors.push('native slopScale exemption requires a reason; the scanner only renders web pages');
+    return [{ status: 'not-applicable', reason: scale.reason }];
+  }
+  const checkpoints = scale.checkpoints;
+  if (!Array.isArray(checkpoints)) {
+    errors.push('slopScale checkpoints must be an array');
+    return [];
+  }
+  const required = [];
+  if (receipt.mode === 'overhaul') {
+    const directions = receipt.direction.source === 'comparison'
+      ? (receipt.direction.probes ?? []).map(({ id }) => id) : [receipt.direction.selected];
+    required.push(...directions.map((direction) => ({ stage: 'directions', direction })));
+  }
+  if (phase === 'completion') required.push({ stage: 'iteration' }, { stage: 'final' });
+  const summaries = [];
+  const paths = new Set();
+  for (const expected of required) {
+    const label = `slopScale ${expected.stage}${expected.direction ? ` (${expected.direction})` : ''}`;
+    const matches = checkpoints.filter((entry) => entry?.stage === expected.stage && entry?.direction === expected.direction);
+    if (matches.length !== 1) {
+      errors.push(`${label} requires exactly one checkpoint`);
+      continue;
+    }
+    const entry = matches[0];
+    if (!['scanned', 'blocked'].includes(entry.status)) {
+      errors.push(`${label} must be scanned or explicitly blocked`);
+      continue;
+    }
+    const previousErrors = errors.length;
+    requireEvidencePath(entry.report, `${label} report`, root, pathExists, errors);
+    if (errors.length !== previousErrors) continue;
+    const reportPath = path.resolve(root, entry.report);
+    if (paths.has(reportPath)) errors.push(`${label} must have its own checkpoint report`);
+    paths.add(reportPath);
+    if (entry.status === 'blocked') {
+      if (!entry.reason?.trim()) errors.push(`${label} blocked scan requires the concrete error or capability limitation`);
+      if (entry.score !== undefined && entry.score !== null) errors.push(`${label} blocked scan has an unknown score, never Clean`);
+      summaries.push({ ...expected, status: 'unknown', reason: entry.reason });
+      continue;
+    }
+    if (!entry.command?.trim() || !entry.findingsReview?.trim()) {
+      errors.push(`${label} requires the scan command and finding dispositions (fixes or justified intentional choices)`);
+    }
+    try {
+      const report = readReport(reportPath);
+      if (report?.status !== 'scanned' || report?.posture !== 'advisory'
+        || report?.tool?.name !== 'slop-detect' || !/^[a-f0-9]{40}$/.test(report?.tool?.revision ?? '')
+        || !Number.isFinite(Date.parse(report?.measuredAt))
+        || report?.viewport?.width !== 1280 || report?.viewport?.height !== 800
+        || !Array.isArray(report?.results) || report.results.length === 0
+        || report.results.some((result) => result?.error || result?.blocked || result?.patternsErrored > 0
+          || !Number.isFinite(result?.score) || result.score < 0 || !result.definitionsVersion
+          || !result.preset || !Array.isArray(result.patterns))) {
+        errors.push(`${label} requires a successful runner JSON report with score, provenance, and triggered evidence; failed scans are unknown`);
+      } else {
+        summaries.push({ ...expected, status: 'scanned', scores: report.results.map(({ score }) => score) });
+      }
+    } catch {
+      errors.push(`${label} report must be readable runner JSON`);
+    }
+  }
+  return summaries;
+}
+
 function validateDirectionContract(contract, errors) {
-  for (const field of ['purpose', 'audience', 'job', 'thesis', 'system', 'signature', 'risk']) {
+  for (const field of ['purpose', 'audience', 'job', 'thesis', 'system', 'signature', 'risk', 'qualityBar']) {
     if (!contract?.[field]?.trim()) errors.push(`direction contract ${field} is required`);
   }
 }
@@ -255,17 +514,17 @@ function validateLibrarySourcing(library, errors) {
   }
 }
 
-export function validateDesignReview(receipt, policyInput, {
+export function validateDesignPreflight(receipt, policyInput, {
   projectRoot,
-  pathExists = existsSync,
-  enforceMinimumScores = true,
+  pathExists = nonemptyEvidenceFile,
+  readReport = (file) => JSON.parse(readFileSync(file, 'utf8')),
 } = {}) {
   const policy = validateDesignWorkflowPolicy(policyInput);
   const root = path.resolve(projectRoot ?? process.cwd());
   const errors = [];
 
-  if (receipt?.$schema !== RECEIPT_SCHEMA || receipt.version !== 1) {
-    errors.push(`receipt must use ${RECEIPT_SCHEMA} version 1`);
+  if (receipt?.$schema !== RECEIPT_SCHEMA || receipt.version !== 2) {
+    errors.push(`receipt must use ${RECEIPT_SCHEMA} version 2; renew legacy receipts before new design work`);
   }
   if (!receipt?.project?.trim()) errors.push('receipt project is required');
   if (!receipt?.target?.trim()) errors.push('receipt target is required');
@@ -286,22 +545,46 @@ export function validateDesignReview(receipt, policyInput, {
   const direction = receipt?.direction ?? {};
   validateDirectionContract(direction.contract, errors);
   validateLibrarySourcing(direction.library, errors);
+  validateProductSurfaces(receipt, root, pathExists, errors);
   if (receipt?.mode === 'preserve') {
+    if (direction.source !== 'existing') errors.push('preserve work must use the existing direction');
     requireEvidencePath(direction.before, 'direction.before', root, pathExists, errors);
     if (!direction.selected?.trim()) errors.push('preserve direction.selected is required');
   }
   if (receipt?.mode === 'overhaul') {
     validateOverhaulDirection(direction, policy.lanes.overhaul, root, pathExists, errors);
   }
+  validateSlopScale(receipt, 'preflight', root, pathExists, readReport, errors);
+
+  if (errors.length) throw new DesignWorkflowError('Design preflight failed', errors);
+  return { ok: true, project: receipt.project, target: receipt.target, mode: receipt.mode, phase: 'preflight' };
+}
+
+export function validateDesignReview(receipt, policyInput, {
+  projectRoot,
+  pathExists = nonemptyEvidenceFile,
+  readReport = (file) => JSON.parse(readFileSync(file, 'utf8')),
+  readEvidenceFile = readFileSync,
+  enforceMinimumScores = true,
+} = {}) {
+  const policy = validateDesignWorkflowPolicy(policyInput);
+  const root = path.resolve(projectRoot ?? process.cwd());
+  validateDesignPreflight(receipt, policy, { projectRoot: root, pathExists, readReport });
+  const errors = [];
 
   validateReviewEvidence(
     receipt?.evidence ?? {},
+    receipt?.context,
     policy,
     enforceMinimumScores,
     root,
     pathExists,
+    readEvidenceFile,
     errors,
   );
+  validateVisualReview(receipt.evidence?.visualReview, receipt.direction.selected, root, pathExists, errors);
+  validateProductContinuity(receipt, root, pathExists, errors);
+  const slopScale = validateSlopScale(receipt, 'completion', root, pathExists, readReport, errors);
 
   if (receipt.surfaceMode === 'persuade' && receipt.evidence?.comprehension?.status !== 'pass') {
     errors.push('persuade surfaces require a passing fresh-visitor comprehension check');
@@ -328,7 +611,13 @@ export function validateDesignReview(receipt, policyInput, {
   }
 
   if (!policy.qualityGate.acceptedOwnerDecisions.includes(receipt?.ownerFeedback?.decision)) {
-    errors.push('owner feedback must be agent-selected, keep, or explicitly delegated');
+    errors.push('owner feedback must be not-required, keep, or explicitly delegated');
+  }
+  if (receipt.mode === 'overhaul') {
+    const expectedDecision = receipt.direction.approval === 'delegated' ? 'delegated' : 'keep';
+    if (receipt.ownerFeedback?.decision !== expectedDecision) {
+      errors.push('overhaul owner feedback must match the evidenced direction decision');
+    }
   }
 
   if (errors.length) throw new DesignWorkflowError('Design review failed', errors);
@@ -342,7 +631,18 @@ export function validateDesignReview(receipt, policyInput, {
     purposeScore: receipt.evidence.comprehension?.purposeScore?.total ?? null,
     ownerDecision: receipt.ownerFeedback.decision,
     advisoryFindings: receipt.evidence.detector.findings?.length ?? 0,
+    slopScale,
+    productContinuity: receipt.evidence.productContinuity.status,
   };
+}
+
+function nonemptyEvidenceFile(value) {
+  try {
+    const file = statSync(value);
+    return file.isFile() && file.size > 0;
+  } catch {
+    return false;
+  }
 }
 
 function validatePurposeScore(score, gate, errors) {
@@ -413,13 +713,27 @@ function requireEvidencePath(value, label, root, pathExists, errors) {
   }
 }
 
-function validateScore(value, minimum, maximum, label, errors) {
+function validateScore(value, minimum, maximum, label, errors, weights) {
   if (value?.maximum !== maximum) {
     errors.push(`${label} maximum must be ${maximum}`);
   }
   if (!Number.isFinite(value?.score) || value.score < minimum || value.score > maximum) {
     errors.push(`${label} score must be between ${minimum} and ${maximum}`);
   }
+  if (!sameMembers(Object.keys(value?.dimensions ?? {}), Object.keys(weights))) {
+    errors.push(`${label} requires dimension scores from the review rubric`);
+    return;
+  }
+  let total = 0;
+  for (const [dimension, limit] of Object.entries(weights)) {
+    const score = value.dimensions[dimension];
+    if (!Number.isFinite(score) || score < 0 || score > limit) {
+      errors.push(`${label} dimension ${dimension} must be between 0 and ${limit}`);
+    } else {
+      total += score;
+    }
+  }
+  if (value.score !== total) errors.push(`${label} score must equal its dimension total ${total}`);
 }
 
 function bounded(value, minimum, maximum) {
