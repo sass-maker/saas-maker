@@ -1,9 +1,7 @@
----
-name: component-pattern-mine
-description: Compare mature implementations of an unfamiliar web component or interaction pattern and turn them into project-adapted guidance. Use for command palettes, comboboxes, timelines, tables, editors, navigation, uploaders, multi-state controls, spatial UI, or any component whose anatomy, states, accessibility, responsive behavior, motion, or data boundary needs research before implementation.
----
-
 # Component pattern mine
+
+> Formerly the standalone `component-pattern-mine` skill; merged into
+> [design-workflow](../SKILL.md) on 2026-10-08. Use to compare mature implementations of an unfamiliar web component or interaction pattern and turn them into project-adapted guidance. Use for command palettes, comboboxes, timelines, tables, editors, navigation, uploaders, multi-state controls, spatial UI, or any component whose anatomy, states, accessibility, responsive behavior, motion, or data boundary needs research before implementation.
 
 Mine behavior and anatomy. Do not import another system's visual language.
 
@@ -21,7 +19,7 @@ the pattern brief.
 
 ## 2. Define the behavior problem
 
-Read [the component contract](references/component-contract.md). Establish:
+Read [the component contract](component-pattern-mine-contract.md). Establish:
 
 - user job and context;
 - content and data shape;
@@ -32,7 +30,7 @@ Read [the component contract](references/component-contract.md). Establish:
 ## 3. Compare mature implementations
 
 Inspect two or three relevant implementations using current primary sources or
-live browser evidence. The parent [source map](../design-engineering/references/source-map.md)
+live browser evidence. The parent [source map](source-map.md)
 is only a starting point. Verify source license, framework compatibility, and
 package status before recommending reuse.
 

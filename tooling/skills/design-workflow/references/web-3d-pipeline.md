@@ -1,9 +1,7 @@
----
-name: web-3d-pipeline
-description: Shape, inspect, optimize, integrate, and validate web 3D experiences and assets. Use for glTF or GLB files, models, scenes, cameras, materials, lighting, spatial interaction, product viewers, 3D heroes, WebGL delivery, Three.js or React Three Fiber work, and decisions about whether an experience needs real-time 3D at all. Requires provenance, fallbacks, loading behavior, accessibility, and browser performance evidence.
----
-
 # Web 3D pipeline
+
+> Formerly the standalone `web-3d-pipeline` skill; merged into
+> [design-workflow](../SKILL.md) on 2026-10-08. Use to shape, inspect, optimize, integrate, and validate web 3D experiences and assets. Use for glTF or GLB files, models, scenes, cameras, materials, lighting, spatial interaction, product viewers, 3D heroes, WebGL delivery, Three.js or React Three Fiber work, and decisions about whether an experience needs real-time 3D at all. Requires provenance, fallbacks, loading behavior, accessibility, and browser performance evidence.
 
 Use the least expensive rendering tier that delivers the intended experience.
 
@@ -22,11 +20,11 @@ Impeccable for the surrounding surface and final audit.
 Run the parent doctor only when local asset or implementation tooling matters:
 
 ```bash
-node skills/design-engineering/scripts/doctor.mjs \
+node skills/design-workflow/scripts/doctor.mjs \
   --project <project-root> --json
 ```
 
-Read [the delivery contract](references/delivery-contract.md). Inspect existing
+Read [the delivery contract](web-3d-pipeline-contract.md). Inspect existing
 packages and asset metadata before proposing a new runtime. Do not install or
 add a production dependency without explicit approval.
 
@@ -78,5 +76,5 @@ Hand shaders or expressive post-processing that do not own scene structure to
 Use the delivery contract's evidence matrix. Exercise required Fleet widths,
 low-capability and fallback paths, loading, interaction, resize, visibility,
 reduced motion, and cleanup. Measure actual delivered bytes and runtime
-behavior. Run the project's smallest relevant check and finish through the
-active design-review receipt.
+behavior. Run the project's smallest relevant check and finish with
+design-workflow's rendered review.

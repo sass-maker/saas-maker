@@ -129,7 +129,7 @@ provider-reported conversions as realized profit.
 For a focused review, return one decision—test, iterate, scale candidate, stop,
 or insufficient evidence (hold for delayed data)—with at most five useful borrow/verify/avoid comparisons
 and one next experiment. Use the compact reference above rather than expanding
-every review into a full growth plan. Meaningful visual changes still require
-`design-workflow` and owner selection; growth approval does not select a design.
+every review into a full growth plan. Visual changes go through
+`design-workflow` (overhaul needs owner selection); growth approval does not select a design.
 For paid campaign reviews, use the more specific readiness/hold/stop/iterate/scale
 decision rules in the paid-acquisition reference. A recommendation is not execution.

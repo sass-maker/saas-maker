@@ -118,12 +118,11 @@ Also read and follow the shared fleet-level agent standard at \`../AGENTS.md\`. 
 
 ## Visual work
 
-For meaningful visual work, use the Fleet-local \`\$design-workflow\` skill and
-the shared \`../LANDING_STANDARD.md\` where applicable. Classify preserve or
-overhaul before code; keep \`PROJECT_STATUS.md\` authoritative for product
-scope, \`PRODUCT.md\` limited to design context, and \`DESIGN.md\` authoritative
-for visual direction. Do not claim completion until the Fleet design-review
-receipt passes.
+For visual work, use the Fleet-local \`\$design-workflow\` skill and the
+shared \`../LANDING_STANDARD.md\` where applicable. Preserve the established look
+by default; overhaul only for a new surface or an explicit redesign. Keep
+\`PROJECT_STATUS.md\` authoritative for product scope, \`PRODUCT.md\` limited to design context, and \`DESIGN.md\` authoritative
+for visual direction. Check the rendered result before claiming completion.
 AGENTSEOF
 
 # 4. PROJECT_STATUS.md
@@ -219,6 +218,6 @@ echo "Post-creation checklist:"
 echo "  [ ] AGENTS.md, PROJECT_STATUS.md, .gitignore committed"
 echo "  [ ] CI workflow committed (may need adjusting for your stack)"
 echo "  [ ] Register in saas-maker catalog/projects.json, then pnpm catalog:sync"
-echo "  [ ] If visual: run \$design-workflow and pass the Fleet design-review receipt"
+echo "  [ ] If visual: follow \$design-workflow and check the rendered result"
 echo "  [ ] If Cloudflare: create wrangler config"
 echo "  [ ] If DB: create schema + first migration"

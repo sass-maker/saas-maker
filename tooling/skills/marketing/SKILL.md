@@ -28,9 +28,9 @@ product: a research exhibit need not acquire a funnel, paywall or sales persona.
 
 - `PRODUCT.md` remains authoritative. Suggest conflicting positioning changes
   explicitly; do not silently rewrite the product's purpose.
-- Meaningful visual/frontend changes use `design-workflow`, including its owner
-  selection gate. Marketing approval is not design-system approval. Copy-only
-  work may preserve the established direction.
+- Visual/frontend changes use `design-workflow` (preserve by default; an
+  overhaul needs owner selection). Marketing approval is not design-system
+  approval.
 - Use `seo-research` for search-market research, `site-health` for technical SEO
   and site measurement.
   Use `humanizer` when the task is specifically editing AI-sounding prose.

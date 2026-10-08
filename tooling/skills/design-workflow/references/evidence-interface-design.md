@@ -1,9 +1,7 @@
----
-name: evidence-interface-design
-description: Shape, audit, specify, or implement evidence-heavy web interfaces such as reports, benchmarks, comparisons, dashboards, scorecards, calculators, ROI tools, and decision pages. Use when facts, formulas, units, sources, uncertainty, visual encoding, or fast-versus-audit reading paths must remain trustworthy while the interface makes a conclusion or decision clear. Produces a project-native evidence and composition contract without importing another brand system.
----
-
 # Evidence interface design
+
+> Formerly the standalone `evidence-interface-design` skill; merged into
+> [design-workflow](../SKILL.md) on 2026-10-08. Use to shape, audit, specify, or implement evidence-heavy web interfaces such as reports, benchmarks, comparisons, dashboards, scorecards, calculators, ROI tools, and decision pages. Use when facts, formulas, units, sources, uncertainty, visual encoding, or fast-versus-audit reading paths must remain trustworthy while the interface makes a conclusion or decision clear. Produces a project-native evidence and composition contract without importing another brand system.
 
 Make the evidence easier to understand without changing what it means.
 
@@ -11,7 +9,7 @@ Make the evidence easier to understand without changing what it means.
 
 Read the nearest project instructions, `PROJECT_STATUS.md`, relevant
 `PRODUCT.md` and `DESIGN.md`, incumbent interface, real content, and supplied
-source material. Read [the evidence contract](references/evidence-contract.md).
+source material. Read [the evidence contract](evidence-interface-design-contract.md).
 
 For meaningful visual implementation, invoke `design-workflow` before editing.
 Use Impeccable for general direction, craft, critique, polish, and audit. This
@@ -95,4 +93,4 @@ supported themes and states, long and missing content, semantics, focus,
 reading order, and text alternatives. Confirm that visual salience matches the
 strength of the evidence and that removing decoration does not weaken meaning.
 Run the smallest relevant project check and finish meaningful visual work
-through the active design-review receipt.
+with design-workflow's rendered review.

@@ -120,4 +120,4 @@ Return:
 7. **Validation** — exact states, widths, inputs, and checks to exercise.
 
 For research-only work, stop here. For requested implementation, add browser
-evidence, the project check, and the active design-workflow receipt result.
+evidence, the project check, and the design-workflow review result.

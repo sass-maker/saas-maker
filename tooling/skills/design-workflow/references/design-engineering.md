@@ -1,14 +1,11 @@
----
-name: design-engineering
-description: 'Use explicitly for isolated design-engineering mechanics that do not need end-to-end visual direction: Tailwind canonicalization, semantic markup reconstruction, or routing a specialized 3D, effects, component-pattern, or evidence-interface task. Meaningful UI implementation and visual direction belong to design-workflow.'
-disable-model-invocation: true
----
-
 # Design engineering
+
+> Formerly the standalone `design-engineering` skill; merged into
+> [design-workflow](../SKILL.md) on 2026-10-08. Use explicitly for isolated design-engineering mechanics that do not need end-to-end visual direction: Tailwind canonicalization, semantic markup reconstruction, or routing a specialized 3D, effects, component-pattern, or evidence-interface task. Meaningful UI implementation and visual direction belong to design-workflow.
 
 This is an explicit specialist helper, not the default design entry point. Route
 only the isolated mechanical or specialist task requested. For meaningful UI
-implementation, stop and use `../design-workflow/SKILL.md` as the sole design
+implementation, stop and use `../SKILL.md` as the sole design
 authority.
 
 ## Allowed scope
@@ -60,12 +57,12 @@ meaningful UI work. Those jobs belong to `design-workflow`.
    `PRODUCT.md`, `DESIGN.md`, tokens, components, and assets before advising or
    editing.
 2. For meaningful Fleet visual implementation, invoke `design-workflow` and
-   keep its preserve/overhaul lane and review receipt authoritative.
+   keep its preserve/overhaul lane authoritative.
 3. Use Impeccable for shape, new-work craft, extraction, color, adaptation,
    critique, polish, and audit. Use imagegen only for requested visual boards or
    raster edits with the required source assets. Use child skills for
    specialized research and delivery mechanics.
-4. Treat [the source map](references/source-map.md) as discovery help, not a
+4. Treat [the source map](source-map.md) as discovery help, not a
    trusted catalog. Verify drift-prone availability, pricing, licensing, and
    compatibility before relying on an external tool or asset.
 5. Reuse the project's current stack. Do not add a production dependency, paid
@@ -80,7 +77,7 @@ doctor from the Fleet root or resolve the same script through this skill's
 installed base directory:
 
 ```bash
-node skills/design-engineering/scripts/doctor.mjs \
+node skills/design-workflow/scripts/doctor.mjs \
   --project <project-root> --json
 ```
 
@@ -92,6 +89,6 @@ dependencies. It does not install, execute, or modify any tool.
 - Research-only work ends with attributable findings, constraints, and a clear
   next decision; it does not claim that implementation shipped.
 - Implementation work ends through the owning project's checks and, when the
-  work is meaningful visual work, the `design-workflow` receipt.
+  work is meaningful visual work, `design-workflow`'s rendered review.
 - Record completed Fleet-owned skill runs through the installed
   `fleet-skill-run` boundary or supported host hook.
