@@ -32,7 +32,8 @@ usage() {
 usage: agent-stack.sh <command>
 
 Commands:
-  install-skills  Link Fleet Ops skills into local agent runtimes.
+  install-skills  Link Fleet Ops skills into local agent runtimes, or defer to
+                  a user-level skills manager when one is present.
   install-agents  Register Fleet support projects as OpenClaw agents.
   mobile          Show or configure mobile control surfaces.
   notify          Send or inspect a durable Fleet notification.
@@ -44,6 +45,27 @@ Commands:
   restart         Restart OpenClaw and notifications.
   status          Show gateway, cron, mobile, and paired-device status.
 EOF
+}
+
+# A user-level skills manager, if present, owns the skill links in the
+# Fleet and user agent directories. This script must not write over them.
+skills_manager_command() {
+  if command -v agent-config >/dev/null 2>&1; then
+    command -v agent-config
+  elif [[ -x "$HOME/.agent-config/bin/agent-config" ]]; then
+    printf '%s\n' "$HOME/.agent-config/bin/agent-config"
+  else
+    return 1
+  fi
+}
+
+skills_manager_present() {
+  skills_manager_command >/dev/null 2>&1 || [[ -d "$HOME/.agent-config" ]]
+}
+
+read_skill_version() {
+  sed -nE 's/^version:[[:space:]]*["'\'']?([^"'\'']+[[:alnum:]])["'\'']?[[:space:]]*$/\1/p' \
+    "$1" 2>/dev/null | head -n 1
 }
 
 install_impeccable() {
@@ -69,13 +91,18 @@ install_impeccable() {
     printf 'Invalid Impeccable version policy: %s\n' "$policy_file" >&2
     return 1
   }
-  installed_version="$(
-    sed -nE 's/^version:[[:space:]]*["'\'']?([^"'\'']+[[:alnum:]])["'\'']?[[:space:]]*$/\1/p' \
-      "$skill_file" 2>/dev/null | head -n 1
-  )"
+  installed_version="$(read_skill_version "$skill_file")"
 
   if [[ "$installed_version" == "$expected_version" ]]; then
     return 0
+  fi
+
+  # A managed copy (a link, or any copy under a skills manager) is only
+  # verified here. Installing into it would overwrite the managed files.
+  if [[ -L "$(dirname "$skill_file")" ]] || skills_manager_present; then
+    printf 'Impeccable version drift: expected %s, found %s. Update it through the skills manager.\n' \
+      "$expected_version" "${installed_version:-missing}" >&2
+    return 1
   fi
 
   if ! command -v npx >/dev/null 2>&1; then
@@ -90,10 +117,7 @@ install_impeccable() {
       --scope=project
   )
 
-  installed_version="$(
-    sed -nE 's/^version:[[:space:]]*["'\'']?([^"'\'']+[[:alnum:]])["'\'']?[[:space:]]*$/\1/p' \
-      "$skill_file" 2>/dev/null | head -n 1
-  )"
+  installed_version="$(read_skill_version "$skill_file")"
   if [[ "$installed_version" != "$expected_version" ]]; then
     printf 'Impeccable install drift: expected %s, found %s\n' \
       "$expected_version" "${installed_version:-missing}" >&2
@@ -180,6 +204,7 @@ install_skill_run_command() {
 
 install_skills() {
   local dir
+  local manager
 
   # Impeccable is a machine-installed third-party skill. Its generated files
   # stay untracked; child projects receive local links below.
@@ -187,10 +212,21 @@ install_skills() {
   install_skill_run_command
   node "$FLEET_OPS_DIR/scripts/install-skill-run-hook.mjs"
 
-  # Keep Codex skills local to Fleet instead of loading them in every repo.
-  dir="$FLEET_ROOT/.agents/skills"
-  link_fleet_skills "$dir"
-  link_teammate_parent "$dir"
+  if skills_manager_present; then
+    # The user-level skills manager owns the Fleet skill links; refresh them
+    # through it instead of writing competing links here.
+    printf 'A user-level skills manager manages skill links; running its sync.\n'
+    if manager="$(skills_manager_command)"; then
+      "$manager" sync
+    else
+      printf 'Skills manager command not found; skill links left unchanged.\n' >&2
+    fi
+  else
+    # Keep Codex skills local to Fleet instead of loading them in every repo.
+    dir="$FLEET_ROOT/.agents/skills"
+    link_fleet_skills "$dir"
+    link_teammate_parent "$dir"
+  fi
   "$FLEET_OPS_DIR/scripts/link-project-agent-assets.sh" --skills-only
 
   # Gateway runtimes are not repository-scoped, so keep user-level links.

@@ -24,7 +24,9 @@ preserved for historical reference remain tracked but noncanonical; see
 The scripts and skills were preserved when Site Health was narrowed to its five
 owner views. Products call the current reusable workflows here directly. Agent
 runtimes link the relevant skills from this checkout with
-`scripts/agent-stack.sh`.
+`scripts/agent-stack.sh`. When a user-level skills manager is present, it owns
+those links: `install-skills` runs its sync instead and only verifies the
+Impeccable version.
 
 Capability discovery is repository-relative and does not require the former
 `foundry/ops` checkout layout:

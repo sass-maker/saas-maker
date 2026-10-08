@@ -1,10 +1,13 @@
 # Fleet AI client standard
 
-**Status: ratified 2026-08-30 on issue #61.**
+**Status: ratified 2026-08-30 on issue #61; gateway policy revised 2026-10-09.**
 
-Fleet does not use a shared AI gateway. Each product owns its direct free-tier
-provider or local-inference endpoint, credential, quota policy, and fallback.
-Shared tooling owns only the credential-free audit and exact client pins.
+Every Fleet product calls models through the shared Free AI gateway
+(`free-ai`). Requests use `model: "auto"` unless the product needs an exact
+model, and every request sends the product's project id (`project_id` in the
+body or the `X-Gateway-Project-Id` header) so usage and rate accounting stay
+per product. Shared tooling owns only the credential-free audit and exact
+client pins.
 
 ## Runtime contract
 
@@ -18,10 +21,9 @@ JavaScript and TypeScript model callers use:
 Versions are exact. Review one converging upgrade monthly; do not let every
 repository drift independently.
 
-The endpoint comes from project-owned runtime configuration (`AI_BASE_URL` is
-the neutral default name) and the credential from a project-owned secret
-(`AI_API_KEY` is the neutral default name). Values never belong in source,
-examples, audit reports, or shared configuration.
+The gateway endpoint comes from runtime configuration and the gateway key from
+a secret. Values never belong in source, examples, audit reports, or shared
+configuration.
 
 Swift, Rust, Python, and other runtimes where the Vercel AI SDK cannot run use
 the smallest maintained native client. The audit records those as dated
@@ -30,15 +32,14 @@ incompatible runtime.
 
 ## Routing rules
 
-- Prefer a local model when it satisfies the product requirement.
-- Otherwise choose a deliberate free-tier provider path owned by the product.
-- Do not add paid-provider spend or a shared credential during migration.
-- `ai-gateway.sassmaker.com` is retired.
-- Gateway-only variables such as `AI_GATEWAY_BASE_URL` and
-  `FREE_AI_GATEWAY_URL` are retired in active source.
-- A direct provider host is evidence of the chosen route, not a policy breach.
-- Hand-written JS/TS HTTP remains migration debt even when it points at an
-  acceptable direct provider; the pinned SDK is the maintained seam.
+- Route model calls through the Free AI gateway with `model: "auto"` and the
+  product's project id.
+- A local model is acceptable where the product's requirement is local
+  inference (for example `posttrainllm`).
+- Do not add paid-provider spend or a new direct provider credential.
+- A direct provider call in a product is migration debt toward the gateway.
+- Hand-written JS/TS HTTP remains migration debt; the pinned SDK (with the
+  OpenAI-compatible adapter pointed at the gateway) is the maintained seam.
 
 ## What the audit proves
 
@@ -48,14 +49,14 @@ provider SDK and raw HTTP paths, retired gateway references, and
 credential-shaped literals. High-confidence provider calls stay separate from
 mentions, examples, tests, and endpoint pickers.
 
-The detector fails on a credential literal, the retired gateway host, or a
-gateway-only variable. It reports SDK drift and hand-written calls as migration
-work so existing debt remains visible without making shared tooling permanently
-red.
+The detector fails on a credential literal. It reports SDK drift and
+hand-written calls as migration work so existing debt remains visible without
+making shared tooling permanently red.
 
-Direct provider paths are not compared with the old gateway path list. A
-provider-specific moderation, messages, embeddings, image, speech, or model
-endpoint can be valid when the owning product deliberately chose it.
+The detector's gateway host and `gatewayEnvNames` checks in
+`config/ai-client-standard.json` predate the 2026-10-09 policy revision and
+still flag gateway use as retired. Treat those findings as stale until the
+audit is updated to the gateway-first policy.
 
 ## Exceptions
 
@@ -63,9 +64,9 @@ Exceptions live in `config/ai-client-standard.json` with a recorded date,
 written reason, and review date when appropriate. They are for runtime or
 product boundaries, not convenience.
 
-The current exceptions are `free-ai`, temporarily while its retiring upstream
-clients remain, and `posttrainllm`, where local training/inference and native
-evaluation paths are the product.
+The current exceptions are `free-ai`, which is the gateway and owns the
+upstream provider clients, and `posttrainllm`, where local training/inference
+and native evaluation paths are the product.
 
 ## Running the audit
 
@@ -82,8 +83,7 @@ use `--omit-private`, which counts private repositories without naming them.
 Build output and dependency directories are excluded. Use `--explain` only
 locally when a credential finding needs a file path.
 
-Production deploys, credential changes, provider-resource deletion, DNS
-changes, and gateway decommissioning remain separate operational actions.
-The non-executing, approval-gated decommission runbook belongs to the retiring
-Free AI product at
-[`docs/operations/decommission.md`](https://github.com/sass-maker/free-ai/blob/main/docs/operations/decommission.md).
+Production deploys, credential changes, provider-resource deletion, and DNS
+changes remain separate operational actions. Gateway authentication and the
+project id contract are documented in the
+[Free AI README](https://github.com/sass-maker/free-ai#authentication--project-id).
