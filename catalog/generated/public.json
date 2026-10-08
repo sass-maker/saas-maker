@@ -1876,7 +1876,7 @@
         "audience": "Developers running local servers, coding agents and other moving parts on a Mac.",
         "outcome": "Find the process or port evidence behind a slowdown and choose the next check deliberately.",
         "mechanism": "A native local Mac app records bounded CPU, memory, thermal, process and socket observations with reviewed stop controls.",
-        "proof": "The public signed Sparkle feed and download serve notarized 0.2.3 build8 with matching DMG bytes. An isolated build3-to-5 Sparkle update and native journey were observed; build8 has not been installed for a new journey.",
+        "proof": "Public 0.2.16 build21 is signed, universal and notarized. The download matches the release checksum; the Sparkle feed, staple and local launch were verified on 2026-10-02. Full live-window acceptance and a 10x whole-app memory reduction remain unverified.",
         "nextAction": "Read the public landing and use the current GitHub release for a Mac install; review measured evidence before acting on a diagnosis."
       },
       "footerArt": {
@@ -2030,14 +2030,14 @@
     {
       "id": "daddyrad",
       "name": "DaddyRad",
-      "description": "Umbrella landing for the daddy series of native Mac utilities.",
+      "description": "Series home and a local read-only MCP source preview for performance, storage, browser rules and agent context.",
       "makerNote": "I moved the daddy series onto its own domain so the apps read as one family.",
       "purposeContract": {
         "purpose": "DaddyRad is the umbrella home for the daddy series of native macOS utilities.",
         "audience": "Mac users and developers discovering the daddy-series apps.",
         "outcome": "One domain introduces all four apps and routes to each product's site.",
-        "mechanism": "A small Cloudflare Worker serves a static landing on the apex and redirects www; each app repository owns its subdomain.",
-        "proof": "HTTPS 200 at daddyrad.com and public routes for all four app subdomains verified 2026-09-25.",
+        "mechanism": "A small Cloudflare Worker serves the series landing; each app owns its subdomain. A local stdio MCP source preview uses all four native cores with bounded read-only tools.",
+        "proof": "DaddyRad MCP mcp-v0.1.0 source preview published 2026-10-02 at https://github.com/Significant-Hobbies/daddyrad/releases/tag/mcp-v0.1.0. Exact-revision CI verifies all eight tools across four engines. Source/build instructions only; no signed/notarized server executable is distributed.",
         "nextAction": "Visit daddyrad.com and pick an app."
       },
       "footerArt": {
@@ -2054,9 +2054,12 @@
       "category": "utility",
       "form": "website",
       "platforms": [
-        "Web"
+        "Web",
+        "macOS"
       ],
       "technologies": [
+        "Swift",
+        "MCP",
         "Cloudflare Workers"
       ],
       "group": "current",
@@ -2535,8 +2538,8 @@
         "purpose": "DaddyRad is the umbrella home for the daddy series of native macOS utilities.",
         "audience": "Mac users and developers discovering the daddy-series apps.",
         "outcome": "One domain introduces all four apps and routes to each product's site.",
-        "mechanism": "A small Cloudflare Worker serves a static landing on the apex and redirects www; each app repository owns its subdomain.",
-        "proof": "HTTPS 200 at daddyrad.com and public routes for all four app subdomains verified 2026-09-25.",
+        "mechanism": "A small Cloudflare Worker serves the series landing; each app owns its subdomain. A local stdio MCP source preview uses all four native cores with bounded read-only tools.",
+        "proof": "DaddyRad MCP mcp-v0.1.0 source preview published 2026-10-02 at https://github.com/Significant-Hobbies/daddyrad/releases/tag/mcp-v0.1.0. Exact-revision CI verifies all eight tools across four engines. Source/build instructions only; no signed/notarized server executable is distributed.",
         "nextAction": "Visit daddyrad.com and pick an app."
       },
       "footerArt": {
@@ -3125,7 +3128,7 @@
         "audience": "Developers running local servers, coding agents and other moving parts on a Mac.",
         "outcome": "Find the process or port evidence behind a slowdown and choose the next check deliberately.",
         "mechanism": "A native local Mac app records bounded CPU, memory, thermal, process and socket observations with reviewed stop controls.",
-        "proof": "The public signed Sparkle feed and download serve notarized 0.2.3 build8 with matching DMG bytes. An isolated build3-to-5 Sparkle update and native journey were observed; build8 has not been installed for a new journey.",
+        "proof": "Public 0.2.16 build21 is signed, universal and notarized. The download matches the release checksum; the Sparkle feed, staple and local launch were verified on 2026-10-02. Full live-window acceptance and a 10x whole-app memory reduction remain unverified.",
         "nextAction": "Read the public landing and use the current GitHub release for a Mac install; review measured evidence before acting on a diagnosis."
       },
       "footerArt": {

@@ -101,23 +101,6 @@
       }
     },
     {
-      "id": "drank",
-      "state": "ready",
-      "event": {
-        "name": "site_added",
-        "text": "Add site",
-        "selector": "form button[type=\"submit\"]"
-      },
-      "funnel": {
-        "name": "discover_to_add_site",
-        "steps": [
-          "page:/",
-          "event:site_added"
-        ]
-      },
-      "source": "drank/app/page.tsx"
-    },
-    {
       "id": "email-manager",
       "state": "ready",
       "event": {
@@ -198,22 +181,6 @@
       }
     },
     {
-      "id": "everythingrated",
-      "state": "ready",
-      "event": {
-        "name": "rating_started",
-        "text": "Start rating",
-        "href": "/d/ai-dev-tools"
-      },
-      "funnel": {
-        "name": "discover_to_rating",
-        "steps": [
-          "page:/",
-          "event:rating_started"
-        ]
-      }
-    },
-    {
       "id": "research-papers",
       "state": "ready",
       "event": {
@@ -258,22 +225,6 @@
         "steps": [
           "page:/",
           "event:private_hub_opened"
-        ]
-      }
-    },
-    {
-      "id": "india-standards",
-      "state": "ready",
-      "event": {
-        "name": "changelog_opened",
-        "text": "Changelog",
-        "href": "/changelog"
-      },
-      "funnel": {
-        "name": "discover_to_changelog",
-        "steps": [
-          "page:/",
-          "event:changelog_opened"
         ]
       }
     },
@@ -725,6 +676,55 @@
           "event:brand_check_opened"
         ]
       }
+    },
+    {
+      "id": "ai-game",
+      "state": "ready",
+      "event": {
+        "name": "game_opened",
+        "text": "Play Now",
+        "href": "/game/"
+      },
+      "funnel": {
+        "name": "discover_to_play",
+        "steps": [
+          "page:/",
+          "event:game_opened"
+        ]
+      }
+    },
+    {
+      "id": "open-historia",
+      "state": "ready",
+      "event": {
+        "name": "play_opened",
+        "text": "Pick a scenario and start",
+        "href": "/play"
+      },
+      "funnel": {
+        "name": "discover_to_play",
+        "steps": [
+          "page:/",
+          "event:play_opened"
+        ]
+      }
+    },
+    {
+      "id": "ph-catalog",
+      "state": "ready",
+      "event": {
+        "name": "sample_opened",
+        "text": "Acme Toolkit",
+        "href": "samples/acme-toolkit.html"
+      },
+      "funnel": {
+        "name": "discover_to_sample",
+        "steps": [
+          "page:/",
+          "event:sample_opened"
+        ]
+      },
+      "source": "ph-catalog/landing/index.html"
     }
   ]
 }

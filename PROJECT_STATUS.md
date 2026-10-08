@@ -25,6 +25,15 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-10-09 — Finish sweep of stranded work.** Landed the Clarity audit's
+  verified-worktree exemption: a registered tag found in a linked Git worktree
+  of the cataloged checkout is reported as a warning instead of an undeclared
+  ID; copies without Git worktree proof, and IDs owned by another canonical
+  product, still block. Refreshed the public `/launchdesk` coverage projection
+  from the owner-local ledger, which now includes the 2026-10-02 submission
+  waves 2–3 (39 public projects; private receipts stay owner-local). Stale and
+  superseded branches and stashes were retired to `archive/*` tags.
+
 - **2026-10-03 — Agent workspace tooling (#179).** Added a dependency-free
   CLI for linked writer worktrees, shared-store frozen pinned-pnpm installs,
   owner/task/heartbeat records, concurrency and disk admission limits,

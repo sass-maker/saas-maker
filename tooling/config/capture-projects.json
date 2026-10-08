@@ -1012,26 +1012,6 @@
       ]
     },
     {
-      "id": "field-track",
-      "applicability": "not-applicable",
-      "confidence": "high",
-      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "internal"
-        },
-        {
-          "field": "classification.kind",
-          "value": "product"
-        }
-      ]
-    },
-    {
       "id": "reddit-insights",
       "applicability": "newsletter",
       "confidence": "medium",
@@ -1423,27 +1403,6 @@
       ]
     },
     {
-      "id": "war-chest",
-      "applicability": "not-applicable",
-      "confidence": "high",
-      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "internal"
-        },
-        {
-          "field": "classification.kind",
-          "value": "experiment"
-        }
-      ],
-      "feedbackApplicability": "not_applicable"
-    },
-    {
       "id": "mentionpilot",
       "applicability": "newsletter",
       "confidence": "high",
@@ -1491,23 +1450,16 @@
       ]
     },
     {
-      "id": "digital-life",
+      "id": "agent-inbox",
       "applicability": "not-applicable",
       "confidence": "high",
-      "rationale": "Owner-local research experiment; no public newsletter or waitlist.",
+      "rationale": "Internal local-only development app; no public landing, newsletter or waitlist.",
+      "feedbackApplicability": "not_applicable",
       "evidence": [
         {
           "field": "purpose.audience",
           "value": "internal"
-        }
-      ]
-    },
-    {
-      "id": "human-v2",
-      "applicability": "not-applicable",
-      "confidence": "high",
-      "rationale": "Local-only prototype; no public newsletter or waitlist. Reassess for a public release.",
-      "evidence": [
+        },
         {
           "field": "deployment.status",
           "value": "local-only"
