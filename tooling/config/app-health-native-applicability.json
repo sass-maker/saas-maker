@@ -237,12 +237,6 @@
       "serverRequests": "not-applicable"
     },
     {
-      "id": "field-track",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
-    },
-    {
       "id": "reddit-insights",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
@@ -321,14 +315,6 @@
       "serverRequests": "not-applicable"
     },
     {
-      "id": "war-chest",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "not-applicable",
-      "browserVisitorsReason": "Project promises no analytics or runtime network traffic; this report excludes browser tracking for its public static teaser.",
-      "browserVisitorsSourceIssue": "https://github.com/sass-maker/app-health/issues/91",
-      "serverRequests": "not-applicable"
-    },
-    {
       "id": "mentionpilot",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
@@ -338,6 +324,12 @@
       "id": "daddyrad",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
+      "serverRequests": "not-applicable"
+    },
+    {
+      "id": "agent-inbox",
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "not-applicable",
       "serverRequests": "not-applicable"
     }
   ]

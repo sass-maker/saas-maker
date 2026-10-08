@@ -177,11 +177,6 @@
       "probePath": "/"
     },
     {
-      "id": "field-track",
-      "url": "https://field-track.sassmaker.com",
-      "probePath": "/"
-    },
-    {
       "id": "reddit-insights",
       "url": "https://reddit-insights.highsignal.app",
       "probePath": "/"
@@ -239,11 +234,6 @@
     {
       "id": "contextdaddy",
       "url": "https://context.daddyrad.com",
-      "probePath": "/"
-    },
-    {
-      "id": "war-chest",
-      "url": "https://warchest.significanthobbies.com",
       "probePath": "/"
     },
     {
