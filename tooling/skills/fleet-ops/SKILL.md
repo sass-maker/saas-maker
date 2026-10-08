@@ -45,5 +45,4 @@ It is a message format, not a task system or permission to make the change.
 - Public browser journeys → use the `public-product-smoke` subskill
 - AI crawler readiness → use `agent-ready` skill
 - On-page SEO audits → use `seo-audit` skill
-- Codex context/token audits → use `token-budget` skill
 - Fleet-wide "is production in sync with main?" → use `fleet-deploy-parity` skill

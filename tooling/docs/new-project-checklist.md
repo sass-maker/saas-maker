@@ -32,7 +32,8 @@ Via the `fleet-init` skill (`tooling/scripts/fleet-init.sh`):
 - [ ] `AGENTS.md`, `PROJECT_STATUS.md` (all 6 required sections), `.gitignore`
 - [ ] CI workflow (lint + typecheck + test), green on the scaffold
 - [ ] Wrangler config if Cloudflare; schema + first migration if a DB
-- [ ] README that gets a stranger running, plus a `local-verification` pass
+- [ ] README that gets a stranger running, plus a local clone-to-serving check
+      (`tooling/scripts/verify-local.mjs`)
 
 The Fleet root is not a Git repository and has no README index; the catalog
 in phase 2 is the project list.
@@ -124,8 +125,7 @@ in phase 2 is the project list.
 
 - **iOS / native app**: the public page comes from the `ios-landings`
   factory, not `web-landing`. `apple-native` covers build and QA,
-  `apple-release` covers release, `screenmap` covers Expo/RN screen coverage,
-  `ios-app-growth` covers distribution experiments.
+  `apple-release` covers release.
 - **LLM-powered product**: follow `tooling/docs/ai-client-standard.md`; set a
   spend cap, bounded retries, and output caps before launch.
 - **No public web surface**: skip phases 3, 6, and the Clarity line of 7, and

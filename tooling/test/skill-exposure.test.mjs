@@ -24,7 +24,7 @@ test('audit counts entrypoints, honors explicit-only policy, and separates cache
   const cached = add(path.join(codex, 'plugins/cache/vendor/version'), 'example');
   fs.symlinkSync(cached, path.join(cached, 'self'));
   add(path.join(fleet, 'saas-maker/tooling/skills'), 'example');
-  const script = fs.readFileSync(new URL('skills/token-budget/scripts/token-budget.sh', root), 'utf8');
+  const script = fs.readFileSync(new URL('preserved/retired-skills-2026-10-08/token-budget/scripts/token-budget.sh', root), 'utf8');
   const python = script.split("python3 <<'PY'\n")[1].split('\nPY\n')[0];
   const result = spawnSync('python3', ['-c', python], {
     encoding: 'utf8', timeout: 10000,

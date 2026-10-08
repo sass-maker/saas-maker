@@ -8,15 +8,11 @@ LEGACY_FLEET_OPS_DIR="$FLEET_ROOT/fleet-ops"
 EXPOSED_FLEET_SKILLS=(
   analyze-storage
   astra-orchestrator
-  daily-learning
   design-engineering
   design-workflow
   fleet-deploy-parity
   fleet-ops
   flow-veo-browser
-  glyph-art
-  ian-xiaohei-illustrations
-  ios-app-growth
   jules-cloud-worker
   code-cleanup
   clarity-fleet-health
@@ -25,11 +21,9 @@ EXPOSED_FLEET_SKILLS=(
   media-acquisition
   mobile-task-control
   name-domains
-  screenmap
   seo-research
   site-health
   spec-driven
-  token-budget
   test-quality
   web-extraction
 )

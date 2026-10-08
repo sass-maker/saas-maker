@@ -32,7 +32,7 @@ product: a research exhibit need not acquire a funnel, paywall or sales persona.
   selection gate. Marketing approval is not design-system approval. Copy-only
   work may preserve the established direction.
 - Use `seo-research` for search-market research, `site-health` for technical SEO
-  and site measurement, and `ios-app-growth` for iOS acquisition/paywalls.
+  and site measurement.
   Use `humanizer` when the task is specifically editing AI-sounding prose.
 - A request to release code does not trigger a marketing campaign. A launch
   plan does not authorize posts, outreach, ad spend, pricing changes or deploys.
