@@ -1,9 +1,16 @@
 ---
 name: apple-native
-description: Build, review, test, and qualify Swift or SwiftUI applications across iOS, iPadOS, macOS, and watchOS. Covers Xcode and XcodeGen projects, platform boundaries, entitlements, simulator and physical-device QA, native accessibility, lifecycle, sync, and release preparation. Use for implementation or native product QA, not upload operations.
+description: Build, review, test, and qualify Swift or SwiftUI applications across iOS, iPadOS, macOS, and watchOS. Covers Xcode and XcodeGen projects, platform boundaries, entitlements, simulator and physical-device QA, native accessibility, lifecycle, sync, and release preparation. Also the entry point for Apple work in general: it routes archive, signing, upload, TestFlight, App Store, and notarization work to apple-release.
 ---
 
 # Apple-native engineering and QA
+
+Entry point for Apple work. Archive, sign, upload, TestFlight, App Store,
+notarization, or Apple account issues go to
+[apple-release](../apple-release/SKILL.md). The shared operating contract
+(source of truth, distribution channels, separate receipts, credential
+handling, desktop personal-account mode, completion language) is in
+[platform-contract.md](references/platform-contract.md); read it before acting.
 
 ## Start with the repository
 

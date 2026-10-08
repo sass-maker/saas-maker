@@ -11,16 +11,14 @@ one you need, not all of them.
 | Intent | Read and follow |
 |---|---|
 | AI/agent readiness: llms.txt, /api/ai, index.md, robots vs AI crawlers, GEO surfaces | `skills/agent-ready/SKILL.md` |
-| Daily organic operator: measure all products' search vitals, rank every action on one scale, execute the best one, register outcomes | `skills/seo/SKILL.md` |
 | On-page SEO: title/meta/canonical/OG/JSON-LD/hreflang/sitemap coverage | `skills/seo-audit/SKILL.md` |
 | SEO market research: keywords, search competitors, backlink prospects, local-search opportunities, optional provider metrics | `skills/seo-research/SKILL.md` |
 | SEO content sufficiency: article inventory, competitive intent/page gaps, comparison/alternative/use-case pages, create or publish missing pages | `skills/content-coverage/SKILL.md` |
-| Performance: Core Web Vitals, Lighthouse distributions, "why is X slow" | `psi-swarm/SKILL.md` (standalone product; exposed through the skill symlink) |
+| Performance: Core Web Vitals, Lighthouse, "why is X slow" | the global `web-perf` skill |
 | Outcome trends: SERP classes over time, "did results move", weekly run | `skills/geo-observatory/SKILL.md` |
-| URL indexing: submit pages for discovery, "is X indexed", per-URL Google index status | `skills/search-indexing/SKILL.md` |
 | Microsoft Clarity health: sessions, browser counts, missing tracking, source integrity, feature adoption, or fleet-wide Clarity testing | `../clarity-fleet-health/SKILL.md` — pick its mode: `source-audit` (credential-free wiring), `cached-health` (counts, no network), `provider-refresh` (explicit live refresh only), `mcp-investigation` (optional, one project) |
-| Microsoft Clarity setup: creating projects, assigning IDs, wiring a surface, repairing receipt drift | `../clarity-fleet-rollout/SKILL.md` |
-| Canonical-root crawl and source fixes | Run `node scripts/ahrefs-site-audit-health.mjs`, then apply every **error** action in the owning repo. The working path is the local sitemap crawl. Ahrefs Health Scores are optional and currently blocked (Infisical `AHREFS_API_KEY` returns 401). See [canonical-root site audit](../../docs/ahrefs-site-audit.md). Do not deploy. Do not invent ratings. |
+| Microsoft Clarity setup: creating projects, assigning IDs, wiring a surface, repairing receipt drift | `../clarity-fleet-health/references/rollout.md` |
+| Canonical-root crawl and source fixes | Run `node scripts/ahrefs-site-audit-health.mjs`, then report every **error** action with its owning repo. Apply fixes only when they fall inside the scope the owner requested; list the rest. The working path is the local sitemap crawl. Ahrefs Health Scores are optional and currently blocked (Infisical `AHREFS_API_KEY` returns 401). See [canonical-root site audit](../../docs/ahrefs-site-audit.md). Do not deploy. Do not invent ratings. |
 | Public usability: click around, guest journeys, blank/broken pages, navigation, search/detail, downloads, primary product actions | `skills/public-product-smoke/SKILL.md` |
 
 ## Combined mode — "full health check"

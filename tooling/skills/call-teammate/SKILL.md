@@ -1,6 +1,6 @@
 ---
 name: call-teammate
-description: Delegate work to Codex, Grok, Hermes, or optional Devin. Use for independent review, parallel attempts, bounded specialist work, and explicit-spend external agent runs.
+description: Delegate work to Codex, Grok, Cursor, a fresh Claude Code instance, Hermes, or optional Devin. Use for independent review, parallel attempts, bounded specialist work, and explicit-spend external agent runs.
 ---
 
 # call-teammate — parent skill
@@ -14,7 +14,9 @@ delegate to. Subskills live as sibling directories under `skills/`.
 |---|---|---|---|
 | "delegate to codex" / "call codex" / "second opinion from a different model" / "mechanical refactor / test-fix loop" | `call-codex` | `../call-codex/SKILL.md` | OpenAI model family, scoped implementation, independent review |
 | "delegate to grok" / "call grok" / "N parallel attempts" / "cross-model second opinion" / "non-Anthropic/non-OpenAI opinion" | `call-grok` | `../call-grok/SKILL.md` | xAI model family, native worktree isolation, best-of-N attempts |
-| "delegate to hermes" / "call hermes" / "repeat this workflow" | `call-hermes` | `../call-hermes/SKILL.md` | Open-source self-improving specialist and persistent skills |
+| "delegate to cursor" / "call cursor" / implementation fallback when other teammates are quota-limited | `call-cursor` | `../call-cursor/SKILL.md` | Cursor Agent CLI, clean JSON envelope, read-only plan/ask modes, separate model roster and quota |
+| "delegate to claude" / "call claude-work" / fresh-context review / parallel Claude worker | `call-claude-code` | `../call-claude-code/SKILL.md` | Headless Claude Code with clean context; personal or work profile |
+| "delegate to hermes" / "call hermes" / "repeat this workflow" | Hermes (no subskill) | [references/hermes.md](references/hermes.md) | Open-source self-improving specialist and persistent skills |
 | "delegate to devin" / "call devin" / "external autonomous agent" | `call-devin` | `../call-devin/SKILL.md` | Proprietary optional agent platform; requires explicit spend approval |
 
 ## How to use

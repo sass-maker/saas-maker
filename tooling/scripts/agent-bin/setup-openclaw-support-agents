@@ -103,7 +103,7 @@ project_workspace() {
       printf '%s\n' "$FLEET_ROOT/saas-maker/tooling"
       ;;
     research)
-      printf '%s\n' "$FLEET_ROOT/saas-maker/tooling/skills/evidence-research"
+      printf '%s\n' "$FLEET_ROOT/saas-maker/tooling"
       ;;
     reel-pipeline)
       printf '%s\n' "$FLEET_ROOT/reel-pipeline"

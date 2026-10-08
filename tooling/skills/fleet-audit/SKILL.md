@@ -2,7 +2,7 @@
 name: fleet-audit
 description: Audit the fleet — git/CI health, PROJECT_STATUS sync, or full recurring audit. Use when the user asks "is the fleet healthy?", "what's the fleet status?", "what's everyone working on?", "audit the fleet", "check all projects", "what's broken?", or wants a fleet-wide snapshot before a deploy or audit pass.
 metadata:
-  short-description: Audit the Foundry project fleet
+  short-description: Audit the Fleet project repositories
 ---
 
 # Fleet Audit
@@ -13,22 +13,22 @@ Three modes, one skill. The user's question determines which mode to run.
 
 **Trigger:** "Is the fleet healthy?", "check all projects", "what's broken?", "can I deploy everything?"
 
-Updates safe repositories, then checks git state, CI signal, and branch status
-across the fleet workspace plus active projects listed in
-the immediate child repositories under `~/Desktop/fleet`.
+Checks git state, CI signal, and branch status across the immediate child
+repositories under `~/Desktop/fleet`. Run it read-only with `--no-fetch` by
+default. Fetch and fast-forward only when the owner asks for an updated audit.
 
 ```bash
-bash ~/Desktop/fleet/saas-maker/tooling/scripts/fleet-health.sh
-bash ~/Desktop/fleet/saas-maker/tooling/scripts/fleet-health.sh --no-fetch     # skip git fetch and pull
-bash ~/Desktop/fleet/saas-maker/tooling/scripts/fleet-health.sh --only saas-maker,aliveville
+bash ~/Desktop/fleet/saas-maker/tooling/scripts/fleet-health.sh --no-fetch     # default: no git fetch or pull
+bash ~/Desktop/fleet/saas-maker/tooling/scripts/fleet-health.sh --no-fetch --only saas-maker,aliveville
+bash ~/Desktop/fleet/saas-maker/tooling/scripts/fleet-health.sh                # only when the owner asks to update
 ```
 
 The script discovers immediate child Git repositories. The Fleet container is
-not itself a repository. By default it fetches each repository and
-fast-forward-pulls a behind branch only when the
-worktree is clean, the branch has an upstream, and there are no local-only
-commits. Dirty, detached, ahead, and diverged repositories are left untouched
-and reported. For each repository it then checks:
+not itself a repository. Without `--no-fetch` it fetches each repository and
+fast-forward-pulls a behind branch only when the worktree is clean, the branch
+has an upstream, and there are no local-only commits. Dirty, detached, ahead,
+and diverged repositories are left untouched and reported. For each repository
+it then checks:
 
 1. **Update** — safely pulled, already current, or intentionally skipped?
 2. **Git state** — clean? dirty?
@@ -48,8 +48,8 @@ anime-list       main    clean  red    ci.yml failing
 Summary: N clean, N dirty, N CI-red, N unknown.
 
 **Act on results:**
-- CI-red → investigate the failing workflow, fix or track
-- Dirty → commit or stash before fleet operations
+- CI-red → investigate the failing workflow and report it; fix only inside the requested scope
+- Dirty → report only. Never commit, stash, reset, or clean another checkout's changes
 - Not on main → flag if deploy planned
 
 ## Mode: status
@@ -174,18 +174,18 @@ failed step before assigning severity.
 1. Run the Fleet-owned audit stack unless the user asks for a quick pass.
 2. Run only the Site Health subskills relevant to the request.
 3. Summarize open PRs, failed workflows, failed checks, performance issues, and dirty repositories.
-4. Record real regressions in the owning repository's GitHub Issues.
+4. Report real regressions with their owning repository. Open GitHub Issues only when the owner asks for tracking.
 5. Do not auto-merge, deploy, delete Cloudflare projects, rotate secrets, or clean worktrees unless explicitly asked.
 
 ### Follow-up rules
 
-Record follow-up for:
+Report follow-up for:
 - latest main workflow failures
 - failed production smoke checks
 - local build/test/typecheck failures
 - broken deploy pipeline
 
-Do not create tasks for:
+Do not report as follow-up:
 - known open PRs unless stale or blocking
 - expected API-root 404s
 - local dirty state in saas-maker during active work

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 #
 # Scaffold a new fleet project — creates GitHub repo, local checkout,
-# AGENTS.md, PROJECT_STATUS.md, .gitignore, CI workflow, and fleet README entry.
+# AGENTS.md, PROJECT_STATUS.md, .gitignore, and CI workflow. The Fleet root is
+# not a Git repository; this script never writes or commits there.
 # Backs the fleet-init skill.
 #
 # Usage:
@@ -208,67 +209,16 @@ echo ""
 echo "2. Scaffold files committed and pushed."
 echo ""
 
-# 7. Add to fleet README
-echo "3. Adding to fleet README under category: $CATEGORY..."
-
-README="$ROOT/README.md"
-ENTRY="- [$NAME](https://github.com/$GITHUB_OWNER/$NAME) — $DESC"
-
-# Find the category section and add the entry
-python3 - "$README" "$ENTRY" "$CATEGORY" <<'PYEOF'
-import sys, re
-
-readme_path, entry, category = sys.argv[1], sys.argv[2], sys.argv[3]
-
-with open(readme_path, 'r') as f:
-    content = f.read()
-
-# Map category to the section header
-section_map = {
-    'support': 'Support',
-    'support+saas': 'Support + SaaS',
-    'research': 'Research',
-    'personal+free-tool': 'Personal + free-tool',
-    'personal+saas': 'Personal + SaaS',
-    'data': 'Data',
-}
-
-header = section_map.get(category.lower(), category)
-# Find the section and add entry before the next blank line that precedes another section
-pattern = rf'(\*\*{re.escape(header)}\*\*[^\n]*\n(?:[^\n]*\n)*?)(?=\n\*\*|\n>|\Z)'
-match = re.search(pattern, content)
-if match:
-    section = match.group(1)
-    # Add entry at end of section
-    new_section = section.rstrip('\n') + '\n' + entry + '\n'
-    content = content[:match.start()] + new_section + content[match.end():]
-    with open(readme_path, 'w') as f:
-        f.write(content)
-    print(f"  Added entry under '{header}' section")
-else:
-    print(f"  WARNING: could not find '{header}' section in README — add manually")
-PYEOF
-
-cd "$ROOT"
-git add README.md
-git commit -m "fleet: add $NAME to README under $CATEGORY
-
-Generated with [Devin](https://devin.ai)
-
-Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>" 2>/dev/null || true
-git push origin main 2>/dev/null || true
-
 echo ""
 echo "=== Done ==="
 echo "Project: $NAME"
 echo "Repo: https://github.com/$GITHUB_OWNER/$NAME"
 echo "Local: $DIR"
-echo "Fleet README: updated under $CATEGORY"
 echo ""
 echo "Post-creation checklist:"
 echo "  [ ] AGENTS.md, PROJECT_STATUS.md, .gitignore committed"
 echo "  [ ] CI workflow committed (may need adjusting for your stack)"
-echo "  [ ] Fleet README updated"
+echo "  [ ] Register in saas-maker catalog/projects.json, then pnpm catalog:sync"
 echo "  [ ] If visual: run \$design-workflow and pass the Fleet design-review receipt"
 echo "  [ ] If Cloudflare: create wrangler config"
 echo "  [ ] If DB: create schema + first migration"

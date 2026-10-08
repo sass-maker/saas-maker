@@ -1,30 +1,34 @@
 ---
 name: spec-driven
-description: Spec-driven development for any new fleet feature. Use when starting non-trivial feature work (multi-file, new surface, behavior change, cross-repo) in any fleet project. Creates a GitHub tracking issue with proposal, design, specs, and task checklist — no local spec files. Trigger automatically at the start of feature work; do not wait for the user to ask.
+description: Opt-in spec workflow for large fleet features. Use only when the owner asks for spec-driven work, a spec, or a tracking issue, or when a feature is genuinely large or cross-repo. Writes the proposal, design, specs, and task checklist; creates a GitHub tracking issue only when the owner wants tracking. Small fixes and ordinary scoped changes skip it.
 ---
 
 # spec-driven — GitHub Issue spec workflow for new features
 
-Spec-driven development is the fleet standard for non-trivial feature work.
-When an agent starts feature work in any fleet project, it must create a
-spec-driven tracking issue **before writing feature code**. This skill is the
-canonical entry point — invoke it the moment feature intent is detected.
+Spec-driven development is an opt-in process for large feature work. Process
+scales with the task: ordinary scoped work takes the light path (do it, verify
+it, report it). This skill adds ceremony only when the owner wants it or the
+work is genuinely broad.
 
-All spec content lives in the GitHub Issue: proposal, design notes,
-requirements/scenarios, and the task checklist. There is no local `openspec/`
-directory, no local spec files, and no `openspec` CLI.
+When tracking is wanted, all spec content lives in one GitHub Issue: proposal,
+design notes, requirements/scenarios, and the task checklist. There is no
+local `openspec/` directory, no local spec files, and no `openspec` CLI.
 
-## When to trigger (strong default)
+## When to use
 
-Trigger automatically when the user's request matches **any** of:
+Use this workflow only when **one** of these holds:
 
-- "build X" / "add a feature" / "implement X" / "let's add X"
-- A new product surface, page, route, command, or capability
-- Multi-file change that introduces new behavior (not just refactors existing)
-- Cross-repo change (umbrella + sub-product, support infra + consumer)
-- Anything that would warrant a `docs/plans/` entry under the old convention
+- The owner asks for it: "spec this", "spec-driven", "write a proposal",
+  "open a tracking issue", or similar.
+- The feature is genuinely large: a new product surface or capability spanning
+  many files and several work sessions, or a cross-repo change (umbrella +
+  sub-product, support infra + consumer).
 
-**Do NOT trigger for** (skip the spec, just do the work, mention the skip in handoff):
+For a large feature the owner did not ask to spec, propose the spec in chat
+(or offer to) and continue only with the owner's agreement. Do not block
+scoped work on it.
+
+**Skip it for** (just do the work):
 
 - Bug fixes (single-file or clearly scoped regression)
 - Cleanup, dead-code removal, dep bumps, lint/format fixes
@@ -32,10 +36,10 @@ Trigger automatically when the user's request matches **any** of:
 - Single-file polish / styling tweaks
 - Test additions for existing behavior
 - Config / env / CI workflow adjustments
+- Ordinary features with a clear, scoped request ("add X to this page")
 - Anything the user explicitly says "just do it" / "quick fix" / "no spec"
 
-When in doubt, default to running the workflow. The cost of a 5-minute
-proposal is far lower than the cost of building the wrong thing.
+When in doubt, skip it and do the scoped work.
 
 ## Pre-flight
 
@@ -53,10 +57,12 @@ If the feature is not yet well-defined, explore the codebase first. Read
 relevant files, weigh options, and shape a plan. Skip straight to step 2 if
 the user has already scoped the feature.
 
-### 2. Propose (mandatory)
+### 2. Propose
 
-Create one GitHub tracking issue using `gh issue create`. The issue body is
-the complete spec — it must contain:
+Write the spec below. Share it with the owner in chat first. Create a GitHub
+tracking issue (`gh issue create`) only when the owner asked for tracking or
+approves creating one; issues may be public, so never create one
+automatically. The spec must contain:
 
 ```
 ## Why
@@ -81,7 +87,7 @@ the complete spec — it must contain:
 - [ ] 2. <second task>
 ```
 
-Use `gh issue create` with the body as a heredoc or `--body-file`. Add the
+When creating the issue, use `gh issue create` with the body as a heredoc or `--body-file`. Add the
 `spec` label if the repo has one. Assign the issue to the person requesting
 the work.
 
@@ -102,20 +108,19 @@ For **cross-repo features** (umbrella + sub-product, support infra + consumer),
 open one tracking issue in the repo that owns the change. Reference it from
 every affected repo's PR body (`Part of #<issue>`).
 
-Review the issue with the user before moving on.
+Review the spec with the owner before moving on.
 
 ### 3. Apply (implement)
 
-Work through the tracking issue's task checklist item by item. The agent
-should:
+Work through the spec's task checklist item by item. The agent should:
 
-- Check off tasks in the GitHub issue body as they complete (use
-  `gh issue edit <N> --body ...` or the web UI)
+- If a tracking issue exists, check off tasks in its body as they complete
+  (use `gh issue edit <N> --body ...` or the web UI)
 - Run the smallest relevant verification after each task (lint, typecheck,
   unit test, build)
 - Surface failures, skipped checks, and uncertainty immediately
 - Keep diffs reviewable — prefer multiple small commits over one large one
-- Use `Closes #<issue>` in the implementing pull request body
+- Use `Closes #<issue>` in the implementing pull request body when an issue exists
 
 ### 4. Close (when done)
 
@@ -134,7 +139,7 @@ The tracking issue does **not** replace these — it sits alongside them:
 
 | Artifact | Purpose | When |
 |---|---|---|
-| GitHub tracking issue | Feature spec + task checklist + operational state | Created at propose; checked off during apply; closed at ship |
+| GitHub tracking issue | Feature spec + task checklist + operational state | Created at propose only when the owner wants tracking; checked off during apply; closed at ship |
 | `PROJECT_STATUS.md` | Durable product status | Read before broad work; update on ship |
 | `docs/plans/` | Rare design artifacts that outlive the feature | Only if the design has lasting reference value |
 | `AGENTS.md` | Per-project agent instructions | Stack, commands, conventions |
@@ -146,11 +151,10 @@ tracking issue, and record only the shipped outcome in `PROJECT_STATUS.md`.
 
 ## Anti-patterns
 
-- **Skipping propose because "it's obvious"** — if it's obvious, the proposal
-  takes 5 minutes and confirms alignment. Skip only for the explicit
-  exemptions above.
-- **Writing feature code before the tracking issue exists** — the issue is the
-  gate. No issue, no feature code.
+- **Running this on small or scoped work** — heavy process on a small task
+  is a failure, not diligence.
+- **Creating a public GitHub issue the owner did not ask for** — tracking is
+  opt-in.
 - **Maintaining local spec files** — all spec content lives in the tracking
   issue. Do not create `openspec/` directories, `proposal.md`, `tasks.md`,
   `design.md`, or `specs/` folders. The tracking issue is the single source

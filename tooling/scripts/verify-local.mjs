@@ -4,7 +4,7 @@
 //
 // CLI entrypoint for the reusable local-verification qualification.
 // Loads a qualification config, runs the qualification, and writes the
-// result envelope. Backs the local-verification skill and the reusable
+// result envelope. Backs the reusable
 // verify-local workflow.
 //
 // Usage:

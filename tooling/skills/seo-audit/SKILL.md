@@ -23,7 +23,7 @@ orphan candidates, and optional external-link health.
 - "Review meta tags / structured data / hreflang for <url>"
 - Before launching a new marketing surface
 - Before deploying changes to a public page
-- As part of a fleet audit alongside `psi-swarm` (perf) and `agent-ready` (AI crawler readiness)
+- As part of a fleet audit alongside `web-perf` (perf) and `agent-ready` (AI crawler readiness)
 
 ## How to invoke
 
@@ -207,7 +207,7 @@ output.
 
 | Skill | Covers |
 |---|---|
-| **psi-swarm** | Performance (Lighthouse, Core Web Vitals, LCP/CLS/TBT) |
+| **web-perf** | Performance (Lighthouse, Core Web Vitals, LCP/CLS/TBT) |
 | **agent-ready** | AI crawler discoverability (robots.txt AI rules, sitemap, llms.txt, MCP) |
 | **seo-audit** | On-page SEO (meta, structured data, headings, alt, hreflang, SSR leaks) |
 

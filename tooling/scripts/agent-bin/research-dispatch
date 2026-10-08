@@ -8,4 +8,4 @@ fi
 
 exec openclaw agent \
   --agent research \
-  --message "Research this request using the evidence-research skill. Save a decision-ready report in reports/ before replying: $*"
+  --message "Research this request evidence-first: restate the decision, cite primary sources, separate facts from inference, and end with a recommendation. Save a decision-ready report in reports/ before replying: $*"

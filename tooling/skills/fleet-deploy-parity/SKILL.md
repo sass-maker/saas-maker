@@ -1,14 +1,18 @@
 ---
 name: fleet-deploy-parity
-description: Check whether live Fleet products match origin/main, including SHA-tagged Workers at 100% traffic, and current-main Actions are green.
+description: Check whether live Fleet products match origin/main (SHA-tagged Workers at 100% traffic, green current-main Actions), and gate a single project's deploy readiness. Use for "is production in sync with main?", "what's not deployed?", "can I deploy X?", or "is X safe to deploy?".
 ---
 
 # fleet-deploy-parity — is production in sync with main?
 
 Answers one focused question: **does the live Cloudflare deployment for every
 Fleet product match the latest `origin/main`?** This is a read-only fleet-wide
-parity check, not a single-project deploy gate (use `fleet-deploy-guard` for
-that) and not a full audit (use `fleet-audit` for that).
+parity check and not a full audit (use `fleet-audit` for that).
+
+For a single-project deploy readiness gate ("can I deploy X?", before any
+production deploy), follow [deploy-guard.md](references/deploy-guard.md). It
+runs `tooling/scripts/fleet-deploy-guard.sh` and never deploys by itself;
+deploying still needs the owner's go-ahead.
 
 ## When to invoke
 
@@ -103,7 +107,7 @@ Summarize as a fleet-wide parity table:
 Then list the behind/non-100% projects explicitly so the user knows what to
 redeploy, and list untagged Workers as **unknown**, never current. Do not
 redeploy anything from this skill — it is read-only. If the user wants to
-redeploy, hand off to `fleet-deploy-guard` per project.
+redeploy, run the [deploy guard](references/deploy-guard.md) per project.
 
 ## Worker deployment contract
 
@@ -131,7 +135,6 @@ an unambiguous comparison.
 
 ## What this skill does NOT cover
 
-- Single-project deploy readiness gate → `fleet-deploy-guard`
 - Full fleet audit (git health, PROJECT_STATUS sync, resilience) → `fleet-audit`
 - Cloudflare spend → `cloudflare-spend-guard`
 - Public product browser journeys → `public-product-smoke`

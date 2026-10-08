@@ -109,4 +109,4 @@ Do **not** chase 19/19 external checks unless the product is an agent platform.
 |---|---|
 | **agent-ready** | GEO / LLM indexing (this skill) |
 | **seo-audit** | Classic on-page SEO |
-| **psi-swarm** | Performance / Core Web Vitals |
+| **web-perf** | Performance / Core Web Vitals |
