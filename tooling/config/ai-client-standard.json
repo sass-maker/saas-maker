@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "ratified",
-  "ratifiedAt": "2026-08-30",
+  "ratifiedAt": "2026-10-04",
   "recommendedBy": "tooling/docs/ai-client-standard.md",
   "issue": "https://github.com/sass-maker/saas-maker/issues/61",
   "canonical": {
-    "option": "direct-free-model-vercel-ai-sdk",
+    "option": "free-ai-gateway-vercel-ai-sdk",
     "packages": {
       "ai": "6.0.168",
       "@ai-sdk/openai-compatible": "2.0.41"
@@ -14,16 +14,22 @@
       "@ai-sdk/react": "3.0.86"
     },
     "upgradeCadence": "monthly-review, pinned exact, one converging bump per cadence",
-    "endpointOwnership": "project",
-    "baseUrlEnv": "AI_BASE_URL",
-    "apiKeyEnv": "AI_API_KEY"
+    "endpointOwnership": "gateway",
+    "baseUrlEnv": "AI_GATEWAY_URL",
+    "apiKeyEnv": "AI_GATEWAY_API_KEY",
+    "model": "auto"
   },
   "gateway": {
-    "host": null,
-    "openAiCompatiblePaths": [],
-    "retiredHosts": [
-      "ai-gateway.sassmaker.com"
-    ]
+    "host": "ai-gateway.sassmaker.com",
+    "baseUrl": "https://ai-gateway.sassmaker.com/v1",
+    "projectIdHeader": "X-Gateway-Project-Id",
+    "projectIdBodyField": "project_id",
+    "openAiCompatiblePaths": [
+      "/v1/chat/completions",
+      "/v1/embeddings",
+      "/v1/models"
+    ],
+    "retiredHosts": []
   },
   "detection": {
     "canonicalPackages": [
@@ -81,10 +87,9 @@
     {
       "project": "free-ai",
       "verdict": "exception",
-      "recordedAt": "2026-08-30",
-      "reason": "The retiring gateway must keep its upstream provider clients until its callers and deployment are decommissioned; it is not a reusable Fleet client.",
-      "allowsRetiredGatewayReferences": true,
-      "reviewBy": "2026-09-30"
+      "recordedAt": "2026-10-04",
+      "reason": "free-ai is the gateway: it owns the upstream provider clients and calls providers directly by design; it is not a reusable Fleet client.",
+      "reviewBy": "2027-02-28"
     },
     {
       "project": "posttrainllm",
@@ -111,7 +116,7 @@
       "project": "mashup",
       "verdict": "exception",
       "recordedAt": "2026-08-30",
-      "reason": "The media pipeline is Python and now uses an explicit direct free-provider endpoint without gateway metadata; the JavaScript Vercel AI SDK is not applicable to this runtime.",
+      "reason": "The media pipeline is Python and calls an explicit direct free-provider endpoint; the JavaScript Vercel AI SDK is not applicable to this runtime. Moving it to the gateway needs a project id on each request.",
       "reviewBy": "2027-02-28"
     },
     {
@@ -137,6 +142,10 @@
     }
   ],
   "followUps": [],
-  "ratifiedBy": "owner decision on https://github.com/sass-maker/saas-maker/issues/61",
-  "ratifiedDecision": "Fleet does not use a shared AI gateway. JavaScript and TypeScript model callers use the pinned Vercel AI SDK against a project-owned free-provider or local endpoint wherever the runtime supports it. Native runtimes keep explicit project-owned clients. Direct provider calls are routing evidence, while the retired gateway host and gateway-only environment variables are blocking findings."
+  "ratifiedBy": "owner decision on https://github.com/sass-maker/saas-maker/issues/61, superseded by owner decision 2026-10-04 ('Everyone uses free AI')",
+  "ratifiedDecision": "Superseding the 2026-08-29 decision (no shared AI gateway), as of 2026-10-04 every Fleet product calls the free-ai gateway at https://ai-gateway.sassmaker.com/v1 with model 'auto', authenticated by AI_GATEWAY_API_KEY, and every request carries a project id (X-Gateway-Project-Id header or project_id body field; a missing id is rejected with 400). JavaScript and TypeScript callers use the pinned Vercel AI SDK against the gateway. The gateway host and gateway environment names are the expected configuration, not findings. Direct provider calls from products and gateway calls without a project id are review-level findings; documented exceptions (free-ai itself, native and Python runtimes) are recorded below.",
+  "supersedes": {
+    "ratifiedAt": "2026-08-30",
+    "decision": "Fleet does not use a shared AI gateway"
+  }
 }

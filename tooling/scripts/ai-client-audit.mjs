@@ -479,7 +479,15 @@ export function validateStandard(value) {
   }
 
   if (!value.gateway || typeof value.gateway !== 'object') fail('gateway must be an object');
-  else if (!Array.isArray(value.gateway.retiredHosts)) fail('gateway.retiredHosts must be an array');
+  else {
+    if (typeof value.gateway.host !== 'string' || !value.gateway.host) {
+      fail('gateway.host must name the standard gateway host');
+    }
+    if (typeof value.gateway.projectIdHeader !== 'string' || !value.gateway.projectIdHeader) {
+      fail('gateway.projectIdHeader must name the project id header');
+    }
+    if (!Array.isArray(value.gateway.retiredHosts)) fail('gateway.retiredHosts must be an array');
+  }
 
   if (!value.detection || typeof value.detection !== 'object') {
     fail('detection must be an object');
@@ -629,6 +637,10 @@ export function scanSource(projectRoot, standard) {
   const retired = new Set(standard.gateway.retiredHosts);
   const envNames = standard.detection.gatewayEnvNames;
   const paths = standard.detection.modelRequestPaths ?? [];
+  const projectIdPattern = new RegExp(
+    `${escapeRegExp(standard.gateway.projectIdHeader)}|project_?id`,
+    'i'
+  );
 
   const ignoredPaths = (standard.detection.scanIgnorePaths ?? []).map((value) =>
     value.split('/').join(sep)
@@ -645,6 +657,8 @@ export function scanSource(projectRoot, standard) {
     providerCallSiteDetail: [],
     gatewayEnvFiles: 0,
     gatewayEnvPaths: [],
+    gatewayWithoutProjectIdFiles: 0,
+    gatewayWithoutProjectIdPaths: [],
     completionsPathFiles: 0,
     canonicalImportFiles: 0,
     providerSdkImportFiles: 0,
@@ -707,6 +721,14 @@ export function scanSource(projectRoot, standard) {
           if (!source.includes(host)) continue;
           evidence.gatewayHostFiles += 1;
           if (retired.has(host)) evidence.retiredHosts.add(host);
+          // A file that names the live gateway host must also carry the project
+          // id (header or body field), or the gateway answers 400.
+          if (!retired.has(host) && !projectIdPattern.test(source)) {
+            evidence.gatewayWithoutProjectIdFiles += 1;
+            if (evidence.gatewayWithoutProjectIdPaths.length < 20) {
+              evidence.gatewayWithoutProjectIdPaths.push(relativePath);
+            }
+          }
           break;
         }
       }
@@ -854,7 +876,7 @@ export function classifyProject({ project, declared, source, standard, exception
   }
   reasons.push(...providerHostReasons(source));
   if (source.gatewayEnvFiles > 0) {
-    reasons.push(`References a gateway environment name in ${source.gatewayEnvFiles} source file(s).`);
+    reasons.push(`References a gateway environment name (expected configuration) in ${source.gatewayEnvFiles} source file(s).`);
   }
   if (source.completionsPathFiles > 0) {
     reasons.push(
@@ -952,6 +974,7 @@ export function auditProject({ project, fleetRoot, standard, explain = false }) 
           : 'No repository directory available in this checkout; nothing was inspected.',
       ],
       blocking: [],
+      review: [],
     };
   }
 
@@ -976,9 +999,9 @@ export function auditProject({ project, fleetRoot, standard, explain = false }) 
       ...(explain ? { detail: source.credentialFiles } : {}),
     });
   }
-  // A dated, explicit exception may let the retiring gateway repository name
-  // its own surface while it is being decommissioned. Caller repositories do
-  // not inherit this exemption, and credential-shaped literals always block.
+  // The gateway host and gateway environment names are the expected
+  // configuration (2026-10-04 policy). Only a host the standard lists as retired
+  // blocks, and a dated exception may let a repository name its own surface.
   if (exception?.allowsRetiredGatewayReferences !== true) {
     for (const host of source.retiredHosts) {
       blocking.push({
@@ -987,11 +1010,31 @@ export function auditProject({ project, fleetRoot, standard, explain = false }) 
         message: `References retired gateway host ${host}.`,
       });
     }
-    if (source.gatewayEnvFiles > 0) {
-      blocking.push({
-        code: 'RETIRED_GATEWAY_ENV',
+  }
+
+  // Review-level findings: real gaps against the policy, reported without
+  // reddening the gate. A recorded exception already documents its boundary.
+  const review = [];
+  if (!exception) {
+    const providerSdks = declared.filter((entry) => entry.kind === 'provider-sdk');
+    if (source.providerCallSites > 0 || providerSdks.length > 0) {
+      review.push({
+        code: 'DIRECT_PROVIDER_CALL',
         project: project.id,
-        message: `References a retired gateway-only environment name in ${source.gatewayEnvFiles} source file(s).`,
+        message:
+          'Calls a model provider directly instead of the free-ai gateway'
+          + ` (${source.providerCallSites} call site(s)`
+          + `${providerSdks.length > 0 ? `, SDKs: ${providerSdks.map((entry) => entry.package).join(', ')}` : ''}).`,
+      });
+    }
+    if (source.gatewayWithoutProjectIdFiles > 0) {
+      review.push({
+        code: 'GATEWAY_CALL_WITHOUT_PROJECT_ID',
+        project: project.id,
+        message:
+          `References the gateway in ${source.gatewayWithoutProjectIdFiles} source file(s) that never send a project id`
+          + ` (${standard.gateway.projectIdHeader} header or project_id body field); the gateway rejects these with 400.`,
+        ...(explain ? { detail: source.gatewayWithoutProjectIdPaths } : {}),
       });
     }
   }
@@ -1020,6 +1063,7 @@ export function auditProject({ project, fleetRoot, standard, explain = false }) 
       providerHostBreakdown: source.providerHostBreakdown,
       providerCallSiteDetail: source.providerCallSiteDetail,
       gatewayEnvFiles: source.gatewayEnvFiles,
+      gatewayWithoutProjectIdFiles: source.gatewayWithoutProjectIdFiles,
       ...(explain ? { gatewayEnvPaths: source.gatewayEnvPaths } : {}),
       completionsPathFiles: source.completionsPathFiles,
       canonicalImportFiles: source.canonicalImportFiles,
@@ -1028,6 +1072,7 @@ export function auditProject({ project, fleetRoot, standard, explain = false }) 
     },
     reasons,
     blocking,
+    review,
   };
 }
 
@@ -1115,7 +1160,7 @@ export function auditAiClients({
       note:
         'providerHostFiles counts files that contain a provider-host string. providerCallSites '
         + 'counts the subset the classifier is willing to call a request target. Direct call sites '
-        + 'are routing evidence, not gateway bypasses; the raw mention count remains visible.',
+        + 'are review findings against the free-ai gateway policy; the raw mention count remains visible.',
       mentionFiles: results.reduce(
         (total, result) => total + (result.evidence?.providerHostFiles ?? 0),
         0
@@ -1125,6 +1170,7 @@ export function auditAiClients({
     },
     warnings,
     blocking: published.flatMap((result) => result.blocking),
+    review: published.flatMap((result) => result.review),
     followUps: standard.followUps ?? [],
     ...(withheld ? { withheld } : {}),
     results: published,
@@ -1173,7 +1219,9 @@ repository without publishing a private project catalog.
 Exit codes:
   0  Report produced. Drift against an unratified standard is reported, not failed.
   1  Something unambiguously wrong: an invalid standard file, a credential
-     literal in tracked source, or a retired gateway host/variable still referenced.
+     literal in tracked source, or a host the standard lists as retired.
+  Review findings (direct provider calls, gateway calls without a project id)
+  are reported but never change the exit code.
   2  Usage error.`;
 
 export async function main(argv = process.argv.slice(2)) {
@@ -1282,6 +1330,12 @@ function renderText(report, { compact = false } = {}) {
   if (!compact && report.warnings.length > 0) {
     lines.push('', 'Warnings:');
     for (const warning of report.warnings) lines.push(`  - ${warning}`);
+  }
+  if (report.review.length > 0) {
+    lines.push('', 'Review:');
+    for (const entry of report.review) {
+      lines.push(`  - [${entry.code}] ${entry.project}: ${entry.message}`);
+    }
   }
   if (report.blocking.length > 0) {
     lines.push('', 'Blocking:');

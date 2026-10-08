@@ -1,6 +1,6 @@
 # Fleet AI client standard
 
-**Status: ratified 2026-08-30 on issue #61; gateway policy revised 2026-10-09.**
+**Status: ratified 2026-08-30 on issue #61; gateway policy revised 2026-10-04, superseding the 2026-08-29 no-gateway decision.**
 
 Every Fleet product calls models through the shared Free AI gateway
 (`free-ai`). Requests use `model: "auto"` unless the product needs an exact
@@ -45,18 +45,21 @@ incompatible runtime.
 
 `scripts/ai-client-audit.mjs` reads package manifests and tracked source across
 the supplied project list. It reports exact SDK pins, ranged/off-pin packages,
-provider SDK and raw HTTP paths, retired gateway references, and
+provider SDK and raw HTTP paths, gateway calls that omit the project id, and
 credential-shaped literals. High-confidence provider calls stay separate from
 mentions, examples, tests, and endpoint pickers.
 
-The detector fails on a credential literal. It reports SDK drift and
-hand-written calls as migration work so existing debt remains visible without
-making shared tooling permanently red.
+The detector fails on a credential literal, or on a host the standard lists as
+retired (none today). It reports SDK drift and hand-written calls as migration
+work so existing debt remains visible without making shared tooling permanently
+red.
 
-The detector's gateway host and `gatewayEnvNames` checks in
-`config/ai-client-standard.json` predate the 2026-10-09 policy revision and
-still flag gateway use as retired. Treat those findings as stale until the
-audit is updated to the gateway-first policy.
+The gateway host and the gateway environment names (`AI_GATEWAY_API_KEY`, ...)
+are the expected configuration, not findings. Two review-level findings are
+reported without failing the run: `DIRECT_PROVIDER_CALL` (a product calls a
+provider directly or declares a provider SDK) and
+`GATEWAY_CALL_WITHOUT_PROJECT_ID` (a file names the gateway but never sends
+`X-Gateway-Project-Id` or `project_id`).
 
 ## Exceptions
 

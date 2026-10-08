@@ -1,0 +1,7 @@
+{
+  "name": "gateway-project-project",
+  "private": true,
+  "dependencies": {
+    "hono": "4.6.3"
+  }
+}

@@ -66,9 +66,15 @@ test('the shipped standard validates and is ratified with a date', () => {
   assert.equal(valid, true);
   assert.equal(standard.status, 'ratified');
   assert.match(standard.ratifiedAt, /^\d{4}-\d{2}-\d{2}$/u);
-  assert.equal(standard.canonical.option, 'direct-free-model-vercel-ai-sdk');
-  assert.equal(standard.gateway.host, null);
-  assert.deepEqual(standard.gateway.retiredHosts, ['ai-gateway.sassmaker.com']);
+  assert.equal(standard.canonical.option, 'free-ai-gateway-vercel-ai-sdk');
+  assert.equal(standard.ratifiedAt, '2026-10-04');
+  assert.equal(standard.gateway.host, 'ai-gateway.sassmaker.com');
+  assert.equal(standard.gateway.baseUrl, 'https://ai-gateway.sassmaker.com/v1');
+  assert.equal(standard.gateway.projectIdHeader, 'X-Gateway-Project-Id');
+  assert.deepEqual(standard.gateway.retiredHosts, []);
+  assert.equal(standard.canonical.apiKeyEnv, 'AI_GATEWAY_API_KEY');
+  assert.match(standard.ratifiedDecision, /supersed\w* the 2026-08-29/iu);
+  assert.doesNotMatch(JSON.stringify(standard.exceptions), /retiring/iu);
 });
 
 test('validateStandard rejects loose pins, undated exceptions, and claimed ratification', () => {
@@ -133,16 +139,54 @@ test('a ranged or off-pin canonical declaration is drifted and names the pin', (
   assert.match(result.reasons.join('\n'), /ai declares \^6\.0\.97, canonical pin is 6\.0\.168/u);
 });
 
-test('raw HTTP against the retired gateway is hand-rolled and blocking', () => {
+test('a gateway call and gateway env names are expected configuration, not blocking', () => {
+  const result = auditFixtures(['gateway-project-project']).results[0];
+  assert.equal(result.verdict, 'hand-rolled');
+  assert.equal(result.pattern, 'raw-http');
+  assert.equal(result.evidence.gatewayHostFiles, 1);
+  assert.equal(result.evidence.gatewayEnvFiles, 1);
+  assert.deepEqual(result.blocking, []);
+  assert.deepEqual(result.review, []);
+});
+
+test('a gateway call without a project id is a review finding, not a blocker', () => {
   const result = auditFixtures(['raw-http-project']).results[0];
   assert.equal(result.verdict, 'hand-rolled');
   assert.equal(result.pattern, 'raw-http');
   assert.deepEqual(result.declared, []);
   assert.equal(result.evidence.gatewayHostFiles, 1);
+  assert.equal(result.evidence.gatewayWithoutProjectIdFiles, 1);
+  assert.deepEqual(result.blocking, []);
   assert.deepEqual(
-    result.blocking.map((entry) => entry.code).sort(),
-    ['RETIRED_GATEWAY_ENV', 'RETIRED_GATEWAY_HOST']
+    result.review.map((entry) => entry.code),
+    ['GATEWAY_CALL_WITHOUT_PROJECT_ID']
   );
+});
+
+test('a project_id body field satisfies the gateway project id check', () => {
+  const root = mkdtempSync(join(tmpdir(), 'ai-client-body-id-'));
+  try {
+    writeFileSync(
+      join(root, 'worker.ts'),
+      "await fetch('https://ai-gateway.sassmaker.com/v1/chat/completions', { body: JSON.stringify({ model: 'auto', project_id: 'demo' }) });\n"
+    );
+    assert.equal(scanSource(root, standard).gatewayWithoutProjectIdFiles, 0);
+    writeFileSync(
+      join(root, 'worker.ts'),
+      "await fetch('https://ai-gateway.sassmaker.com/v1/chat/completions', { body: '{}' });\n"
+    );
+    assert.equal(scanSource(root, standard).gatewayWithoutProjectIdFiles, 1);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a direct provider SDK is a review finding that names the SDK', () => {
+  const result = auditFixtures(['provider-sdk-project']).results[0];
+  assert.deepEqual(result.blocking, []);
+  const finding = result.review.find((entry) => entry.code === 'DIRECT_PROVIDER_CALL');
+  assert.ok(finding);
+  assert.match(finding.message, /openai/u);
 });
 
 test('a provider SDK without the canonical client is hand-rolled and labelled provider-sdk', () => {
@@ -197,24 +241,31 @@ test('a dated exception wins over the measured pattern and records its reason', 
   assert.match(result.reasons.join('\n'), /Dated exception recorded 2026-08-29/u);
 });
 
-test('only an explicit dated exception can allow the retiring gateway to reference itself', () => {
-  const withException = structuredClone(standard);
-  withException.exceptions = [
+test('a host the standard lists as retired still blocks unless an exception allows it', () => {
+  const retiring = structuredClone(standard);
+  retiring.gateway.retiredHosts = ['ai-gateway.sassmaker.com'];
+  const audit = (custom) =>
+    auditAiClients({
+      projects: [{ id: 'raw-http-project', repo: 'raw-http-project' }],
+      fleetRoot: fixtureRoot,
+      standard: custom,
+      now: Date.parse('2026-10-04T00:00:00.000Z'),
+    });
+  assert.deepEqual(
+    audit(retiring).blocking.map((entry) => entry.code),
+    ['RETIRED_GATEWAY_HOST']
+  );
+
+  retiring.exceptions = [
     {
       project: 'raw-http-project',
-      recordedAt: '2026-08-29',
-      reason: 'The fixture stands in for the retiring gateway repository itself.',
+      recordedAt: '2026-10-04',
+      reason: 'The fixture stands in for a repository that names its own retired surface.',
       allowsRetiredGatewayReferences: true,
     },
   ];
-  const report = auditAiClients({
-    projects: [{ id: 'raw-http-project', repo: 'raw-http-project' }],
-    fleetRoot: fixtureRoot,
-    standard: withException,
-    now: Date.parse('2026-08-29T00:00:00.000Z'),
-  });
+  const report = audit(retiring);
   assert.equal(report.results[0].verdict, 'exception');
-  assert.deepEqual(report.results[0].blocking, []);
   assert.deepEqual(report.blocking, []);
 });
 
@@ -286,9 +337,10 @@ test('the report summarises every verdict bucket and is binding once ratified', 
     exception: 0,
     'not-applicable': 1,
   });
+  assert.deepEqual(report.blocking, []);
   assert.deepEqual(
-    report.blocking.map((entry) => entry.code).sort(),
-    ['RETIRED_GATEWAY_ENV', 'RETIRED_GATEWAY_HOST']
+    report.review.map((entry) => entry.code).sort(),
+    ['DIRECT_PROVIDER_CALL', 'GATEWAY_CALL_WITHOUT_PROJECT_ID']
   );
 });
 
