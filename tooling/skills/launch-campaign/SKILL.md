@@ -1,6 +1,6 @@
 ---
 name: launch-campaign
-description: Plan and execute a one-off launch for a new product or major feature. Use when the owner wants every launch step, full flagship posts, broad relevant directory and content-platform submissions, one exact-plan approval, and automatic execution through repositories, Postiz, connectors, or a visible connected browser.
+description: Plan and run a one-off launch for a new product or major feature, including honest directory-submission runs with the launchkit toolkit. Use when the owner asks to launch a product, submit to directories, plan a launch run, or runs /launchkit. Builds one exact plan, gets owner approval of it, then executes only the approved items.
 ---
 
 # Launch Campaign
@@ -11,6 +11,14 @@ execute only the unchanged owner-approved manifest.
 The machine-readable runtime recommendation lives in
 [`execution-profile.json`](execution-profile.json). Hosts map its capability
 tiers to their own available providers and models.
+
+## Directory-only runs (launchkit)
+
+For a directory-submission run without a full campaign ("submit to
+directories", "plan a launch run", /launchkit), follow
+[launchkit-directory-run.md](references/launchkit-directory-run.md): brief
+once, plan truthfully, submit with evidence. The same approval and honesty
+rules below apply.
 
 ## Workflow
 

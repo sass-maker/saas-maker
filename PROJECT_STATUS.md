@@ -123,7 +123,7 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
   optional jobs or steps. Conditional/error-tolerant validators, dependency-gated
   jobs, unsupported YAML inheritance and shell early exits remain rejected.
   Exact-source successful push requirements are unchanged. See #104 and
-  `tooling/skills/fleet-deploy-guard/SKILL.md` for the supported source boundary.
+  `tooling/skills/fleet-deploy-parity/references/deploy-guard.md` for the supported source boundary.
 
 - **2026-09-07 — Bounded acquisition and SEO research skills added locally:**
   Added Fleet-owned `web-extraction`, `media-acquisition`, and `seo-research`

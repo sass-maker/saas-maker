@@ -5,7 +5,7 @@ different halves of that, and they must not be confused:
 
 | Skill | Owns |
 | --- | --- |
-| `clarity-fleet-rollout` | Creating projects, assigning IDs, wiring source, repairing receipt drift — all mutations |
+| `clarity-fleet-health` rollout reference (`references/rollout.md`) | Creating projects, assigning IDs, wiring source, repairing receipt drift — all mutations |
 | `clarity-fleet-health` | Repeatable read-only health checks across every identity |
 
 This page is the operator index for the health half. The full protocol is
@@ -55,7 +55,7 @@ Site Health: `site-health/docs/clarity-fleet-health.md`.
 - No recordings, heatmaps, URLs, visitor identifiers, or raw provider payloads
   leave a health run — in any mode.
 - No project creation, token generation, source wiring change, deploy, or
-  schedule installation. Those are `clarity-fleet-rollout` or separate,
+  schedule installation. Those are the `clarity-fleet-health` rollout reference or separate,
   separately authorized work.
 - MCP output is exploratory evidence. The deterministic Data Export adapter is
   the fleet health authority.

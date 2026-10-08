@@ -36,7 +36,7 @@ export function GET() {
       trackerTemplate: `${RAW}/tooling/launchkit/tracker.template.json`,
       report: `${RAW}/tooling/launchkit/scripts/report.mjs`,
       readme: `${RAW}/tooling/launchkit/README.md`,
-      skill: `${RAW}/tooling/skills/launchkit/SKILL.md`,
+      skill: `${RAW}/tooling/skills/launch-campaign/references/launchkit-directory-run.md`,
     },
     data: {
       catalog: `${SITE}/launchdesk.json`,

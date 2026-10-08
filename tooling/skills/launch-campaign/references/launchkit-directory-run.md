@@ -1,14 +1,3 @@
----
-name: launchkit
-description: >
-  Plan and run an honest directory-submission launch campaign for a product
-  using the launchdesk catalog: fill one product brief, generate a truthful
-  run plan of free/conditional routes, execute each route from its
-  per-platform playbook with human gates, and record submitted/scheduled/live
-  states with evidence in a tracker. Use for "launch my product", "submit to
-  directories", "plan a launch run", "directory submissions", or /launchkit.
----
-
 # launchkit — brief once, plan truthfully, submit with evidence
 
 The kit lives at `tooling/launchkit/`. Data lives in the launchdesk catalog

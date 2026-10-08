@@ -139,7 +139,7 @@ The full JSON envelope follows
 
 ## What this skill does NOT cover
 
-- Single-project deploy readiness gate → `fleet-deploy-guard`
+- Single-project deploy readiness gate → `fleet-deploy-parity` (deploy guard reference)
 - Cross-project deploy parity → `fleet-deploy-parity`
 - Public product browser journeys → `public-product-smoke`
 - Full fleet audit → `fleet-audit`

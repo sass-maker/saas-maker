@@ -1,6 +1,6 @@
 ---
 name: clarity-fleet-health
-description: Audit Microsoft Clarity across every Fleet product, including project-ID integrity, source wiring, desired capability coverage, provider settings, cached aggregate traffic, and explicit live traffic refreshes. Use for Clarity counts, fleet-wide Clarity health, missing analytics, feature adoption, or requests to test Clarity on all applications; use clarity-fleet-rollout instead for project creation or source installation.
+description: Audit Microsoft Clarity across every Fleet product, including project-ID integrity, source wiring, desired capability coverage, provider settings, cached aggregate traffic, and explicit live traffic refreshes. Use for Clarity counts, fleet-wide Clarity health, missing analytics, feature adoption, or requests to test Clarity on all applications; for project creation or source installation, follow its rollout reference.
 ---
 
 # Clarity Fleet Health
@@ -168,7 +168,7 @@ never registered users. Separate source wiring, provider measurement,
 deployment, and public verification; evidence for one gate does not prove the
 others.
 
-Use `clarity-fleet-rollout` for creating projects, changing IDs, wiring source,
-or repairing receipt drift. Those mutations require their own authorization.
-This skill never creates a project, generates a token, edits source wiring,
+Use [rollout.md](references/rollout.md) for creating projects, changing IDs,
+wiring source, or repairing receipt drift. Those mutations require their own
+authorization. The audit modes above never create a project, generates a token, edits source wiring,
 deploys a product, or installs a schedule.

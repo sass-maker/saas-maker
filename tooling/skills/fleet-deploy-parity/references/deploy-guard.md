@@ -1,9 +1,6 @@
----
-name: fleet-deploy-guard
-description: Guard a fleet project deploy — verify clean main, green CI, known Cloudflare target, no uncommitted changes before allowing a deploy. Use when the user says "deploy X", "can I deploy?", "is X safe to deploy?", or before any production deploy.
----
+# Deploy guard — single-project deploy readiness gate
 
-# fleet-deploy-guard — deploy readiness gate
+Merged from the former `fleet-deploy-guard` skill into `fleet-deploy-parity`.
 
 Verifies that a project is safe to deploy before allowing the deploy command
 to run. Enforces the fleet deployment standard from AGENTS.md.
@@ -103,7 +100,7 @@ Git:        dirty ✗ (3 uncommitted files)
 ## Rules
 
 - **Never bypass the guard** — if a gate fails, report it and stop
-- **Never deploy from a dirty tree** — commit or stash first
+- **Never deploy from a dirty tree** — report the dirty files; never commit, stash, or discard someone else's changes
 - **Never deploy with red CI** — fix the CI failure first
 - **Exception:** if CI is red for reasons unrelated to the deploy change, the
   user can explicitly override — but the exception must be named in the handoff

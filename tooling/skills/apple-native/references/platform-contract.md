@@ -1,18 +1,13 @@
----
-name: apple-platform
-description: Route Apple-native application work and Apple distribution work for iOS, iPadOS, macOS, and watchOS. Use when building Swift or SwiftUI apps, testing native targets, preparing archives, shipping through TestFlight or the App Store, notarizing direct-download Mac software, or diagnosing Apple Developer and App Store Connect blockers.
----
+# Apple platform contract
 
-# Apple platform
-
-Use this as the entry point for Apple work. Route to the smallest focused
-workflow:
+Shared contract for all Apple work (merged from the former `apple-platform`
+router skill). Route to the smallest focused workflow:
 
 | Request | Skill |
 |---|---|
-| Build or review Swift, SwiftUI, UIKit, AppKit, iOS, macOS, or watchOS code | `../apple-native/SKILL.md` |
-| Archive, sign, upload, process, distribute, notarize, submit, or deal with Apple | `../apple-release/SKILL.md` |
-| Native UI direction or polish | `../design-workflow/SKILL.md`, then the native skill |
+| Build or review Swift, SwiftUI, UIKit, AppKit, iOS, macOS, or watchOS code | `apple-native/SKILL.md` |
+| Archive, sign, upload, process, distribute, notarize, submit, or deal with Apple | `apple-release/SKILL.md` |
+| Native UI direction or polish | `design-workflow/SKILL.md`, then the native skill |
 
 ## Shared operating contract
 

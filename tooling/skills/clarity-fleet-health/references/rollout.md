@@ -1,9 +1,6 @@
----
-name: clarity-fleet-rollout
-description: Create and wire one Microsoft Clarity project per Fleet catalog entry, with a recoverable ID receipt and explicit no-web-surface exceptions.
----
+# Clarity rollout
 
-# clarity-fleet-rollout
+Merged from the former `clarity-fleet-rollout` skill into `clarity-fleet-health`.
 
 Use for requests to set up, repair, or audit Microsoft Clarity across Fleet products. Do not use for a one-off snippet on an unrelated site.
 

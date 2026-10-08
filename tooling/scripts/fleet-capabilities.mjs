@@ -48,7 +48,7 @@ Exit codes:
 Examples:
   node scripts/fleet-capabilities.mjs search "deploy readiness"
   node scripts/fleet-capabilities.mjs search browser --type skill --json
-  node scripts/fleet-capabilities.mjs get skill:fleet-deploy-guard --dense
+  node scripts/fleet-capabilities.mjs get skill:fleet-deploy-parity --dense
   node scripts/fleet-capabilities.mjs execution skill:launch-campaign --runtime balanced:high
   node scripts/fleet-capabilities.mjs context "site health" --dense
   node scripts/fleet-capabilities.mjs doctor --json`;
