@@ -448,15 +448,15 @@ test('CLI preserves historical receipts and separates preflight from completion'
   assert.match(escaped.stderr, /stay inside the project/);
 });
 
-test('prompt hook reinforces design gates throughout Fleet and ignores unrelated directories/events', () => {
+test('prompt hook routes to the preserve-by-default design lane throughout Fleet and ignores unrelated directories/events', () => {
   const cli = resolve(root, 'scripts/design-workflow.mjs');
   const run = (cwd, event = 'UserPromptSubmit') => spawnSync(process.execPath, [cli, 'prompt-hook'], {
     encoding: 'utf8', input: JSON.stringify({ cwd, hook_event_name: event }),
   });
   const inFleet = run(resolve(root, '../../human-v2'));
   assert.equal(inFleet.status, 0, inFleet.stderr);
-  assert.match(JSON.parse(inFleet.stdout).hookSpecificOutput.additionalContext, /preflight/);
-  assert.match(JSON.parse(inFleet.stdout).hookSpecificOutput.additionalContext, /slop scale at direction review, first working render, and final review/);
+  assert.match(JSON.parse(inFleet.stdout).hookSpecificOutput.additionalContext, /Default lane is PRESERVE/);
+  assert.match(JSON.parse(inFleet.stdout).hookSpecificOutput.additionalContext, /optional overhaul tools, not gates/);
   assert.deepEqual(JSON.parse(run('/tmp').stdout), {});
   assert.deepEqual(JSON.parse(run(resolve(root, '../..') + '-unrelated').stdout), {});
   assert.deepEqual(JSON.parse(run(resolve(root, '../..'), 'Stop').stdout), {});

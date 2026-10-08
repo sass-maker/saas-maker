@@ -8,7 +8,7 @@ Include the information needed to decide without reopening the conversation:
 1. **Outcome and location:** product, target and why the prepared work matters.
 2. **Artifact:** link the exact diff, draft or evidence. Show incoming context
    beside a reply. For code, identify the revision and test result; for a visual
-   decision, show the actual alternatives required by design-workflow.
+   decision, show the actual rendered alternatives (design-workflow overhaul).
 3. **Recommendation and limits:** what is observed, what remains uncertain,
    meaningful cost/risk, and the smallest useful next step.
 4. **Decision, if needed:** name the exact action, target, scope and consequence.

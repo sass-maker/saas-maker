@@ -8,7 +8,6 @@ LEGACY_FLEET_OPS_DIR="$FLEET_ROOT/fleet-ops"
 EXPOSED_FLEET_SKILLS=(
   analyze-storage
   astra-orchestrator
-  design-engineering
   design-workflow
   fleet-deploy-parity
   fleet-ops

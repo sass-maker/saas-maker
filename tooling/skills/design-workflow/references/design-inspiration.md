@@ -1,10 +1,7 @@
----
-name: design-inspiration
-description: Use explicitly when external design references, comparative visual directions, or a requested brand-direction board are needed for a Fleet project. Produces attributable principles and design-workflow evidence without copying another product's brand, content, assets, or proprietary implementation. It does not own UI implementation or completion.
-disable-model-invocation: true
----
-
 # Design inspiration
+
+> Formerly the standalone `design-inspiration` skill; merged into
+> [design-workflow](../SKILL.md) on 2026-10-08. Use explicitly when external design references, comparative visual directions, or a requested brand-direction board are needed for a Fleet project. Produces attributable principles and design-workflow evidence without copying another product's brand, content, assets, or proprietary implementation. It does not own UI implementation or completion.
 
 Find evidence for a direction, not a collage of attractive screenshots.
 
@@ -39,10 +36,10 @@ Choose the smallest output that resolves the decision:
 
 ## 3. Search broadly, then narrow
 
-Read [the research contract](references/research-contract.md). When external
+Read [the research contract](design-inspiration-research-contract.md). When external
 references are requested or the parent workflow requires a reference quality
 bar, use current web research and the relevant entries in the parent
-[source map](../design-engineering/references/source-map.md) to discover
+[source map](source-map.md) to discover
 candidates. A direction set built from sufficient existing product/design
 context does not otherwise require fresh external research; identify retained
 references as prior context rather than claiming a new inspection. Search by the actual interaction, content type,

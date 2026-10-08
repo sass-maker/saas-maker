@@ -1,16 +1,14 @@
----
-name: creative-web-effects
-description: Shape, audit, discover, specify, implement, and validate purposeful creative browser effects using CSS animation, SVG, Canvas, WebGL shaders, scroll progress, pointer input, particles, transitions, or procedural visuals. Use when a web surface needs a new expressive effect, an audit of existing animation code, identification of genuine motion opportunities, or precise vocabulary for an unclear motion brief. Requires project-native direction, reduced-motion and low-capability fallbacks, input safety, lifecycle cleanup, and measurable performance evidence.
----
-
 # Creative web effects
+
+> Formerly the standalone `creative-web-effects` skill; merged into
+> [design-workflow](../SKILL.md) on 2026-10-08. Use to shape, audit, discover, specify, implement, and validate purposeful creative browser effects using CSS animation, SVG, Canvas, WebGL shaders, scroll progress, pointer input, particles, transitions, or procedural visuals. Use when a web surface needs a new expressive effect, an audit of existing animation code, identification of genuine motion opportunities, or precise vocabulary for an unclear motion brief. Requires project-native direction, reduced-motion and low-capability fallbacks, input safety, lifecycle cleanup, and measurable performance evidence.
 
 Make the effect serve the page. Spectacle is not its own success criterion.
 
 ## 1. Choose one mode
 
 Read only the mode-specific output in
-[the effect contract](references/effect-contract.md):
+[the effect contract](creative-web-effects-contract.md):
 
 - `shape`: define or implement a requested effect. Continue through every
   section below; write code only when implementation is explicitly requested.
@@ -32,7 +30,7 @@ asks to review and then fix an existing effect.
 
 Read the nearest project instructions, design context, incumbent motion
 language, target surface, and real content. Read
-[the effect contract](references/effect-contract.md). For `shape`, define:
+[the effect contract](creative-web-effects-contract.md). For `shape`, define:
 
 - the communication or interaction purpose;
 - what starts, changes, completes, and interrupts the effect;
@@ -93,5 +91,5 @@ route/component teardown. Measure the agreed budget in the browser and run the
 smallest relevant project check.
 
 If the effect obscures content, traps input, destabilizes layout, or misses the
-budget, simplify or remove it. Finish meaningful visual work through the active
-design-review receipt.
+budget, simplify or remove it. Finish with design-workflow's rendered review
+(and its receipt only when one is in use).

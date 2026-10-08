@@ -1,7 +1,7 @@
 interface:
   display_name: "Fleet Design Director"
-  short_description: "Direct serious Fleet UI through owner selection"
-  default_prompt: "Use $design-workflow to develop visual directions, get my selection, implement the chosen system, and verify the result."
+  short_description: "Preserve-by-default UI work; overhaul directions only on request"
+  default_prompt: "Use $design-workflow for this UI work: preserve the established look unless I ask for a redesign, and check the rendered result."
 
 policy:
   allow_implicit_invocation: true
