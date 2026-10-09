@@ -132,6 +132,30 @@ for review; there is no apply/delete mode. Use the receipt's restore command if
 needed; the closed manifest remains historical evidence, so a restored checkout
 is treated as unmanaged until explicitly reconciled.
 
+### Squash-landed branches and missing folders
+
+A squash merge leaves the branch HEAD outside every remote ref. `close`
+accepts it when every path the branch changed since its merge base with
+`origin/HEAD` (or `origin/main`) has identical content there; the receipt
+records `landing.landedBy: content-equal`. If `main` has since edited those
+paths, verify the landing yourself and pass `--landed <sha>` naming the landed
+commit; it must be contained in a local remote-tracking ref (fetch first) and
+is recorded as `operator-verified`. Unlanded local commits stay blocked.
+
+A folder that disappears (trashed, moved by hand, or vanishing while `du` walks
+it) is non-fatal: `status` and `gc` report `missing-worktree`, and disk
+measurement accepts a total whose only `du` diagnostics are vanished entries.
+`reconcile --dry-run` lists non-closed records whose folder is gone;
+`reconcile` marks them `missing` so they stop holding writer slots. It only
+changes manifests: no folder, branch or Git worktree metadata is deleted, and
+closed records with a missing retired folder are reported, not changed.
+
+```sh
+fleet-workspace close --id product-issue-123 --dry-run --landed <squash-sha>
+fleet-workspace reconcile --dry-run
+fleet-workspace reconcile
+```
+
 ```sh
 fleet-workspace inventory --path /private/tmp
 ```

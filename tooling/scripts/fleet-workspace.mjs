@@ -13,7 +13,12 @@ const help = `fleet-workspace <command> [options]
   install (--id <id> | --repo <path>) [--offline]
   lockfile-only --id <id>        Update an existing pnpm lockfile without installing.
   run (--id <id> | --repo <path>) -- <command> [args...]
-  close --id <id> [--dry-run]      Check source and open files; retire reversibly.
+  close --id <id> [--dry-run] [--landed <sha>]
+                                   Check source and open files; retire reversibly.
+                                   Squash-landed branches pass when their changed
+                                   paths match the remote default branch, or with
+                                   --landed naming the commit that landed them.
+  reconcile [--dry-run]           Mark records whose folder is gone as missing.
   gc --dry-run                    Review managed workspaces; never deletes.
   inventory --path <path>          Read-only legacy checkout/store discovery.
   configure [--store-dir <path>] [--max-writers <n>] [--max-heavy-jobs <n>]
@@ -27,7 +32,7 @@ export async function main(argv = process.argv.slice(2)) {
   const input = divider < 0 ? argv : argv.slice(0, divider);
   const { values: opts, positionals } = parseArgs({ args: input, allowPositionals: true, strict: true, options: {
     root: { type: 'string' }, id: { type: 'string' }, repo: { type: 'string' }, owner: { type: 'string' }, task: { type: 'string' },
-    base: { type: 'string' }, path: { type: 'string' }, 'store-dir': { type: 'string' },
+    base: { type: 'string' }, path: { type: 'string' }, landed: { type: 'string' }, 'store-dir': { type: 'string' },
     'max-writers': { type: 'string' }, 'max-heavy-jobs': { type: 'string' }, 'workspace-gib': { type: 'string' },
     'total-gib': { type: 'string' }, 'min-free-gib': { type: 'string' },
     offline: { type: 'boolean' }, 'dry-run': { type: 'boolean' }, help: { type: 'boolean', short: 'h' },
@@ -43,7 +48,8 @@ export async function main(argv = process.argv.slice(2)) {
     case 'install': result = await manager.install(opts); break;
     case 'lockfile-only': result = await manager.lockfileOnly(opts); break;
     case 'run': result = await manager.run({ ...opts, argv: commandArgs }); break;
-    case 'close': result = await manager.close(opts.id, { dryRun: opts['dry-run'] }); break;
+    case 'close': result = await manager.close(opts.id, { dryRun: opts['dry-run'], landed: opts.landed }); break;
+    case 'reconcile': result = await manager.reconcile({ dryRun: opts['dry-run'] }); break;
     case 'gc':
       if (!opts['dry-run']) throw new Error('Only gc --dry-run is supported; no automatic deletion.');
       result = manager.gc(); break;

@@ -109,13 +109,28 @@ export function jobAlive(job, { probe = alive, identities = processIdentities } 
   }
   return true;
 }
+// `du` exits non-zero when an entry disappears while it walks the tree (another
+// agent retiring or trashing a folder). Accept a total only when every
+// diagnostic is such a vanished-entry report; permission and other errors
+// still fail closed.
+export function vanishedOnly(stderr) {
+  const lines = String(stderr ?? '').split('\n').map((line) => line.trim()).filter(Boolean);
+  return lines.length > 0 && lines.every((line) => /^du: .*(?:No such file or directory|fts_read)/.test(line));
+}
+function duBytes(path) {
+  const result = spawnSync('du', ['-sk', path], { encoding: 'utf8', timeout: 180_000, maxBuffer: 32 * 1024 ** 2 });
+  if (result.error) throw new Error(`du -sk failed: ${result.error.message}`);
+  const bytes = Number(result.stdout.trim().split(/\s/)[0]) * 1024;
+  if (result.status !== 0 && !(vanishedOnly(result.stderr) && result.stdout.trim())) throw new Error(`du -sk failed: ${result.stderr.trim()}`);
+  return bytes;
+}
 function requireBytes(value, label) {
   if (!Number.isSafeInteger(value) || value < 0) throw new Error(`Invalid ${label} disk measurement`);
   return value;
 }
 export function diskBytes(path) {
   if (!existsSync(path)) throw new Error(`Missing path: ${path}`);
-  return requireBytes(Number(command('du', ['-sk', path]).split(/\s/)[0]) * 1024, 'workspace');
+  return requireBytes(duBytes(path), 'workspace');
 }
 // Complete, bounded measurement: no cached totals or retired-worktree exclusions.
 export function diskBytesAsync(path) {
@@ -140,7 +155,7 @@ export function diskBytesAsync(path) {
       clearTimeout(timer);
       const bytes = Number(stdout.trim().split(/\s/)[0]) * 1024;
       if (failure) fail(failure);
-      else if (code !== 0) fail(new Error(`du -sk failed (${code}): ${stderr.trim()}`));
+      else if (code !== 0 && !(vanishedOnly(stderr) && stdout.trim())) fail(new Error(`du -sk failed (${code}): ${stderr.trim()}`));
       else if (!stdout.trim() || !Number.isSafeInteger(bytes) || bytes < 0) fail(new Error('du -sk returned an invalid measurement'));
       else done(bytes);
     });
@@ -220,8 +235,8 @@ export class AgentWorkspaces {
     return readdirSync(join(this.root, 'manifests')).filter((name) => name.endsWith('.json')).map((name) => {
       const row = json(join(this.root, 'manifests', name));
       validateId(row.id);
-      const fields = ['schemaVersion', 'id', 'repo', 'commonDir', 'path', 'owner', 'task', 'branch', 'baseSha', 'state', 'createdAt', 'heartbeatAt', 'closedAt', 'lastCommandAt', 'lastExitCode'];
-      if (Object.keys(row).some((key) => !fields.includes(key)) || name !== `${row.id}.json` || row.schemaVersion !== 1 || !['creating', 'active', 'failed', 'closed'].includes(row.state)) throw new Error('Invalid workspace manifest.');
+      const fields = ['schemaVersion', 'id', 'repo', 'commonDir', 'path', 'owner', 'task', 'branch', 'baseSha', 'state', 'createdAt', 'heartbeatAt', 'closedAt', 'lastCommandAt', 'lastExitCode', 'missingAt', 'missingFrom'];
+      if (Object.keys(row).some((key) => !fields.includes(key)) || name !== `${row.id}.json` || row.schemaVersion !== 1 || !['creating', 'active', 'failed', 'closed', 'missing'].includes(row.state)) throw new Error('Invalid workspace manifest.');
       requireText(row.owner, 'manifest owner'); requireText(row.task, 'manifest task');
       if (typeof row.repo !== 'string' || !row.repo.startsWith('/') || typeof row.commonDir !== 'string' || !row.commonDir.startsWith('/') || !Number.isFinite(Date.parse(row.heartbeatAt))) throw new Error('Invalid workspace identity or heartbeat.');
       const expected = join(this.root, row.state === 'closed' ? 'retired' : 'worktrees', row.id);
@@ -304,7 +319,8 @@ export class AgentWorkspaces {
     return this.locked(() => {
       if (this.records().some((row) => row.id === id)) throw new Error('Workspace ID already exists; reuse it or choose another.');
       const policy = this.policy();
-      if (this.records().filter((row) => row.state !== 'closed').length >= policy.maxWriters) throw new Error('Writer workspace limit reached.');
+      // Closed and reconciled-missing records no longer hold a writer slot.
+      if (this.records().filter((row) => !['closed', 'missing'].includes(row.state)).length >= policy.maxWriters) throw new Error('Writer workspace limit reached.');
       this.validateBudgets(snapshot);
       if (existsSync(path)) throw new Error('Workspace path already exists.');
       const branch = `agent/${id}`;
@@ -329,7 +345,12 @@ export class AgentWorkspaces {
     });
   }
   inspect(row) {
-    const info = { ...row, reportedBytes: existsSync(row.path) ? requireBytes(this.measure(row.path), 'workspace') : null, blockers: [] };
+    const info = { ...row, reportedBytes: null, blockers: [] };
+    if (existsSync(row.path)) {
+      try { info.reportedBytes = requireBytes(this.measure(row.path), 'workspace'); }
+      catch (error) { if (existsSync(row.path)) throw error; }
+    }
+    // A missing folder is reported, never fatal: other records stay inspectable.
     if (!existsSync(row.path)) { info.blockers.push('missing-worktree'); return info; }
     try {
       if (!lstatSync(join(row.path, '.git')).isFile()) throw new Error('Not a linked worktree');
@@ -357,18 +378,51 @@ export class AgentWorkspaces {
       return info;
     }), jobs: this.jobs().map((job) => ({ ...job, running: jobAlive(job) })) };
   }
-  async close(id, { dryRun = false } = {}) {
+  // A squash merge leaves the branch HEAD outside every remote ref. Treat the
+  // work as landed when each path the branch changed (since its merge base with
+  // the remote default branch) has identical content there, or when the
+  // operator names a landed commit that a remote-tracking ref contains.
+  landing(info, landed) {
+    const repo = info.path;
+    if (landed !== undefined) {
+      if (typeof landed !== 'string' || !/^[0-9a-f]{7,64}$/i.test(landed)) throw new Error('--landed must be a commit SHA.');
+      const sha = git(repo, 'rev-parse', '--verify', '--end-of-options', `${landed}^{commit}`);
+      const refs = git(repo, 'for-each-ref', '--format=%(refname)', '--contains', sha, 'refs/remotes/').split('\n').filter(Boolean);
+      if (!refs.length) throw new Error(`Landed commit ${sha} is not contained in a local remote-tracking ref; fetch first.`);
+      return { landedBy: 'operator-verified', landedCommit: sha, landedRefs: refs };
+    }
+    let ref;
+    for (const candidate of ['refs/remotes/origin/HEAD', 'refs/remotes/origin/main', 'refs/remotes/origin/master']) {
+      const probe = spawnSync('git', ['rev-parse', '--verify', '--quiet', `${candidate}^{commit}`], { cwd: repo, encoding: 'utf8', env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' } });
+      if (probe.status === 0) { ref = candidate; break; }
+    }
+    if (!ref) return null;
+    const base = git(repo, 'merge-base', 'HEAD', ref);
+    const changed = git(repo, 'diff', '--name-only', '-z', '--no-renames', base, 'HEAD').split('\0').filter(Boolean);
+    if (!changed.length) return null;
+    const diff = spawnSync('git', ['diff', '--quiet', '--no-renames', ref, 'HEAD', '--', ...changed.map((path) => `:(literal)${path}`)], { cwd: repo, encoding: 'utf8', env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' } });
+    if (diff.status === 0) return { landedBy: 'content-equal', landedRef: ref, landedRefSha: git(repo, 'rev-parse', ref), changedPaths: changed.length };
+    if (diff.status !== 1) throw new Error(`git diff failed: ${diff.stderr.trim()}`);
+    return null;
+  }
+  async close(id, { dryRun = false, landed } = {}) {
     return this.locked(() => {
       const row = this.record(id);
       if (row.state !== 'active') throw new Error('Only active workspaces can be closed.');
       const info = this.inspect(row);
+      if (info.blockers.includes('head-not-in-local-remote-refs')) {
+        try {
+          const evidence = this.landing(info, landed);
+          if (evidence) { info.blockers = info.blockers.filter((item) => item !== 'head-not-in-local-remote-refs'); info.landing = evidence; }
+        } catch (error) { info.blockers.push(`landing-unverified: ${error.message}`); }
+      } else if (landed !== undefined) info.blockers.push('landing-flag-unneeded: HEAD is already in a remote ref');
       try { if (this.openFiles(row.path)) info.blockers.push('open-files'); }
       catch (error) { info.blockers.push(error.message); }
       if (dryRun) return { ...info, dryRun: true, action: info.blockers.length ? 'keep' : 'move-to-retired' };
       if (info.blockers.length) throw new Error(`Keeping ${id}: ${info.blockers.join(', ')}`);
       const destination = join(this.root, 'retired', row.id);
       if (existsSync(destination)) throw new Error('Retirement path already exists.');
-      const receipt = { id, owner: row.owner, task: row.task, head: info.head, branch: row.branch, remoteRefs: info.remoteRefs, original: row.path, retired: destination, createdAt: now(), reportedBytes: info.reportedBytes, restore: ['git', '-C', row.repo, 'worktree', 'move', destination, row.path], note: 'Reversible relocation only; no disk space was reclaimed. All ignored artifacts remain available for review.' };
+      const receipt = { id, owner: row.owner, task: row.task, head: info.head, branch: row.branch, remoteRefs: info.remoteRefs, ...(info.landing ? { landing: info.landing } : {}), original: row.path, retired: destination, createdAt: now(), reportedBytes: info.reportedBytes, restore: ['git', '-C', row.repo, 'worktree', 'move', destination, row.path], note: 'Reversible relocation only; no disk space was reclaimed. All ignored artifacts remain available for review.' };
       save(join(this.root, 'receipts', `${id}.json`), receipt);
       // No force/remove/clean: submodules, locked trees and Git safety failures remain blockers.
       git(row.repo, 'worktree', 'move', row.path, destination);
@@ -376,11 +430,35 @@ export class AgentWorkspaces {
       return receipt;
     });
   }
+  // Mark records whose worktree folder no longer exists as `missing` so they
+  // stop holding writer slots. Never deletes, moves or prunes anything; Git's
+  // own worktree metadata is left for `git worktree prune` by the repo owner.
+  async reconcile({ dryRun = false } = {}) {
+    return this.locked(() => {
+      const actions = this.records().map((row) => {
+        const present = existsSync(row.path);
+        if (row.state === 'missing') return { id: row.id, state: row.state, action: present ? 'review-reappeared' : 'none' };
+        if (present) return { id: row.id, state: row.state, action: 'none' };
+        if (row.state === 'closed') return { id: row.id, state: row.state, path: row.path, action: 'report-retired-folder-missing' };
+        return { id: row.id, state: row.state, path: row.path, owner: row.owner, task: row.task, branch: row.branch, action: 'mark-missing' };
+      });
+      if (!dryRun) {
+        for (const item of actions.filter((entry) => entry.action === 'mark-missing')) {
+          const row = this.record(item.id);
+          if (existsSync(row.path)) { item.action = 'none'; continue; }
+          row.missingFrom = row.state; row.state = 'missing'; row.missingAt = now(); this.write(row);
+        }
+      }
+      const changes = actions.filter((entry) => entry.action !== 'none');
+      return { dryRun, changes, note: 'Only manifest state changes; no folder, branch or Git metadata is deleted.' };
+    });
+  }
   gc() {
     return { dryRun: true, workspaces: this.status().workspaces.map((info) => ({
       id: info.id, owner: info.owner, task: info.task, state: info.state, path: info.path,
       reportedBytes: info.reportedBytes, stale: info.stale, blockers: info.blockers,
-      action: info.state === 'closed' && !info.blockers.length ? 'review-retired-artifacts' : 'keep',
+      action: info.state === 'closed' && !info.blockers.length ? 'review-retired-artifacts'
+        : ['closed', 'missing'].includes(info.state) && info.blockers.includes('missing-worktree') ? 'record-only' : 'keep',
     })), note: 'No automatic deletion. Stale heartbeats never make source disposable. Reported sizes do not account for APFS shared blocks.' };
   }
   async install({ id, repo, offline = false }) {

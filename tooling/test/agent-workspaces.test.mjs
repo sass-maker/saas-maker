@@ -5,7 +5,7 @@ import { tmpdir, homedir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync, spawn } from 'node:child_process';
-import { AgentWorkspaces, GiB, inventory, diskBytesAsync, jobAlive, StaleWorkspaceSnapshotError } from '../lib/agent-workspaces.mjs';
+import { AgentWorkspaces, GiB, inventory, diskBytesAsync, jobAlive, StaleWorkspaceSnapshotError, vanishedOnly } from '../lib/agent-workspaces.mjs';
 
 const fixtures = [];
 test.after(() => {
@@ -728,4 +728,97 @@ test('postflight identity changes also require a complete converged fresh scan',
   assert.equal((await manager.run({ id: row.id, argv: [process.execPath, '-e', "require('fs').writeFileSync('completed.flag', '')"] })).exitCode, 0);
   assert.ok(changed); assert.equal(measured, 9);
   assert.equal(manager.record(row.id).lastExitCode, 0); assert.equal(manager.jobs().length, 0);
+});
+
+function squashLand(repo, row, files) {
+  // Simulate a provider squash merge: the same content lands on main as a new
+  // commit, so the branch HEAD is never contained in a remote-tracking ref.
+  for (const [name, content] of Object.entries(files)) writeFileSync(join(row.path, name), content);
+  git(row.path, 'add', '-A'); git(row.path, 'commit', '-m', 'branch work');
+  git(repo, 'checkout', '-q', '--detach', 'refs/remotes/origin/main');
+  for (const [name, content] of Object.entries(files)) writeFileSync(join(repo, name), content);
+  git(repo, 'add', '-A'); git(repo, 'commit', '-m', 'squash: branch work');
+  const landed = git(repo, 'rev-parse', 'HEAD');
+  git(repo, 'update-ref', 'refs/remotes/origin/main', landed);
+  git(repo, 'checkout', '-q', 'main');
+  return landed;
+}
+
+test('close accepts squash-landed branches only when changed paths match the remote branch', async () => {
+  const { manager, repo, create } = fixture();
+  const row = await create('squashed');
+  squashLand(repo, row, { 'feature.txt': 'landed by squash\n' });
+  // main moved on in unrelated files after the squash; still content-equal for the branch's paths.
+  git(repo, 'checkout', '-q', '--detach', 'refs/remotes/origin/main');
+  writeFileSync(join(repo, 'later.txt'), 'later main work\n'); git(repo, 'add', 'later.txt'); git(repo, 'commit', '-m', 'later');
+  git(repo, 'update-ref', 'refs/remotes/origin/main', 'HEAD'); git(repo, 'checkout', '-q', 'main');
+  const preview = await manager.close('squashed', { dryRun: true });
+  assert.equal(preview.action, 'move-to-retired');
+  assert.equal(preview.landing.landedBy, 'content-equal');
+  const receipt = await manager.close('squashed');
+  assert.equal(receipt.landing.landedBy, 'content-equal');
+  assert.equal(readFileSync(join(receipt.retired, 'feature.txt'), 'utf8'), 'landed by squash\n');
+  assert.equal(manager.record('squashed').state, 'closed');
+});
+
+test('close keeps unlanded or diverged work unless an operator names a landed remote commit', async () => {
+  const { manager, repo, create } = fixture();
+  const row = await create('diverged');
+  const landed = squashLand(repo, row, { 'feature.txt': 'branch version\n' });
+  // Main later edits the same file, so content equality no longer proves landing.
+  git(repo, 'checkout', '-q', '--detach', 'refs/remotes/origin/main');
+  writeFileSync(join(repo, 'feature.txt'), 'edited on main\n'); git(repo, 'commit', '-qam', 'edit');
+  git(repo, 'update-ref', 'refs/remotes/origin/main', 'HEAD'); git(repo, 'checkout', '-q', 'main');
+  await assert.rejects(manager.close('diverged'), /head-not-in-local-remote-refs/);
+  await assert.rejects(manager.close('diverged', { landed: 'deadbeefdeadbeef' }), /landing-unverified/);
+  const local = git(row.path, 'rev-parse', 'HEAD');
+  await assert.rejects(manager.close('diverged', { landed: local }), /not contained in a local remote-tracking ref/);
+  const receipt = await manager.close('diverged', { landed });
+  assert.equal(receipt.landing.landedBy, 'operator-verified');
+  assert.equal(receipt.landing.landedCommit, landed);
+
+  const other = await create('unpublished');
+  writeFileSync(join(other.path, 'only-here.txt'), 'never pushed\n');
+  git(other.path, 'add', '-A'); git(other.path, 'commit', '-m', 'local only');
+  await assert.rejects(manager.close('unpublished'), /head-not-in-local-remote-refs/);
+  assert.ok(existsSync(join(other.path, 'only-here.txt')));
+});
+
+test('missing folders are non-fatal and reconcile frees writer slots without deleting anything', async () => {
+  const { manager, repo, create, folder } = fixture();
+  await manager.configure({ maxWriters: 2 });
+  await create('retired-gone');
+  await manager.close('retired-gone');
+  const gone = await create('gone'); await create('kept');
+  // Another agent removed folders out from under the registry.
+  const moved = join(folder, 'moved-away'); git(repo, 'worktree', 'move', gone.path, moved);
+  rmSync(manager.record('retired-gone').path, { recursive: true });
+  const status = manager.status();
+  assert.deepEqual(status.workspaces.find((item) => item.id === 'gone').blockers, ['missing-worktree']);
+  assert.equal(manager.gc().workspaces.find((item) => item.id === 'retired-gone').action, 'record-only');
+  await assert.rejects(create('third'), /limit reached/);
+  assert.equal((await manager.run({ repo, argv: [process.execPath, '-e', ''] })).exitCode, 0, 'managed commands still admit');
+
+  const preview = await manager.reconcile({ dryRun: true });
+  assert.deepEqual(preview.changes.map((item) => [item.id, item.action]).sort(), [['gone', 'mark-missing'], ['retired-gone', 'report-retired-folder-missing']]);
+  assert.equal(manager.record('gone').state, 'active');
+  await manager.reconcile();
+  assert.equal(manager.record('gone').state, 'missing');
+  assert.equal(manager.record('gone').missingFrom, 'active');
+  assert.equal(manager.record('kept').state, 'active');
+  assert.ok(existsSync(join(moved, 'source.txt')), 'reconcile never touches relocated source');
+  assert.equal(git(repo, 'rev-parse', '--verify', 'agent/gone').length, 40, 'branch retained');
+  await assert.rejects(manager.heartbeat('gone'), /Only active/);
+  await assert.rejects(manager.close('gone'), /Only active/);
+  const third = await create('third');
+  assert.equal(third.state, 'active');
+  assert.equal(manager.gc().workspaces.find((item) => item.id === 'gone').action, 'record-only');
+  assert.deepEqual((await manager.reconcile({ dryRun: true })).changes.map((item) => item.id), ['retired-gone']);
+});
+
+test('disk measurement tolerates entries vanishing mid-scan but not other du errors', async () => {
+  assert.equal(vanishedOnly('du: /x/y: No such file or directory\n'), true);
+  assert.equal(vanishedOnly('du: fts_read: No such file or directory'), true);
+  assert.equal(vanishedOnly('du: /x/y: Permission denied\ndu: /x/z: No such file or directory'), false);
+  assert.equal(vanishedOnly(''), false);
 });
