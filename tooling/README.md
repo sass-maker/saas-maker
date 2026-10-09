@@ -35,6 +35,11 @@ Capability discovery is repository-relative and does not require the former
 node scripts/fleet-capabilities.mjs doctor --json
 ```
 
+## GitHub analysis
+
+[GitStat](tools/gitstat/README.md) is the retained GitHub activity and code-churn
+dashboard inside SaaS Maker tooling, without an independent product roadmap.
+
 ## Landing pages
 
 Fleet keeps two landing-page engines and no more:

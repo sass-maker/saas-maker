@@ -132,18 +132,8 @@
       "probePath": "/"
     },
     {
-      "id": "gitstat",
-      "url": "https://git.significanthobbies.com",
-      "probePath": "/"
-    },
-    {
       "id": "on-record",
       "url": "https://podcasts.highsignal.app",
-      "probePath": "/"
-    },
-    {
-      "id": "issue-pages",
-      "url": "https://issues.sarthakagrawal.dev",
       "probePath": "/"
     },
     {

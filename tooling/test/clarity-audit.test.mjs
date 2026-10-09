@@ -62,8 +62,8 @@ test('the shipped capability policy is complete and remains desired state, not p
   assert.deepEqual(problems, []);
   assert.equal(valid, true);
   const coverage = projectCapabilityCoverage(shipped, capabilityPolicy);
-  assert.equal(coverage.projects, 71);
-  assert.equal(coverage.wiredProjects, 45);
+  assert.equal(coverage.projects, 69);
+  assert.equal(coverage.wiredProjects, 43);
   assert.equal(coverage.capabilities.length, 17);
   assert.equal(coverage.providerVerifiedAssignments, 0);
   assert.ok(coverage.desiredAssignments > 0);
@@ -84,8 +84,8 @@ test('the shipped journey registry covers every wired surface with live-root evi
   const { valid, problems } = validateJourneyRegistry(journeys, shipped);
   assert.deepEqual(problems, []);
   assert.equal(valid, true);
-  assert.equal(journeys.projects.length, 45);
-  assert.equal(journeys.projects.filter((entry) => entry.state === 'ready').length, 45);
+  assert.equal(journeys.projects.length, 43);
+  assert.equal(journeys.projects.filter((entry) => entry.state === 'ready').length, 43);
   assert.equal(journeys.projects.filter((entry) => entry.state === 'discovery-required').length, 0);
 });
 
@@ -240,7 +240,7 @@ test('the shipped receipt declares separate landing and browser-app surfaces whe
   }
   assert.deepEqual(shipped.projects.find((entry) => entry.id === 'pace').browserSurfaces.map((surface) => surface.kind), ['landing']);
   // High Signal's Next app serves both the landing and the app since the Astro overlay retired.
-  for (const id of ['gitstat', 'high-signal']) {
+  for (const id of ['high-signal']) {
     assert.deepEqual(shipped.projects.find((entry) => entry.id === id).browserSurfaces.map((surface) => surface.kind), ['combined']);
   }
   for (const id of ['email-manager', 'knowledge-base']) {
@@ -487,18 +487,17 @@ test('omitPrivate counts private repositories without naming them', () => {
   assert.equal(JSON.stringify(report.results).includes('beta'), false);
 });
 
-test('the shipped registry has distinct, wired IDs for the five resolved projects', () => {
+test('the shipped registry has distinct, wired IDs for the four retained resolved projects', () => {
   const violations = shipped.projects.filter((entry) => entry.violation);
   assert.deepEqual(violations, []);
 
   const resolved = Object.fromEntries(
     shipped.projects
-      .filter((entry) => ['high-signal', 'issue-pages', 'journal', 'live', 'on-record'].includes(entry.id))
+      .filter((entry) => ['high-signal', 'journal', 'live', 'on-record'].includes(entry.id))
       .map((entry) => [entry.id, entry.clarityId])
   );
   assert.deepEqual(resolved, {
     'high-signal': 'ybcgyx9ugh',
-    'issue-pages': 'ybch2c99wz',
     journal: 'ybcifeb3uv',
     live: 'ybcglnzl4t',
     'on-record': 'ybch0p6cta',

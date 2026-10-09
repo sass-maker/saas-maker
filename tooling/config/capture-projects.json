@@ -195,40 +195,6 @@
       ]
     },
     {
-      "id": "gitstat",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "public"
-        },
-        {
-          "field": "presentation.directory.platforms",
-          "value": [
-            "Web"
-          ]
-        },
-        {
-          "field": "presentation.directory.purposeContract.purpose",
-          "value": "GitStat explains how engineering effort, contribution history, and code churn are distributed across many repositories."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "One public profile; private repositories untested."
-        },
-        {
-          "field": "deployment.status",
-          "value": "live"
-        }
-      ]
-    },
-    {
       "id": "fleet-social",
       "applicability": "not-applicable",
       "confidence": "high",
@@ -389,26 +355,6 @@
         {
           "field": "sharing.evidence.reason",
           "value": "Bounded sample, not full corpus attribution audit. Home labels some counts cached; original publisher has paid content and browser appeared signed in there; no paid content bypassed."
-        }
-      ]
-    },
-    {
-      "id": "issue-pages",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "An explicit newsletter form exists at issue-pages/src/ui/templates.ts. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "presentation.directory.purposeContract.nextAction",
-          "value": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "New issue publication not tested or required for retained read-only surface."
         }
       ]
     },
