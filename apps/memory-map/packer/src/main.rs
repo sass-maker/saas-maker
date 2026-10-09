@@ -16,6 +16,7 @@ mod time;
 use std::collections::HashMap;
 use std::fs::OpenOptions;
 use std::io::Write;
+#[cfg(unix)]
 use std::os::unix::fs::OpenOptionsExt;
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -211,10 +212,11 @@ fn write_receipt(
         skipped_files: collection.skipped_files,
         sources,
     };
-    let mut file = OpenOptions::new()
-        .write(true)
-        .create_new(true)
-        .mode(0o600)
+    let mut options = OpenOptions::new();
+    options.write(true).create_new(true);
+    #[cfg(unix)]
+    options.mode(0o600);
+    let mut file = options
         .open(path)
         .map_err(|error| format!("could not create receipt: {error}"))?;
     serde_json::to_writer_pretty(&mut file, &receipt)
