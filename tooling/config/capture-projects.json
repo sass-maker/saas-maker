@@ -1402,6 +1402,23 @@
           "value": "local-only"
         }
       ]
+    },
+    {
+      "id": "techdata",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "Private owner-only data workbench; no public landing, newsletter or waitlist.",
+      "feedbackApplicability": "not_applicable",
+      "evidence": [
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "deployment.status",
+          "value": "undeployed"
+        }
+      ]
     }
   ]
 }

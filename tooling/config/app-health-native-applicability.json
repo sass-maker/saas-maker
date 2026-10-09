@@ -313,6 +313,12 @@
       "nativeSessions": "not-applicable",
       "browserVisitors": "not-applicable",
       "serverRequests": "not-applicable"
+    },
+    {
+      "id": "techdata",
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable",
+      "serverRequests": "not-applicable"
     }
   ]
 }
