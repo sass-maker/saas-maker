@@ -129,9 +129,14 @@ MCP follow-up — are indexed in
 [`docs/clarity-fleet-health.md`](docs/clarity-fleet-health.md).
 
 `footer-source-audit.mjs` reads a caller-owned manifest of relative source
-paths and verifies that each named browser surface loads the project strip
-before Ask AI, carries both loaders, and has no active `data-compose=false`
-opt-out. Dated retirement exceptions stay visible and become blocking when
+paths and accepts either Fleet footer form. Precise surfaces must load the
+project strip before Ask AI, carry both loaders, and have no active
+`data-compose=false` opt-out. Surfaces on the SaaS Maker UI-library footer
+(`StudioFooter`) pass instead when the listed file is rendered output with
+`data-fleet-footer="studio"` and `data-catalog-id` equal to the surface id, or
+a content JSON whose `footer.catalogId` is the surface id inside a package that
+depends on `@saas-maker/ui` or `@saas-maker/templates`. The receipt counts
+compliant surfaces per form. Dated retirement exceptions stay visible and become blocking when
 their recorded debt disappears, preventing stale exceptions. The Fleet surface
 receipt at `../site-health/apps/backend/config/footer-surfaces.json` is a
 generated output of the canonical catalog (`pnpm catalog:sync`); edit

@@ -239,30 +239,31 @@ describe('daily PII-free capture receipts', () => {
     ).rejects.toThrow('1 to 55 IDs');
   });
 
-  it('returns canonical capture applicability for all 54 products, including internal newsletter exceptions', async () => {
+  it('returns canonical capture applicability for all 52 products, including internal newsletter exceptions', async () => {
     const { d1 } = setup();
-    const reportProjects = capturePolicy.projects.slice(0, 54);
+    const reportProjects = capturePolicy.projects.slice(0, 52);
     const catalogIds = reportProjects.map(({ id }) => id);
     const result = await getDailyCaptureCounts(d1, '2020-01-01', catalogIds);
 
-    expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(54);
-    expect(Object.keys(result.feedbackApplicabilityByCatalogId)).toHaveLength(54);
+    expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(52);
+    expect(Object.keys(result.feedbackApplicabilityByCatalogId)).toHaveLength(52);
     expect(result.feedbackApplicabilityByCatalogId['site-health']).toBe('applicable');
     expect(result.feedbackApplicabilityByCatalogId['slow-serp']).toBe('not_applicable');
     expect(result.feedbackApplicabilityByCatalogId['agent-inbox']).toBe('not_applicable');
+    expect(result.feedbackApplicabilityByCatalogId.techdata).toBe('not_applicable');
     expect(
       Object.entries(result.feedbackApplicabilityByCatalogId)
-        .filter(([id]) => !['site-health', 'slow-serp', 'agent-inbox'].includes(id))
+        .filter(([id]) => !['site-health', 'slow-serp', 'agent-inbox', 'techdata'].includes(id))
         .map(([, applicability]) => applicability)
-    ).toEqual(Array.from({ length: 51 }, () => 'unknown'));
-    expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(54);
-    expect(Object.keys(result.browserVisitorsApplicabilityByCatalogId)).toHaveLength(54);
-    expect(Object.keys(result.serverRequestsApplicabilityByCatalogId)).toHaveLength(54);
+    ).toEqual(Array.from({ length: 48 }, () => 'unknown'));
+    expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(52);
+    expect(Object.keys(result.browserVisitorsApplicabilityByCatalogId)).toHaveLength(52);
+    expect(Object.keys(result.serverRequestsApplicabilityByCatalogId)).toHaveLength(52);
     expect(
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'applicable'
       )
-    ).toHaveLength(27);
+    ).toHaveLength(25);
     expect(
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'not_applicable'
@@ -290,8 +291,8 @@ describe('daily PII-free capture receipts', () => {
       Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
         (value) => value === 'not_applicable'
       )
-    ).toHaveLength(54);
-    expect(nativeApplicability.products).toHaveLength(54);
+    ).toHaveLength(52);
+    expect(nativeApplicability.products).toHaveLength(52);
     const nativeProducts = [
       'codevetter',
       'pace',
@@ -376,6 +377,7 @@ describe('daily PII-free capture receipts', () => {
       'fleet-social',
       'site-health',
       'slow-serp',
+      'techdata',
       'unified-portfolio',
     ]);
     expect(Object.values(result.applicabilityByCatalogId)).not.toContain('waitlist');

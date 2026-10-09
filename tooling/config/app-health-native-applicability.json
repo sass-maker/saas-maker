@@ -195,22 +195,10 @@
       "serverRequests": "applicable"
     },
     {
-      "id": "mashup",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "not-applicable"
-    },
-    {
       "id": "motion",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
-    },
-    {
-      "id": "open-historia",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
     },
     {
       "id": "ph-catalog",
@@ -315,12 +303,6 @@
       "serverRequests": "not-applicable"
     },
     {
-      "id": "mentionpilot",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
-    },
-    {
       "id": "daddyrad",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
@@ -330,6 +312,12 @@
       "id": "agent-inbox",
       "nativeSessions": "not-applicable",
       "browserVisitors": "not-applicable",
+      "serverRequests": "not-applicable"
+    },
+    {
+      "id": "techdata",
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
     }
   ]

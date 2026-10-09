@@ -373,22 +373,6 @@
       }
     },
     {
-      "id": "mashup",
-      "state": "ready",
-      "event": {
-        "name": "receipt_opened",
-        "text": "Inspect the validated receipt",
-        "href": "/receipts/operators.receipt.json"
-      },
-      "funnel": {
-        "name": "discover_to_receipt",
-        "steps": [
-          "page:/",
-          "event:receipt_opened"
-        ]
-      }
-    },
-    {
       "id": "motion",
       "state": "ready",
       "event": {
@@ -610,22 +594,6 @@
         "steps": [
           "page:/",
           "event:download_opened"
-        ]
-      }
-    },
-    {
-      "id": "mentionpilot",
-      "state": "ready",
-      "event": {
-        "name": "brand_check_opened",
-        "text": "Free brand check",
-        "href": "/check"
-      },
-      "funnel": {
-        "name": "discover_to_brand_check",
-        "steps": [
-          "page:/",
-          "event:brand_check_opened"
         ]
       }
     },

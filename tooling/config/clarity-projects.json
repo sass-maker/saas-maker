@@ -658,23 +658,6 @@
       ]
     },
     {
-      "id": "mashup",
-      "name": "Mashup",
-      "repo": "mashup",
-      "clarityId": "y6bvgfkqwg",
-      "hostname": "mashup.highsignal.app",
-      "wiredFiles": [
-        "mashup/web/src/pages/index.astro"
-      ],
-      "reason": "Clarity covers only the public proof site; archives, editing, rendering, approvals, and publishing remain local and outside session replay.",
-      "browserSurfaces": [
-        {
-          "kind": "landing",
-          "file": "mashup/web/src/pages/index.astro"
-        }
-      ]
-    },
-    {
       "id": "motion",
       "name": "Motion",
       "repo": "motion",
@@ -700,16 +683,6 @@
       "hostname": "github.com",
       "wiredFiles": [],
       "reason": "Archived and out of Fleet with no public URL; do not reopen or invent a surface solely for analytics.",
-      "browserSurfaces": []
-    },
-    {
-      "id": "open-historia",
-      "name": "Open Historia",
-      "repo": "open-historia",
-      "clarityId": "y6bvtr9hri",
-      "hostname": "historia.aliveville.com",
-      "wiredFiles": [],
-      "reason": "Intentionally unwired under the owner-approved tracking hold: Open Historia PR #42 (2026-10-05) removed the unapproved Clarity loaders from the Astro landing and SPA shell; live historia.aliveville.com loads no Clarity. Re-wire only when the owner lifts the hold.",
       "browserSurfaces": []
     },
     {
@@ -1082,23 +1055,6 @@
         {
           "kind": "landing",
           "file": "ios-landings/src/lib/clarity.ts"
-        }
-      ]
-    },
-    {
-      "id": "mentionpilot",
-      "name": "MentionPilot",
-      "repo": "mentionpilot",
-      "clarityId": "yoigmcwti8",
-      "hostname": "mention.highsignal.app",
-      "tag": "mentionpilot",
-      "wiredFiles": [
-        "mentionpilot/apps/web/src/app/layout.tsx"
-      ],
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "mentionpilot/apps/web/src/app/layout.tsx"
         }
       ]
     }
