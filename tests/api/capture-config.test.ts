@@ -7,6 +7,7 @@ const { mockDb, mockBinding } = vi.hoisted(() => ({
 vi.mock('../../workers/api/src/db', () => ({ getDb: () => mockDb }));
 vi.mock('../../workers/api/src/lib/catalog-project-binding', () => mockBinding);
 
+import app from '../../workers/api/src/index';
 import { request } from './helpers';
 
 beforeEach(() => {
@@ -71,6 +72,45 @@ describe('GET /v1/capture-config/:catalogId', () => {
     expect(preflight.headers.get('access-control-allow-origin')).toBe(origin);
     expect(preflight.headers.get('access-control-allow-methods')).toContain('GET');
     expect(preflight.headers.get('access-control-allow-credentials')).toBeNull();
+  });
+
+  it('serves 99% of repeated config reads from edge cache without D1 or cross-origin CORS leakage', async () => {
+    mockBinding.getSaasMakerProjectIdByCatalogId.mockResolvedValue('saas-project-1');
+    mockDb.getProjectById.mockResolvedValue(BOUND_PROJECT);
+    const entries = new Map<string, Response>();
+    vi.stubGlobal('caches', {
+      default: {
+        match: async (key: string) => entries.get(key)?.clone(),
+        put: async (key: string, response: Response) => {
+          entries.set(key, response);
+        },
+      },
+    });
+    const env = { DB: {}, APP_BASE_URL: 'https://app.sassmaker.com', CORS_ORIGIN: '*' };
+    let hits = 0;
+    for (let i = 0; i < 100; i++) {
+      const pending: Promise<unknown>[] = [];
+      const origin = `https://product${i}.example`;
+      const response = await app.fetch(
+        new Request('https://api.sassmaker.com/v1/capture-config/acme', {
+          headers: { Origin: origin },
+        }),
+        env as Parameters<typeof app.fetch>[1],
+        { waitUntil: (p: Promise<unknown>) => pending.push(p) } as ExecutionContext
+      );
+      if (response.headers.get('x-edge-cache') === 'HIT') hits++;
+      expect(await response.json()).toEqual({
+        api_key: 'pk_acme_publishable',
+        name: 'Acme',
+        slug: 'acme',
+      });
+      expect(response.headers.get('access-control-allow-origin')).toBe(origin);
+      expect(response.headers.get('access-control-allow-credentials')).toBeNull();
+      await Promise.all(pending);
+    }
+    expect(hits).toBe(99);
+    expect(mockDb.getProjectById).toHaveBeenCalledOnce();
+    expect(mockBinding.getSaasMakerProjectIdByCatalogId).toHaveBeenCalledOnce();
   });
 
   it('404s for an unknown (unbound) catalog id without leaking existence', async () => {
