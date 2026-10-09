@@ -2,14 +2,16 @@
 import GitHubIcon from './GitHubIcon.astro';
 import { GITHUB_REPO_URL } from '../data/links';
 
-const isLearnings = Astro.url.pathname.startsWith('/learnings');
-const isProjects =
-  Astro.url.pathname.startsWith('/projects') || Astro.url.pathname.startsWith('/p/');
-const isIdeas = Astro.url.pathname.startsWith('/ideas');
-const isLaunchDesk = Astro.url.pathname.startsWith('/launchdesk');
-const isFunding = Astro.url.pathname.startsWith('/funding');
-const isTools = Astro.url.pathname.startsWith('/tools');
-const isSearch = Astro.url.pathname.startsWith('/search');
+const path = Astro.url.pathname;
+const links = [
+  { href: '/projects', label: 'Products', current: path.startsWith('/projects') || path.startsWith('/p/') },
+  { href: '/ideas', label: 'Ideas', current: path.startsWith('/ideas') },
+  { href: '/launchdesk', label: 'Launch catalog', current: path.startsWith('/launchdesk') },
+  { href: '/funding', label: 'Funding', current: path.startsWith('/funding') },
+  { href: '/tools', label: 'Tools', current: path.startsWith('/tools') },
+  { href: '/learnings', label: 'Learnings', current: path.startsWith('/learnings') },
+  { href: '/search', label: 'Search', current: path.startsWith('/search') },
+];
 ---
 <nav class="nav" aria-label="Primary navigation">
   <a href="/" class="brand" aria-label="SaaS Maker home">
@@ -17,13 +19,13 @@ const isSearch = Astro.url.pathname.startsWith('/search');
     <span class="brand-name">SaaS Maker</span>
   </a>
   <div class="nav-links">
-    <a href="/projects" aria-current={isProjects ? 'page' : undefined}>Products</a>
-    <a href="/ideas" aria-current={isIdeas ? 'page' : undefined}>Ideas</a>
-    <a href="/launchdesk" aria-current={isLaunchDesk ? 'page' : undefined}>Launch catalog</a>
-    <a href="/funding" aria-current={isFunding ? 'page' : undefined}>Funding</a>
-    <a href="/tools" aria-current={isTools ? 'page' : undefined}>Tools</a>
-    <a href="/learnings" aria-current={isLearnings ? 'page' : undefined}>Learnings</a>
-    <a href="/search" aria-current={isSearch ? 'page' : undefined}>Search</a>
+    <a href="/projects" aria-current={links[0].current ? 'page' : undefined}>Products</a>
+    <a href="/ideas" aria-current={links[1].current ? 'page' : undefined}>Ideas</a>
+    <a href="/launchdesk" aria-current={links[2].current ? 'page' : undefined}>Launch catalog</a>
+    <a href="/funding" aria-current={links[3].current ? 'page' : undefined}>Funding</a>
+    <a href="/tools" aria-current={links[4].current ? 'page' : undefined}>Tools</a>
+    <a href="/learnings" aria-current={links[5].current ? 'page' : undefined}>Learnings</a>
+    <a href="/search" aria-current={links[6].current ? 'page' : undefined}>Search</a>
     <a
       class="nav-source"
       href={GITHUB_REPO_URL}
@@ -32,4 +34,54 @@ const isSearch = Astro.url.pathname.startsWith('/search');
       target="_blank"
       rel="noopener noreferrer"><GitHubIcon /></a>
   </div>
+  <details class="nav-menu" data-nav-menu>
+    <summary class="nav-menu-toggle">
+      <span class="nav-menu-label" data-closed>Menu</span>
+      <span class="nav-menu-label" data-open>Close</span>
+      <span class="nav-menu-icon" aria-hidden="true"><span></span><span></span></span>
+    </summary>
+    <div class="nav-menu-sheet">
+      <p class="nav-menu-eyebrow">Directory</p>
+      <ul class="nav-menu-list">
+        {links.map((link, index) => (
+          <li>
+            <a href={link.href} aria-current={link.current ? 'page' : undefined}>
+              <span class="nav-menu-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+              <span>{link.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a class="nav-menu-source" href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">
+        <GitHubIcon />
+        <span>Source on GitHub</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </details>
 </nav>
+
+<script>
+  // Progressive enhancement for the native <details> menu: close on Escape,
+  // outside tap, link choice, or when the viewport grows past the breakpoint.
+  for (const menu of document.querySelectorAll<HTMLDetailsElement>('[data-nav-menu]')) {
+    const summary = menu.querySelector('summary');
+    const close = (focus = false) => {
+      if (!menu.open) return;
+      menu.open = false;
+      if (focus) summary?.focus();
+    };
+    menu.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') close(true);
+    });
+    document.addEventListener('click', (event) => {
+      if (!menu.contains(event.target as Node)) close();
+    });
+    menu.querySelectorAll('.nav-menu-sheet a').forEach((link) => {
+      link.addEventListener('click', () => close());
+    });
+    window.matchMedia('(min-width: 56.01rem)').addEventListener('change', (event) => {
+      if (event.matches) close();
+    });
+  }
+</script>
