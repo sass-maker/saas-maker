@@ -4,8 +4,9 @@
 > [`Significant-Hobbies/chatgpt-memory-insights`](https://github.com/Significant-Hobbies/chatgpt-memory-insights)
 > at `950a85ce1fd4fb255d145e1c514e776426a9b4e8`
 > ([sass-maker/saas-maker#210](https://github.com/sass-maker/saas-maker/issues/210)).
-> Full history, design receipts and qualification evidence remain there. Production
-> is still deployed from that repository until the owner cuts over.
+> Full history, design receipts and qualification evidence remain there. Since
+> the 2026-10-09 cutover, production and the `memory-pack` CLI are built and
+> released from here.
 
 Memory Map turns a ChatGPT data-export ZIP into a private, searchable memory
 atlas in the browser. It shows topic relationships, repeated questions,
@@ -87,9 +88,11 @@ memory-pack --dry-run --list   # see what would be packed
 memory-pack                    # write memory-pack-<date>.zip
 ```
 
-Source, options, and the full account of what is kept and dropped are in
-[`packer/`](https://github.com/Significant-Hobbies/chatgpt-memory-insights/tree/main/packer)
-in the original repository, which still owns the CLI and its releases.
+Source, options, releases, and the full account of what is kept and dropped are
+in [`packer/`](packer/README.md). The installer served at `/install.sh` comes
+from [`public/install.sh`](public/install.sh); it resolves the newest
+`memory-pack-v*` release of this repository and falls back to the releases
+published from the original repository (up to `memory-pack-v0.1.2`).
 
 ## Develop
 
@@ -112,7 +115,8 @@ Astro/TypeScript checks, tests with coverage floors, Knip unused-code and cycle
 checks, complexity (`uvx lizard`), exact duplication, suppression and hygiene
 checks, and the production build. Existing debt is regression-gated by the
 checked-in quality scripts; historical context is in
-[issue #12](https://github.com/Significant-Hobbies/chatgpt-memory-insights/issues/12).
+[#213](https://github.com/sass-maker/saas-maker/issues/213) (moved from
+chatgpt-memory-insights#12).
 Dependency advisories are audited for the whole SaaS Maker workspace with
 `pnpm -F @saas-maker/memory-map run quality:dependencies`.
 
@@ -125,8 +129,8 @@ readable statistics. Checks run at 390 px and 1280 px.
 
 Open qualification work (large/split archives, multilingual and cross-browser
 behavior, failures after GPU initialization) is tracked in
-[chatgpt-memory-insights#37](https://github.com/Significant-Hobbies/chatgpt-memory-insights/issues/37)
-until it is reconciled into SaaS Maker issues.
+[#214](https://github.com/sass-maker/saas-maker/issues/214) (moved from
+chatgpt-memory-insights#37; closed as historical backlog).
 
 ## Browser-local data and origins
 
@@ -137,7 +141,23 @@ between origins automatically.
 
 ## Deploy
 
-This package has no deploy command. Production cutover (pointing the
-`chatgpt-memory-insights` Cloudflare Pages project at this package's `dist/`)
-is an owner-approved step tracked in
-[sass-maker/saas-maker#210](https://github.com/sass-maker/saas-maker/issues/210).
+Production is the existing `chatgpt-memory-insights` Cloudflare Pages project
+on `chatgpt.significanthobbies.com`. Keep both: the hostname is the origin that
+owns visitors' saved IndexedDB indexes. Deploy manually from clean, synced
+`main` at the repository root:
+
+```bash
+pnpm deploy:memory-map
+```
+
+That runs the Fleet deploy guard, this package's full `check` (which ends in
+the build), then `wrangler pages deploy dist --project-name
+chatgpt-memory-insights --branch main` from this directory, so
+`functions/_middleware.ts` ships with the static build. Roll back with the
+previous production deployment in the Pages dashboard (or `wrangler pages
+deployment list --project-name chatgpt-memory-insights`). Cutover history:
+[#210](https://github.com/sass-maker/saas-maker/issues/210).
+
+`memory-pack` has its own CI (`.github/workflows/memory-pack-ci.yml`) and
+release workflow (`.github/workflows/memory-pack-release.yml`); see
+[`packer/README.md`](packer/README.md#release).

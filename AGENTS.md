@@ -33,8 +33,12 @@ SaaS Maker owns only:
 - Memory Map at `apps/memory-map`: a bounded, credential-free, browser-local
   ChatGPT-export analysis tool absorbed from `chatgpt-memory-insights`
   (#210). Archives and derived text stay on the visitor's device; it is not a
-  hosted analytics service or AI gateway. Production is still deployed from
-  the original repository until the owner-approved cutover.
+  hosted analytics service or AI gateway. It deploys manually with
+  `pnpm deploy:memory-map` to the existing `chatgpt-memory-insights` Pages
+  project on `chatgpt.significanthobbies.com` (never change that origin: it
+  owns visitors' saved indexes). Its `memory-pack` Rust CLI lives in
+  `apps/memory-map/packer` with `memory-pack-ci.yml` and the tag-driven
+  `memory-pack-release.yml`.
 
 SaaS Maker Tooling owns shared schedules, skills, and host automation. Site
 Health owns portfolio operations and reads the SaaS Maker catalog through a

@@ -24,6 +24,7 @@
     "deploy:directory": "pnpm deploy:guard && pnpm -F @saas-maker/landing-page run deploy",
     "deploy:api": "pnpm deploy:guard && pnpm -F @saas-maker/api run deploy",
     "deploy:cockpit": "pnpm deploy:guard && pnpm -F @saas-maker/dashboard run deploy",
+    "deploy:memory-map": "pnpm deploy:guard && pnpm -F @saas-maker/memory-map run deploy",
     "catalog:sync-public": "node scripts/sync-fleet-public-products.mjs",
     "catalog:check-public": "node scripts/sync-fleet-public-products.mjs --check",
     "catalog:validate-public": "node scripts/sync-fleet-public-products.mjs --validate",

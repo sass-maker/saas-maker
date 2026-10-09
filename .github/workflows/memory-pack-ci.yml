@@ -1,0 +1,45 @@
+name: memory-pack CI
+
+# Rust checks for the memory-pack CLI (apps/memory-map/packer), moved from
+# Significant-Hobbies/chatgpt-memory-insights with its CI `packer` job.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "apps/memory-map/packer/**"
+      - ".github/workflows/memory-pack-*.yml"
+  push:
+    branches: [main]
+    paths:
+      - "apps/memory-map/packer/**"
+      - ".github/workflows/memory-pack-*.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  packer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: apps/memory-map/packer
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/memory-map/packer
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test
+      - name: Smoke the installer script
+        working-directory: apps/memory-map/public
+        run: sh -n install.sh
