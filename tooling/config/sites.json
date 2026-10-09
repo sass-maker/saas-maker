@@ -132,18 +132,8 @@
       "probePath": "/"
     },
     {
-      "id": "gitstat",
-      "url": "https://git.significanthobbies.com",
-      "probePath": "/"
-    },
-    {
       "id": "on-record",
       "url": "https://podcasts.highsignal.app",
-      "probePath": "/"
-    },
-    {
-      "id": "issue-pages",
-      "url": "https://issues.sarthakagrawal.dev",
       "probePath": "/"
     },
     {
@@ -207,11 +197,6 @@
       "probePath": "/"
     },
     {
-      "id": "agent-testing",
-      "url": "https://browser-agents.sarthakagrawal.dev",
-      "probePath": "/"
-    },
-    {
       "id": "nutrition-formula-engine",
       "url": "https://formula.significanthobbies.com",
       "probePath": "/"
@@ -224,11 +209,6 @@
     {
       "id": "contextdaddy",
       "url": "https://context.daddyrad.com",
-      "probePath": "/"
-    },
-    {
-      "id": "daddyrad",
-      "url": "https://daddyrad.com",
       "probePath": "/"
     }
   ]
