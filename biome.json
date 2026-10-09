@@ -28,6 +28,7 @@
       "!services/drank",
       "!services/reel-pipeline",
       "!tools/psi-swarm",
+      "!apps/memory-map",
       "!**/*.css",
       "!**/*.astro"
     ]

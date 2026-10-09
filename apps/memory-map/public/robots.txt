@@ -1,0 +1,34 @@
+User-agent: *
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: DeepSeekBot
+Allow: /
+
+Sitemap: https://chatgpt.significanthobbies.com/sitemap.xml
+# Agent indexing
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /index.md
+Allow: /api/ai
+Allow: /agents.md
+Allow: /pricing.md
+Allow: /.well-known/ai-catalog.json
+Allow: /.well-known/agent-skills/index.json

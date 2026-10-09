@@ -11,6 +11,7 @@
     "build": "turbo run build",
     "build:api": "pnpm -F @saas-maker/api typecheck",
     "build:cockpit": "turbo run build --filter=@saas-maker/dashboard...",
+    "check:memory-map": "pnpm -F @saas-maker/memory-map run check",
     "build:widget": "pnpm -F @saas-maker/feedback build",
     "check:shared-packages": "pnpm --filter @saas-maker/ai-chat-footer --filter @saas-maker/newsletter-capture --filter @saas-maker/portfolio-project-strip run check",
     "build:showcase": "pnpm -F @saas-maker/landing-page build",

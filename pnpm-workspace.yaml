@@ -5,6 +5,7 @@ packages:
   - 'packages/portfolio-project-strip'
   - 'apps/cockpit'
   - 'apps/showcase'
+  - 'apps/memory-map'
   - 'workers/api'
 allowBuilds:
   core-js: true
@@ -20,3 +21,9 @@ allowBuilds:
 overrides:
   rollup: 4.60.2
   esbuild: 0.28.1
+  # Memory Map runs Transformers.js in the browser only; never install the native runtime.
+  '@huggingface/transformers@3.8.1>onnxruntime-node': '-'
+  # Memory Map security pins carried over from chatgpt-memory-insights, scoped to its Astro.
+  'astro@7.2.8>devalue': 5.9.3
+  'astro@7.2.8>http-cache-semantics': 4.3.0
+  'astro@7.2.8>smol-toml': 1.9.0

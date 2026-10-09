@@ -1,0 +1,760 @@
+---
+import "../styles/global.css";
+import "../styles/about.css";
+import "../styles/footer-precise.css";
+import PublicClarity from "../components/public-clarity.astro";
+import FooterCapture from "../components/FooterCapture.astro";
+
+const title = "What Memory Map finds in your ChatGPT history";
+const description =
+  "See how Memory Map finds recurring questions, topic connections, memory changes, conversation strands, and private search in a ChatGPT export.";
+const canonical = "https://chatgpt.significanthobbies.com/about/";
+const socialImage =
+  "https://raw.githubusercontent.com/Significant-Hobbies/chatgpt-memory-insights/main/artifacts/design/after-1440.png";
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: title,
+  description,
+  url: canonical,
+  isPartOf: {
+    "@type": "WebSite",
+    name: "Memory Map",
+    url: "https://chatgpt.significanthobbies.com/",
+  },
+};
+
+const capabilityRoutes = [
+  {
+    code: "A",
+    className: "route-cobalt",
+    title: "Your questions, counted honestly",
+    summary:
+      "Fast local rules read the full parsed export first, so useful totals arrive even if the embedding model cannot load.",
+    stops: [
+      {
+        title: "History overview",
+        detail:
+          "Conversations, messages, your prompts, approximate words, active days, date range, and longest activity streak.",
+      },
+      {
+        title: "Conversation depth",
+        detail:
+          "Median message depth plus short, medium, and deep conversation groups.",
+      },
+      {
+        title: "Activity rhythms",
+        detail:
+          "A monthly cadence graph switches between conversation count and approximate word count, filters by any overlapping question route, and shows the selected total and peak month.",
+      },
+      {
+        title: "Recurring terms",
+        detail:
+          "Frequently used meaningful terms that can surface themes worth revisiting.",
+      },
+      {
+        title: "Exact repeated questions",
+        detail:
+          "Near-identical wording grouped with count, first ask, last ask, and source conversations.",
+      },
+      {
+        title: "10 overlapping question domains",
+        detail:
+          "Math, health, software, money, career, learning, creative work, relationships, travel, and planning—each with query count, conversation count, monthly history, and evidence.",
+      },
+      {
+        title: "Likely typo signals",
+        detail:
+          "A deliberately small disclosed misspelling list plus repeated-word checks—not a grammar or writing-quality score.",
+      },
+      {
+        title: "Possible thread changes",
+        detail:
+          "Low-overlap adjacent prompts flag conversations that may contain several tracks before deeper semantic segmentation runs.",
+      },
+    ],
+  },
+  {
+    code: "B",
+    className: "route-signal",
+    title: "Meaning, not just matching words",
+    summary:
+      "A pinned embedding model runs inside the browser to connect differently worded questions, conversations, facts, and strands.",
+    stops: [
+      {
+        title: "Automatic model selection",
+        detail:
+          "Chooses a compact English profile or multilingual profile from the writing systems in your prompts; manual selection remains available.",
+      },
+      {
+        title: "Visible model cost",
+        detail:
+          "Shows the pinned model, revision, selection reason, and approximate first-download size: about 90 MB for accelerated compact analysis, 24 MB for compact compatibility mode, or 135 MB multilingual.",
+      },
+      {
+        title: "Accelerated browser inference",
+        detail:
+          "Uses WebGPU with larger bounded batches when the compact model and browser support it, then retries the complete ordered workload in portable WebAssembly mode when needed.",
+      },
+      {
+        title: "Progressive conversation graph",
+        detail:
+          "Every parsed conversation becomes a distinct stop in a live deterministic route sketch, which stays visible through semantic analysis and hands off to the final embedding-backed topology.",
+      },
+      {
+        title: "Semantic topic clusters",
+        detail:
+          "Groups sampled conversations by meaning and names them against 20 broad topic anchors plus distinctive terms from your history.",
+      },
+      {
+        title: "Interactive topic graph",
+        detail:
+          "Node size represents conversation count; edges represent semantic proximity; selecting a node opens its evidence.",
+      },
+      {
+        title: "Semantic repeated questions",
+        detail:
+          "Finds similar intent even when the wording changed, while keeping these groups distinct from exact repeats.",
+      },
+      {
+        title: "Four memory states",
+        detail:
+          "Current, updated, explicitly refuted, and possible contradiction—detected only from first-person statements, never assistant assertions.",
+      },
+      {
+        title: "Memory change history",
+        detail:
+          "Keeps earlier and later wording, dates, update or refutation cues, semantic similarity, lexical overlap, confidence, and source conversations.",
+      },
+      {
+        title: "Semantic conversation strands",
+        detail:
+          "Splits substantial multi-prompt conversations into ordered strands with visible boundaries, snippets, continuity, and confidence.",
+      },
+    ],
+  },
+  {
+    code: "C",
+    className: "route-violet",
+    title: "How your map changes over time",
+    summary:
+      "Monthly evidence distinguishes a momentary spike from a theme that is growing, fading, returning, or holding steady.",
+    stops: [
+      {
+        title: "Topic evolution",
+        detail:
+          "Monthly histories and local trend labels for semantic topic clusters.",
+      },
+      {
+        title: "Question-domain evolution",
+        detail:
+          "See whether health, software, planning, learning, and the other lenses become more or less prominent.",
+      },
+      {
+        title: "Language-signal evolution",
+        detail:
+          "Tracks curiosity, frustration, urgency, uncertainty, excitement, appreciation, and neutral/direct wording by month.",
+      },
+      {
+        title: "Five explicit trend states",
+        detail:
+          "Emerging, fading, resurfacing, steady, or not enough history—descriptions of the series, never explanations of why you changed.",
+      },
+      {
+        title: "Positive, neutral, and negative wording",
+        detail:
+          "A compact lexical tone distribution and negative-wording rate, explicitly separated from personality or mental-health claims.",
+      },
+      {
+        title: "Evidence-backed reflection questions",
+        detail:
+          "Open questions triggered by repeats, changed or refuted memories, possible contradictions, frustration-wording spikes, stale memories, dormant themes, recurring terms, and activity peaks.",
+      },
+      {
+        title: "Six-view visual atlas",
+        detail:
+          "A coordinated activity calendar, question-mix chart, language matrix, repeat landscape, topic-momentum plot, and conversation-shape board, each with readable data and source evidence.",
+      },
+      {
+        title: "One global view period",
+        detail:
+          "Switch between the recent 3, 6, 12, or 24 calendar months and all history; the activity calendar, cadence graph, topic movement, query tone, and language signals stay aligned to the same window, including inactive months.",
+      },
+      {
+        title: "Seven-slide Story mode",
+        detail:
+          "A keyboard-, swipe-, and touch-friendly presentation turns scale, cadence, question routes, repeats, language, and topic movement into an evidence-aware personal recap.",
+      },
+    ],
+  },
+  {
+    code: "D",
+    className: "route-teal",
+    title: "Search that explains itself",
+    summary:
+      "The derived index is useful as memory because search results and every inferred insight retain a route back to the conversation evidence.",
+    stops: [
+      {
+        title: "Natural-language memory search",
+        detail:
+          "Search conversations, individual questions, fact candidates, topics, and semantic strands with a hybrid semantic and lexical index.",
+      },
+      {
+        title: "Visible graph traversal",
+        detail:
+          "Each memory question creates a temporary query node, highlights up to four topic routes, and shows the route from question to topic to evidence before an answer appears.",
+      },
+      {
+        title: "Local memory conversation",
+        detail:
+          "An optional pinned 77M browser model turns retrieved evidence into a short conversational answer without receiving the full ZIP.",
+      },
+      {
+        title: "Six-stop evidence boundary",
+        detail:
+          "The local generator receives at most six labelled excerpts and four recent chat turns, keeping context inspectable and browser work bounded.",
+      },
+      {
+        title: "Citation checks, not answer verification",
+        detail:
+          "Local drafts are labelled unverified. Missing or unknown citations and repeated instructions are withheld; recognized S1–S6 citations do not establish answer accuracy. Source excerpts remain available for review.",
+      },
+      {
+        title: "Change-aware and repeat-aware retrieval",
+        detail:
+          "Questions about changed, updated, refuted, or repeated memories prioritize the matching structured ledger state instead of relying on similarity alone.",
+      },
+      {
+        title: "Short conversational continuity",
+        detail:
+          "The panel retains only the four most recent turns for follow-ups; generated answers never become facts, graph edges, or saved memory.",
+      },
+      {
+        title: "Typed, scored results",
+        detail:
+          "Each result identifies what it is, shows why it matched, includes a similarity score, and opens its topic or source.",
+      },
+      {
+        title: "Evidence drawer",
+        detail:
+          "Topics, repeats, facts, domains, typo signals, strands, trends, language signals, and reflections all open supporting conversations.",
+      },
+      {
+        title: "Adjustable evidence confidence",
+        detail:
+          "Exploratory, balanced, conservative, and custom thresholds refilter inferred repeats, memory changes, strand boundaries, and reflections without rereading the ZIP.",
+      },
+      {
+        title: "Transparent sampling",
+        detail:
+          "The report states how many conversations, prompts, facts, and thread prompts were embedded versus the full parsed totals.",
+      },
+      {
+        title: "Keyboard and non-graph access",
+        detail:
+          "A complete topic list mirrors the SVG graph; graph nodes, tabs, dialogs, search, and import controls support keyboard use and visible focus.",
+      },
+    ],
+  },
+  {
+    code: "E",
+    className: "route-amber",
+    title: "Private and recoverable by construction",
+    summary:
+      "There is no application server waiting for the archive. Parsing, analysis, search, and optional persistence happen on the device.",
+    stops: [
+      {
+        title: "Original ZIP import",
+        detail:
+          "Accepts current ChatGPT exports containing one or more conversations*.json files; no manual unzipping required.",
+      },
+      {
+        title: "Incremental split-file parsing",
+        detail:
+          "Reads large conversation chunks sequentially in a Web Worker instead of loading the whole archive into the page at once.",
+      },
+      {
+        title: "Attachments stay unread",
+        detail:
+          "Binary attachments, chat.html, and unrelated export files are ignored.",
+      },
+      {
+        title: "No archive upload",
+        detail:
+          "Conversation text is not sent to an application API, account system, analytics payload, or model endpoint.",
+      },
+      {
+        title: "Deterministic fallback",
+        detail:
+          "Totals, activity, domains, exact repeats, wording signals, typo candidates, and initial thread candidates remain useful if embeddings fail.",
+      },
+      {
+        title: "Nothing saved by default",
+        detail:
+          "The page does not persist the archive or derived index unless you explicitly choose “Keep on this device.”",
+      },
+      {
+        title: "Device-local save, restore, and forget",
+        detail:
+          "An opt-in IndexedDB snapshot restores the derived report and search index; incompatible old snapshots are rejected and removed; Forget deletes the saved copy.",
+      },
+      {
+        title: "Visible progress and recovery",
+        detail:
+          "Parse, statistics, model, embedding, and clustering stages report progress; analysis can be cancelled, errors explain recovery, and a new archive resets the report.",
+      },
+      {
+        title: "Step-by-step wait estimates",
+        detail:
+          "A live six-stop route separates archive opening, parsing, initial insights, model preparation, semantic mapping, and final assembly, with elapsed time and a continuously revised remaining-time estimate.",
+      },
+      {
+        title: "Complete execution receipt",
+        detail:
+          "After the map is ready, a distinct end-to-end timer includes parsing, model download and preparation, embeddings, and report assembly alongside initial-insight time, compute route, and preserved candidate coverage.",
+      },
+      {
+        title: "Explicit chat-model lifecycle",
+        detail:
+          "The local generator loads only after consent, discloses its approximately 105 MB cached download and English focus, and can be unloaded independently at any time.",
+      },
+      {
+        title: "Single-tab compute guard",
+        detail:
+          "A browser lock prevents duplicate heavyweight archive analysis across tabs, while reset, unload, errors, and page exit terminate model workers and release the lock.",
+      },
+    ],
+  },
+] as const;
+
+const totalCapabilities = capabilityRoutes.reduce((sum, route) => sum + route.stops.length, 0);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="canonical" href={canonical} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f3f5f2" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Memory Map" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    <title>{title}</title>
+    <script is:inline async src="/scripts/posthog.js"></script>
+    <PublicClarity />
+    <script is:inline src="/app-health-log.js" defer></script>
+    <script is:inline defer src="https://health.sassmaker.com/tracker.js" data-key="ahk_pub_6e16be9c9385a6def153b05b1feb391a1205ca00a2c4cd263fb7428dbed4302c" data-project="app-import-de5017d248ba97d2e2e54643dcabc91b3a53f820644e3d8d324d74364847fe58" data-identity="persistent"></script>
+  </head>
+  <body class="about-page">
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="about-nav">
+      <a class="brand" href="/" aria-label="Memory Map analysis app">
+        <svg viewBox="0 0 36 36" aria-hidden="true">
+          <path d="M7 8 17 15 29 7M17 15l1 14M7 27l11 2 11-9" />
+          <circle cx="7" cy="8" r="3" />
+          <circle cx="29" cy="7" r="3" />
+          <circle cx="17" cy="15" r="3" />
+          <circle cx="7" cy="27" r="3" />
+          <circle cx="18" cy="29" r="3" />
+          <circle cx="29" cy="20" r="3" />
+        </svg>
+        <span>Memory Map</span>
+      </a>
+      <nav aria-label="About Memory Map">
+        <a href="#capabilities">What it finds</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#export">Get the ZIP</a>
+        <a href="/changelog/">Changelog</a>
+      </nav>
+      <a class="about-nav-action" href="/">Analyze my ZIP</a>
+    </header>
+    <nav class="about-section-nav" aria-label="Page sections">
+      <a href="#capabilities"><i class="route-dot route-blue"></i>What it finds</a>
+      <a href="#privacy"><i class="route-dot route-teal"></i>Privacy</a>
+      <a href="#export"><i class="route-dot route-amber"></i>Get the ZIP</a>
+    </nav>
+
+    <main id="main">
+      <!--
+      THESIS: A ChatGPT archive becomes usable memory, not a nostalgic statistics recap.
+      OWN-WORLD: Cool map paper, transit rules, labelled interchanges, flat platform boards, and evidence annotations.
+      STORY: Recognize the problem, see the memory mechanism, inspect every route, trust the privacy boundary, then analyze a ZIP.
+      FIRST VIEWPORT: Outcome and one primary action at left; a large illustrative topic-memory interchange at right; verified counts form the platform edge.
+      FORM: Capability atlas, grounded structure six, transit-stack staging, preserve lane, concept seed 2f09553c.
+      -->
+      <section class="about-hero" aria-labelledby="about-heading">
+        <div class="about-hero-copy">
+          <p class="map-key">A private atlas of your ChatGPT history</p>
+          <h1 id="about-heading">Turn your ChatGPT history into usable memory.</h1>
+          <p class="about-lede">
+            Find the questions you repeat, facts you changed, themes you left behind, and ideas
+            that connect across years of conversations. Your export is analyzed in this browser,
+            then becomes a searchable map with evidence behind every suggestion.
+          </p>
+          <a class="about-primary-action" href="/">Analyze my ChatGPT ZIP</a>
+          <p class="about-hero-proof">
+            <strong>10</strong> question domains <span aria-hidden="true">·</span>
+            <strong>4</strong> memory states <span aria-hidden="true">·</span>
+            <strong>2</strong> model profiles <span aria-hidden="true">·</span>
+            <strong>0</strong> archive uploads
+          </p>
+        </div>
+
+        <figure class="about-map-preview">
+          <figcaption>
+            <span>Illustrative preview</span>
+            <strong>One history. Several connected routes.</strong>
+          </figcaption>
+          <svg viewBox="0 0 760 570" aria-hidden="true">
+            <g class="preview-grid">
+              <path d="M44 95H716M44 190H716M44 285H716M44 380H716M44 475H716" />
+              <path d="M140 48V522M260 48V522M380 48V522M500 48V522M620 48V522" />
+            </g>
+            <g class="preview-lines">
+              <path class="preview-blue" d="M75 430 220 330 390 330 555 205 690 205" />
+              <path class="preview-red" d="M105 145 220 235 390 330 540 430 675 430" />
+              <path class="preview-teal" d="M220 75V235L390 330 555 330" />
+              <path class="preview-violet" d="M390 95V330L555 485" />
+            </g>
+            <g class="preview-stops">
+              <circle class="stop-blue" cx="75" cy="430" r="9" />
+              <circle class="stop-red" cx="105" cy="145" r="9" />
+              <circle class="stop-teal" cx="220" cy="75" r="9" />
+              <circle class="stop-red" cx="220" cy="235" r="9" />
+              <circle class="stop-blue" cx="220" cy="330" r="9" />
+              <circle class="stop-violet" cx="390" cy="95" r="9" />
+              <circle class="stop-interchange" cx="390" cy="330" r="18" />
+              <circle class="stop-teal" cx="555" cy="330" r="9" />
+              <circle class="stop-blue" cx="555" cy="205" r="9" />
+              <circle class="stop-violet" cx="555" cy="485" r="9" />
+              <circle class="stop-red" cx="675" cy="430" r="9" />
+              <circle class="stop-blue" cx="690" cy="205" r="9" />
+            </g>
+          </svg>
+          <div class="preview-label label-question">
+            <span>Repeated question</span><strong>“How should I prioritize this?” × 7</strong>
+          </div>
+          <div class="preview-label label-topic">
+            <span>Connected topic</span><strong>Product · planning</strong>
+          </div>
+          <div class="preview-label label-memory">
+            <span>Memory updated</span><strong>“I now prefer…”</strong>
+          </div>
+          <div class="preview-label label-search">
+            <span>Search destination</span><strong>Decisions I postponed</strong>
+          </div>
+          <div class="preview-interchange-label">
+            <span>Evidence interchange</span>
+            <strong>12 source conversations</strong>
+          </div>
+        </figure>
+
+        <div class="about-platform-board" aria-label="What the product connects">
+          <span>Questions</span>
+          <i aria-hidden="true"></i>
+          <span>Topics</span>
+          <i aria-hidden="true"></i>
+          <span>Facts</span>
+          <i aria-hidden="true"></i>
+          <span>Time</span>
+          <i aria-hidden="true"></i>
+          <span>Sources</span>
+        </div>
+      </section>
+
+      <section class="about-problem" aria-labelledby="problem-heading">
+        <p class="map-key">Why this exists</p>
+        <div>
+          <h2 id="problem-heading">Your archive remembers more than any single chat can.</h2>
+          <div class="about-problem-copy">
+            <p>
+              A long ChatGPT history contains decisions revisited under different wording,
+              personal facts that later stopped being true, projects scattered across unrelated
+              chats, and patterns that are almost impossible to see one conversation at a time.
+            </p>
+            <p>
+              Memory Map treats those conversations as evidence. It counts what can be counted
+              exactly, uses local embeddings where meaning matters, and always keeps a route back
+              to the sources.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="capabilities" class="capability-atlas" aria-labelledby="capability-heading">
+        <header class="about-section-heading">
+          <div>
+            <p class="map-key">Complete capability atlas</p>
+            <h2 id="capability-heading">Everything the map can show you.</h2>
+          </div>
+          <p>
+            {totalCapabilities} shipped capabilities across five routes. These are current product
+            behaviors, not a roadmap.
+          </p>
+        </header>
+
+        <div class="capability-routes">
+          {
+            capabilityRoutes.map((route) => (
+              <details class:list={["capability-route", route.className]} open={route.code === "A"}>
+                <summary>
+                  <span class="route-code" aria-hidden="true">{route.code}</span>
+                  <div>
+                    <h3>{route.title}</h3>
+                    <p>{route.summary}</p>
+                  </div>
+                  <span class="route-count">{route.stops.length} stops</span>
+                </summary>
+                <ol>
+                  {route.stops.map((stop) => (
+                    <li>
+                      <span class="capability-stop" aria-hidden="true" />
+                      <div>
+                        <strong>{stop.title}</strong>
+                        <p>{stop.detail}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </details>
+            ))
+          }
+        </div>
+      </section>
+
+      <section id="privacy" class="privacy-architecture" aria-labelledby="privacy-heading">
+        <header class="about-section-heading">
+          <div>
+            <p class="map-key">The privacy architecture</p>
+            <h2 id="privacy-heading">Your conversations never need an application server.</h2>
+          </div>
+          <p>
+            The website is static. The analysis pipeline lives in your tab and its Web Worker.
+          </p>
+        </header>
+
+        <ol class="privacy-route">
+          <li>
+            <span>1</span>
+            <strong>Your original ZIP</strong>
+            <p>You choose it from your device. It is not submitted through a web form.</p>
+          </li>
+          <li>
+            <span>2</span>
+            <strong>Incremental browser parsing</strong>
+            <p>Conversation JSON chunks are read one at a time; attachments remain ignored.</p>
+          </li>
+          <li>
+            <span>3</span>
+            <strong>Local rules + embeddings</strong>
+            <p>
+              Statistics run first. A pinned Hugging Face model file downloads separately, then
+              embeds bounded text on your device.
+            </p>
+          </li>
+          <li>
+            <span>4</span>
+            <strong>Your report and search index</strong>
+            <p>
+              Nothing persists unless you explicitly save the derived memory to this browser.
+            </p>
+          </li>
+        </ol>
+
+        <div class="privacy-boundaries">
+          <div>
+            <span class="boundary-yes">Stays here</span>
+            <p>Archive text, parsed prompts, fact candidates, embeddings, report, and search index.</p>
+          </div>
+          <div>
+            <span class="boundary-out">Comes in</span>
+            <p>Pinned embedding-model files from Hugging Face. Your prompt text is not part of that request.</p>
+          </div>
+          <div>
+            <span class="boundary-no">Does not exist</span>
+            <p>Archive upload endpoint, Memory Map account, cross-device sync, or server-side analysis.</p>
+          </div>
+          <div>
+            <span class="boundary-out">Public page analytics</span>
+            <p>
+              PostHog and Microsoft Clarity measure the public `/about` and `/changelog` pages.
+              The private analysis route does not load Clarity, so archive text, reports, and
+              search activity are excluded from session replay.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="fit-board" aria-labelledby="fit-heading">
+        <header>
+          <p class="map-key">Know before you import</p>
+          <h2 id="fit-heading">Built for reflection. Not diagnosis.</h2>
+        </header>
+        <div class="fit-columns">
+          <div>
+            <h3>Memory Map is a good fit if you want to…</h3>
+            <ul>
+              <li>Find recurring questions and decisions across many chats.</li>
+              <li>Build a searchable index of your own prompts, topics, facts, and strands.</li>
+              <li>Review what you explicitly updated, rejected, or may have contradicted.</li>
+              <li>See how interests and wording signals changed over time.</li>
+              <li>Keep the archive on your device and inspect the evidence behind suggestions.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>It is not currently the right tool if you need…</h3>
+            <ul>
+              <li>Attachment, image, audio, or exported-memory-file analysis.</li>
+              <li>A generative biography, automatic life summary, or personality profile.</li>
+              <li>Medical, mental-health, or emotional diagnosis.</li>
+              <li>Verified truth—the fact ledger contains candidates from your wording.</li>
+              <li>Accounts, team collaboration, cross-device sync, or server backups.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="export" class="about-export" aria-labelledby="export-heading">
+        <div class="about-export-intro">
+          <p class="map-key">Your ticket in</p>
+          <h2 id="export-heading">Download the ZIP directly from ChatGPT.</h2>
+          <p>
+            Keep it zipped. Memory Map knows how to find split conversation files and ignores the
+            binary attachments.
+          </p>
+        </div>
+        <ol>
+          <li>
+            <span>1</span>
+            <p>
+              Sign in to ChatGPT, open your profile menu, and choose{" "}
+              <strong>Settings → Data controls</strong>.
+            </p>
+          </li>
+          <li>
+            <span>2</span>
+            <p>
+              Under <strong>Export data</strong>, choose <strong>Export</strong>, then{" "}
+              <strong>Confirm export</strong>.
+            </p>
+          </li>
+          <li>
+            <span>3</span>
+            <p>
+              Open the email or SMS from OpenAI, download the ZIP, and return here without
+              unzipping it.
+            </p>
+          </li>
+        </ol>
+        <aside>
+          <p>
+            OpenAI says an export can take up to 7 days, and the download link expires 24 hours
+            after it arrives. Settings export requires an eligible signed-in account and is not
+            available for Business or Enterprise workspaces.
+          </p>
+          <nav aria-label="ChatGPT export resources">
+            <a
+              href="https://help.openai.com/en/articles/7260999-how-do-i-export-my-chatgpt-history-and-data"
+              target="_blank"
+              rel="noreferrer">Official instructions ↗</a
+            >
+            <a href="https://privacy.openai.com/" target="_blank" rel="noreferrer"
+              >Privacy Portal ↗</a
+            >
+          </nav>
+        </aside>
+      </section>
+
+      <section class="about-final" aria-labelledby="final-heading">
+        <div>
+          <p class="map-key">Next stop</p>
+          <h2 id="final-heading">Your history is already there. Make it navigable.</h2>
+        </div>
+        <a class="about-primary-action" href="/" data-app-health-event="analysis_opened">Analyze my ChatGPT ZIP</a>
+        <p>
+          No account. No archive upload. Nothing saved unless you ask.
+        </p>
+      </section>
+    </main>
+
+    <fleet-footer-extension
+      style="--fleet-footer-mobile-signature-size: 4.75rem;"
+      data-fleet-footer-project="chatgpt-memory-insights"
+      product-name="Memory Map"
+      signature-name="Memory Map"
+      signature-font="newsreader"
+      font-base="/fonts/fleet-footer-precise-v1/"
+      theme="light"
+      surface="web"
+      art-src="/footer-art/memory-map.webp"
+      art-alt="A cool cartography workshop centers an open transit-like atlas and a source slip physically connected to one route. A boxed conversation archive and folded map margins occupy the wings."
+      art-width="2171"
+      art-height="724"
+      art-position="50% 50%"
+      art-credit="Original illustration for Memory Map"
+    >
+      <a slot="cta" data-fleet-footer-cta data-fleet-footer-primary href="/">
+        Analyze my ChatGPT ZIP
+      </a>
+      <footer class="about-footer" slot="navigation" data-fleet-footer-navigation>
+        <div class="about-footer-identity">
+          <a class="brand" href="/">
+            <svg viewBox="0 0 36 36" aria-hidden="true">
+              <path d="M7 8 17 15 29 7M17 15l1 14M7 27l11 2 11-9" />
+              <circle cx="7" cy="8" r="3" />
+              <circle cx="29" cy="7" r="3" />
+              <circle cx="17" cy="15" r="3" />
+              <circle cx="7" cy="27" r="3" />
+              <circle cx="18" cy="29" r="3" />
+              <circle cx="29" cy="20" r="3" />
+            </svg>
+            <span>Memory Map</span>
+          </a>
+          <p>Not a wrapped. Not a diagnosis. A map back to your own evidence.</p>
+        </div>
+        <nav class="footer-groups" aria-label="Memory Map links">
+          <div class="footer-group">
+            <h2 data-fleet-footer-group-label>Explore</h2>
+            <a href="/changelog/">Changelog</a>
+          </div>
+          <div class="footer-group">
+            <h2 data-fleet-footer-group-label>Privacy</h2>
+            <a href="/about/#privacy">Read the privacy details</a>
+          </div>
+        </nav>
+      </footer>
+      <FooterCapture />
+    </fleet-footer-extension>
+    <script
+      is:inline
+      src="https://sassmaker.com/project-strip.js?v=precise-b0adaa67"
+      data-project="chatgpt-memory-insights"
+      data-theme="light"
+      data-host-only="true"
+      defer
+    ></script>
+    <script
+      is:inline
+      src="https://sassmaker.com/ai-chat-footer.js?v=precise-b0adaa67"
+      data-project="chatgpt-memory-insights"
+      data-name="Memory Map"
+      data-theme="light"
+      data-surface="web"
+      data-host-only="true"
+      data-capture="false"
+      defer
+    ></script>
+  </body>
+</html>

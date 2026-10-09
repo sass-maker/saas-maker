@@ -30,6 +30,11 @@ SaaS Maker owns only:
   import, not a live sync). Preserve per-row evidence quality, uncertainty,
   and the assessment-vs-fact distinction; assessments are portfolio judgment,
   not the programs' claims.
+- Memory Map at `apps/memory-map`: a bounded, credential-free, browser-local
+  ChatGPT-export analysis tool absorbed from `chatgpt-memory-insights`
+  (#210). Archives and derived text stay on the visitor's device; it is not a
+  hosted analytics service or AI gateway. Production is still deployed from
+  the original repository until the owner-approved cutover.
 
 SaaS Maker Tooling owns shared schedules, skills, and host automation. Site
 Health owns portfolio operations and reads the SaaS Maker catalog through a
@@ -53,6 +58,7 @@ pnpm build:widget
 pnpm check:shared-packages
 pnpm build:showcase
 pnpm build:cockpit
+pnpm check:memory-map
 pnpm catalog:check-public
 pnpm check:docs
 ~~~
