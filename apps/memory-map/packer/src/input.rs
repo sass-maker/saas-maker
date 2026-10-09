@@ -1,6 +1,9 @@
 use std::fs::{File, Metadata, OpenOptions};
 use std::io;
+#[cfg(unix)]
 use std::os::unix::fs::{MetadataExt, OpenOptionsExt};
+#[cfg(windows)]
+use std::os::windows::fs::{MetadataExt, OpenOptionsExt};
 use std::path::Path;
 use std::time::UNIX_EPOCH;
 
@@ -26,11 +29,20 @@ pub fn open_regular_expected(
     if expected.is_some_and(|expected| !same_identity(expected, &before)) {
         return Err(StableInputError::Changed);
     }
-    let file = OpenOptions::new()
-        .read(true)
-        .custom_flags(libc_flags())
-        .open(path)?;
+    let mut options = OpenOptions::new();
+    options.read(true);
+    #[cfg(unix)]
+    options.custom_flags(libc_flags());
+    // FILE_SHARE_READ: prevent writes, renames and deletion while parsing.
+    // OPEN_REPARSE_POINT: do not follow a final symlink swapped in after validation.
+    #[cfg(windows)]
+    options.share_mode(0x1).custom_flags(0x0020_0000);
+    let file = options.open(path)?;
     let opened = file.metadata()?;
+    #[cfg(windows)]
+    if opened.file_type().is_symlink() {
+        return Err(StableInputError::Symlink);
+    }
     if !same_identity(&before, &opened) {
         return Err(StableInputError::Changed);
     }
@@ -75,6 +87,7 @@ pub fn is_before_cutoff(modified: Option<f64>, cutoff: f64) -> bool {
     modified.is_some_and(|value| value < cutoff)
 }
 
+#[cfg(unix)]
 pub fn same_identity(left: &Metadata, right: &Metadata) -> bool {
     left.dev() == right.dev()
         && left.ino() == right.ino()
@@ -86,13 +99,23 @@ pub fn same_identity(left: &Metadata, right: &Metadata) -> bool {
         && left.ctime() == right.ctime()
 }
 
+// Stable Windows MetadataExt does not expose a file ID. Compare the available
+// metadata; the read-only sharing mode above protects the file once opened.
+#[cfg(windows)]
+pub fn same_identity(left: &Metadata, right: &Metadata) -> bool {
+    left.file_attributes() == right.file_attributes()
+        && left.file_size() == right.file_size()
+        && left.creation_time() == right.creation_time()
+        && left.last_write_time() == right.last_write_time()
+}
+
 #[cfg(target_os = "macos")]
 fn libc_flags() -> i32 {
     // Darwin fcntl.h: O_NOFOLLOW=0x100, O_NONBLOCK=0x4, O_CLOEXEC=0x1000000.
     0x0000_0100 | 0x0000_0004 | 0x0100_0000
 }
 
-#[cfg(not(target_os = "macos"))]
+#[cfg(all(unix, not(target_os = "macos")))]
 fn libc_flags() -> i32 {
     0
 }
@@ -125,6 +148,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn rejects_symlink_ancestors() {
         let root = fixture_path("symlink-root");
         let real = fixture_path("real-root");
@@ -138,6 +162,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn detects_changed_input_after_open() {
         let path = fixture_path("changed.jsonl");
         fs::write(&path, b"before").unwrap();
@@ -150,6 +175,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn detects_deleted_or_replaced_input_after_open() {
         let deleted = fixture_path("deleted.jsonl");
         fs::write(&deleted, b"before").unwrap();
@@ -166,6 +192,28 @@ mod tests {
             unchanged(&replaced, &file, &before),
             Err(StableInputError::Symlink)
         ));
+    }
+
+    #[test]
+    fn accepts_unchanged_input() {
+        let path = fixture_path("unchanged.jsonl");
+        fs::write(&path, b"before").unwrap();
+        let selected = regular_metadata(&path).unwrap();
+        let (file, before) = open_regular_expected(&path, Some(&selected)).unwrap();
+        assert!(unchanged(&path, &file, &before).is_ok());
+    }
+
+    #[test]
+    #[cfg(windows)]
+    fn prevents_mutation_while_input_is_open() {
+        let path = fixture_path("locked.jsonl");
+        fs::write(&path, b"before").unwrap();
+        let (file, before) = open_regular_expected(&path, None).unwrap();
+        assert!(fs::write(&path, b"after").is_err());
+        assert!(fs::remove_file(&path).is_err());
+        assert!(unchanged(&path, &file, &before).is_ok());
+        drop(file);
+        fs::write(&path, b"after").unwrap();
     }
 
     #[test]
