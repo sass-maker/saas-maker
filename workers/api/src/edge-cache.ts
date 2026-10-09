@@ -13,7 +13,7 @@ import type { AppContext } from './types';
 const DEFAULT_TTL_SECONDS = 60;
 const PRIVATE_RESPONSE_CACHE_CONTROL = 'private, no-store';
 
-function getEdgeCache(): Cache | undefined {
+export function getEdgeCache(): Cache | undefined {
   if (typeof caches === 'undefined') return undefined;
   return (caches as unknown as { default?: Cache }).default;
 }

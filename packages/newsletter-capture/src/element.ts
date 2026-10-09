@@ -153,10 +153,15 @@ export function registerNewsletterCapture(): void {
 
     connectedCallback(): void {
       if (!this.form || this.renderedConfig !== this.configSignature()) this.render();
-      void this.loadConfigIfNeeded();
+      this.updateConfigStatus();
     }
 
     disconnectedCallback(): void {
+      this.submissionToken += 1;
+      this.submissionStatusOwned = false;
+      if (this.submitButton) this.submitButton.disabled = false;
+      this.form?.setAttribute('aria-busy', 'false');
+      this.setStatus('', '');
       this.configToken += 1;
       this.abortController?.abort();
       this.abortController = undefined;
@@ -171,7 +176,9 @@ export function registerNewsletterCapture(): void {
       if (name === 'project-key' || name === 'catalog-id' || name === 'api-base-url') {
         this.resolvedProjectKey = '';
         this.configState = 'idle';
-        void this.loadConfigIfNeeded();
+        this.configToken += 1;
+        this.abortController?.abort();
+        this.updateConfigStatus();
       }
     }
 
@@ -345,7 +352,11 @@ export function registerNewsletterCapture(): void {
       } else if (this.configState === 'error') {
         this.status.textContent = 'This signup form is not configured yet.';
         this.status.dataset.state = 'error';
-      } else if (this.configState === 'idle' && !this.hasExplicitOrResolvedKey()) {
+      } else if (
+        this.configState === 'idle' &&
+        !this.hasExplicitOrResolvedKey() &&
+        !this.getAttribute('catalog-id')
+      ) {
         // No project-key and no catalog-id: leave a quiet not-configured note.
         this.status.textContent = 'This signup form is not configured yet.';
         this.status.dataset.state = 'error';
@@ -400,17 +411,6 @@ export function registerNewsletterCapture(): void {
       if (!this.form || !this.emailInput || !this.consentInput) return;
       if (!this.form.reportValidity()) return;
 
-      // project-key takes precedence; fall back to the catalog-id-resolved key.
-      const projectKey = (this.getAttribute('project-key') || '').trim() || this.resolvedProjectKey;
-      if (!projectKey) {
-        if (this.configState === 'loading') {
-          this.setStatus('Preparing signup form…', 'loading');
-        } else {
-          this.setStatus('This signup form is not configured yet.', 'error');
-        }
-        return;
-      }
-
       let input: ReturnType<typeof validateSubscriptionRequest>;
       let apiBaseUrl = DEFAULT_API_BASE_URL;
       try {
@@ -437,15 +437,27 @@ export function registerNewsletterCapture(): void {
       const config = this.configSignature();
       const token = ++this.submissionToken;
       const isCurrentSubmission = () =>
-        this.form === form && this.configSignature() === config && this.submissionToken === token;
+        this.isConnected &&
+        this.form === form &&
+        this.configSignature() === config &&
+        this.submissionToken === token;
       this.submitButton.disabled = true;
       this.submissionStatusOwned = true;
       form.setAttribute('aria-busy', 'true');
       this.setStatus('Sending your request…', 'loading');
       try {
+        // Resolve only after a valid, consented submission. Page views and
+        // crawlers never need this publishable configuration.
+        await this.loadConfigIfNeeded();
+        if (!isCurrentSubmission()) return;
+        const projectKey =
+          (this.getAttribute('project-key') || '').trim() || this.resolvedProjectKey;
+        if (!projectKey) throw new Error('This signup form is not configured yet.');
         await submitSubscription(input, { projectKey, apiBaseUrl });
         if (!isCurrentSubmission()) return;
         form.reset();
+        this.resolvedProjectKey = '';
+        this.configState = 'idle';
         if (this.kindSelect) this.kindSelect.value = validKind(this.getAttribute('kind'));
         this.updateSubmitLabel();
         const consentCopy = this.form.querySelector('.consent-copy');

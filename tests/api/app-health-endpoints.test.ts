@@ -1,8 +1,12 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import app from '../../workers/api/src/index';
 import type { Bindings } from '../../workers/api/src/types';
 
-afterEach(() => vi.unstubAllGlobals());
+beforeEach(() => vi.useFakeTimers());
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.useRealTimers();
+});
 
 function dispatch(path: string, key?: string) {
   const pending: Promise<unknown>[] = [];
@@ -33,6 +37,7 @@ describe('SaaS Maker API endpoint health', () => {
     );
 
     expect((await response).status).toBe(404);
+    await vi.advanceTimersByTimeAsync(5000);
     await Promise.all(pending);
     expect(send).toHaveBeenCalledTimes(1);
     const [endpoint, options] = send.mock.calls[0] as unknown as [string, RequestInit];
@@ -78,6 +83,8 @@ describe('SaaS Maker API endpoint health', () => {
     const { response, pending } = dispatch('/v1/projects/private-project-id', 'synthetic-key');
     expect((await response).status).toBe(401);
     expect(pending).toHaveLength(1);
+    expect(send).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(5000);
     expect(send).toHaveBeenCalledTimes(1);
 
     finishDelivery(new Response(null, { status: 403 }));

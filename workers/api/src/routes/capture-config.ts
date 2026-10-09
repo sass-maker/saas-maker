@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { buildCacheKey, getEdgeCache } from '../edge-cache';
 import { getDb } from '../db';
 import { getSaasMakerProjectIdByCatalogId } from '../lib/catalog-project-binding';
 import { apiError } from '../lib/errors';
@@ -22,6 +23,24 @@ captureConfig.get('/:catalogId', async (c) => {
     return apiError(c, 404, 'not_found', 'Capture config not found');
   }
 
+  // Cache the public body before D1. CORS is applied by outer middleware;
+  // never retain the requesting origin or other request headers in this key.
+  const cacheKey = buildCacheKey('capture-config', `${catalogId}:v1`);
+  const cache = getEdgeCache();
+  if (cache) {
+    try {
+      const cached = await cache.match(cacheKey);
+      if (cached) {
+        const hit = new Response(cached.body, cached);
+        hit.headers.set('Cache-Control', CACHE_CONTROL);
+        hit.headers.set('X-Edge-Cache', 'HIT');
+        return hit;
+      }
+    } catch {
+      // Cache failure must not prevent signup configuration from resolving.
+    }
+  }
+
   const saasMakerProjectId = await getSaasMakerProjectIdByCatalogId(c.env.DB, catalogId);
   if (!saasMakerProjectId) {
     return apiError(c, 404, 'not_found', 'Capture config not found');
@@ -33,9 +52,18 @@ captureConfig.get('/:catalogId', async (c) => {
   }
 
   c.header('Cache-Control', CACHE_CONTROL);
-  return c.json({
+  const response = c.json({
     api_key: project.api_key,
     name: project.name,
     slug: project.slug,
   });
+  response.headers.set('X-Edge-Cache', 'MISS');
+  if (cache) {
+    try {
+      c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()).catch(() => undefined));
+    } catch {
+      // Non-Worker runtimes can serve without a background cache write.
+    }
+  }
+  return response;
 });

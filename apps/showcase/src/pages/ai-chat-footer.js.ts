@@ -72,19 +72,9 @@ const source = `(() => {
     extension.setAttribute('show-updates', String(showUpdates));
     extension.setAttribute('capture-status', 'loading');
     extension.dataset.capturePending = 'true';
-    const controller = new AbortController();
-    const configTimeout = window.setTimeout(() => controller.abort(), 8000);
     try {
-      const response = await fetch('https://api.sassmaker.com/v1/capture-config/' + catalogId, {
-        headers: { accept: 'application/json' },
-        signal: controller.signal,
-      });
-      if (!response.ok) throw new Error('Capture unavailable');
-      const config = await response.json();
-      window.clearTimeout(configTimeout);
-      if (!config || typeof config.api_key !== 'string' || !/^pk_[a-z0-9]+$/.test(config.api_key)) throw new Error('Capture unavailable');
       if (!extension.isConnected) { extension.setAttribute('capture-status', 'unavailable'); return; }
-      mountFeedback(config.api_key, extension);
+      mountFeedback(catalogId, extension);
       if (script.dataset.capture === 'false' || !captureKind || document.querySelector('saas-maker-newsletter-capture')) {
         extension.setAttribute('show-updates', 'false');
         extension.setAttribute('capture-status', 'ready');
@@ -128,9 +118,8 @@ const source = `(() => {
         return;
       }
       const capture = document.createElement('saas-maker-newsletter-capture');
-      capture.setAttribute('project-key', config.api_key);
       capture.setAttribute('catalog-id', catalogId);
-      capture.setAttribute('product-name', script.dataset.name || config.name || catalogId);
+      capture.setAttribute('product-name', script.dataset.name || catalogId);
       capture.setAttribute('kind', captureKind);
       capture.setAttribute('source', 'fleet-footer');
       capture.setAttribute('privacy-url', 'https://sassmaker.com/privacy');
@@ -143,9 +132,9 @@ const source = `(() => {
       extension.dataset.captureConfigured = 'true';
     } catch {
       extension.setAttribute('capture-status', 'unavailable');
-    } finally { window.clearTimeout(configTimeout); delete extension.dataset.capturePending; }
+    } finally { delete extension.dataset.capturePending; }
   };
-  const mountFeedback = (apiKey, extension) => {
+  const mountFeedback = (catalogId, extension) => {
     if (script.dataset.feedback === 'false' || document.querySelector('[data-saas-maker-feedback-root]')) return;
     const hasExistingWidget = (host) => Array.from(document.querySelectorAll('[data-feedback-widget]'))
       .some((widget) => !host.contains(widget));
@@ -182,7 +171,7 @@ const source = `(() => {
     extension.append(host);
     const pageUrl = window.location.origin + window.location.pathname;
     const productTitle = document.title || script.dataset.name || 'Product';
-    const options = { apiKey, pageUrl, pageTitle: productTitle };
+    let options;
     let active = true;
     let loading = false;
     let mounted = false;
@@ -200,8 +189,34 @@ const source = `(() => {
         document.querySelector('[data-feedback-widget] .smw-trigger')?.focus();
       }
     };
-    const openWidget = () => {
+    const openWidget = async () => {
       if (!active || hasExistingWidget(host)) { removeLauncher(); return; }
+      if (loading) return;
+      if (!options) {
+        loading = true;
+        launcher.setAttribute('aria-busy', 'true');
+        launcher.textContent = 'Loading…';
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 8000);
+        try {
+          const response = await fetch('https://api.sassmaker.com/v1/capture-config/' + catalogId, {
+            credentials: 'omit', signal: controller.signal,
+          });
+          if (!response.ok) throw new Error('Feedback unavailable');
+          const config = await response.json();
+          if (!config || typeof config.api_key !== 'string' || !/^pk_[a-z0-9]+$/.test(config.api_key)) throw new Error('Feedback unavailable');
+          options = { apiKey: config.api_key, pageUrl, pageTitle: productTitle };
+        } catch {
+          launcher.textContent = launcherLabel;
+          status.textContent = 'Feedback could not load. Try again.';
+          return;
+        } finally {
+          window.clearTimeout(timeout);
+          loading = false;
+          launcher.removeAttribute('aria-busy');
+        }
+        if (!active || hasExistingWidget(host)) { removeLauncher(); return; }
+      }
       const api = window.SaasMakerFeedback;
       if (mounted && typeof api?.openSharedFooterFeedback === 'function') {
         api.openSharedFooterFeedback(widgetRoot, options);

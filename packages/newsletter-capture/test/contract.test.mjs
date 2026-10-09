@@ -202,3 +202,37 @@ test('React compact layout forwards only presentation and retains capture attrib
   assert.equal(compact.replace(' layout="compact"', ''), standard);
   assert.doesNotMatch(compact, /allow-kind-selection|project-key=/);
 });
+
+test('successful config lookups reuse public config for 60 seconds, failures retry and origins stay separate', async () => {
+  const originalFetch = globalThis.fetch;
+  const originalNow = Date.now;
+  let now = originalNow();
+  let calls = 0;
+  let fail = false;
+  Date.now = () => now;
+  globalThis.fetch = async () => {
+    calls++;
+    return fail
+      ? new Response(null, { status: 503 })
+      : Response.json({ api_key: 'pk_synthetic', name: 'Synthetic', slug: 'synthetic' });
+  };
+  try {
+    const first = await fetchCaptureConfig('cache-test');
+    first.name = 'mutated';
+    assert.equal((await fetchCaptureConfig('cache-test')).name, 'Synthetic');
+    assert.equal(calls, 1);
+    await fetchCaptureConfig('cache-test', { apiBaseUrl: 'https://another-api.example' });
+    assert.equal(calls, 2);
+    now += 60_001;
+    await fetchCaptureConfig('cache-test');
+    assert.equal(calls, 3);
+    fail = true;
+    await assert.rejects(fetchCaptureConfig('retry-test'));
+    fail = false;
+    await fetchCaptureConfig('retry-test');
+    assert.equal(calls, 5);
+  } finally {
+    globalThis.fetch = originalFetch;
+    Date.now = originalNow;
+  }
+});

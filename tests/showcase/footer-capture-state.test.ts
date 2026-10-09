@@ -40,6 +40,10 @@ function harness({
     createElement: () => ({ remove: vi.fn(), onload: () => {} }),
     head: {
       append: (script: { onload: () => void }) => {
+        if (!ok) {
+          (script as unknown as { onerror: () => void }).onerror();
+          return;
+        }
         registered = true;
         hasNative = true;
         script.onload();
@@ -77,7 +81,7 @@ describe('footer capture configuration state', () => {
     expect(h.nativeCapture).toEqual(nativeBefore);
     expect(h.feedback).toHaveBeenCalledOnce();
     await h.mount();
-    expect(h.fetch).toHaveBeenCalledOnce();
+    expect(h.fetch).not.toHaveBeenCalled();
   });
 
   it('settles ready when capture is explicitly disabled while preserving configured feedback', async () => {
@@ -105,16 +109,13 @@ describe('footer capture configuration state', () => {
   });
 
   it('keeps genuine configuration failure unavailable and retryable', async () => {
-    const h = harness({ ok: false });
+    const h = harness({ ok: false, native: false, lateNative: true });
     await h.mount();
     expect(h.attributes.get('capture-status')).toBe('unavailable');
     expect(h.extension.dataset.captureConfigured).toBeUndefined();
     expect(h.extension.dataset.capturePending).toBeUndefined();
     expect(h.children).toHaveLength(0);
-    expect(h.feedback).not.toHaveBeenCalled();
-    h.fetch.mockResolvedValue({ ok: true, json: async () => ({ api_key: 'pk_config' }) });
-    await h.mount();
-    expect(h.attributes.get('capture-status')).toBe('ready');
-    expect(h.fetch).toHaveBeenCalledTimes(2);
+    expect(h.feedback).toHaveBeenCalledOnce();
+    expect(h.fetch).not.toHaveBeenCalled();
   });
 });

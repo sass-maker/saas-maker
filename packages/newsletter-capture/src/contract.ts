@@ -4,6 +4,12 @@ export const EMAIL_MAX_LENGTH = 254;
 export const SOURCE_PATTERN = /^[a-z][a-z0-9_-]{0,63}$/;
 export const CATALOG_ID_PATTERN = /^[a-z][a-z0-9_-]{0,63}$/;
 
+// Public config only; bounded and short-lived so rotations propagate. Never
+// cache failures or subscription writes. Explicit project-key skips resolution.
+const captureConfigs = new Map<string, { expiresAt: number; config: CaptureConfig }>();
+const CONFIG_CACHE_MS = 60_000;
+const MAX_CONFIGS = 128;
+
 export type CaptureKind = 'newsletter' | 'waitlist';
 
 /** Publishable config resolved from a Fleet catalog id via GET /v1/capture-config. */
@@ -136,6 +142,13 @@ export async function fetchCaptureConfig(
   }
 
   const apiBaseUrl = normalizeApiBaseUrl(options.apiBaseUrl ?? DEFAULT_API_BASE_URL);
+  const cacheKey = `${apiBaseUrl}/v1/capture-config/${encodeURIComponent(id)}`;
+  // Injected transports stay isolated (tests and alternate integrations).
+  const cached = options.fetcher ? undefined : captureConfigs.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) {
+    options.signal?.throwIfAborted();
+    return { ...cached.config };
+  }
   const fetcher = options.fetcher ?? fetch;
   let response: Response;
   try {
@@ -170,5 +183,13 @@ export async function fetchCaptureConfig(
   if (!apiKey || !name || !slug) {
     throw new Error('This signup form is not configured yet.');
   }
-  return { api_key: apiKey, name, slug };
+  const result = { api_key: apiKey, name, slug };
+  if (!options.fetcher && !options.signal?.aborted) {
+    if (captureConfigs.size >= MAX_CONFIGS) {
+      const oldest = captureConfigs.keys().next().value;
+      if (oldest !== undefined) captureConfigs.delete(oldest);
+    }
+    captureConfigs.set(cacheKey, { expiresAt: Date.now() + CONFIG_CACHE_MS, config: result });
+  }
+  return { ...result };
 }
