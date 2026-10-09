@@ -316,7 +316,14 @@ outputs.set(
   // public GET with no body, credentials or query values. App Health reads the
   // generated file; it never decides which products are probed.
   const config = systems.probeJourneys ?? {};
-  const allowedJourney = new Set(['journey', 'url', 'budget_ms', 'timeout_ms', 'warm_check', 'expect']);
+  const allowedJourney = new Set([
+    'journey',
+    'url',
+    'budget_ms',
+    'timeout_ms',
+    'warm_check',
+    'expect',
+  ]);
   const entries = systemEntries('probe');
   for (const [id, policy] of entries) {
     if (!Array.isArray(policy.journeys) || policy.journeys.length === 0)
