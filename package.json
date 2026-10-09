@@ -44,7 +44,8 @@
     "catalog:test-schema": "node --test scripts/catalog-schema.test.mjs",
     "catalog:sync": "pnpm catalog:sync-operations && pnpm catalog:sync-systems && pnpm catalog:sync-public && pnpm catalog:table && pnpm catalog:check-source",
     "catalog:sync-systems": "node scripts/sync-catalog-systems.mjs",
-    "catalog:check-systems": "node scripts/sync-catalog-systems.mjs --check"
+    "catalog:check-systems": "node scripts/sync-catalog-systems.mjs --check",
+    "capture:refresh": "node scripts/refresh-capture-config.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.1",

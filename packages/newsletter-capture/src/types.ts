@@ -10,8 +10,8 @@ export interface NewsletterCaptureProps {
   projectKey?: string;
   /**
    * Canonical Fleet catalog id bound to a SaaS Maker project. The element
-   * resolves the publishable key via GET /v1/capture-config/:catalogId before
-   * the first submit. Ignored when `projectKey` is set.
+   * resolves the publishable key from its built-in public configuration before
+   * the first submit. Alternate API origins require an explicit projectKey. Ignored when `projectKey` is set.
    */
   catalogId?: string;
   /** Initial selection. Visitors can change this in the form. */

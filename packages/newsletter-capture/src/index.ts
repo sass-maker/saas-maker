@@ -5,6 +5,7 @@ export {
   DEFAULT_SOURCE,
   fetchCaptureConfig,
   normalizeApiBaseUrl,
+  resolveCaptureConfig,
   submitSubscription,
   validateSubscriptionRequest,
 } from './contract';

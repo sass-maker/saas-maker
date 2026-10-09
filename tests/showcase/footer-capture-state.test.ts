@@ -52,6 +52,7 @@ function harness({
   };
   const context = vm.createContext({
     script: { dataset: { capture: disabled ? 'false' : undefined } },
+    CAPTURE_CONFIGS: { product: { api_key: 'pk_config', name: 'Product', slug: 'product' } },
     AUTO_CAPTURE_KINDS: kind ? { product: kind } : {},
     captureModuleAttempts: new WeakMap(),
     assetBase: new URL('https://sassmaker.com/'),

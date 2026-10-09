@@ -1,18 +1,14 @@
+import captureConfigs from './capture-config.json';
+
 export const DEFAULT_API_BASE_URL = 'https://api.sassmaker.com';
 export const DEFAULT_SOURCE = 'footer';
 export const EMAIL_MAX_LENGTH = 254;
 export const SOURCE_PATTERN = /^[a-z][a-z0-9_-]{0,63}$/;
 export const CATALOG_ID_PATTERN = /^[a-z][a-z0-9_-]{0,63}$/;
 
-// Public config only; bounded and short-lived so rotations propagate. Never
-// cache failures or subscription writes. Explicit project-key skips resolution.
-const captureConfigs = new Map<string, { expiresAt: number; config: CaptureConfig }>();
-const CONFIG_CACHE_MS = 60_000;
-const MAX_CONFIGS = 128;
-
 export type CaptureKind = 'newsletter' | 'waitlist';
 
-/** Publishable config resolved from a Fleet catalog id via GET /v1/capture-config. */
+/** Public project configuration embedded when the shared assets are built. */
 export interface CaptureConfig {
   api_key: string;
   name: string;
@@ -125,71 +121,26 @@ export async function submitSubscription(
   }
 }
 
-/**
- * Resolve a Fleet catalog id to the bound project's publishable capture config
- * via GET /v1/capture-config/:catalogId. Used by the custom element's catalog-id
- * mode to obtain the publishable project key when project-key is absent. The
- * publishable key is never logged; transport and config-load failures become a
- * single safe retry message so the host form can surface them.
- */
+/** Resolve public Fleet config locally. Alternate API origins require an explicit key. */
+export function resolveCaptureConfig(
+  catalogId: string,
+  apiBaseUrl = DEFAULT_API_BASE_URL
+): CaptureConfig {
+  const id = catalogId.trim();
+  if (!CATALOG_ID_PATTERN.test(id) || normalizeApiBaseUrl(apiBaseUrl) !== DEFAULT_API_BASE_URL) {
+    throw new Error('This signup form is not configured yet.');
+  }
+  if (!Object.hasOwn(captureConfigs, id)) {
+    throw new Error('This signup form is not configured yet.');
+  }
+  return { ...captureConfigs[id as keyof typeof captureConfigs] };
+}
+
+/** @deprecated Kept for existing imports; resolves the build-time config without network I/O. */
 export async function fetchCaptureConfig(
   catalogId: string,
   options: { apiBaseUrl?: string; fetcher?: typeof fetch; signal?: AbortSignal } = {}
 ): Promise<CaptureConfig> {
-  const id = catalogId.trim();
-  if (!id || !CATALOG_ID_PATTERN.test(id)) {
-    throw new Error('This signup form is not configured yet.');
-  }
-
-  const apiBaseUrl = normalizeApiBaseUrl(options.apiBaseUrl ?? DEFAULT_API_BASE_URL);
-  const cacheKey = `${apiBaseUrl}/v1/capture-config/${encodeURIComponent(id)}`;
-  // Injected transports stay isolated (tests and alternate integrations).
-  const cached = options.fetcher ? undefined : captureConfigs.get(cacheKey);
-  if (cached && cached.expiresAt > Date.now()) {
-    options.signal?.throwIfAborted();
-    return { ...cached.config };
-  }
-  const fetcher = options.fetcher ?? fetch;
-  let response: Response;
-  try {
-    response = await fetcher(`${apiBaseUrl}/v1/capture-config/${encodeURIComponent(id)}`, {
-      method: 'GET',
-      credentials: 'omit',
-      signal: options.signal,
-    });
-  } catch (error) {
-    if ((error as Error)?.name === 'AbortError') throw error;
-    throw new Error('Unable to reach the signup service. Please try again.', { cause: error });
-  }
-
-  if (!response.ok) {
-    // 404 covers unknown, malformed, and unbound ids; treat all as not configured.
-    throw new Error('This signup form is not configured yet.');
-  }
-
-  let body: unknown;
-  try {
-    body = await response.json();
-  } catch (error) {
-    throw new Error('Unable to reach the signup service. Please try again.', { cause: error });
-  }
-  if (!body || typeof body !== 'object' || Array.isArray(body)) {
-    throw new Error('This signup form is not configured yet.');
-  }
-  const config = body as Record<string, unknown>;
-  const apiKey = typeof config.api_key === 'string' ? config.api_key.trim() : '';
-  const name = typeof config.name === 'string' ? config.name.trim() : '';
-  const slug = typeof config.slug === 'string' ? config.slug.trim() : '';
-  if (!apiKey || !name || !slug) {
-    throw new Error('This signup form is not configured yet.');
-  }
-  const result = { api_key: apiKey, name, slug };
-  if (!options.fetcher && !options.signal?.aborted) {
-    if (captureConfigs.size >= MAX_CONFIGS) {
-      const oldest = captureConfigs.keys().next().value;
-      if (oldest !== undefined) captureConfigs.delete(oldest);
-    }
-    captureConfigs.set(cacheKey, { expiresAt: Date.now() + CONFIG_CACHE_MS, config: result });
-  }
-  return { ...result };
+  options.signal?.throwIfAborted();
+  return resolveCaptureConfig(catalogId, options.apiBaseUrl);
 }

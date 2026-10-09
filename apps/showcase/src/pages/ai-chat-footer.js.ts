@@ -4,6 +4,7 @@ import { registerFleetFooter } from '../../../../packages/fleet-footer/src/eleme
 import aiBrowserBundle from '../../../../packages/ai-chat-footer/dist/browser/element.mjs?raw';
 import { classicBrowserBundle } from '../lib/classic-browser-bundle';
 import capturePolicy from '../../../../tooling/config/capture-projects.json';
+import captureConfigs from '../../../../packages/newsletter-capture/src/capture-config.json';
 
 const feedbackLauncherCss = `
   [data-saas-maker-feedback-launcher] {
@@ -54,6 +55,7 @@ const source = `(() => {
   'use strict';
 
   const AUTO_CAPTURE_KINDS = ${JSON.stringify(autoCaptureKinds)};
+  const CAPTURE_CONFIGS = ${JSON.stringify(captureConfigs)};
   const FOOTER_ART = ${JSON.stringify(footerArt)};
   ${classicBrowserBundle(aiBrowserBundle)}
 
@@ -119,6 +121,7 @@ const source = `(() => {
       }
       const capture = document.createElement('saas-maker-newsletter-capture');
       capture.setAttribute('catalog-id', catalogId);
+      if (Object.hasOwn(CAPTURE_CONFIGS, catalogId)) capture.setAttribute('project-key', CAPTURE_CONFIGS[catalogId].api_key);
       capture.setAttribute('product-name', script.dataset.name || catalogId);
       capture.setAttribute('kind', captureKind);
       capture.setAttribute('source', 'fleet-footer');
@@ -193,29 +196,12 @@ const source = `(() => {
       if (!active || hasExistingWidget(host)) { removeLauncher(); return; }
       if (loading) return;
       if (!options) {
-        loading = true;
-        launcher.setAttribute('aria-busy', 'true');
-        launcher.textContent = 'Loading…';
-        const controller = new AbortController();
-        const timeout = window.setTimeout(() => controller.abort(), 8000);
-        try {
-          const response = await fetch('https://api.sassmaker.com/v1/capture-config/' + catalogId, {
-            credentials: 'omit', signal: controller.signal,
-          });
-          if (!response.ok) throw new Error('Feedback unavailable');
-          const config = await response.json();
-          if (!config || typeof config.api_key !== 'string' || !/^pk_[a-z0-9]+$/.test(config.api_key)) throw new Error('Feedback unavailable');
-          options = { apiKey: config.api_key, pageUrl, pageTitle: productTitle };
-        } catch {
-          launcher.textContent = launcherLabel;
-          status.textContent = 'Feedback could not load. Try again.';
+        const config = Object.hasOwn(CAPTURE_CONFIGS, catalogId) ? CAPTURE_CONFIGS[catalogId] : null;
+        if (!config) {
+          status.textContent = 'Feedback is not configured yet.';
           return;
-        } finally {
-          window.clearTimeout(timeout);
-          loading = false;
-          launcher.removeAttribute('aria-busy');
         }
-        if (!active || hasExistingWidget(host)) { removeLauncher(); return; }
+        options = { apiKey: config.api_key, pageUrl, pageTitle: productTitle };
       }
       const api = window.SaasMakerFeedback;
       if (mounted && typeof api?.openSharedFooterFeedback === 'function') {

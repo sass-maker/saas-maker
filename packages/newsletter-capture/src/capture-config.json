@@ -1,0 +1,232 @@
+{
+  "ai-game": {
+    "api_key": "pk_35db52a950fc8264dbd85d1def9c584ab51daa5bbe3391f8",
+    "name": "AliveVille",
+    "slug": "ai-game-fleet-20260928"
+  },
+  "anchor": {
+    "api_key": "pk_dd47c09931b258564c0357b3765356af4b831d4ca640e119",
+    "name": "Anchor",
+    "slug": "anchor-fleet-20260928"
+  },
+  "anime-list": {
+    "api_key": "pk_fb1fe870205272a447298bfac32122383426d6a1c1fb10ab",
+    "name": "anime_list",
+    "slug": "anime-list-modh30ze"
+  },
+  "app-health": {
+    "api_key": "pk_2867da0a80c1c600a4abeee6155f81fc9784b483bd47c761",
+    "name": "App Health",
+    "slug": "app-health-fleet-20260928"
+  },
+  "browserdaddy": {
+    "api_key": "pk_da52dfa9bf1b64907504627106a89d032b1cadafe7c997a5",
+    "name": "BrowserDaddy",
+    "slug": "browserdaddy-fleet-20260928"
+  },
+  "calorie": {
+    "api_key": "pk_e76b3b57c1d46bec65f550b524c487efbbee2c56d9515446",
+    "name": "Calorie",
+    "slug": "calorie-fleet-20260928"
+  },
+  "chatgpt-connections": {
+    "api_key": "pk_cca9c4c1909644306c3bb317a04e3bd7c2011e1faab75392",
+    "name": "ChatGPT Connections",
+    "slug": "chatgpt-connections-fleet-20260928"
+  },
+  "chatgpt-memory-insights": {
+    "api_key": "pk_96cb788078faf090c6035c374844292d69129573c99d881a",
+    "name": "Memory Map",
+    "slug": "chatgpt-memory-insights-fleet-20260928"
+  },
+  "codevetter": {
+    "api_key": "pk_3b30d0f8ac7964f013fef7ae8dbee239d9a7896d75ed3726",
+    "name": "CodeVetter",
+    "slug": "codevetter-modh33a1"
+  },
+  "contextdaddy": {
+    "api_key": "pk_ee2cf4dc858e66a3dee838b99be6b406eb2cb3929ab855b3",
+    "name": "ContextDaddy",
+    "slug": "contextdaddy-fleet-20260928"
+  },
+  "email-manager": {
+    "api_key": "pk_bb34b76049e67b359f2b9f600f64bebe0f3f1a3cfa64a5ec",
+    "name": "email-manager",
+    "slug": "email-manager-modh346r"
+  },
+  "every-song-is-a-website": {
+    "api_key": "pk_4edecd55b55fd525bfb7a78b414986a3bf98d246a8dd4a90",
+    "name": "Every Song Is a Website",
+    "slug": "every-song-is-a-website-fleet-20260928"
+  },
+  "fleet-social": {
+    "api_key": "pk_e332e4d5c7b4c3f32449d4be7278b13d4639a3393e2620f8",
+    "name": "Fleet Social",
+    "slug": "fleet-social-fleet-20260928"
+  },
+  "free-ai": {
+    "api_key": "pk_ea4bfa6df1fa89eb5d8615bc3a66f0c49aa1a179326663f6",
+    "name": "free-ai",
+    "slug": "free-ai-modh34oa"
+  },
+  "high-signal": {
+    "api_key": "pk_3eb4816ef2179c25f364315aa1c3148a88e8004bfa5e5235",
+    "name": "high-signal",
+    "slug": "high-signal-moeiii9c"
+  },
+  "ios-landings": {
+    "api_key": "pk_461fcf2e2169989e288e4851c4e63e4ff08691d021fc2e8a",
+    "name": "iOS landings",
+    "slug": "ios-landings-fleet-20260928"
+  },
+  "karte": {
+    "api_key": "pk_e6ac3183f00632f469bc9748a95ce57bb82d065fb64a5863",
+    "name": "Karte",
+    "slug": "karte-fleet-20260928"
+  },
+  "kith": {
+    "api_key": "pk_0202c41db150d136b45d93c3fc0e82f754c1235eb93e318d",
+    "name": "Kith",
+    "slug": "kith-fleet-20260928"
+  },
+  "knowledge-base": {
+    "api_key": "pk_5887ab8294cb88c38705cb8fd01f21253f1278bc71719329",
+    "name": "Knowledge Base",
+    "slug": "knowledge-base-fleet-20260928"
+  },
+  "live": {
+    "api_key": "pk_3bde8438825371de56bea67194d45076cb8409a0a02f64b1",
+    "name": "Live",
+    "slug": "live-fleet-20260928"
+  },
+  "looptv": {
+    "api_key": "pk_6a7e5a03e5bcffd3f04080623af4f65a14e6ea8262409b4c",
+    "name": "looptv",
+    "slug": "looptv-modgv1w3"
+  },
+  "meme-lab": {
+    "api_key": "pk_87e5d159d00d86304a0c9fcf98722998f8b5bb2136c2fe2d",
+    "name": "Meme Lab",
+    "slug": "meme-lab-fleet-20260928"
+  },
+  "motion": {
+    "api_key": "pk_ba4d6b24687e8799545299d7dfab6e864ac87c8a03042af4",
+    "name": "Motion",
+    "slug": "motion-fleet-20260928"
+  },
+  "nomad-data-adventure": {
+    "api_key": "pk_e1d63f70c48f419165eefe14c4bc848fa6189ad779880773",
+    "name": "Nomad Data Adventure",
+    "slug": "nomad-data-adventure-fleet-20260928"
+  },
+  "nutrition-formula-engine": {
+    "api_key": "pk_5b45747d605d3b4ecc0ed1e7fb7d03560fc76204570345a2",
+    "name": "Formula Composition Engine",
+    "slug": "nutrition-formula-engine-fleet-20260928"
+  },
+  "on-record": {
+    "api_key": "pk_f4f3b85da9cb09caccfbb86b1cb6a8ef0cffe771713a73f6",
+    "name": "High Signal Podcasts",
+    "slug": "on-record-fleet-20260928"
+  },
+  "pace": {
+    "api_key": "pk_23e30835466275cc8eeca74ef48972a9e3ad6565f9ad0af3",
+    "name": "HeyPace",
+    "slug": "pace-fleet-20260928"
+  },
+  "performancedaddy": {
+    "api_key": "pk_5527b9ce2e52f6d31bd182a5f35a24170141822c80ccbe00",
+    "name": "PerformanceDaddy",
+    "slug": "performancedaddy-fleet-20260928"
+  },
+  "ph-catalog": {
+    "api_key": "pk_f0b2e58b3705f48ff52ddfa347eecad4776407b6cd789cce",
+    "name": "PH Catalog",
+    "slug": "ph-catalog-fleet-20260928"
+  },
+  "posttrainllm": {
+    "api_key": "pk_a73bacb9c9c58b28d9d952699f64f69191709295e56e6ac5",
+    "name": "PostTrainLLM",
+    "slug": "posttrainllm-fleet-20260928"
+  },
+  "reader": {
+    "api_key": "pk_75916801a6a3b2d35c7e620f95c2d09050e1c0f49cb84b4a",
+    "name": "reader",
+    "slug": "reader-modh38jy"
+  },
+  "reddit-insights": {
+    "api_key": "pk_f8cbe52e816457c94999c5618ff5508ae6fc4c5ed4d7e18c",
+    "name": "Reddit Insights",
+    "slug": "reddit-insights-fleet-20260928"
+  },
+  "research-papers": {
+    "api_key": "pk_f7426f5d1c0a1d279ef4f0092fdfdf901f7306ceb8171af0",
+    "name": "Research Papers",
+    "slug": "research-papers-fleet-20260928"
+  },
+  "rolepatch": {
+    "api_key": "pk_e371969e74a6715a671c853dce04a86ca1d3799d20dc315f",
+    "name": "RolePatch",
+    "slug": "rolepatch-fleet-20260928"
+  },
+  "saas-maker": {
+    "api_key": "pk_d259160ac0e0d6466901f8e3859c56662571344f38a2175e",
+    "name": "saas-maker",
+    "slug": "saas-maker-modh3aoc"
+  },
+  "sarthakagrawal-personal": {
+    "api_key": "pk_4eb0777d2c51cda66b7cd793f285abd3035e0e9ddebee17e",
+    "name": "Sarthak Agrawal",
+    "slug": "sarthakagrawal-personal-fleet-20260928"
+  },
+  "setline": {
+    "api_key": "pk_ade3ca0bc5e191eda41dd2f3101548075ac91514b58682b0",
+    "name": "Setline",
+    "slug": "setline-fleet-20260928"
+  },
+  "significanthobbies": {
+    "api_key": "pk_4c47978d5cd58ad03c3e2e00c6e1d4768b57ffe8336da44f",
+    "name": "significanthobbies",
+    "slug": "significanthobbies-modh3b6q"
+  },
+  "site-health": {
+    "api_key": "pk_97beebc4a170d3aa92c70ac8853d44ddb1f6513ddc39cfb5",
+    "name": "Site Health",
+    "slug": "site-health-fleet-20260928"
+  },
+  "slow-serp": {
+    "api_key": "pk_b4f573abd27bdc07407deaad00d2f7038b5e5ed4272a2f20",
+    "name": "Slow SERP",
+    "slug": "slow-serp-fleet-20260928"
+  },
+  "starboard": {
+    "api_key": "pk_75a79ba00cef1e878e66d8b510878d7532654aaee0fcddf7",
+    "name": "starboard",
+    "slug": "starboard-modh3bnx"
+  },
+  "storagedaddy": {
+    "api_key": "pk_f99695c45a9eb8f1c1ceeae7e7d3b58cb912b86a0c87a400",
+    "name": "storagedaddy",
+    "slug": "storagedaddy-fleet-20260928"
+  },
+  "swe-interview-prep": {
+    "api_key": "pk_37878dc1c6b0822431731d7b0cb19b27fc8ff4a9bae12a26",
+    "name": "swe-interview-prep",
+    "slug": "swe-interview-prep-modh3c14"
+  },
+  "unified-portfolio": {
+    "api_key": "pk_417d0ef04ceb84dfc566a06151c6a32b564c85881de185b4",
+    "name": "Unified Portfolio",
+    "slug": "unified-portfolio-fleet-20260928"
+  },
+  "web-playables": {
+    "api_key": "pk_67399f132633af13f456f1cf8dcfbcef4dfd97e840bfb655",
+    "name": "Web Playables",
+    "slug": "web-playables-fleet-20260928"
+  },
+  "what-it-takes-to-win": {
+    "api_key": "pk_25066612a8e8431cc86510032c861fe9ebe7a1b103363359",
+    "name": "Paths",
+    "slug": "what-it-takes-to-win-fleet-20260928"
+  }
+}

@@ -42,17 +42,20 @@ describe('SaaS Maker public source boundary', () => {
     expect(source).toMatch(/AUTO_CAPTURE_KINDS\[catalogId\]/);
     expect(source).not.toMatch(/strip\.remove\(\)/);
     expect(source).not.toMatch(/analytics|localStorage|Authorization/i);
-    expect(source).toMatch(/credentials: 'omit'/);
+    expect(source.includes('/v1/capture-config/')).toBe(false);
     expect(source).not.toMatch(/^\s*(?:import|export)\s/m);
     expect(() => new Function(source)).not.toThrow();
   });
 
-  it('resolves feedback keys independently of newsletter policy', async () => {
+  it('embeds feedback config independently of newsletter policy without API lookups', async () => {
     const source = await readShowcase('src/pages/ai-chat-footer.js.ts');
     const lookup = source.indexOf('mountFeedback(catalogId, extension)');
     const newsletterGate = source.indexOf("script.dataset.capture === 'false' || !captureKind");
     expect(lookup).toBeGreaterThanOrEqual(0);
     expect(newsletterGate).toBeGreaterThan(lookup);
+    expect(source).toMatch(/const CAPTURE_CONFIGS =/);
+    expect(source.includes('/v1/capture-config/')).toBe(false);
+    expect(source.includes('api.sassmaker.com')).toBe(false);
     expect(source).toMatch(/window\.location\.origin \+ window\.location\.pathname/);
   });
 
