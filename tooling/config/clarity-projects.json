@@ -43,16 +43,9 @@
       "repo": "codevetter",
       "clarityId": "y6bqiui587",
       "hostname": "codevetter.com",
-      "wiredFiles": [
-        "codevetter/apps/landing-page-astro/src/layouts/Layout.astro"
-      ],
-      "reason": "Clarity covers only the public marketing and synthetic benchmark pages; the local desktop verifier and repository data remain outside browser analytics.",
-      "browserSurfaces": [
-        {
-          "kind": "landing",
-          "file": "codevetter/apps/landing-page-astro/src/layouts/Layout.astro"
-        }
-      ]
+      "wiredFiles": [],
+      "reason": "Intentionally unwired under the owner-approved tracking hold: CodeVetter PR #353 (issue #352, 2026-10-02) removed the Clarity tag from the public landing at the owner's explicit choice to keep collection disabled; live codevetter.com loads no Clarity. Re-wire only when the owner lifts the hold.",
+      "browserSurfaces": []
     },
     {
       "id": "pace",
@@ -320,16 +313,9 @@
       "repo": "research-papers",
       "clarityId": "y6btr00dl7",
       "hostname": "papers.highsignal.app",
-      "wiredFiles": [
-        "research-papers/web/src/components/site-nav.astro"
-      ],
-      "reason": "Clarity covers public no-account pages; the search and cited-answer subtrees are explicitly masked and the boundary is disclosed on /data.",
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "research-papers/web/src/components/site-nav.astro"
-        }
-      ]
+      "wiredFiles": [],
+      "reason": "Intentionally unwired under the owner-approved tracking hold: Research Papers PR #57 (2026-10-02) removed the Clarity loader from the shared site nav; live papers.highsignal.app loads no Clarity. Re-wire only when the owner lifts the hold.",
+      "browserSurfaces": []
     },
     {
       "id": "materia",
@@ -603,18 +589,13 @@
       "clarityId": "y6bv5ous5y",
       "hostname": "aliveville.com",
       "wiredFiles": [
-        "aliveville/astro-landing/src/layouts/Layout.astro",
         "aliveville/astro-landing/src/layouts/LegalLayout.astro",
         "aliveville/astro-landing/src/pages/index.astro",
         "aliveville/astro-landing/src/pages/ai-world-simulator.astro",
         "aliveville/web3d/index.html"
       ],
-      "reason": "Wired 2026-10-02 after explicit owner decision: Clarity covers all public Astro landing pages (each page is standalone — the shared Layout.astro is currently unreferenced — plus LegalLayout for privacy/terms) and the /game/ browser client; the game root is masked before collection so world content is not uploaded.",
+      "reason": "Wired 2026-10-02 after explicit owner decision: Clarity covers all public Astro landing pages (each page is standalone, plus LegalLayout for privacy/terms) and the /game/ browser client; the game root is masked before collection so world content is not uploaded. The unreferenced Layout.astro loader was removed in aliveville PR #47.",
       "browserSurfaces": [
-        {
-          "kind": "landing",
-          "file": "aliveville/astro-landing/src/layouts/Layout.astro"
-        },
         {
           "kind": "landing",
           "file": "aliveville/astro-landing/src/layouts/LegalLayout.astro"
@@ -727,22 +708,9 @@
       "repo": "open-historia",
       "clarityId": "y6bvtr9hri",
       "hostname": "historia.aliveville.com",
-      "wiredFiles": [
-        "open-historia/landing-astro/src/layouts/Layout.astro",
-        "open-historia/app.html"
-      ],
-      "reason": "Wired 2026-10-02 after explicit owner decision: Clarity covers the Astro landing and the SPA shell; the application root is masked before collection so player commands and game content are not uploaded.",
-      "browserSurfaces": [
-        {
-          "kind": "landing",
-          "file": "open-historia/landing-astro/src/layouts/Layout.astro"
-        },
-        {
-          "kind": "browser-app",
-          "file": "open-historia/app.html",
-          "mask": "root"
-        }
-      ]
+      "wiredFiles": [],
+      "reason": "Intentionally unwired under the owner-approved tracking hold: Open Historia PR #42 (2026-10-05) removed the unapproved Clarity loaders from the Astro landing and SPA shell; live historia.aliveville.com loads no Clarity. Re-wire only when the owner lifts the hold.",
+      "browserSurfaces": []
     },
     {
       "id": "companion-robot",
@@ -1020,17 +988,9 @@
       "clarityId": "ymdudyzrcs",
       "hostname": "memes.significanthobbies.com",
       "tag": "meme-lab",
-      "wiredFiles": [
-        "meme-lab/public/index.html"
-      ],
-      "reason": "The public experiment shell is measured, but its entire application root is masked so prompts, outputs, and local experiment content are not uploaded.",
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "meme-lab/public/index.html",
-          "mask": "root"
-        }
-      ]
+      "wiredFiles": [],
+      "reason": "The deployed Worker pages (worker/public) carry no Clarity tag; the former hostname-gated loader lived only in the local-only server.mjs shell (public/index.html) and was removed in meme-lab PR #54. Wire the deployed pages only on an explicit owner decision.",
+      "browserSurfaces": []
     },
     {
       "id": "agent-testing",
