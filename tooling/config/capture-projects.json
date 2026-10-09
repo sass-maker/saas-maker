@@ -25,7 +25,7 @@
         },
         {
           "field": "sharing.evidence.reason",
-          "value": "Published 1.14.3 DMG matched GitHub SHA-256, passed strict signature and Gatekeeper notarization checks, and was installed and launched from /Applications. The previous 1.12.0 native-preview bundle was preserved separately. The earlier bounded CLI review receipt remains historical; current full native workflow and in-app Sparkle installation were not exercised in this audit."
+          "value": "Published v1.16.0 (2026-10-09, GitHub Latest, release run 37886067815 from d54a3c19): CodeVetter-1.16.0-arm64.dmg SHA-256 d1e43ea2325c904efa296f9db0bb70614a649812f3fdf2273746a1b96031f8cd matches the GitHub asset digest; the bundled CodeVetter.app 1.16.0 (build 11600) passes strict codesign and Gatekeeper as a notarized Developer ID app. The DMG container itself is unsigned and unstapled. The release publishes a Sparkle appcast for 1.16.0. Not installed or launched in this audit; foreground native workflow and in-app Sparkle installation remain unexercised."
         }
       ]
     },
@@ -1394,7 +1394,7 @@
         },
         {
           "field": "sharing.evidence.reason",
-          "value": "Public 0.2.1 build 10 verified at https://context.daddyrad.com/download and GitHub release v0.2.1-10. SHA-256 e43afdb396041f0abb6bdbcad718eb74c09745612574124adb49088331e36940 matches the Developer ID signed, Apple notarized DMG from protected release run 36259190197, source b04f3c423341a8ec421933835569c3019c3355ba. Installed to /Applications/ContextDaddy.app and launched; Gatekeeper accepted the notarized app. Guided Skills onboarding, bounded scrolling including legacy scrollbars, and Devin in unified Local History. Manual updates only. Installed Skills library populated; rescan and guided selection passed. Discovery retains explicit entry/depth coverage limits."
+          "value": "Public 0.2.10 build 20 verified at https://context.daddyrad.com/download and GitHub release v0.2.10-20 (2026-10-09, source 95b88093e9f1f9786253bbdd6cbb3e66aa44fb6d). The live download SHA-256 51acdf9eb8a39f1b9555b702f4c9b498140dfd3f43445fd74bfa261e3d575bb2 matches the release asset and its live-publication receipt; the DMG and bundled ContextDaddy.app pass Gatekeeper as a notarized Developer ID build (notary status Accepted). Updates are delivered through the Sparkle appcast at https://context.daddyrad.com/updates/appcast.xml, which offers 0.2.10 build 20. Not installed or launched in this audit; in-app Sparkle installation remains unexercised. Discovery does not prove live prompt use and retains explicit entry/depth coverage limits."
         },
         {
           "field": "deployment.status",

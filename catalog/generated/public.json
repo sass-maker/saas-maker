@@ -15,7 +15,7 @@
         "audience": "Developers and teams shipping code produced with AI agents.",
         "outcome": "Higher confidence that an agent completed the requested change correctly and safely.",
         "mechanism": "Local-first review combines repository context, executable checks, targeted evaluation, and inspectable verification receipts.",
-        "proof": "Published macOS 1.14.3 is signed and notarized; its DMG hash and local installation were verified. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
+        "proof": "Published macOS 1.16.0 is notarized: its DMG hash matches the release and the bundled app passes strict signature and Gatekeeper checks. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
         "nextAction": "Try the current Mac release on a small local repository. Use the documented manual update path until in-app installation is qualified."
       },
       "footerArt": {
@@ -1985,8 +1985,8 @@
         "audience": "Developers using multiple coding agents on a Mac.",
         "outcome": "Find actionable context and usage problems with evidence and explicit measurement limits.",
         "mechanism": "A native Mac app combines bounded discovery, previewed local skill management with recovery, offline usage history, and local OpenTelemetry views.",
-        "proof": "Public 0.2.1 build 10 verified at https://context.daddyrad.com/download and GitHub release v0.2.1-10. SHA-256 e43afdb396041f0abb6bdbcad718eb74c09745612574124adb49088331e36940 matches the Developer ID signed, Apple notarized DMG from protected release run 36259190197, source b04f3c423341a8ec421933835569c3019c3355ba. Installed to /Applications/ContextDaddy.app and launched; Gatekeeper accepted the notarized app. Guided Skills onboarding, bounded scrolling including legacy scrollbars, and Devin in unified Local History. Manual updates only. Discovery does not prove live prompt use. Installed Skills library populated; rescan and guided selection passed. Discovery retains explicit entry/depth coverage limits.",
-        "nextAction": "Download the signed 0.2.1 beta; open Skills and follow Guide. Updates are manual downloads."
+        "proof": "Public 0.2.10 build 20 verified at https://context.daddyrad.com/download and GitHub release v0.2.10-20 (2026-10-09, source 95b88093e9f1f9786253bbdd6cbb3e66aa44fb6d). The live download SHA-256 51acdf9eb8a39f1b9555b702f4c9b498140dfd3f43445fd74bfa261e3d575bb2 matches the release asset and its live-publication receipt; the DMG and bundled ContextDaddy.app pass Gatekeeper as a notarized Developer ID build (notary status Accepted). Updates are delivered through the Sparkle appcast at https://context.daddyrad.com/updates/appcast.xml, which offers 0.2.10 build 20. Not installed or launched in this audit; in-app Sparkle installation remains unexercised. Discovery does not prove live prompt use and retains explicit entry/depth coverage limits.",
+        "nextAction": "Download the signed 0.2.10 beta; open Skills and follow Guide. Later builds arrive through the in-app Sparkle update feed."
       },
       "footerArt": {
         "src": "/footer-art/contextdaddy.webp",
@@ -2236,7 +2236,7 @@
         "audience": "Developers and teams shipping code produced with AI agents.",
         "outcome": "Higher confidence that an agent completed the requested change correctly and safely.",
         "mechanism": "Local-first review combines repository context, executable checks, targeted evaluation, and inspectable verification receipts.",
-        "proof": "Published macOS 1.14.3 is signed and notarized; its DMG hash and local installation were verified. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
+        "proof": "Published macOS 1.16.0 is notarized: its DMG hash matches the release and the bundled app passes strict signature and Gatekeeper checks. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
         "nextAction": "Try the current Mac release on a small local repository. Use the documented manual update path until in-app installation is qualified."
       },
       "footerArt": {
@@ -2507,8 +2507,8 @@
         "audience": "Developers using multiple coding agents on a Mac.",
         "outcome": "Find actionable context and usage problems with evidence and explicit measurement limits.",
         "mechanism": "A native Mac app combines bounded discovery, previewed local skill management with recovery, offline usage history, and local OpenTelemetry views.",
-        "proof": "Public 0.2.1 build 10 verified at https://context.daddyrad.com/download and GitHub release v0.2.1-10. SHA-256 e43afdb396041f0abb6bdbcad718eb74c09745612574124adb49088331e36940 matches the Developer ID signed, Apple notarized DMG from protected release run 36259190197, source b04f3c423341a8ec421933835569c3019c3355ba. Installed to /Applications/ContextDaddy.app and launched; Gatekeeper accepted the notarized app. Guided Skills onboarding, bounded scrolling including legacy scrollbars, and Devin in unified Local History. Manual updates only. Discovery does not prove live prompt use. Installed Skills library populated; rescan and guided selection passed. Discovery retains explicit entry/depth coverage limits.",
-        "nextAction": "Download the signed 0.2.1 beta; open Skills and follow Guide. Updates are manual downloads."
+        "proof": "Public 0.2.10 build 20 verified at https://context.daddyrad.com/download and GitHub release v0.2.10-20 (2026-10-09, source 95b88093e9f1f9786253bbdd6cbb3e66aa44fb6d). The live download SHA-256 51acdf9eb8a39f1b9555b702f4c9b498140dfd3f43445fd74bfa261e3d575bb2 matches the release asset and its live-publication receipt; the DMG and bundled ContextDaddy.app pass Gatekeeper as a notarized Developer ID build (notary status Accepted). Updates are delivered through the Sparkle appcast at https://context.daddyrad.com/updates/appcast.xml, which offers 0.2.10 build 20. Not installed or launched in this audit; in-app Sparkle installation remains unexercised. Discovery does not prove live prompt use and retains explicit entry/depth coverage limits.",
+        "nextAction": "Download the signed 0.2.10 beta; open Skills and follow Guide. Later builds arrive through the in-app Sparkle update feed."
       },
       "footerArt": {
         "src": "/footer-art/contextdaddy.webp",

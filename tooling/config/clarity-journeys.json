@@ -5,22 +5,6 @@
   "note": "Credential-free candidates observed from each wired public root. Provider state remains unverified until the saved Smart Event and funnel are reread in Clarity.",
   "projects": [
     {
-      "id": "codevetter",
-      "state": "ready",
-      "event": {
-        "name": "benchmark_opened",
-        "text": "Inspect published benchmark evidence",
-        "href": "/benchmark"
-      },
-      "funnel": {
-        "name": "discover_to_benchmark",
-        "steps": [
-          "page:/",
-          "event:benchmark_opened"
-        ]
-      }
-    },
-    {
       "id": "pace",
       "state": "ready",
       "event": {
@@ -177,22 +161,6 @@
         "steps": [
           "page:/",
           "event:publish_opened"
-        ]
-      }
-    },
-    {
-      "id": "research-papers",
-      "state": "ready",
-      "event": {
-        "name": "reading_paths_opened",
-        "text": "Browse reading paths",
-        "href": "/paths"
-      },
-      "funnel": {
-        "name": "library_to_reading_path",
-        "steps": [
-          "page:/",
-          "event:reading_paths_opened"
         ]
       }
     },
@@ -582,22 +550,6 @@
       }
     },
     {
-      "id": "meme-lab",
-      "state": "ready",
-      "event": {
-        "name": "paired_run_started",
-        "text": "Run blind A/B",
-        "selector": "#run-paired"
-      },
-      "funnel": {
-        "name": "discover_to_paired_run",
-        "steps": [
-          "page:/",
-          "event:paired_run_started"
-        ]
-      }
-    },
-    {
       "id": "nutrition-formula-engine",
       "state": "ready",
       "event": {
@@ -690,22 +642,6 @@
         "steps": [
           "page:/",
           "event:game_opened"
-        ]
-      }
-    },
-    {
-      "id": "open-historia",
-      "state": "ready",
-      "event": {
-        "name": "play_opened",
-        "text": "Pick a scenario and start",
-        "href": "/play"
-      },
-      "funnel": {
-        "name": "discover_to_play",
-        "steps": [
-          "page:/",
-          "event:play_opened"
         ]
       }
     },
