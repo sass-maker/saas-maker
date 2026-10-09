@@ -43,18 +43,19 @@ from a canonical catalog id alone. Use `catalog-id` instead of `project-key`:
 ></saas-maker-newsletter-capture>
 ```
 
-The element calls `GET /v1/capture-config/:catalogId`, which returns only the
-bound project's publishable `api_key` and minimal display metadata (`name`,
-`slug`). It never returns owner/user data, private tokens, or unbound
-projects. Unknown, malformed, and unbound ids all return the same 404 shape;
-the form shows a neutral "not configured" status and prevents submission.
+The element resolves the publishable key from the public config snapshot bundled
+into the shared assets. It makes no config API request, including on submission.
+Unknown or unbound ids show a neutral "not configured" status and prevent
+submission. `project-key` takes precedence; alternate API origins require it.
+Only an actual submission calls `POST /v1/subscriptions`.
 
-The resolved key is held only in memory for the current element instance; it is
-not logged, stored, or sent anywhere except the existing `POST /v1/subscriptions`
-contract. `project-key` takes precedence when both attributes are present, so
-existing explicit-key integrations keep working unchanged. Config loading is
-lifecycle-safe: a disconnect or attribute change cancels the in-flight request
-and discards stale responses before they can mutate the form.
+After registering a project binding or rotating a publishable key, run
+`pnpm capture:refresh` at the repository root and rebuild the shared assets.
+The refresh reads the credential-free public endpoint, retains only `api_key`,
+`name`, and `slug`, and updates `src/capture-config.json`. Review and commit the
+snapshot, then deploy the hosted assets (or release the package for npm consumers).
+Builds use the checked-in snapshot and never query the API. The shared footer
+embeds the same snapshot for feedback, so opening feedback also needs no lookup.
 
 ## Footer placement with Fleet components
 

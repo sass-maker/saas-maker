@@ -4,8 +4,8 @@ import {
   CONSENT_COPY_V1,
   DEFAULT_API_BASE_URL,
   DEFAULT_SOURCE,
-  fetchCaptureConfig,
   normalizeApiBaseUrl,
+  resolveCaptureConfig,
   submitSubscription,
   validateSubscriptionRequest,
 } from './contract';
@@ -143,7 +143,7 @@ export function registerNewsletterCapture(): void {
     // when attributes change so a stale async response cannot mutate state.
     private resolvedProjectKey = '';
     private configState: 'idle' | 'loading' | 'ready' | 'error' = 'idle';
-    // Monotonic token guarding against stale config fetches across disconnect,
+    // Monotonic token guarding against stale config resolution across disconnect,
     // reconnect, and attribute changes. Only the latest token may apply state.
     private configToken = 0;
     private abortController?: AbortController;
@@ -297,13 +297,12 @@ export function registerNewsletterCapture(): void {
     }
 
     /**
-     * Resolve the publishable project key for catalog-id mode. Explicit
-     * project-key always wins and skips the fetch. Lifecycle-safe: a monotonic
-     * token discards stale responses after disconnect or attribute changes,
-     * and an AbortSignal cancels the in-flight request on disconnect.
+     * Resolve the publishable project key locally for catalog-id mode. Explicit
+     * project-key always wins. Disconnects and attribute changes invalidate
+     * pending submissions.
      */
     private async loadConfigIfNeeded(): Promise<void> {
-      // Explicit project-key mode: no config fetch, no pending state.
+      // Explicit project-key mode: no config resolution, no pending state.
       const explicitKey = (this.getAttribute('project-key') || '').trim();
       if (explicitKey) {
         this.resolvedProjectKey = '';
@@ -327,10 +326,10 @@ export function registerNewsletterCapture(): void {
       this.updateConfigStatus();
 
       try {
-        const config: CaptureConfig = await fetchCaptureConfig(catalogId, {
-          apiBaseUrl: this.getAttribute('api-base-url') || DEFAULT_API_BASE_URL,
-          signal: this.abortController.signal,
-        });
+        const config: CaptureConfig = resolveCaptureConfig(
+          catalogId,
+          this.getAttribute('api-base-url') || DEFAULT_API_BASE_URL
+        );
         if (token !== this.configToken || !this.isConnected) return;
         this.resolvedProjectKey = config.api_key;
         this.configState = 'ready';
