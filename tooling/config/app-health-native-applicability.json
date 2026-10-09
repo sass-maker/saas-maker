@@ -291,12 +291,6 @@
       "serverRequests": "applicable"
     },
     {
-      "id": "agent-testing",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "not-applicable"
-    },
-    {
       "id": "nutrition-formula-engine",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",

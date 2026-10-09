@@ -1922,60 +1922,6 @@
       "latestCommitAt": "2026-09-23"
     },
     {
-      "id": "agent-testing",
-      "name": "Browser Agent Testing",
-      "description": "A completed local web and iOS experiment comparing browser-agent strategies with independent verification.",
-      "makerNote": "I ran Browser Agent Testing to compare automation by verified feedback time, not by how quickly a driver can finish clicks.",
-      "purposeContract": {
-        "purpose": "Browser Agent Testing compares local web and native UI automation with reproducible, product-owned verification.",
-        "audience": "Coding agents and maintainers comparing local browser and native UI testing tools.",
-        "outcome": "Choose faster and cheaper test strategies without silently losing functional or visual defect detection.",
-        "mechanism": "Bounded manifests and receipts run saved or adaptive workflows, then independent product verifiers check UI, persistence, process and visual outcomes.",
-        "proof": "The completed experiment publishes a sourced 79-tool catalogue, 26 measured journey arms with 118 verified completions across 129 attempts, seven additional probes, ten retained experiment records, exact observed pins and a live agent-first guide. The measured evidence retains Playwright and Maestro as baselines.",
-        "nextAction": "Explore the finished experiment or clone the public repository; replay a documented arm only when a concrete product change justifies it."
-      },
-      "footerArt": {
-        "src": "/footer-art/agent-testing.webp",
-        "width": 2171,
-        "height": 724,
-        "alt": "Browser Agent Testing: A compact experiment reading bench centers a retained evidence envelope and two plainly fictional viewport studies. One route folio supplies context; no extra control-room props or active app shell are invented.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Browser Agent Testing",
-        "sha256": "9fe38d1d06d641d0d42e79460e68ed02b44f29631d7ebc16a265881567e8ba79"
-      },
-      "kind": "experiment",
-      "category": "experimental",
-      "form": "Completed benchmark and static guide",
-      "platforms": [
-        "Web",
-        "iOS",
-        "CLI"
-      ],
-      "technologies": [
-        "Node.js",
-        "Cloudflare Workers",
-        "Playwright",
-        "Maestro"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Workers"
-      ],
-      "domains": [
-        "browser-agents.sarthakagrawal.dev"
-      ],
-      "url": "https://browser-agents.sarthakagrawal.dev/",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/agent-testing",
-      "changelogUrl": "https://browser-agents.sarthakagrawal.dev/changelog",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/agent-testing/issues",
-      "firstCommitAt": "2026-09-20",
-      "latestCommitAt": "2026-09-20"
-    },
-    {
       "id": "contextdaddy",
       "name": "ContextDaddy",
       "description": "A native Mac workspace for coding-agent skills, context, usage and telemetry, with a unified skill library, explicit local changes, and recovery history.",
@@ -2386,41 +2332,6 @@
         "focalY": 50,
         "credit": "Original illustration for App Health",
         "sha256": "d89c904afcbb6b379ecdb0aeb394609af83c63f1703f637dec6df5e5fde08886"
-      }
-    },
-    {
-      "id": "agent-testing",
-      "name": "Browser Agent Testing",
-      "description": "A completed local web and iOS experiment comparing browser-agent speed, cost, reliability and defect detection against independent verification.",
-      "url": "https://browser-agents.sarthakagrawal.dev/",
-      "tier": "secondary",
-      "category": "experimental",
-      "priority": "P4",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "experiment",
-      "changelogUrl": "https://browser-agents.sarthakagrawal.dev/changelog",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/agent-testing",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/agent-testing/issues",
-      "pillarId": "build",
-      "purposeContract": {
-        "purpose": "Browser Agent Testing compares local web and native UI automation with reproducible, product-owned verification.",
-        "audience": "Coding agents and maintainers comparing local browser and native UI testing tools.",
-        "outcome": "Choose faster and cheaper test strategies without silently losing functional or visual defect detection.",
-        "mechanism": "Bounded manifests and receipts run saved or adaptive workflows, then independent product verifiers check UI, persistence, process and visual outcomes.",
-        "proof": "The completed experiment publishes a sourced 79-tool catalogue, 26 measured journey arms with 118 verified completions across 129 attempts, seven additional probes, ten retained experiment records, exact observed pins and a live agent-first guide. The measured evidence retains Playwright and Maestro as baselines.",
-        "nextAction": "Explore the finished experiment or clone the public repository; replay a documented arm only when a concrete product change justifies it."
-      },
-      "footerArt": {
-        "src": "/footer-art/agent-testing.webp",
-        "width": 2171,
-        "height": 724,
-        "alt": "Browser Agent Testing: A compact experiment reading bench centers a retained evidence envelope and two plainly fictional viewport studies. One route folio supplies context; no extra control-room props or active app shell are invented.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Browser Agent Testing",
-        "sha256": "9fe38d1d06d641d0d42e79460e68ed02b44f29631d7ebc16a265881567e8ba79"
       }
     },
     {

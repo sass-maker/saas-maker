@@ -1033,16 +1033,6 @@
       ]
     },
     {
-      "id": "agent-testing",
-      "name": "Browser Agent Testing",
-      "repo": "agent-testing",
-      "clarityId": "ymdukwth4b",
-      "hostname": "browser-agents.sarthakagrawal.dev",
-      "wiredFiles": [],
-      "reason": "Testing surface reactivated 2026-09-27; analytics remain unwired pending an explicit owner wiring decision.",
-      "browserSurfaces": []
-    },
-    {
       "id": "scale",
       "name": "Scale",
       "repo": "scale",

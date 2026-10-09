@@ -1284,26 +1284,6 @@
       ]
     },
     {
-      "id": "agent-testing",
-      "applicability": "not-applicable",
-      "confidence": "high",
-      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "internal"
-        },
-        {
-          "field": "classification.kind",
-          "value": "experiment"
-        }
-      ]
-    },
-    {
       "id": "nutrition-formula-engine",
       "applicability": "newsletter",
       "confidence": "medium",
