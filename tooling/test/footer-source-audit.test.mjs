@@ -7,6 +7,7 @@ import test, { afterEach } from 'node:test';
 import {
   auditFooterSources,
   inspectFooterSource,
+  inspectStudioFooter,
   validateManifest,
 } from '../scripts/footer-source-audit.mjs';
 
@@ -64,6 +65,7 @@ test('a required visual surface and shared factory pass when every named file is
     compliant: 2,
     compliantVisual: 1,
     compliantFactories: 1,
+    compliantForms: { precise: 2, studio: 0 },
     acknowledgedExceptions: 0,
     findings: 0,
     blocking: 0,
@@ -127,4 +129,124 @@ test('manifest validation rejects unknown fields, duplicate ids, and unsafe path
   assert.match(result.problems.join('\n'), /unsupported field surprise/u);
   assert.match(result.problems.join('\n'), /duplicate id/u);
   assert.match(result.problems.join('\n'), /safe relative paths/u);
+});
+
+const studioHtml = '<footer data-fleet-footer="studio" data-catalog-id="product"></footer>';
+const studioContent = (catalogId) => JSON.stringify({
+  template: 'gallery',
+  footer: { summary: 'A product.', catalogId, capture: 'newsletter', feedbackKey: 'pk_test' },
+});
+const uiPackage = JSON.stringify({ name: 'product-site', dependencies: { '@saas-maker/ui': 'file:../ui' } });
+
+test('inspectStudioFooter reads the rendered marker and the content JSON catalog id', () => {
+  assert.deepEqual(inspectStudioFooter(studioHtml), {
+    studioMarkers: 1,
+    studioCatalogIds: ['product'],
+    contentCatalogId: null,
+  });
+  assert.equal(inspectStudioFooter(studioContent('product'), { json: true }).contentCatalogId, 'product');
+  assert.equal(inspectStudioFooter('{not json', { json: true }).contentCatalogId, null);
+  assert.equal(inspectStudioFooter(paired).studioMarkers, 0);
+});
+
+test('a rendered UI-library studio footer passes without Precise loaders', () => {
+  const root = fixture({ 'product/dist/index.html': studioHtml });
+  const report = auditFooterSources({
+    fleetRoot: root,
+    manifest: manifest([
+      { id: 'product', kind: 'visual', state: 'required', files: ['product/dist/index.html'] },
+    ]),
+  });
+  assert.equal(report.summary.blocking, 0);
+  assert.deepEqual(report.summary.compliantForms, { precise: 0, studio: 1 });
+  assert.equal(report.results[0].files[0].form, 'studio');
+});
+
+test('a UI-library content JSON passes with a matching catalog id and library dependency', () => {
+  const root = fixture({
+    'product/.git/HEAD': 'ref: refs/heads/main\n',
+    'product/package.json': JSON.stringify({ name: 'workspace' }),
+    'product/site/package.json': JSON.stringify({ devDependencies: { '@saas-maker/templates': '0.1.7' } }),
+    'product/site/src/content/product.json': studioContent('product'),
+    'other/package.json': uiPackage,
+    'other/site/src/content/site.json': studioContent('other'),
+  });
+  const report = auditFooterSources({
+    fleetRoot: root,
+    manifest: manifest([
+      { id: 'product', kind: 'visual', state: 'required', files: ['product/site/src/content/product.json'] },
+      { id: 'other', kind: 'visual', state: 'required', files: ['other/site/src/content/site.json'] },
+    ]),
+  });
+  assert.equal(report.summary.blocking, 0);
+  assert.deepEqual(report.summary.compliantForms, { precise: 0, studio: 2 });
+  assert.deepEqual(report.results[0].files[0].uiLibraryDependency, {
+    package: '@saas-maker/templates',
+    manifest: 'product/site/package.json',
+  });
+});
+
+test('studio footers block on a wrong catalog id or a missing UI-library dependency', () => {
+  const root = fixture({
+    'wrong/dist/index.html': '<footer data-fleet-footer="studio" data-catalog-id="someone-else"></footer>',
+    'unlabelled/dist/index.html': '<footer data-fleet-footer="studio"></footer>',
+    'content/package.json': uiPackage,
+    'content/src/content/site.json': studioContent('someone-else'),
+    'nodep/.git/HEAD': 'ref: refs/heads/main\n',
+    'nodep/package.json': JSON.stringify({ dependencies: { react: '19.0.0' } }),
+    'nodep/src/content/site.json': studioContent('nodep'),
+    // A dependency above the repository root does not count.
+    'package.json': uiPackage,
+  });
+  const report = auditFooterSources({
+    fleetRoot: root,
+    manifest: manifest([
+      { id: 'wrong', kind: 'visual', state: 'required', files: ['wrong/dist/index.html'] },
+      { id: 'unlabelled', kind: 'visual', state: 'required', files: ['unlabelled/dist/index.html'] },
+      { id: 'content', kind: 'visual', state: 'required', files: ['content/src/content/site.json'] },
+      { id: 'nodep', kind: 'visual', state: 'required', files: ['nodep/src/content/site.json'] },
+    ]),
+  });
+  assert.deepEqual(
+    report.blocking.map((entry) => `${entry.surface}:${entry.code}`).sort(),
+    [
+      'content:STUDIO_CATALOG_ID',
+      'nodep:MISSING_UI_LIBRARY',
+      'unlabelled:STUDIO_CATALOG_ID',
+      'wrong:STUDIO_CATALOG_ID',
+    ],
+  );
+  assert.equal(report.summary.compliant, 0);
+});
+
+test('a content JSON without a footer catalog id still needs the Precise loaders', () => {
+  const root = fixture({
+    'product/package.json': uiPackage,
+    'product/src/content/site.json': JSON.stringify({ footer: { summary: 'No catalog id.' } }),
+  });
+  const report = auditFooterSources({
+    fleetRoot: root,
+    manifest: manifest([
+      { id: 'product', kind: 'visual', state: 'required', files: ['product/src/content/site.json'] },
+    ]),
+  });
+  assert.deepEqual(
+    report.blocking.map((entry) => entry.code).sort(),
+    ['MISSING_AI_FOOTER', 'MISSING_PROJECT_STRIP'],
+  );
+});
+
+test('Precise and studio surfaces are counted separately in one receipt', () => {
+  const root = fixture({ 'precise/layout.astro': paired, 'product/dist/index.html': studioHtml });
+  const report = auditFooterSources({
+    fleetRoot: root,
+    manifest: manifest([
+      { id: 'precise', kind: 'visual', state: 'required', files: ['precise/layout.astro'] },
+      { id: 'product', kind: 'visual', state: 'required', files: ['product/dist/index.html'] },
+    ]),
+  });
+  assert.equal(report.summary.blocking, 0);
+  assert.equal(report.summary.compliantVisual, 2);
+  assert.deepEqual(report.summary.compliantForms, { precise: 1, studio: 1 });
+  assert.equal(report.results[0].files[0].form, 'precise');
 });
