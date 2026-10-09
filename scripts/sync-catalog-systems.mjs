@@ -311,6 +311,36 @@ outputs.set(
   });
 }
 
+{
+  // Journey probes are read-only by policy: every catalogued journey is a
+  // public GET with no body, credentials or query values. App Health reads the
+  // generated file; it never decides which products are probed.
+  const config = systems.probeJourneys ?? {};
+  const allowedJourney = new Set(['journey', 'url', 'budget_ms', 'timeout_ms', 'warm_check', 'expect']);
+  const entries = systemEntries('probe');
+  for (const [id, policy] of entries) {
+    if (!Array.isArray(policy.journeys) || policy.journeys.length === 0)
+      throw new Error(`Probe policy needs journeys or an absent reason: ${id}`);
+    for (const journey of policy.journeys) {
+      const unknown = Object.keys(journey).filter((field) => !allowedJourney.has(field));
+      if (unknown.length > 0)
+        throw new Error(`Probe journeys are GET-only; unexpected ${unknown.join(', ')}: ${id}`);
+      const url = new URL(journey.url);
+      if (url.protocol !== 'https:' || url.search || url.username || url.password)
+        throw new Error(`Probe journey URL must be plain public https: ${id}/${journey.journey}`);
+    }
+  }
+  outputs.set('app-health/apps/probe/journeys.json', {
+    schema_version: 1,
+    generated_from: 'saas-maker catalog/projects.json projects[].systems.probe (pnpm catalog:sync)',
+    purpose: config.purpose,
+    source_issue: config.sourceIssue,
+    journeys: inOrder(config, entries, (id) =>
+      entries.get(id)?.journeys.map((journey) => ({ project: id, ...journey }))
+    ).flat(),
+  });
+}
+
 outputs.set('site-health/apps/backend/config/root-search-queries.json', systems.searchRoots ?? {});
 outputs.set('site-health/apps/backend/config/root-brands.json', systems.rootBrands ?? {});
 outputs.set('site-health/apps/backend/config/search-console.json', systems.searchConsole ?? {});
