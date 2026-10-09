@@ -157,10 +157,8 @@ test('studio is one static labelled line of safe noncurrent links and the direct
   );
   assert.match(markup, /data-layout="studio"/);
   assert.match(markup, /From the studio/);
-  assert.match(
-    markup,
-    /tabindex="0" role="region" aria-label="Studio project links; scroll with arrow keys"/
-  );
+  assert.match(markup, /class="portfolio-project-strip__studio"/);
+  assert.doesNotMatch(markup, /tabindex=|role="region"/);
   assert.equal((markup.match(/<a /g) ?? []).length, 4);
   assert.match(markup, /campaign=launch&amp;ref=current#details/);
   assert.match(markup, /href="https:\/\/sassmaker.com\/projects"/);

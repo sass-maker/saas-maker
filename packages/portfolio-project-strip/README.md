@@ -66,6 +66,6 @@ Use `layout="curated"` (React or browser attribute) for the first three normaliz
 Set `layout="studio"` on the React component or `<portfolio-project-strip>`
 for a single static line: "From the studio", three safe noncurrent catalog
 links and "All projects". It retains current-product exclusion, referral
-parameters and background catalog revalidation. On narrow screens the line
-scrolls within its own keyboard-focusable region instead of wrapping or
-animating. It consumes the shared composition's `--fleet-footer-ui-font`.
+parameters and background catalog revalidation. It never clips or animates:
+below a 40rem container width the label becomes an eyebrow on its own line and
+the names (then All projects) wrap beneath it without separators. It consumes the shared composition's `--fleet-footer-ui-font`.

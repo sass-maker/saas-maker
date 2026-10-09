@@ -9,7 +9,6 @@ class FixtureNode {
     this.attributes = new Map();
     this.listeners = new Map();
     this.isConnected = false;
-    this.scrollLeft = 0;
     this.bounds = { left: 0, right: 100 };
     this.style = {
       setProperty(name, value) {
@@ -120,7 +119,7 @@ const projects = [
   { id: 'three', name: 'Three', url: 'https://three.example' },
 ];
 
-test('same-value attributes preserve studio nodes; successful refresh restores destination focus and scroll', async () => {
+test('same-value attributes preserve studio nodes; successful refresh restores destination focus', async () => {
   await withBrowser(async (Strip) => {
     const strip = new Strip();
     strip.projects = projects;
@@ -133,7 +132,6 @@ test('same-value attributes preserve studio nodes; successful refresh restores d
     const root = strip.shadowRoot;
     const line = root.querySelector('.studio-line');
     const focused = line.querySelectorAll('a')[1];
-    line.scrollLeft = 180;
     focused.focus();
     strip.setAttribute('theme', 'dark');
     strip.setAttribute('current-project', 'current');
@@ -152,14 +150,14 @@ test('same-value attributes preserve studio nodes; successful refresh restores d
     assert.equal(requests[0].options.headers.accept, 'application/json');
     const refreshed = root.querySelector('.studio-line');
     assert.notEqual(refreshed, line);
-    assert.equal(refreshed.scrollLeft, 180);
+    assert.equal(refreshed.tabIndex, undefined);
     assert.equal(root.activeElement.href, focused.href);
     assert.match(root.activeElement.href, /ref=current/);
     assert.equal(refreshed.querySelectorAll('a').length, 4);
     globalThis.fetch = async () =>
       new Response(JSON.stringify(projects.filter((project) => project.id !== 'two')));
     await strip.revalidate();
-    assert.equal(root.activeElement, root.querySelector('.studio-line'));
+    assert.equal(root.activeElement, root.querySelector('.studio-line').querySelectorAll('a')[0]);
   });
 });
 

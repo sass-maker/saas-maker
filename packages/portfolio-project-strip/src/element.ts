@@ -55,7 +55,6 @@ export function registerPortfolioProjectStrip(): void {
       );
       const focusedHref =
         root.activeElement instanceof HTMLAnchorElement ? root.activeElement.href : undefined;
-      const studioScrollLeft = previousStudio?.scrollLeft ?? 0;
       root.replaceChildren();
       const style = document.createElement('style');
       style.textContent = `
@@ -96,15 +95,19 @@ export function registerPortfolioProjectStrip(): void {
         .curated-list a { font-size: .95rem; font-weight: 650; overflow-wrap: anywhere; }
         .description { margin: 0; color: var(--portfolio-strip-muted); font-size: .8125rem; line-height: 1.5; overflow-wrap: anywhere; }
         @container (min-width: 560px) { .curated-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; align-items: start; } }
-        :host([layout='studio']) { border-block: 0; background: transparent; font-family: var(--portfolio-strip-ui-font, var(--fleet-footer-ui-font, inherit)); }
-        .studio-line { display: flex; width: 100%; min-width: 0; align-items: center; justify-content: space-between; gap: 1.4rem; padding: .4rem var(--portfolio-strip-edge, var(--fleet-footer-edge, 1.25rem)); overflow-x: auto; overscroll-behavior-x: contain; white-space: nowrap; font-size: .75rem; line-height: 1.5; scrollbar-width: thin; scrollbar-color: var(--portfolio-strip-border) transparent; }
-        .studio-line:focus-visible { outline: 2px solid var(--portfolio-strip-focus); outline-offset: -2px; }
+        :host([layout='studio']) { border-block: 0; background: transparent; font-family: var(--portfolio-strip-ui-font, var(--fleet-footer-ui-font, inherit)); container-type: inline-size; }
+        .studio-line { display: flex; flex-wrap: wrap; width: 100%; min-width: 0; align-items: center; justify-content: space-between; gap: 0 1.4rem; padding: .4rem var(--portfolio-strip-edge, var(--fleet-footer-edge, 1.25rem)); white-space: nowrap; font-size: .75rem; line-height: 1.5; }
         .studio-label, .studio-line > a, .studio-dot { flex: 0 0 auto; }
         .studio-label, .studio-dot { color: var(--portfolio-strip-muted); }
-        .studio-list { display: flex; flex: 1 0 auto; align-items: center; justify-content: space-around; gap: 1.4rem; }
+        .studio-list { display: flex; flex: 1 0 auto; flex-wrap: wrap; align-items: center; justify-content: space-around; gap: 0 1.4rem; }
         .studio-list li { display: flex; align-items: center; gap: 1.4rem; }
         .studio-line a { font-size: inherit; }
-        @media (max-width: 600px) { .studio-line, .studio-list, .studio-list li { gap: 1rem; } }
+        @container (max-width: 40rem) {
+          .studio-line { justify-content: flex-start; column-gap: 1.25rem; padding-block: .75rem .25rem; }
+          .studio-label { flex-basis: 100%; }
+          .studio-dot { display: none; }
+          .studio-list { flex: 0 1 auto; justify-content: flex-start; column-gap: 1.25rem; }
+        }
         @keyframes portfolio-strip-marquee { to { transform: translateX(-50%); } }
         @media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
           .track { animation: none; }
@@ -118,9 +121,6 @@ export function registerPortfolioProjectStrip(): void {
       if (studio) {
         const line = document.createElement('div');
         line.className = 'studio-line';
-        line.tabIndex = 0;
-        line.setAttribute('role', 'region');
-        line.setAttribute('aria-label', 'Studio project links; scroll with arrow keys');
         const caption = document.createElement('span');
         caption.className = 'studio-label';
         caption.textContent = 'From the studio';
@@ -151,21 +151,11 @@ export function registerPortfolioProjectStrip(): void {
         line.append(caption, list, separator(), all);
         aside.append(line);
         root.append(style, aside);
-        line.scrollLeft = studioScrollLeft;
         if (restoreStudioFocus) {
-          const focusedLink = Array.from(line.querySelectorAll('a')).find(
-            (link) => link.href === focusedHref
-          );
-          (focusedLink ?? line).focus({ preventScroll: true });
-          if (focusedLink) {
-            const lineBounds = line.getBoundingClientRect();
-            const linkBounds = focusedLink.getBoundingClientRect();
-            if (linkBounds.left < lineBounds.left) {
-              line.scrollLeft += linkBounds.left - lineBounds.left;
-            } else if (linkBounds.right > lineBounds.right) {
-              line.scrollLeft += linkBounds.right - lineBounds.right;
-            }
-          }
+          const links = Array.from(line.querySelectorAll('a'));
+          (links.find((link) => link.href === focusedHref) ?? links[0])?.focus({
+            preventScroll: true,
+          });
         }
         return;
       }
