@@ -373,22 +373,6 @@
       }
     },
     {
-      "id": "mashup",
-      "state": "ready",
-      "event": {
-        "name": "receipt_opened",
-        "text": "Inspect the validated receipt",
-        "href": "/receipts/operators.receipt.json"
-      },
-      "funnel": {
-        "name": "discover_to_receipt",
-        "steps": [
-          "page:/",
-          "event:receipt_opened"
-        ]
-      }
-    },
-    {
       "id": "motion",
       "state": "ready",
       "event": {

@@ -1335,60 +1335,6 @@
       "latestCommitAt": "2026-09-19"
     },
     {
-      "id": "mashup",
-      "name": "Mashup",
-      "description": "Two playable examples of a local media-editing pipeline, with captions and inspectable source and approval receipts.",
-      "makerNote": "I wanted a creator’s archive to become coherent topic-specific compilations instead of a pile of isolated clips.",
-      "purposeContract": {
-        "purpose": "Mashup turns an owned creator archive into coherent topic-specific compilations while keeping every edit inspectable.",
-        "audience": "A creator or operator assembling comedy, motivation, podcast, or clipping compilations from approved media.",
-        "outcome": "Find, approve, sequence, and render useful clips without losing source provenance or editorial control.",
-        "mechanism": "A local pipeline combines archive analysis, clipping, editable EDLs, source receipts, approval boundaries, and deterministic rendering.",
-        "proof": "The first public Startups proof assembles a source-faithful 47-second argument from four beats across three Creative Commons podcast episodes, with captions and media receipts.",
-        "nextAction": "Preserved experiment; no current work or obligation to resume."
-      },
-      "footerArt": {
-        "src": "/footer-art/mashup.webp",
-        "width": 2170,
-        "height": 725,
-        "alt": "Mashup: A local editing bench centers an assembled filmstrip and cutting surface. Original abstract frames, owned-source reels and retained cut slips surround an editable sequence folio.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Mashup",
-        "sha256": "4bd8e37d6d4f21cc22402f8e7450a50afecce0adfe5517a59e2d6a5a55821be5"
-      },
-      "kind": "experiment",
-      "category": "experimental",
-      "form": "Local media tool with public proof",
-      "platforms": [
-        "Web",
-        "CLI",
-        "Local"
-      ],
-      "technologies": [
-        "Python",
-        "FFmpeg",
-        "Astro",
-        "Cloudflare Pages"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Pages"
-      ],
-      "domains": [
-        "mashup.highsignal.app"
-      ],
-      "url": "https://mashup.highsignal.app",
-      "repositoryUrl": "https://github.com/sass-maker/mashup",
-      "changelogUrl": "https://mashup.highsignal.app/changelog",
-      "roadmapUrl": "https://github.com/sass-maker/mashup/issues",
-      "firstCommitAt": "2026-07-25",
-      "latestCommitAt": "2026-09-07"
-    },
-    {
       "id": "ph-catalog",
       "name": "PH Catalog",
       "description": "A resumable local Product Hunt catalogue and analytics experiment with a privacy-safe synthetic demo.",
@@ -2974,39 +2920,6 @@
         "focalY": 50,
         "credit": "Original illustration for LoopTV",
         "sha256": "647e371670bb62c6e39c8a843a714a9d2ff3f4001876719a9b63a7c380ba8cb5"
-      }
-    },
-    {
-      "id": "mashup",
-      "name": "Mashup",
-      "description": "Two playable examples of a local media-editing pipeline, with captions and inspectable source and approval receipts.",
-      "url": "https://mashup.highsignal.app",
-      "tier": "secondary",
-      "category": "experimental",
-      "priority": "P2",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "changelogUrl": "https://mashup.highsignal.app/changelog",
-      "repositoryUrl": "https://github.com/sass-maker/mashup",
-      "roadmapUrl": "https://github.com/sass-maker/mashup/issues",
-      "purposeContract": {
-        "purpose": "Mashup turns an owned creator archive into coherent topic-specific compilations while keeping every edit inspectable.",
-        "audience": "A creator or operator assembling comedy, motivation, podcast, or clipping compilations from approved media.",
-        "outcome": "Find, approve, sequence, and render useful clips without losing source provenance or editorial control.",
-        "mechanism": "A local pipeline combines archive analysis, clipping, editable EDLs, source receipts, approval boundaries, and deterministic rendering.",
-        "proof": "The first public Startups proof assembles a source-faithful 47-second argument from four beats across three Creative Commons podcast episodes, with captions and media receipts.",
-        "nextAction": "Preserved experiment; no current work or obligation to resume."
-      },
-      "footerArt": {
-        "src": "/footer-art/mashup.webp",
-        "width": 2170,
-        "height": 725,
-        "alt": "Mashup: A local editing bench centers an assembled filmstrip and cutting surface. Original abstract frames, owned-source reels and retained cut slips surround an editable sequence folio.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Mashup",
-        "sha256": "4bd8e37d6d4f21cc22402f8e7450a50afecce0adfe5517a59e2d6a5a55821be5"
       }
     },
     {

@@ -872,26 +872,6 @@
       ]
     },
     {
-      "id": "mashup",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "The public product site has a bound project identity and shared footer. Offer occasional notes only when the product materially changes; do not imply a planned release or recurring cadence.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "presentation.directory.purposeContract.nextAction",
-          "value": "Preserved experiment; no current work or obligation to resume."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "Public finished-example playback, exact media receipts and corrected desktop/mobile captions pass. Automatic editorial selection, source installation and the real creator/operator pilot remain unqualified under #11."
-        }
-      ]
-    },
-    {
       "id": "motion",
       "applicability": "newsletter",
       "confidence": "medium",

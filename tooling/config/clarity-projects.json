@@ -658,23 +658,6 @@
       ]
     },
     {
-      "id": "mashup",
-      "name": "Mashup",
-      "repo": "mashup",
-      "clarityId": "y6bvgfkqwg",
-      "hostname": "mashup.highsignal.app",
-      "wiredFiles": [
-        "mashup/web/src/pages/index.astro"
-      ],
-      "reason": "Clarity covers only the public proof site; archives, editing, rendering, approvals, and publishing remain local and outside session replay.",
-      "browserSurfaces": [
-        {
-          "kind": "landing",
-          "file": "mashup/web/src/pages/index.astro"
-        }
-      ]
-    },
-    {
       "id": "motion",
       "name": "Motion",
       "repo": "motion",

@@ -157,11 +157,6 @@
       "probePath": "/"
     },
     {
-      "id": "mashup",
-      "url": "https://mashup.highsignal.app",
-      "probePath": "/"
-    },
-    {
       "id": "ph-catalog",
       "url": "https://ph.significanthobbies.com",
       "probePath": "/"

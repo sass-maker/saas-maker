@@ -195,12 +195,6 @@
       "serverRequests": "applicable"
     },
     {
-      "id": "mashup",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "not-applicable"
-    },
-    {
       "id": "motion",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
