@@ -16,7 +16,7 @@ Each app's manual `.github/workflows/release.yml` uses a `production-release` en
 - `APPLE_NOTARY_API_KEY_P8_BASE64`
 - `APPLE_NOTARY_KEY_ID`
 - `APPLE_NOTARY_ISSUER_ID`
-- `SPARKLE_ED25519_PRIVATE_KEY` (StorageDaddy, PerformanceDaddy, and BrowserDaddy only)
+- `SPARKLE_ED25519_PRIVATE_KEY` (a separate key for each app; ContextDaddy requires a new dedicated key before its updater rollout)
 - `CLOUDFLARE_API_TOKEN` (an account token with Editor limited to the four Daddy Workers, account Workers Metadata Read-Only, and Workers Routes Write limited to `daddyrad.com` and `significanthobbies.com`)
 - `CLOUDFLARE_ACCOUNT_ID`
 
@@ -32,8 +32,8 @@ The `shared/` files are the canonical sources. App copies keep local packaging i
 
 | Canonical file | App copies |
 | --- | --- |
-| `shared/appcast_core.py` | `storagedaddy`, `performancedaddy`, `browserdaddy`: `scripts/appcast_core.py` (apply alongside the wrapper patches below) |
-| `shared/sparkle_core.py` | `storagedaddy`, `performancedaddy`, `browserdaddy`: `scripts/sparkle_core.py` |
+| `shared/appcast_core.py` | all four apps: `scripts/appcast_core.py` (apply alongside the wrapper patches below) |
+| `shared/sparkle_core.py` | all four apps: `scripts/sparkle_core.py` |
 | `shared/prepare-memory-pack.py` | `storagedaddy`: `scripts/prepare-memory-pack.py`; ContextDaddy's current local feature branch also has this copy, but public `main` does not |
 | `shared/worker-core.mjs` | `performancedaddy`, `browserdaddy`: `site/worker-core.mjs` |
 
@@ -55,8 +55,8 @@ Reviewable patches are in `app-wrapper-patches/storagedaddy.patch`,
 `app-wrapper-patches/browserdaddy.patch`. They retain each app's existing
 qualification, filename/URL policy, configuration check, and signing invocation.
 StorageDaddy retains its signed/notarized/stapled receipt gate; the other two
-retain their codesign and stapler gates. ContextDaddy is unchanged and gains
-neither an appcast copy nor Sparkle.
+retain their codesign and stapler gates. The original integration left ContextDaddy manual. The staged four-app updater
+adoption below adds its appcast copy and Sparkle deliberately.
 
 The parent must apply each patch in its app repository and copy the canonical
 `shared/appcast_core.py` to `scripts/appcast_core.py` in the same integration.
@@ -91,3 +91,34 @@ python3 check_copies.py --fleet-root /path/to/fleet
 `universal_products.py` builds PerformanceDaddy and BrowserDaddy separately for arm64 and x86_64, verifies each executable and byte-identical resource bundle, then creates a fresh `Products/Release` directory and a source-SHA receipt. Run it on a clean exact-commit checkout before either app's `package-release.py`; the candidate build also populates the default SwiftPM Sparkle artifact path needed by those packagers.
 
 `launch_smoke.py` runs the assembled app executable briefly before notarization. A hosted SwiftPM binary may resolve `Bundle.module` at the `.app` root even when the packager correctly places artwork under `Contents/Resources`; a signed, notarized artifact can still crash on launch. Keep this check in the protected PerformanceDaddy and BrowserDaddy jobs, and qualify the installed update separately.
+
+
+## Four-app native foundation adoption (local source)
+
+`shared/DaddyAppUpdates.swift` owns the updater lifecycle, preferences, command
+menu and deferred work. `shared/DaddyAppUpdatesTests.swift` runs in all four native
+test targets. Small app-owned `AppUpdates.swift` adapters keep distinct idle rules;
+BrowserDaddy includes classification, and ContextDaddy includes management writes
+and review sheets. `DaddyVisualCore.swift` is canonical for all four apps;
+`DaddyLifecycle.swift` remains canonical for its three current consumers.
+
+`shared/daddy-foundation.json` records hashes and the common Sparkle version.
+The copied `check-daddy-foundation.py` validates these offline and requires the
+candidate workflow, candidate tooling and release tooling to use one full SHA.
+It runs in each app's own CI, even before the new shared runner is published.
+The four-app `check_copies.py` additionally rejects mismatched series revisions.
+The manifest intentionally does not encode its own Git commit: publishing and
+repinning must not create a circular self-hash dependency.
+
+This source adds ContextDaddy's Sparkle profile, feed asset staging and verified
+live download/feed contract. Its app-owned Worker preserves `/download` for the
+one-time bootstrap installation and serves bundled `/updates/` assets directly.
+The protected job requires published updater-aware tooling and a dedicated key;
+it fails closed while still pinned to the older manual profile. Existing public
+manual releases are not retroactively called Sparkle updates.
+
+Publication order: review and publish this shared revision; copy its canonical
+files; repin all four candidate and release callers to that immutable revision;
+configure ContextDaddy's separate signing input; qualify the packaged menu and
+signed previous-build upgrade; publish only with owner release authorization.
+The changes and fixture tests do not prove a signed, published or installed update.

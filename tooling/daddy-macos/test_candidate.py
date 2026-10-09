@@ -57,17 +57,26 @@ class DaddyCandidateProfilesTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Shared Daddy utility drift"):
                 check_shared_copies("browserdaddy", root, shared)
             (root / "site/worker-core.mjs").write_text("original")
+            for canonical, destination in SHARED_COPIES["browserdaddy"]:
+                if not (shared / canonical).exists():
+                    (shared / canonical).write_text("native utility")
+                    target = root / destination
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_text("native utility")
             check_shared_copies("browserdaddy", root, shared)
             (root / "scripts/appcast_core.py").write_text("changed appcast")
             with self.assertRaisesRegex(ValueError, "Shared Daddy utility drift: scripts/appcast_core.py"):
                 check_shared_copies("browserdaddy", root, shared)
 
-    def test_appcast_copy_manifest_covers_only_the_three_sparkle_apps(self):
-        for app in ("storagedaddy", "performancedaddy", "browserdaddy"):
+    def test_appcast_copy_manifest_covers_all_four_sparkle_apps(self):
+        for app in ("storagedaddy", "performancedaddy", "browserdaddy", "contextdaddy"):
             self.assertIn(("appcast_core.py", "scripts/appcast_core.py"), SHARED_COPIES[app])
-        self.assertEqual(SHARED_COPIES["contextdaddy"], [])
-        with tempfile.TemporaryDirectory() as directory:
-            check_shared_copies("contextdaddy", Path(directory))
+
+    def test_native_foundation_is_guarded_for_all_four_apps(self):
+        for app, copies in SHARED_COPIES.items():
+            canonical = {source for source, _ in copies}
+            self.assertTrue({"DaddyVisualCore.swift", "DaddyAppUpdates.swift", "DaddyAppUpdatesTests.swift"} <= canonical)
+            self.assertEqual("DaddyLifecycle.swift" in canonical, app != "contextdaddy")
 
     def test_four_app_copy_cli_passes_integrated_fixture_and_rejects_new_copy_drift(self):
         shared = Path(__file__).with_name("shared")
@@ -78,6 +87,10 @@ class DaddyCandidateProfilesTests(unittest.TestCase):
                     target = root / app / destination
                     target.parent.mkdir(parents=True, exist_ok=True)
                     target.write_bytes((shared / canonical).read_bytes())
+            for app in SHARED_COPIES:
+                ci = root / app / ".github/workflows/ci.yml"
+                ci.parent.mkdir(parents=True, exist_ok=True)
+                ci.write_text("daddy-macos-candidate.yml@" + "a" * 40)
             with patch('sys.argv', ['check_copies.py', '--fleet-root', str(root)]), \
                  patch('builtins.print'):
                 self.assertEqual(check_copies_main(), 0)

@@ -38,12 +38,15 @@
       "repository": "Significant-Hobbies/contextdaddy",
       "executable": "ContextDaddy",
       "bundleId": "com.significanthobbies.contextdaddy",
-      "testArguments": ["--skip", "DesignSnapshotTests"],
-      "sparkleTests": false,
-      "workerTests": false,
+      "testArguments": [
+        "--skip",
+        "DesignSnapshotTests"
+      ],
+      "sparkleTests": true,
+      "workerTests": true,
       "developerDir": "/Applications/Xcode_26.6.app/Contents/Developer",
-      "updateMode": "manual",
-      "updateBaseUrl": null
+      "updateMode": "sparkle",
+      "updateBaseUrl": "https://context.daddyrad.com/updates/"
     }
   }
 }

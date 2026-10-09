@@ -16,8 +16,20 @@ SHARED_COPIES = {
     "storagedaddy": [("appcast_core.py", "scripts/appcast_core.py"), ("prepare-memory-pack.py", "scripts/prepare-memory-pack.py"), ("sparkle_core.py", "scripts/sparkle_core.py")],
     "performancedaddy": [("appcast_core.py", "scripts/appcast_core.py"), ("worker-core.mjs", "site/worker-core.mjs"), ("sparkle_core.py", "scripts/sparkle_core.py")],
     "browserdaddy": [("appcast_core.py", "scripts/appcast_core.py"), ("worker-core.mjs", "site/worker-core.mjs"), ("sparkle_core.py", "scripts/sparkle_core.py")],
-    "contextdaddy": [],
+    "contextdaddy": [("appcast_core.py", "scripts/appcast_core.py"), ("sparkle_core.py", "scripts/sparkle_core.py")],
 }
+for app, executable in (("storagedaddy", "StorageDaddy"), ("performancedaddy", "PerformanceDaddy"),
+                        ("browserdaddy", "BrowserDaddy"), ("contextdaddy", "ContextDaddy")):
+    SHARED_COPIES[app].extend([
+        ("check-daddy-foundation.py", "scripts/check-daddy-foundation.py"),
+        ("daddy-foundation.json", "scripts/daddy-foundation.json"),
+        ("DaddyVisualCore.swift", f"Sources/{executable}/DaddyVisualCore.swift"),
+        ("DaddyAppUpdates.swift", f"Sources/{executable}/DaddyAppUpdates.swift"),
+        ("DaddyAppUpdatesTests.swift", f"Tests/{executable}Tests/DaddyAppUpdatesTests.swift"),
+    ])
+    if app != "contextdaddy":
+        SHARED_COPIES[app].append(("DaddyLifecycle.swift", f"Sources/{executable}/DaddyLifecycle.swift"))
+
 
 
 def profile_for(app: str, repository: str, profiles_path: Path = PROFILES) -> dict:
