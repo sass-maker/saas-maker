@@ -62,7 +62,7 @@ test('the shipped capability policy is complete and remains desired state, not p
   assert.deepEqual(problems, []);
   assert.equal(valid, true);
   const coverage = projectCapabilityCoverage(shipped, capabilityPolicy);
-  assert.equal(coverage.projects, 72);
+  assert.equal(coverage.projects, 71);
   assert.equal(coverage.wiredProjects, 45);
   assert.equal(coverage.capabilities.length, 17);
   assert.equal(coverage.providerVerifiedAssignments, 0);

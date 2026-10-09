@@ -239,14 +239,14 @@ describe('daily PII-free capture receipts', () => {
     ).rejects.toThrow('1 to 55 IDs');
   });
 
-  it('returns canonical capture applicability for all 54 products, including internal newsletter exceptions', async () => {
+  it('returns canonical capture applicability for all 53 products, including internal newsletter exceptions', async () => {
     const { d1 } = setup();
-    const reportProjects = capturePolicy.projects.slice(0, 54);
+    const reportProjects = capturePolicy.projects.slice(0, 53);
     const catalogIds = reportProjects.map(({ id }) => id);
     const result = await getDailyCaptureCounts(d1, '2020-01-01', catalogIds);
 
-    expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(54);
-    expect(Object.keys(result.feedbackApplicabilityByCatalogId)).toHaveLength(54);
+    expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(53);
+    expect(Object.keys(result.feedbackApplicabilityByCatalogId)).toHaveLength(53);
     expect(result.feedbackApplicabilityByCatalogId['site-health']).toBe('applicable');
     expect(result.feedbackApplicabilityByCatalogId['slow-serp']).toBe('not_applicable');
     expect(result.feedbackApplicabilityByCatalogId['agent-inbox']).toBe('not_applicable');
@@ -254,10 +254,10 @@ describe('daily PII-free capture receipts', () => {
       Object.entries(result.feedbackApplicabilityByCatalogId)
         .filter(([id]) => !['site-health', 'slow-serp', 'agent-inbox'].includes(id))
         .map(([, applicability]) => applicability)
-    ).toEqual(Array.from({ length: 51 }, () => 'unknown'));
-    expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(54);
-    expect(Object.keys(result.browserVisitorsApplicabilityByCatalogId)).toHaveLength(54);
-    expect(Object.keys(result.serverRequestsApplicabilityByCatalogId)).toHaveLength(54);
+    ).toEqual(Array.from({ length: 50 }, () => 'unknown'));
+    expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(53);
+    expect(Object.keys(result.browserVisitorsApplicabilityByCatalogId)).toHaveLength(53);
+    expect(Object.keys(result.serverRequestsApplicabilityByCatalogId)).toHaveLength(53);
     expect(
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'applicable'
@@ -267,7 +267,7 @@ describe('daily PII-free capture receipts', () => {
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'not_applicable'
       )
-    ).toHaveLength(27);
+    ).toHaveLength(26);
     expect(
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'unknown'
@@ -290,8 +290,8 @@ describe('daily PII-free capture receipts', () => {
       Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
         (value) => value === 'not_applicable'
       )
-    ).toHaveLength(54);
-    expect(nativeApplicability.products).toHaveLength(54);
+    ).toHaveLength(53);
+    expect(nativeApplicability.products).toHaveLength(53);
     const nativeProducts = [
       'codevetter',
       'pace',
@@ -310,7 +310,7 @@ describe('daily PII-free capture receipts', () => {
       expect(result.nativeSessionsApplicabilityByCatalogId[id]).toBe('not_applicable');
     }
     expect(result.nativeSessionsApplicabilityByCatalogId['slow-serp']).toBe('not_applicable');
-    expect(result.nativeSessionsApplicabilityByCatalogId['agent-testing']).toBe('not_applicable');
+    expect(result.nativeSessionsApplicabilityByCatalogId['agent-testing']).toBeUndefined();
     const browserNotApplicable = Object.entries(result.browserVisitorsApplicabilityByCatalogId)
       .filter(([, applicability]) => applicability === 'not_applicable')
       .map(([id]) => id)
