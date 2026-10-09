@@ -132,18 +132,8 @@
       "probePath": "/"
     },
     {
-      "id": "gitstat",
-      "url": "https://git.significanthobbies.com",
-      "probePath": "/"
-    },
-    {
       "id": "on-record",
       "url": "https://podcasts.highsignal.app",
-      "probePath": "/"
-    },
-    {
-      "id": "issue-pages",
-      "url": "https://issues.sarthakagrawal.dev",
       "probePath": "/"
     },
     {
@@ -214,11 +204,6 @@
     {
       "id": "meme-lab",
       "url": "https://memes.significanthobbies.com",
-      "probePath": "/"
-    },
-    {
-      "id": "agent-testing",
-      "url": "https://browser-agents.sarthakagrawal.dev",
       "probePath": "/"
     },
     {

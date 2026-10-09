@@ -85,22 +85,6 @@
       }
     },
     {
-      "id": "gitstat",
-      "state": "ready",
-      "event": {
-        "name": "analysis_started",
-        "text": "Analyze",
-        "selector": "#github-username + button"
-      },
-      "funnel": {
-        "name": "discover_to_analysis",
-        "steps": [
-          "page:/",
-          "event:analysis_started"
-        ]
-      }
-    },
-    {
       "id": "email-manager",
       "state": "ready",
       "event": {
@@ -161,22 +145,6 @@
         "steps": [
           "page:/",
           "event:claim_search_opened"
-        ]
-      }
-    },
-    {
-      "id": "issue-pages",
-      "state": "ready",
-      "event": {
-        "name": "publish_opened",
-        "text": "Open a pilot issue",
-        "href": "https://github.com/sarthakagrawal927/issue-pages/issues/new?template=publish.md"
-      },
-      "funnel": {
-        "name": "discover_to_publish",
-        "steps": [
-          "page:/",
-          "event:publish_opened"
         ]
       }
     },

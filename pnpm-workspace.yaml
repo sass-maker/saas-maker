@@ -6,6 +6,7 @@ packages:
   - 'apps/cockpit'
   - 'apps/showcase'
   - 'workers/api'
+  - 'tooling/tools/gitstat'
 allowBuilds:
   core-js: true
   esbuild: true

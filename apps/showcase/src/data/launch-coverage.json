@@ -1,32 +1,12 @@
 {
   "$schema": "fleet.launch-coverage.v1",
-  "updated": "2026-10-08",
+  "updated": "2026-10-09",
   "note": "Public projection of the owner-local submission ledger. Agents mark destinations here as submissions are posted; private receipts stay in tooling/config/directory-submissions/.",
   "coveredStates": ["submitted", "scheduled", "queued", "live"],
   "denominator": {
     "destinations": 817
   },
   "projects": {
-    "agent-testing": {
-      "destinations": {
-        "activesearchresults.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "directorywebpromotion.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "qualityinternetdirectory.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupcollections.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        }
-      }
-    },
     "anchor": {
       "destinations": {
         "activesearchresults.com": {
@@ -1806,64 +1786,6 @@
         }
       }
     },
-    "gitstat": {
-      "destinations": {
-        "activesearchresults.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "devpages.io": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "directorywebpromotion.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "fivetaco.com": {
-          "state": "skipped",
-          "recordedAt": "2026-09-22T19:24:53Z",
-          "reason": "Held after account gate / unresolved prior indeterminate"
-        },
-        "lachief.io": {
-          "state": "skipped",
-          "recordedAt": "2026-09-22T19:24:53Z",
-          "reason": "Required verified 540x540 square logo unavailable"
-        },
-        "pitchwall.co": {
-          "state": "skipped",
-          "recordedAt": "2026-09-22T19:24:53Z",
-          "reason": "authentication_required"
-        },
-        "qualityinternetdirectory.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupcollections.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupplug.com.ng": {
-          "state": "skipped",
-          "recordedAt": "2026-09-22T19:24:53Z",
-          "reason": "provider_closed"
-        },
-        "startupproject.org": {
-          "state": "skipped",
-          "recordedAt": "2026-09-22T19:24:53Z",
-          "reason": "backlink_required"
-        },
-        "startupsea.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "viesearch.com": {
-          "state": "skipped",
-          "recordedAt": "2026-09-22T19:24:53Z",
-          "reason": "email_verification_serial_gate"
-        }
-      }
-    },
     "high-signal": {
       "destinations": {
         "ainavhub.com": {
@@ -1919,26 +1841,6 @@
           "state": "skipped",
           "recordedAt": "2026-09-22T19:24:53Z",
           "reason": "email_verification_serial_gate"
-        }
-      }
-    },
-    "issue-pages": {
-      "destinations": {
-        "activesearchresults.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "directorywebpromotion.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "qualityinternetdirectory.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupcollections.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
         }
       }
     },
