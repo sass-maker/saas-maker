@@ -1,0 +1,207 @@
+---
+import "../styles/global.css";
+import "../styles/about.css";
+import "../styles/footer-precise.css";
+import PublicClarity from "../components/public-clarity.astro";
+import FooterCapture from "../components/FooterCapture.astro";
+
+const repository = "https://github.com/Significant-Hobbies/chatgpt-memory-insights";
+const title = "Changelog · Memory Map";
+const description = "Meaningful improvements to Memory Map’s private ChatGPT-history analysis.";
+const canonical = "https://chatgpt.significanthobbies.com/changelog/";
+const socialImage =
+  "https://raw.githubusercontent.com/Significant-Hobbies/chatgpt-memory-insights/main/artifacts/design/after-1440.png";
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: title,
+  description,
+  url: canonical,
+  isPartOf: {
+    "@type": "WebSite",
+    name: "Memory Map",
+    url: "https://chatgpt.significanthobbies.com/",
+  },
+};
+const releases = [
+  {
+    date: "2026-07-28",
+    title: "Memory Map launched",
+    outcomes: [
+      "ChatGPT export ZIPs can be analyzed entirely in the browser without uploading conversation history to an application server.",
+      "The first report connected recurring questions, themes, activity, language signals, and source evidence.",
+    ],
+  },
+  {
+    date: "2026-07-28",
+    title: "A visual atlas and seven-slide story",
+    outcomes: [
+      "Six period-aware charts make activity, question mix, language, repeats, topic movement, and conversation shape explorable.",
+      "Story mode turns the report into a keyboard-, touch-, and swipe-friendly guided view with evidence detours.",
+    ],
+  },
+  {
+    date: "2026-07-28",
+    title: "Graph-routed, local Memory Chat",
+    outcomes: [
+      "An opt-in local model can answer through a visible question-to-topic-to-evidence route.",
+      "Bounded evidence packs and citation validation withhold unsupported drafts rather than presenting them as grounded.",
+    ],
+  },
+  {
+    date: "2026-07-28",
+    title: "Faster analysis with clearer timing",
+    outcomes: [
+      "WebGPU acceleration and an order-preserving WebAssembly fallback reduce semantic analysis time across supported devices.",
+      "The progress view now separates stages, elapsed time, estimated wait, and the final execution receipt.",
+    ],
+  },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f3f5f2" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Memory Map" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    <title>{title}</title>
+    <script is:inline async src="/scripts/posthog.js"></script>
+    <PublicClarity />
+    <script is:inline src="/app-health-log.js" defer></script>
+    <script is:inline defer src="https://health.sassmaker.com/tracker.js" data-key="ahk_pub_6e16be9c9385a6def153b05b1feb391a1205ca00a2c4cd263fb7428dbed4302c" data-project="app-import-de5017d248ba97d2e2e54643dcabc91b3a53f820644e3d8d324d74364847fe58" data-identity="persistent"></script>
+  </head>
+  <body class="about-page changelog-page">
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="about-nav">
+      <a class="brand" href="/" aria-label="Memory Map analysis app">
+        <svg viewBox="0 0 36 36" aria-hidden="true">
+          <path d="M7 8 17 15 29 7M17 15l1 14M7 27l11 2 11-9" />
+          <circle cx="7" cy="8" r="3" />
+          <circle cx="29" cy="7" r="3" />
+          <circle cx="17" cy="15" r="3" />
+          <circle cx="7" cy="27" r="3" />
+          <circle cx="18" cy="29" r="3" />
+          <circle cx="29" cy="20" r="3" />
+        </svg>
+        <span>Memory Map</span>
+      </a>
+      <nav aria-label="Site">
+        <a href="/about/">What it finds</a>
+        <a aria-current="page" href="/changelog/">Changelog</a>
+      </nav>
+      <a class="about-nav-action" href="/">Analyze my ZIP</a>
+    </header>
+
+    <main id="main" class="changelog-main">
+      <header class="changelog-intro">
+        <p class="map-key">Product history</p>
+        <h1>Changelog</h1>
+        <p>
+          Meaningful improvements to private analysis, evidence navigation, and local memory.
+        </p>
+        <nav aria-label="Project links">
+          <a href={`${repository}/issues`}>Roadmap</a>
+          <a href={repository}>Source</a>
+        </nav>
+      </header>
+
+      <ol class="changelog-list">
+        {
+          releases.map((release) => (
+            <li>
+              <article>
+                <time datetime={release.date}>
+                  {new Date(`${release.date}T00:00:00`).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>
+                <h2>{release.title}</h2>
+                <ul>
+                  {release.outcomes.map((outcome) => <li>{outcome}</li>)}
+                </ul>
+              </article>
+            </li>
+          ))
+        }
+      </ol>
+    </main>
+
+    <fleet-footer-extension
+      style="--fleet-footer-mobile-signature-size: 4.75rem;"
+      data-fleet-footer-project="chatgpt-memory-insights"
+      product-name="Memory Map"
+      signature-name="Memory Map"
+      signature-font="newsreader"
+      font-base="/fonts/fleet-footer-precise-v1/"
+      theme="light"
+      surface="web"
+      art-src="/footer-art/memory-map.webp"
+      art-alt="A cool cartography workshop centers an open transit-like atlas and a source slip physically connected to one route. A boxed conversation archive and folded map margins occupy the wings."
+      art-width="2171"
+      art-height="724"
+      art-position="50% 50%"
+      art-credit="Original illustration for Memory Map"
+    >
+      <a slot="cta" data-fleet-footer-cta data-fleet-footer-primary href="/" data-app-health-event="analysis_opened">
+        Analyze my ChatGPT ZIP →
+      </a>
+      <footer class="about-footer" slot="navigation" data-fleet-footer-navigation>
+        <div class="about-footer-identity">
+          <a class="brand" href="/">Memory Map</a>
+          <p>
+            Your history stays on your device. Microsoft Clarity measures this public changelog, not
+            the private analysis route.
+          </p>
+        </div>
+        <nav class="footer-groups" aria-label="Memory Map links">
+          <div class="footer-group">
+            <h2 data-fleet-footer-group-label>Explore</h2>
+            <a href="/about/">What it finds</a>
+            <a href="/changelog/">Changelog</a>
+          </div>
+          <div class="footer-group">
+            <h2 data-fleet-footer-group-label>Privacy</h2>
+            <a href="/about/#privacy">Read the privacy details</a>
+          </div>
+        </nav>
+      </footer>
+      <FooterCapture />
+    </fleet-footer-extension>
+    <script
+      is:inline
+      src="https://sassmaker.com/project-strip.js?v=precise-b0adaa67"
+      data-project="chatgpt-memory-insights"
+      data-theme="light"
+      data-host-only="true"
+      defer
+    ></script>
+    <script
+      is:inline
+      src="https://sassmaker.com/ai-chat-footer.js?v=precise-b0adaa67"
+      data-project="chatgpt-memory-insights"
+      data-name="Memory Map"
+      data-theme="light"
+      data-surface="web"
+      data-host-only="true"
+      data-capture="false"
+      defer
+    ></script>
+  </body>
+</html>
