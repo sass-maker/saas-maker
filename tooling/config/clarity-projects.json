@@ -140,22 +140,6 @@
       ]
     },
     {
-      "id": "gitstat",
-      "name": "GitStat",
-      "repo": "gitstat",
-      "clarityId": "y6bru7gtx7",
-      "hostname": "git.significanthobbies.com",
-      "wiredFiles": [
-        "gitstat/index.html"
-      ],
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "gitstat/index.html"
-        }
-      ]
-    },
-    {
       "id": "reel-pipeline",
       "name": "Reel Pipeline",
       "repo": "reel-pipeline",
@@ -277,23 +261,6 @@
         {
           "kind": "combined",
           "file": "on-record/apps/web/src/layouts/Base.astro"
-        }
-      ]
-    },
-    {
-      "id": "issue-pages",
-      "name": "IssuePages",
-      "repo": "issue-pages",
-      "clarityId": "ybch2c99wz",
-      "hostname": "issues.sarthakagrawal.dev",
-      "tag": "issue-pages",
-      "wiredFiles": [
-        "issue-pages/src/ui/templates.ts"
-      ],
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "issue-pages/src/ui/templates.ts"
         }
       ]
     },
@@ -966,16 +933,6 @@
       "browserSurfaces": []
     },
     {
-      "id": "agent-testing",
-      "name": "Browser Agent Testing",
-      "repo": "agent-testing",
-      "clarityId": "ymdukwth4b",
-      "hostname": "browser-agents.sarthakagrawal.dev",
-      "wiredFiles": [],
-      "reason": "Testing surface reactivated 2026-09-27; analytics remain unwired pending an explicit owner wiring decision.",
-      "browserSurfaces": []
-    },
-    {
       "id": "scale",
       "name": "Scale",
       "repo": "scale",
@@ -1019,23 +976,6 @@
         {
           "kind": "combined",
           "file": "every-song-is-a-website/shared/clarity.js"
-        }
-      ]
-    },
-    {
-      "id": "daddyrad",
-      "name": "DaddyRad",
-      "repo": "daddyrad",
-      "clarityId": "yoiee8dv98",
-      "hostname": "daddyrad.com",
-      "tag": "daddyrad",
-      "wiredFiles": [
-        "daddyrad/site/public/index.html"
-      ],
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "daddyrad/site/public/index.html"
         }
       ]
     },

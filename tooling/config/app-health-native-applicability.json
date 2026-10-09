@@ -47,12 +47,6 @@
       "serverRequests": "applicable"
     },
     {
-      "id": "gitstat",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
-    },
-    {
       "id": "fleet-social",
       "nativeSessions": "not-applicable",
       "browserVisitors": "not-applicable",
@@ -86,12 +80,6 @@
     },
     {
       "id": "on-record",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
-    },
-    {
-      "id": "issue-pages",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "applicable"
@@ -279,12 +267,6 @@
       "serverRequests": "applicable"
     },
     {
-      "id": "agent-testing",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "not-applicable"
-    },
-    {
       "id": "nutrition-formula-engine",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
@@ -298,12 +280,6 @@
     },
     {
       "id": "contextdaddy",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "not-applicable"
-    },
-    {
-      "id": "daddyrad",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"

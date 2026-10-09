@@ -271,58 +271,6 @@
       "latestCommitAt": "2026-09-22"
     },
     {
-      "id": "gitstat",
-      "name": "GitStat",
-      "description": "An experimental public GitHub analysis tool for repository activity, contributions and code churn.",
-      "makerNote": "I built GitStat to understand how my time and code churn are distributed across a large collection of repositories.",
-      "purposeContract": {
-        "purpose": "GitStat explains how engineering effort, contribution history, and code churn are distributed across many repositories.",
-        "audience": "A developer managing enough GitHub projects that the normal contribution graph no longer answers useful questions.",
-        "outcome": "See where time and change are going and distinguish sustained work from noisy activity.",
-        "mechanism": "A GitHub analytics dashboard aggregates commits, churn, collaboration, and AI-assisted work across the portfolio.",
-        "proof": "The maintained dashboard answers the owner’s recurring repository-distribution questions and is considered functionally complete.",
-        "nextAction": "Use the dashboard for a concrete portfolio question; request new analysis only when an unanswered recurring question appears."
-      },
-      "footerArt": {
-        "src": "/footer-art/gitstat.webp",
-        "width": 2171,
-        "height": 724,
-        "alt": "GitStat: A contribution-history weaving station centers a loom. Distinct repository threads enter it from separate spools and form a chronological fabric while preserving their individual routes. A folded timeline rests beside the loom.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for GitStat",
-        "sha256": "86458fee72b8d765c773dedfaf5bdb235ef80dd82d6fe024ef341a6483450eff"
-      },
-      "kind": "product",
-      "category": "experimental",
-      "form": "Web app",
-      "platforms": [
-        "Web"
-      ],
-      "technologies": [
-        "React",
-        "Vite",
-        "TypeScript",
-        "Cloudflare Pages"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Pages"
-      ],
-      "domains": [
-        "git.significanthobbies.com"
-      ],
-      "url": "https://git.significanthobbies.com",
-      "repositoryUrl": "https://github.com/sass-maker/gitstat",
-      "changelogUrl": "https://git.significanthobbies.com/changelog",
-      "roadmapUrl": "https://github.com/sass-maker/gitstat/issues",
-      "firstCommitAt": "2026-08-21",
-      "latestCommitAt": "2026-09-12"
-    },
-    {
       "id": "email-manager",
       "name": "Kinetic",
       "description": "A private Gmail workspace for local semantic search, sender insights, and explicit unsubscribe workflows.",
@@ -584,59 +532,6 @@
       "roadmapUrl": "https://github.com/Significant-Hobbies/on-record/issues",
       "firstCommitAt": "2026-08-24",
       "latestCommitAt": "2026-09-22"
-    },
-    {
-      "id": "issue-pages",
-      "name": "IssuePages",
-      "description": "Read public GitHub issues as focused articles; publishing requires repository-owner access.",
-      "makerNote": "I wanted publishing a public page to be as simple as opening a GitHub issue.",
-      "purposeContract": {
-        "purpose": "IssuePages turns a GitHub issue into a readable, searchable public page.",
-        "audience": "A builder or writer who wants lightweight publishing while keeping GitHub as the editing workflow.",
-        "outcome": "Publish and update a durable page without adopting a separate CMS.",
-        "mechanism": "An owner-approved issue is rendered into a public page with edit, archive, search, and source-link behavior.",
-        "proof": "The owner-only production pilot has proven the issue-to-page loop at issues.sarthakagrawal.dev.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-      },
-      "footerArt": {
-        "src": "/footer-art/issue-pages.webp",
-        "width": 2171,
-        "height": 724,
-        "alt": "IssuePages: A modest publishing press centers a folded issue sheet and deliberate approval lever. The sheet moves toward an openly readable display stand; a plain source folio sits on the other side. Keep the apparatus small and ordinary.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for IssuePages",
-        "sha256": "3bbaf28600b6060aa4911d09fa6ac7383d6c3b79e30f9b3ca61ae3a102610110"
-      },
-      "kind": "experiment",
-      "category": "experimental",
-      "form": "Issue-backed publishing website",
-      "platforms": [
-        "Web",
-        "GitHub"
-      ],
-      "technologies": [
-        "Hono",
-        "TypeScript",
-        "Cloudflare Workers",
-        "D1"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Workers"
-      ],
-      "domains": [
-        "issues.sarthakagrawal.dev"
-      ],
-      "url": "https://issues.sarthakagrawal.dev",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/issue-pages",
-      "changelogUrl": "https://issues.sarthakagrawal.dev/changelog",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/issue-pages/issues",
-      "firstCommitAt": "2026-08-25",
-      "latestCommitAt": "2026-09-07"
     },
     {
       "id": "research-papers",
@@ -1871,60 +1766,6 @@
       "latestCommitAt": "2026-09-23"
     },
     {
-      "id": "agent-testing",
-      "name": "Browser Agent Testing",
-      "description": "A completed local web and iOS experiment comparing browser-agent strategies with independent verification.",
-      "makerNote": "I ran Browser Agent Testing to compare automation by verified feedback time, not by how quickly a driver can finish clicks.",
-      "purposeContract": {
-        "purpose": "Browser Agent Testing compares local web and native UI automation with reproducible, product-owned verification.",
-        "audience": "Coding agents and maintainers comparing local browser and native UI testing tools.",
-        "outcome": "Choose faster and cheaper test strategies without silently losing functional or visual defect detection.",
-        "mechanism": "Bounded manifests and receipts run saved or adaptive workflows, then independent product verifiers check UI, persistence, process and visual outcomes.",
-        "proof": "The completed experiment publishes a sourced 79-tool catalogue, 26 measured journey arms with 118 verified completions across 129 attempts, seven additional probes, ten retained experiment records, exact observed pins and a live agent-first guide. The measured evidence retains Playwright and Maestro as baselines.",
-        "nextAction": "Explore the finished experiment or clone the public repository; replay a documented arm only when a concrete product change justifies it."
-      },
-      "footerArt": {
-        "src": "/footer-art/agent-testing.webp",
-        "width": 2171,
-        "height": 724,
-        "alt": "Browser Agent Testing: A compact experiment reading bench centers a retained evidence envelope and two plainly fictional viewport studies. One route folio supplies context; no extra control-room props or active app shell are invented.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Browser Agent Testing",
-        "sha256": "9fe38d1d06d641d0d42e79460e68ed02b44f29631d7ebc16a265881567e8ba79"
-      },
-      "kind": "experiment",
-      "category": "experimental",
-      "form": "Completed benchmark and static guide",
-      "platforms": [
-        "Web",
-        "iOS",
-        "CLI"
-      ],
-      "technologies": [
-        "Node.js",
-        "Cloudflare Workers",
-        "Playwright",
-        "Maestro"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Workers"
-      ],
-      "domains": [
-        "browser-agents.sarthakagrawal.dev"
-      ],
-      "url": "https://browser-agents.sarthakagrawal.dev/",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/agent-testing",
-      "changelogUrl": "https://browser-agents.sarthakagrawal.dev/changelog",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/agent-testing/issues",
-      "firstCommitAt": "2026-09-20",
-      "latestCommitAt": "2026-09-20"
-    },
-    {
       "id": "contextdaddy",
       "name": "ContextDaddy",
       "description": "A native Mac workspace for coding-agent skills, context, usage and telemetry, with a unified skill library, explicit local changes, and recovery history.",
@@ -1975,58 +1816,6 @@
       "roadmapUrl": "https://github.com/Significant-Hobbies/contextdaddy/issues",
       "firstCommitAt": "2026-09-13",
       "latestCommitAt": "2026-09-26"
-    },
-    {
-      "id": "daddyrad",
-      "name": "DaddyRad",
-      "description": "Series home and a local read-only MCP source preview for performance, storage, browser rules and agent context.",
-      "makerNote": "I moved the daddy series onto its own domain so the apps read as one family.",
-      "purposeContract": {
-        "purpose": "DaddyRad is the umbrella home for the daddy series of native macOS utilities.",
-        "audience": "Mac users and developers discovering the daddy-series apps.",
-        "outcome": "One domain introduces all four apps and routes to each product's site.",
-        "mechanism": "A small Cloudflare Worker serves the series landing; each app owns its subdomain. A local stdio MCP source preview uses all four native cores with bounded read-only tools.",
-        "proof": "DaddyRad MCP mcp-v0.1.0 source preview published 2026-10-02 at https://github.com/Significant-Hobbies/daddyrad/releases/tag/mcp-v0.1.0. Exact-revision CI verifies all eight tools across four engines. Source/build instructions only; no signed/notarized server executable is distributed.",
-        "nextAction": "Visit daddyrad.com and pick an app."
-      },
-      "footerArt": {
-        "src": "/footer-art/daddyrad.webp",
-        "width": 2170,
-        "height": 725,
-        "alt": "DaddyRad: A local utility courtyard centers one shared entrance surrounded by four distinct small inspection bays: storage parcels, browsing folios, performance instruments and context cards. Each bay remains bounded and original.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for DaddyRad",
-        "sha256": "ca705e3d83cb8847aad25b07b61996392b1cdf72c845158a1e5134b39345edc8"
-      },
-      "kind": "platform",
-      "category": "utility",
-      "form": "website",
-      "platforms": [
-        "Web",
-        "macOS"
-      ],
-      "technologies": [
-        "Swift",
-        "MCP",
-        "Cloudflare Workers"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Workers"
-      ],
-      "domains": [
-        "daddyrad.com",
-        "www.daddyrad.com"
-      ],
-      "url": "https://daddyrad.com/",
-      "repositoryUrl": "https://github.com/Significant-Hobbies/daddyrad",
-      "roadmapUrl": "https://github.com/Significant-Hobbies/daddyrad/issues",
-      "firstCommitAt": "2026-09-25",
-      "latestCommitAt": "2026-09-25"
     },
     {
       "id": "ai-badges",
@@ -2338,41 +2127,6 @@
       }
     },
     {
-      "id": "agent-testing",
-      "name": "Browser Agent Testing",
-      "description": "A completed local web and iOS experiment comparing browser-agent speed, cost, reliability and defect detection against independent verification.",
-      "url": "https://browser-agents.sarthakagrawal.dev/",
-      "tier": "secondary",
-      "category": "experimental",
-      "priority": "P4",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "experiment",
-      "changelogUrl": "https://browser-agents.sarthakagrawal.dev/changelog",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/agent-testing",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/agent-testing/issues",
-      "pillarId": "build",
-      "purposeContract": {
-        "purpose": "Browser Agent Testing compares local web and native UI automation with reproducible, product-owned verification.",
-        "audience": "Coding agents and maintainers comparing local browser and native UI testing tools.",
-        "outcome": "Choose faster and cheaper test strategies without silently losing functional or visual defect detection.",
-        "mechanism": "Bounded manifests and receipts run saved or adaptive workflows, then independent product verifiers check UI, persistence, process and visual outcomes.",
-        "proof": "The completed experiment publishes a sourced 79-tool catalogue, 26 measured journey arms with 118 verified completions across 129 attempts, seven additional probes, ten retained experiment records, exact observed pins and a live agent-first guide. The measured evidence retains Playwright and Maestro as baselines.",
-        "nextAction": "Explore the finished experiment or clone the public repository; replay a documented arm only when a concrete product change justifies it."
-      },
-      "footerArt": {
-        "src": "/footer-art/agent-testing.webp",
-        "width": 2171,
-        "height": 724,
-        "alt": "Browser Agent Testing: A compact experiment reading bench centers a retained evidence envelope and two plainly fictional viewport studies. One route folio supplies context; no extra control-room props or active app shell are invented.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Browser Agent Testing",
-        "sha256": "9fe38d1d06d641d0d42e79460e68ed02b44f29631d7ebc16a265881567e8ba79"
-      }
-    },
-    {
       "id": "browserdaddy",
       "name": "BrowserDaddy",
       "description": "A local-first Mac browsing intelligence app for a unified history archive and real attention tracking.",
@@ -2471,38 +2225,6 @@
       }
     },
     {
-      "id": "daddyrad",
-      "name": "DaddyRad",
-      "description": "Umbrella landing for the daddy series: native Mac utilities for performance evidence, storage cleanup, browsing attention and agent context.",
-      "url": "https://daddyrad.com/",
-      "tier": "active",
-      "category": "utility",
-      "priority": "P3",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "beta",
-      "pillarId": "build",
-      "purposeContract": {
-        "purpose": "DaddyRad is the umbrella home for the daddy series of native macOS utilities.",
-        "audience": "Mac users and developers discovering the daddy-series apps.",
-        "outcome": "One domain introduces all four apps and routes to each product's site.",
-        "mechanism": "A small Cloudflare Worker serves the series landing; each app owns its subdomain. A local stdio MCP source preview uses all four native cores with bounded read-only tools.",
-        "proof": "DaddyRad MCP mcp-v0.1.0 source preview published 2026-10-02 at https://github.com/Significant-Hobbies/daddyrad/releases/tag/mcp-v0.1.0. Exact-revision CI verifies all eight tools across four engines. Source/build instructions only; no signed/notarized server executable is distributed.",
-        "nextAction": "Visit daddyrad.com and pick an app."
-      },
-      "footerArt": {
-        "src": "/footer-art/daddyrad.webp",
-        "width": 2170,
-        "height": 725,
-        "alt": "DaddyRad: A local utility courtyard centers one shared entrance surrounded by four distinct small inspection bays: storage parcels, browsing folios, performance instruments and context cards. Each bay remains bounded and original.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for DaddyRad",
-        "sha256": "ca705e3d83cb8847aad25b07b61996392b1cdf72c845158a1e5134b39345edc8"
-      }
-    },
-    {
       "id": "free-ai",
       "name": "Free AI",
       "description": "An OpenAI-compatible free-tier model gateway with operator-provisioned project access.",
@@ -2535,41 +2257,6 @@
         "focalY": 50,
         "credit": "Original illustration for Free AI",
         "sha256": "26a88d2ef0d56bd1cd3a8f974faf4de0b73fc7a737242b22db53c45070f855a8"
-      }
-    },
-    {
-      "id": "gitstat",
-      "name": "GitStat",
-      "description": "An experimental public GitHub analysis tool for repository activity, contributions and code churn.",
-      "url": "https://git.significanthobbies.com",
-      "tier": "secondary",
-      "category": "experimental",
-      "priority": "P2",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "experiment",
-      "changelogUrl": "https://git.significanthobbies.com/changelog",
-      "repositoryUrl": "https://github.com/sass-maker/gitstat",
-      "roadmapUrl": "https://github.com/sass-maker/gitstat/issues",
-      "pillarId": "build",
-      "purposeContract": {
-        "purpose": "GitStat explains how engineering effort, contribution history, and code churn are distributed across many repositories.",
-        "audience": "A developer managing enough GitHub projects that the normal contribution graph no longer answers useful questions.",
-        "outcome": "See where time and change are going and distinguish sustained work from noisy activity.",
-        "mechanism": "A GitHub analytics dashboard aggregates commits, churn, collaboration, and AI-assisted work across the portfolio.",
-        "proof": "The maintained dashboard answers the owner’s recurring repository-distribution questions and is considered functionally complete.",
-        "nextAction": "Use the dashboard for a concrete portfolio question; request new analysis only when an unanswered recurring question appears."
-      },
-      "footerArt": {
-        "src": "/footer-art/gitstat.webp",
-        "width": 2171,
-        "height": 724,
-        "alt": "GitStat: A contribution-history weaving station centers a loom. Distinct repository threads enter it from separate spools and form a chronological fabric while preserving their individual routes. A folded timeline rests beside the loom.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for GitStat",
-        "sha256": "86458fee72b8d765c773dedfaf5bdb235ef80dd82d6fe024ef341a6483450eff"
       }
     },
     {
@@ -2675,41 +2362,6 @@
         "focalY": 50,
         "credit": "Original illustration for High Signal Podcasts",
         "sha256": "10ab36994c185216c85d76ed31664227ba1a6f49e65af28e82a7822cb5c82171"
-      }
-    },
-    {
-      "id": "issue-pages",
-      "name": "IssuePages",
-      "description": "Read public GitHub issues as focused articles; publishing requires repository-owner access.",
-      "url": "https://issues.sarthakagrawal.dev",
-      "tier": "secondary",
-      "category": "experimental",
-      "priority": "P4",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "experiment",
-      "changelogUrl": "https://issues.sarthakagrawal.dev/changelog",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/issue-pages",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/issue-pages/issues",
-      "pillarId": "build",
-      "purposeContract": {
-        "purpose": "IssuePages turns a GitHub issue into a readable, searchable public page.",
-        "audience": "A builder or writer who wants lightweight publishing while keeping GitHub as the editing workflow.",
-        "outcome": "Publish and update a durable page without adopting a separate CMS.",
-        "mechanism": "An owner-approved issue is rendered into a public page with edit, archive, search, and source-link behavior.",
-        "proof": "The owner-only production pilot has proven the issue-to-page loop at issues.sarthakagrawal.dev.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-      },
-      "footerArt": {
-        "src": "/footer-art/issue-pages.webp",
-        "width": 2171,
-        "height": 724,
-        "alt": "IssuePages: A modest publishing press centers a folded issue sheet and deliberate approval lever. The sheet moves toward an openly readable display stand; a plain source folio sits on the other side. Keep the apparatus small and ordinary.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for IssuePages",
-        "sha256": "3bbaf28600b6060aa4911d09fa6ac7383d6c3b79e30f9b3ca61ae3a102610110"
       }
     },
     {
