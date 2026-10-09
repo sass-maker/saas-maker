@@ -420,9 +420,9 @@
         "chatgpt.significanthobbies.com"
       ],
       "url": "https://chatgpt.significanthobbies.com",
-      "repositoryUrl": "https://github.com/Significant-Hobbies/chatgpt-memory-insights",
+      "repositoryUrl": "https://github.com/sass-maker/saas-maker",
       "changelogUrl": "https://chatgpt.significanthobbies.com/changelog",
-      "roadmapUrl": "https://github.com/Significant-Hobbies/chatgpt-memory-insights/issues",
+      "roadmapUrl": "https://github.com/sass-maker/saas-maker/issues",
       "firstCommitAt": "2026-07-28",
       "latestCommitAt": "2026-09-19"
     },
@@ -2935,8 +2935,8 @@
       "shareable": true,
       "maturity": "experiment",
       "changelogUrl": "https://chatgpt.significanthobbies.com/changelog",
-      "repositoryUrl": "https://github.com/Significant-Hobbies/chatgpt-memory-insights",
-      "roadmapUrl": "https://github.com/Significant-Hobbies/chatgpt-memory-insights/issues",
+      "repositoryUrl": "https://github.com/sass-maker/saas-maker",
+      "roadmapUrl": "https://github.com/sass-maker/saas-maker/issues",
       "pillarId": "learn",
       "purposeContract": {
         "purpose": "Memory Map turns an exported AI conversation history into a private map of recurring themes, facts, emotions, and change.",
