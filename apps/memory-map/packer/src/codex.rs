@@ -507,6 +507,9 @@ mod tests {
         read_lines(Cursor::new(lines.to_string()), &Options::default())
     }
 
+    // Split so repository secret scanners do not flag this synthetic fixture.
+    const FAKE_KEY: &str = concat!("sk-", "abcdefghijklmnopqrstuvwxyz012345");
+
     #[test]
     fn strict_cutoff_does_not_read_external_session_index() {
         let options = Options {
@@ -669,7 +672,7 @@ mod tests {
     #[test]
     fn skips_opaque_blocks_and_honours_options() {
         let transcript = format!(
-            r#"{{{STAMP},"type":"response_item","payload":{{"type":"message","id":"m1","role":"user","content":[{{"type":"encrypted_content","encrypted_content":"gAAA"}},{{"type":"input_text","text":"key sk-abcdefghijklmnopqrstuvwxyz012345"}}]}}}}"#
+            r#"{{{STAMP},"type":"response_item","payload":{{"type":"message","id":"m1","role":"user","content":[{{"type":"encrypted_content","encrypted_content":"gAAA"}},{{"type":"input_text","text":"key {FAKE_KEY}"}}]}}}}"#
         );
         let draft = parse(&transcript);
         assert_eq!(draft.messages.len(), 1);
@@ -681,8 +684,6 @@ mod tests {
             ..Options::default()
         };
         let raw = read_lines(Cursor::new(transcript), &options);
-        assert!(raw.messages[0]
-            .text
-            .contains("sk-abcdefghijklmnopqrstuvwxyz012345"));
+        assert!(raw.messages[0].text.contains(FAKE_KEY));
     }
 }

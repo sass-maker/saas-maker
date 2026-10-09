@@ -141,10 +141,14 @@ mod tests {
 
     #[test]
     fn masks_known_credential_shapes() {
-        let masked = redact("use sk-abcdefghijklmnopqrstuvwxyz012345 now");
+        let masked = redact(concat!("use sk-", "abcdefghijklmnopqrstuvwxyz012345 now"));
         assert_eq!(masked, format!("use {REDACTED} now"));
-        assert!(redact("AKIAIOSFODNN7EXAMPLE").contains(REDACTED));
-        assert!(redact("token=ghp_0123456789012345678901234567890123456").contains(REDACTED));
+        assert!(redact(concat!("AKIA", "IOSFODNN7EXAMPLE")).contains(REDACTED));
+        assert!(redact(concat!(
+            "token=ghp_",
+            "0123456789012345678901234567890123456"
+        ))
+        .contains(REDACTED));
     }
 
     #[test]
@@ -156,7 +160,10 @@ mod tests {
 
     #[test]
     fn masks_private_key_blocks_but_not_certificates() {
-        let key = "before\n-----BEGIN RSA PRIVATE KEY-----\nMIIEow==\n-----END RSA PRIVATE KEY-----\nafter";
+        let key = concat!(
+            "before\n-----BEGIN RSA ",
+            "PRIVATE KEY-----\nMIIEow==\n-----END RSA PRIVATE KEY-----\nafter"
+        );
         let masked = redact(key);
         assert!(masked.contains("[redacted-private-key]"));
         assert!(!masked.contains("MIIEow"));
