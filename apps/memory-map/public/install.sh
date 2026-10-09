@@ -7,13 +7,20 @@
 # verifies its checksum, and installs it. Nothing is compiled and no package
 # manager is required.
 #
+# memory-pack is released from sass-maker/saas-maker under `memory-pack-v*`
+# tags. Releases up to memory-pack-v0.1.2 were published from the former
+# Significant-Hobbies/chatgpt-memory-insights repository; the installer falls
+# back to them until SaaS Maker has published a memory-pack release.
+#
 # Environment:
 #   MEMORY_PACK_VERSION   release tag to install (default: latest)
 #   MEMORY_PACK_BIN_DIR   install directory (default: $HOME/.local/bin)
 
 set -eu
 
-REPO="Significant-Hobbies/chatgpt-memory-insights"
+REPO="sass-maker/saas-maker"
+LEGACY_REPO="Significant-Hobbies/chatgpt-memory-insights"
+TAG_PREFIX="memory-pack-v"
 BINARY="memory-pack"
 VERSION="${MEMORY_PACK_VERSION:-latest}"
 BIN_DIR="${MEMORY_PACK_BIN_DIR:-$HOME/.local/bin}"
@@ -82,14 +89,31 @@ verify() {
 target="$(detect_target)"
 asset="$BINARY-$target"
 
-if [ "$VERSION" = "latest" ]; then
-  base="https://github.com/$REPO/releases/latest/download"
-else
-  base="https://github.com/$REPO/releases/download/$VERSION"
-fi
-
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT INT TERM
+
+latest_tag() {
+  # latest_tag <repo>: newest published memory-pack release tag, if any.
+  # SaaS Maker hosts other releases too, so /releases/latest is not usable.
+  fetch "https://api.github.com/repos/$1/releases?per_page=100" "$tmp/releases.json" 2>/dev/null ||
+    return 0
+  sed -n "s/.*\"tag_name\": *\"\($TAG_PREFIX[^\"]*\)\".*/\1/p" "$tmp/releases.json" | head -n 1
+}
+
+if [ "$VERSION" = "latest" ]; then
+  VERSION="$(latest_tag "$REPO")"
+  if [ -n "$VERSION" ]; then
+    base="https://github.com/$REPO/releases/download/$VERSION"
+  else
+    VERSION="latest"
+    base="https://github.com/$LEGACY_REPO/releases/latest/download"
+  fi
+else
+  base="https://github.com/$REPO/releases/download/$VERSION"
+  if ! fetch "$base/SHA256SUMS" "$tmp/probe" 2>/dev/null; then
+    base="https://github.com/$LEGACY_REPO/releases/download/$VERSION"
+  fi
+fi
 
 say "Downloading $asset ($VERSION)"
 fetch "$base/$asset" "$tmp/$BINARY" ||

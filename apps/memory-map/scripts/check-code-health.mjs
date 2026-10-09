@@ -60,7 +60,7 @@ function checkFormat() {
   const observed = { files: report.summary.errors };
   if (observed.files > 0) console.error(JSON.stringify(report.diagnostics));
   console.log(`Format: ${observed.files} files differ from the enabled Biome formatter.`);
-  // Ratcheted legacy debt: https://github.com/Significant-Hobbies/chatgpt-memory-insights/issues/12
+  // Ratcheted legacy debt: https://github.com/sass-maker/saas-maker/issues/213
   failRegressions("Format", observed, { files: 0 });
 }
 
@@ -93,7 +93,7 @@ function checkComplexity() {
       `${observed.violations} violations; max CCN ${observed.maxCcn}, ` +
       `max length ${observed.maxLength}, max params ${observed.maxParams}.`
   );
-  // Ratcheted legacy debt: https://github.com/Significant-Hobbies/chatgpt-memory-insights/issues/12
+  // Ratcheted legacy debt: https://github.com/sass-maker/saas-maker/issues/213
   failRegressions("Complexity", observed, {
     violations: 14,
     maxCcn: 28,
@@ -132,7 +132,7 @@ function checkDuplication() {
       `(${observed.percentage.toFixed(4)}%), ${observed.clones} groups across ` +
       `${observed.sources} files.`
   );
-  // Ratcheted legacy debt: https://github.com/Significant-Hobbies/chatgpt-memory-insights/issues/12
+  // Ratcheted legacy debt: https://github.com/sass-maker/saas-maker/issues/213
   failRegressions("Duplication", observed, {
     clones: 3,
     duplicatedLines: 43,
@@ -206,7 +206,7 @@ function checkSuppressions() {
   );
   const inline = result.stdout.trim() ? result.stdout.trim().split("\n").length : 0;
   console.log(`Suppressions: ${disabledRules} disabled Biome rules, ${inline} inline directives.`);
-  // Ratcheted compatibility debt: https://github.com/Significant-Hobbies/chatgpt-memory-insights/issues/12
+  // Ratcheted compatibility debt: https://github.com/sass-maker/saas-maker/issues/213
   failRegressions("Suppressions", { disabledRules, inline }, { disabledRules: 27, inline: 0 });
 }
 

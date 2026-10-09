@@ -26,7 +26,8 @@
     "quality:suppressions": "node scripts/check-code-health.mjs suppressions",
     "quality:hygiene": "node scripts/check-code-health.mjs hygiene",
     "quality": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test:coverage && pnpm run quality:unused && pnpm run quality:complexity && pnpm run quality:duplication && pnpm run quality:cycles && pnpm run quality:dependencies && pnpm run quality:suppressions && pnpm run quality:hygiene && pnpm run build",
-    "check": "pnpm run quality"
+    "check": "pnpm run quality",
+    "deploy": "pnpm run check && wrangler pages deploy dist --project-name chatgpt-memory-insights --branch main"
   },
   "dependencies": {
     "@huggingface/transformers": "3.8.1",
@@ -46,7 +47,8 @@
     "tailwindcss": "4.3.3",
     "typescript": "5.9.3",
     "ultracite": "7.10.2",
-    "vitest": "4.1.11"
+    "vitest": "4.1.11",
+    "wrangler": "4.85.0"
   },
-  "description": "Memory Map: browser-local ChatGPT export analysis (absorbed from Significant-Hobbies/chatgpt-memory-insights@950a85ce)."
+  "description": "Memory Map: browser-local ChatGPT export analysis, deployed to the chatgpt-memory-insights Cloudflare Pages project (chatgpt.significanthobbies.com)."
 }
