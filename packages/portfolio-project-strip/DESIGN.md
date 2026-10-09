@@ -75,9 +75,11 @@ rectilinear so it can join a footer without looking like an inserted card.
 
 - The opt-in `studio` layout is the owner-selected Precise closing line: "From
   the studio", three stable noncurrent links, then "All projects". It spans the
-  composition width, distributes links on wide screens and scrolls locally on
-  narrow screens. It does not animate or show descriptions/cards. The scroll
-  region and links retain keyboard focus treatment and 44px targets.
+  composition width and distributes links on wide screens. Below a 40rem
+  container the label sits on its own line and the names wrap beneath it with
+  gaps instead of dots, so no link is ever clipped or hidden behind a scroll.
+  It does not animate or show descriptions/cards. Links retain keyboard focus
+  treatment and 44px targets.
 - Studio typography consumes the composition's `--fleet-footer-ui-font` at
   12px; host colors and the existing catalog/referral contract remain authoritative.
 

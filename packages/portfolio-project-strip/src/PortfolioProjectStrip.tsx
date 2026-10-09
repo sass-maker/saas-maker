@@ -104,13 +104,7 @@ export function PortfolioProjectStrip({
         data-layout="studio"
         aria-label={label}
       >
-        <div
-          className="portfolio-project-strip__studio"
-          // biome-ignore lint/a11y/noNoninteractiveTabindex: This scroll region needs focus for native arrow-key scrolling.
-          tabIndex={0}
-          role="region"
-          aria-label="Studio project links; scroll with arrow keys"
-        >
+        <div className="portfolio-project-strip__studio">
           <span className="portfolio-project-strip__studio-label">From the studio</span>
           <ul className="portfolio-project-strip__studio-links">
             {visibleProjects.slice(0, 3).map((project) => (

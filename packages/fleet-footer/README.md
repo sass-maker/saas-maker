@@ -11,7 +11,7 @@
 | `feedback` | Original feedback/support action and its existing handler, left column. |
 | `ai` | Existing AI child with `layout="question"`: editable labelled question, five accessible icon-only handoffs, no duplicate chips. Child owns URL synchronization and question state. |
 | `capture` | Existing capture child in integrated compact/open mode. Child owns heading, email, required unchecked consent, status and API behavior. Actual children always remain visible, even when automatic configuration is disabled. |
-| `projects` | Existing strip child with `layout="studio"`: one static names-only row, From the studio, three safe catalog links and All projects. Child owns accessible local scrolling and distribution. Frame adds no duplicate caption, cards or links. This slot is absolutely last. |
+| `projects` | Existing strip child with `layout="studio"`: one static names-only row, From the studio, three safe catalog links and All projects. Child owns distribution and narrow-width wrapping (no clipping or local scroll). Frame adds no duplicate caption, cards or links. This slot is absolutely last. |
 
 The component does not insert a preview form or fake answer. The hosted loader/integration owns attaching existing children and respecting opt-outs. The component never does that attachment or searches/reparents native page regions.
 

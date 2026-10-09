@@ -171,6 +171,7 @@
 }
 
 .portfolio-project-strip[data-layout='studio'] {
+  container-type: inline-size;
   min-width: 0;
   max-width: 100%;
   border-block: 0;
@@ -182,21 +183,14 @@
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1.4rem;
+  gap: 0 1.4rem;
   padding: 0.4rem var(--portfolio-strip-edge, var(--fleet-footer-edge, 1.25rem));
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
   white-space: nowrap;
   font-size: 0.75rem;
   line-height: 1.5;
-  scrollbar-width: thin;
-  scrollbar-color: var(--portfolio-strip-border) transparent;
-}
-.portfolio-project-strip__studio:focus-visible {
-  outline: 2px solid var(--portfolio-strip-focus);
-  outline-offset: -2px;
 }
 .portfolio-project-strip__studio-label,
 .portfolio-project-strip__studio > a,
@@ -206,9 +200,10 @@
 .portfolio-project-strip__studio-links {
   display: flex;
   flex: 1 0 auto;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-around;
-  gap: 1.4rem;
+  gap: 0 1.4rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -219,8 +214,18 @@
   gap: 1.4rem;
 }
 .portfolio-project-strip__studio .portfolio-project-strip__link { font-size: inherit; }
-@media (max-width: 600px) {
-  .portfolio-project-strip__studio,
-  .portfolio-project-strip__studio-links,
-  .portfolio-project-strip__studio-links li { gap: 1rem; }
+/* Narrow compositions: the label becomes the line's eyebrow and every name stays visible. */
+@container (max-width: 40rem) {
+  .portfolio-project-strip__studio {
+    justify-content: flex-start;
+    column-gap: 1.25rem;
+    padding-block: 0.75rem 0.25rem;
+  }
+  .portfolio-project-strip__studio-label { flex-basis: 100%; }
+  .portfolio-project-strip__studio-dot { display: none; }
+  .portfolio-project-strip__studio-links {
+    flex: 0 1 auto;
+    justify-content: flex-start;
+    column-gap: 1.25rem;
+  }
 }
