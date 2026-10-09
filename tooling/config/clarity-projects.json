@@ -212,17 +212,17 @@
     {
       "id": "chatgpt-memory-insights",
       "name": "Memory Map",
-      "repo": "chatgpt-memory-insights",
+      "repo": "saas-maker",
       "clarityId": "y6bt9512d0",
       "hostname": "chatgpt.significanthobbies.com",
       "wiredFiles": [
-        "chatgpt-memory-insights/src/components/public-clarity.astro"
+        "saas-maker/apps/memory-map/src/components/public-clarity.astro"
       ],
       "reason": "Clarity covers only the public about and changelog pages; the private ZIP analysis, report, and search route intentionally do not import the loader.",
       "browserSurfaces": [
         {
           "kind": "landing",
-          "file": "chatgpt-memory-insights/src/components/public-clarity.astro"
+          "file": "saas-maker/apps/memory-map/src/components/public-clarity.astro"
         }
       ]
     },
