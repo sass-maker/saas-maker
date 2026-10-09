@@ -37,7 +37,8 @@ LAYOUT = {
     },
     "contextdaddy": {
         "download": "https://context.daddyrad.com/download",
-        "dmg_dirs": ("downloads",),
+        "dmg_dirs": ("downloads", "updates"),
+        "feed": "updates/appcast.xml",
     },
 }
 
