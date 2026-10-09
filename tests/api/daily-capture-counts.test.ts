@@ -371,7 +371,6 @@ describe('daily PII-free capture receipts', () => {
       .sort();
     expect(notApplicable).toEqual([
       'agent-inbox',
-      'agent-testing',
       'chatgpt-connections',
       'fleet-social',
       'site-health',
