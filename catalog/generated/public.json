@@ -1473,17 +1473,20 @@
       "technologies": [
         "TypeScript",
         "Vite",
-        "Cloudflare Pages"
+        "Cloudflare Pages",
+        "Cloudflare Workers"
       ],
       "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
-        "Cloudflare Pages"
+        "Cloudflare Pages",
+        "Cloudflare Workers"
       ],
       "domains": [
-        "idle.aliveville.com"
+        "idle.aliveville.com",
+        "historia.aliveville.com"
       ],
       "url": "https://idle.aliveville.com",
       "repositoryUrl": "https://github.com/sarthakagrawal927/web-playables",

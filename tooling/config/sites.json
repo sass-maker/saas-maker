@@ -162,11 +162,6 @@
       "probePath": "/"
     },
     {
-      "id": "open-historia",
-      "url": "https://historia.aliveville.com",
-      "probePath": "/"
-    },
-    {
       "id": "ph-catalog",
       "url": "https://ph.significanthobbies.com",
       "probePath": "/"
@@ -234,11 +229,6 @@
     {
       "id": "contextdaddy",
       "url": "https://context.daddyrad.com",
-      "probePath": "/"
-    },
-    {
-      "id": "mentionpilot",
-      "url": "https://mention.highsignal.app",
       "probePath": "/"
     },
     {

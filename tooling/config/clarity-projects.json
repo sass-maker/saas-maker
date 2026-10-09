@@ -703,16 +703,6 @@
       "browserSurfaces": []
     },
     {
-      "id": "open-historia",
-      "name": "Open Historia",
-      "repo": "open-historia",
-      "clarityId": "y6bvtr9hri",
-      "hostname": "historia.aliveville.com",
-      "wiredFiles": [],
-      "reason": "Intentionally unwired under the owner-approved tracking hold: Open Historia PR #42 (2026-10-05) removed the unapproved Clarity loaders from the Astro landing and SPA shell; live historia.aliveville.com loads no Clarity. Re-wire only when the owner lifts the hold.",
-      "browserSurfaces": []
-    },
-    {
       "id": "companion-robot",
       "name": "Companion Robot",
       "repo": "companion-robot",
@@ -1082,23 +1072,6 @@
         {
           "kind": "landing",
           "file": "ios-landings/src/lib/clarity.ts"
-        }
-      ]
-    },
-    {
-      "id": "mentionpilot",
-      "name": "MentionPilot",
-      "repo": "mentionpilot",
-      "clarityId": "yoigmcwti8",
-      "hostname": "mention.highsignal.app",
-      "tag": "mentionpilot",
-      "wiredFiles": [
-        "mentionpilot/apps/web/src/app/layout.tsx"
-      ],
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "mentionpilot/apps/web/src/app/layout.tsx"
         }
       ]
     }

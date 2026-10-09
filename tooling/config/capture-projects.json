@@ -912,26 +912,6 @@
       ]
     },
     {
-      "id": "open-historia",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "The public product site has a bound project identity and shared footer. Offer occasional notes only when the product materially changes; do not imply a planned release or recurring cadence.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "presentation.directory.purposeContract.nextAction",
-          "value": "Preserved experiment; no current work or obligation to resume."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "Guest checkpoint persistence and desktop/mobile layout repairs are deployed from 9445110fc7857238eadff2de27804deca754f380 as Worker e529a943-f06e-4529-9323-dd3a384d5fc7 at100%, deployment21a0e2d9-30a1-4636-a6f5-c884b501a960. The September9 receipt proves six viewport sizes without panel overlap or branch-control collisions, 44px branch targets, public asset parity and actual guest Save/reload preserving three snapshots, relations, summary and selected branch. Earlier real guest AI turns also proved checkpoint memory and branch parent continuity. Final tests/docs-only HEAD6b7fa8f883f261291a5c32a47516f06b18668da0 passed CI34327732410 on the first attempt with22 browser and87 unit tests, after an explicitly recorded earlier flaky run. Historical faction/scenario coherence, geography and authenticated cloud saves/account isolation remain unqualified under #27. Keep inactive/nonshareable; these repairs do not establish a coherent complete campaign."
-        }
-      ]
-    },
-    {
       "id": "ph-catalog",
       "applicability": "newsletter",
       "confidence": "medium",
@@ -1399,29 +1379,6 @@
         {
           "field": "deployment.status",
           "value": "live"
-        }
-      ]
-    },
-    {
-      "id": "mentionpilot",
-      "applicability": "newsletter",
-      "confidence": "high",
-      "rationale": "An explicit newsletter form exists at mentionpilot/apps/web/src/app/page.tsx. The live public page renders the form. This is product-update capture, not a launch waitlist.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "presentation.directory.platforms",
-          "value": [
-            "Web",
-            "API"
-          ]
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "Owner reactivated the product. The API health endpoint returned HTTP 200, while the repository-listed Pages web URL did not resolve in this check. Public product usability and ownership of similarly named external domains remain unverified."
         }
       ]
     },

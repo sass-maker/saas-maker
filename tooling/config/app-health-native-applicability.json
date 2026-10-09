@@ -207,12 +207,6 @@
       "serverRequests": "not-applicable"
     },
     {
-      "id": "open-historia",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
-    },
-    {
       "id": "ph-catalog",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
@@ -313,12 +307,6 @@
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
-    },
-    {
-      "id": "mentionpilot",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
     },
     {
       "id": "daddyrad",

@@ -614,22 +614,6 @@
       }
     },
     {
-      "id": "mentionpilot",
-      "state": "ready",
-      "event": {
-        "name": "brand_check_opened",
-        "text": "Free brand check",
-        "href": "/check"
-      },
-      "funnel": {
-        "name": "discover_to_brand_check",
-        "steps": [
-          "page:/",
-          "event:brand_check_opened"
-        ]
-      }
-    },
-    {
       "id": "ai-game",
       "state": "ready",
       "event": {
