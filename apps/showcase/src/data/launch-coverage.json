@@ -2246,26 +2246,6 @@
         }
       }
     },
-    "mashup": {
-      "destinations": {
-        "activesearchresults.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "directorywebpromotion.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "qualityinternetdirectory.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupcollections.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        }
-      }
-    },
     "nomad-data-adventure": {
       "destinations": {
         "activesearchresults.com": {

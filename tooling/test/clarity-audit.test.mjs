@@ -62,8 +62,8 @@ test('the shipped capability policy is complete and remains desired state, not p
   assert.deepEqual(problems, []);
   assert.equal(valid, true);
   const coverage = projectCapabilityCoverage(shipped, capabilityPolicy);
-  assert.equal(coverage.projects, 72);
-  assert.equal(coverage.wiredProjects, 41);
+  assert.equal(coverage.projects, 69);
+  assert.equal(coverage.wiredProjects, 39);
   assert.equal(coverage.capabilities.length, 17);
   assert.equal(coverage.providerVerifiedAssignments, 0);
   assert.ok(coverage.desiredAssignments > 0);
@@ -84,8 +84,8 @@ test('the shipped journey registry covers every wired surface with live-root evi
   const { valid, problems } = validateJourneyRegistry(journeys, shipped);
   assert.deepEqual(problems, []);
   assert.equal(valid, true);
-  assert.equal(journeys.projects.length, 41);
-  assert.equal(journeys.projects.filter((entry) => entry.state === 'ready').length, 41);
+  assert.equal(journeys.projects.length, 39);
+  assert.equal(journeys.projects.filter((entry) => entry.state === 'ready').length, 39);
   assert.equal(journeys.projects.filter((entry) => entry.state === 'discovery-required').length, 0);
 });
 
