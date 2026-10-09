@@ -18,7 +18,7 @@ Each of the 72 product identities has these sections (optional fields stay absen
 | `repositories` | Local/source paths, repository URL, visibility and aliases |
 | `deployment` | Deployment status, domains, authentication, targets and database dependencies |
 | `presentation` | Public listing metadata and directory details, including the original maker note |
-| `systems` | Per-project policy for each downstream system manifest (Clarity receipt, footer surfaces, GEO queries, actions policy, AI-visibility, journeys, PSI target, site probe) |
+| `systems` | Per-project policy for each downstream system manifest (Clarity receipt, footer surfaces, GEO queries, actions policy, AI-visibility, journeys, PSI target, site probe, journey probe) |
 | `retainedFields` | Any unmapped fields, retained verbatim rather than discarded |
 
 `classification.futureForm` is the owner classification.
@@ -67,6 +67,10 @@ pnpm --dir ../site-health docs:projects
   stores its `order` list so regeneration is stable.
 - `tooling/config/app-health-native-applicability.json` is generated from
   `projects[].systems.appHealth` alongside those policy manifests.
+- App Health's `apps/probe/journeys.json` is generated from
+  `projects[].systems.probe` (ordered by top-level `systems.probeJourneys`).
+  Journeys are public GET requests only: the sync rejects methods, bodies,
+  query strings and credentials. App Health's probe reads this file by default.
 
 App Health browser visitors are inferred from catalogued browser surfaces.
 Projects with no reportable browser audience may set
@@ -76,11 +80,11 @@ a non-empty `reason` and a `sourceIssue` URL. The generated
 issue reference. This affects applicability labels only; an observed positive
 visitor count remains visible.
 
-Every project declares all eight per-project systems keys. A value of
+Every project declares all nine per-project systems keys (eight policy manifests plus the journey `probe`). A value of
 `{"absent": "<reason>"}` records an intentional non-entry — it documents the
 posture in the catalog without emitting anything to that manifest, and the
 generated manifest simply drops it. Active projects carry their live policy or
-an absent reason; inactive projects carry the same eight cells with
+an absent reason; inactive projects carry the same nine cells with
 inactive-scoped reasons (and an explicit `ignored` actions policy), so every
 project's systems posture is explicit: a real entry, or a written reason there
 is none.

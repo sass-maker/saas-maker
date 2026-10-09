@@ -261,17 +261,12 @@
       "hostname": "highsignal.app",
       "tag": "high-signal",
       "wiredFiles": [
-        "high-signal/apps/web/src/app/layout.tsx",
-        "high-signal/apps/web/landing-astro/src/layouts/Layout.astro"
+        "high-signal/apps/web/src/app/layout.tsx"
       ],
       "browserSurfaces": [
         {
-          "kind": "browser-app",
+          "kind": "combined",
           "file": "high-signal/apps/web/src/app/layout.tsx"
-        },
-        {
-          "kind": "landing",
-          "file": "high-signal/apps/web/landing-astro/src/layouts/Layout.astro"
         }
       ]
     },

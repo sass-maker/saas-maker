@@ -234,12 +234,15 @@ test('CLI loads canonical repositories.localPath before checking a direct stale 
 });
 
 test('the shipped receipt declares separate landing and browser-app surfaces where required', () => {
-  for (const id of ['live', 'high-signal', 'email-manager', 'knowledge-base']) {
+  for (const id of ['live', 'email-manager', 'knowledge-base']) {
     const project = shipped.projects.find((entry) => entry.id === id);
     assert.deepEqual(project.browserSurfaces.map((surface) => surface.kind).sort(), ['browser-app', 'landing']);
   }
   assert.deepEqual(shipped.projects.find((entry) => entry.id === 'pace').browserSurfaces.map((surface) => surface.kind), ['landing']);
-  assert.deepEqual(shipped.projects.find((entry) => entry.id === 'gitstat').browserSurfaces.map((surface) => surface.kind), ['combined']);
+  // High Signal's Next app serves both the landing and the app since the Astro overlay retired.
+  for (const id of ['gitstat', 'high-signal']) {
+    assert.deepEqual(shipped.projects.find((entry) => entry.id === id).browserSurfaces.map((surface) => surface.kind), ['combined']);
+  }
   for (const id of ['email-manager', 'knowledge-base']) {
     const appSurface = shipped.projects.find((entry) => entry.id === id).browserSurfaces.find((surface) => surface.kind === 'browser-app');
     assert.equal(appSurface.mask, 'root');
