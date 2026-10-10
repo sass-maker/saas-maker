@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { FilterBar } from '@/components/filter-bar';
+import { FeedbackTableSkeleton } from '@/components/table-skeleton';
 import { FeedbackTable } from '@/components/feedback-table';
 import type { FeedbackRecord, AnyFeedbackStatus } from '@saas-maker/contracts';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
@@ -59,17 +60,7 @@ export function InboxContent({ projectId }: InboxContentProps) {
     return (
       <div className="space-y-4">
         <FilterBar />
-        <div className="rounded-md border">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="border-b p-3 flex gap-4 items-center">
-              <div className="h-5 w-16 animate-pulse rounded-full bg-muted" />
-              <div className="h-4 w-48 animate-pulse rounded bg-muted flex-1" />
-              <div className="h-4 w-32 animate-pulse rounded bg-muted hidden sm:block" />
-              <div className="h-4 w-8 animate-pulse rounded bg-muted" />
-              <div className="h-5 w-20 animate-pulse rounded-full bg-muted" />
-            </div>
-          ))}
-        </div>
+        <FeedbackTableSkeleton />
       </div>
     );
   }
