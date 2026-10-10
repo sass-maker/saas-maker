@@ -210,6 +210,11 @@
       "id": "contextdaddy",
       "url": "https://context.daddyrad.com",
       "probePath": "/"
+    },
+    {
+      "id": "techdata",
+      "url": "https://techdata.sarthakagrawal927.workers.dev",
+      "probePath": "/"
     }
   ]
 }
