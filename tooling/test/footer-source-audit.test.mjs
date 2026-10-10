@@ -149,6 +149,22 @@ test('inspectStudioFooter reads the rendered marker and the content JSON catalog
   assert.equal(inspectStudioFooter(paired).studioMarkers, 0);
 });
 
+test('inspectStudioFooter reads the authored element and library-call catalog ids', () => {
+  assert.deepEqual(
+    inspectStudioFooter('<studio-footer data-mode="dark" catalog-id="product"></studio-footer>').studioCatalogIds,
+    ['product'],
+  );
+  assert.deepEqual(
+    inspectStudioFooter("import { renderStudioFooterHtml } from '@saas-maker/ui/footer-html';\nrender({ catalogId: 'product' });").studioCatalogIds,
+    ['product'],
+  );
+  assert.deepEqual(
+    inspectStudioFooter('const f = document.createElement("studio-footer"); f.setAttribute("catalog-id", "product");').studioCatalogIds,
+    ['product'],
+  );
+  assert.equal(inspectStudioFooter("const catalogId = 'product';").studioMarkers, 0);
+});
+
 test('a rendered UI-library studio footer passes without Precise loaders', () => {
   const root = fixture({ 'product/dist/index.html': studioHtml });
   const report = auditFooterSources({
