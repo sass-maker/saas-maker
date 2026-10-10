@@ -249,12 +249,6 @@
       "serverRequests": "not-applicable"
     },
     {
-      "id": "slow-serp",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "not-applicable",
-      "serverRequests": "not-applicable"
-    },
-    {
       "id": "unified-portfolio",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",

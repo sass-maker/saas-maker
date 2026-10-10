@@ -239,26 +239,25 @@ describe('daily PII-free capture receipts', () => {
     ).rejects.toThrow('1 to 55 IDs');
   });
 
-  it('returns canonical capture applicability for all 48 products, including internal newsletter exceptions', async () => {
+  it('returns canonical capture applicability for all 47 products, including internal newsletter exceptions', async () => {
     const { d1 } = setup();
-    const reportProjects = capturePolicy.projects.slice(0, 48);
+    const reportProjects = capturePolicy.projects.slice(0, 47);
     const catalogIds = reportProjects.map(({ id }) => id);
     const result = await getDailyCaptureCounts(d1, '2020-01-01', catalogIds);
 
-    expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(48);
-    expect(Object.keys(result.feedbackApplicabilityByCatalogId)).toHaveLength(48);
+    expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(47);
+    expect(Object.keys(result.feedbackApplicabilityByCatalogId)).toHaveLength(47);
     expect(result.feedbackApplicabilityByCatalogId['site-health']).toBe('applicable');
-    expect(result.feedbackApplicabilityByCatalogId['slow-serp']).toBe('not_applicable');
     expect(result.feedbackApplicabilityByCatalogId['agent-inbox']).toBe('not_applicable');
     expect(result.feedbackApplicabilityByCatalogId.techdata).toBe('not_applicable');
     expect(
       Object.entries(result.feedbackApplicabilityByCatalogId)
-        .filter(([id]) => !['site-health', 'slow-serp', 'agent-inbox', 'techdata'].includes(id))
+        .filter(([id]) => !['site-health', 'agent-inbox', 'techdata'].includes(id))
         .map(([, applicability]) => applicability)
     ).toEqual(Array.from({ length: 44 }, () => 'unknown'));
-    expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(48);
-    expect(Object.keys(result.browserVisitorsApplicabilityByCatalogId)).toHaveLength(48);
-    expect(Object.keys(result.serverRequestsApplicabilityByCatalogId)).toHaveLength(48);
+    expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(47);
+    expect(Object.keys(result.browserVisitorsApplicabilityByCatalogId)).toHaveLength(47);
+    expect(Object.keys(result.serverRequestsApplicabilityByCatalogId)).toHaveLength(47);
     expect(
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'applicable'
@@ -268,7 +267,7 @@ describe('daily PII-free capture receipts', () => {
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'not_applicable'
       )
-    ).toHaveLength(25);
+    ).toHaveLength(24);
     expect(
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'unknown'
@@ -290,8 +289,8 @@ describe('daily PII-free capture receipts', () => {
       Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
         (value) => value === 'not_applicable'
       )
-    ).toHaveLength(48);
-    expect(nativeApplicability.products).toHaveLength(48);
+    ).toHaveLength(47);
+    expect(nativeApplicability.products).toHaveLength(47);
     const nativeProducts = [
       'codevetter',
       'pace',
@@ -309,7 +308,6 @@ describe('daily PII-free capture receipts', () => {
     for (const id of nativeProducts) {
       expect(result.nativeSessionsApplicabilityByCatalogId[id]).toBe('not_applicable');
     }
-    expect(result.nativeSessionsApplicabilityByCatalogId['slow-serp']).toBe('not_applicable');
     const browserNotApplicable = Object.entries(result.browserVisitorsApplicabilityByCatalogId)
       .filter(([, applicability]) => applicability === 'not_applicable')
       .map(([id]) => id)
@@ -319,7 +317,6 @@ describe('daily PII-free capture receipts', () => {
       'fleet-social',
       'ios-landings',
       'site-health',
-      'slow-serp',
     ]);
     for (const id of ['fleet-social', 'ios-landings', 'site-health']) {
       const policy = nativeApplicability.products.find((product) => product.id === id);
@@ -373,7 +370,6 @@ describe('daily PII-free capture receipts', () => {
       'chatgpt-connections',
       'fleet-social',
       'site-health',
-      'slow-serp',
       'techdata',
       'unified-portfolio',
     ]);
@@ -382,16 +378,16 @@ describe('daily PII-free capture receipts', () => {
   });
 
   it('maps only requested feedback policies, defaults missing decisions to unknown, and keeps counts separate', async () => {
-    const requested = ['site-health', 'slow-serp', 'war-chest', 'unclassified'];
+    const requested = ['site-health', 'agent-inbox', 'war-chest', 'unclassified'];
     const mapping = mapFeedbackApplicabilityByCatalogId(requested, [
       { id: 'site-health', feedbackApplicability: 'applicable' },
-      { id: 'slow-serp', feedbackApplicability: 'not_applicable' },
+      { id: 'agent-inbox', feedbackApplicability: 'not_applicable' },
       { id: 'war-chest', feedbackApplicability: 'not_applicable' },
       { id: 'outside-request', feedbackApplicability: 'applicable' },
     ]);
     expect(mapping).toEqual({
       'site-health': 'applicable',
-      'slow-serp': 'not_applicable',
+      'agent-inbox': 'not_applicable',
       'war-chest': 'not_applicable',
       unclassified: 'unknown',
     });

@@ -1114,27 +1114,6 @@
       ]
     },
     {
-      "id": "slow-serp",
-      "applicability": "not-applicable",
-      "confidence": "high",
-      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "internal"
-        },
-        {
-          "field": "classification.kind",
-          "value": "platform"
-        }
-      ],
-      "feedbackApplicability": "not_applicable"
-    },
-    {
       "id": "unified-portfolio",
       "applicability": "not-applicable",
       "confidence": "high",
