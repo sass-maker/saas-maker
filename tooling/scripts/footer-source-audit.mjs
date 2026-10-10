@@ -21,6 +21,16 @@ const COMPOSE_OPT_OUT = /data-compose\s*=\s*(?:["']false["']|\{false\}|false\b)/
 // object whose `catalogId` drives it.
 const STUDIO_FOOTER = /data-fleet-footer\s*=\s*["']studio["']/gu;
 const STUDIO_CATALOG_ID = /data-catalog-id\s*=\s*["']([^"']*)["']/gu;
+// Pages that wrap the framework-free footer author the custom element
+// directly: `<studio-footer … catalog-id="<id>">` (the element renders the
+// marker above at runtime).
+const STUDIO_ELEMENT = /<studio-footer\b[^>]*?\bcatalog-id\s*=\s*["']([^"']*)["']/gu;
+// Source that builds the footer through the library (`renderStudioFooterHtml`,
+// the React `StudioFooter`, or a script creating the element) names its
+// catalog identity as `catalogId: "<id>"`, `catalogId="<id>"`, a quoted
+// `'catalog-id': "<id>"` key or `setAttribute("catalog-id", "<id>")`.
+const STUDIO_LIBRARY_REFERENCE = /studio-footer|StudioFooter|ui\/footer-html|ui\/blocks\/footer/u;
+const STUDIO_SOURCE_ID = /(?:\bcatalogId\s*[:=]\s*\{?\s*|["']catalog-id["']\s*[:,]\s*|\bsetAttribute\(\s*["']catalog-id["']\s*,\s*)["']([a-z0-9-]+)["']/gu;
 const UI_LIBRARY_PACKAGES = ['@saas-maker/ui', '@saas-maker/templates'];
 const DEPENDENCY_FIELDS = ['dependencies', 'devDependencies', 'peerDependencies'];
 
@@ -126,9 +136,16 @@ export function inspectFooterSource(source) {
  */
 export function inspectStudioFooter(source, { json = false } = {}) {
   const text = String(source);
-  const markers = [...text.matchAll(STUDIO_FOOTER)].length;
+  const elements = [...text.matchAll(STUDIO_ELEMENT)];
+  if (!json && STUDIO_LIBRARY_REFERENCE.test(text)) {
+    elements.push(...text.matchAll(STUDIO_SOURCE_ID));
+  }
+  const markers = [...text.matchAll(STUDIO_FOOTER)].length + elements.length;
   const catalogIds = markers > 0
-    ? [...text.matchAll(STUDIO_CATALOG_ID)].map((match) => match[1])
+    ? [
+        ...[...text.matchAll(STUDIO_CATALOG_ID)].map((match) => match[1]),
+        ...elements.map((match) => match[1]),
+      ]
     : [];
   let contentCatalogId = null;
   if (json) {
