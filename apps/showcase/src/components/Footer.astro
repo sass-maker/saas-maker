@@ -16,7 +16,7 @@ const isChangelog = Astro.url.pathname.startsWith('/changelog');
   art-position="50% 50%"
   art-credit="Original illustration for SaaS Maker"
 >
-  {showCommission && <div slot="cta" data-fleet-footer-cta><Commission contained /></div>}
+  {showCommission && <div data-fleet-footer-cta><Commission contained /></div>}
 <footer class="footer" slot="navigation" data-fleet-footer-navigation>
   <div class="footer-brand">
     <span class="brand-mark sm" aria-hidden="true">S</span>

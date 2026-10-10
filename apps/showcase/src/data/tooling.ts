@@ -1,6 +1,5 @@
 // The canonical tooling catalog is built from checked-in, public source at
 // build time. It never reads Fleet-private state.
-import { fileURLToPath } from 'node:url';
 import { buildCatalog, listCapabilities } from '../../../../tooling/lib/capability-catalog.mjs';
 
 export type ToolingCapability = {
@@ -16,7 +15,7 @@ export type ToolingCapability = {
   } | null;
 };
 
-const catalog = buildCatalog(fileURLToPath(new URL('../../../../tooling', import.meta.url)));
+const catalog = buildCatalog(import.meta.env.TOOLING_ROOT);
 
 if (catalog.issues.some((issue: { level: string }) => issue.level === 'error')) {
   throw new Error('SaaS Maker tooling catalog is invalid; run pnpm tooling:check.');

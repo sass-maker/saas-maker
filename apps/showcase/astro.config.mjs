@@ -1,10 +1,21 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { fileURLToPath } from 'node:url';
 
 export default defineConfig({
   site: 'https://sassmaker.com',
   output: 'static',
   trailingSlash: 'never',
+  // Preserve Astro 5's lossless whitespace handling instead of JSX rules.
+  compressHTML: true,
+  vite: {
+    // Keep the previous minifiers' CSS compatibility and script output.
+    build: { minify: 'esbuild', cssMinify: 'esbuild' },
+    define: {
+      // Resolve before bundling: prerender chunks have a different module URL.
+      'import.meta.env.TOOLING_ROOT': JSON.stringify(fileURLToPath(new URL('../../tooling', import.meta.url))),
+    },
+  },
   build: {
     // `file` keeps slashless canonicals mapping straight onto `/learnings.html`
     // on Cloudflare Pages. `directory` would emit `learnings/index.html` and
