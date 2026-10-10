@@ -30,6 +30,7 @@ const OG_IMAGE = `${SITE_URL}/og-image.svg`;
 ---
 
 <!doctype html>
+<Fragment set:html={/<!doctype html/i.test(description) ? '<!DOCTYPE html>' : ''} />
 <html lang="en">
   <head>
     <meta charset="utf-8" />
