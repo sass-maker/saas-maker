@@ -27,6 +27,7 @@
       "!**/design.html",
       "!apps/showcase/ideas/data/solopreneur_ideas.json",
       "!tooling",
+      "!.fleet/design",
       "!ops/assets",
       "!apps/mobile-cockpit",
       "!services/drank",
