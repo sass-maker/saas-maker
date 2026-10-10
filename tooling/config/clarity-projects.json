@@ -442,13 +442,13 @@
       "hostname": "calorie.significanthobbies.com",
       "tag": "calorie",
       "wiredFiles": [
-        "ios-landings/src/lib/clarity.ts"
+        "calorie/landing/src/pages/index.astro"
       ],
-      "surfaceOwner": "ios-landings",
+      "surfaceOwner": "calorie",
       "browserSurfaces": [
         {
           "kind": "landing",
-          "file": "ios-landings/src/lib/clarity.ts"
+          "file": "calorie/landing/src/pages/index.astro"
         }
       ]
     },
