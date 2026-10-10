@@ -164,7 +164,9 @@ describe('SaaS Maker public source boundary', () => {
     expect(layout).toMatch(/<script is:inline type="module" src="\/footer\.js"/);
     expect(layout).toContain('<studio-footer');
     expect(layout).toContain('catalog-id="saas-maker"');
-    expect(layout).not.toMatch(/src="(?:https:\/\/sassmaker\.com)?\/(?:newsletter-capture|project-strip|ai-chat-footer|feedback-launcher)\.js/);
+    expect(layout).not.toMatch(
+      /src="(?:https:\/\/sassmaker\.com)?\/(?:newsletter-capture|project-strip|ai-chat-footer|feedback-launcher)\.js/
+    );
     expect(routes).toMatch(/# Products in focus/);
     expect(routes).toMatch(/# Complete directory/);
     expect(routes).toMatch(/CORE\.flatMap/);
