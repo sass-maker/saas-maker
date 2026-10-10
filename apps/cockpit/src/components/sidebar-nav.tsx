@@ -6,9 +6,9 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { label: 'Feedback inbox', href: '/projects/feedback', icon: MessageSquare },
-  { label: 'Subscribers', href: '/projects/subscribers', icon: Users },
-  { label: 'Project keys', href: '/projects', icon: FolderKanban },
+  { label: 'feedback inbox', href: '/projects/feedback', icon: MessageSquare },
+  { label: 'subscribers', href: '/projects/subscribers', icon: Users },
+  { label: 'project keys', href: '/projects', icon: FolderKanban },
 ] as const;
 
 export function SidebarNav() {
