@@ -1,7 +1,5 @@
-# HTML: browsers always revalidate (max-age=0); the edge may serve a copy for
-# 5 minutes and refresh it for 1 more minute (s-maxage + stale-while-revalidate),
-# so a deployment is visible within about 6 minutes without a per-request origin
-# round trip. Hash-stable Astro bundles remain immutable below.
+# Revalidate HTML so a successful Pages deployment becomes visible promptly.
+# Hash-stable Astro bundles remain immutable below.
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
@@ -9,13 +7,13 @@
   Permissions-Policy: geolocation=(), microphone=(), camera=()
 
 /
-  Cache-Control: public, max-age=0, s-maxage=300, stale-while-revalidate=60
+  Cache-Control: public, max-age=0, must-revalidate
 
 /*.html
-  Cache-Control: public, max-age=0, s-maxage=300, stale-while-revalidate=60
+  Cache-Control: public, max-age=0, must-revalidate
 
 /p/*
-  Cache-Control: public, max-age=0, s-maxage=300, stale-while-revalidate=60
+  Cache-Control: public, max-age=0, must-revalidate
 
 /projects.json
   Access-Control-Allow-Origin: *
