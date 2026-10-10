@@ -562,7 +562,7 @@
       "id": "calorie",
       "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "An explicit newsletter form exists at calorie/marketing/index.html. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
+      "rationale": "An explicit newsletter form exists at calorie/landing/src/content/calorie.json. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
       "evidence": [
         {
           "field": "lifecycle.status",
