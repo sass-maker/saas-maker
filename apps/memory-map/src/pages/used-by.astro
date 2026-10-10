@@ -2,7 +2,7 @@
 import "../styles/global.css";
 import "../styles/about.css";
 import PublicClarity from "../components/public-clarity.astro";
-import FooterCapture from "../components/FooterCapture.astro";
+import StudioFooter from "../components/studio-footer.astro";
 
 const title = "Where Memory Map shows up";
 const description =
@@ -142,28 +142,7 @@ const surfaces = [
         }
       </ul>
     </main>
-    <footer class="about-footer">
-      <a class="brand" href="/">
-        <svg viewBox="0 0 36 36" aria-hidden="true">
-          <path d="M7 8 17 15 29 7M17 15l1 14M7 27l11 2 11-9"></path>
-          <circle cx="7" cy="8" r="3"></circle>
-          <circle cx="29" cy="7" r="3"></circle>
-          <circle cx="17" cy="15" r="3"></circle>
-          <circle cx="7" cy="27" r="3"></circle>
-          <circle cx="18" cy="29" r="3"></circle>
-          <circle cx="29" cy="20" r="3"></circle>
-        </svg>
-        <span>Memory Map</span>
-      </a>
-      <a href="/about/">About</a>
-      <a href="/" data-app-health-event="analysis_opened">Analyze my ChatGPT ZIP →</a>
-    </footer>
-    <FooterCapture />
+    <StudioFooter summary="Browser-local analysis for a ChatGPT export. The current web app has no Memory Map account or checkout." analyze />
     <PublicClarity />
-    <script
-      is:inline
-      src="https://sassmaker.com/project-strip.js"
-      data-project="chatgpt-memory-insights"
-      defer></script>
   </body>
 </html>
