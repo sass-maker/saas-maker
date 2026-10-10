@@ -177,11 +177,16 @@
       "hostname": "mail.significanthobbies.com",
       "tag": "email-manager",
       "wiredFiles": [
+        "email-manager/landing-astro/src/pages/index.astro",
         "email-manager/landing-astro/src/layouts/Layout.astro",
         "email-manager/index.html"
       ],
       "reason": "Clarity covers the public marketing site and authenticated Gmail application; the application root is explicitly masked before collection so mailbox content and derived views are not uploaded.",
       "browserSurfaces": [
+        {
+          "kind": "landing",
+          "file": "email-manager/landing-astro/src/pages/index.astro"
+        },
         {
           "kind": "landing",
           "file": "email-manager/landing-astro/src/layouts/Layout.astro"
@@ -442,13 +447,13 @@
       "hostname": "calorie.significanthobbies.com",
       "tag": "calorie",
       "wiredFiles": [
-        "ios-landings/src/lib/clarity.ts"
+        "calorie/landing/src/pages/index.astro"
       ],
-      "surfaceOwner": "ios-landings",
+      "surfaceOwner": "calorie",
       "browserSurfaces": [
         {
           "kind": "landing",
-          "file": "ios-landings/src/lib/clarity.ts"
+          "file": "calorie/landing/src/pages/index.astro"
         }
       ]
     },
@@ -532,10 +537,15 @@
       "clarityId": "y6bv15rm1t",
       "hostname": "karte.cc",
       "wiredFiles": [
+        "karte/landing-astro/src/pages/index.astro",
         "karte/landing-astro/src/layouts/Layout.astro"
       ],
       "reason": "Clarity covers only the static marketing layer; profiles, chat, contact, sign-in, and authenticated dashboard routes intentionally exclude it.",
       "browserSurfaces": [
+        {
+          "kind": "landing",
+          "file": "karte/landing-astro/src/pages/index.astro"
+        },
         {
           "kind": "landing",
           "file": "karte/landing-astro/src/layouts/Layout.astro"
