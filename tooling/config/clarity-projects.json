@@ -902,16 +902,6 @@
       ]
     },
     {
-      "id": "slow-serp",
-      "name": "Slow SERP",
-      "repo": "slow-serp",
-      "clarityId": "ymdts9dgmh",
-      "hostname": "github.com",
-      "wiredFiles": [],
-      "reason": "Local service and CLI with no public browser-delivered surface to tag.",
-      "browserSurfaces": []
-    },
-    {
       "id": "unified-portfolio",
       "name": "Unified Portfolio",
       "repo": "unified-portfolio",
