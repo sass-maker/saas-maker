@@ -302,14 +302,14 @@
       "hostname": "knowledgebase.sassmaker.com",
       "tag": "knowledge-base",
       "wiredFiles": [
-        "knowledge-base/landing-astro/src/layouts/Layout.astro",
+        "knowledge-base/landing-astro/src/pages/index.astro",
         "knowledge-base/app/index.html"
       ],
       "reason": "Clarity covers the public landing and Access-protected operator workspace; the application root is explicitly masked before collection so private corpus content is not uploaded.",
       "browserSurfaces": [
         {
           "kind": "landing",
-          "file": "knowledge-base/landing-astro/src/layouts/Layout.astro"
+          "file": "knowledge-base/landing-astro/src/pages/index.astro"
         },
         {
           "kind": "browser-app",
@@ -326,12 +326,17 @@
       "hostname": "significanthobbies.com",
       "tag": "significanthobbies",
       "wiredFiles": [
-        "significanthobbies/services/hub-backend/src/hub.ts"
+        "significanthobbies/services/hub-backend/src/hub.ts",
+        "significanthobbies/services/hub-backend/src/landing.generated.ts"
       ],
       "browserSurfaces": [
         {
           "kind": "combined",
           "file": "significanthobbies/services/hub-backend/src/hub.ts"
+        },
+        {
+          "kind": "combined",
+          "file": "significanthobbies/services/hub-backend/src/landing.generated.ts"
         }
       ],
       "reason": "Clarity covers the apex hub landing served by the personal-platform worker."
@@ -398,12 +403,17 @@
       "hostname": "read.significanthobbies.com",
       "tag": "reader",
       "wiredFiles": [
-        "reader/app.html"
+        "reader/app.html",
+        "reader/landing-astro/src/components/Head.astro"
       ],
       "browserSurfaces": [
         {
           "kind": "combined",
           "file": "reader/app.html"
+        },
+        {
+          "kind": "landing",
+          "file": "reader/landing-astro/src/components/Head.astro"
         }
       ]
     },
