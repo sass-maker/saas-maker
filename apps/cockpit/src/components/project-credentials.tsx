@@ -4,6 +4,7 @@ import type { AgentTokenRecord } from '@saas-maker/contracts';
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { CopyButton } from '@/components/copy-button';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -125,7 +126,9 @@ export function ProjectCredentials({ projectId, projectKey }: ProjectCredentials
         ) : null}
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
         {loading ? (
-          <p className="text-sm text-muted-foreground">Loading tokens…</p>
+          <div role="status" aria-label="Loading tokens">
+            <Skeleton className="h-5 w-full max-w-56" />
+          </div>
         ) : tokens.length === 0 ? (
           <p className="text-sm text-muted-foreground">No agent tokens yet.</p>
         ) : (

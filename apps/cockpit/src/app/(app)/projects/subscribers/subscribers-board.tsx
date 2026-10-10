@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { SubscribersTableSkeleton } from '@/components/table-skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -189,7 +190,7 @@ export function SubscribersBoard({ projects }: SubscribersBoardProps) {
           No feedback projects are available. Create a project before collecting subscribers.
         </p>
       ) : loading ? (
-        <p className="py-12 text-center text-sm text-muted-foreground">Loading subscribers…</p>
+        <SubscribersTableSkeleton />
       ) : error && subscribers.length === 0 ? null : subscribers.length === 0 ? (
         <div className="overflow-x-auto rounded-md border">
           <Table>

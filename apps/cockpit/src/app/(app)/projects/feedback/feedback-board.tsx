@@ -2,6 +2,7 @@
 
 import type { AnyFeedbackStatus, FeedbackRecord, FeedbackType } from '@saas-maker/contracts';
 import { useCallback, useEffect, useState } from 'react';
+import { FeedbackTableSkeleton } from '@/components/table-skeleton';
 import { FeedbackTable } from '@/components/feedback-table';
 import { Button } from '@/components/ui/button';
 import {
@@ -127,7 +128,7 @@ export function FeedbackBoard() {
         </p>
       )}
       {loading ? (
-        <p className="py-12 text-center text-sm text-muted-foreground">Loading feedback…</p>
+        <FeedbackTableSkeleton />
       ) : (
         <FeedbackTable feedback={feedback} onStatusChange={updateStatus} />
       )}
