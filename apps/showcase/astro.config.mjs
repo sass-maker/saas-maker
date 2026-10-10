@@ -13,7 +13,9 @@ export default defineConfig({
     build: { minify: 'esbuild', cssMinify: 'esbuild' },
     define: {
       // Resolve before bundling: prerender chunks have a different module URL.
-      'import.meta.env.TOOLING_ROOT': JSON.stringify(fileURLToPath(new URL('../../tooling', import.meta.url))),
+      'import.meta.env.TOOLING_ROOT': JSON.stringify(
+        fileURLToPath(new URL('../../tooling', import.meta.url))
+      ),
     },
   },
   build: {
