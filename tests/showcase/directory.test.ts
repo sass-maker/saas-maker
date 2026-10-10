@@ -51,7 +51,7 @@ async function directoryHarness(groups = ['current', 'current', 'current', 'past
   const selectors = [
     '[data-directory-root]',
     '[data-directory-controls]',
-    'fleet-footer-extension',
+    'studio-footer',
     '[data-directory-filter-return]',
     '[data-filter-return-count]',
     '[data-filter-return-label]',
@@ -64,7 +64,7 @@ async function directoryHarness(groups = ['current', 'current', 'current', 'past
     '[data-empty-reset]',
   ];
   const elements = Object.fromEntries(selectors.map((selector) => [selector, new Element()]));
-  elements['fleet-footer-extension'].bounds = { top: 1200, bottom: 1600 };
+  elements['studio-footer'].bounds = { top: 1200, bottom: 1600 };
   const windowListeners: Record<string, () => void> = {};
   const window = {
     innerHeight: 800,
@@ -130,7 +130,7 @@ describe('directory visible counts', () => {
   it('keeps Filters useful through the list and clears the footer on scroll, resize and filtering', async () => {
     const { elements, window, fireWindow } = await directoryHarness();
     const controls = elements['[data-directory-controls]'];
-    const footer = elements['fleet-footer-extension'];
+    const footer = elements['studio-footer'];
     const returnButton = elements['[data-directory-filter-return]'];
     expect(returnButton.hidden).toBe(true);
 

@@ -1,9 +1,8 @@
 ---
 import "../styles/global.css";
 import "../styles/about.css";
-import "../styles/footer-precise.css";
 import PublicClarity from "../components/public-clarity.astro";
-import FooterCapture from "../components/FooterCapture.astro";
+import StudioFooter from "../components/studio-footer.astro";
 
 const title = "What Memory Map finds in your ChatGPT history";
 const description =
@@ -689,72 +688,6 @@ const totalCapabilities = capabilityRoutes.reduce((sum, route) => sum + route.st
       </section>
     </main>
 
-    <fleet-footer-extension
-      style="--fleet-footer-mobile-signature-size: 4.75rem;"
-      data-fleet-footer-project="chatgpt-memory-insights"
-      product-name="Memory Map"
-      signature-name="Memory Map"
-      signature-font="newsreader"
-      font-base="/fonts/fleet-footer-precise-v1/"
-      theme="light"
-      surface="web"
-      art-src="/footer-art/memory-map.webp"
-      art-alt="A cool cartography workshop centers an open transit-like atlas and a source slip physically connected to one route. A boxed conversation archive and folded map margins occupy the wings."
-      art-width="2171"
-      art-height="724"
-      art-position="50% 50%"
-      art-credit="Original illustration for Memory Map"
-    >
-      <a slot="cta" data-fleet-footer-cta data-fleet-footer-primary href="/">
-        Analyze my ChatGPT ZIP
-      </a>
-      <footer class="about-footer" slot="navigation" data-fleet-footer-navigation>
-        <div class="about-footer-identity">
-          <a class="brand" href="/">
-            <svg viewBox="0 0 36 36" aria-hidden="true">
-              <path d="M7 8 17 15 29 7M17 15l1 14M7 27l11 2 11-9" />
-              <circle cx="7" cy="8" r="3" />
-              <circle cx="29" cy="7" r="3" />
-              <circle cx="17" cy="15" r="3" />
-              <circle cx="7" cy="27" r="3" />
-              <circle cx="18" cy="29" r="3" />
-              <circle cx="29" cy="20" r="3" />
-            </svg>
-            <span>Memory Map</span>
-          </a>
-          <p>Not a wrapped. Not a diagnosis. A map back to your own evidence.</p>
-        </div>
-        <nav class="footer-groups" aria-label="Memory Map links">
-          <div class="footer-group">
-            <h2 data-fleet-footer-group-label>Explore</h2>
-            <a href="/changelog/">Changelog</a>
-          </div>
-          <div class="footer-group">
-            <h2 data-fleet-footer-group-label>Privacy</h2>
-            <a href="/about/#privacy">Read the privacy details</a>
-          </div>
-        </nav>
-      </footer>
-      <FooterCapture />
-    </fleet-footer-extension>
-    <script
-      is:inline
-      src="https://sassmaker.com/project-strip.js?v=precise-b0adaa67"
-      data-project="chatgpt-memory-insights"
-      data-theme="light"
-      data-host-only="true"
-      defer
-    ></script>
-    <script
-      is:inline
-      src="https://sassmaker.com/ai-chat-footer.js?v=precise-b0adaa67"
-      data-project="chatgpt-memory-insights"
-      data-name="Memory Map"
-      data-theme="light"
-      data-surface="web"
-      data-host-only="true"
-      data-capture="false"
-      defer
-    ></script>
+    <StudioFooter summary="Not a wrapped. Not a diagnosis. A map back to your own evidence." analyze />
   </body>
 </html>

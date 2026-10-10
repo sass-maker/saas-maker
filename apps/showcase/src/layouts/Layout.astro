@@ -105,20 +105,65 @@ const OG_IMAGE = `${SITE_URL}/og-image.svg`;
     <!--email_off-->
     <slot />
     <!--/email_off-->
-    <script is:inline type="module" src="/newsletter-capture.js?v=precise-b0adaa67"></script>
-    <script
-      is:inline
-      src="/project-strip.js?v=precise-b0adaa67"
-      data-project="saas-maker"
-      defer
-    ></script>
-    <script
-      is:inline
-      src="/ai-chat-footer.js?v=precise-b0adaa67"
-      data-name="SaaS Maker"
-      data-theme="light"
-      defer
-    ></script>
+    <link rel="stylesheet" href="/footer.css" />
+    <script is:inline type="module" src="/footer.js"></script>
+    <style is:global>
+      /* Page element rules are unlayered and would beat the library's layered footer CSS. */
+      studio-footer { display: block; }
+    studio-footer {
+      --background: #0b0c0d; --foreground: #f1f0ec; --muted-foreground: #a5a39c;
+      --border: #282a2d; --input: #282a2d; --surface: #111315; --card: #111315; --accent: #111315;
+      --brand: #d57a43; --brand-ink: #0b0c0d; --brand-soft: rgb(213 122 67 / 0.14);
+      --primary: #d57a43; --primary-foreground: #0b0c0d; --ring: #d57a43;
+      --font-display: var(--sans); --font-text: var(--sans); --font-sans: var(--sans);
+      color-scheme: dark;
+    }
+      studio-footer *:not(#studio-footer-reset), studio-footer *:not(#studio-footer-reset)::before, studio-footer *:not(#studio-footer-reset)::after { all: revert-layer; }
+    </style>
+    <studio-footer
+      product="SaaS Maker"
+      url="https://sassmaker.com"
+      catalog-id="saas-maker"
+      capture="newsletter"
+      variant="studio"
+      privacy-url="https://sassmaker.com/privacy"
+    >
+      <script is:inline type="application/json">
+        {
+          "summary": "Fleet products and shared tooling. Built and maintained by Sarthak Agrawal.",
+          "legal": "Curious products. Real domains. Work that keeps moving.",
+          "art": {
+            "src": "/footer-art/saas-maker.webp",
+            "width": 2170,
+            "height": 725,
+            "alt": "SaaS Maker: A product studio courtyard centers an active craft table where small software-inspired models are made and inspected. Varied finished and unfinished models occupy a quiet exhibition shelf; useful tools remain on the outer workbenches.",
+            "focalX": 50,
+            "focalY": 50,
+            "credit": "Original illustration for SaaS Maker"
+          },
+          "groups": [
+            {"title": "Explore", "links": [
+              {"label": "Products", "href": "/projects"},
+              {"label": "Shared tooling", "href": "/tools"},
+              {"label": "Ideas", "href": "/ideas"},
+              {"label": "LaunchDesk", "href": "/launchdesk"},
+              {"label": "Funding", "href": "/funding"}
+            ]},
+            {"title": "Journal", "links": [
+              {"label": "Changelog", "href": "/changelog"},
+              {"label": "Learnings", "href": "/learnings"},
+              {"label": "Ranks", "href": "/ranks"}
+            ]},
+            {"title": "Studio", "links": [
+              {"label": "Sarthak Agrawal", "href": "https://sarthakagrawal.dev"},
+              {"label": "Source", "href": "https://github.com/sass-maker/saas-maker"},
+              {"label": "Privacy", "href": "/privacy"},
+              {"label": "Terms", "href": "/terms"}
+            ]}
+          ]
+        }
+      </script>
+    </studio-footer>
     <script is:inline>
       document.addEventListener('click', (event) => {
         const target = event.target;
