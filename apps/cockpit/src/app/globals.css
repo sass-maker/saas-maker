@@ -113,3 +113,8 @@
     text-transform: var(--ui-case);
   }
 }
+
+/* Loading placeholders stay quiet, including when reduced motion is not enabled. */
+[data-slot="skeleton"] {
+  animation: none;
+}

@@ -1,6 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { EmptyState } from '@saas-maker/ui/components/empty-state';
+import { useApiResource, useCockpitResources } from '@/components/cockpit-resources';
+import { ResourceView } from '@/components/resource-view';
 import { useSearchParams } from 'next/navigation';
 import { FilterBar } from '@/components/filter-bar';
 import { FeedbackTableSkeleton } from '@/components/table-skeleton';
@@ -18,34 +20,13 @@ export function InboxContent({ projectId }: InboxContentProps) {
   const typeFilter = searchParams.get('type') ?? 'all';
   const statusFilter = searchParams.get('status') ?? 'all';
 
-  const [feedback, setFeedback] = useState<FeedbackRecord[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchFeedback = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams();
-      if (typeFilter !== 'all') params.set('type', typeFilter);
-      if (statusFilter !== 'all') params.set('status', statusFilter);
-      const qs = params.toString();
-      const token = await getClientToken();
-      const data = await apiFetchClient<{ data: FeedbackRecord[] }>(
-        `/v1/feedback?project=${encodeURIComponent(projectId)}${qs ? `&${qs}` : ''}`,
-        token
-      );
-      setFeedback(data.data ?? []);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load feedback');
-    } finally {
-      setLoading(false);
-    }
-  }, [projectId, typeFilter, statusFilter]);
-
-  useEffect(() => {
-    fetchFeedback();
-  }, [fetchFeedback]);
+  const params = new URLSearchParams({ project: projectId });
+  if (typeFilter !== 'all') params.set('type', typeFilter);
+  if (statusFilter !== 'all') params.set('status', statusFilter);
+  const resource = useApiResource<{ data: FeedbackRecord[] }>(`/v1/feedback?${params}`, {
+    isEmpty: (result) => (result.data ?? []).length === 0,
+  });
+  const { invalidate } = useCockpitResources();
 
   async function handleStatusChange(item: FeedbackRecord, status: AnyFeedbackStatus) {
     const token = await getClientToken();
@@ -53,31 +34,31 @@ export function InboxContent({ projectId }: InboxContentProps) {
       method: 'PATCH',
       body: JSON.stringify({ status }),
     });
-    setFeedback((prev) => prev.map((f) => (f.id === item.id ? { ...f, ...updated } : f)));
-  }
-
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        <FilterBar />
-        <FeedbackTableSkeleton />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="space-y-4">
-        <FilterBar />
-        <div className="text-destructive text-center py-8">{error}</div>
-      </div>
-    );
+    resource.mutate((result) => ({
+      data: (result?.data ?? []).map((candidate) =>
+        candidate.id === item.id ? { ...candidate, ...updated } : candidate
+      ),
+    }));
+    invalidate('/v1/feedback?');
   }
 
   return (
     <div className="space-y-4">
       <FilterBar />
-      <FeedbackTable feedback={feedback} onStatusChange={handleStatusChange} />
+      <ResourceView
+        resource={resource}
+        skeleton={<FeedbackTableSkeleton />}
+        empty={
+          <EmptyState
+            title="no matching feedback"
+            description="new submissions from the hosted widget appear here."
+          />
+        }
+      >
+        {(result) => (
+          <FeedbackTable feedback={result.data ?? []} onStatusChange={handleStatusChange} />
+        )}
+      </ResourceView>
     </div>
   );
 }

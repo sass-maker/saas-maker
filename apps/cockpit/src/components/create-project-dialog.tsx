@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Plus } from 'lucide-react';
 import { apiFetch } from '@/lib/api';
+import { useCockpitResources } from '@/components/cockpit-resources';
 
 async function getToken(): Promise<string> {
   const res = await fetch('/api/token');
@@ -27,6 +28,7 @@ async function getToken(): Promise<string> {
 
 export function CreateProjectDialog() {
   const router = useRouter();
+  const { invalidate } = useCockpitResources();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -47,6 +49,7 @@ export function CreateProjectDialog() {
         { method: 'POST', body: JSON.stringify(payload) },
         token
       );
+      invalidate('/v1/projects');
       setOpen(false);
       setName('');
       // Navigate to the new project or refresh the list

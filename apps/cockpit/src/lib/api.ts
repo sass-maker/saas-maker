@@ -1,33 +1,14 @@
-import { API_BASE, API_FALLBACK_BASES } from './api-base';
+import { fetchJsonWithFallback } from './api-client';
 
 export async function apiFetch(path: string, options: RequestInit = {}, token?: string) {
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...(options.headers as Record<string, string>),
-  };
-  if (token) headers.Authorization = `Bearer ${token}`;
-
-  let lastError: Error | null = null;
-  for (const base of API_FALLBACK_BASES) {
-    try {
-      const res = await fetch(`${base}${path}`, {
-        ...options,
-        headers,
-      });
-      if (res.ok) return res.json();
-      const body = await res.text();
-      const retriable = res.status === 530 || body.includes('error code: 1003');
-      if (!retriable || base === API_FALLBACK_BASES.at(-1)) {
-        throw new Error(body);
-      }
-      lastError = new Error(body);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown fetch error';
-      lastError = new Error(`${message} (${base}${path})`);
-      if (base !== API_FALLBACK_BASES.at(-1)) continue;
-    }
-  }
-  throw lastError ?? new Error(`Failed to fetch ${API_BASE}${path}`);
+  return fetchJsonWithFallback<any>(path, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers as Record<string, string>),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
 }
 
 /**
@@ -57,7 +38,8 @@ export async function getProjectBySlug(
 ): Promise<import('@saas-maker/contracts').ProjectRecord | null> {
   try {
     return await apiFetch(`/v1/projects/by-slug/${slug}`, {}, token);
-  } catch {
-    return null;
+  } catch (error) {
+    if (error instanceof Error && 'status' in error && error.status === 404) return null;
+    throw error;
   }
 }

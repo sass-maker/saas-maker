@@ -1,95 +1,46 @@
-import { Skeleton } from '@/components/ui/skeleton';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { DataTableSkeleton } from '@saas-maker/ui/components/data-table';
 
-export function FeedbackTableSkeleton() {
+export const feedbackTableShape =
+  '[&_table]:table-fixed [&_tr]:h-10 [&_th:nth-child(1)]:w-[100px] [&_th:nth-child(3)]:hidden [&_td:nth-child(3)]:hidden sm:[&_th:nth-child(3)]:table-cell sm:[&_td:nth-child(3)]:table-cell sm:[&_th:nth-child(3)]:w-1/4 [&_th:nth-child(4)]:w-[120px] [&_th:nth-child(5)]:hidden [&_td:nth-child(5)]:hidden md:[&_th:nth-child(5)]:table-cell md:[&_td:nth-child(5)]:table-cell [&_th:nth-child(5)]:w-[120px]';
+export const subscribersTableShape =
+  '[&_table]:table-fixed [&_tr]:h-10 [&_th:nth-child(2)]:w-[120px] [&_th:nth-child(3)]:hidden [&_td:nth-child(3)]:hidden sm:[&_th:nth-child(3)]:table-cell sm:[&_td:nth-child(3)]:table-cell sm:[&_th:nth-child(3)]:w-1/5 [&_th:nth-child(4)]:w-[120px] [&_th:nth-child(5)]:hidden [&_td:nth-child(5)]:hidden md:[&_th:nth-child(5)]:table-cell md:[&_td:nth-child(5)]:table-cell [&_th:nth-child(5)]:w-[140px] [&_th:nth-child(6)]:hidden [&_td:nth-child(6)]:hidden md:[&_th:nth-child(6)]:table-cell md:[&_td:nth-child(6)]:table-cell [&_th:nth-child(6)]:w-[140px]';
+
+// DataTableSkeleton includes a column-picker toolbar; these tables have filters above them.
+const skeletonShape =
+  '[&>div.flex]:hidden [&>div]:rounded-md [&_table]:border-collapse [&_th]:px-2 [&_th]:text-sm [&_td]:p-2';
+
+export function FeedbackTableSkeleton({ announce = true }: { announce?: boolean }) {
   return (
-    <div role="status" aria-label="Loading feedback" className="rounded-md border">
-      <Table aria-hidden="true">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Type</TableHead>
-            <TableHead>Title</TableHead>
-            <TableHead className="hidden sm:table-cell">Submitter</TableHead>
-            <TableHead className="w-[120px]">Status</TableHead>
-            <TableHead className="hidden md:table-cell w-[120px]">Date</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {[1, 2, 3, 4, 5].map((row) => (
-            <TableRow key={row}>
-              <TableCell>
-                <Skeleton className="h-5 w-16" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-4 w-full max-w-48" />
-              </TableCell>
-              <TableCell className="hidden sm:table-cell">
-                <Skeleton className="h-4 w-32" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-5 w-16" />
-              </TableCell>
-              <TableCell className="hidden md:table-cell">
-                <Skeleton className="h-4 w-20" />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <DataTableSkeleton
+      columns={[
+        { id: 'type', header: 'type' },
+        { id: 'title', header: 'title' },
+        { id: 'submitter', header: 'submitter' },
+        { id: 'status', header: 'status' },
+        { id: 'date', header: 'date' },
+      ]}
+      rows={5}
+      label="feedback"
+      announce={announce}
+      className={`${skeletonShape} ${feedbackTableShape}`}
+    />
   );
 }
 
 export function SubscribersTableSkeleton() {
   return (
-    <div
-      role="status"
-      aria-label="Loading subscribers"
-      className="overflow-x-auto rounded-md border"
-    >
-      <Table aria-hidden="true">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Email</TableHead>
-            <TableHead className="w-[120px]">Kind</TableHead>
-            <TableHead className="hidden sm:table-cell">Source</TableHead>
-            <TableHead className="w-[120px]">State</TableHead>
-            <TableHead className="hidden md:table-cell w-[140px]">Consented</TableHead>
-            <TableHead className="hidden md:table-cell w-[140px]">Created</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {[1, 2, 3, 4, 5].map((row) => (
-            <TableRow key={row}>
-              <TableCell>
-                <Skeleton className="h-4 w-full max-w-48" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-5 w-20" />
-              </TableCell>
-              <TableCell className="hidden sm:table-cell">
-                <Skeleton className="h-4 w-16" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-5 w-16" />
-              </TableCell>
-              <TableCell className="hidden md:table-cell">
-                <Skeleton className="h-4 w-24" />
-              </TableCell>
-              <TableCell className="hidden md:table-cell">
-                <Skeleton className="h-4 w-24" />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <DataTableSkeleton
+      columns={[
+        { id: 'email', header: 'email' },
+        { id: 'kind', header: 'kind' },
+        { id: 'source', header: 'source' },
+        { id: 'state', header: 'state' },
+        { id: 'consented', header: 'consented' },
+        { id: 'created', header: 'created' },
+      ]}
+      rows={5}
+      label="subscribers"
+      className={`${skeletonShape} ${subscribersTableShape}`}
+    />
   );
 }

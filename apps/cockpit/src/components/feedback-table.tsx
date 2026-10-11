@@ -10,6 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { feedbackTableShape } from '@/components/table-skeleton';
 import { FeedbackDetail } from '@/components/feedback-detail';
 import type { FeedbackRecord, AnyFeedbackStatus } from '@saas-maker/contracts';
 
@@ -42,7 +43,7 @@ export function FeedbackTable({ feedback, onStatusChange }: FeedbackTableProps) 
 
   return (
     <>
-      <div className="rounded-md border">
+      <div className={`min-h-[242px] rounded-md border ${feedbackTableShape}`}>
         <Table>
           <TableHeader>
             <TableRow>
@@ -80,8 +81,8 @@ export function FeedbackTable({ feedback, onStatusChange }: FeedbackTableProps) 
                     <TableCell>
                       <Badge variant={typeStyle.variant}>{typeStyle.label}</Badge>
                     </TableCell>
-                    <TableCell className="font-medium">{item.title}</TableCell>
-                    <TableCell className="hidden sm:table-cell text-muted-foreground">
+                    <TableCell className="truncate font-medium">{item.title}</TableCell>
+                    <TableCell className="hidden sm:table-cell truncate text-muted-foreground">
                       {item.submitter_name || item.submitter_email || 'Anonymous'}
                     </TableCell>
                     <TableCell>

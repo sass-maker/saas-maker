@@ -7,6 +7,8 @@ import { MobileNav } from '@/components/mobile-nav';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { getLocalDevSession, isLocalAuthBypassEnabled } from '@/lib/local-auth';
 import { UserMenu } from '@/components/user-menu';
+import { CockpitResources } from '@/components/cockpit-resources';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,6 +17,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const session = isLocalAuthBypassEnabled(requestHeaders.get('host'))
     ? getLocalDevSession()
     : await auth.api.getSession({ headers: requestHeaders });
+  if (!session?.user) redirect('/login');
 
   return (
     <div className="min-h-screen flex bg-background text-foreground">
@@ -71,7 +74,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <ThemeToggle />
         </header>
 
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <CockpitResources key={session.user.id}>{children}</CockpitResources>
+        </div>
       </main>
     </div>
   );
