@@ -1,7 +1,8 @@
 # Agent workspaces
 
 Use `fleet-workspace` for Fleet writer checkouts, dependency installs and heavy
-commands. It is a local Node CLI with no dependencies or provider access.
+commands. It is a local Node CLI with no dependencies; close can use optional
+read-only GitHub evidence through an already authenticated `gh`.
 Implementation tracking: [SaaS Maker #179](https://github.com/sass-maker/saas-maker/issues/179); lockfile-only follow-up: [#195](https://github.com/sass-maker/saas-maker/issues/195).
 
 Review-only agents inspect existing source. Create a linked Git worktree only
@@ -103,8 +104,11 @@ fleet-workspace status
 ```
 
 `status` reports owner, task, branch, heartbeat, Git blockers and reported disk
-usage. `du` figures do not account for shared APFS blocks or establish physically
-reclaimable space. Stale heartbeats are a review signal, never deletion authority.
+usage. Disk scans run asynchronously with at most four concurrent measurements.
+`status --no-disk` skips every disk measurement and omits budget reporting;
+workspace `reportedBytes` is null. `du` figures do not account for shared APFS
+blocks or establish physically reclaimable space. Stale heartbeats are a review
+signal, never deletion authority.
 Long idle tasks should send `heartbeat` manually. PID reuse is handled
 conservatively: a live PID may keep an old command lease blocked.
 
@@ -116,11 +120,14 @@ state fails closed. Failed creation remains recorded for review.
 
 ## Retirement and existing temporary files
 
-Closing checks the linked worktree/repository identity, recorded branch, all
+Closing checks the linked worktree/repository identity, current branch, all
 tracked/untracked changes, command leases, and open files visible to `lsof`.
-The HEAD must be contained in a local remote-tracking ref. This is local Git
-evidence, not a fresh provider check. Open-file visibility follows current OS
-permissions; permission errors are blockers. Change directory out of a worktree
+HEAD must be contained in a local remote-tracking ref or have landing evidence
+described below. A branch switch or detached HEAD is allowed only when the
+current HEAD is clean and landed; receipts record `branchNow` and a note.
+An unnecessary `--landed` flag is ignored with a note. Close skips disk scans.
+Open-file visibility follows current OS permissions; permission errors are
+blockers. Change directory out of a worktree
 before closing it. Locked trees and submodule worktrees remain protected by Git.
 
 A safe close writes a recovery receipt and uses `git worktree move` to relocate
@@ -138,8 +145,14 @@ A squash merge leaves the branch HEAD outside every remote ref. `close`
 accepts it when every path the branch changed since its merge base with
 `origin/HEAD` (or `origin/main`) has identical content there; the receipt
 records `landing.landedBy: content-equal`. If `main` has since edited those
-paths, verify the landing yourself and pass `--landed <sha>` naming the landed
-commit; it must be contained in a local remote-tracking ref (fetch first) and
+paths, close also checks merged GitHub PRs for the recorded and current branch.
+A PR qualifies only when HEAD equals or is an ancestor of its head commit;
+commits ahead of the PR remain blocked. If its merge commit exists locally,
+a remote-tracking ref must contain it. No fetch occurs. Receipts record
+`landing.landedBy: merged-pr`, PR number and URL. Missing, unauthenticated or
+failing `gh` supplies no evidence. Alternatively, verify the landing yourself
+and pass `--landed <sha>` naming the landed commit; it must be contained in a
+local remote-tracking ref (fetch first) and
 is recorded as `operator-verified`. Unlanded local commits stay blocked.
 
 A folder that disappears (trashed, moved by hand, or vanishing while `du` walks
@@ -155,6 +168,14 @@ fleet-workspace close --id product-issue-123 --dry-run --landed <squash-sha>
 fleet-workspace reconcile --dry-run
 fleet-workspace reconcile
 ```
+
+`close --all-landed [--dry-run] [--idle-minutes N]` checks active workspaces
+individually using the same close rules and receipts. The default idle threshold
+is 30 minutes. Only clean, landed trees with no open files or live command lease
+and an older heartbeat move to `retired`; failures keep that tree and do not
+stop the others. JSON lists `closed`, `kept` (with blockers/reasons), and counts.
+Dry-run reports eligible trees as `would-retire` without moving or updating them.
+No force or deletion is used.
 
 ```sh
 fleet-workspace inventory --path /private/tmp
@@ -177,8 +198,8 @@ measurement has a 180-second bound and runs asynchronously outside the registry
 lock. Unknown or failed measurements still fail closed; no totals are cached and
 retired worktrees remain included. Admission rechecks the current policy, free
 space reserve, material workspace identities, and heavy-job limits under the
-registry lock before registering its lease. Identity changes during a managed run scan
-trigger at most two retries (three complete fresh measurement attempts) before
+registry lock before registering its lease. Identity changes during a create or
+managed run scan trigger at most two retries (three complete fresh measurement attempts) before
 failing closed. Admission remains atomic; every retry remeasures all three
 roles outside the lock and rechecks current limits and free reserve under it.
 No old byte totals are used. A converging unrelated create/retirement does not

@@ -9,15 +9,18 @@ import { AgentWorkspaces, GiB, inventory } from '../lib/agent-workspaces.mjs';
 const help = `fleet-workspace <command> [options]
   create --id <id> --repo <path> --owner <agent> --task <task> [--base HEAD]
   heartbeat --id <id>
-  status
+  status [--no-disk]               Skip disk measurements and budget reporting.
   install (--id <id> | --repo <path>) [--offline]
   lockfile-only --id <id>        Update an existing pnpm lockfile without installing.
   run (--id <id> | --repo <path>) -- <command> [args...]
   close --id <id> [--dry-run] [--landed <sha>]
+  close --all-landed [--dry-run] [--idle-minutes <n>] (default: 30)
                                    Check source and open files; retire reversibly.
                                    Squash-landed branches pass when their changed
-                                   paths match the remote default branch, or with
-                                   --landed naming the commit that landed them.
+                                   paths match the remote default branch, a merged
+                                   GitHub PR contains HEAD, or --landed names the
+                                   commit that landed them. Bulk close keeps busy,
+                                   recently active, dirty and unlanded worktrees.
   reconcile [--dry-run]           Mark records whose folder is gone as missing.
   gc --dry-run                    Review managed workspaces; never deletes.
   inventory --path <path>          Read-only legacy checkout/store discovery.
@@ -34,7 +37,8 @@ export async function main(argv = process.argv.slice(2)) {
     root: { type: 'string' }, id: { type: 'string' }, repo: { type: 'string' }, owner: { type: 'string' }, task: { type: 'string' },
     base: { type: 'string' }, path: { type: 'string' }, landed: { type: 'string' }, 'store-dir': { type: 'string' },
     'max-writers': { type: 'string' }, 'max-heavy-jobs': { type: 'string' }, 'workspace-gib': { type: 'string' },
-    'total-gib': { type: 'string' }, 'min-free-gib': { type: 'string' },
+    'total-gib': { type: 'string' }, 'min-free-gib': { type: 'string' }, 'idle-minutes': { type: 'string' },
+    'all-landed': { type: 'boolean' }, 'no-disk': { type: 'boolean' },
     offline: { type: 'boolean' }, 'dry-run': { type: 'boolean' }, help: { type: 'boolean', short: 'h' },
   } });
   if (opts.help || positionals.length === 0) { console.log(help); return; }
@@ -44,15 +48,24 @@ export async function main(argv = process.argv.slice(2)) {
   switch (positionals[0]) {
     case 'create': result = await manager.create(opts); break;
     case 'heartbeat': result = await manager.heartbeat(opts.id); break;
-    case 'status': result = manager.status(); break;
+    case 'status': result = await manager.status({ noDisk: opts['no-disk'] }); break;
     case 'install': result = await manager.install(opts); break;
     case 'lockfile-only': result = await manager.lockfileOnly(opts); break;
     case 'run': result = await manager.run({ ...opts, argv: commandArgs }); break;
-    case 'close': result = await manager.close(opts.id, { dryRun: opts['dry-run'], landed: opts.landed }); break;
+    case 'close':
+      if (opts['all-landed']) {
+        if (opts.id || opts.landed !== undefined) throw new Error('--all-landed cannot be combined with --id or --landed.');
+        result = await manager.closeAllLanded({ dryRun: opts['dry-run'], idleMinutes: opts['idle-minutes'] === undefined ? 30 : Number(opts['idle-minutes']) });
+      } else {
+        if (!opts.id) throw new Error('close requires --id or --all-landed.');
+        if (opts['idle-minutes'] !== undefined) throw new Error('--idle-minutes requires --all-landed.');
+        result = await manager.close(opts.id, { dryRun: opts['dry-run'], landed: opts.landed });
+      }
+      break;
     case 'reconcile': result = await manager.reconcile({ dryRun: opts['dry-run'] }); break;
     case 'gc':
       if (!opts['dry-run']) throw new Error('Only gc --dry-run is supported; no automatic deletion.');
-      result = manager.gc(); break;
+      result = await manager.gc(); break;
     case 'inventory':
       if (!opts.path) throw new Error('inventory requires --path.');
       result = inventory(opts.path); break;
