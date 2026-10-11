@@ -2,84 +2,46 @@
 
 ## Direction
 
-The public directory is a sunlit product workshop expressed as a black
-steel-framed glass wall. Clear panes carry the studio story, seeded glass holds
-supporting material, and three saturated panes—cobalt, amber, and oxblood—mark
-work that deserves attention. The system should feel architectural and
-handmade, not translucent app chrome.
+The landing and every public route share the dark App Health/cockpit direction.
+Quiet cards frame the product directory, packages, tools, and studio journal.
+Keep the existing copy, hierarchy, routes, evidence, and analytics intact.
 
-## Color and material
+## Tokens
 
-- Limestone ground: `#eee8dc`
-- Clear pane: `rgba(250, 247, 239, 0.88)`
-- Seeded pane: `#ddd6c7`
-- Steel: `#11120f`
-- Ink: `#141511`
-- Muted ink: `#5f5d55`
-- Cobalt: `#1746a2`
-- Amber: `#c9820d`
-- Oxblood: `#7b211c`
-- Pale line: `rgba(20, 21, 17, 0.2)`
+- Background: `#0a0a0a`; cards: `#171717`; muted surface: `#262626`.
+- Foreground: `#fafafa`; supporting text: `#e5e5e5`; muted text: `#a1a1a1`.
+- Hairline border: `#222222`; card and control radius: `10px`.
+- Copper actions: `#d57a43`, hover/focus `#ef9b66`, with `#0a0a0a` text.
+- Neutral secondary actions: `#e5e5e5` with `#0a0a0a` text.
+- Destructive text: `#ff6467`; keyboard focus ring: copper highlight.
 
-Pane color is structural, not decorative. A saturated pane owns a whole
-product or interaction state; do not scatter accent-colored text across the
-page.
+Ledger plaques flood on hover and keyboard focus: cobalt `#1746a2` or oxblood
+`#7b211c` with opaque white text; amber `#c9820d` with `#0a0a0a` text.
+All plaque metadata inherits the same foreground. Accent colors are fills for
+these states, not low-contrast text on the dark ground.
 
 ## Typography
 
-Use Schibsted Grotesk throughout. Character comes from large, calm grotesque
-type inside hard architectural proportions, not from switching to a display
-serif. Keep display tracking above `-0.04em`, body copy at or above `1rem`, and
-long prose near 70 characters.
+Use self-hosted Geist for prose and headings, and Geist Mono for event,
+package, and tool names, code, and chips. The unchanged latin variable cuts
+come from Next's devtools font directory; `public/fonts/OFL.txt` retains the
+upstream SIL OFL notice. Preload the sans face and use `font-display: optional`.
 
-The family is self-hosted, not loaded from Google Fonts. `public/fonts/`
-carries the variable latin cut of the upstream v7 release, narrowed to the
-400-750 weight range the system uses (44KB, SIL OFL, `OFL.txt` alongside it).
-It is declared `font-display: optional` and preloaded, so a cold visit renders
-in a metrics-matched Arial stand-in and never swaps mid-paint — the third-party
-stylesheet used to land after first paint and make the hero heading both the
-LCP and the page's only layout shift. Recut the file with the same weight range
-and recompute the `size-adjust` / `ascent-override` / `descent-override`
-numbers in `src/styles/globals.css` if the family is ever replaced; the
-derivation is written out in the comment next to them.
+The Arial fallback is calculated from the shipped Geist and local Arial
+hmtx/hhea tables with a frequency-weighted lowercase sample. Its size adjustment
+is `106.3855%`, ascent `94.4678%`, descent `27.7293%`, and line gap `0%`.
+The calculation is recorded beside the face in `src/styles/globals.css`.
+Recompute those values if the font cut changes. Preserve existing capitalization.
 
-## Layout
+## Composition and motion
 
-Compose public product discovery as a wall elevation. Matte-black mullions
-separate unevenly proportioned panes; each pane carries one statement or
-destination. The homepage first viewport is one clear editorial pane: a wide
-headline sits beside the intro, status, and a masked glimpse of the atelier
-photograph, and the spotlighted products arrive as a steel-mullioned ledger of
-quiet plaques that flood with saturated pane color on hover and focus. The
-ledger scales honestly to however many products are spotlighted — two read as
-two commissioned entries, never as an unfinished grid. It does not repeat the
-catalog: one directory gateway points to `/projects`, where supporting and past
-work become disciplined specimen rows rather than cards.
+Cards replace the old glass wall and heavy steel mullions; hairline gaps keep
+related panes legible. Directory rows and details use the same dark surfaces.
+Each section has one focal visual. The hero keeps the existing atelier crop
+under a near-opaque dark mask, behind semantic HTML; other reading surfaces
+use solid cards. Preserve the dark TokenWorld scene and its accessible fallback.
 
-Product detail pages inherit the same workshop world: one clear identity pane
-shares a steel frame with a saturated canonical-product action, while public
-evidence becomes a run of specimen panes. Ideas, Tools, and Learnings use the
-same limestone ground, steel mullions, clear or seeded bays, and saturated
-structural states while keeping the form each job needs: ledger, capability
-register, or reading surface. On narrow screens, bays restack into one column
-while preserving bar thickness and reading order. Legal pages remain quiet.
-
-The changelog is the workshop ledger: a clear editorial pane shares the first
-frame with one cobalt explanation pane, then dated milestones alternate seeded
-date bays with quiet reading bays. Oversized ledger numbers expose chronology
-without replacing semantic dates.
-
-## Imagery
-
-One editorial photograph of a real-feeling glazier's atelier supplies physical
-light and depth. It remains atmosphere behind semantic HTML, never a rasterized
-interface. Avoid generic abstract gradients, fake product screenshots, doodles,
-and decorative glass blur.
-
-## Motion
-
-The wall arrives once: the editorial pane brightens, then the ledger plaques
-settle in sequence. On the homepage, hover and focus flood a whole plaque with
-its product's saturated color; elsewhere they backlight a pane without
-translating the layout. Disable nonessential motion under
-`prefers-reduced-motion`.
+Existing responsive reading order and native disclosures remain. Check at
+390, 768, and 1440px with no page overflow. Keep readable text at WCAG AA,
+visible copper keyboard focus, and reduced-motion behavior. Entrance motion
+moves cards subtly without dimming their text.

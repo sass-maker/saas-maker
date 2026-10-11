@@ -21,8 +21,8 @@ import Footer from '../components/Footer.astro';
     margin-top: 1.5rem;
     padding: 0.7rem 1.25rem;
     border: 1px solid currentColor;
-    border-radius: 0.4rem;
-    background: var(--ink);
+    border-radius: var(--radius);
+    background: var(--copper);
     color: var(--bg);
     font: inherit;
     font-weight: 600;
@@ -30,7 +30,7 @@ import Footer from '../components/Footer.astro';
   }
 
   #unsubscribe-button:disabled { opacity: 0.55; cursor: not-allowed; }
-  #unsubscribe-button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+  #unsubscribe-button:focus-visible { outline: 3px solid var(--copper-hi); outline-offset: 3px; }
   </style>
 
   <script is:inline>

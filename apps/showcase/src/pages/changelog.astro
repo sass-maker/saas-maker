@@ -66,19 +66,20 @@ import Layout from '../layouts/Layout.astro';
 
 <style>
   .changelog {
-    width: var(--workshop-frame-width);
+    width: var(--frame-width);
     margin-inline: auto;
-    border: 0.375rem solid var(--workshop-steel);
-    border-top: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
   }
 
   .changelog-hero {
     min-height: 34rem;
     display: grid;
     grid-template-columns: minmax(0, 1.6fr) minmax(20rem, 0.65fr);
-    background:
-      linear-gradient(rgba(250, 247, 239, 0.88), rgba(250, 247, 239, 0.88)),
-      url('/images/glazier-atelier-hero.webp') center / cover;
+    background: var(--surface);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .changelog-hero > div,
@@ -91,15 +92,18 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .changelog-hero > div {
-    border-right: 0.375rem solid var(--workshop-steel);
+    border-right: 1px solid var(--line);
   }
 
   .changelog-hero > aside {
     margin: 0;
-    background: var(--workshop-cobalt);
+    background: var(--surface);
     color: #fff;
     font-size: clamp(1.1rem, 1.7vw, 1.35rem);
     line-height: 1.6;
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .changelog-intro p {
@@ -144,11 +148,14 @@ import Layout from '../layouts/Layout.astro';
     margin: 0;
     padding: 0;
     list-style: none;
-    background: rgba(250, 247, 239, 0.94);
+    background: var(--surface);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .changelog-list > li {
-    border-top: 0.375rem solid var(--workshop-steel);
+    border-top: 1px solid var(--line);
   }
 
   article {
@@ -166,14 +173,17 @@ import Layout from '../layouts/Layout.astro';
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-right: 0.375rem solid var(--workshop-steel);
-    background: var(--workshop-seeded);
-    color: var(--workshop-ink);
+    border-right: 1px solid var(--line);
+    background: var(--surface-muted);
+    color: var(--ink);
     font-size: 0.82rem;
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .changelog-date span {
-    color: var(--workshop-steel);
+    color: var(--ink);
     font-size: clamp(3rem, 6vw, 6rem);
     font-weight: 600;
     letter-spacing: -0.06em;
@@ -193,7 +203,7 @@ import Layout from '../layouts/Layout.astro';
   .changelog-entry > p {
     max-width: 60ch;
     margin: 1.5rem 0 0;
-    color: var(--workshop-muted);
+    color: var(--ink-muted);
     font-size: clamp(1rem, 1.5vw, 1.2rem);
     line-height: 1.6;
   }
@@ -203,13 +213,13 @@ import Layout from '../layouts/Layout.astro';
     margin: 2.5rem 0 0;
     padding: 0;
     list-style: none;
-    border-top: 1px solid rgba(20, 21, 17, 0.2);
+    border-top: 1px solid var(--line);
   }
 
   .changelog-entry li {
     position: relative;
     padding: 1rem 0 1rem 1.5rem;
-    border-bottom: 1px solid rgba(20, 21, 17, 0.2);
+    border-bottom: 1px solid var(--line);
     line-height: 1.5;
   }
 
@@ -219,7 +229,7 @@ import Layout from '../layouts/Layout.astro';
     left: 0;
     width: 0.45rem;
     height: 0.45rem;
-    background: var(--workshop-amber);
+    background: var(--surface);
     content: '';
   }
 
@@ -230,8 +240,11 @@ import Layout from '../layouts/Layout.astro';
     gap: 2rem;
     align-items: center;
     padding: clamp(2rem, 5vw, 4.5rem);
-    border-top: 0.375rem solid var(--workshop-steel);
-    background: var(--workshop-amber);
+    border-top: 1px solid var(--line);
+    background: var(--surface);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .changelog-close p {
@@ -265,7 +278,7 @@ import Layout from '../layouts/Layout.astro';
 
     .changelog-hero > aside {
       min-height: 16rem;
-      border-top: 0.375rem solid var(--workshop-steel);
+      border-top: 1px solid var(--line);
     }
 
     h1 {
@@ -284,7 +297,7 @@ import Layout from '../layouts/Layout.astro';
       flex-direction: row;
       align-items: flex-end;
       border-right: 0;
-      border-bottom: 0.375rem solid var(--workshop-steel);
+      border-bottom: 1px solid var(--line);
     }
 
     .changelog-close {

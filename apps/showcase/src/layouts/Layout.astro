@@ -35,6 +35,8 @@ const OG_IMAGE = `${SITE_URL}/og-image.svg`;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="color-scheme" content="dark" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -66,19 +68,11 @@ const OG_IMAGE = `${SITE_URL}/og-image.svg`;
     <meta name="robots" content="index, follow" />
     <meta name="googlebot" content="index, follow" />
 
-    {/* One type family keeps the directory calm and reduces font payload. It is
-        self-hosted and declared in globals.css, which is inlined into this
-        document, so there is no third-party stylesheet, no extra connection
-        and no swap reflow (issue #92). `font-display: optional` gives the
-        font a short block period and then commits to whichever face won, so
-        the preload is what keeps first paint early — dropping it measured
-        ~400ms worse FCP, because the block period starts late.
-        `fetchpriority="low"` holds it behind the hero image, which is the LCP
-        element on mobile; measured neutral locally, where the origin is free,
-        and it costs nothing to keep the ordering explicit. */}
+    {/* Self-hosted Geist is preloaded and optional; the metrics-matched Arial
+        fallback in globals.css prevents a late font swap from shifting layout. */}
     <link
       rel="preload"
-      href="/fonts/schibsted-grotesk-v7-latin.woff2"
+      href="/fonts/geist-latin.woff2"
       as="font"
       type="font/woff2"
       fetchpriority="low"
@@ -111,11 +105,13 @@ const OG_IMAGE = `${SITE_URL}/og-image.svg`;
       /* Page element rules are unlayered and would beat the library's layered footer CSS. */
       studio-footer { display: block; }
     studio-footer {
-      --background: #0b0c0d; --foreground: #f1f0ec; --muted-foreground: #a5a39c;
-      --border: #282a2d; --input: #282a2d; --surface: #111315; --card: #111315; --accent: #111315;
-      --brand: #d57a43; --brand-ink: #0b0c0d; --brand-soft: rgb(213 122 67 / 0.14);
-      --primary: #d57a43; --primary-foreground: #0b0c0d; --ring: #d57a43;
+      --background: #0a0a0a; --foreground: #fafafa; --muted-foreground: #a1a1a1;
+      --border: #222222; --input: #222222; --surface: #171717; --card: #171717; --accent: #171717;
+      --brand: #d57a43; --brand-ink: #0a0a0a; --brand-soft: rgb(213 122 67 / 0.14);
+      --primary: #d57a43; --primary-foreground: #0a0a0a; --ring: #ef9b66;
       --font-display: var(--sans); --font-text: var(--sans); --font-sans: var(--sans);
+      --font-mono: var(--mono); --fleet-footer-label-font: var(--mono);
+      --radius: 10px;
       color-scheme: dark;
     }
       studio-footer *:not(#studio-footer-reset), studio-footer *:not(#studio-footer-reset)::before, studio-footer *:not(#studio-footer-reset)::after { all: revert-layer; }

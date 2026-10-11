@@ -130,7 +130,7 @@ const localProfilePath = (url: string) => new URL(url).pathname;
 
 <style>
   .studio-shell {
-    width: var(--workshop-frame-width);
+    width: var(--frame-width);
     margin-inline: auto;
     padding-bottom: 1rem;
   }
@@ -140,15 +140,18 @@ const localProfilePath = (url: string) => new URL(url).pathname;
   .studio-principles,
   .studio-proof,
   .studio-boundary {
-    border-inline: 0.375rem solid var(--workshop-steel);
+    border-inline: 1px solid var(--line);
   }
 
   .studio-manifesto {
     display: grid;
     grid-template-columns: minmax(0, 1.16fr) minmax(24rem, 0.84fr);
-    gap: 0.375rem;
+    gap: 1px;
     min-height: min(42rem, calc(100svh - 4.75rem));
-    background: var(--workshop-steel);
+    background: var(--line);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-manifesto-copy,
@@ -161,7 +164,10 @@ const localProfilePath = (url: string) => new URL(url).pathname;
   }
 
   .studio-manifesto-copy {
-    background: var(--workshop-pane);
+    background: var(--surface);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-manifesto h1 {
@@ -177,7 +183,7 @@ const localProfilePath = (url: string) => new URL(url).pathname;
   .studio-manifesto-intro {
     max-width: 47rem;
     margin-top: clamp(2rem, 4vh, 3rem);
-    color: var(--workshop-muted);
+    color: var(--ink-muted);
     font-size: clamp(1.08rem, 1.5vw, 1.35rem);
   }
 
@@ -187,7 +193,7 @@ const localProfilePath = (url: string) => new URL(url).pathname;
     gap: 0.55rem;
     margin-top: auto;
     padding-top: 3rem;
-    color: var(--workshop-muted);
+    color: var(--ink-muted);
     font-size: 0.85rem;
   }
 
@@ -195,14 +201,17 @@ const localProfilePath = (url: string) => new URL(url).pathname;
     min-height: 2.75rem;
     display: inline-flex;
     align-items: center;
-    color: var(--workshop-ink);
+    color: var(--ink);
     font-weight: 700;
     text-underline-offset: 0.24em;
   }
 
   .studio-ai-position {
-    background: var(--workshop-cobalt);
+    background: var(--surface);
     color: #fff;
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-ai-position > p:nth-child(2) {
@@ -232,19 +241,28 @@ const localProfilePath = (url: string) => new URL(url).pathname;
   .studio-boundary {
     display: grid;
     grid-template-columns: minmax(18rem, 0.72fr) minmax(0, 1.28fr);
-    gap: 0.375rem;
-    margin-top: 0.375rem;
-    background: var(--workshop-steel);
+    gap: 1px;
+    margin-top: 1px;
+    background: var(--line);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-thesis > *,
   .studio-boundary > * {
     padding: clamp(2.5rem, 5vw, 5rem);
-    background: var(--workshop-pane);
+    background: var(--surface);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-thesis > div:first-child {
-    background: var(--workshop-amber);
+    background: var(--surface);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-thesis h2,
@@ -267,13 +285,13 @@ const localProfilePath = (url: string) => new URL(url).pathname;
 
   .studio-thesis-copy p {
     max-width: 65ch;
-    color: var(--workshop-muted);
+    color: var(--ink-muted);
     font-size: clamp(1.05rem, 1.5vw, 1.3rem);
   }
 
   .studio-principles,
   .studio-proof {
-    margin-top: 0.375rem;
+    margin-top: 1px;
   }
 
   .studio-principles > header,
@@ -283,30 +301,41 @@ const localProfilePath = (url: string) => new URL(url).pathname;
     justify-content: space-between;
     gap: 2rem;
     padding: clamp(3rem, 7vw, 6rem);
-    background: var(--workshop-pane);
+    background: var(--surface);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-principles ol,
   .studio-proof ol {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.375rem;
+    gap: 1px;
     margin: 0;
-    padding: 0.375rem 0 0;
-    background: var(--workshop-steel);
+    padding: 1px 0 0;
+    background: var(--line);
     list-style: none;
-  }
+
+  border-radius: var(--radius);
+}
 
   .studio-principles li {
     min-height: 24rem;
     display: flex;
     flex-direction: column;
     padding: clamp(1.5rem, 3vw, 2.5rem);
-    background: var(--workshop-seeded);
+    background: var(--surface-muted);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-principles li:nth-child(even) {
-    background: var(--workshop-pane);
+    background: var(--surface);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-principles li > span,
@@ -326,17 +355,17 @@ const localProfilePath = (url: string) => new URL(url).pathname;
 
   .studio-principles li p {
     margin-top: 1rem;
-    color: var(--workshop-muted);
+    color: var(--ink-muted);
     font-size: 1rem;
   }
 
   .studio-principles li:nth-child(odd) p {
-    color: #57554e;
+    color: var(--ink-muted);
   }
 
   .studio-proof > header > p {
     max-width: 39ch;
-    color: var(--workshop-muted);
+    color: var(--ink-muted);
     font-size: 1rem;
   }
 
@@ -388,31 +417,47 @@ const localProfilePath = (url: string) => new URL(url).pathname;
 
   .studio-proof-actions a:hover,
   .studio-proof-actions a:focus-visible {
-    opacity: 0.64;
+    opacity: 1;
+    color: var(--copper-hi);
   }
 
   .studio-proof-pane--cobalt {
-    background: var(--workshop-cobalt);
+    background: var(--surface);
     color: #fff;
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-proof-pane--seeded {
-    background: var(--workshop-seeded);
-    color: var(--workshop-ink);
+    background: var(--surface-muted);
+    color: var(--ink);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-proof-pane--amber {
-    background: var(--workshop-amber);
-    color: #17130c;
+    background: var(--surface);
+    color: var(--ink);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-proof-pane--oxblood {
-    background: var(--workshop-oxblood);
+    background: var(--surface);
     color: #fff;
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-boundary > div:first-child {
-    background: var(--workshop-seeded);
+    background: var(--surface-muted);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .studio-boundary ul {
@@ -421,7 +466,7 @@ const localProfilePath = (url: string) => new URL(url).pathname;
     max-width: 65ch;
     margin: 0;
     padding-left: 1.2rem;
-    color: var(--workshop-muted);
+    color: var(--ink-muted);
     font-size: 1rem;
   }
 

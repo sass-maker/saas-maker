@@ -426,7 +426,7 @@ const deadlineText = (program: (typeof programs)[number]) =>
 
 <style>
   .funding-page {
-    width: var(--workshop-frame-width);
+    width: var(--frame-width);
     margin-inline: auto;
     padding-bottom: clamp(5rem, 9vw, 8rem);
   }
@@ -434,17 +434,22 @@ const deadlineText = (program: (typeof programs)[number]) =>
   .funding-hero {
     display: grid;
     grid-template-columns: minmax(0, 1.5fr) minmax(19rem, 0.7fr);
-    gap: 0.375rem;
-    padding: 0.375rem;
+    gap: 1px;
+    padding: 1px;
     padding-top: 0;
-    background: var(--workshop-steel);
+    background: var(--line);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .funding-identity,
   .funding-summary {
     border: 0;
     background: var(--surface);
-  }
+
+  border-radius: var(--radius);
+}
 
   .funding-identity {
     padding: clamp(3rem, 6vw, 6rem);
@@ -487,17 +492,23 @@ const deadlineText = (program: (typeof programs)[number]) =>
     flex-direction: column;
     justify-content: space-between;
     padding: 1.5rem;
-    border-bottom: 0.375rem solid var(--workshop-steel);
+    border-bottom: 1px solid var(--line);
   }
 
   .funding-summary > div:nth-child(2) {
-    background: var(--workshop-seeded);
+    background: var(--surface-muted);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .funding-summary > div:last-child {
     border-bottom: 0;
-    background: var(--workshop-cobalt);
+    background: var(--surface);
     color: #fff;
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .funding-summary dt {
@@ -605,7 +616,7 @@ const deadlineText = (program: (typeof programs)[number]) =>
   .funding-empty button {
     min-height: 2.75rem;
     border: 1px solid var(--line-strong);
-    border-radius: 0;
+    border-radius: var(--radius);
     background: var(--bg);
     color: var(--ink);
     font: inherit;
@@ -731,20 +742,29 @@ const deadlineText = (program: (typeof programs)[number]) =>
   }
 
   .fd-pill--p0 {
-    background: var(--workshop-oxblood);
-    border-color: var(--workshop-oxblood);
+    background: var(--surface);
+    border-color: var(--pane-oxblood);
     color: #fff;
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .fd-pill--p1 {
-    background: var(--workshop-amber);
-    border-color: var(--workshop-amber);
-    color: #17130c;
+    background: var(--surface);
+    border-color: var(--pane-amber);
+    color: var(--ink);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .fd-pill--p2 {
-    background: var(--workshop-seeded);
-    color: var(--workshop-ink);
+    background: var(--surface-muted);
+    color: var(--ink);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .fd-blank {
@@ -845,9 +865,11 @@ const deadlineText = (program: (typeof programs)[number]) =>
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     border: 1px solid var(--line-strong);
-    background: var(--workshop-steel);
+    background: var(--line);
     gap: 1px;
-  }
+
+  border-radius: var(--radius);
+}
 
   .funding-doc {
     display: flex;
@@ -859,10 +881,13 @@ const deadlineText = (program: (typeof programs)[number]) =>
     color: var(--ink);
     text-decoration: none;
     transition: background 160ms ease;
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .funding-doc:hover {
-    background: var(--workshop-seeded);
+    background: var(--surface-muted);
   }
 
   .funding-doc strong {
@@ -886,7 +911,9 @@ const deadlineText = (program: (typeof programs)[number]) =>
     padding: clamp(2rem, 5vw, 4rem);
     border: 1px solid var(--line-strong);
     background: var(--surface);
-  }
+
+  border-radius: var(--radius);
+}
 
   .funding-method > div:last-child {
     align-self: end;
@@ -934,7 +961,7 @@ const deadlineText = (program: (typeof programs)[number]) =>
     }
 
     .funding-hero {
-      gap: 0.375rem;
+      gap: 1px;
     }
 
     .funding-identity h1 {
@@ -967,7 +994,7 @@ const deadlineText = (program: (typeof programs)[number]) =>
     .funding-summary > div {
       min-height: 7rem;
       padding: 1rem;
-      border-right: 0.375rem solid var(--workshop-steel);
+      border-right: 1px solid var(--line);
       border-bottom: 0;
     }
 
