@@ -1,0 +1,286 @@
+{
+  "uiLibrary": {
+    "schemaVersion": 1,
+    "decidedAt": "2026-10-11",
+    "source": {
+      "quote": "Very little code",
+      "date": "2026-10-09"
+    },
+    "repository": "https://github.com/sass-maker/ui-library",
+    "visibility": "public",
+    "npmPublish": false,
+    "currentTag": "v0.1.19",
+    "web": {
+      "installMethod": "Set tagged GitHub subdirectory specs with pnpm pkg set, then pnpm install.",
+      "packages": [
+        {
+          "name": "@saas-maker/ui",
+          "path": "/packages/ui",
+          "install": "pnpm pkg set \"dependencies.@saas-maker/ui=github:sass-maker/ui-library#<tag>&path:/packages/ui\""
+        },
+        {
+          "name": "@saas-maker/motion",
+          "path": "/packages/motion",
+          "install": "pnpm pkg set \"dependencies.@saas-maker/motion=github:sass-maker/ui-library#<tag>&path:/packages/motion\""
+        },
+        {
+          "name": "@saas-maker/templates",
+          "path": "/packages/templates",
+          "install": "pnpm pkg set \"dependencies.@saas-maker/templates=github:sass-maker/ui-library#<tag>&path:/packages/templates\""
+        },
+        {
+          "name": "@saas-maker/tokens",
+          "path": "/packages/tokens",
+          "install": "pnpm pkg set \"dependencies.@saas-maker/tokens=github:sass-maker/ui-library#<tag>&path:/packages/tokens\""
+        }
+      ],
+      "consumerGuide": "https://github.com/sass-maker/ui-library/blob/main/README.md",
+      "notes": [
+        "Keep ui, motion and templates on the same tag; templates requires ui and motion beside it.",
+        "Do not use pnpm add for these GitHub specs: pnpm 10.33 drops the tag and subdirectory when saving them.",
+        "React templates need React, React DOM and the Astro React integration in Astro consumers; follow the library consumer guide.",
+        "Share tokens, variants and templates rather than making per-product forks."
+      ]
+    },
+    "native": {
+      "name": "SaaSMakerUI",
+      "url": "https://github.com/sass-maker/ui-library",
+      "manifest": "Package.swift (repository root; sources under swift/Sources/SaaSMakerUI)",
+      "install": ".package(url: \"https://github.com/sass-maker/ui-library\", from: \"0.1.19\")"
+    },
+    "templates": {
+      "landing": [
+        "Gallery (GalleryPage)",
+        "Workbench (WorkbenchPage)"
+      ],
+      "app": [
+        "ConsolePage"
+      ],
+      "heroLayouts": [
+        "center",
+        "split",
+        "form",
+        "masthead"
+      ]
+    },
+    "footer": {
+      "react": "StudioFooter from @saas-maker/ui/blocks/footer",
+      "frameworkFree": "renderStudioFooterHtml from @saas-maker/ui/footer-html with @saas-maker/ui/footer.css and @saas-maker/ui/footer.js",
+      "replaces": "The old Precise footer rollout; existing Precise footers remain accepted by the fleet audit during migration.",
+      "contracts": [
+        "Subscribe",
+        "Ask AI",
+        "Feedback",
+        "Studio strip"
+      ]
+    }
+  },
+  "designDefaults": {
+    "schemaVersion": 1,
+    "decidedAt": "2026-10-11",
+    "source": {
+      "quote": "i prefer dark and easy to understand themes. when in doubt ask",
+      "date": "2026-10-11"
+    },
+    "mode": "dark",
+    "theme": "Easy to understand; choose clarity and quiet structure.",
+    "continuity": {
+      "required": true,
+      "attributes": [
+        "palette",
+        "mode",
+        "type",
+        "voice",
+        "components"
+      ],
+      "defect": "app and landing page not matching"
+    },
+    "quietDesign": [
+      "One idea and one focal visual per section.",
+      "No stat or pill noise.",
+      "Use real copy and images.",
+      "Keep the product identity; avoid a generic centered template."
+    ],
+    "lowercase": [
+      "headlines",
+      "buttons",
+      "navigation"
+    ],
+    "tasteCalls": {
+      "askOwner": true,
+      "renderedOptions": {
+        "min": 2,
+        "max": 4
+      }
+    }
+  },
+  "loadingStates": {
+    "schemaVersion": 1,
+    "decidedAt": "2026-10-11",
+    "source": {
+      "quote": "one thing that I continuously struggled with was loading states across products … very surprising … that three or four products that are on a proper backend still struggle with it.",
+      "date": "2026-10-10"
+    },
+    "placeholderWithinMs": 300,
+    "maxDataArrivalCls": 0.05,
+    "placeholder": "Content-shaped skeletons.",
+    "forbidden": [
+      "blank data-fetching screens",
+      "full-page spinners"
+    ],
+    "requiredStates": [
+      "error",
+      "empty",
+      "retry"
+    ],
+    "revisits": "Show cached content instantly and revalidate in the background (stale-while-revalidate).",
+    "primitives": [
+      {
+        "name": "Skeleton",
+        "import": "@saas-maker/ui/components/skeleton",
+        "use": "Compose placeholders matching the arriving content."
+      },
+      {
+        "name": "DataTable",
+        "import": "@saas-maker/ui/components/data-table",
+        "use": "Built-in loading skeletons, empty and error states; provide onRetry."
+      },
+      {
+        "name": "EmptyState",
+        "import": "@saas-maker/ui/blocks/app",
+        "use": "Explain empty results and provide a next action."
+      }
+    ]
+  },
+  "releaseGate": {
+    "schemaVersion": 1,
+    "decidedAt": "2026-10-11",
+    "source": {
+      "quote": "score it and, based on the score, release it… ensure SEO, GEO and speed tests: nothing fails",
+      "date": "2026-10-10"
+    },
+    "performanceContract": "https://github.com/sass-maker/app-health/blob/main/docs/performance-contract.md",
+    "execution": {
+      "phases": [
+        "before deployment",
+        "live after deployment"
+      ],
+      "allChecksMustPass": true,
+      "noBaselineRegression": true,
+      "failureAction": "Fix and rerun failing checks. If a check cannot be fixed, do not release; report it. Deployment still needs explicit owner approval.",
+      "scorecard": [
+        "Capture the pre-change baseline.",
+        "Record before and after for every check in the PR description and final report."
+      ]
+    },
+    "speed": {
+      "device": "mobile",
+      "runs": 3,
+      "aggregation": "median",
+      "reportSpread": true,
+      "pages": {
+        "home": true,
+        "keyInnerPages": 2
+      },
+      "lighthouse": {
+        "performance": 90,
+        "accessibility": 95,
+        "bestPractices": 95,
+        "seo": 95
+      },
+      "maxLcpSeconds": 2.5,
+      "maxCls": 0.1,
+      "maxTbtMs": 200
+    },
+    "seo": {
+      "h1Count": 1,
+      "maxTitleChars": 60,
+      "maxDescriptionChars": 160,
+      "checks": [
+        "Unique title and meta description.",
+        "Self-canonical with absolute URLs.",
+        "Parse valid JSON-LD matching the page type.",
+        "OG and Twitter tags with a reachable image.",
+        "Reachable, consistent robots.txt and sitemap.xml.",
+        "No accidental noindex.",
+        "Every internal page link returns 2xx or 3xx.",
+        "No broken images."
+      ]
+    },
+    "geo": {
+      "crawlers": [
+        "GPTBot",
+        "ClaudeBot",
+        "PerplexityBot",
+        "Google-Extended",
+        "CCBot"
+      ],
+      "checks": [
+        "AI crawler robots policy matches catalog AI-visibility policy and stays unchanged unless intended.",
+        "llms.txt and previously existing llms-full.txt remain served and correct.",
+        "Accept: text/markdown still returns markdown wherever it did before.",
+        "Organization, Product and SoftwareApplication JSON-LD facts are accurate.",
+        "Run available SaaS Maker GEO/AI-visibility tooling for the product."
+      ]
+    },
+    "fleetContracts": {
+      "checks": [
+        "Run pnpm tooling:footers for the product from a SaaS Maker origin/main copy.",
+        "Clarity and App Health trackers follow catalog policy.",
+        "Subscribe and feedback work at least in preview.",
+        "Previously existing routes preserve status and headers; probe before and after."
+      ],
+      "minimumRouteProbes": 10
+    },
+    "ux": {
+      "viewportWidths": [
+        390,
+        768,
+        1440
+      ],
+      "checks": [
+        "No horizontal scroll.",
+        "No console errors or failed requests.",
+        "Visible keyboard focus on interactive elements.",
+        "Forms, pickers and search work end to end."
+      ]
+    },
+    "designTaste": {
+      "checks": [
+        "Quiet sections: one idea and one focal visual.",
+        "Real copy and images; lowercase UI.",
+        "Preserve product identity rather than a generic centered template."
+      ],
+      "screenshots": "Save before and after screenshots for the owner."
+    },
+    "loadingStates": {
+      "placeholderWithinMs": 300,
+      "maxDataArrivalCls": 0.05,
+      "placeholder": "Content-shaped skeletons.",
+      "forbidden": [
+        "blank data-fetching screens",
+        "full-page spinners"
+      ],
+      "requiredStates": [
+        "error",
+        "empty",
+        "retry"
+      ],
+      "revisits": "Show cached content instantly and revalidate in the background (stale-while-revalidate).",
+      "network": "Slow 4G",
+      "cpuSlowdown": 4
+    },
+    "continuityTheme": {
+      "attributes": [
+        "palette",
+        "mode",
+        "type",
+        "voice",
+        "components"
+      ],
+      "defaultMode": "dark",
+      "theme": "Easy to understand.",
+      "ownerPick": "A light theme or unclear taste call requires an explicit owner pick before release."
+    }
+  }
+}

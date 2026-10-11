@@ -5,13 +5,16 @@
 import { isDeepStrictEqual } from 'node:util';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { validateFeedbackApplicability } from './capture-policy-validation.mjs';
+import { validateDesignPolicies } from './design-policy-validation.mjs';
 
 const catalogPath = new URL('../catalog/projects.json', import.meta.url);
+const repoRoot = new URL('../', import.meta.url);
 const fleetRoot = new URL('../../', import.meta.url);
 const check = process.argv.includes('--check');
 
 const source = JSON.parse(readFileSync(catalogPath, 'utf8'));
 const systems = source.systems ?? {};
+validateDesignPolicies(systems, source.projects);
 
 // Capture policy is explicit for every primary/active product. Keep evidence
 // tied to the canonical catalog so a policy cannot silently outlive its basis.
@@ -361,6 +364,21 @@ outputs.set(
 );
 outputs.set('saas-maker/tooling/config/ai-client-standard.json', systems.aiClientStandard ?? {});
 outputs.set('saas-maker/tooling/config/design-workflow.json', systems.designWorkflow ?? {});
+outputs.set(
+  'saas-maker/tooling/config/design-policy.json',
+  Object.fromEntries(
+    ['uiLibrary', 'designDefaults', 'loadingStates', 'releaseGate'].map((key) => [
+      key,
+      systems[key],
+    ])
+  )
+);
+outputs.set('saas-maker/tooling/config/ui-adoption.json', {
+  schemaVersion: 1,
+  projects: source.projects
+    .filter((project) => project.systems?.ui !== undefined)
+    .map((project) => ({ id: project.id, ...project.systems.ui })),
+});
 outputs.set('site-health/apps/backend/config/indexnow.json', systems.indexNow ?? {});
 outputs.set('site-health/apps/backend/config/capabilities.json', systems.capabilities ?? {});
 
@@ -383,8 +401,19 @@ outputs.set('site-health/apps/backend/config/capabilities.json', systems.capabil
 }
 
 const stale = [];
+let skipped = 0;
 for (const [relative, value] of outputs) {
-  const target = new URL(relative, fleetRoot);
+  // Own outputs follow this checkout even when a worktree has another name.
+  // Missing sibling checkouts are reported, never created or redirected.
+  const local = relative.startsWith('saas-maker/');
+  const target = local
+    ? new URL(relative.slice('saas-maker/'.length), repoRoot)
+    : new URL(relative, fleetRoot);
+  if (!local && !existsSync(new URL('./', target))) {
+    console.log(`skipped unavailable sibling manifest: ${relative}`);
+    skipped++;
+    continue;
+  }
   const rendered = `${JSON.stringify(value, null, 2)}\n`;
   const current = existsSync(target) ? readFileSync(target, 'utf8') : null;
   if (current === rendered) continue;
@@ -412,5 +441,7 @@ if (stale.length > 0) {
   console.error(`stale generated manifests (run pnpm catalog:sync): ${stale.join(', ')}`);
   process.exitCode = 1;
 } else {
-  console.log(`systems manifests match the one source (${outputs.size} files)`);
+  console.log(
+    `systems manifests match the one source (${outputs.size - skipped} files; ${skipped} sibling outputs unverified)`
+  );
 }
