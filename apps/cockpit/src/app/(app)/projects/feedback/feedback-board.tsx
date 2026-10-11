@@ -49,7 +49,7 @@ export function FeedbackBoard() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <Select value={type} onValueChange={(value) => setType(value as FeedbackType | 'all')}>
-          <SelectTrigger className="w-[160px]">
+          <SelectTrigger className="w-[160px]" aria-label="filter feedback by type">
             <SelectValue placeholder="Type" />
           </SelectTrigger>
           <SelectContent>
@@ -63,7 +63,7 @@ export function FeedbackBoard() {
           value={status}
           onValueChange={(value) => setStatus(value as AnyFeedbackStatus | 'all')}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px]" aria-label="filter feedback by status">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>

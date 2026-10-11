@@ -107,7 +107,7 @@ function SubscribersContent({ projects }: { projects: ProjectOption[] }) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <Select value={project} onValueChange={setProject} disabled={projects.length === 0}>
-          <SelectTrigger className="w-[180px]" aria-label="Filter subscribers by project">
+          <SelectTrigger className="w-[180px]" aria-label="filter subscribers by project">
             <SelectValue placeholder="Project" />
           </SelectTrigger>
           <SelectContent>
@@ -119,7 +119,7 @@ function SubscribersContent({ projects }: { projects: ProjectOption[] }) {
           </SelectContent>
         </Select>
         <Select value={kind} onValueChange={(value) => setKind(value as SubscriptionKind | 'all')}>
-          <SelectTrigger className="w-[160px]" aria-label="Filter subscribers by kind">
+          <SelectTrigger className="w-[160px]" aria-label="filter subscribers by kind">
             <SelectValue placeholder="Kind" />
           </SelectTrigger>
           <SelectContent>

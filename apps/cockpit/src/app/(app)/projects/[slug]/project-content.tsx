@@ -1,18 +1,19 @@
 'use client';
 
 import { notFound, useParams } from 'next/navigation';
-import type { ProjectRecord } from '@saas-maker/contracts';
+import type { ProjectDetails } from '@/lib/dashboard-projects';
 import { PageHeader } from '@/components/page-header';
 import { ProjectCredentials } from '@/components/project-credentials';
 import { ProjectDetailSkeleton } from '@/components/project-skeleton';
 import { ResourceView } from '@/components/resource-view';
-import { useApiResource } from '@/components/cockpit-resources';
+import { useApiResource, type ResourceSeed } from '@/components/cockpit-resources';
 import { InboxContent } from './inbox-content';
 
-export function ProjectContent() {
+export function ProjectContent(options: ResourceSeed<ProjectDetails>) {
   const { slug } = useParams<{ slug: string }>();
-  const resource = useApiResource<ProjectRecord>(
-    `/v1/projects/by-slug/${encodeURIComponent(slug)}`
+  const resource = useApiResource<ProjectDetails>(
+    `/v1/projects/by-slug/${encodeURIComponent(slug)}`,
+    options
   );
   if (resource.error && 'status' in resource.error && resource.error.status === 404) notFound();
 

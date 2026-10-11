@@ -111,6 +111,47 @@ describe('cockpit loading and failure states', () => {
 });
 
 describe('cockpit resource cache', () => {
+  it('seeds the shared key with the server timestamp and preserves newer cached data', () => {
+    const resources = createCockpitResources();
+    const path = '/v1/projects';
+    const initialData = { data: [{ id: 'server-project' }] };
+    resources.seed(path, { initialData, initialDataUpdatedAt: 1000 });
+    expect(resources.client.entry(path).snapshot).toMatchObject({
+      data: initialData,
+      updated: 1000,
+      error: undefined,
+    });
+    resources.client.mutate(path, { data: [{ id: 'client-project' }] });
+    resources.seed(path, { initialData, initialDataUpdatedAt: 1000 });
+    expect(resources.client.entry(path).snapshot.data).toEqual({
+      data: [{ id: 'client-project' }],
+    });
+    resources.seed('/v1/projects/by-slug/unavailable', {});
+    expect(
+      resources.client.entry('/v1/projects/by-slug/unavailable').snapshot.data
+    ).toBeUndefined();
+  });
+
+  it('retains the server seed after failed revalidation and updates it on retry', async () => {
+    const resources = createCockpitResources();
+    const path = '/v1/projects/by-slug/example';
+    const initialData = { id: 'server-project' };
+    resources.seed(path, { initialData, initialDataUpdatedAt: 1000 });
+    const fetcher = vi
+      .fn()
+      .mockRejectedValueOnce(Object.assign(new Error('failed'), { status: 503 }));
+    await resources.client.run(path, fetcher, { retries: 0, cacheTime: Infinity });
+    expect(resources.client.entry(path).snapshot).toMatchObject({
+      data: initialData,
+      error: { status: 503 },
+      updated: 1000,
+    });
+    fetcher.mockResolvedValue({ id: 'updated-project' });
+    await resources.client.run(path, fetcher, { cacheTime: Infinity });
+    expect(resources.client.entry(path).snapshot.data).toEqual({ id: 'updated-project' });
+    expect(resources.client.entry(path).snapshot.error).toBeUndefined();
+  });
+
   it('deduplicates requests and retains data when the last subscriber leaves', async () => {
     vi.useFakeTimers();
     const resources = createCockpitResources();
@@ -143,7 +184,7 @@ describe('cockpit resource cache', () => {
     }
   });
 
-  it('does not automatically retry 4xx and manually retries the identical subscriber filter', async () => {
+  it('skips automatic 4xx retries and manually retries the same subscriber filter', async () => {
     vi.useFakeTimers();
     const resources = createCockpitResources();
     const path = '/v1/subscriptions?project=one&kind=waitlist';

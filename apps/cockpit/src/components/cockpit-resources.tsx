@@ -6,9 +6,13 @@ import {
   useResource,
   type ResourceOptions,
 } from '@saas-maker/ui/lib/use-resource';
-import type { ProjectRecord } from '@saas-maker/contracts';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
-import { visibleDashboardProjects } from '@/lib/dashboard-projects';
+import { visibleDashboardProjects, type DashboardProject } from '@/lib/dashboard-projects';
+
+export interface ResourceSeed<T> {
+  initialData?: T;
+  initialDataUpdatedAt?: number;
+}
 
 export function createCockpitResources() {
   const client = createResourceClient();
@@ -16,6 +20,19 @@ export function createCockpitResources() {
   return {
     client,
     paths,
+    seed<T>(path: string, { initialData, initialDataUpdatedAt }: ResourceSeed<T>) {
+      const entry = client.entry(path);
+      // The shared hook has no timestamp option. Seed before it reads the cache,
+      // preserving any data already fetched or mutated in this account's session.
+      if (initialData !== undefined && entry.snapshot.data === undefined) {
+        entry.snapshot = {
+          data: initialData,
+          error: undefined,
+          fetching: entry.snapshot.fetching,
+          updated: initialDataUpdatedAt ?? Date.now(),
+        };
+      }
+    },
     invalidate(prefix: string) {
       for (const path of paths) {
         if (path.startsWith(prefix)) client.invalidate(path);
@@ -38,8 +55,12 @@ export function useCockpitResources() {
   return resources;
 }
 
-export function useApiResource<T>(path: string, options: ResourceOptions<T> = {}) {
-  const { client, paths } = useCockpitResources();
+export function useApiResource<T>(
+  path: string,
+  options: ResourceOptions<T> & ResourceSeed<T> = {}
+) {
+  const { client, paths, seed } = useCockpitResources();
+  seed(path, options);
   useEffect(() => {
     paths.add(path);
   }, [path, paths]);
@@ -50,8 +71,9 @@ export function useApiResource<T>(path: string, options: ResourceOptions<T> = {}
   );
 }
 
-export function useProjectsResource() {
-  return useApiResource<{ data: ProjectRecord[] }>('/v1/projects', {
+export function useProjectsResource(options: ResourceSeed<{ data: DashboardProject[] }> = {}) {
+  return useApiResource<{ data: DashboardProject[] }>('/v1/projects', {
+    ...options,
     isEmpty: (result) => visibleDashboardProjects(result.data ?? []).length === 0,
   });
 }

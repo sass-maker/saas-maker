@@ -7,10 +7,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { CreateProjectDialog } from '@/components/create-project-dialog';
 import { PageHeader } from '@/components/page-header';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
-import { useProjectsResource } from '@/components/cockpit-resources';
+import { useProjectsResource, type ResourceSeed } from '@/components/cockpit-resources';
 import { ResourceView } from '@/components/resource-view';
 import { ProjectsSkeleton } from '@/components/project-skeleton';
-import { visibleDashboardProjects } from '@/lib/dashboard-projects';
+import { visibleDashboardProjects, type DashboardProject } from '@/lib/dashboard-projects';
 import { ArrowRight, Boxes, CalendarDays, Cloud, KeyRound, NotebookText } from 'lucide-react';
 
 function formatDate(date: string) {
@@ -21,8 +21,8 @@ function formatDate(date: string) {
   }).format(new Date(date));
 }
 
-export function ProjectsContent() {
-  const resource = useProjectsResource();
+export function ProjectsContent(options: ResourceSeed<{ data: DashboardProject[] }>) {
+  const resource = useProjectsResource(options);
   const projects = visibleDashboardProjects(resource.data?.data ?? []);
   const [showCreatedKey, setShowCreatedKey] = useState(false);
   const onboarding = (
