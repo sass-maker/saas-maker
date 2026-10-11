@@ -178,13 +178,31 @@ function openFileCount(path) {
   if (result.error || result.status !== 0) throw new Error('Cannot verify open files with lsof; keep the workspace.');
   return result.stdout.split('\n').filter((line) => line === `n${path}` || line.startsWith(`n${path}${sep}`)).length;
 }
+async function mapBounded(items, action, limit = 4) {
+  const results = []; let next = 0;
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (next < items.length) {
+      const index = next++;
+      results[index] = await action(items[index]);
+    }
+  }));
+  return results;
+}
+function acceptLandedBranch(info) {
+  if (info.blockers.includes('branch-changed') && info.remoteRefs !== undefined
+    && !info.blockers.some((item) => item === 'dirty-or-untracked' || item === 'head-not-in-local-remote-refs' || item.startsWith('git-state-unknown:'))) {
+    info.blockers = info.blockers.filter((item) => item !== 'branch-changed');
+    info.notes.push(`Recorded branch ${info.branch} changed to ${info.branchNow ?? 'detached HEAD'}; current HEAD is clean and landed.`);
+  }
+}
 
 export class AgentWorkspaces {
-  constructor({ root = defaultRoot, measure = diskBytes, freeBytes, openFiles = openFileCount } = {}) {
+  constructor({ root = defaultRoot, measure = diskBytes, freeBytes, openFiles = openFileCount, gh = (args, repo) => command('gh', args, repo) } = {}) {
     this.root = resolve(root);
     this.measure = measure;
     this.freeBytes = freeBytes ?? (() => { const fs = statfsSync(this.root); return fs.bavail * fs.bsize; });
     this.openFiles = openFiles;
+    this.gh = gh;
   }
   initialize() {
     if (this.root === sep || this.root === homedir() || existsSync(join(this.root, '.git'))) throw new Error('Choose a dedicated private state directory outside a Git checkout.');
@@ -315,13 +333,11 @@ export class AgentWorkspaces {
     repo = realpathSync(resolve(repo));
     const baseSha = git(repo, 'rev-parse', '--verify', '--end-of-options', `${base}^{commit}`);
     const path = join(this.root, 'worktrees', id);
-    const snapshot = await this.measureBudgets(path, 'create');
-    return this.locked(() => {
+    return this.withFreshBudgets(path, 'create', () => {
       if (this.records().some((row) => row.id === id)) throw new Error('Workspace ID already exists; reuse it or choose another.');
       const policy = this.policy();
       // Closed and reconciled-missing records no longer hold a writer slot.
       if (this.records().filter((row) => !['closed', 'missing'].includes(row.state)).length >= policy.maxWriters) throw new Error('Writer workspace limit reached.');
-      this.validateBudgets(snapshot);
       if (existsSync(path)) throw new Error('Workspace path already exists.');
       const branch = `agent/${id}`;
       const commonDir = git(repo, 'rev-parse', '--path-format=absolute', '--git-common-dir');
@@ -344,10 +360,13 @@ export class AgentWorkspaces {
       row.heartbeatAt = now(); this.write(row); return row;
     });
   }
-  inspect(row) {
-    const info = { ...row, reportedBytes: null, blockers: [] };
-    if (existsSync(row.path)) {
-      try { info.reportedBytes = requireBytes(this.measure(row.path), 'workspace'); }
+  async measuredBytes(path, role = 'workspace') {
+    return requireBytes(await (this.measure === diskBytes ? diskBytesAsync(path) : this.measure(path)), role);
+  }
+  async inspect(row, { noDisk = false } = {}) {
+    const info = { ...row, reportedBytes: null, blockers: [], notes: [] };
+    if (!noDisk && existsSync(row.path)) {
+      try { info.reportedBytes = await this.measuredBytes(row.path); }
       catch (error) { if (existsSync(row.path)) throw error; }
     }
     // A missing folder is reported, never fatal: other records stay inspectable.
@@ -357,7 +376,9 @@ export class AgentWorkspaces {
       if (git(row.path, 'rev-parse', '--show-toplevel') !== realpathSync(row.path)) throw new Error('Worktree identity mismatch');
       if (git(row.path, 'rev-parse', '--path-format=absolute', '--git-common-dir') !== row.commonDir) throw new Error('Repository identity mismatch');
       info.head = git(row.path, 'rev-parse', 'HEAD');
-      info.branchNow = git(row.path, 'symbolic-ref', '--short', 'HEAD');
+      const branch = spawnSync('git', ['symbolic-ref', '--quiet', '--short', 'HEAD'], { cwd: row.path, encoding: 'utf8' });
+      if (branch.error || ![0, 1].includes(branch.status)) throw new Error('Cannot determine current branch');
+      info.branchNow = branch.status === 0 ? branch.stdout.trim() : null;
       if (info.branchNow !== row.branch) info.blockers.push('branch-changed');
       if (git(row.path, 'status', '--porcelain=v1', '-z', '--untracked-files=all')) info.blockers.push('dirty-or-untracked');
       const remotes = git(row.path, 'for-each-ref', '--format=%(refname)', '--contains', info.head, 'refs/remotes/').split('\n').filter(Boolean);
@@ -365,24 +386,35 @@ export class AgentWorkspaces {
       info.remoteRefs = remotes;
     } catch (error) { info.blockers.push(`git-state-unknown: ${error.message}`); }
     if (this.jobs().some((job) => job.id === row.id && jobAlive(job))) info.blockers.push('command-running');
+    acceptLandedBranch(info);
     return info;
   }
-  status() {
+  async status({ noDisk = false } = {}) {
     const policy = this.policy();
-    const freeBytes = existsSync(this.root) ? requireBytes(this.freeBytes(), 'free-space') : null;
-    const managedReportedBytes = existsSync(join(this.root, 'worktrees')) ? requireBytes(requireBytes(this.measure(join(this.root, 'worktrees')), 'active-worktrees') + requireBytes(this.measure(join(this.root, 'retired')), 'retired-worktrees'), 'total') : 0;
-    return { policy, freeBytes, managedReportedBytes, belowFreeSpaceReserve: freeBytes !== null && freeBytes < policy.minFreeBytes, totalOverBudget: managedReportedBytes > policy.maxTotalBytes, workspaces: this.records().map((row) => {
-      const info = this.inspect(row);
+    const rows = this.records();
+    const measurements = noDisk || !existsSync(join(this.root, 'worktrees')) ? [] : [
+      () => this.measuredBytes(join(this.root, 'worktrees'), 'active-worktrees'),
+      () => this.measuredBytes(join(this.root, 'retired'), 'retired-worktrees'),
+    ];
+    const results = await mapBounded([...measurements, ...rows.map((row) => async () => {
+      const info = await this.inspect(row, { noDisk });
       info.stale = Date.now() - Date.parse(row.heartbeatAt) > policy.staleHours * 3_600_000;
-      info.overBudget = info.reportedBytes > policy.maxWorkspaceBytes;
+      if (!noDisk) info.overBudget = info.reportedBytes !== null && info.reportedBytes > policy.maxWorkspaceBytes;
       return info;
-    }), jobs: this.jobs().map((job) => ({ ...job, running: jobAlive(job) })) };
+    })], (scan) => scan());
+    const status = { policy, workspaces: results.slice(measurements.length), jobs: this.jobs().map((job) => ({ ...job, running: jobAlive(job) })) };
+    if (!noDisk) {
+      const freeBytes = existsSync(this.root) ? requireBytes(this.freeBytes(), 'free-space') : null;
+      const managedReportedBytes = requireBytes(measurements.length ? results[0] + results[1] : 0, 'total');
+      Object.assign(status, { freeBytes, managedReportedBytes, belowFreeSpaceReserve: freeBytes !== null && freeBytes < policy.minFreeBytes, totalOverBudget: managedReportedBytes > policy.maxTotalBytes });
+    }
+    return status;
   }
   // A squash merge leaves the branch HEAD outside every remote ref. Treat the
   // work as landed when each path the branch changed (since its merge base with
   // the remote default branch) has identical content there, or when the
-  // operator names a landed commit that a remote-tracking ref contains.
-  landing(info, landed) {
+  // operator names a landed remote commit, or a merged PR contains HEAD.
+  async landing(info, landed) {
     const repo = info.path;
     if (landed !== undefined) {
       if (typeof landed !== 'string' || !/^[0-9a-f]{7,64}$/i.test(landed)) throw new Error('--landed must be a commit SHA.');
@@ -396,39 +428,87 @@ export class AgentWorkspaces {
       const probe = spawnSync('git', ['rev-parse', '--verify', '--quiet', `${candidate}^{commit}`], { cwd: repo, encoding: 'utf8', env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' } });
       if (probe.status === 0) { ref = candidate; break; }
     }
-    if (!ref) return null;
-    const base = git(repo, 'merge-base', 'HEAD', ref);
-    const changed = git(repo, 'diff', '--name-only', '-z', '--no-renames', base, 'HEAD').split('\0').filter(Boolean);
-    if (!changed.length) return null;
-    const diff = spawnSync('git', ['diff', '--quiet', '--no-renames', ref, 'HEAD', '--', ...changed.map((path) => `:(literal)${path}`)], { cwd: repo, encoding: 'utf8', env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' } });
-    if (diff.status === 0) return { landedBy: 'content-equal', landedRef: ref, landedRefSha: git(repo, 'rev-parse', ref), changedPaths: changed.length };
-    if (diff.status !== 1) throw new Error(`git diff failed: ${diff.stderr.trim()}`);
+    if (ref) {
+      const base = spawnSync('git', ['merge-base', info.head, ref], { cwd: repo, encoding: 'utf8' });
+      if (base.error || ![0, 1].includes(base.status)) throw new Error('Cannot determine landing merge base');
+      if (base.status === 0) {
+        const changed = git(repo, 'diff', '--name-only', '-z', '--no-renames', base.stdout.trim(), info.head).split('\0').filter(Boolean);
+        if (changed.length) {
+          const diff = spawnSync('git', ['diff', '--quiet', '--no-renames', ref, info.head, '--', ...changed.map((path) => `:(literal)${path}`)], { cwd: repo, encoding: 'utf8', env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' } });
+          if (diff.status === 0) return { landedBy: 'content-equal', landedRef: ref, landedRefSha: git(repo, 'rev-parse', ref), changedPaths: changed.length };
+          if (diff.status !== 1) throw new Error(`git diff failed: ${diff.stderr.trim()}`);
+        }
+      }
+    }
+    for (const branch of new Set([info.branch, info.branchNow].filter(Boolean))) {
+      try {
+        const prs = JSON.parse(await this.gh(['pr', 'list', '--state', 'merged', '--head', branch, '--json', 'number,mergeCommit,headRefOid,url', '--limit', '5'], repo));
+        if (!Array.isArray(prs)) continue;
+        for (const pr of prs) {
+          if (!Number.isSafeInteger(pr.number) || pr.number < 1 || typeof pr.url !== 'string'
+            || !/^[0-9a-f]{40,64}$/i.test(pr.headRefOid ?? '') || !/^[0-9a-f]{40,64}$/i.test(pr.mergeCommit?.oid ?? '')
+            || (pr.state !== undefined && pr.state !== 'MERGED')
+            || (pr.headRefName !== undefined && pr.headRefName !== branch)) continue;
+          // A merged PR may contain HEAD, but HEAD must never be ahead of it.
+          if (info.head !== pr.headRefOid && spawnSync('git', ['merge-base', '--is-ancestor', info.head, pr.headRefOid], { cwd: repo }).status !== 0) continue;
+          const merge = pr.mergeCommit.oid;
+          const probe = spawnSync('git', ['rev-parse', '--verify', '--quiet', `${merge}^{commit}`], { cwd: repo });
+          if (probe.error || ![0, 1].includes(probe.status)) continue;
+          const available = probe.status === 0;
+          const refs = available ? git(repo, 'for-each-ref', '--format=%(refname)', '--contains', merge, 'refs/remotes/').split('\n').filter(Boolean) : [];
+          if (available && !refs.length) continue;
+          return { landedBy: 'merged-pr', prNumber: pr.number, prUrl: pr.url, headRefOid: pr.headRefOid, landedCommit: merge, landedRefs: refs };
+        }
+      } catch { /* Missing gh, auth, provider or malformed output supplies no evidence. */ }
+    }
     return null;
   }
-  async close(id, { dryRun = false, landed } = {}) {
-    return this.locked(() => {
+  async close(id, { dryRun = false, landed, idleMinutes } = {}) {
+    if (idleMinutes !== undefined && (!Number.isFinite(idleMinutes) || idleMinutes < 0)) throw new Error('--idle-minutes must be a non-negative number.');
+    return this.locked(async () => {
       const row = this.record(id);
       if (row.state !== 'active') throw new Error('Only active workspaces can be closed.');
-      const info = this.inspect(row);
+      const info = await this.inspect(row, { noDisk: true });
+      let flagIgnored = landed !== undefined && info.remoteRefs?.length > 0;
       if (info.blockers.includes('head-not-in-local-remote-refs')) {
         try {
-          const evidence = this.landing(info, landed);
+          let evidence = await this.landing(info);
+          flagIgnored = landed !== undefined && evidence !== null;
+          if (!evidence && landed !== undefined) evidence = await this.landing(info, landed);
           if (evidence) { info.blockers = info.blockers.filter((item) => item !== 'head-not-in-local-remote-refs'); info.landing = evidence; }
         } catch (error) { info.blockers.push(`landing-unverified: ${error.message}`); }
-      } else if (landed !== undefined) info.blockers.push('landing-flag-unneeded: HEAD is already in a remote ref');
+      }
+      if (flagIgnored) info.notes.push('Ignored --landed: current HEAD is already landed.');
+      acceptLandedBranch(info);
+      if (idleMinutes !== undefined && Date.now() - Date.parse(row.heartbeatAt) <= idleMinutes * 60_000) info.blockers.push('heartbeat-not-idle');
       try { if (this.openFiles(row.path)) info.blockers.push('open-files'); }
       catch (error) { info.blockers.push(error.message); }
       if (dryRun) return { ...info, dryRun: true, action: info.blockers.length ? 'keep' : 'move-to-retired' };
-      if (info.blockers.length) throw new Error(`Keeping ${id}: ${info.blockers.join(', ')}`);
+      if (info.blockers.length) {
+        const error = new Error(`Keeping ${id}: ${info.blockers.join(', ')}`);
+        error.blockers = info.blockers; throw error;
+      }
       const destination = join(this.root, 'retired', row.id);
       if (existsSync(destination)) throw new Error('Retirement path already exists.');
-      const receipt = { id, owner: row.owner, task: row.task, head: info.head, branch: row.branch, remoteRefs: info.remoteRefs, ...(info.landing ? { landing: info.landing } : {}), original: row.path, retired: destination, createdAt: now(), reportedBytes: info.reportedBytes, restore: ['git', '-C', row.repo, 'worktree', 'move', destination, row.path], note: 'Reversible relocation only; no disk space was reclaimed. All ignored artifacts remain available for review.' };
+      const receipt = { id, owner: row.owner, task: row.task, head: info.head, branch: row.branch, branchNow: info.branchNow, notes: info.notes, remoteRefs: info.remoteRefs, ...(info.landing ? { landing: info.landing } : {}), original: row.path, retired: destination, createdAt: now(), reportedBytes: info.reportedBytes, restore: ['git', '-C', row.repo, 'worktree', 'move', destination, row.path], note: 'Reversible relocation only; no disk space was reclaimed. All ignored artifacts remain available for review.' };
       save(join(this.root, 'receipts', `${id}.json`), receipt);
       // No force/remove/clean: submodules, locked trees and Git safety failures remain blockers.
       git(row.repo, 'worktree', 'move', row.path, destination);
       row.state = 'closed'; row.path = destination; row.closedAt = now(); this.write(row);
       return receipt;
     });
+  }
+  async closeAllLanded({ dryRun = false, idleMinutes = 30 } = {}) {
+    if (!Number.isFinite(idleMinutes) || idleMinutes < 0) throw new Error('--idle-minutes must be a non-negative number.');
+    const closed = []; const kept = [];
+    for (const row of this.records().filter((item) => item.state === 'active')) {
+      try {
+        const result = await this.close(row.id, { dryRun, idleMinutes });
+        if (result.action === 'keep') kept.push({ id: row.id, blockers: result.blockers, reason: result.blockers.join(', ') });
+        else closed.push({ id: row.id, blockers: [], reason: dryRun ? 'would-retire' : 'retired' });
+      } catch (error) { kept.push({ id: row.id, blockers: error.blockers ?? [], reason: error.message }); }
+    }
+    return { dryRun, idleMinutes, closed, kept, counts: { closed: closed.length, kept: kept.length, total: closed.length + kept.length } };
   }
   // Mark records whose worktree folder no longer exists as `missing` so they
   // stop holding writer slots. Never deletes, moves or prunes anything; Git's
@@ -453,8 +533,8 @@ export class AgentWorkspaces {
       return { dryRun, changes, note: 'Only manifest state changes; no folder, branch or Git metadata is deleted.' };
     });
   }
-  gc() {
-    return { dryRun: true, workspaces: this.status().workspaces.map((info) => ({
+  async gc() {
+    return { dryRun: true, workspaces: (await this.status()).workspaces.map((info) => ({
       id: info.id, owner: info.owner, task: info.task, state: info.state, path: info.path,
       reportedBytes: info.reportedBytes, stale: info.stale, blockers: info.blockers,
       action: info.state === 'closed' && !info.blockers.length ? 'review-retired-artifacts'

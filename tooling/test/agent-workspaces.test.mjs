@@ -5,7 +5,7 @@ import { tmpdir, homedir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync, spawn } from 'node:child_process';
-import { AgentWorkspaces, GiB, inventory, diskBytesAsync, jobAlive, StaleWorkspaceSnapshotError, vanishedOnly } from '../lib/agent-workspaces.mjs';
+import { AgentWorkspaces, GiB, inventory, diskBytes, diskBytesAsync, jobAlive, StaleWorkspaceSnapshotError, vanishedOnly } from '../lib/agent-workspaces.mjs';
 
 const fixtures = [];
 test.after(() => {
@@ -27,7 +27,7 @@ function fixture(options = {}) {
   writeFileSync(join(repo, 'source.txt'), 'retained source\n');
   git(repo, 'add', 'source.txt'); git(repo, 'commit', '-m', 'fixture');
   git(repo, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
-  const manager = new AgentWorkspaces({ root: join(folder, 'state'), measure: () => 0, freeBytes: () => 100 * GiB, openFiles: () => 0, ...options });
+  const manager = new AgentWorkspaces({ root: join(folder, 'state'), measure: () => 0, freeBytes: () => 100 * GiB, openFiles: () => 0, gh: () => '[]', ...options });
   const create = (id) => manager.create({ id, repo, owner: 'test-agent', task: 'test workspace lifecycle' });
   return { folder, repo, manager, create };
 }
@@ -44,7 +44,7 @@ test('linked writer shares Git objects, records ownership and preserves source o
   assert.equal(readFileSync(join(receipt.retired, 'source.txt'), 'utf8'), 'retained source\n');
   assert.ok(existsSync(join(repo, 'source.txt')));
   assert.equal(manager.record('writer').state, 'closed');
-  assert.equal(manager.gc().dryRun, true);
+  assert.equal((await manager.gc()).dryRun, true);
   assert.match(receipt.note, /no disk space was reclaimed/);
   git(repo, 'worktree', 'move', receipt.retired, receipt.original);
   assert.ok(existsSync(join(receipt.original, 'source.txt')));
@@ -61,12 +61,14 @@ test('dirty/untracked source and commits absent from remote refs prevent close',
   assert.ok(existsSync(row.path));
 });
 
-test('open files, changed branch and missing Git state remain explicit blockers', async () => {
+test('open files remain blockers after switching to a clean landed branch', async () => {
   const { manager, create } = fixture({ openFiles: () => 1 });
   const row = await create('busy');
   await assert.rejects(manager.close('busy'), /open-files/);
   git(row.path, 'switch', '-c', 'different-branch');
-  assert.ok(manager.inspect(manager.record('busy')).blockers.includes('branch-changed'));
+  const preview = await manager.close('busy', { dryRun: true });
+  assert.ok(preview.blockers.includes('open-files'));
+  assert.ok(!preview.blockers.includes('branch-changed'));
 });
 
 test('traversal, temporary stores and symlink state directories are rejected', async () => {
@@ -110,7 +112,7 @@ test('malformed manifests fail closed instead of approving cleanup', async () =>
   const { manager, create } = fixture();
   const row = await create('unknown');
   writeFileSync(join(manager.root, 'manifests', `${row.id}.json`), JSON.stringify({ ...row, unexpectedField: true }));
-  assert.throws(() => manager.gc(), /Invalid workspace manifest/);
+  await assert.rejects(manager.gc(), /Invalid workspace manifest/);
   assert.ok(existsSync(join(row.path, 'source.txt')));
 });
 
@@ -556,7 +558,7 @@ test('async du requires complete valid output and has an actual bounded timeout'
   } finally { process.env.PATH = previousPath; globalThis.setTimeout = originalTimeout; }
 });
 
-test('invalid bytes fail closed in validation, synchronous status and retirement', async () => {
+test('invalid bytes fail closed in validation and async status; close needs no disk measurement', async () => {
   const { manager, create } = fixture();
   const row = await create('invalid-bytes');
   for (const invalid of [NaN, Infinity, -1, 0.5, Number.MAX_SAFE_INTEGER + 1]) {
@@ -564,8 +566,8 @@ test('invalid bytes fail closed in validation, synchronous status and retirement
     assert.throws(() => manager.validateBudgets({ bytes: 0, total: invalid }), /Invalid total disk measurement/);
     manager.measure = () => invalid;
     assert.throws(() => manager.budgets(row.path), /Invalid/);
-    assert.throws(() => manager.status(), /Invalid/);
-    await assert.rejects(manager.close(row.id), /Invalid workspace disk measurement/);
+    await assert.rejects(manager.status(), /Invalid/);
+    assert.equal((await manager.close(row.id, { dryRun: true })).action, 'move-to-retired');
     assert.equal(manager.record(row.id).state, 'active');
     assert.ok(existsSync(row.path));
   }
@@ -784,6 +786,265 @@ test('close keeps unlanded or diverged work unless an operator names a landed re
   assert.ok(existsSync(join(other.path, 'only-here.txt')));
 });
 
+function mergedPrFixture(id = 'merged-pr') {
+  const fixtureData = fixture();
+  return { ...fixtureData, setup: async () => {
+    const row = await fixtureData.create(id);
+    const merge = squashLand(fixtureData.repo, row, { 'feature.txt': 'branch work\n' });
+    git(fixtureData.repo, 'checkout', '-q', '--detach', 'refs/remotes/origin/main');
+    writeFileSync(join(fixtureData.repo, 'feature.txt'), 'later main edit\n');
+    git(fixtureData.repo, 'commit', '-qam', 'main moves on');
+    git(fixtureData.repo, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
+    git(fixtureData.repo, 'checkout', '-q', 'main');
+    const pr = { number: 123, url: 'https://github.com/example/product/pull/123', headRefOid: git(row.path, 'rev-parse', 'HEAD'), mergeCommit: { oid: merge } };
+    return { row, pr };
+  } };
+}
+
+test('merged PR evidence retires squash work after main edits and remote branch deletion', async () => {
+  const { manager, repo, setup } = mergedPrFixture();
+  const { row, pr } = await setup();
+  git(repo, 'update-ref', `refs/remotes/origin/${row.branch}`, pr.headRefOid);
+  git(repo, 'update-ref', '-d', `refs/remotes/origin/${row.branch}`);
+  const calls = [];
+  manager.gh = async (args, cwd) => { calls.push({ args, cwd }); return JSON.stringify([pr]); };
+  const receipt = await manager.close(row.id);
+  assert.equal(receipt.landing.landedBy, 'merged-pr');
+  assert.equal(receipt.landing.prNumber, pr.number); assert.equal(receipt.landing.prUrl, pr.url);
+  assert.deepEqual(receipt.landing.landedRefs, ['refs/remotes/origin/main']);
+  assert.deepEqual(calls, [{ cwd: row.path, args: ['pr', 'list', '--state', 'merged', '--head', row.branch, '--json', 'number,mergeCommit,headRefOid,url', '--limit', '5'] }]);
+  assert.equal(readFileSync(join(receipt.retired, 'feature.txt'), 'utf8'), 'branch work\n');
+});
+
+test('merged PR must contain HEAD, never commits ahead of its head or unrelated work', async () => {
+  const { manager, setup, repo } = mergedPrFixture();
+  const { row, pr } = await setup();
+  manager.gh = () => JSON.stringify([pr]);
+  writeFileSync(join(row.path, 'feature.txt'), 'extra unpublished change\n');
+  git(row.path, 'commit', '-qam', 'ahead of merged PR');
+  await assert.rejects(manager.close(row.id), /head-not-in-local-remote-refs/);
+  git(row.path, 'checkout', '--detach', pr.headRefOid);
+  git(row.path, 'switch', '-c', 'unrelated', git(repo, 'rev-parse', 'main'));
+  writeFileSync(join(row.path, 'unrelated.txt'), 'other work\n');
+  git(row.path, 'add', '-A'); git(row.path, 'commit', '-m', 'other branch');
+  const preview = await manager.close(row.id, { dryRun: true });
+  assert.ok(preview.blockers.includes('branch-changed'));
+  assert.ok(preview.blockers.includes('head-not-in-local-remote-refs'));
+  assert.equal(preview.landing, undefined);
+});
+
+test('merged PR accepts an ancestor HEAD and a clean detached HEAD', async () => {
+  const { manager, setup } = mergedPrFixture();
+  const { row, pr } = await setup();
+  const head = pr.headRefOid;
+  writeFileSync(join(row.path, 'later-pr.txt'), 'more merged work\n');
+  git(row.path, 'add', '-A'); git(row.path, 'commit', '-m', 'later PR head');
+  pr.headRefOid = git(row.path, 'rev-parse', 'HEAD');
+  git(row.path, 'checkout', '--detach', head);
+  manager.gh = () => JSON.stringify([pr]);
+  const receipt = await manager.close(row.id);
+  assert.equal(receipt.head, head); assert.equal(receipt.branchNow, null);
+  assert.equal(receipt.landing.landedBy, 'merged-pr');
+  assert.match(receipt.notes.join('\n'), /detached HEAD.*clean and landed/);
+});
+
+test('current branch PR is checked separately; dirty switched work stays blocked', async () => {
+  const { manager, setup } = mergedPrFixture();
+  const { row, pr } = await setup();
+  git(row.path, 'switch', '-c', 'current-branch');
+  const branches = [];
+  manager.gh = (args) => {
+    const branch = args[args.indexOf('--head') + 1]; branches.push(branch);
+    return JSON.stringify(branch === 'current-branch' ? [pr] : []);
+  };
+  writeFileSync(join(row.path, 'untracked.txt'), 'keep dirty source');
+  const preview = await manager.close(row.id, { dryRun: true });
+  assert.ok(preview.blockers.includes('branch-changed')); assert.ok(preview.blockers.includes('dirty-or-untracked'));
+  assert.deepEqual(branches, [row.branch, 'current-branch']);
+  git(row.path, 'add', 'untracked.txt'); git(row.path, 'commit', '-m', 'additional work');
+  // Return to the PR head cleanly, preserving the additional commit on its branch.
+  git(row.path, 'switch', '-c', 'landed-current', pr.headRefOid);
+  manager.gh = (args) => JSON.stringify(args[args.indexOf('--head') + 1] === 'landed-current' ? [pr] : []);
+  const receipt = await manager.close(row.id);
+  assert.equal(receipt.branchNow, 'landed-current'); assert.match(receipt.notes.join('\n'), /clean and landed/);
+});
+
+test('gh failures and malformed or mismatched evidence fail closed without fatal provider errors', async () => {
+  const { manager, setup } = mergedPrFixture();
+  const { row, pr } = await setup();
+  for (const runner of [
+    () => { throw new Error('gh missing or unauthenticated'); },
+    async () => { throw new Error('provider failed'); },
+    () => 'not json', () => '{}', () => '[]',
+    () => JSON.stringify([{ ...pr, state: 'OPEN' }]),
+    () => JSON.stringify([{ ...pr, headRefName: 'unrelated' }]),
+    () => JSON.stringify([{ ...pr, headRefOid: 'invalid' }]),
+    () => JSON.stringify([{ ...pr, mergeCommit: null }]),
+  ]) {
+    manager.gh = runner;
+    const preview = await manager.close(row.id, { dryRun: true });
+    assert.deepEqual(preview.blockers, ['head-not-in-local-remote-refs']);
+    assert.equal(preview.landing, undefined); assert.equal(manager.record(row.id).state, 'active');
+  }
+});
+
+test('available PR merge commits need remote containment; unavailable commits use provider evidence', async () => {
+  const { manager, repo, setup } = mergedPrFixture();
+  const { row, pr } = await setup();
+  pr.mergeCommit.oid = pr.headRefOid;
+  manager.gh = () => JSON.stringify([pr]);
+  await assert.rejects(manager.close(row.id), /head-not-in-local-remote-refs/);
+  // No local merge object or remote refs: gh supplies the merged-state evidence.
+  git(repo, 'update-ref', '-d', 'refs/remotes/origin/main');
+  pr.mergeCommit.oid = 'a'.repeat(40);
+  assert.equal((await manager.close(row.id)).landing.landedBy, 'merged-pr');
+});
+
+test('already-landed HEAD ignores --landed and records clean branch changes', async () => {
+  const { manager, create } = fixture();
+  const row = await create('switched');
+  git(row.path, 'switch', '-c', 'finished-branch');
+  const receipt = await manager.close(row.id, { landed: 'unneeded-invalid-flag' });
+  assert.equal(receipt.branchNow, 'finished-branch');
+  assert.match(receipt.notes.join('\n'), /Ignored --landed/);
+  assert.match(receipt.notes.join('\n'), /clean and landed/);
+  const { manager: squashManager, setup } = mergedPrFixture('flag-merged');
+  const { row: squashRow, pr } = await setup();
+  squashManager.gh = () => JSON.stringify([pr]);
+  const preview = await squashManager.close(squashRow.id, { dryRun: true, landed: 'invalid-but-unneeded' });
+  assert.equal(preview.action, 'move-to-retired'); assert.match(preview.notes.join('\n'), /Ignored --landed/);
+});
+
+test('bulk close preserves busy, fresh, dirty and unlanded work; dry-run changes no receipts or manifests', async () => {
+  const { manager, repo, create } = fixture();
+  const rows = {};
+  for (const id of ['eligible', 'dirty', 'unlanded', 'open', 'leased', 'fresh', 'locked']) rows[id] = await create(id);
+  for (const row of Object.values(rows).filter((item) => item.id !== 'fresh')) manager.write({ ...row, heartbeatAt: new Date(Date.now() - 31 * 60_000).toISOString() });
+  writeFileSync(join(rows.dirty.path, 'dirty.txt'), 'retain');
+  writeFileSync(join(rows.unlanded.path, 'new.txt'), 'unpublished');
+  git(rows.unlanded.path, 'add', '-A'); git(rows.unlanded.path, 'commit', '-m', 'unpublished');
+  manager.openFiles = (path) => path === rows.open.path ? 1 : 0;
+  writeFileSync(join(manager.root, 'jobs', 'test-lease.json'), JSON.stringify({ token: 'test-lease', id: 'leased', repo, pid: process.pid, startedAt: new Date().toISOString() }));
+  git(repo, 'worktree', 'lock', rows.locked.path);
+  manager.measure = () => { throw new Error('close must never measure disk'); };
+  const before = manager.records();
+  const preview = await manager.closeAllLanded({ dryRun: true });
+  assert.deepEqual(preview.counts, { closed: 2, kept: 5, total: 7 });
+  assert.ok(preview.closed.every((item) => item.reason === 'would-retire'));
+  assert.deepEqual(manager.records(), before);
+  assert.ok(!existsSync(join(manager.root, 'receipts', 'eligible.json')));
+  const result = await manager.closeAllLanded();
+  assert.deepEqual(result.closed.map((item) => item.id), ['eligible']);
+  assert.deepEqual(result.counts, { closed: 1, kept: 6, total: 7 });
+  for (const [id, blocker] of [['dirty', 'dirty-or-untracked'], ['unlanded', 'head-not-in-local-remote-refs'], ['open', 'open-files'], ['leased', 'command-running'], ['fresh', 'heartbeat-not-idle']]) {
+    assert.ok(result.kept.find((item) => item.id === id).blockers.includes(blocker));
+    assert.equal(manager.record(id).state, 'active'); assert.ok(existsSync(rows[id].path));
+  }
+  assert.match(result.kept.find((item) => item.id === 'locked').reason, /locked/);
+  assert.ok(existsSync(join(manager.root, 'receipts', 'eligible.json')));
+  assert.ok(existsSync(join(manager.record('eligible').path, 'source.txt')));
+  assert.equal(git(repo, 'rev-parse', '--verify', rows.eligible.branch).length, 40);
+  assert.equal((await manager.closeAllLanded({ dryRun: true, idleMinutes: 60 })).closed.length, 0);
+  await assert.rejects(manager.closeAllLanded({ idleMinutes: -1 }), /idle-minutes/);
+  await assert.rejects(manager.closeAllLanded({ idleMinutes: NaN }), /idle-minutes/);
+});
+
+test('bulk close uses merged PR evidence and continues after a per-workspace move failure', async () => {
+  const { manager, repo, setup, create } = mergedPrFixture('z-merged');
+  const { row, pr } = await setup();
+  const failed = await create('a-locked');
+  for (const item of [row, failed]) manager.write({ ...item, heartbeatAt: new Date(Date.now() - 60 * 60_000).toISOString() });
+  git(repo, 'worktree', 'lock', failed.path);
+  manager.gh = () => JSON.stringify([pr]);
+  const result = await manager.closeAllLanded();
+  assert.deepEqual(result.closed.map((item) => item.id), [row.id]);
+  assert.deepEqual(result.kept.map((item) => item.id), [failed.id]);
+  assert.equal(JSON.parse(readFileSync(join(manager.root, 'receipts', `${row.id}.json`))).landing.landedBy, 'merged-pr');
+});
+
+test('status disk measurements are async and bounded; no-disk inspection computes no budgets', async () => {
+  const { manager, create } = fixture();
+  for (let index = 0; index < 6; index++) await create(`status-${index}`);
+  let concurrent = 0; let maximum = 0; const calls = [];
+  manager.measure = async (path) => {
+    calls.push(path); concurrent++; maximum = Math.max(maximum, concurrent);
+    await pause(10); concurrent--; return 1024;
+  };
+  const result = await manager.status();
+  assert.equal(maximum, 4); assert.equal(calls.length, 8);
+  assert.equal(result.managedReportedBytes, 2048);
+  assert.ok(result.workspaces.every((item) => item.reportedBytes === 1024 && item.overBudget === false));
+  manager.measure = () => { throw new Error('no disk'); };
+  manager.freeBytes = () => { throw new Error('no reserve calculation'); };
+  const light = await manager.status({ noDisk: true });
+  for (const field of ['freeBytes', 'managedReportedBytes', 'belowFreeSpaceReserve', 'totalOverBudget']) assert.ok(!Object.hasOwn(light, field));
+  assert.ok(light.workspaces.every((item) => item.reportedBytes === null && !Object.hasOwn(item, 'overBudget')));
+  assert.equal((await manager.inspect(manager.record('status-0'), { noDisk: true })).reportedBytes, null);
+  await manager.close('status-0');
+});
+
+test('default status uses asynchronous du and leaves the event loop responsive', async () => {
+  const { manager, create, folder } = fixture();
+  await create('async-status');
+  const bin = join(folder, 'bin'); mkdirSync(bin);
+  const executable = join(bin, 'du');
+  writeFileSync(executable, `#!${process.execPath}\nsetTimeout(() => process.stdout.write('1\\tpath\\n'), 50);\n`);
+  chmodSync(executable, 0o700);
+  const previousPath = process.env.PATH;
+  process.env.PATH = `${bin}:${previousPath}`;
+  manager.measure = diskBytes;
+  let ticked = false;
+  const timer = setTimeout(() => { ticked = true; }, 10);
+  try {
+    const status = await manager.status();
+    assert.equal(ticked, true); assert.equal(status.managedReportedBytes, 2048);
+    assert.equal(status.workspaces[0].reportedBytes, 1024);
+  } finally { clearTimeout(timer); process.env.PATH = previousPath; }
+});
+
+test('create retries changed identities with fresh budgets and fails closed after three attempts', async () => {
+  const { manager, create } = fixture();
+  const other = await create('existing');
+  let scans = 0; let changed = false;
+  manager.measure = async (path) => {
+    assert.ok(!existsSync(join(manager.root, 'state.lock')));
+    if (path === join(manager.root, 'worktrees')) {
+      scans++;
+      if (!changed) { changed = true; await manager.locked(() => manager.write({ ...manager.record(other.id), state: 'failed' })); }
+    }
+    return 0;
+  };
+  assert.equal((await create('retry-create')).state, 'active'); assert.equal(scans, 2);
+  scans = 0;
+  manager.measure = async (path) => {
+    if (path === join(manager.root, 'worktrees')) {
+      scans++;
+      await manager.locked(() => { const row = manager.record(other.id); manager.write({ ...row, state: row.state === 'failed' ? 'active' : 'failed' }); });
+    }
+    return 0;
+  };
+  await assert.rejects(create('churning-create'), StaleWorkspaceSnapshotError);
+  assert.equal(scans, 3); assert.ok(!manager.records().some((item) => item.id === 'churning-create'));
+  manager.measure = async () => { throw new Error('unknown measurement'); };
+  await assert.rejects(create('unknown-create'), /Disk measurement failed \(create/);
+});
+
+test('CLI exposes no-disk status and bulk close flags, and requires an explicit close target', async () => {
+  const { manager } = fixture();
+  await manager.configure({ minFreeBytes: 1 });
+  const cli = fileURLToPath(new URL('../scripts/fleet-workspace.mjs', import.meta.url));
+  const call = (...args) => spawnSync(process.execPath, [cli, '--root', manager.root, ...args], { encoding: 'utf8' });
+  const status = call('status', '--no-disk');
+  assert.equal(status.status, 0, status.stderr); assert.ok(!Object.hasOwn(JSON.parse(status.stdout), 'managedReportedBytes'));
+  const close = call('close', '--all-landed', '--dry-run', '--idle-minutes', '10');
+  assert.equal(close.status, 0, close.stderr); assert.equal(JSON.parse(close.stdout).idleMinutes, 10);
+  assert.equal(JSON.parse(call('close', '--all-landed', '--dry-run').stdout).idleMinutes, 30);
+  for (const args of [['close'], ['close', '--all-landed', '--id', 'x'], ['close', '--id', 'x', '--idle-minutes', '1'], ['close', '--all-landed', '--idle-minutes', 'invalid']]) {
+    assert.equal(call(...args).status, 1, args.join(' '));
+  }
+  const help = call('--help'); assert.match(help.stdout, /--all-landed/); assert.match(help.stdout, /--no-disk/);
+});
+
 test('missing folders are non-fatal and reconcile frees writer slots without deleting anything', async () => {
   const { manager, repo, create, folder } = fixture();
   await manager.configure({ maxWriters: 2 });
@@ -793,9 +1054,9 @@ test('missing folders are non-fatal and reconcile frees writer slots without del
   // Another agent removed folders out from under the registry.
   const moved = join(folder, 'moved-away'); git(repo, 'worktree', 'move', gone.path, moved);
   rmSync(manager.record('retired-gone').path, { recursive: true });
-  const status = manager.status();
+  const status = await manager.status();
   assert.deepEqual(status.workspaces.find((item) => item.id === 'gone').blockers, ['missing-worktree']);
-  assert.equal(manager.gc().workspaces.find((item) => item.id === 'retired-gone').action, 'record-only');
+  assert.equal((await manager.gc()).workspaces.find((item) => item.id === 'retired-gone').action, 'record-only');
   await assert.rejects(create('third'), /limit reached/);
   assert.equal((await manager.run({ repo, argv: [process.execPath, '-e', ''] })).exitCode, 0, 'managed commands still admit');
 
@@ -812,7 +1073,7 @@ test('missing folders are non-fatal and reconcile frees writer slots without del
   await assert.rejects(manager.close('gone'), /Only active/);
   const third = await create('third');
   assert.equal(third.state, 'active');
-  assert.equal(manager.gc().workspaces.find((item) => item.id === 'gone').action, 'record-only');
+  assert.equal((await manager.gc()).workspaces.find((item) => item.id === 'gone').action, 'record-only');
   assert.deepEqual((await manager.reconcile({ dryRun: true })).changes.map((item) => item.id), ['retired-gone']);
 });
 
