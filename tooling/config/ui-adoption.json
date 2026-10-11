@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "projects": [
+    {
+      "id": "chatgpt-connections",
+      "app": {
+        "library": true,
+        "version": "v0.1.15"
+      }
+    },
+    {
+      "id": "knowledge-base",
+      "landing": {
+        "library": true,
+        "version": "v0.1.14",
+        "template": "workbench"
+      }
+    },
+    {
+      "id": "significanthobbies",
+      "landing": {
+        "library": true,
+        "version": "v0.1.13",
+        "template": "gallery"
+      }
+    },
+    {
+      "id": "anime-list",
+      "app": {
+        "library": true,
+        "version": "v0.1.14"
+      }
+    },
+    {
+      "id": "calorie",
+      "landing": {
+        "library": true,
+        "version": "v0.1.13",
+        "template": "gallery"
+      }
+    },
+    {
+      "id": "ios-landings",
+      "landing": {
+        "library": true,
+        "version": "v0.1.14"
+      }
+    },
+    {
+      "id": "starboard",
+      "landing": {
+        "library": true,
+        "version": "v0.1.13",
+        "template": "workbench"
+      }
+    },
+    {
+      "id": "storagedaddy",
+      "landing": {
+        "library": true,
+        "version": "v0.1.13",
+        "template": "workbench"
+      },
+      "native": {
+        "saasMakerUI": true,
+        "version": "0.1.17"
+      }
+    },
+    {
+      "id": "techdata",
+      "app": {
+        "library": true,
+        "version": "v0.1.14"
+      }
+    }
+  ]
+}

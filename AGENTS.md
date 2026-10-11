@@ -81,3 +81,7 @@ catalog or expand this field into a dependency inventory.
 
 Do not deploy, migrate, publish/deprecate npm packages, change DNS, or archive
 repositories without explicit approval.
+
+Fleet design/quality policy and UI adoption live in the private catalog.
+See [design-quality-policy](tooling/docs/design-quality-policy.md) for the schema
+and generated manifests; edit the catalog and run `pnpm catalog:sync`.

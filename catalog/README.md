@@ -65,6 +65,10 @@ pnpm --dir ../site-health docs:projects
   catalog and re-sync. Fleet-global blocks live under top-level `systems`;
   per-project entries live under `projects[].systems`. Each ordered manifest
   stores its `order` list so regeneration is stable.
+- `tooling/config/design-policy.json` projects the four Fleet design/quality
+  blocks; `tooling/config/ui-adoption.json` projects optional per-project UI
+  evidence in catalog order. See the canonical
+  [design and quality policy](../tooling/docs/design-quality-policy.md).
 - `tooling/config/app-health-native-applicability.json` is generated from
   `projects[].systems.appHealth` alongside those policy manifests.
 - App Health's `apps/probe/journeys.json` is generated from
