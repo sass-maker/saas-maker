@@ -22,22 +22,20 @@ describe('showcase typography', () => {
     }
   });
 
-  it('self-hosts Schibsted Grotesk and preloads it', async () => {
+  it('self-hosts Geist and preloads it', async () => {
     const [layout, css] = await Promise.all([
       readShowcase('src/layouts/Layout.astro'),
       readShowcase('src/styles/globals.css'),
     ]);
 
-    const font = await stat(showcase('public/fonts/schibsted-grotesk-v7-latin.woff2'));
+    const font = await stat(showcase('public/fonts/geist-latin.woff2'));
     expect(font.size).toBeGreaterThan(0);
     // Parity with the single variable file Google served; a full static set
     // would be several times this.
     expect(font.size).toBeLessThan(60_000);
 
-    expect(css).toMatch(
-      /src: url\("\/fonts\/schibsted-grotesk-v7-latin\.woff2"\) format\("woff2"\)/
-    );
-    expect(layout).toMatch(/rel="preload"[\s\S]*schibsted-grotesk-v7-latin\.woff2/);
+    expect(css).toMatch(/src: url\("\/fonts\/geist-latin\.woff2"\) format\("woff2"\)/);
+    expect(layout).toMatch(/rel="preload"[\s\S]*geist-latin\.woff2/);
     expect(layout).toMatch(/as="font"/);
     expect(layout).toMatch(/crossorigin/);
   });
@@ -49,12 +47,12 @@ describe('showcase typography', () => {
     // the font inside its block period or never applies it on this view.
     expect(css).toMatch(/font-display: optional;/);
     // And the face that renders instead has to occupy the same space.
-    expect(css).toMatch(/font-family: "Schibsted Grotesk Fallback";/);
-    expect(css).toMatch(/size-adjust: 105\.3%;/);
-    expect(css).toMatch(/ascent-override: 92\.74%;/);
-    expect(css).toMatch(/descent-override: 24\.48%;/);
+    expect(css).toMatch(/font-family: "Geist Fallback";/);
+    expect(css).toMatch(/size-adjust: 106\.3855%;/);
+    expect(css).toMatch(/ascent-override: 94\.4678%;/);
+    expect(css).toMatch(/descent-override: 27\.7293%;/);
     expect(css).toMatch(/line-gap-override: 0%;/);
-    expect(css).toMatch(/--sans: "Schibsted Grotesk", "Schibsted Grotesk Fallback", system-ui/);
+    expect(css).toMatch(/--sans: "Geist", "Geist Fallback", system-ui/);
   });
 
   it('serves the font immutably', async () => {

@@ -159,9 +159,13 @@ const keywords = (entry: SearchEntry) => {
   }
 
   .search-shell .type-chip[aria-pressed='true'] {
-    color: var(--surface);
-    background: var(--ink);
-    border-color: var(--ink);
+    color: var(--bg);
+    background: var(--ink-soft);
+    border-color: var(--ink-soft);
+  }
+
+  .search-shell .type-chip[aria-pressed='true'] span {
+    color: var(--bg);
   }
 
   .search-shell .search-count {
@@ -196,7 +200,7 @@ const keywords = (entry: SearchEntry) => {
     padding: 0;
     list-style: none;
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: var(--radius);
     background: var(--surface);
     overflow: hidden;
   }

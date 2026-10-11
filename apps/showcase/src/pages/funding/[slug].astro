@@ -162,15 +162,21 @@ const groups = FUNDING_FIELD_GROUPS.map((group) => ({
   .funding-head {
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.6fr);
-    gap: 0.375rem;
-    padding: 0.375rem;
-    background: var(--workshop-steel);
+    gap: 1px;
+    padding: 1px;
+    background: var(--line);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .funding-head-main,
   .funding-head-side {
     background: var(--surface);
     padding: clamp(2rem, 4vw, 3.5rem);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .funding-kicker {
@@ -208,9 +214,12 @@ const groups = FUNDING_FIELD_GROUPS.map((group) => ({
   }
 
   .fd-chip--priority {
-    background: var(--workshop-amber);
-    border-color: var(--workshop-amber);
-    color: #17130c;
+    background: var(--surface);
+    border-color: var(--pane-amber);
+    color: var(--ink);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .funding-head-side {
@@ -227,14 +236,14 @@ const groups = FUNDING_FIELD_GROUPS.map((group) => ({
     gap: 0.5rem;
     min-height: 3rem;
     padding: 0.75rem 1.25rem;
-    background: var(--workshop-ink);
-    color: #fff;
+    background: var(--copper);
+    color: var(--bg);
     font-weight: 600;
     text-decoration: none;
   }
 
   .funding-cta:hover {
-    background: var(--workshop-cobalt);
+    background: var(--copper-hi);
   }
 
   .funding-evidence {
@@ -252,12 +261,17 @@ const groups = FUNDING_FIELD_GROUPS.map((group) => ({
     gap: 1px;
     margin-top: clamp(2.5rem, 5vw, 4rem);
     border: 1px solid var(--line-strong);
-    background: var(--workshop-steel);
-  }
+    background: var(--line);
+
+  border-radius: var(--radius);
+}
 
   .funding-pane {
     padding: clamp(1.5rem, 3vw, 2.5rem);
     background: var(--surface);
+
+  border-radius: var(--radius);
+    border: 1px solid var(--line);
   }
 
   .funding-pane--views {

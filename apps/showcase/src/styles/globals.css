@@ -1,12 +1,10 @@
 @font-face {
-  /* Self-hosted so the first paint never waits on a third-party origin.
-     Variable weight axis (400-750) covers every weight the design system
-     uses, in one 44KB file. See public/fonts/README.md. */
-  font-family: "Schibsted Grotesk";
+  /* Self-hosted variable latin font; SIL OFL in public/fonts/OFL.txt. */
+  font-family: "Geist";
   font-style: normal;
-  font-weight: 400 750;
+  font-weight: 100 900;
   font-display: optional;
-  src: url("/fonts/schibsted-grotesk-v7-latin.woff2") format("woff2");
+  src: url("/fonts/geist-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
     U+2212, U+2215, U+FEFF, U+FFFD;
@@ -15,20 +13,29 @@
 @font-face {
   /* Metrics-matched stand-in. `font-display: optional` means a cold visit
      renders in this face and never swaps, so it has to occupy the same space
-     as Schibsted Grotesk or the hero heading reflows (issue #92).
-     Overrides derived from the shipped woff2 against Arial:
-       size-adjust      = 0.472636 / 0.448836 avg advance per em = 105.30%
-       ascent-override  = (2000 / 2048) / 1.0530 = 92.74%
-       descent-override = (528 / 2048) / 1.0530 = 24.48%
+     as Geist or the hero heading reflows (issue #92).
+     Overrides derived from the shipped woff2 and Arial.ttf hmtx/hhea tables,
+     using the frequency-weighted sample "aaabcdeeeefghiijklmnnoopqrrssttuvwxyz      ":
+       size-adjust      = 0.485442 / 0.456305 avg advance per em = 106.3855%
+       ascent-override  = (1005 / 1000) / 1.063855 = 94.4678%
+       descent-override = (295 / 1000) / 1.063855 = 27.7293%
        line-gap-override = 0 (the family ships no line gap) */
-  font-family: "Schibsted Grotesk Fallback";
+  font-family: "Geist Fallback";
   font-style: normal;
-  font-weight: 400 750;
-  src: local("Arial"), local("Helvetica Neue"), local("Liberation Sans");
-  size-adjust: 105.3%;
-  ascent-override: 92.74%;
-  descent-override: 24.48%;
+  font-weight: 100 900;
+  src: local("Arial");
+  size-adjust: 106.3855%;
+  ascent-override: 94.4678%;
+  descent-override: 27.7293%;
   line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: optional;
+  src: url("/fonts/geist-mono-latin.woff2") format("woff2");
 }
 
 *,
@@ -40,16 +47,24 @@
 }
 
 :root {
-  --bg: #0b0c0d;
-  --surface: #111315;
-  --ink: #f1f0ec;
-  --ink-soft: #c2c0b8;
-  --ink-muted: #85847f;
-  --line: #282a2d;
-  --line-strong: #414348;
+  --bg: #0a0a0a;
+  --surface: #171717;
+  --surface-muted: #262626;
+  --ink: #fafafa;
+  --ink-soft: #e5e5e5;
+  --ink-muted: #a1a1a1;
+  --line: #222222;
+  --line-strong: #222222;
   --copper: #d57a43;
   --copper-hi: #ef9b66;
-  --sans: "Schibsted Grotesk", "Schibsted Grotesk Fallback", system-ui, -apple-system,
+  --destructive: #ff6467;
+  --radius: 10px;
+  --frame-width: min(92rem, calc(100% - 2rem));
+  --pane-cobalt: #1746a2;
+  --pane-amber: #c9820d;
+  --pane-oxblood: #7b211c;
+  --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --sans: "Geist", "Geist Fallback", system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
   --max: 76rem;
 }
@@ -339,7 +354,7 @@ a {
 .nav-menu-index {
   min-width: 1.6rem;
   color: var(--nav-sheet-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -704,9 +719,10 @@ a {
   border: 1px solid var(--line);
   background: var(--surface);
   color: var(--ink-soft);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.875rem;
   white-space: nowrap;
+  border-radius: var(--radius);
 }
 
 .package-action a {
@@ -726,6 +742,8 @@ a {
   padding: clamp(3rem, 6vw, 4.5rem) clamp(1.5rem, 4vw, 3rem);
   border-block: 1px solid var(--line-strong);
   background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .commission-copy h2 {
@@ -864,13 +882,13 @@ a {
 
 .learnings-index,
 .learning-article {
-  width: var(--workshop-frame-width, min(var(--max), calc(100% - 3rem)));
+  width: var(--frame-width, min(var(--max), calc(100% - 3rem)));
   margin-inline: auto;
 }
 
 .learnings-index {
   min-height: 0;
-  border: 0.375rem solid var(--workshop-steel);
+  border: 1px solid var(--line);
   border-top: 0;
 }
 
@@ -880,8 +898,10 @@ a {
   flex-direction: column;
   justify-content: center;
   padding: clamp(3rem, 7vw, 7rem);
-  border-bottom: 0.375rem solid var(--workshop-steel);
-  background: var(--workshop-pane);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .learnings-header h1 {
@@ -904,7 +924,9 @@ a {
 .learning-list {
   margin: 0;
   list-style: none;
-  background: var(--workshop-pane);
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .learning-list li {
@@ -923,7 +945,7 @@ a {
 
 .learning-list a:hover,
 .learning-list a:focus-visible {
-  background: #f5c66d;
+  background: var(--surface-muted);
 }
 
 .learning-list time {
@@ -951,7 +973,7 @@ a {
 
 .learning-list a > span:last-child {
   justify-self: end;
-  color: var(--workshop-oxblood);
+  color: var(--copper-hi);
   font-size: 1.2rem;
 }
 
@@ -963,11 +985,12 @@ a {
   min-height: min(45rem, calc(100svh - 9rem));
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(22rem, 0.7fr);
-  gap: 0.375rem;
+  gap: 1px;
   align-items: stretch;
-  border: 0.375rem solid var(--workshop-steel);
+  border: 1px solid var(--line);
   border-top: 0;
-  background: var(--workshop-steel);
+  background: var(--line);
+  border-radius: var(--radius);
 }
 
 .article-intro {
@@ -976,7 +999,7 @@ a {
   flex-direction: column;
   justify-content: center;
   padding: clamp(3rem, 6vw, 6rem);
-  background: var(--workshop-pane);
+  background: var(--surface);
 }
 
 .article-intro h1 {
@@ -1022,7 +1045,8 @@ a {
   justify-content: flex-end;
   border: 0;
   color: #fff;
-  background: var(--workshop-cobalt);
+  background: var(--surface);
+  border-radius: var(--radius);
 }
 
 .profile-example > p {
@@ -1037,7 +1061,7 @@ a {
 .prose pre {
   overflow-x: auto;
   color: var(--ink-soft);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-family: var(--mono);
   font-size: clamp(0.78rem, 1.2vw, 0.9rem);
   line-height: 1.7;
   white-space: pre;
@@ -1110,7 +1134,7 @@ a {
 
 .prose code {
   color: var(--ink);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.9em;
 }
 
@@ -1133,6 +1157,8 @@ a {
   padding: 1px;
   background: var(--line);
   list-style: none;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .method-steps li,
@@ -1165,6 +1191,7 @@ a {
   padding: 1.25rem;
   border: 1px solid var(--line);
   background: var(--surface);
+  border-radius: var(--radius);
 }
 
 .article-principle {
@@ -1429,7 +1456,7 @@ a {
   .article-hero {
     min-height: auto;
     grid-template-columns: 1fr;
-    gap: 0.375rem;
+    gap: 1px;
   }
 
   .article-intro {
@@ -1490,7 +1517,7 @@ a {
 }
 
 .tooling-shell {
-  width: var(--workshop-frame-width);
+  width: var(--frame-width);
   margin-inline: auto;
   padding-bottom: clamp(5rem, 9vw, 8rem);
 }
@@ -1498,20 +1525,20 @@ a {
 .tooling-intro {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr);
-  gap: 0.375rem;
-  border: 0.375rem solid var(--workshop-steel);
+  gap: 1px;
+  border: 1px solid var(--line);
   border-top: 0;
-  background: var(--workshop-steel);
+  background: var(--line);
 }
 
 .tooling-intro-copy {
   min-width: 0;
   padding: clamp(2.5rem, 6vw, 6rem);
-  background: var(--workshop-pane);
+  background: var(--surface);
 }
 
 .tooling-intro .directory-kicker {
-  color: var(--workshop-oxblood);
+  color: var(--copper-hi);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -1529,7 +1556,7 @@ a {
 
 .tooling-intro-copy > p:last-child {
   max-width: 64ch;
-  color: var(--workshop-muted);
+  color: var(--ink-muted);
   font-size: clamp(1rem, 1.5vw, 1.2rem);
 }
 
@@ -1539,7 +1566,9 @@ a {
   justify-content: flex-end;
   padding: clamp(2rem, 4vw, 4rem);
   color: #fff;
-  background: var(--workshop-cobalt);
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .tooling-count strong {
@@ -1561,7 +1590,9 @@ a {
   gap: 1px;
   margin: 0 0 clamp(4rem, 8vw, 7rem);
   padding: 1px;
-  background: var(--workshop-steel);
+  background: var(--line);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .tooling-jump a {
@@ -1569,28 +1600,36 @@ a {
   flex: 1 1 12rem;
   justify-content: space-between;
   padding: 1rem 1.2rem;
-  background: var(--workshop-pane);
-  color: var(--workshop-ink);
+  background: var(--surface);
+  color: var(--ink);
   font-weight: 600;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .tooling-jump a:hover,
 .tooling-jump a:focus-visible {
   color: #fff;
-  background: var(--workshop-cobalt);
+  background: var(--surface);
 }
 
 .tooling-group {
   display: grid;
   grid-template-columns: minmax(12rem, 0.34fr) minmax(0, 1fr);
-  gap: 0.375rem;
-  padding: 0.375rem;
-  background: var(--workshop-steel);
+  gap: 1px;
+  padding: 1px;
+  background: var(--line);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .tooling-group > header {
+  min-width: 0;
+  overflow-wrap: anywhere;
   padding: clamp(2rem, 4vw, 4rem);
-  background: var(--workshop-seeded);
+  background: var(--surface-muted);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .tooling-group > header p,
@@ -1608,29 +1647,33 @@ a {
 }
 
 .tooling-group ol {
+  min-width: 0;
   margin: 0;
   padding: 0;
   list-style: none;
-  background: var(--workshop-pane);
+  background: var(--surface);
+  border-radius: var(--radius);
 }
 
 .tooling-group li + li {
-  border-top: 1px solid rgba(20, 21, 17, 0.2);
+  border-top: 1px solid var(--line);
 }
 
 .tooling-group li a {
+  min-width: 0;
+  overflow-wrap: anywhere;
   display: grid;
   grid-template-columns: minmax(12rem, 0.35fr) minmax(0, 1fr) auto;
   gap: 1rem;
   align-items: start;
   padding: 1.35rem 1.5rem;
   min-height: 7rem;
-  color: var(--workshop-ink);
+  color: var(--ink);
 }
 
 .tooling-group li a:hover,
 .tooling-group li a:focus-visible {
-  background: #f5c66d;
+  background: var(--surface-muted);
 }
 
 .tooling-group li span {
@@ -1647,17 +1690,17 @@ a {
 .tooling-group li code,
 .tooling-group li small {
   overflow-wrap: anywhere;
-  color: var(--workshop-muted);
+  color: var(--ink-muted);
 }
 
 .tooling-group li p {
   margin: 0;
   max-width: 62ch;
-  color: var(--workshop-muted);
+  color: var(--ink-muted);
   line-height: 1.55;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 980px) {
   .tooling-intro,
   .tooling-group {
     grid-template-columns: 1fr;
@@ -1674,54 +1717,19 @@ a {
 
   .tooling-intro-copy,
   .tooling-group > header {
+  min-width: 0;
+  overflow-wrap: anywhere;
     padding: 2.5rem 1.5rem;
   }
 
   .tooling-group li a {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
-/* Homepage: the glazier's workshop */
-
+/* Shared dark card shell; every route inherits the root tokens. */
 .workshop-world {
-  --workshop-frame-width: min(92rem, 100%);
-  --workshop-ground: #eee8dc;
-  --workshop-pane: rgba(250, 247, 239, 0.9);
-  --workshop-seeded: #d9d2c4;
-  --workshop-steel: #11120f;
-  --workshop-ink: #141511;
-  --workshop-muted: #5f5d55;
-  --workshop-cobalt: #1746a2;
-  --workshop-amber: #c9820d;
-  --workshop-oxblood: #7b211c;
   min-height: 100svh;
-  overflow-x: clip;
-  background: var(--workshop-ground);
-  color: var(--workshop-ink);
-  color-scheme: light;
-}
-
-.interior-world {
-  --bg: var(--workshop-ground);
-  --surface: var(--workshop-pane);
-  --ink: var(--workshop-ink);
-  --ink-soft: var(--workshop-muted);
-  --ink-muted: #6c6960;
-  --line: rgba(20, 21, 17, 0.2);
-  --line-strong: rgba(20, 21, 17, 0.42);
-  --copper: var(--workshop-amber);
-  --copper-hi: var(--workshop-oxblood);
-  color-scheme: light;
-}
-
-.workshop-world :focus-visible {
-  outline-color: var(--workshop-oxblood);
-}
-
-.workshop-world .nav :focus-visible,
-.workshop-world .tooling-jump a:focus-visible {
-  outline-color: #fff;
 }
 
 .workshop-world .nav,
@@ -1731,7 +1739,7 @@ a {
 .studio-package,
 .studio-commission,
 .workshop-world .footer {
-  width: var(--workshop-frame-width);
+  width: var(--frame-width);
   margin-inline: auto;
 }
 
@@ -1740,9 +1748,10 @@ a {
   z-index: 20;
   min-height: 4.75rem;
   padding-inline: 1.25rem;
-  border: 0;
-  background: var(--workshop-steel);
-  color: #f8f4ea;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: var(--radius);
 }
 
 .workshop-world .brand {
@@ -1751,23 +1760,24 @@ a {
 }
 
 .workshop-world .brand-mark {
-  border-color: rgba(255, 255, 255, 0.58);
-  border-radius: 0;
-  background: var(--workshop-cobalt);
+  border-color: var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
   color: #fff;
+  border: 1px solid var(--line);
 }
 
 .workshop-world .nav-links {
-  color: #bdb8ad;
+  color: var(--ink-muted);
 }
 
 .workshop-world .nav-menu {
-  --nav-sheet-bg: var(--workshop-steel);
-  --nav-sheet-ink: #f8f4ea;
-  --nav-sheet-muted: #bdb8ad;
-  --nav-sheet-line: rgba(255, 255, 255, 0.14);
-  --nav-sheet-edge: rgba(255, 255, 255, 0.58);
-  --nav-sheet-accent: var(--workshop-cobalt);
+  --nav-sheet-bg: var(--surface);
+  --nav-sheet-ink: var(--ink);
+  --nav-sheet-muted: var(--ink-muted);
+  --nav-sheet-line: var(--line);
+  --nav-sheet-edge: var(--line);
+  --nav-sheet-accent: var(--copper-hi);
 }
 
 .workshop-world .nav-menu-sheet {
@@ -1786,10 +1796,10 @@ a {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 0.375rem solid var(--workshop-steel);
-  border-top: 0;
-  background: var(--workshop-pane);
+  border: 1px solid var(--line);
+  background: var(--surface);
   isolation: isolate;
+  border-radius: var(--radius);
 }
 
 .studio-hero-scene {
@@ -1811,7 +1821,8 @@ a {
 .studio-hero-scene::after {
   position: absolute;
   inset: 0;
-  background: rgba(17, 18, 15, 0.08);
+  /* A near-opaque dark mask keeps the original crop quiet and text legible. */
+  background: rgb(23 23 23 / 0.94);
   content: '';
 }
 
@@ -1849,13 +1860,14 @@ a {
 .studio-hero-aside {
   min-width: 0;
   padding: 1.4rem 1.6rem;
-  border: 1px solid var(--workshop-line);
-  background: var(--workshop-pane);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--radius);
 }
 
 .studio-intro {
   max-width: 39rem;
-  color: var(--workshop-muted);
+  color: var(--ink-muted);
   font-size: clamp(1.05rem, 1.4vw, 1.25rem);
   line-height: 1.5;
 }
@@ -1878,7 +1890,7 @@ a {
   align-items: center;
   gap: 0.65rem;
   margin-top: 2rem;
-  color: var(--workshop-muted);
+  color: var(--ink-muted);
   font-size: 0.82rem;
 }
 
@@ -1886,19 +1898,22 @@ a {
   width: 0.55rem;
   height: 0.55rem;
   border-radius: 50%;
-  background: var(--workshop-cobalt);
+  background: var(--surface);
   box-shadow: 0.15rem 0.2rem 0.6rem rgba(23, 70, 162, 0.28);
+  border: 1px solid var(--line);
 }
 
 .product-ledger {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 1px;
   margin: auto 0 0;
   padding: 0;
-  background: var(--workshop-steel);
+  background: var(--line);
   list-style: none;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .product-ledger > li {
@@ -1913,11 +1928,13 @@ a {
   align-items: center;
   gap: 0.85rem clamp(1rem, 3vw, 3rem);
   padding: 1.5rem clamp(1.5rem, 4vw, 4rem);
-  background: var(--workshop-pane);
+  background: var(--surface);
   text-decoration: none;
   transition:
     background 220ms ease,
     color 220ms ease;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .ledger-count {
@@ -1925,7 +1942,7 @@ a {
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  color: var(--workshop-muted);
+  color: var(--ink-muted);
   font-size: 0.85rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -1937,12 +1954,13 @@ a {
   width: 0.62rem;
   height: 0.62rem;
   flex: none;
-  background: var(--plaque-tone, var(--workshop-cobalt));
+  background: var(--plaque-tone, var(--pane-cobalt));
   content: '';
   transition: background 220ms ease;
 }
 
 .ledger-plaque strong {
+  overflow-wrap: anywhere;
   grid-column: 2;
   font-size: clamp(1.9rem, 3.2vw, 3rem);
   font-weight: 600;
@@ -1953,7 +1971,7 @@ a {
 .ledger-description {
   grid-column: 3;
   max-width: 34ch;
-  color: var(--workshop-muted);
+  color: var(--ink-muted);
   font-size: 0.94rem;
   line-height: 1.45;
   transition: color 220ms ease;
@@ -1970,7 +1988,7 @@ a {
 }
 
 .ledger-domain {
-  color: var(--workshop-muted);
+  color: var(--ink-muted);
   font-size: 0.78rem;
   font-weight: 600;
   transition: color 220ms ease;
@@ -1982,67 +2000,48 @@ a {
 }
 
 .ledger-plaque--cobalt {
-  --plaque-tone: var(--workshop-cobalt);
+  --plaque-tone: var(--pane-cobalt);
 }
 
 .ledger-plaque--oxblood {
-  --plaque-tone: var(--workshop-oxblood);
+  --plaque-tone: var(--pane-oxblood);
 }
 
 .ledger-plaque--amber {
-  --plaque-tone: var(--workshop-amber);
+  --plaque-tone: var(--pane-amber);
 }
 
 .ledger-plaque:focus-visible {
-  outline-color: currentColor;
+  outline-color: var(--copper-hi);
   outline-offset: -0.25rem;
+  /* The dark inset keeps the copper ring legible on the amber flood, too. */
+  box-shadow: inset 0 0 0 6px var(--bg);
 }
 
 .ledger-plaque--cobalt:hover,
 .ledger-plaque--cobalt:focus-visible {
-  background: var(--workshop-cobalt);
+  background: var(--pane-cobalt);
   color: #fff;
 }
 
 .ledger-plaque--oxblood:hover,
 .ledger-plaque--oxblood:focus-visible {
-  background: var(--workshop-oxblood);
+  background: var(--pane-oxblood);
   color: #fff;
 }
 
 .ledger-plaque--amber:hover,
 .ledger-plaque--amber:focus-visible {
-  background: var(--workshop-amber);
-  color: #17130c;
+  background: var(--pane-amber);
+  color: #0a0a0a;
 }
 
-.ledger-plaque:hover .ledger-count,
-.ledger-plaque:focus-visible .ledger-count,
-.ledger-plaque:hover .ledger-domain,
-.ledger-plaque:focus-visible .ledger-domain {
-  color: rgba(255, 255, 255, 0.7);
+.ledger-plaque:is(:hover, :focus-visible) :is(.ledger-count, .ledger-domain, .ledger-description) {
+  color: inherit;
 }
 
-.ledger-plaque:hover .ledger-count::before,
-.ledger-plaque:focus-visible .ledger-count::before {
+.ledger-plaque:is(:hover, :focus-visible) .ledger-count::before {
   background: currentColor;
-}
-
-.ledger-plaque--amber:hover .ledger-count,
-.ledger-plaque--amber:focus-visible .ledger-count,
-.ledger-plaque--amber:hover .ledger-domain,
-.ledger-plaque--amber:focus-visible .ledger-domain {
-  color: rgba(23, 19, 12, 0.62);
-}
-
-.ledger-plaque:hover .ledger-description,
-.ledger-plaque:focus-visible .ledger-description {
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.ledger-plaque--amber:hover .ledger-description,
-.ledger-plaque--amber:focus-visible .ledger-description {
-  color: rgba(23, 19, 12, 0.78);
 }
 
 .studio-index {
@@ -2059,7 +2058,7 @@ a {
 
 .studio-index-head .studio-kicker {
   grid-column: 1 / -1;
-  color: var(--workshop-oxblood);
+  color: var(--copper-hi);
 }
 
 .studio-index-head h2 {
@@ -2073,7 +2072,7 @@ a {
 
 .studio-index-context > p {
   max-width: 36rem;
-  color: var(--workshop-muted);
+  color: var(--ink-muted);
   font-size: clamp(1rem, 1.45vw, 1.2rem);
 }
 
@@ -2084,17 +2083,19 @@ a {
   gap: 0.7rem;
   margin-top: 1.25rem;
   border-bottom: 1px solid currentColor;
-  color: var(--workshop-oxblood);
+  color: var(--copper-hi);
   font-weight: 700;
 }
 
 .learning-ledger {
   display: grid;
   grid-template-columns: minmax(18rem, 0.58fr) minmax(0, 1.42fr);
-  gap: 0.375rem;
+  gap: 1px;
   margin-top: 0;
-  padding: 0.375rem;
-  background: var(--workshop-steel);
+  padding: 1px;
+  background: var(--line);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .learning-ledger-meta {
@@ -2103,17 +2104,19 @@ a {
   flex-direction: column;
   justify-content: space-between;
   padding: clamp(2rem, 4vw, 4rem);
-  background: var(--workshop-seeded);
+  background: var(--surface-muted);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .learning-ledger-meta .studio-kicker {
-  color: var(--workshop-oxblood);
+  color: var(--copper-hi);
 }
 
 .learning-ledger-meta > div {
   display: grid;
   gap: 0.55rem;
-  color: #55534c;
+  color: var(--ink-muted);
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -2125,8 +2128,10 @@ a {
   display: grid;
   align-content: end;
   padding: clamp(2.5rem, 6vw, 6rem);
-  background: var(--workshop-cobalt);
+  background: var(--surface);
   color: #fff;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .learning-ledger-story h2 {
@@ -2160,14 +2165,17 @@ a {
 .studio-package {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(24rem, 0.8fr);
-  border: 0.375rem solid var(--workshop-steel);
-  background: var(--workshop-steel);
+  border: 1px solid var(--line);
+  background: var(--line);
+  border-radius: var(--radius);
 }
 
 .package-copy {
   padding: clamp(3rem, 6vw, 6rem);
-  background: var(--workshop-amber);
-  color: var(--workshop-ink);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .package-copy h2 {
@@ -2189,23 +2197,27 @@ a {
   align-content: center;
   gap: 1.25rem;
   padding: clamp(2.25rem, 5vw, 4.5rem);
-  border-left: 0.375rem solid var(--workshop-steel);
-  background: #f8f4ea;
+  border-left: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .workshop-world .package-action > p {
-  color: var(--workshop-muted);
+  color: var(--ink-muted);
   font-size: 0.82rem;
 }
 
 .workshop-world .package-action code {
-  border-color: var(--workshop-steel);
-  background: var(--workshop-steel);
+  border-color: var(--ink);
+  background: var(--line);
   color: #fff;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .workshop-world .package-action a {
-  color: var(--workshop-oxblood);
+  color: var(--copper-hi);
 }
 
 .studio-commission {
@@ -2215,8 +2227,10 @@ a {
   align-items: end;
   margin-top: clamp(5rem, 8vw, 7rem);
   padding: clamp(3rem, 6vw, 5.5rem);
-  background: var(--workshop-steel);
-  color: #f7f1e6;
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 
 .studio-commission h2 {
@@ -2232,7 +2246,7 @@ a {
 .studio-commission > div > p:last-child {
   max-width: 56ch;
   margin-top: 1.75rem;
-  color: #bbb6ab;
+  color: var(--ink-muted);
 }
 
 .studio-commission-email {
@@ -2243,12 +2257,12 @@ a {
   gap: 0.45rem 1.5rem;
   align-content: center;
   padding: 1.5rem 0;
-  border-block: 1px solid #5c5b55;
+  border-block: 1px solid var(--line);
   transition: border-color 180ms ease;
 }
 
 .studio-commission-email > span:first-child {
-  color: #a7a298;
+  color: var(--ink-muted);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -2266,40 +2280,38 @@ a {
   grid-column: 2;
   grid-row: 1 / 3;
   align-self: center;
-  color: #f2b345;
+  color: var(--copper-hi);
   font-size: 1.5rem;
 }
 
 .studio-commission-email:hover,
 .studio-commission-email:focus-visible {
-  border-color: #f2b345;
+  border-color: var(--copper-hi);
 }
 
 .workshop-world .footer {
   margin-top: clamp(2rem, 5vw, 4rem);
   padding-inline: 1rem;
-  border-color: rgba(20, 21, 17, 0.35);
-  color: var(--workshop-muted);
+  border-color: var(--ink);
+  color: var(--ink-muted);
 }
 
 .workshop-world .footer a:hover,
 .workshop-world .footer a:focus-visible {
-  color: var(--workshop-oxblood);
+  color: var(--copper-hi);
 }
 
 .workshop-world .footer .brand-mark {
-  border-color: var(--workshop-steel);
+  border-color: var(--ink);
 }
 
 @keyframes pane-brighten {
   from {
-    filter: brightness(0.76);
-    opacity: 0.82;
+    transform: translateY(4px);
   }
 
   to {
-    filter: brightness(1);
-    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -2329,11 +2341,11 @@ a {
 .token-world {
   position: relative;
   padding: clamp(5rem, 9vw, 8rem) clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem);
-  border: 0.375rem solid var(--workshop-steel);
+  border: 1px solid var(--line);
   border-top: 0;
   overflow: hidden;
-  background: #080a0d;
-  color: #f7f3e9;
+  background: var(--surface);
+  color: var(--ink);
 }
 
 .token-world-head {
@@ -2347,7 +2359,7 @@ a {
 
 .token-world-head .studio-kicker {
   grid-column: 1 / -1;
-  color: #f2b345;
+  color: var(--copper-hi);
 }
 
 .token-world-head h2 {
@@ -2460,7 +2472,7 @@ a {
   min-height: 3.25rem;
   margin-top: -0.75rem;
   padding: 0.85rem 1rem;
-  border-top: 1px solid #343942;
+  border-top: 1px solid var(--line);
   letter-spacing: 0.1em;
   text-align: center;
 }
@@ -2468,7 +2480,7 @@ a {
 .token-world-measures {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-block: 1px solid #343942;
+  border-block: 1px solid var(--line);
 }
 
 .token-world-measures > div {
@@ -2477,7 +2489,7 @@ a {
 }
 
 .token-world-measures > div + div {
-  border-left: 1px solid #343942;
+  border-left: 1px solid var(--line);
 }
 
 .token-world-measures dt {
@@ -2541,7 +2553,7 @@ a {
 
 .token-world-pulses button:hover,
 .token-world-pulses button:focus-visible {
-  border-color: #f2b345;
+  border-color: var(--copper-hi);
 }
 
 .token-world-pulses span {
@@ -2598,7 +2610,7 @@ a {
   }
 
   .workshop-world .package-action {
-    border-top: 0.375rem solid var(--workshop-steel);
+    border-top: 1px solid var(--line);
     border-left: 0;
   }
 }
@@ -2643,7 +2655,7 @@ a {
   }
 
   .token-world-measures > div + div {
-    border-top: 1px solid #343942;
+    border-top: 1px solid var(--line);
     border-left: 0;
   }
 
@@ -2734,4 +2746,56 @@ a {
   .token-world-canvas {
     opacity: 0.9;
   }
+}
+
+/* Technical names, event labels and chips share the cockpit's mono face. */
+code, pre, kbd, samp,
+.ledger-plaque strong, .ledger-domain, .ledger-count,
+.package-copy h2, .tooling-group li strong, .tool-head h1,
+.studio-status, .token-world-orbit-label,
+.workshop-world [class*="chip"][class], .workshop-world [class*="pill"][class],
+.workshop-world [class*="badge"][class], .ld-tag {
+  font-family: var(--mono);
+}
+
+input:not([type="checkbox"]):not([type="radio"]), select, textarea, button,
+.nav-menu-toggle, .nav-menu-sheet, .package-action code {
+  border-radius: var(--radius);
+}
+
+button {
+  font-family: inherit;
+}
+
+.workshop-world .brand-mark {
+  color: var(--copper-hi);
+}
+
+/* Copper primary actions; light neutral secondary actions. */
+.workshop-world .package-action a, .tool-cta, .funding-cta,
+#unsubscribe-button {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--copper);
+  border-radius: var(--radius);
+  background: var(--copper);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.workshop-world .package-action a:is(:hover, :focus-visible),
+.tool-cta:is(:hover, :focus-visible), .funding-cta:is(:hover, :focus-visible),
+#unsubscribe-button:hover {
+  background: var(--copper-hi);
+  color: var(--bg);
+}
+
+.workshop-world :is(.directory-groups, .ideas-controls, .launchdesk-controls, .funding-controls) button:not([disabled]) {
+  background: var(--ink-soft);
+  color: var(--bg);
+  border-color: var(--ink-soft);
+}
+
+/* Inline technical paths reflow; code blocks retain their own scroll area. */
+:not(pre) > code {
+  overflow-wrap: anywhere;
 }

@@ -19,9 +19,9 @@ const feedbackLauncherCss = `
   [data-saas-maker-feedback-root] h2 { margin: 0; font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 720; letter-spacing: -.025em; line-height: 1.2; }
   [data-saas-maker-feedback-root] p { margin: .4rem 0 0; color: color-mix(in srgb, currentColor 76%, transparent); }
   [data-saas-maker-feedback-launcher]:hover:not([aria-busy='true']) { border-color: color-mix(in srgb, currentColor 36%, transparent); background: color-mix(in srgb, currentColor 6%, transparent); }
-  [data-saas-maker-feedback-launcher]:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
+  [data-saas-maker-feedback-launcher]:focus-visible { outline: 2px solid #ef9b66; outline-offset: 3px; }
   [data-saas-maker-feedback-launcher][aria-busy='true'] { cursor: wait; opacity: .75; }
-  [data-saas-maker-feedback-root] .saas-maker-feedback-status { grid-column: 1 / -1; color: #a32929; font: 12px/1.4 system-ui, sans-serif; }
+  [data-saas-maker-feedback-root] .saas-maker-feedback-status { grid-column: 1 / -1; color: #ff6467; font: 12px/1.4 var(--sans); }
   [data-saas-maker-feedback-root][slot='feedback'] { display: block; width: 100%; margin: 0; padding: 0; border: 0; background: transparent; }
   [data-saas-maker-feedback-root][slot='feedback'] h2 { font-size: 1rem; font-weight: 600; line-height: 1.35; }
   [data-saas-maker-feedback-root][slot='feedback'] [data-saas-maker-feedback-launcher] { width: 100%; margin-block-start: 1rem; }
