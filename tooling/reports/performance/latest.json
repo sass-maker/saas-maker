@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-05T17:30:23.080Z",
+  "generatedAt": "2026-10-12T18:17:28.042Z",
   "mode": "performance",
   "runs": 3,
   "summary": {
-    "sites": 51,
-    "passed": 51,
+    "sites": 43,
+    "passed": 43,
     "failed": 0
   },
   "results": [
@@ -18,32 +18,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://codevetter.com/",
-          "headersMs": 1292,
-          "totalMs": 1295.3,
+          "headersMs": 696.1,
+          "totalMs": 712.7,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://codevetter.com/",
-          "headersMs": 253.9,
-          "totalMs": 256.7,
+          "headersMs": 119.2,
+          "totalMs": 138.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://codevetter.com/",
-          "headersMs": 98.3,
-          "totalMs": 100.2,
+          "headersMs": 120.3,
+          "totalMs": 138.1,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 253.9,
-        "headersP90Ms": 1292,
-        "totalP50Ms": 256.7,
-        "totalP90Ms": 1295.3
+        "headersP50Ms": 120.3,
+        "headersP90Ms": 696.1,
+        "totalP50Ms": 138.1,
+        "totalP90Ms": 712.7
       }
     },
     {
@@ -55,32 +55,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://heypace.app/",
-          "headersMs": 414.6,
-          "totalMs": 424.1,
+          "headersMs": 274.2,
+          "totalMs": 296.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://heypace.app/",
-          "headersMs": 138.6,
-          "totalMs": 144.2,
+          "headersMs": 55.3,
+          "totalMs": 60.3,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://heypace.app/",
-          "headersMs": 173,
-          "totalMs": 176.4,
+          "headersMs": 53.6,
+          "totalMs": 56.2,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 173,
-        "headersP90Ms": 414.6,
-        "totalP50Ms": 176.4,
-        "totalP90Ms": 424.1
+        "headersP50Ms": 55.3,
+        "headersP90Ms": 274.2,
+        "totalP50Ms": 60.3,
+        "totalP90Ms": 296.1
       }
     },
     {
@@ -92,32 +92,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://highsignal.app/",
-          "headersMs": 3348.6,
-          "totalMs": 4788.1,
+          "headersMs": 2275.9,
+          "totalMs": 5106,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://highsignal.app/",
-          "headersMs": 61.5,
-          "totalMs": 63,
+          "headersMs": 154.8,
+          "totalMs": 165.4,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://highsignal.app/",
-          "headersMs": 83.7,
-          "totalMs": 85.1,
+          "headersMs": 133.8,
+          "totalMs": 145.6,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 83.7,
-        "headersP90Ms": 3348.6,
-        "totalP50Ms": 85.1,
-        "totalP90Ms": 4788.1
+        "headersP50Ms": 154.8,
+        "headersP90Ms": 2275.9,
+        "totalP50Ms": 165.4,
+        "totalP90Ms": 5106
       }
     },
     {
@@ -129,32 +129,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://posttrainllm.com/",
-          "headersMs": 461.9,
-          "totalMs": 464.7,
+          "headersMs": 276.2,
+          "totalMs": 296.6,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://posttrainllm.com/",
-          "headersMs": 110.7,
-          "totalMs": 113,
+          "headersMs": 44.9,
+          "totalMs": 55.2,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://posttrainllm.com/",
-          "headersMs": 100.5,
-          "totalMs": 102.8,
+          "headersMs": 125.7,
+          "totalMs": 128.5,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 110.7,
-        "headersP90Ms": 461.9,
-        "totalP50Ms": 113,
-        "totalP90Ms": 464.7
+        "headersP50Ms": 125.7,
+        "headersP90Ms": 276.2,
+        "totalP50Ms": 128.5,
+        "totalP90Ms": 296.6
       }
     },
     {
@@ -166,32 +166,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://anime.significanthobbies.com/",
-          "headersMs": 427.7,
-          "totalMs": 428.7,
+          "headersMs": 505.5,
+          "totalMs": 506.8,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://anime.significanthobbies.com/",
-          "headersMs": 114.1,
-          "totalMs": 116.4,
+          "headersMs": 40.7,
+          "totalMs": 41.5,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://anime.significanthobbies.com/",
-          "headersMs": 109.4,
-          "totalMs": 110.2,
+          "headersMs": 44,
+          "totalMs": 44.9,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 114.1,
-        "headersP90Ms": 427.7,
-        "totalP50Ms": 116.4,
-        "totalP90Ms": 428.7
+        "headersP50Ms": 44,
+        "headersP90Ms": 505.5,
+        "totalP50Ms": 44.9,
+        "totalP90Ms": 506.8
       }
     },
     {
@@ -203,32 +203,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://health.sassmaker.com/",
-          "headersMs": 239.1,
-          "totalMs": 240,
+          "headersMs": 76.2,
+          "totalMs": 77.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://health.sassmaker.com/",
-          "headersMs": 65.8,
-          "totalMs": 66.8,
+          "headersMs": 30.3,
+          "totalMs": 31.5,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://health.sassmaker.com/",
-          "headersMs": 38.3,
-          "totalMs": 39.6,
+          "headersMs": 36.5,
+          "totalMs": 37.6,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 65.8,
-        "headersP90Ms": 239.1,
-        "totalP50Ms": 66.8,
-        "totalP90Ms": 240
+        "headersP50Ms": 36.5,
+        "headersP90Ms": 76.2,
+        "totalP50Ms": 37.6,
+        "totalP90Ms": 77.1
       }
     },
     {
@@ -240,32 +240,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://calorie.significanthobbies.com/",
-          "headersMs": 605,
-          "totalMs": 606.6,
+          "headersMs": 366.8,
+          "totalMs": 368.7,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://calorie.significanthobbies.com/",
-          "headersMs": 77.2,
-          "totalMs": 78.8,
+          "headersMs": 31.4,
+          "totalMs": 33.3,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://calorie.significanthobbies.com/",
-          "headersMs": 47,
-          "totalMs": 48.9,
+          "headersMs": 35.9,
+          "totalMs": 38,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 77.2,
-        "headersP90Ms": 605,
-        "totalP50Ms": 78.8,
-        "totalP90Ms": 606.6
+        "headersP50Ms": 35.9,
+        "headersP90Ms": 366.8,
+        "totalP50Ms": 38,
+        "totalP90Ms": 368.7
       }
     },
     {
@@ -277,32 +277,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://mail.significanthobbies.com/",
-          "headersMs": 168.9,
-          "totalMs": 171,
+          "headersMs": 557.9,
+          "totalMs": 571.6,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://mail.significanthobbies.com/",
-          "headersMs": 63.8,
-          "totalMs": 65.2,
+          "headersMs": 107.3,
+          "totalMs": 123.9,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://mail.significanthobbies.com/",
-          "headersMs": 57.4,
-          "totalMs": 58.8,
+          "headersMs": 104.4,
+          "totalMs": 120.3,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 63.8,
-        "headersP90Ms": 168.9,
-        "totalP50Ms": 65.2,
-        "totalP90Ms": 171
+        "headersP50Ms": 107.3,
+        "headersP90Ms": 557.9,
+        "totalP50Ms": 123.9,
+        "totalP90Ms": 571.6
       }
     },
     {
@@ -314,32 +314,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://ai-gateway.sassmaker.com/",
-          "headersMs": 300.5,
-          "totalMs": 301.7,
+          "headersMs": 406.9,
+          "totalMs": 408.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://ai-gateway.sassmaker.com/",
-          "headersMs": 78.8,
-          "totalMs": 80,
+          "headersMs": 38.3,
+          "totalMs": 39.5,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://ai-gateway.sassmaker.com/",
-          "headersMs": 58.1,
-          "totalMs": 59.4,
+          "headersMs": 43.3,
+          "totalMs": 44.8,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 78.8,
-        "headersP90Ms": 300.5,
-        "totalP50Ms": 80,
-        "totalP90Ms": 301.7
+        "headersP50Ms": 43.3,
+        "headersP90Ms": 406.9,
+        "totalP50Ms": 44.8,
+        "totalP90Ms": 408.1
       }
     },
     {
@@ -351,32 +351,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://karte.cc/",
-          "headersMs": 609,
-          "totalMs": 612,
+          "headersMs": 690.2,
+          "totalMs": 692,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://karte.cc/",
-          "headersMs": 72.9,
-          "totalMs": 75,
+          "headersMs": 44.9,
+          "totalMs": 48.7,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://karte.cc/",
-          "headersMs": 76.9,
-          "totalMs": 78.8,
+          "headersMs": 38.6,
+          "totalMs": 40.4,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 76.9,
-        "headersP90Ms": 609,
-        "totalP50Ms": 78.8,
-        "totalP90Ms": 612
+        "headersP50Ms": 44.9,
+        "headersP90Ms": 690.2,
+        "totalP50Ms": 48.7,
+        "totalP90Ms": 692
       }
     },
     {
@@ -388,32 +388,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://kith.significanthobbies.com/",
-          "headersMs": 416.4,
-          "totalMs": 419.5,
+          "headersMs": 308.7,
+          "totalMs": 313.6,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://kith.significanthobbies.com/",
-          "headersMs": 194.8,
-          "totalMs": 198.6,
+          "headersMs": 88.8,
+          "totalMs": 91.8,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://kith.significanthobbies.com/",
-          "headersMs": 143.4,
-          "totalMs": 145,
+          "headersMs": 97.4,
+          "totalMs": 100.5,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 194.8,
-        "headersP90Ms": 416.4,
-        "totalP50Ms": 198.6,
-        "totalP90Ms": 419.5
+        "headersP50Ms": 97.4,
+        "headersP90Ms": 308.7,
+        "totalP50Ms": 100.5,
+        "totalP90Ms": 313.6
       }
     },
     {
@@ -425,32 +425,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://knowledgebase.sassmaker.com/",
-          "headersMs": 412.4,
-          "totalMs": 414.3,
+          "headersMs": 837.9,
+          "totalMs": 842.2,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://knowledgebase.sassmaker.com/",
-          "headersMs": 139.4,
-          "totalMs": 140.6,
+          "headersMs": 140.7,
+          "totalMs": 148.4,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://knowledgebase.sassmaker.com/",
-          "headersMs": 144.7,
-          "totalMs": 147.1,
+          "headersMs": 138.5,
+          "totalMs": 145.9,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 144.7,
-        "headersP90Ms": 412.4,
-        "totalP50Ms": 147.1,
-        "totalP90Ms": 414.3
+        "headersP50Ms": 140.7,
+        "headersP90Ms": 837.9,
+        "totalP50Ms": 148.4,
+        "totalP90Ms": 842.2
       }
     },
     {
@@ -462,32 +462,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://tv.significanthobbies.com/",
-          "headersMs": 381.1,
-          "totalMs": 382.4,
+          "headersMs": 293.3,
+          "totalMs": 295.5,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://tv.significanthobbies.com/",
-          "headersMs": 111.2,
-          "totalMs": 112.4,
+          "headersMs": 58.6,
+          "totalMs": 60.6,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://tv.significanthobbies.com/",
-          "headersMs": 110.2,
-          "totalMs": 111,
+          "headersMs": 84.6,
+          "totalMs": 86.5,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 111.2,
-        "headersP90Ms": 381.1,
-        "totalP50Ms": 112.4,
-        "totalP90Ms": 382.4
+        "headersP50Ms": 84.6,
+        "headersP90Ms": 293.3,
+        "totalP50Ms": 86.5,
+        "totalP90Ms": 295.5
       }
     },
     {
@@ -499,32 +499,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://chatgpt.significanthobbies.com/",
-          "headersMs": 402.3,
-          "totalMs": 406.9,
+          "headersMs": 307.1,
+          "totalMs": 312.9,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://chatgpt.significanthobbies.com/",
-          "headersMs": 160.4,
-          "totalMs": 163.4,
+          "headersMs": 92.3,
+          "totalMs": 95.2,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://chatgpt.significanthobbies.com/",
-          "headersMs": 128.8,
-          "totalMs": 130.9,
+          "headersMs": 70.4,
+          "totalMs": 72.4,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 160.4,
-        "headersP90Ms": 402.3,
-        "totalP50Ms": 163.4,
-        "totalP90Ms": 406.9
+        "headersP50Ms": 92.3,
+        "headersP90Ms": 307.1,
+        "totalP50Ms": 95.2,
+        "totalP90Ms": 312.9
       }
     },
     {
@@ -536,32 +536,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://motion.significanthobbies.com/",
-          "headersMs": 396.9,
-          "totalMs": 398.9,
+          "headersMs": 328.9,
+          "totalMs": 331.8,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://motion.significanthobbies.com/",
-          "headersMs": 174.1,
-          "totalMs": 175.6,
+          "headersMs": 77.1,
+          "totalMs": 79.7,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://motion.significanthobbies.com/",
-          "headersMs": 177.8,
-          "totalMs": 179.7,
+          "headersMs": 84.2,
+          "totalMs": 86.5,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 177.8,
-        "headersP90Ms": 396.9,
-        "totalP50Ms": 179.7,
-        "totalP90Ms": 398.9
+        "headersP50Ms": 84.2,
+        "headersP90Ms": 328.9,
+        "totalP50Ms": 86.5,
+        "totalP90Ms": 331.8
       }
     },
     {
@@ -573,32 +573,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://read.significanthobbies.com/",
-          "headersMs": 927.8,
-          "totalMs": 929.2,
+          "headersMs": 526.4,
+          "totalMs": 529.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://read.significanthobbies.com/",
-          "headersMs": 115.4,
-          "totalMs": 116.5,
+          "headersMs": 35.2,
+          "totalMs": 37.7,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://read.significanthobbies.com/",
-          "headersMs": 90.9,
-          "totalMs": 91.9,
+          "headersMs": 37.4,
+          "totalMs": 39.6,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 115.4,
-        "headersP90Ms": 927.8,
-        "totalP50Ms": 116.5,
-        "totalP90Ms": 929.2
+        "headersP50Ms": 37.4,
+        "headersP90Ms": 526.4,
+        "totalP50Ms": 39.6,
+        "totalP90Ms": 529.1
       }
     },
     {
@@ -610,32 +610,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://papers.highsignal.app/",
-          "headersMs": 437.1,
-          "totalMs": 439.4,
+          "headersMs": 310.2,
+          "totalMs": 313.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://papers.highsignal.app/",
-          "headersMs": 116.1,
-          "totalMs": 121.3,
+          "headersMs": 52.6,
+          "totalMs": 55.3,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://papers.highsignal.app/",
-          "headersMs": 98.9,
-          "totalMs": 100.6,
+          "headersMs": 52.4,
+          "totalMs": 60.3,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 116.1,
-        "headersP90Ms": 437.1,
-        "totalP50Ms": 121.3,
-        "totalP90Ms": 439.4
+        "headersP50Ms": 52.6,
+        "headersP90Ms": 310.2,
+        "totalP50Ms": 60.3,
+        "totalP90Ms": 313.1
       }
     },
     {
@@ -647,32 +647,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://rolepatch.com/",
-          "headersMs": 700.9,
-          "totalMs": 832,
+          "headersMs": 633.1,
+          "totalMs": 635.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://rolepatch.com/",
-          "headersMs": 68.2,
-          "totalMs": 70,
+          "headersMs": 44,
+          "totalMs": 46.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://rolepatch.com/",
-          "headersMs": 71.5,
-          "totalMs": 73.1,
+          "headersMs": 70.2,
+          "totalMs": 71.8,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 71.5,
-        "headersP90Ms": 700.9,
-        "totalP50Ms": 73.1,
-        "totalP90Ms": 832
+        "headersP50Ms": 70.2,
+        "headersP90Ms": 633.1,
+        "totalP50Ms": 71.8,
+        "totalP90Ms": 635.1
       }
     },
     {
@@ -684,32 +684,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://sassmaker.com/",
-          "headersMs": 362.7,
-          "totalMs": 366.5,
+          "headersMs": 163.8,
+          "totalMs": 165.4,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://sassmaker.com/",
-          "headersMs": 127.4,
-          "totalMs": 129.1,
+          "headersMs": 108.4,
+          "totalMs": 110.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://sassmaker.com/",
-          "headersMs": 105.6,
-          "totalMs": 107.1,
+          "headersMs": 53,
+          "totalMs": 54.7,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 127.4,
-        "headersP90Ms": 362.7,
-        "totalP50Ms": 129.1,
-        "totalP90Ms": 366.5
+        "headersP50Ms": 108.4,
+        "headersP90Ms": 163.8,
+        "totalP50Ms": 110.1,
+        "totalP90Ms": 165.4
       }
     },
     {
@@ -721,32 +721,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://sarthakagrawal.dev/",
-          "headersMs": 372.7,
-          "totalMs": 374.5,
+          "headersMs": 293.9,
+          "totalMs": 296,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://sarthakagrawal.dev/",
-          "headersMs": 195.7,
-          "totalMs": 197.8,
+          "headersMs": 65.2,
+          "totalMs": 67.3,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://sarthakagrawal.dev/",
-          "headersMs": 109.7,
-          "totalMs": 111.6,
+          "headersMs": 64.3,
+          "totalMs": 65.9,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 195.7,
-        "headersP90Ms": 372.7,
-        "totalP50Ms": 197.8,
-        "totalP90Ms": 374.5
+        "headersP50Ms": 65.2,
+        "headersP90Ms": 293.9,
+        "totalP50Ms": 67.3,
+        "totalP90Ms": 296
       }
     },
     {
@@ -758,32 +758,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://setline.significanthobbies.com/",
-          "headersMs": 387.7,
-          "totalMs": 389.2,
+          "headersMs": 340.3,
+          "totalMs": 364.6,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://setline.significanthobbies.com/",
-          "headersMs": 128.9,
-          "totalMs": 130.7,
+          "headersMs": 142.7,
+          "totalMs": 146.6,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://setline.significanthobbies.com/",
-          "headersMs": 129.1,
-          "totalMs": 130.9,
+          "headersMs": 120.2,
+          "totalMs": 123.6,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 129.1,
-        "headersP90Ms": 387.7,
-        "totalP50Ms": 130.9,
-        "totalP90Ms": 389.2
+        "headersP50Ms": 142.7,
+        "headersP90Ms": 340.3,
+        "totalP50Ms": 146.6,
+        "totalP90Ms": 364.6
       }
     },
     {
@@ -795,32 +795,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://significanthobbies.com/",
-          "headersMs": 1118.3,
-          "totalMs": 1119.2,
+          "headersMs": 771.2,
+          "totalMs": 772.7,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://significanthobbies.com/",
-          "headersMs": 102.4,
-          "totalMs": 103.4,
+          "headersMs": 29.8,
+          "totalMs": 31.6,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://significanthobbies.com/",
-          "headersMs": 103.8,
-          "totalMs": 104.7,
+          "headersMs": 23.5,
+          "totalMs": 24.8,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 103.8,
-        "headersP90Ms": 1118.3,
-        "totalP50Ms": 104.7,
-        "totalP90Ms": 1119.2
+        "headersP50Ms": 29.8,
+        "headersP90Ms": 771.2,
+        "totalP50Ms": 31.6,
+        "totalP90Ms": 772.7
       }
     },
     {
@@ -832,32 +832,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://starboard.codevetter.com/",
-          "headersMs": 173.8,
-          "totalMs": 175.2,
+          "headersMs": 177.3,
+          "totalMs": 178.6,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://starboard.codevetter.com/",
-          "headersMs": 88.7,
-          "totalMs": 90.3,
+          "headersMs": 32.5,
+          "totalMs": 33.9,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://starboard.codevetter.com/",
-          "headersMs": 112.3,
-          "totalMs": 113.8,
+          "headersMs": 31.4,
+          "totalMs": 36.4,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 112.3,
-        "headersP90Ms": 173.8,
-        "totalP50Ms": 113.8,
-        "totalP90Ms": 175.2
+        "headersP50Ms": 32.5,
+        "headersP90Ms": 177.3,
+        "totalP50Ms": 36.4,
+        "totalP90Ms": 178.6
       }
     },
     {
@@ -869,32 +869,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://learn.significanthobbies.com/",
-          "headersMs": 570.9,
-          "totalMs": 571.8,
+          "headersMs": 447.5,
+          "totalMs": 454,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://learn.significanthobbies.com/",
-          "headersMs": 73.6,
-          "totalMs": 74.6,
+          "headersMs": 56.7,
+          "totalMs": 64.6,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://learn.significanthobbies.com/",
-          "headersMs": 110.7,
-          "totalMs": 111.7,
+          "headersMs": 52,
+          "totalMs": 52.8,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 110.7,
-        "headersP90Ms": 570.9,
-        "totalP50Ms": 111.7,
-        "totalP90Ms": 571.8
+        "headersP50Ms": 56.7,
+        "headersP90Ms": 447.5,
+        "totalP50Ms": 64.6,
+        "totalP90Ms": 454
       }
     },
     {
@@ -906,32 +906,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://paths.significanthobbies.com/",
-          "headersMs": 541.9,
-          "totalMs": 545,
+          "headersMs": 171.2,
+          "totalMs": 172.7,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://paths.significanthobbies.com/",
-          "headersMs": 123.8,
-          "totalMs": 126.5,
+          "headersMs": 59.9,
+          "totalMs": 61.4,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://paths.significanthobbies.com/",
-          "headersMs": 77,
-          "totalMs": 79.1,
+          "headersMs": 67.1,
+          "totalMs": 68.6,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 123.8,
-        "headersP90Ms": 541.9,
-        "totalP50Ms": 126.5,
-        "totalP90Ms": 545
+        "headersP50Ms": 67.1,
+        "headersP90Ms": 171.2,
+        "totalP50Ms": 68.6,
+        "totalP90Ms": 172.7
       }
     },
     {
@@ -943,69 +943,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://live.significanthobbies.com/",
-          "headersMs": 507.4,
-          "totalMs": 508.8,
+          "headersMs": 919.5,
+          "totalMs": 922.3,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://live.significanthobbies.com/",
-          "headersMs": 76.4,
-          "totalMs": 77.6,
+          "headersMs": 57.4,
+          "totalMs": 60.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://live.significanthobbies.com/",
-          "headersMs": 70.8,
-          "totalMs": 72.2,
+          "headersMs": 61.2,
+          "totalMs": 62.5,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 76.4,
-        "headersP90Ms": 507.4,
-        "totalP50Ms": 77.6,
-        "totalP90Ms": 508.8
-      }
-    },
-    {
-      "id": "gitstat",
-      "target": "https://git.significanthobbies.com/",
-      "ok": true,
-      "attempts": [
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://git.significanthobbies.com/",
-          "headersMs": 317.7,
-          "totalMs": 318.5,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://git.significanthobbies.com/",
-          "headersMs": 104.9,
-          "totalMs": 105.5,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://git.significanthobbies.com/",
-          "headersMs": 101.9,
-          "totalMs": 102.6,
-          "redirects": []
-        }
-      ],
-      "metrics": {
-        "headersP50Ms": 104.9,
-        "headersP90Ms": 317.7,
-        "totalP50Ms": 105.5,
-        "totalP90Ms": 318.5
+        "headersP50Ms": 61.2,
+        "headersP90Ms": 919.5,
+        "totalP50Ms": 62.5,
+        "totalP90Ms": 922.3
       }
     },
     {
@@ -1017,69 +980,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://podcasts.highsignal.app/",
-          "headersMs": 2676,
-          "totalMs": 2677.4,
+          "headersMs": 1910.6,
+          "totalMs": 1913.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://podcasts.highsignal.app/",
-          "headersMs": 1263.1,
-          "totalMs": 1264.6,
+          "headersMs": 946.9,
+          "totalMs": 948.8,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://podcasts.highsignal.app/",
-          "headersMs": 1257.5,
-          "totalMs": 1258.9,
+          "headersMs": 26.2,
+          "totalMs": 28.9,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 1263.1,
-        "headersP90Ms": 2676,
-        "totalP50Ms": 1264.6,
-        "totalP90Ms": 2677.4
-      }
-    },
-    {
-      "id": "issue-pages",
-      "target": "https://issues.sarthakagrawal.dev/",
-      "ok": true,
-      "attempts": [
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://issues.sarthakagrawal.dev/",
-          "headersMs": 601.5,
-          "totalMs": 602.2,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://issues.sarthakagrawal.dev/",
-          "headersMs": 290.2,
-          "totalMs": 290.9,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://issues.sarthakagrawal.dev/",
-          "headersMs": 426.9,
-          "totalMs": 427.5,
-          "redirects": []
-        }
-      ],
-      "metrics": {
-        "headersP50Ms": 426.9,
-        "headersP90Ms": 601.5,
-        "totalP50Ms": 427.5,
-        "totalP90Ms": 602.2
+        "headersP50Ms": 946.9,
+        "headersP90Ms": 1910.6,
+        "totalP50Ms": 948.8,
+        "totalP90Ms": 1913.1
       }
     },
     {
@@ -1091,32 +1017,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://apps.significanthobbies.com/",
-          "headersMs": 649.3,
-          "totalMs": 649.8,
+          "headersMs": 925.7,
+          "totalMs": 926.5,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://apps.significanthobbies.com/",
-          "headersMs": 199.3,
-          "totalMs": 199.8,
+          "headersMs": 220.6,
+          "totalMs": 222.9,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://apps.significanthobbies.com/",
-          "headersMs": 197.3,
-          "totalMs": 197.8,
+          "headersMs": 205.2,
+          "totalMs": 207.8,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 199.3,
-        "headersP90Ms": 649.3,
-        "totalP50Ms": 199.8,
-        "totalP90Ms": 649.8
+        "headersP50Ms": 220.6,
+        "headersP90Ms": 925.7,
+        "totalP50Ms": 222.9,
+        "totalP90Ms": 926.5
       }
     },
     {
@@ -1128,106 +1054,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://aliveville.com/",
-          "headersMs": 278.6,
-          "totalMs": 282.3,
+          "headersMs": 625,
+          "totalMs": 627.8,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://aliveville.com/",
-          "headersMs": 58.5,
-          "totalMs": 62,
+          "headersMs": 68.6,
+          "totalMs": 71.5,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://aliveville.com/",
-          "headersMs": 55.4,
-          "totalMs": 58.5,
+          "headersMs": 78.8,
+          "totalMs": 81.6,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 58.5,
-        "headersP90Ms": 278.6,
-        "totalP50Ms": 62,
-        "totalP90Ms": 282.3
-      }
-    },
-    {
-      "id": "mashup",
-      "target": "https://mashup.highsignal.app/",
-      "ok": true,
-      "attempts": [
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://mashup.highsignal.app/",
-          "headersMs": 293.2,
-          "totalMs": 294,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://mashup.highsignal.app/",
-          "headersMs": 106.8,
-          "totalMs": 107.6,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://mashup.highsignal.app/",
-          "headersMs": 109.3,
-          "totalMs": 110.1,
-          "redirects": []
-        }
-      ],
-      "metrics": {
-        "headersP50Ms": 109.3,
-        "headersP90Ms": 293.2,
-        "totalP50Ms": 110.1,
-        "totalP90Ms": 294
-      }
-    },
-    {
-      "id": "open-historia",
-      "target": "https://historia.aliveville.com/",
-      "ok": true,
-      "attempts": [
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://historia.aliveville.com/",
-          "headersMs": 386.1,
-          "totalMs": 387.9,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://historia.aliveville.com/",
-          "headersMs": 72.3,
-          "totalMs": 73.2,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://historia.aliveville.com/",
-          "headersMs": 41.2,
-          "totalMs": 42,
-          "redirects": []
-        }
-      ],
-      "metrics": {
-        "headersP50Ms": 72.3,
-        "headersP90Ms": 386.1,
-        "totalP50Ms": 73.2,
-        "totalP90Ms": 387.9
+        "headersP50Ms": 78.8,
+        "headersP90Ms": 625,
+        "totalP50Ms": 81.6,
+        "totalP90Ms": 627.8
       }
     },
     {
@@ -1239,32 +1091,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://ph.significanthobbies.com/",
-          "headersMs": 204,
-          "totalMs": 204.6,
+          "headersMs": 739.6,
+          "totalMs": 740.2,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://ph.significanthobbies.com/",
-          "headersMs": 138.6,
-          "totalMs": 139.3,
+          "headersMs": 128.9,
+          "totalMs": 130.8,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://ph.significanthobbies.com/",
-          "headersMs": 118.7,
-          "totalMs": 119.7,
+          "headersMs": 131.1,
+          "totalMs": 133,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 138.6,
-        "headersP90Ms": 204,
-        "totalP50Ms": 139.3,
-        "totalP90Ms": 204.6
+        "headersP50Ms": 131.1,
+        "headersP90Ms": 739.6,
+        "totalP50Ms": 133,
+        "totalP90Ms": 740.2
       }
     },
     {
@@ -1276,69 +1128,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://idle.aliveville.com/",
-          "headersMs": 314.6,
-          "totalMs": 315.1,
+          "headersMs": 233.4,
+          "totalMs": 234.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://idle.aliveville.com/",
-          "headersMs": 98.1,
-          "totalMs": 99.2,
+          "headersMs": 45.4,
+          "totalMs": 45.8,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://idle.aliveville.com/",
-          "headersMs": 93.6,
-          "totalMs": 94.2,
+          "headersMs": 48.6,
+          "totalMs": 49.2,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 98.1,
-        "headersP90Ms": 314.6,
-        "totalP50Ms": 99.2,
-        "totalP90Ms": 315.1
-      }
-    },
-    {
-      "id": "field-track",
-      "target": "https://field-track.sassmaker.com/",
-      "ok": true,
-      "attempts": [
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://field-track.sassmaker.com/",
-          "headersMs": 364.5,
-          "totalMs": 365.3,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://field-track.sassmaker.com/",
-          "headersMs": 63.3,
-          "totalMs": 64,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://field-track.sassmaker.com/",
-          "headersMs": 36.1,
-          "totalMs": 36.8,
-          "redirects": []
-        }
-      ],
-      "metrics": {
-        "headersP50Ms": 63.3,
-        "headersP90Ms": 364.5,
-        "totalP50Ms": 64,
-        "totalP90Ms": 365.3
+        "headersP50Ms": 48.6,
+        "headersP90Ms": 233.4,
+        "totalP50Ms": 49.2,
+        "totalP90Ms": 234.1
       }
     },
     {
@@ -1350,32 +1165,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://reddit-insights.highsignal.app/",
-          "headersMs": 413.1,
-          "totalMs": 413.7,
+          "headersMs": 204.6,
+          "totalMs": 205.5,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://reddit-insights.highsignal.app/",
-          "headersMs": 84,
-          "totalMs": 84.6,
+          "headersMs": 52.7,
+          "totalMs": 53.5,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://reddit-insights.highsignal.app/",
-          "headersMs": 79.4,
-          "totalMs": 80,
+          "headersMs": 35.5,
+          "totalMs": 37.4,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 84,
-        "headersP90Ms": 413.1,
-        "totalP50Ms": 84.6,
-        "totalP90Ms": 413.7
+        "headersP50Ms": 52.7,
+        "headersP90Ms": 204.6,
+        "totalP50Ms": 53.5,
+        "totalP90Ms": 205.5
       }
     },
     {
@@ -1387,32 +1202,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://anchor.significanthobbies.com/",
-          "headersMs": 278.9,
-          "totalMs": 280.3,
+          "headersMs": 365.2,
+          "totalMs": 368.5,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://anchor.significanthobbies.com/",
-          "headersMs": 146.2,
-          "totalMs": 157.8,
+          "headersMs": 83,
+          "totalMs": 87.8,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://anchor.significanthobbies.com/",
-          "headersMs": 134.7,
-          "totalMs": 135.9,
+          "headersMs": 100.1,
+          "totalMs": 101.7,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 146.2,
-        "headersP90Ms": 278.9,
-        "totalP50Ms": 157.8,
-        "totalP90Ms": 280.3
+        "headersP50Ms": 100.1,
+        "headersP90Ms": 365.2,
+        "totalP50Ms": 101.7,
+        "totalP90Ms": 368.5
       }
     },
     {
@@ -1424,32 +1239,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://nomad.significanthobbies.com/",
-          "headersMs": 241.1,
-          "totalMs": 241.7,
+          "headersMs": 145,
+          "totalMs": 146.2,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://nomad.significanthobbies.com/",
-          "headersMs": 104.9,
-          "totalMs": 105.6,
+          "headersMs": 47.8,
+          "totalMs": 48.9,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://nomad.significanthobbies.com/",
-          "headersMs": 76.3,
-          "totalMs": 77.1,
+          "headersMs": 43.6,
+          "totalMs": 44.7,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 104.9,
-        "headersP90Ms": 241.1,
-        "totalP50Ms": 105.6,
-        "totalP90Ms": 241.7
+        "headersP50Ms": 47.8,
+        "headersP90Ms": 145,
+        "totalP50Ms": 48.9,
+        "totalP90Ms": 146.2
       }
     },
     {
@@ -1461,32 +1276,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://storage.daddyrad.com/",
-          "headersMs": 222.8,
-          "totalMs": 223.8,
+          "headersMs": 117.3,
+          "totalMs": 118.6,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://storage.daddyrad.com/",
-          "headersMs": 58.8,
-          "totalMs": 59.6,
+          "headersMs": 33.7,
+          "totalMs": 35.2,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://storage.daddyrad.com/",
-          "headersMs": 98.6,
-          "totalMs": 99.4,
+          "headersMs": 31.2,
+          "totalMs": 33,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 98.6,
-        "headersP90Ms": 222.8,
-        "totalP50Ms": 99.4,
-        "totalP90Ms": 223.8
+        "headersP50Ms": 33.7,
+        "headersP90Ms": 117.3,
+        "totalP50Ms": 35.2,
+        "totalP90Ms": 118.6
       }
     },
     {
@@ -1498,32 +1313,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://browser.daddyrad.com/",
-          "headersMs": 831.4,
-          "totalMs": 832.8,
+          "headersMs": 342.5,
+          "totalMs": 352,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://browser.daddyrad.com/",
-          "headersMs": 69.1,
-          "totalMs": 70.5,
+          "headersMs": 67.2,
+          "totalMs": 73.6,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://browser.daddyrad.com/",
-          "headersMs": 105.9,
-          "totalMs": 107.6,
+          "headersMs": 67,
+          "totalMs": 70.7,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 105.9,
-        "headersP90Ms": 831.4,
-        "totalP50Ms": 107.6,
-        "totalP90Ms": 832.8
+        "headersP50Ms": 67.2,
+        "headersP90Ms": 342.5,
+        "totalP50Ms": 73.6,
+        "totalP90Ms": 352
       }
     },
     {
@@ -1535,32 +1350,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://performance.daddyrad.com/",
-          "headersMs": 355.3,
-          "totalMs": 357.1,
+          "headersMs": 290.4,
+          "totalMs": 297.3,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://performance.daddyrad.com/",
-          "headersMs": 117.6,
-          "totalMs": 120.5,
+          "headersMs": 65.1,
+          "totalMs": 70.6,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://performance.daddyrad.com/",
-          "headersMs": 90.2,
-          "totalMs": 93.9,
+          "headersMs": 59,
+          "totalMs": 66.5,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 117.6,
-        "headersP90Ms": 355.3,
-        "totalP50Ms": 120.5,
-        "totalP90Ms": 357.1
+        "headersP50Ms": 65.1,
+        "headersP90Ms": 290.4,
+        "totalP50Ms": 70.6,
+        "totalP90Ms": 297.3
       }
     },
     {
@@ -1572,8 +1387,8 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://money.significanthobbies.com/settings",
-          "headersMs": 1114.9,
-          "totalMs": 1115.6,
+          "headersMs": 772.5,
+          "totalMs": 773.3,
           "redirects": [
             {
               "status": 307,
@@ -1586,8 +1401,8 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://money.significanthobbies.com/settings",
-          "headersMs": 146.6,
-          "totalMs": 147.4,
+          "headersMs": 66.3,
+          "totalMs": 67,
           "redirects": [
             {
               "status": 307,
@@ -1600,8 +1415,8 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://money.significanthobbies.com/settings",
-          "headersMs": 133.9,
-          "totalMs": 134.6,
+          "headersMs": 77.4,
+          "totalMs": 78.3,
           "redirects": [
             {
               "status": 307,
@@ -1612,10 +1427,10 @@
         }
       ],
       "metrics": {
-        "headersP50Ms": 146.6,
-        "headersP90Ms": 1114.9,
-        "totalP50Ms": 147.4,
-        "totalP90Ms": 1115.6
+        "headersP50Ms": 77.4,
+        "headersP90Ms": 772.5,
+        "totalP50Ms": 78.3,
+        "totalP90Ms": 773.3
       }
     },
     {
@@ -1627,69 +1442,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://memes.significanthobbies.com/",
-          "headersMs": 416.7,
-          "totalMs": 417.3,
+          "headersMs": 170.8,
+          "totalMs": 171.9,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://memes.significanthobbies.com/",
-          "headersMs": 44.2,
-          "totalMs": 45.1,
+          "headersMs": 28.7,
+          "totalMs": 29.6,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://memes.significanthobbies.com/",
-          "headersMs": 39.4,
-          "totalMs": 40,
+          "headersMs": 22.8,
+          "totalMs": 23.8,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 44.2,
-        "headersP90Ms": 416.7,
-        "totalP50Ms": 45.1,
-        "totalP90Ms": 417.3
-      }
-    },
-    {
-      "id": "agent-testing",
-      "target": "https://browser-agents.sarthakagrawal.dev/",
-      "ok": true,
-      "attempts": [
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://browser-agents.sarthakagrawal.dev/",
-          "headersMs": 266.8,
-          "totalMs": 267.5,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://browser-agents.sarthakagrawal.dev/",
-          "headersMs": 95,
-          "totalMs": 95.8,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://browser-agents.sarthakagrawal.dev/",
-          "headersMs": 76,
-          "totalMs": 77,
-          "redirects": []
-        }
-      ],
-      "metrics": {
-        "headersP50Ms": 95,
-        "headersP90Ms": 266.8,
-        "totalP50Ms": 95.8,
-        "totalP90Ms": 267.5
+        "headersP50Ms": 28.7,
+        "headersP90Ms": 170.8,
+        "totalP50Ms": 29.6,
+        "totalP90Ms": 171.9
       }
     },
     {
@@ -1701,32 +1479,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://formula.significanthobbies.com/",
-          "headersMs": 144.2,
-          "totalMs": 145.1,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://formula.significanthobbies.com/",
-          "headersMs": 102.5,
-          "totalMs": 103.3,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://formula.significanthobbies.com/",
-          "headersMs": 116.7,
+          "headersMs": 116.9,
           "totalMs": 117.8,
+          "redirects": []
+        },
+        {
+          "ok": true,
+          "status": 200,
+          "finalUrl": "https://formula.significanthobbies.com/",
+          "headersMs": 19.9,
+          "totalMs": 20.7,
+          "redirects": []
+        },
+        {
+          "ok": true,
+          "status": 200,
+          "finalUrl": "https://formula.significanthobbies.com/",
+          "headersMs": 18.9,
+          "totalMs": 19.9,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 116.7,
-        "headersP90Ms": 144.2,
-        "totalP50Ms": 117.8,
-        "totalP90Ms": 145.1
+        "headersP50Ms": 19.9,
+        "headersP90Ms": 116.9,
+        "totalP50Ms": 20.7,
+        "totalP90Ms": 117.8
       }
     },
     {
@@ -1738,32 +1516,32 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://music.significanthobbies.com/",
-          "headersMs": 203.5,
-          "totalMs": 204.4,
+          "headersMs": 138.3,
+          "totalMs": 139.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://music.significanthobbies.com/",
-          "headersMs": 94,
-          "totalMs": 94.9,
+          "headersMs": 65.5,
+          "totalMs": 66.4,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://music.significanthobbies.com/",
-          "headersMs": 42.2,
-          "totalMs": 43.1,
+          "headersMs": 54.7,
+          "totalMs": 55.3,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 94,
-        "headersP90Ms": 203.5,
-        "totalP50Ms": 94.9,
-        "totalP90Ms": 204.4
+        "headersP50Ms": 65.5,
+        "headersP90Ms": 138.3,
+        "totalP50Ms": 66.4,
+        "totalP90Ms": 139.1
       }
     },
     {
@@ -1775,143 +1553,69 @@
           "ok": true,
           "status": 200,
           "finalUrl": "https://context.daddyrad.com/",
-          "headersMs": 493.3,
-          "totalMs": 494.9,
+          "headersMs": 612.5,
+          "totalMs": 625.5,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://context.daddyrad.com/",
-          "headersMs": 110.2,
-          "totalMs": 112.2,
+          "headersMs": 163.7,
+          "totalMs": 184.1,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
           "finalUrl": "https://context.daddyrad.com/",
-          "headersMs": 118.4,
-          "totalMs": 126.2,
+          "headersMs": 146.4,
+          "totalMs": 159.7,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 118.4,
-        "headersP90Ms": 493.3,
-        "totalP50Ms": 126.2,
-        "totalP90Ms": 494.9
+        "headersP50Ms": 163.7,
+        "headersP90Ms": 612.5,
+        "totalP50Ms": 184.1,
+        "totalP90Ms": 625.5
       }
     },
     {
-      "id": "war-chest",
-      "target": "https://warchest.significanthobbies.com/",
+      "id": "techdata",
+      "target": "https://techdata.sarthakagrawal927.workers.dev/",
       "ok": true,
       "attempts": [
         {
           "ok": true,
           "status": 200,
-          "finalUrl": "https://warchest.significanthobbies.com/",
-          "headersMs": 371.5,
-          "totalMs": 372,
+          "finalUrl": "https://techdata.sarthakagrawal927.workers.dev/",
+          "headersMs": 251,
+          "totalMs": 252,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
-          "finalUrl": "https://warchest.significanthobbies.com/",
-          "headersMs": 106.9,
-          "totalMs": 107.4,
+          "finalUrl": "https://techdata.sarthakagrawal927.workers.dev/",
+          "headersMs": 15.8,
+          "totalMs": 16.7,
           "redirects": []
         },
         {
           "ok": true,
           "status": 200,
-          "finalUrl": "https://warchest.significanthobbies.com/",
-          "headersMs": 107.2,
-          "totalMs": 107.7,
+          "finalUrl": "https://techdata.sarthakagrawal927.workers.dev/",
+          "headersMs": 15.3,
+          "totalMs": 16.3,
           "redirects": []
         }
       ],
       "metrics": {
-        "headersP50Ms": 107.2,
-        "headersP90Ms": 371.5,
-        "totalP50Ms": 107.7,
-        "totalP90Ms": 372
-      }
-    },
-    {
-      "id": "mentionpilot",
-      "target": "https://mention.highsignal.app/",
-      "ok": true,
-      "attempts": [
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://mention.highsignal.app/",
-          "headersMs": 1315.3,
-          "totalMs": 1316.2,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://mention.highsignal.app/",
-          "headersMs": 152.6,
-          "totalMs": 153.9,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://mention.highsignal.app/",
-          "headersMs": 139.4,
-          "totalMs": 140.7,
-          "redirects": []
-        }
-      ],
-      "metrics": {
-        "headersP50Ms": 152.6,
-        "headersP90Ms": 1315.3,
-        "totalP50Ms": 153.9,
-        "totalP90Ms": 1316.2
-      }
-    },
-    {
-      "id": "daddyrad",
-      "target": "https://daddyrad.com/",
-      "ok": true,
-      "attempts": [
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://daddyrad.com/",
-          "headersMs": 314.4,
-          "totalMs": 315.1,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://daddyrad.com/",
-          "headersMs": 63.9,
-          "totalMs": 64.5,
-          "redirects": []
-        },
-        {
-          "ok": true,
-          "status": 200,
-          "finalUrl": "https://daddyrad.com/",
-          "headersMs": 52.9,
-          "totalMs": 55.5,
-          "redirects": []
-        }
-      ],
-      "metrics": {
-        "headersP50Ms": 63.9,
-        "headersP90Ms": 314.4,
-        "totalP50Ms": 64.5,
-        "totalP90Ms": 315.1
+        "headersP50Ms": 15.8,
+        "headersP90Ms": 251,
+        "totalP50Ms": 16.7,
+        "totalP90Ms": 252
       }
     }
   ]
