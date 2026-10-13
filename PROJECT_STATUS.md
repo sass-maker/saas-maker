@@ -382,3 +382,17 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 ## Work queue
 
 Open work is tracked only in [GitHub Issues](https://github.com/sass-maker/saas-maker/issues).
+
+## Public root cache candidate (#248)
+
+The public root has deployment-content and HTML/Markdown-specific Cache API
+lookup URLs, a 60-second internal TTL, and downstream no-store headers. The
+public build emits `public-cache-generation.txt`; a missing marker safely
+bypasses caching. Session, authorization, conditional/range/query requests,
+private/error/Set-Cookie/encoded responses and other routes bypass this cache.
+A small asset-binding marker lookup remains on warm requests.
+
+This is source-qualified only. Real Cloudflare format isolation, middleware
+execution, old-cache handling and same-workload TTFB acceptance remain pending
+under [#248](https://github.com/sass-maker/saas-maker/issues/248). Human review
+and deployment/cache-purge approval remain open; no deployment was performed.
