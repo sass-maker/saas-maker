@@ -7,6 +7,8 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import plistlib
+import re
 import shutil
 import stat
 import subprocess
@@ -23,6 +25,8 @@ ARCHITECTURES = ("arm64", "x86_64")
 
 
 def resource_hashes(bundle: Path) -> dict[str, str]:
+    if bundle.is_symlink():
+        raise ValueError(f"Resource bundle symlink is not allowed: {bundle}")
     if not bundle.is_dir():
         raise ValueError(f"Missing Release resource bundle: {bundle}")
     result = {}
@@ -62,7 +66,10 @@ def architectures(path: Path) -> set[str]:
 
 
 def build_products(root: Path, architecture: str) -> Path:
-    triple = f"{architecture}-apple-macosx14.0"
+    minimum = plistlib.loads((root / "Support/Info.plist").read_bytes()).get("LSMinimumSystemVersion")
+    if not isinstance(minimum, str) or not re.fullmatch(r"[0-9]+(?:\.[0-9]+){1,2}", minimum):
+        raise ValueError("Invalid declared minimum macOS version in Support/Info.plist")
+    triple = f"{architecture}-apple-macosx{minimum}"
     scratch = root / ".build" / f"daddy-release-{architecture}"
     command = ["swift", "build", "-c", "release", "--triple", triple, "--scratch-path", str(scratch)]
     subprocess.run(command, cwd=root, check=True)
@@ -90,11 +97,16 @@ def make_universal(app: str, repository: str, root: Path, output: Path) -> dict:
     for architecture, directory in products.items():
         if architectures(directory / executable) != {architecture}:
             raise ValueError(f"Wrong architecture in {directory / executable}")
-    arm_bundle = products["arm64"] / bundle_name
-    x86_bundle = products["x86_64"] / bundle_name
-    hashes = resource_hashes(arm_bundle)
-    if hashes != resource_hashes(x86_bundle):
-        raise ValueError("Release resource bundles differ between architectures")
+    bundles = {architecture: {path.name for path in directory.glob("*.bundle")}
+               for architecture, directory in products.items()}
+    for architecture, names in bundles.items():
+        if bundle_name not in names:
+            raise ValueError(f"Missing Release resource bundle: {products[architecture] / bundle_name}")
+    if bundles["arm64"] != bundles["x86_64"]:
+        raise ValueError("Release resource bundle names differ between architectures")
+    for name in sorted(bundles["arm64"]):
+        if resource_hashes(products["arm64"] / name) != resource_hashes(products["x86_64"] / name):
+            raise ValueError(f"Release resource bundles differ between architectures: {name}")
     output.mkdir(parents=True, exist_ok=False)
     binary = output / executable
     subprocess.run(["lipo", "-create", str(products["arm64"] / executable),
@@ -102,7 +114,8 @@ def make_universal(app: str, repository: str, root: Path, output: Path) -> dict:
     binary.chmod(stat.S_IMODE((products["arm64"] / executable).stat().st_mode))
     if architectures(binary) != set(ARCHITECTURES):
         raise ValueError("Universal Release executable is missing an architecture")
-    copied_hashes = copy_resource_bundle(arm_bundle, output / bundle_name)
+    copied_bundles = {name: copy_resource_bundle(products["arm64"] / name, output / name)
+                      for name in sorted(bundles["arm64"])}
     source_sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
     receipt = {
         "schemaVersion": 1,
@@ -114,7 +127,8 @@ def make_universal(app: str, repository: str, root: Path, output: Path) -> dict:
         "executable": executable,
         "executableSha256": hashlib.sha256(binary.read_bytes()).hexdigest(),
         "resourceBundle": bundle_name,
-        "resourceHashes": copied_hashes,
+        "resourceHashes": copied_bundles[bundle_name],
+        "resourceBundles": copied_bundles,
     }
     (output.parent / "universal-products-receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
     return receipt
