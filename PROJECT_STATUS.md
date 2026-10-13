@@ -382,3 +382,16 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 ## Work queue
 
 Open work is tracked only in [GitHub Issues](https://github.com/sass-maker/saas-maker/issues).
+
+## Current project browsing candidate (#240)
+
+The `/projects` view excludes the four public rows marked inactive: AI Badges,
+Pinpoint, Port Whisperer and Society Relay. Their public metadata and direct
+profiles remain retained. The view derives its 34-row total, two Featured and
+32 Current rows, filters and empty/reset counts from the same eligible set.
+
+The public archived-work classification supports this narrow view change.
+[Issue #240](https://github.com/sass-maker/saas-maker/issues/240) retains the
+owner's portfolio decisions and release acceptance; no cockpit routing or
+private catalog changes are included. Local responsive/browser checks are
+source evidence, not deployed or device acceptance.
