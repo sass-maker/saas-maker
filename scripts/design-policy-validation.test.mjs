@@ -75,6 +75,43 @@ test('adoption is fully optional without defaults or conflating null with false'
   }
 });
 
+test('UI source observations retain unknowns and applicability without implying live coverage', () => {
+  const unknown = {
+    state: 'unknown',
+    notes: 'Live behavior was not exercised; source evidence is retained separately.',
+    checkedAt: '2026-10-14',
+    evidence: ['src/app/loading.tsx:1'],
+  };
+  const value = {
+    app: { mode: 'system', ...unknown, libraryVersion: unknown, loading: unknown },
+    landing: { ...unknown, state: 'not-applicable' },
+    continuity: { ...unknown, score: null },
+  };
+  assert.doesNotThrow(() => validateProjectUi(value, 'example'));
+  for (const libraryVersion of [
+    { ...unknown, state: 'source-observed' },
+    { ...unknown, value: 'v0.1.19' },
+    { state: 'unknown' },
+  ]) {
+    assert.throws(
+      () => validateProjectUi({ app: { libraryVersion } }, 'example'),
+      /Invalid design policy/
+    );
+  }
+  assert.doesNotThrow(() =>
+    validateProjectUi(
+      { app: { libraryVersion: { ...unknown, state: 'source-observed', value: 'v0.1.19' } } },
+      'example'
+    )
+  );
+  for (const field of ['state', 'checkedAt', 'evidence']) {
+    const copy = structuredClone(value);
+    copy.app.loading[field] =
+      field === 'state' ? 'covered' : field === 'checkedAt' ? 'yesterday' : [];
+    assert.throws(() => validateProjectUi(copy, 'example'), /Invalid design policy/);
+  }
+});
+
 test('adoption rejects invalid fields, objects, booleans, modes, scores and dates', () => {
   for (const value of [
     null,
