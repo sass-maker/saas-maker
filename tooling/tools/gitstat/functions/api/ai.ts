@@ -23,9 +23,9 @@ const product = {
   dataBoundary: {
     processing: 'browser',
     cache: 'local device, one-hour TTL',
-    productAnalytics: true,
+    productAnalytics: false,
     analyticsBoundary:
-      'Microsoft Clarity measures site interaction; the GitHub username field is masked before collection. When enabled, App Health receives only method, fixed API route, status, and duration summaries.',
+      'Browser Clarity, capture, Fleet footer and App Health hooks are inactive in this tool. Retained optional server monitoring runs only if configured and receives method, fixed API route, status, and duration summaries.',
     serverAccountStore: false,
   },
   caveats: [
@@ -33,7 +33,7 @@ const product = {
     'Line counts describe change volume and are not a productivity score.',
     'The shared GitHub API allowance may rate-limit large analyses.',
   ],
-  source: 'https://github.com/sass-maker/gitstat',
+  source: 'https://github.com/sass-maker/saas-maker/tree/main/tooling/tools/gitstat',
 }
 
 const handleRequestGet: PagesFunction<AppHealthBindings> = async ({ request }) => {

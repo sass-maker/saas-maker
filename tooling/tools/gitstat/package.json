@@ -8,7 +8,7 @@
     "dev:full": "wrangler pages dev -- vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "test:app-health": "node --experimental-strip-types --test functions/app-health.test.ts",
+    "test:app-health": "node --experimental-strip-types --test functions/app-health.test.ts functions/github-proxy.test.ts",
     "test:lookup": "node --experimental-strip-types --test test/lookup.test.mjs",
     "preview": "vite preview"
   },

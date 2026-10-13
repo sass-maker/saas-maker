@@ -16,6 +16,7 @@
 import { withPagesFunctionHealth } from '@saas-maker/app-health/pages'
 
 import { appHealthClient, type AppHealthBindings } from '../lib/app-health.ts'
+import { githubRestUrl } from '../lib/github-path.ts'
 
 interface GhEnv extends AppHealthBindings {
   GH_PUBLIC_TOKEN?: string
@@ -48,16 +49,16 @@ function forwardRateLimitHeaders(resp: Response): Record<string, string> {
 
 const handleRequestGet: PagesFunction<GhEnv> = async ({ request, env }) => {
   const url = new URL(request.url)
-  const path = url.searchParams.get('path')
-  if (!path) {
-    return new Response(JSON.stringify({ error: 'Missing path parameter' }), {
+  const target = githubRestUrl(url.searchParams.get('path'))
+  if (!target) {
+    return new Response(JSON.stringify({ error: 'Invalid GitHub REST path' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' },
     })
   }
 
   try {
-    const resp = await fetch(`https://api.github.com${path}`, { headers: buildHeaders(env) })
+    const resp = await fetch(target, { headers: buildHeaders(env) })
     const data = await resp.text()
     return new Response(data, { status: resp.status, headers: forwardRateLimitHeaders(resp) })
   } catch (e: any) {

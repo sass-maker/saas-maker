@@ -111,6 +111,11 @@ test('AI catalog reports a static route and missing key leaves collection disabl
   await Promise.all(enabled.pending)
   const eventBatch = JSON.parse(String(calls[0]?.init?.body)) as { events: Array<Record<string, unknown>> }
   assert.equal(response.status, 200)
+  const catalog = await response.json() as { dataBoundary: { productAnalytics: boolean; analyticsBoundary: string }; source: string }
+  assert.equal(catalog.dataBoundary.productAnalytics, false)
+  assert.match(catalog.dataBoundary.analyticsBoundary, /hooks are inactive/)
+  assert.match(catalog.dataBoundary.analyticsBoundary, /optional server monitoring runs only if configured/)
+  assert.equal(catalog.source, 'https://github.com/sass-maker/saas-maker/tree/main/tooling/tools/gitstat')
   assert.equal(calls.length, 1)
   assert.deepEqual(eventBatch.events.map(({ method, route, status_code }) => ({ method, route, status_code })), [
     { method: 'GET', route: '/api/ai', status_code: 200 },

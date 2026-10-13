@@ -2,13 +2,14 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import type { Plugin } from 'vite'
+import { githubRestUrl } from './functions/lib/github-path.ts'
 
 /**
  * Dev-only proxy for /api/gh — simulates the Cloudflare Pages Function.
  * In production, functions/api/gh.ts handles this server-side.
  * In dev, this Vite plugin forwards requests to GitHub API directly.
  */
-function ghProxyPlugin(): Plugin {
+export function ghProxyPlugin(): Plugin {
   return {
     name: 'gh-proxy',
     configureServer(server) {
@@ -40,11 +41,11 @@ function ghProxyPlugin(): Plugin {
             })
           } else {
             // REST GET — extract path from query
-            const path = new URL(url, 'http://localhost').searchParams.get('path')
-            if (!path) {
+            const target = githubRestUrl(new URL(url, 'http://localhost').searchParams.get('path'))
+            if (!target) {
               res.statusCode = 400
               res.setHeader('Content-Type', 'application/json')
-              res.end(JSON.stringify({ error: 'Missing path parameter' }))
+              res.end(JSON.stringify({ error: 'Invalid GitHub REST path' }))
               return
             }
 
@@ -53,7 +54,7 @@ function ghProxyPlugin(): Plugin {
               'X-GitHub-Api-Version': '2022-11-28',
               'User-Agent': 'gitstat-dev-proxy',
             }
-            ghResp = await fetch(`https://api.github.com${path}`, { headers })
+            ghResp = await fetch(target, { headers })
           }
 
           // Forward rate limit headers
