@@ -3,14 +3,16 @@ import Footer from '../components/Footer.astro';
 import Nav from '../components/Nav.astro';
 import GitHubIcon from '../components/GitHubIcon.astro';
 import {
-  DIRECTORY_COUNT,
-  DIRECTORY_FORMS,
-  DIRECTORY_GROUPS,
-  DIRECTORY_PLATFORMS,
   HISTORY_SEMANTICS,
   directoryFormFamilies,
   type DirectoryProject,
 } from '../data/directory';
+import {
+  PROJECTS_DIRECTORY_COUNT as DIRECTORY_COUNT,
+  PROJECTS_DIRECTORY_FORMS as DIRECTORY_FORMS,
+  PROJECTS_DIRECTORY_GROUPS as DIRECTORY_GROUPS,
+  PROJECTS_DIRECTORY_PLATFORMS as DIRECTORY_PLATFORMS,
+} from '../data/projects-directory';
 import Layout from '../layouts/Layout.astro';
 import { formatDirectoryDate } from '../data/format-directory-date';
 
@@ -37,7 +39,6 @@ const searchableText = (project: DirectoryProject) =>
 
 const currentCount = DIRECTORY_GROUPS.find((group) => group.id === 'current')?.projects.length ?? 0;
 const featuredCount = DIRECTORY_GROUPS.find((group) => group.id === 'featured')?.projects.length ?? 0;
-const pastCount = DIRECTORY_GROUPS.find((group) => group.id === 'past')?.projects.length ?? 0;
 const projectCountLabel = (count: number) => `${count} ${count === 1 ? 'project' : 'projects'}`;
 const projectProfilePath = (project: DirectoryProject) =>
   project.id === 'saas-maker' ? '/' : `/p/${project.id}`;
@@ -45,12 +46,12 @@ const projectProfilePath = (project: DirectoryProject) =>
 
 <Layout
   title={`${projectCountLabel(DIRECTORY_COUNT)} — SaaS Maker directory`}
-  description="Working Fleet experiments and reference projects, grouped by current focus and paused work."
+  description="Working Fleet experiments and reference projects, grouped by featured and current work."
 >
   <!--
   THESIS: A complete portfolio is clearest as a working register, not a promotional card grid.
   OWN-WORLD: Limestone panes, matte-black mullions, seeded metadata bays, and one cobalt index pane extend the SaaS Maker workshop wall.
-  STORY: Understand the 55-project boundary, narrow it by form or platform, then inspect purpose, maker rationale, public links, stack, and Git span.
+  STORY: Understand the current project boundary, narrow it by form or platform, then inspect purpose, maker rationale, public links, stack, and Git span.
   FIRST VIEWPORT: A wide identity pane and cobalt count pane sit above a black filter rail; the first current-project rows begin without a marketing detour.
   FORM: Lifecycle bays crossed by platform and technology rails; fourth grounded structure, seed 2aaa2e62.
   -->
@@ -63,13 +64,13 @@ const projectProfilePath = (project: DirectoryProject) =>
           <h1>Useful things to try.<br />Experiments welcome.</h1>
           <p>
             Working experiments and reference projects, with their scope and limits explained.
-            Paused work can still be useful; inclusion does not imply a finished product.
+            Inclusion does not imply a finished product; inspect each project’s scope before trying it.
           </p>
         </div>
         <div class="directory-count-pane" aria-label={`${projectCountLabel(DIRECTORY_COUNT)} total`}>
           <strong>{DIRECTORY_COUNT}</strong>
           <span>total {DIRECTORY_COUNT === 1 ? 'project' : 'projects'}</span>
-          <small>{featuredCount} featured · {currentCount} current · {pastCount} paused</small>
+          <small>{featuredCount} featured · {currentCount} current</small>
         </div>
       </header>
 
@@ -279,8 +280,8 @@ const projectProfilePath = (project: DirectoryProject) =>
         </div>
         <div>
           <p>
-            These projects have a useful public surface. “Current” marks active work; paused
-            experiments remain available without a promise of ongoing development.
+            These projects have a useful public surface. “Current” marks active work; archived
+            experiments remain available through their direct profiles.
           </p>
           <p>Deployment labels reflect catalog ownership, not a real-time availability check.</p>
           <p>{HISTORY_SEMANTICS}</p>
