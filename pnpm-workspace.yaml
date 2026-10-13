@@ -7,6 +7,7 @@ packages:
   - 'apps/showcase'
   - 'apps/memory-map'
   - 'workers/api'
+  - 'tooling/tools/gitstat'
 allowBuilds:
   core-js: true
   esbuild: true

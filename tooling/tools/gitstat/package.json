@@ -1,0 +1,33 @@
+{
+  "name": "gitstat",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:full": "wrangler pages dev -- vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "test:app-health": "node --experimental-strip-types --test functions/app-health.test.ts",
+    "test:lookup": "node --experimental-strip-types --test test/lookup.test.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@saas-maker/app-health": "https://github.com/sass-maker/app-health/releases/download/node-v0.4.0/saas-maker-app-health-0.4.0.tgz",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "oxlint": "^1.75.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.0",
+    "wrangler": "^4.143.1"
+  },
+  "packageManager": "pnpm@10.33.2"
+}
