@@ -34,6 +34,9 @@ jobs:
       - run: pnpm check:shared-packages
       - run: pnpm build:showcase
       - run: pnpm build:cockpit
+      - run: pnpm --filter gitstat test:lookup
+      - run: pnpm --filter gitstat test:app-health
+      - run: pnpm --filter gitstat build
       - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
       - run: pnpm check:memory-map
       - name: Retain public showcase build
