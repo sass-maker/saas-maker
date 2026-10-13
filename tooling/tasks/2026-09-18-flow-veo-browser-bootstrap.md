@@ -1,7 +1,8 @@
 ---
 status: blocked
 started: 2026-09-18
-needs: [browser automation, human present for Google sign-in/MFA]
+needs: [owner verification of Flow profiles, configured Jules authentication]
+issue: https://github.com/sass-maker/saas-maker/issues/249
 created: 2026-09-18
 skills:
   - saas-maker/tooling/skills/flow-veo-browser
@@ -9,6 +10,10 @@ skills:
 ---
 
 # Bootstrap the three-account Google Ultra workers (Flow + Jules)
+
+Canonical tracking: [SaaS Maker #249](https://github.com/sass-maker/saas-maker/issues/249).
+The historical outcome below is retained; the current readiness checkpoint
+supersedes its provider-auth diagnosis.
 
 Two skills were built on 2026-09-18 that both depend on **three experimental
 Google Ultra accounts** being signed in. They share the same sign-in session —
@@ -110,3 +115,31 @@ that repository in Jules. Account A is the verified owner of issue-label tasks.
 Issue #114 was dispatched by applying the `jules` label, acknowledged by the
 `google-labs-jules` bot, and entered remote repository setup in Jules session
 `16613944077704222315`. No pull request has been merged.
+
+## Readiness checkpoint — 2026-10-14
+
+Bootstrap readiness remains **blocked** after supported read-only checks. No
+generation, project creation, credit spend, credential provisioning/rotation,
+or access change was performed.
+
+- Current installed skill aliases resolve to the agent-config checkout, whose
+  state has no readiness records. Retained local records belong to this SaaS
+  Maker tooling checkout. Invoke its `tooling/skills/flow-veo-browser/bin/flow-worker`
+  and `tooling/skills/jules-cloud-worker/bin/jules-worker` explicitly; their short
+  command names were not found on the checking process's PATH.
+- Flow's retained A/B/C records say `READY`, while all three notes require owner
+  sign-in/MFA in fresh profiles. No account-to-label identity mapping is recorded.
+  Authenticated Google sessions in the regular browser do not qualify the intended
+  isolated experimental profiles. Current balances, entitlements, model availability
+  and generation costs remain unknown; recorded balances are not fresh UI evidence.
+- The canonical Jules `sources --refresh` command returned exit 0 but made no
+  successful provider request: A/B/C remain `NO_KEY`, and repository-access cache
+  timestamps remain September 20. Cached sources and process success do not prove
+  current authentication or repository access. The historical HTTP 401 was not
+  reproduced and is not treated as a current provider failure.
+
+Owner action: verify the intended experimental account mapping and existing
+A/B/C profile sessions, completing sign-in/MFA manually if necessary; provide
+the existing supported authenticated Jules CLI context, then repeat read-only
+source checks. Keep identities, provider output and credentials private. Any
+provisioning/access change or credit-consuming smoke requires its own scope.
