@@ -239,14 +239,16 @@ describe('daily PII-free capture receipts', () => {
     ).rejects.toThrow('1 to 55 IDs');
   });
 
-  it('returns canonical capture applicability for all 47 products, including internal newsletter exceptions', async () => {
+  it('returns canonical capture applicability for every policy product, including internal newsletter exceptions', async () => {
     const { d1 } = setup();
-    const reportProjects = capturePolicy.projects.slice(0, 47);
+    const reportProjects = capturePolicy.projects;
     const catalogIds = reportProjects.map(({ id }) => id);
     const result = await getDailyCaptureCounts(d1, '2020-01-01', catalogIds);
 
-    expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(47);
-    expect(Object.keys(result.feedbackApplicabilityByCatalogId)).toHaveLength(47);
+    expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(reportProjects.length);
+    expect(Object.keys(result.feedbackApplicabilityByCatalogId)).toHaveLength(
+      reportProjects.length
+    );
     expect(result.feedbackApplicabilityByCatalogId['site-health']).toBe('applicable');
     expect(result.feedbackApplicabilityByCatalogId['agent-inbox']).toBe('not_applicable');
     expect(result.feedbackApplicabilityByCatalogId.techdata).toBe('not_applicable');
@@ -254,20 +256,33 @@ describe('daily PII-free capture receipts', () => {
       Object.entries(result.feedbackApplicabilityByCatalogId)
         .filter(([id]) => !['site-health', 'agent-inbox', 'techdata'].includes(id))
         .map(([, applicability]) => applicability)
-    ).toEqual(Array.from({ length: 44 }, () => 'unknown'));
-    expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(47);
-    expect(Object.keys(result.browserVisitorsApplicabilityByCatalogId)).toHaveLength(47);
-    expect(Object.keys(result.serverRequestsApplicabilityByCatalogId)).toHaveLength(47);
+    ).toEqual(Array.from({ length: reportProjects.length - 3 }, () => 'unknown'));
+    expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(
+      reportProjects.length
+    );
+    expect(Object.keys(result.browserVisitorsApplicabilityByCatalogId)).toHaveLength(
+      reportProjects.length
+    );
+    expect(Object.keys(result.serverRequestsApplicabilityByCatalogId)).toHaveLength(
+      reportProjects.length
+    );
     expect(
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'applicable'
       )
-    ).toHaveLength(23);
+    ).toHaveLength(
+      nativeApplicability.products.filter(({ serverRequests }) => serverRequests === 'applicable')
+        .length
+    );
     expect(
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'not_applicable'
       )
-    ).toHaveLength(24);
+    ).toHaveLength(
+      nativeApplicability.products.filter(
+        ({ serverRequests }) => serverRequests === 'not-applicable'
+      ).length
+    );
     expect(
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'unknown'
@@ -289,8 +304,42 @@ describe('daily PII-free capture receipts', () => {
       Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
         (value) => value === 'not_applicable'
       )
-    ).toHaveLength(47);
-    expect(nativeApplicability.products).toHaveLength(47);
+    ).toHaveLength(reportProjects.length);
+    expect(nativeApplicability.products.map(({ id }) => id).sort()).toEqual([...catalogIds].sort());
+    for (const {
+      id,
+      nativeSessions,
+      browserVisitors,
+      serverRequests,
+    } of nativeApplicability.products) {
+      expect(result.nativeSessionsApplicabilityByCatalogId[id]).toBe(
+        nativeSessions.replace('-', '_')
+      );
+      expect(result.browserVisitorsApplicabilityByCatalogId[id]).toBe(
+        browserVisitors.replace('-', '_')
+      );
+      expect(result.serverRequestsApplicabilityByCatalogId[id]).toBe(
+        serverRequests.replace('-', '_')
+      );
+    }
+    for (const { id, applicability, feedbackApplicability } of reportProjects) {
+      expect(result.applicabilityByCatalogId[id]).toBe(applicability);
+      expect(result.feedbackApplicabilityByCatalogId[id]).toBe(feedbackApplicability ?? 'unknown');
+    }
+    for (const id of [
+      'slow-serp',
+      'agent-testing',
+      'gitstat',
+      'issue-pages',
+      'mashup',
+      'open-historia',
+      'mentionpilot',
+      'daddyrad',
+    ]) {
+      expect(catalogIds).not.toContain(id);
+      expect(result.applicabilityByCatalogId[id]).toBeUndefined();
+      expect(result.nativeSessionsApplicabilityByCatalogId[id]).toBeUndefined();
+    }
     const nativeProducts = [
       'codevetter',
       'pace',

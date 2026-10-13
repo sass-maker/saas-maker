@@ -148,11 +148,46 @@ export const designPolicySchema = {
   }),
 };
 
-const mode = oneOf('light', 'dark', null);
+const mode = oneOf('light', 'dark', 'system', null);
+const observation = {
+  state: oneOf('source-observed', 'unknown', 'not-applicable'),
+  notes: text,
+  checkedAt: date,
+  evidence: strings,
+};
+const observedVersion = (value, path) => {
+  object({ ...observation, value: text }, true)(value, path);
+  for (const [field, validate] of Object.entries(observation)) {
+    validate(value[field], `${path}.${field}`);
+  }
+  if (value.state === 'source-observed') text(value.value, `${path}.value`);
+  else if (Object.hasOwn(value, 'value')) fail(`${path}.value`);
+};
 const ui = object(
   {
-    landing: object({ library: boolean, version: text, template: text, mode }, true),
-    app: object({ library: boolean, version: text, mode }, true),
+    landing: object(
+      {
+        library: boolean,
+        version: text,
+        template: text,
+        mode,
+        ...observation,
+        libraryVersion: observedVersion,
+        loading: object(observation),
+      },
+      true
+    ),
+    app: object(
+      {
+        library: boolean,
+        version: text,
+        mode,
+        ...observation,
+        libraryVersion: observedVersion,
+        loading: object(observation),
+      },
+      true
+    ),
     native: object({ saasMakerUI: boolean, version: text }, true),
     continuity: object(
       {
@@ -161,6 +196,8 @@ const ui = object(
         },
         notes: text,
         checkedAt: date,
+        state: oneOf('source-observed', 'unknown', 'not-applicable'),
+        evidence: strings,
       },
       true
     ),
