@@ -133,11 +133,15 @@ export function diskBytes(path) {
   return requireBytes(duBytes(path), 'workspace');
 }
 // Complete, bounded measurement: no cached totals or retired-worktree exclusions.
-export function diskBytesAsync(path) {
-  if (!existsSync(path)) return Promise.reject(new Error(`Missing path: ${path}`));
+export function diskBytesAsync(path, { signal } = {}) {
+  // `existsSync` follows links and would misclassify a dangling retired alias;
+  // `du` still counts the symlink itself, so only a missing directory entry fails.
+  try { lstatSync(path); }
+  catch (error) { return Promise.reject(error.code === 'ENOENT' ? new Error(`Missing path: ${path}`) : error); }
+  if (signal?.aborted) return Promise.reject(signal.reason);
   return new Promise((done, fail) => {
-    const child = spawn('du', ['-sk', path], { stdio: ['ignore', 'pipe', 'pipe'] });
-    let stdout = ''; let stderr = ''; let failure;
+    const child = spawn('du', ['-sk', path], { stdio: ['ignore', 'pipe', 'pipe'], signal, killSignal: 'SIGKILL' });
+    let stdout = ''; let stderr = ''; let failure; let spawnFailure;
     const timer = setTimeout(() => {
       failure = new Error('du -sk timed out after 180000ms');
       failure.code = 'ETIMEDOUT'; child.kill('SIGKILL');
@@ -150,16 +154,57 @@ export function diskBytesAsync(path) {
         }
       });
     }
-    child.once('error', (error) => { clearTimeout(timer); fail(error); });
+    // Wait for close after cancellation: rejecting on the earlier error event
+    // could release admission while a killed du child is still being reaped.
+    child.once('error', (error) => { spawnFailure = error; });
     child.once('close', (code) => {
       clearTimeout(timer);
       const bytes = Number(stdout.trim().split(/\s/)[0]) * 1024;
-      if (failure) fail(failure);
+      if (spawnFailure) fail(spawnFailure);
+      else if (failure) fail(failure);
       else if (code !== 0 && !(vanishedOnly(stderr) && stdout.trim())) fail(new Error(`du -sk failed (${code}): ${stderr.trim()}`));
       else if (!stdout.trim() || !Number.isSafeInteger(bytes) || bytes < 0) fail(new Error('du -sk returned an invalid measurement'));
       else done(bytes);
     });
   });
+}
+// Retired trees are never omitted from admission. Scan their immediate entries
+// fresh with bounded fan-out; separate `du` calls can only overcount shared
+// hardlinks, so their sum is a conservative total-budget measurement.
+export async function retiredBytesAsync(path, { concurrency = 4, timeoutMs = 180_000 } = {}) {
+  if (!Number.isSafeInteger(concurrency) || concurrency < 1 || concurrency > 8) throw new Error('Invalid retired scan concurrency.');
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 180_000) throw new Error('Invalid retired scan timeout.');
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(new Error(`Retired disk scan timed out after ${timeoutMs}ms`)), timeoutMs);
+  try {
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      if (controller.signal.aborted) throw controller.signal.reason;
+      const before = lstatSync(path, { bigint: true });
+      if (!before.isDirectory() || before.isSymbolicLink()) throw new Error(`Unsafe retired directory: ${path}`);
+      const entries = readdirSync(path).sort();
+      let next = 0;
+      const sizes = new Array(entries.length);
+      const scans = await Promise.allSettled(Array.from({ length: Math.min(concurrency, entries.length) }, async () => {
+        while (next < entries.length) {
+          const index = next++;
+          sizes[index] = await diskBytesAsync(join(path, entries[index]), { signal: controller.signal });
+        }
+      }));
+      if (controller.signal.aborted) throw controller.signal.reason;
+      const after = lstatSync(path, { bigint: true });
+      const changed = before.dev !== after.dev || before.ino !== after.ino || before.mtimeNs !== after.mtimeNs ||
+        before.ctimeNs !== after.ctimeNs || entries.join('\0') !== readdirSync(path).sort().join('\0');
+      if (changed) {
+        if (attempt < 3) continue;
+        throw new Error('Retired directory changed during three complete disk measurements.');
+      }
+      const failure = scans.find((scan) => scan.status === 'rejected');
+      if (failure) throw failure.reason;
+      // `du -sk` includes the directory inode. st_blocks uses 512-byte units.
+      const directoryBytes = requireBytes(Number(((before.blocks + 1n) / 2n) * 1024n), 'retired directory');
+      return requireBytes(sizes.reduce((sum, bytes) => requireBytes(sum + bytes, 'retired'), directoryBytes), 'retired');
+    }
+  } finally { clearTimeout(timer); }
 }
 function combinedError(primary, cleanup) {
   return new AggregateError([primary, cleanup], `${primary.message}; cleanup also failed: ${cleanup.message}`, { cause: primary });
@@ -286,7 +331,9 @@ export class AgentWorkspaces {
     const measure = async (target, role) => {
       const started = Date.now();
       try {
-        const bytes = await (this.measure === diskBytes ? diskBytesAsync(target) : this.measure(target));
+        const bytes = await (this.measure === diskBytes
+          ? role === 'retired-worktrees' ? retiredBytesAsync(target) : diskBytesAsync(target)
+          : this.measure(target));
         if (!Number.isSafeInteger(bytes) || bytes < 0) throw new Error('Invalid disk measurement');
         return bytes;
       } catch (cause) {

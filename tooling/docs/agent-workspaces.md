@@ -193,10 +193,14 @@ avoid retaining repeated generated builds as permanent recovery archives.
 ### Disk measurement and registry contention
 
 Managed command admission, periodic checks, and postflight require fresh complete
-workspace, active-worktree, and retired-worktree measurements. Each `du -sk`
-measurement has a 180-second bound and runs asynchronously outside the registry
-lock. Unknown or failed measurements still fail closed; no totals are cached and
-retired worktrees remain included. Admission rechecks the current policy, free
+workspace, active-worktree, and retired-worktree measurements. Retired top-level
+entries use at most four concurrent `du -sk` processes, with a 180-second bound
+for the whole retired scan and each process. Timed-out processes are killed and
+reaped. The retired sum includes its directory inode and can conservatively
+overcount hardlinks shared between retired entries. A top-level retired-directory
+change during a scan triggers at most two complete retries; continuous churn
+fails closed. Unknown or failed measurements still fail closed; no totals are
+cached and retired worktrees remain included. Admission rechecks the current policy, free
 space reserve, material workspace identities, and heavy-job limits under the
 registry lock before registering its lease. Identity changes during a create or
 managed run scan trigger at most two retries (three complete fresh measurement attempts) before
