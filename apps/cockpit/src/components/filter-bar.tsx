@@ -10,6 +10,25 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+const TYPE_OPTIONS = [
+  { value: 'all', label: 'All Types' },
+  { value: 'bug', label: 'Bug' },
+  { value: 'feature', label: 'Feature' },
+  { value: 'feedback', label: 'Feedback' },
+] as const;
+
+const STATUS_OPTIONS = [
+  { value: 'all', label: 'All Statuses' },
+  { value: 'new', label: 'New' },
+  { value: 'acknowledged', label: 'Acknowledged' },
+  { value: 'investigating', label: 'Investigating' },
+  { value: 'planned', label: 'Planned' },
+  { value: 'in_progress', label: 'In progress' },
+  { value: 'resolved', label: 'Resolved' },
+  { value: 'dismissed', label: 'Dismissed' },
+  { value: 'on_roadmap', label: 'On Roadmap' },
+] as const;
+
 export function FilterBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -34,30 +53,31 @@ export function FilterBar() {
     <div className="flex flex-wrap items-center gap-3">
       <Select value={type} onValueChange={(v) => updateParam('type', v)}>
         <SelectTrigger className="w-[140px]">
-          <SelectValue placeholder="Type" />
+          <SelectValue placeholder="Type">
+            {TYPE_OPTIONS.find((option) => option.value === type)?.label}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Types</SelectItem>
-          <SelectItem value="bug">Bug</SelectItem>
-          <SelectItem value="feature">Feature</SelectItem>
-          <SelectItem value="feedback">Feedback</SelectItem>
+          {TYPE_OPTIONS.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
 
       <Select value={status} onValueChange={(v) => updateParam('status', v)}>
         <SelectTrigger className="w-[160px]">
-          <SelectValue placeholder="Status" />
+          <SelectValue placeholder="Status">
+            {STATUS_OPTIONS.find((option) => option.value === status)?.label}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Statuses</SelectItem>
-          <SelectItem value="new">New</SelectItem>
-          <SelectItem value="acknowledged">Acknowledged</SelectItem>
-          <SelectItem value="investigating">Investigating</SelectItem>
-          <SelectItem value="planned">Planned</SelectItem>
-          <SelectItem value="in_progress">In progress</SelectItem>
-          <SelectItem value="resolved">Resolved</SelectItem>
-          <SelectItem value="dismissed">Dismissed</SelectItem>
-          <SelectItem value="on_roadmap">On Roadmap</SelectItem>
+          {STATUS_OPTIONS.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
     </div>

@@ -1,9 +1,14 @@
 'use client';
 
 import type { AgentTokenRecord } from '@saas-maker/contracts';
-import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
+import { EmptyState } from '@saas-maker/ui/components/empty-state';
+import { SkeletonContainer } from '@saas-maker/ui/components/skeleton';
+import { useApiResource } from '@/components/cockpit-resources';
+import { ResourceView } from '@/components/resource-view';
 import { CopyButton } from '@/components/copy-button';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -15,33 +20,14 @@ interface ProjectCredentialsProps {
 }
 
 export function ProjectCredentials({ projectId, projectKey }: ProjectCredentialsProps) {
-  const [tokens, setTokens] = useState<AgentTokenRecord[]>([]);
   const [name, setName] = useState('Inbox agent');
   const [canWrite, setCanWrite] = useState(false);
   const [plaintext, setPlaintext] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const token = await getClientToken();
-      const result = await apiFetchClient<{ data: AgentTokenRecord[] }>(
-        `/v1/projects/${projectId}/agent-tokens`,
-        token
-      );
-      setTokens(result.data ?? []);
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Failed to load agent tokens');
-    } finally {
-      setLoading(false);
-    }
-  }, [projectId]);
-
-  useEffect(() => {
-    void load();
-  }, [load]);
+  const resource = useApiResource<{ data: AgentTokenRecord[] }>(
+    `/v1/projects/${projectId}/agent-tokens`,
+    { isEmpty: (result) => (result.data ?? []).length === 0 }
+  );
 
   async function createToken(event: FormEvent) {
     event.preventDefault();
@@ -57,7 +43,10 @@ export function ProjectCredentials({ projectId, projectKey }: ProjectCredentials
         }
       );
       setPlaintext(created.token);
-      setTokens((current) => [created, ...current]);
+      // Keep the one-time plaintext token outside the resource cache.
+      const { token: _plaintext, ...record } = created;
+      resource.mutate((current) => ({ data: [record, ...(current?.data ?? [])] }));
+      void resource.retry();
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Failed to create agent token');
     }
@@ -70,7 +59,10 @@ export function ProjectCredentials({ projectId, projectKey }: ProjectCredentials
       await apiFetchClient(`/v1/projects/${projectId}/agent-tokens/${tokenId}`, session, {
         method: 'DELETE',
       });
-      setTokens((current) => current.filter((item) => item.id !== tokenId));
+      resource.mutate((current) => ({
+        data: (current?.data ?? []).filter((item) => item.id !== tokenId),
+      }));
+      void resource.retry();
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Failed to revoke token');
     }
@@ -124,25 +116,33 @@ export function ProjectCredentials({ projectId, projectKey }: ProjectCredentials
           </div>
         ) : null}
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
-        {loading ? (
-          <p className="text-sm text-muted-foreground">Loading tokens…</p>
-        ) : tokens.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No agent tokens yet.</p>
-        ) : (
-          <ul className="space-y-2">
-            {tokens.map((token) => (
-              <li key={token.id} className="flex items-center justify-between gap-3 text-sm">
-                <span>
-                  {token.name} · {token.token_prefix}… ·{' '}
-                  {token.can_write ? 'read/write' : 'read-only'}
-                </span>
-                <Button variant="outline" size="sm" onClick={() => void revokeToken(token.id)}>
-                  Revoke
-                </Button>
-              </li>
-            ))}
-          </ul>
-        )}
+        <ResourceView
+          resource={resource}
+          skeleton={
+            <SkeletonContainer>
+              <Skeleton className="h-8 w-full max-w-56" />
+            </SkeletonContainer>
+          }
+          empty={
+            <EmptyState className="items-start px-0 py-0 text-left" title="no agent tokens yet" />
+          }
+        >
+          {(result) => (
+            <ul className="space-y-2">
+              {(result.data ?? []).map((token) => (
+                <li key={token.id} className="flex items-center justify-between gap-3 text-sm">
+                  <span>
+                    {token.name} · {token.token_prefix}… ·{' '}
+                    {token.can_write ? 'read/write' : 'read-only'}
+                  </span>
+                  <Button variant="outline" size="sm" onClick={() => void revokeToken(token.id)}>
+                    Revoke
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </ResourceView>
       </div>
     </section>
   );

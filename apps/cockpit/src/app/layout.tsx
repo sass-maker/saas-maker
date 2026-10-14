@@ -10,6 +10,8 @@ const geistSans = Geist({
 });
 
 const geistMono = Geist_Mono({
+  // Keep the same font; request it only when visible mono text needs it.
+  preload: false,
   variable: '--font-geist-mono',
   subsets: ['latin'],
 });
@@ -30,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" style={{ colorScheme: 'dark' }} suppressHydrationWarning>
       <head>
         {/* Microsoft Clarity — session replay + heatmaps (additive; PostHog stays) */}
         <script
@@ -39,14 +41,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         <GlobalNamePolyfill />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           {children}
         </ThemeProvider>
       </body>

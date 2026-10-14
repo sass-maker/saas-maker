@@ -6,22 +6,27 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navItems = [
+  // Match specific routes before the broader project detail route.
   { label: 'Feedback inbox', href: '/projects/feedback', icon: MessageSquare },
   { label: 'Subscribers', href: '/projects/subscribers', icon: Users },
   { label: 'Project keys', href: '/projects', icon: FolderKanban },
 ] as const;
 
-export function SidebarNav() {
+export function SidebarNav({ onNavigate }: { onNavigate?: () => void } = {}) {
   const pathname = usePathname();
+  const activeHref = navItems.find(
+    (item) => pathname === item.href || pathname.startsWith(`${item.href}/`)
+  )?.href;
 
   return (
     <nav className="flex flex-col gap-1">
       {navItems.map((item) => {
-        const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+        const active = activeHref === item.href;
         return (
           <Link
             key={item.href}
             href={item.href}
+            onClick={onNavigate}
             className={cn(
               'flex min-h-10 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
               active

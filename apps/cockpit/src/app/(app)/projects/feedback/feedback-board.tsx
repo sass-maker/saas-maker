@@ -1,7 +1,11 @@
 'use client';
 
 import type { AnyFeedbackStatus, FeedbackRecord, FeedbackType } from '@saas-maker/contracts';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
+import { EmptyState } from '@saas-maker/ui/components/empty-state';
+import { useApiResource, useCockpitResources } from '@/components/cockpit-resources';
+import { ResourceView } from '@/components/resource-view';
+import { FeedbackTableSkeleton } from '@/components/table-skeleton';
 import { FeedbackTable } from '@/components/feedback-table';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,122 +19,107 @@ import { apiFetchClient, getClientToken } from '@/lib/api-client';
 
 type InboxRecord = FeedbackRecord & { project_name: string; project_slug: string };
 
+const TYPE_OPTIONS = [
+  { value: 'all', label: 'All types' },
+  { value: 'bug', label: 'Bugs' },
+  { value: 'feature', label: 'Features' },
+  { value: 'feedback', label: 'Feedback' },
+] as const;
+
+const STATUS_OPTIONS = [
+  { value: 'all', label: 'All statuses' },
+  { value: 'new', label: 'New' },
+  { value: 'acknowledged', label: 'Acknowledged' },
+  { value: 'investigating', label: 'Investigating' },
+  { value: 'planned', label: 'Planned' },
+  { value: 'in_progress', label: 'In progress' },
+  { value: 'resolved', label: 'Resolved' },
+  { value: 'dismissed', label: 'Dismissed' },
+  { value: 'on_roadmap', label: 'On roadmap' },
+] as const;
+
 export function FeedbackBoard() {
-  const [feedback, setFeedback] = useState<InboxRecord[]>([]);
   const [type, setType] = useState<FeedbackType | 'all'>('all');
   const [status, setStatus] = useState<AnyFeedbackStatus | 'all'>('all');
-  const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const load = useCallback(
-    async (activeToken: string) => {
-      setLoading(true);
-      setError(null);
-      try {
-        const query = new URLSearchParams();
-        if (type !== 'all') query.set('type', type);
-        if (status !== 'all') query.set('status', status);
-        const result = await apiFetchClient<{ data: InboxRecord[] }>(
-          `/v1/feedback?${query.toString()}`,
-          activeToken
-        );
-        setFeedback(result.data ?? []);
-      } catch (cause) {
-        setError(cause instanceof Error ? cause.message : 'Failed to load feedback');
-      } finally {
-        setLoading(false);
-      }
-    },
-    [status, type]
-  );
-
-  useEffect(() => {
-    let cancelled = false;
-    getClientToken()
-      .then((activeToken) => {
-        if (cancelled) return;
-        setToken(activeToken);
-        return load(activeToken);
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setError('Failed to authenticate. Please sign in again.');
-          setLoading(false);
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [load]);
+  const query = new URLSearchParams();
+  if (type !== 'all') query.set('type', type);
+  if (status !== 'all') query.set('status', status);
+  const resource = useApiResource<{ data: InboxRecord[] }>(`/v1/feedback?${query}`, {
+    isEmpty: (result) => (result.data ?? []).length === 0,
+  });
+  const { invalidate } = useCockpitResources();
 
   async function updateStatus(item: FeedbackRecord, nextStatus: AnyFeedbackStatus) {
-    if (!token) return;
+    const token = await getClientToken();
     const updated = await apiFetchClient<FeedbackRecord>(`/v1/feedback/${item.id}`, token, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: nextStatus }),
     });
-    setFeedback((items) =>
-      items.map((candidate) =>
+    resource.mutate((result) => ({
+      data: (result?.data ?? []).map((candidate) =>
         candidate.id === updated.id ? { ...candidate, status: updated.status } : candidate
-      )
-    );
+      ),
+    }));
+    invalidate('/v1/feedback?');
   }
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <Select value={type} onValueChange={(value) => setType(value as FeedbackType | 'all')}>
-          <SelectTrigger className="w-[160px]">
-            <SelectValue placeholder="Type" />
+          <SelectTrigger className="w-[160px]" aria-label="filter feedback by type">
+            <SelectValue placeholder="Type">
+              {TYPE_OPTIONS.find((option) => option.value === type)?.label}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All types</SelectItem>
-            <SelectItem value="bug">Bugs</SelectItem>
-            <SelectItem value="feature">Features</SelectItem>
-            <SelectItem value="feedback">Feedback</SelectItem>
+            {TYPE_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         <Select
           value={status}
           onValueChange={(value) => setStatus(value as AnyFeedbackStatus | 'all')}
         >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Status" />
+          <SelectTrigger className="w-[180px]" aria-label="filter feedback by status">
+            <SelectValue placeholder="Status">
+              {STATUS_OPTIONS.find((option) => option.value === status)?.label}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
-            <SelectItem value="new">New</SelectItem>
-            <SelectItem value="acknowledged">Acknowledged</SelectItem>
-            <SelectItem value="investigating">Investigating</SelectItem>
-            <SelectItem value="planned">Planned</SelectItem>
-            <SelectItem value="in_progress">In progress</SelectItem>
-            <SelectItem value="resolved">Resolved</SelectItem>
-            <SelectItem value="dismissed">Dismissed</SelectItem>
-            <SelectItem value="on_roadmap">On roadmap</SelectItem>
+            {STATUS_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         <Button
           variant="outline"
           size="sm"
-          disabled={!token || loading}
-          onClick={() => token && load(token)}
+          disabled={resource.status === 'loading' || resource.isRevalidating}
+          onClick={() => void resource.retry()}
         >
           Refresh
         </Button>
       </div>
 
-      {error && (
-        <p className="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
-          {error}
-        </p>
-      )}
-      {loading ? (
-        <p className="py-12 text-center text-sm text-muted-foreground">Loading feedback…</p>
-      ) : (
-        <FeedbackTable feedback={feedback} onStatusChange={updateStatus} />
-      )}
+      <ResourceView
+        resource={resource}
+        skeleton={<FeedbackTableSkeleton />}
+        empty={
+          <EmptyState
+            title="no matching feedback"
+            description="new submissions from the hosted widget appear here."
+          />
+        }
+      >
+        {(result) => <FeedbackTable feedback={result.data ?? []} onStatusChange={updateStatus} />}
+      </ResourceView>
     </div>
   );
 }

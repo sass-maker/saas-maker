@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CopyButton } from '@/components/copy-button';
 import { apiFetch } from '@/lib/api';
+import { useCockpitResources } from '@/components/cockpit-resources';
 
 async function getToken(): Promise<string> {
   const response = await fetch('/api/token');
@@ -17,8 +18,15 @@ async function getToken(): Promise<string> {
   return (await response.json()).token;
 }
 
-export function OnboardingFlow() {
+export function OnboardingFlow({
+  onCreated,
+  onOpen,
+}: {
+  onCreated?: () => void;
+  onOpen?: () => void;
+}) {
   const router = useRouter();
+  const { invalidate } = useCockpitResources();
   const [name, setName] = useState('');
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -36,6 +44,8 @@ export function OnboardingFlow() {
         await getToken()
       );
       setApiKey(project.api_key);
+      onCreated?.();
+      invalidate('/v1/projects');
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Failed to create project');
     } finally {
@@ -62,7 +72,14 @@ export function OnboardingFlow() {
             <code className="flex-1 break-all text-xs">{example}</code>
             <CopyButton value={example} />
           </div>
-          <Button className="w-full" onClick={() => router.refresh()}>
+          <Button
+            className="w-full"
+            onClick={() => {
+              onOpen?.();
+              invalidate('/v1/projects');
+              router.refresh();
+            }}
+          >
             Open feedback projects
           </Button>
         </CardContent>

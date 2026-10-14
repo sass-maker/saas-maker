@@ -4,6 +4,25 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   resolve: {
     alias: [
+      // Resolve the frontend's declared dependencies without relying on root hoisting.
+      {
+        find: /^@saas-maker\/ui\/(components|blocks)\/(.*)$/,
+        replacement: `${fileURLToPath(new URL('./apps/cockpit/node_modules/@saas-maker/ui/src/', import.meta.url))}$1/$2.tsx`,
+      },
+      {
+        find: /^@saas-maker\/ui\/lib\/(.*)$/,
+        replacement: `${fileURLToPath(new URL('./apps/cockpit/node_modules/@saas-maker/ui/src/lib/', import.meta.url))}$1.ts`,
+      },
+      {
+        find: 'react-dom',
+        replacement: fileURLToPath(
+          new URL('./apps/cockpit/node_modules/react-dom', import.meta.url)
+        ),
+      },
+      {
+        find: 'react',
+        replacement: fileURLToPath(new URL('./apps/cockpit/node_modules/react', import.meta.url)),
+      },
       {
         find: /^@\//,
         replacement: `${fileURLToPath(new URL('./apps/cockpit/src/', import.meta.url))}`,
