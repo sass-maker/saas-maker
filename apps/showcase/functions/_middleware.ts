@@ -390,6 +390,7 @@ async function handleGet(
     if (context.env.ASSETS) {
       const mdUrl = new URL(url);
       mdUrl.pathname = mdPath;
+      if (pathname === '/') mdUrl.search = '';
       let mdResponse: Response;
       try {
         // The root Markdown mirror is public static content. Do not forward a

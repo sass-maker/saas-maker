@@ -80,9 +80,13 @@ describe('public home representation cache', () => {
   it('does not send caller credentials to the public Markdown asset or cache their response', async () => {
     const cache = new UrlCache();
     vi.stubGlobal('caches', { default: cache });
-    const response = await respond('text/markdown', {
-      headers: { authorization: 'Bearer fixture', cookie: 'session=fixture' },
-    });
+    const response = await respond(
+      'text/markdown',
+      {
+        headers: { authorization: 'Bearer fixture', cookie: 'session=fixture' },
+      },
+      '/?token=fixture'
+    );
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toContain('text/markdown');
     expect(await response.text()).toContain('# public brief');
@@ -92,6 +96,7 @@ describe('public home representation cache', () => {
     expect(markdownLookup).toBeDefined();
     expect(markdownLookup?.headers.has('authorization')).toBe(false);
     expect(markdownLookup?.headers.has('cookie')).toBe(false);
+    expect(new URL(markdownLookup?.url || site).search).toBe('');
     expect(cache.entries.size).toBe(0);
   });
   for (const failure of ['missing', 'throw'] as const) {
