@@ -7,6 +7,7 @@ import { MobileNav } from '@/components/mobile-nav';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { getLocalDevSession, isLocalAuthBypassEnabled } from '@/lib/local-auth';
 import { UserMenu } from '@/components/user-menu';
+import { CockpitResources } from '@/components/cockpit-resources';
 
 export const dynamic = 'force-dynamic';
 
@@ -68,7 +69,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <ThemeToggle />
         </header>
 
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
+        <CockpitResources key={session?.user?.id ?? 'guest'}>
+          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
+        </CockpitResources>
       </main>
     </div>
   );

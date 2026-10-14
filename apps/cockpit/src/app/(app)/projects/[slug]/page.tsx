@@ -1,23 +1,32 @@
-import { PageHeader } from '@/components/page-header';
-import { ProjectCredentials } from '@/components/project-credentials';
-import { getAuthenticatedProject } from './get-project';
-import { InboxContent } from './inbox-content';
+import { ProjectContent } from './project-content';
+import { notFound } from 'next/navigation';
+import { getProjectBySlug, getServerToken } from '@/lib/api';
+import { getDashboardSession } from '@/lib/server-session';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
-interface Props {
-  params: Promise<{ slug: string }>;
-}
-
-export default async function ProjectStatusPage({ params }: Props) {
+export default async function ProjectStatusPage({ params }: { params: Promise<{ slug: string }> }) {
+  const session = await getDashboardSession();
+  if (!session?.user) redirect('/login');
   const { slug } = await params;
-  const { project } = await getAuthenticatedProject(slug);
-
-  return (
-    <div className="space-y-6">
-      <PageHeader title={project.name} description={`Feedback for ${project.slug}`} />
-      <ProjectCredentials projectId={project.id} projectKey={project.api_key} />
-      <InboxContent projectId={project.id} />
-    </div>
-  );
+  let project;
+  let initialData;
+  let initialDataUpdatedAt;
+  try {
+    project = await getProjectBySlug(encodeURIComponent(slug), await getServerToken());
+    if (project) {
+      initialData = {
+        id: project.id,
+        name: project.name,
+        slug: project.slug,
+        api_key: project.api_key,
+      };
+      initialDataUpdatedAt = Date.now();
+    }
+  } catch {
+    // An unavailable API is not a missing project. The client resource can retry.
+  }
+  if (project === null) notFound();
+  return <ProjectContent initialData={initialData} initialDataUpdatedAt={initialDataUpdatedAt} />;
 }

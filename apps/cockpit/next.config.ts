@@ -9,6 +9,7 @@ const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  transpilePackages: ['@saas-maker/ui'],
   reactCompiler: true,
   turbopack: {
     root: projectRoot,

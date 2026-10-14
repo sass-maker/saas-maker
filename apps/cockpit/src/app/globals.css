@@ -2,6 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@source "../../node_modules/@saas-maker/ui/src/components/{skeleton,empty-state,error-state,button}.tsx";
+@source "../../node_modules/@saas-maker/ui/src/blocks/resource-boundary.tsx";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
