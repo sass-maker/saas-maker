@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, symlinkSync, realpathSync, rmSync, chmodSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readdirSync, writeFileSync, readFileSync, existsSync, symlinkSync, realpathSync, rmSync, chmodSync } from 'node:fs';
 import { tmpdir, homedir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync, spawn } from 'node:child_process';
-import { AgentWorkspaces, GiB, inventory, diskBytes, diskBytesAsync, jobAlive, StaleWorkspaceSnapshotError, vanishedOnly } from '../lib/agent-workspaces.mjs';
+import { AgentWorkspaces, GiB, inventory, diskBytes, diskBytesAsync, retiredBytesAsync, jobAlive, StaleWorkspaceSnapshotError, vanishedOnly } from '../lib/agent-workspaces.mjs';
 
 const fixtures = [];
 test.after(() => {
@@ -487,6 +487,81 @@ test('long async periodic scans allow independent heartbeats without overlapping
     assert.equal((await manager.run({ id: row.id, argv: [process.execPath, '-e', 'setTimeout(() => {}, 170)'] })).exitCode, 0);
     assert.ok(heartbeats >= 4); assert.equal(maximum, 1); assert.equal(manager.jobs().length, 0);
   } finally { restore(); }
+});
+
+test('fresh bounded retired scans start commands promptly and retain total-budget rejection', async () => {
+  const { folder, manager, create } = fixture();
+  const row = await create('parallel-retired');
+  const retired = join(manager.root, 'retired');
+  for (let index = 0; index < 48; index++) {
+    const path = join(retired, `tree-${index}`); mkdirSync(path);
+    for (let file = 0; file < 8; file++) writeFileSync(join(path, `payload-${file}`), 'retained');
+  }
+  const bin = join(folder, 'bin'); mkdirSync(bin);
+  const executable = join(bin, 'du');
+  const program = (kib) => writeFileSync(executable, `#!${process.execPath}\nsetTimeout(() => process.stdout.write('${kib}\\tmeasured\\n'), 80);\n`, { mode: 0o700 });
+  const previousPath = process.env.PATH;
+  process.env.PATH = `${bin}:${previousPath}`;
+  try {
+    program(1024);
+    const live = new AgentWorkspaces({ root: manager.root, freeBytes: () => 100 * GiB, openFiles: () => 0 });
+    const marker = join(folder, 'started');
+    const started = Date.now();
+    const running = live.run({ id: row.id, argv: [process.execPath, '-e', `require('fs').writeFileSync(${JSON.stringify(marker)}, '')`] });
+    while (!existsSync(marker) && Date.now() - started < 3_500) await pause(10);
+    assert.ok(existsSync(marker), 'admission must not wait for serial scans of every retired tree');
+    assert.ok(Date.now() - started < 3_500);
+    assert.equal((await running).exitCode, 0);
+    assert.ok(await retiredBytesAsync(retired) >= 48 * 1024 ** 2);
+
+    program(3 * 1024 ** 2);
+    const blocked = join(folder, 'must-not-start');
+    await assert.rejects(live.run({ id: row.id, argv: [process.execPath, '-e', `require('fs').writeFileSync(${JSON.stringify(blocked)}, '')`] }), /including retired/);
+    assert.equal(existsSync(blocked), false);
+  } finally { process.env.PATH = previousPath; }
+});
+
+test('retired scan includes unknown entries, retries one change, and fails closed on continuous churn', async () => {
+  const { folder, manager } = fixture();
+  manager.initialize();
+  const retired = join(manager.root, 'retired');
+  mkdirSync(join(retired, 'tree'));
+  writeFileSync(join(retired, 'tree', 'payload'), 'retained');
+  writeFileSync(join(retired, 'untracked-file'), 'also retained');
+  symlinkSync(join(retired, 'missing-target'), join(retired, 'dangling-alias'));
+  assert.ok(await retiredBytesAsync(retired) >= await diskBytesAsync(retired));
+
+  const bin = join(folder, 'bin'); mkdirSync(bin);
+  const executable = join(bin, 'du');
+  writeFileSync(executable, `#!${process.execPath}\nconst fs = require('fs'); const path = ${JSON.stringify(join(retired, 'late-entry'))}; if (!fs.existsSync(path)) fs.writeFileSync(path, 'new'); process.stdout.write('1\\tmeasured\\n');\n`, { mode: 0o700 });
+  const previousPath = process.env.PATH;
+  process.env.PATH = `${bin}:${previousPath}`;
+  try {
+    assert.ok(await retiredBytesAsync(retired) >= 3 * 1024);
+    writeFileSync(executable, `#!${process.execPath}\nrequire('fs').writeFileSync(${JSON.stringify(retired)} + '/churn-' + process.pid, 'new'); process.stdout.write('1\\tmeasured\\n');\n`, { mode: 0o700 });
+    await assert.rejects(retiredBytesAsync(retired), /Retired directory changed during three/);
+  }
+  finally { process.env.PATH = previousPath; }
+});
+
+test('whole retired scan timeout cancels and reaps every in-flight du worker', async () => {
+  const { folder, manager } = fixture();
+  manager.initialize();
+  const retired = join(manager.root, 'retired');
+  for (let index = 0; index < 8; index++) mkdirSync(join(retired, `tree-${index}`));
+  const pids = join(folder, 'du-pids'); mkdirSync(pids);
+  const bin = join(folder, 'bin'); mkdirSync(bin);
+  writeFileSync(join(bin, 'du'), `#!${process.execPath}\nrequire('fs').writeFileSync(${JSON.stringify(pids)} + '/' + process.pid, ''); setTimeout(() => {}, 10000);\n`, { mode: 0o700 });
+  const previousPath = process.env.PATH;
+  process.env.PATH = `${bin}:${previousPath}`;
+  try {
+    const started = Date.now();
+    await assert.rejects(retiredBytesAsync(retired, { timeoutMs: 1_500 }), /Retired disk scan timed out after 1500ms/);
+    assert.ok(Date.now() - started < 3_000, 'the bound applies to the entire scan');
+    const startedPids = readdirSync(pids).map(Number);
+    assert.ok(startedPids.length > 0 && startedPids.length <= 4, 'only bounded fan-out may start');
+    for (const pid of startedPids) assert.throws(() => process.kill(pid, 0), (error) => error.code === 'ESRCH', `du ${pid} must be reaped before admission returns`);
+  } finally { process.env.PATH = previousPath; }
 });
 test('heartbeat contention alone does not terminate an otherwise valid owned command', async () => {
   const { manager, create } = fixture();
