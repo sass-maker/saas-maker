@@ -27,7 +27,7 @@ function TableSkeleton({
   return (
     <SkeletonContainer announce={announce} aria-label={`Loading ${label}`} data-table-skeleton>
       <div className={`min-h-[242px] rounded-md border ${shape}`}>
-        <Table>
+        <Table containerLabel={`Loading ${label} table`}>
           <TableHeader>
             <TableRow>
               {columns.map((column) => (

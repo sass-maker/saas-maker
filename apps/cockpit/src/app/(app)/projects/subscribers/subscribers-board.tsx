@@ -201,7 +201,7 @@ function SubscriberTable({
   return (
     <div className="space-y-3">
       <div className={`min-h-[242px] overflow-x-auto rounded-md border ${subscribersTableShape}`}>
-        <Table>
+        <Table containerLabel="Subscribers table">
           <TableHeader>
             <TableRow>
               <TableHead>Email</TableHead>

@@ -4,9 +4,20 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-function Table({ className, ...props }: React.ComponentProps<'table'>) {
+function Table({
+  className,
+  containerLabel = 'Scrollable table',
+  ...props
+}: React.ComponentProps<'table'> & { containerLabel?: string }) {
   return (
-    <div data-slot="table-container" className="relative w-full overflow-x-auto">
+    <div
+      data-slot="table-container"
+      role="region"
+      aria-label={containerLabel}
+      // biome-ignore lint/a11y/noNoninteractiveTabindex: This labeled scroll region needs keyboard access to columns outside the viewport.
+      tabIndex={0}
+      className="relative w-full overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
       <table
         data-slot="table"
         className={cn('w-full caption-bottom text-sm', className)}

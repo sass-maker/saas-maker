@@ -44,7 +44,7 @@ export function FeedbackTable({ feedback, onStatusChange }: FeedbackTableProps) 
   return (
     <>
       <div className={`min-h-[242px] rounded-md border ${feedbackTableShape}`}>
-        <Table>
+        <Table containerLabel="Feedback table">
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Type</TableHead>
@@ -81,7 +81,16 @@ export function FeedbackTable({ feedback, onStatusChange }: FeedbackTableProps) 
                     <TableCell>
                       <Badge variant={typeStyle.variant}>{typeStyle.label}</Badge>
                     </TableCell>
-                    <TableCell className="truncate font-medium">{item.title}</TableCell>
+                    <TableCell className="truncate font-medium">
+                      <button
+                        type="button"
+                        className="block w-full truncate text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        aria-label={`Open feedback: ${item.title}`}
+                        onClick={() => setSelectedId(item.id)}
+                      >
+                        {item.title}
+                      </button>
+                    </TableCell>
                     <TableCell className="hidden sm:table-cell truncate text-muted-foreground">
                       {item.submitter_name || item.submitter_email || 'Anonymous'}
                     </TableCell>
