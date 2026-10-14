@@ -120,9 +120,10 @@ describe('public home representation cache', () => {
     it(`separates cold and warm ${order.join(' then ')} using URL keys`, async () => {
       const cache = new UrlCache();
       vi.stubGlobal('caches', { default: cache });
-      for (const accept of [...order, ...order]) {
+      for (const [index, accept] of [...order, ...order].entries()) {
         const response = await respond(accept);
         expect(response.status).toBe(200);
+        expect(response.headers.get('x-edge-cache')).toBe(index < 2 ? 'MISS' : 'HIT');
         expect(response.headers.get('content-type')).toContain(accept);
         expect(response.headers.get('vary')).toContain('Accept');
         expect(response.headers.get('cache-control')).toContain('no-store');
@@ -176,7 +177,8 @@ describe('public home representation cache', () => {
       await respond();
       const before = calls;
       await respond('text/html', { headers: headers as Record<string, string> });
-      await respond('text/html', { headers: headers as Record<string, string> });
+      const bypass = await respond('text/html', { headers: headers as Record<string, string> });
+      expect(bypass.headers.get('x-edge-cache')).toBe('BYPASS');
       expect(calls).toBeGreaterThan(before + 1);
       expect(cache.keys).toHaveLength(1);
     });

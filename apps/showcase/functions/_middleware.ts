@@ -46,11 +46,13 @@ async function publicHomeCache(
       : null;
   const format = wantsMarkdown(request) ? 'markdown' : 'html';
   const keyUrl = new URL(url);
-  keyUrl.pathname = `/__public_home_cache_v1/${encodeURIComponent(generation || 'unbuilt')}/${format}`;
+  // A new namespace gives the first release request an observable cold lookup.
+  keyUrl.pathname = `/__public_home_cache_v2/${encodeURIComponent(generation || 'unbuilt')}/${format}`;
   const key = new Request(keyUrl, { method: 'GET' });
-  const downstream = (response: Response) => {
+  const downstream = (response: Response, cacheStatus: 'HIT' | 'MISS' | 'BYPASS') => {
     const headers = new Headers(response.headers);
     if (home) {
+      headers.set('x-edge-cache', cacheStatus);
       headers.set('cache-control', 'private, no-store');
       headers.set('cdn-cache-control', 'no-store');
       headers.set('cloudflare-cdn-cache-control', 'no-store');
@@ -70,11 +72,13 @@ async function publicHomeCache(
       headers,
     });
   };
+  let cacheStatus: 'MISS' | 'BYPASS' = cache ? 'MISS' : 'BYPASS';
   if (cache) {
     try {
       const hit = await cache.match(key);
-      if (hit) return downstream(hit);
+      if (hit) return downstream(hit, 'HIT');
     } catch {
+      cacheStatus = 'BYPASS';
       /* Cache availability must not affect serving. */
     }
   }
@@ -112,7 +116,7 @@ async function publicHomeCache(
       /* Serving succeeds even when a cache write fails. */
     }
   }
-  return downstream(response);
+  return downstream(response, cacheStatus);
 }
 
 // CF Pages Functions middleware for sassmaker.com (showcase):
