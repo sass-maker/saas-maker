@@ -122,7 +122,10 @@ describe('server-seeded project pages', () => {
 
   it('renders successful empty projects as onboarding', async () => {
     vi.mocked(apiFetchAuthed).mockResolvedValue({ data: [] });
-    expect(render(await ProjectsPage())).toContain('Create a feedback project');
+    const html = render(await ProjectsPage());
+    expect(html).toContain('Create a feedback project');
+    expect(html).toContain('Create project key');
+    expect(html).not.toContain('New Project');
   });
 
   it.each([

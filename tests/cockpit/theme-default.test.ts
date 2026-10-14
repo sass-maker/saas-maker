@@ -15,6 +15,7 @@ describe('first HTML theme', () => {
     );
     expect(html).toMatch(/<html[^>]*class="dark"/);
     expect(html).toMatch(/<html[^>]*style="color-scheme:dark"/);
+    expect(html).toMatch(/<body[^>]*class="[^"]*font-sans/);
     expect(html).toContain('Fixture content');
   });
 });

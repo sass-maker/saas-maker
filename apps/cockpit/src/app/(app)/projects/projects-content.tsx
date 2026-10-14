@@ -37,7 +37,9 @@ export function ProjectsContent(options: ResourceSeed<{ data: DashboardProject[]
       <PageHeader
         title="Project keys"
         description="Manage the product identities accepted by the SaaS Maker feedback package."
-        action={<CreateProjectDialog />}
+        action={
+          resource.status !== 'empty' && !showCreatedKey ? <CreateProjectDialog /> : undefined
+        }
       />
 
       <div className="flex flex-col gap-3 pt-8 sm:flex-row sm:items-end sm:justify-between">
