@@ -295,6 +295,19 @@ function markdown404(pathname: string): Response {
   });
 }
 
+function homeMarkdownUnavailable(): Response {
+  return new Response('# Markdown temporarily unavailable\n', {
+    status: 503,
+    headers: {
+      'content-type': 'text/markdown; charset=utf-8',
+      'cache-control': 'no-store',
+      'cdn-cache-control': 'no-store',
+      vary: 'Accept, Accept-Encoding',
+      'x-content-type-options': 'nosniff',
+    },
+  });
+}
+
 function html404(): Response {
   const body = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>404 — Not Found</title></head><body><h1>404 — Not Found</h1><p>The page you requested does not exist.</p></body></html>`;
   return new Response(body, {
@@ -377,7 +390,17 @@ async function handleGet(
     if (context.env.ASSETS) {
       const mdUrl = new URL(url);
       mdUrl.pathname = mdPath;
-      const mdResponse = await context.env.ASSETS.fetch(new Request(mdUrl.toString(), request));
+      let mdResponse: Response;
+      try {
+        // The root Markdown mirror is public static content. Do not forward a
+        // visitor's session or Authorization headers into its asset lookup.
+        const mdRequest =
+          pathname === '/' ? new Request(mdUrl.toString()) : new Request(mdUrl.toString(), request);
+        mdResponse = await context.env.ASSETS.fetch(mdRequest);
+      } catch (error) {
+        if (pathname === '/') return homeMarkdownUnavailable();
+        throw error;
+      }
       // Only serve as markdown if the asset actually exists (not a soft-404 HTML page).
       // Cloudflare Pages may serve index.html with 200 for unknown .md paths.
       if (mdResponse.status === 200) {
@@ -394,6 +417,7 @@ async function handleGet(
         }
       }
     }
+    if (pathname === '/') return homeMarkdownUnavailable();
   }
 
   const response = await context.next(request);
