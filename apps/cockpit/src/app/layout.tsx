@@ -10,6 +10,8 @@ const geistSans = Geist({
 });
 
 const geistMono = Geist_Mono({
+  // Keep the same font; request it only when visible mono text needs it.
+  preload: false,
   variable: '--font-geist-mono',
   subsets: ['latin'],
 });

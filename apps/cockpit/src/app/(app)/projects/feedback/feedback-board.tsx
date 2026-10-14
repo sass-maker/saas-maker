@@ -19,6 +19,25 @@ import { apiFetchClient, getClientToken } from '@/lib/api-client';
 
 type InboxRecord = FeedbackRecord & { project_name: string; project_slug: string };
 
+const TYPE_OPTIONS = [
+  { value: 'all', label: 'All types' },
+  { value: 'bug', label: 'Bugs' },
+  { value: 'feature', label: 'Features' },
+  { value: 'feedback', label: 'Feedback' },
+] as const;
+
+const STATUS_OPTIONS = [
+  { value: 'all', label: 'All statuses' },
+  { value: 'new', label: 'New' },
+  { value: 'acknowledged', label: 'Acknowledged' },
+  { value: 'investigating', label: 'Investigating' },
+  { value: 'planned', label: 'Planned' },
+  { value: 'in_progress', label: 'In progress' },
+  { value: 'resolved', label: 'Resolved' },
+  { value: 'dismissed', label: 'Dismissed' },
+  { value: 'on_roadmap', label: 'On roadmap' },
+] as const;
+
 export function FeedbackBoard() {
   const [type, setType] = useState<FeedbackType | 'all'>('all');
   const [status, setStatus] = useState<AnyFeedbackStatus | 'all'>('all');
@@ -50,13 +69,16 @@ export function FeedbackBoard() {
       <div className="flex flex-wrap items-center gap-3">
         <Select value={type} onValueChange={(value) => setType(value as FeedbackType | 'all')}>
           <SelectTrigger className="w-[160px]" aria-label="filter feedback by type">
-            <SelectValue placeholder="Type" />
+            <SelectValue placeholder="Type">
+              {TYPE_OPTIONS.find((option) => option.value === type)?.label}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All types</SelectItem>
-            <SelectItem value="bug">Bugs</SelectItem>
-            <SelectItem value="feature">Features</SelectItem>
-            <SelectItem value="feedback">Feedback</SelectItem>
+            {TYPE_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         <Select
@@ -64,18 +86,16 @@ export function FeedbackBoard() {
           onValueChange={(value) => setStatus(value as AnyFeedbackStatus | 'all')}
         >
           <SelectTrigger className="w-[180px]" aria-label="filter feedback by status">
-            <SelectValue placeholder="Status" />
+            <SelectValue placeholder="Status">
+              {STATUS_OPTIONS.find((option) => option.value === status)?.label}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
-            <SelectItem value="new">New</SelectItem>
-            <SelectItem value="acknowledged">Acknowledged</SelectItem>
-            <SelectItem value="investigating">Investigating</SelectItem>
-            <SelectItem value="planned">Planned</SelectItem>
-            <SelectItem value="in_progress">In progress</SelectItem>
-            <SelectItem value="resolved">Resolved</SelectItem>
-            <SelectItem value="dismissed">Dismissed</SelectItem>
-            <SelectItem value="on_roadmap">On roadmap</SelectItem>
+            {STATUS_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         <Button

@@ -57,7 +57,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="min-w-0 flex-1 overflow-y-auto">
         {/* Mobile header - only shows on small screens */}
         <header className="md:hidden sticky top-0 z-50 border-b border-border/70 bg-background/90 px-4 h-14 flex items-center justify-between backdrop-blur-xl">
           <div className="flex items-center gap-2">

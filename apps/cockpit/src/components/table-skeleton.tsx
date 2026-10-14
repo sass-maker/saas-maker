@@ -9,9 +9,9 @@ import {
 } from '@/components/ui/table';
 
 export const feedbackTableShape =
-  '[&_table]:table-fixed [&_tr]:h-10 [&_th:nth-child(1)]:w-[100px] [&_th:nth-child(3)]:hidden [&_td:nth-child(3)]:hidden sm:[&_th:nth-child(3)]:table-cell sm:[&_td:nth-child(3)]:table-cell sm:[&_th:nth-child(3)]:w-1/4 [&_th:nth-child(4)]:w-[120px] [&_th:nth-child(5)]:hidden [&_td:nth-child(5)]:hidden md:[&_th:nth-child(5)]:table-cell md:[&_td:nth-child(5)]:table-cell [&_th:nth-child(5)]:w-[120px]';
+  'md:[&_table]:min-w-[670px] [&_table]:table-fixed [&_tr]:h-10 [&_th:nth-child(1)]:w-[100px] [&_th:nth-child(3)]:hidden [&_td:nth-child(3)]:hidden sm:[&_th:nth-child(3)]:table-cell sm:[&_td:nth-child(3)]:table-cell sm:[&_th:nth-child(3)]:w-1/4 [&_th:nth-child(4)]:w-[120px] [&_th:nth-child(5)]:hidden [&_td:nth-child(5)]:hidden md:[&_th:nth-child(5)]:table-cell md:[&_td:nth-child(5)]:table-cell [&_th:nth-child(5)]:w-[120px]';
 export const subscribersTableShape =
-  '[&_table]:table-fixed [&_tr]:h-10 [&_th:nth-child(2)]:w-[120px] [&_th:nth-child(3)]:hidden [&_td:nth-child(3)]:hidden sm:[&_th:nth-child(3)]:table-cell sm:[&_td:nth-child(3)]:table-cell sm:[&_th:nth-child(3)]:w-1/5 [&_th:nth-child(4)]:w-[120px] [&_th:nth-child(5)]:hidden [&_td:nth-child(5)]:hidden md:[&_th:nth-child(5)]:table-cell md:[&_td:nth-child(5)]:table-cell [&_th:nth-child(5)]:w-[140px] [&_th:nth-child(6)]:hidden [&_td:nth-child(6)]:hidden md:[&_th:nth-child(6)]:table-cell md:[&_td:nth-child(6)]:table-cell [&_th:nth-child(6)]:w-[140px]';
+  'md:[&_table]:min-w-[900px] [&_table]:table-fixed [&_tr]:h-10 [&_th:nth-child(2)]:w-[120px] [&_th:nth-child(3)]:hidden [&_td:nth-child(3)]:hidden sm:[&_th:nth-child(3)]:table-cell sm:[&_td:nth-child(3)]:table-cell sm:[&_th:nth-child(3)]:w-1/5 [&_th:nth-child(4)]:w-[120px] [&_th:nth-child(5)]:hidden [&_td:nth-child(5)]:hidden md:[&_th:nth-child(5)]:table-cell md:[&_td:nth-child(5)]:table-cell [&_th:nth-child(5)]:w-[140px] [&_th:nth-child(6)]:hidden [&_td:nth-child(6)]:hidden md:[&_th:nth-child(6)]:table-cell md:[&_td:nth-child(6)]:table-cell [&_th:nth-child(6)]:w-[140px]';
 
 function TableSkeleton({
   columns,

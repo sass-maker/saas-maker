@@ -108,7 +108,9 @@ function SubscribersContent({ projects }: { projects: ProjectOption[] }) {
       <div className="flex flex-wrap items-center gap-3">
         <Select value={project} onValueChange={setProject} disabled={projects.length === 0}>
           <SelectTrigger className="w-[180px]" aria-label="Filter subscribers by project">
-            <SelectValue placeholder="Project" />
+            <SelectValue placeholder="Project">
+              {projects.find((option) => option.slug === project)?.name}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {projects.map((option) => (
@@ -120,7 +122,9 @@ function SubscribersContent({ projects }: { projects: ProjectOption[] }) {
         </Select>
         <Select value={kind} onValueChange={(value) => setKind(value as SubscriptionKind | 'all')}>
           <SelectTrigger className="w-[160px]" aria-label="Filter subscribers by kind">
-            <SelectValue placeholder="Kind" />
+            <SelectValue placeholder="Kind">
+              {kind === 'all' ? 'All kinds' : KIND_STYLES[kind].label}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All kinds</SelectItem>
@@ -216,11 +220,13 @@ function SubscriberTable({
               };
               return (
                 <TableRow key={item.id}>
-                  <TableCell className="truncate font-medium">{item.email}</TableCell>
+                  <TableCell className="break-all whitespace-normal font-medium">
+                    {item.email}
+                  </TableCell>
                   <TableCell>
                     <Badge variant={kindStyle.variant}>{kindStyle.label}</Badge>
                   </TableCell>
-                  <TableCell className="hidden sm:table-cell truncate text-muted-foreground">
+                  <TableCell className="hidden sm:table-cell break-all whitespace-normal text-muted-foreground">
                     {item.source || '—'}
                   </TableCell>
                   <TableCell>
