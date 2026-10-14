@@ -22,6 +22,9 @@ const projection = JSON.parse(
   await readFile(new URL('../catalog/generated/public.json', import.meta.url), 'utf8')
 );
 const expectedDirectoryIds = projection.directory.map(({ id }) => id).sort();
+const expectedBrowseCount = projection.directory.filter(
+  ({ lifecycle }) => lifecycle !== 'inactive'
+).length;
 
 const API = process.env.SAAS_MAKER_API ?? 'https://api.sassmaker.com';
 const APP = process.env.SAAS_MAKER_APP ?? 'https://app.sassmaker.com';
@@ -39,14 +42,14 @@ const directoryChecks = [
     },
   },
   {
-    name: 'Public directory renders the checked-in shareable identities',
+    name: 'Public directory renders the current shareable identities',
     fn: async () => {
       const res = await fetch(`${DIRECTORY}/projects`);
       if (res.status !== 200) throw new Error(`status ${res.status}`);
       const body = await res.text();
       const rows = body.match(/<details class="directory-row" data-directory-row/g)?.length ?? 0;
-      if (rows !== expectedDirectoryIds.length) {
-        throw new Error(`expected ${expectedDirectoryIds.length} directory rows, got ${rows}`);
+      if (rows !== expectedBrowseCount) {
+        throw new Error(`expected ${expectedBrowseCount} directory rows, got ${rows}`);
       }
       if (!body.includes('First retained commit') || !body.includes('Latest retained commit')) {
         throw new Error('missing Git-history bounds');
