@@ -27,7 +27,7 @@ export function MobileNav() {
             <SheetTitle className="text-lg font-bold">SaaS Maker</SheetTitle>
           </SheetHeader>
           <div className="flex-1 overflow-y-auto p-3">
-            <SidebarNav />
+            <SidebarNav onNavigate={() => setOpen(false)} />
           </div>
         </SheetContent>
       </Sheet>

@@ -11,7 +11,7 @@ const navItems = [
   { label: 'Project keys', href: '/projects', icon: FolderKanban },
 ] as const;
 
-export function SidebarNav() {
+export function SidebarNav({ onNavigate }: { onNavigate?: () => void } = {}) {
   const pathname = usePathname();
 
   return (
@@ -22,6 +22,7 @@ export function SidebarNav() {
           <Link
             key={item.href}
             href={item.href}
+            onClick={onNavigate}
             className={cn(
               'flex min-h-10 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
               active
