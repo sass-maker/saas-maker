@@ -37,11 +37,6 @@
       "probePath": "/"
     },
     {
-      "id": "email-manager",
-      "url": "https://mail.significanthobbies.com",
-      "probePath": "/"
-    },
-    {
       "id": "free-ai",
       "url": "https://ai-gateway.sassmaker.com",
       "probePath": "/"
@@ -69,11 +64,6 @@
     {
       "id": "chatgpt-memory-insights",
       "url": "https://chatgpt.significanthobbies.com",
-      "probePath": "/"
-    },
-    {
-      "id": "motion",
-      "url": "https://motion.significanthobbies.com",
       "probePath": "/"
     },
     {

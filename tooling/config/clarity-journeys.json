@@ -69,22 +69,6 @@
       }
     },
     {
-      "id": "email-manager",
-      "state": "ready",
-      "event": {
-        "name": "gmail_connect_opened",
-        "text": "Connect Gmail and search",
-        "href": "/app"
-      },
-      "funnel": {
-        "name": "discover_to_connect",
-        "steps": [
-          "page:/",
-          "event:gmail_connect_opened"
-        ]
-      }
-    },
-    {
       "id": "chatgpt-memory-insights",
       "state": "ready",
       "event": {
@@ -337,22 +321,6 @@
         "steps": [
           "page:/",
           "event:release_status_opened"
-        ]
-      }
-    },
-    {
-      "id": "motion",
-      "state": "ready",
-      "event": {
-        "name": "testflight_status_opened",
-        "text": "See TestFlight status",
-        "href": "/testflight/"
-      },
-      "funnel": {
-        "name": "discover_to_beta",
-        "steps": [
-          "page:/",
-          "event:testflight_status_opened"
         ]
       }
     },

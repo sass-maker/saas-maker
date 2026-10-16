@@ -335,6 +335,8 @@ describe('daily PII-free capture receipts', () => {
       'open-historia',
       'mentionpilot',
       'daddyrad',
+      'email-manager',
+      'motion',
     ]) {
       expect(catalogIds).not.toContain(id);
       expect(result.applicabilityByCatalogId[id]).toBeUndefined();
@@ -346,14 +348,13 @@ describe('daily PII-free capture receipts', () => {
       'calorie',
       'setline',
       'kith',
-      'motion',
       'anchor',
       'storagedaddy',
       'browserdaddy',
       'performancedaddy',
       'contextdaddy',
     ];
-    expect(nativeProducts).toHaveLength(11);
+    expect(nativeProducts).toHaveLength(10);
     for (const id of nativeProducts) {
       expect(result.nativeSessionsApplicabilityByCatalogId[id]).toBe('not_applicable');
     }

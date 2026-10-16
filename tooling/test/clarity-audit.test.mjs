@@ -62,8 +62,8 @@ test('the shipped capability policy is complete and remains desired state, not p
   assert.deepEqual(problems, []);
   assert.equal(valid, true);
   const coverage = projectCapabilityCoverage(shipped, capabilityPolicy);
-  assert.equal(coverage.projects, 64);
-  assert.equal(coverage.wiredProjects, 36);
+  assert.equal(coverage.projects, 62);
+  assert.equal(coverage.wiredProjects, 34);
   assert.equal(coverage.capabilities.length, 17);
   assert.equal(coverage.providerVerifiedAssignments, 0);
   assert.ok(coverage.desiredAssignments > 0);
@@ -84,8 +84,8 @@ test('the shipped journey registry covers every wired surface with live-root evi
   const { valid, problems } = validateJourneyRegistry(journeys, shipped);
   assert.deepEqual(problems, []);
   assert.equal(valid, true);
-  assert.equal(journeys.projects.length, 36);
-  assert.equal(journeys.projects.filter((entry) => entry.state === 'ready').length, 36);
+  assert.equal(journeys.projects.length, 34);
+  assert.equal(journeys.projects.filter((entry) => entry.state === 'ready').length, 34);
   assert.equal(journeys.projects.filter((entry) => entry.state === 'discovery-required').length, 0);
 });
 
@@ -234,7 +234,10 @@ test('CLI loads canonical repositories.localPath before checking a direct stale 
 });
 
 test('the shipped receipt declares separate landing and browser-app surfaces where required', () => {
-  for (const id of ['live', 'email-manager', 'knowledge-base']) {
+  for (const id of ['email-manager', 'motion']) {
+    assert.equal(shipped.projects.find((entry) => entry.id === id), undefined);
+  }
+  for (const id of ['live', 'knowledge-base']) {
     const project = shipped.projects.find((entry) => entry.id === id);
     assert.deepEqual(project.browserSurfaces.map((surface) => surface.kind).sort(), ['browser-app', 'landing']);
   }
@@ -243,7 +246,7 @@ test('the shipped receipt declares separate landing and browser-app surfaces whe
   for (const id of ['high-signal']) {
     assert.deepEqual(shipped.projects.find((entry) => entry.id === id).browserSurfaces.map((surface) => surface.kind), ['combined']);
   }
-  for (const id of ['email-manager', 'knowledge-base']) {
+  for (const id of ['knowledge-base']) {
     const appSurface = shipped.projects.find((entry) => entry.id === id).browserSurfaces.find((surface) => surface.kind === 'browser-app');
     assert.equal(appSurface.mask, 'root');
   }
