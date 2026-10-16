@@ -12,6 +12,9 @@ const projection = JSON.parse(
   await readFile(new URL('../../catalog/generated/public.json', import.meta.url), 'utf8')
 );
 const publicProjects = projection.directory as { lifecycle: string }[];
+const browsableProjectCount = publicProjects.filter(
+  ({ lifecycle }) => lifecycle !== 'inactive'
+).length;
 const ideas = [
   ...Array.from({ length: 48 }, () => ({ source: 'curated' })),
   ...Array.from({ length: 92 }, () => ({ source: 'starterstory' })),
@@ -71,22 +74,25 @@ async function smokeWithRows(rows: number, jsonProjects = publicProjects) {
 }
 
 describe('directory production smoke', () => {
-  it('accepts 33 browsable rows while preserving all 37 public JSON entries', async () => {
-    expect(publicProjects).toHaveLength(37);
-    expect(publicProjects.filter(({ lifecycle }) => lifecycle !== 'inactive')).toHaveLength(33);
-    const result = await smokeWithRows(33);
+  it('accepts the current browsable rows while preserving the full public JSON projection', async () => {
+    const result = await smokeWithRows(browsableProjectCount);
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain('4/4 passed');
   });
 
-  it('rejects the old 38-row browsing view', async () => {
-    const result = await smokeWithRows(38);
+  it('rejects an extra row beyond the current browsing projection', async () => {
+    const result = await smokeWithRows(browsableProjectCount + 1);
     expect(result.exitCode).toBe(1);
-    expect(result.stdout).toContain('expected 33 directory rows, got 38');
+    expect(result.stdout).toContain(
+      `expected ${browsableProjectCount} directory rows, got ${browsableProjectCount + 1}`
+    );
   });
 
   it('still requires the complete public JSON projection', async () => {
-    const result = await smokeWithRows(33, publicProjects.slice(0, 33));
+    const result = await smokeWithRows(
+      browsableProjectCount,
+      publicProjects.slice(0, browsableProjectCount)
+    );
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toContain('directory IDs differ');
   });

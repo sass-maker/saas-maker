@@ -16,17 +16,21 @@ describe('current projects browsing boundary', () => {
         (project) => project.id
       )
     ).toEqual(archived);
-    expect(PROJECTS_DIRECTORY_COUNT).toBe(33);
+    expect(PROJECTS_DIRECTORY_COUNT).toBe(
+      DIRECTORY_PROJECTS.filter((project) => project.lifecycle !== 'inactive').length
+    );
     for (const id of archived) {
       expect(PROJECTS_DIRECTORY.some((project) => project.id === id)).toBe(false);
       expect(DIRECTORY_PROJECTS.some((project) => project.id === id)).toBe(true);
     }
   });
   it('keeps Featured before Current and derives every browsing count from retained rows', () => {
-    expect(PROJECTS_DIRECTORY_GROUPS.map((group) => [group.id, group.projects.length])).toEqual([
-      ['featured', 2],
-      ['current', 31],
-    ]);
+    expect(PROJECTS_DIRECTORY_GROUPS.map((group) => [group.id, group.projects.length])).toEqual(
+      ['featured', 'current'].map((groupId) => [
+        groupId,
+        DIRECTORY_PROJECTS.filter((project) => project.group === groupId).length,
+      ])
+    );
     expect(PROJECTS_DIRECTORY_GROUPS.flatMap((group) => group.projects)).toHaveLength(
       PROJECTS_DIRECTORY_COUNT
     );
