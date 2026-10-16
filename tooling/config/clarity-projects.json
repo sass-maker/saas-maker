@@ -170,30 +170,6 @@
       "browserSurfaces": []
     },
     {
-      "id": "email-manager",
-      "name": "Email Manager",
-      "repo": "email-manager",
-      "clarityId": "y6bt70yq9x",
-      "hostname": "mail.significanthobbies.com",
-      "tag": "email-manager",
-      "wiredFiles": [
-        "email-manager/landing-astro/src/layouts/Layout.astro",
-        "email-manager/index.html"
-      ],
-      "reason": "Clarity covers the public marketing site and authenticated Gmail application; the application root is explicitly masked before collection so mailbox content and derived views are not uploaded.",
-      "browserSurfaces": [
-        {
-          "kind": "landing",
-          "file": "email-manager/landing-astro/src/layouts/Layout.astro"
-        },
-        {
-          "kind": "browser-app",
-          "file": "email-manager/index.html",
-          "mask": "root"
-        }
-      ]
-    },
-    {
       "id": "chatgpt-memory-insights",
       "name": "Memory Map",
       "repo": "saas-maker",
@@ -631,24 +607,6 @@
         {
           "kind": "landing",
           "file": "app-health/apps/web/changelog.html"
-        }
-      ]
-    },
-    {
-      "id": "motion",
-      "name": "Motion",
-      "repo": "motion",
-      "clarityId": "y6bvl31bna",
-      "hostname": "motion.significanthobbies.com",
-      "tag": "motion",
-      "wiredFiles": [
-        "ios-landings/src/lib/clarity.ts"
-      ],
-      "surfaceOwner": "ios-landings",
-      "browserSurfaces": [
-        {
-          "kind": "landing",
-          "file": "ios-landings/src/lib/clarity.ts"
         }
       ]
     },

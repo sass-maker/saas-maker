@@ -55,12 +55,6 @@
       "serverRequests": "applicable"
     },
     {
-      "id": "email-manager",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
-    },
-    {
       "id": "chatgpt-memory-insights",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
@@ -181,12 +175,6 @@
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "applicable"
-    },
-    {
-      "id": "motion",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "not-applicable"
     },
     {
       "id": "ph-catalog",

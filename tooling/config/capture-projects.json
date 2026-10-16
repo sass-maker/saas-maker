@@ -215,41 +215,6 @@
       ]
     },
     {
-      "id": "email-manager",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "public"
-        },
-        {
-          "field": "presentation.directory.platforms",
-          "value": [
-            "Web",
-            "API"
-          ]
-        },
-        {
-          "field": "presentation.directory.purposeContract.purpose",
-          "value": "Kinetic helps a person understand who fills their Gmail inbox and deliberately reduce unwanted volume."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "September 11 ordinary existing-account Google OAuth completed with the requested gmail.readonly and identity scopes. 500 messages cached and indexed to 100%; sender search returned 25 results and a generic semantic query returned 50. After reload the mailbox remained connected and indexed, and the same query returned 50 results. No email write actions or message contents retained. Personal use is qualified; broad public sharing remains false. Account switching and a forced expired-token refresh were not separately exercised. Existing historical broader permissions were displayed as already granted; the current request was Gmail read-only plus identity. Receipt: docs/qualification/kinetic-owner-core-2026-09-11.json."
-        },
-        {
-          "field": "deployment.status",
-          "value": "live"
-        }
-      ]
-    },
-    {
       "id": "chatgpt-memory-insights",
       "applicability": "newsletter",
       "confidence": "medium",
@@ -814,26 +779,6 @@
         {
           "field": "deployment.status",
           "value": "live"
-        }
-      ]
-    },
-    {
-      "id": "motion",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "The public product site has a bound project identity and shared footer. Offer occasional notes only when the product materially changes; do not imply a planned release or recurring cadence.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "presentation.directory.purposeContract.nextAction",
-          "value": "Treat it as a held prototype; reopen around physical-device testing of one genuinely fun control loop."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "Held physical-play experiment; any future functioning-game claim still needs camera/control/device evidence."
         }
       ]
     },
