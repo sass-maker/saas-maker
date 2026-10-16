@@ -141,7 +141,10 @@ describe('Hosted newsletter and waitlist capture', () => {
   it('emits one privacy-limited App Health event after a new durable join', async () => {
     const send = vi.fn().mockResolvedValue(new Response(null, { status: 202 }));
     vi.stubGlobal('fetch', send);
-    const response = await postJoin(JOIN, { APP_HEALTH_INGEST_KEY: 'synthetic-app-health-key' });
+    const response = await postJoin(
+      { ...JOIN, source: 'qa-issue167-20261016' },
+      { APP_HEALTH_INGEST_KEY: 'synthetic-app-health-key' }
+    );
     expect(response.status).toBe(202);
     expect(await response.json()).toEqual({ ok: true });
     expect(mockStore.joinCapture).toHaveBeenCalledWith(
@@ -150,7 +153,7 @@ describe('Hosted newsletter and waitlist capture', () => {
         projectId: 'project-1',
         kind: 'waitlist',
         email: 'person@example.test',
-        source: 'landing',
+        source: 'qa-issue167-20261016',
         consentVersion: 'v1',
         consentText: CAPTURE_CONSENT_COPY_V1.waitlist,
       })
@@ -162,7 +165,12 @@ describe('Hosted newsletter and waitlist capture', () => {
     const payload = JSON.parse(logCalls[0][1].body);
     expect(payload.logs[0]).toMatchObject({
       event: 'waitlist.join',
-      props: { project: 'product-one', project_id: 'project-1', kind: 'waitlist' },
+      props: {
+        project: 'product-one',
+        project_id: 'project-1',
+        kind: 'waitlist',
+        source: 'qa-issue167-20261016',
+      },
     });
     expect(JSON.stringify(payload)).not.toMatch(
       /person@example|Person@Example|synthetic-capture-key/
