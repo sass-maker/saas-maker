@@ -271,59 +271,6 @@
       "latestCommitAt": "2026-09-22"
     },
     {
-      "id": "email-manager",
-      "name": "Kinetic",
-      "description": "A private Gmail workspace for local semantic search, sender insights, and explicit unsubscribe workflows.",
-      "makerNote": "Gmail did not help me see who was filling my inbox, so I built a clearer way to understand volume and unsubscribe.",
-      "purposeContract": {
-        "purpose": "Kinetic helps a person understand who fills their Gmail inbox and deliberately reduce unwanted volume.",
-        "audience": "A Gmail user who wants private search, sender-level insight, and explicit unsubscribe control.",
-        "outcome": "Find old mail, identify repeat senders, and unsubscribe with a clear understanding of what will change.",
-        "mechanism": "A private Gmail workspace combines local semantic search, sender aggregation, and user-confirmed unsubscribe workflows.",
-        "proof": "The maintained application performs its intended search, sender-insight, and unsubscribe jobs in regular use.",
-        "nextAction": "Open the private workspace and investigate a sender or search question; no speculative feature expansion is planned."
-      },
-      "footerArt": {
-        "src": "/footer-art/email-manager.webp",
-        "width": 2169,
-        "height": 725,
-        "alt": "Kinetic: A deliberate inbox sorting desk centers one selected sealed envelope and a hand-operated review tray. Different sender-sized envelope groups occupy the wings; no sender identity or message content is visible.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Kinetic",
-        "sha256": "608d95ab7e52b1aa43650828a4f2032bdc5bef686a715ea573931595594aeaa9"
-      },
-      "kind": "product",
-      "category": "utility",
-      "form": "Web app",
-      "platforms": [
-        "Web",
-        "API"
-      ],
-      "technologies": [
-        "React",
-        "Hono",
-        "Cloudflare Workers",
-        "D1"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Workers"
-      ],
-      "domains": [
-        "mail.significanthobbies.com"
-      ],
-      "url": "https://mail.significanthobbies.com",
-      "repositoryUrl": "https://github.com/Significant-Hobbies/email-manager",
-      "changelogUrl": "https://mail.significanthobbies.com/changelog",
-      "roadmapUrl": "https://github.com/Significant-Hobbies/email-manager/issues",
-      "firstCommitAt": "2026-02-24",
-      "latestCommitAt": "2026-09-10"
-    },
-    {
       "id": "chatgpt-memory-insights",
       "name": "Memory Map",
       "description": "A browser-local experiment for importing a ChatGPT export, exploring semantic themes and search, and optionally saving analysis on your device.",
@@ -2397,41 +2344,6 @@
         "focalY": 50,
         "credit": "Original illustration for Karte",
         "sha256": "82a259b668d1e6507173483dd10368d0304b6923099a8afeb1b5d2850ca134fb"
-      }
-    },
-    {
-      "id": "email-manager",
-      "name": "Kinetic",
-      "description": "A private Gmail workspace for local semantic search, sender insights, and explicit unsubscribe workflows.",
-      "url": "https://mail.significanthobbies.com",
-      "tier": "active",
-      "category": "utility",
-      "priority": "P4",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "maintained",
-      "changelogUrl": "https://mail.significanthobbies.com/changelog",
-      "repositoryUrl": "https://github.com/Significant-Hobbies/email-manager",
-      "roadmapUrl": "https://github.com/Significant-Hobbies/email-manager/issues",
-      "pillarId": "learn",
-      "purposeContract": {
-        "purpose": "Kinetic helps a person understand who fills their Gmail inbox and deliberately reduce unwanted volume.",
-        "audience": "A Gmail user who wants private search, sender-level insight, and explicit unsubscribe control.",
-        "outcome": "Find old mail, identify repeat senders, and unsubscribe with a clear understanding of what will change.",
-        "mechanism": "A private Gmail workspace combines local semantic search, sender aggregation, and user-confirmed unsubscribe workflows.",
-        "proof": "The maintained application performs its intended search, sender-insight, and unsubscribe jobs in regular use.",
-        "nextAction": "Open the private workspace and investigate a sender or search question; no speculative feature expansion is planned."
-      },
-      "footerArt": {
-        "src": "/footer-art/email-manager.webp",
-        "width": 2169,
-        "height": 725,
-        "alt": "Kinetic: A deliberate inbox sorting desk centers one selected sealed envelope and a hand-operated review tray. Different sender-sized envelope groups occupy the wings; no sender identity or message content is visible.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Kinetic",
-        "sha256": "608d95ab7e52b1aa43650828a4f2032bdc5bef686a715ea573931595594aeaa9"
       }
     },
     {
