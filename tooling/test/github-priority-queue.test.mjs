@@ -4,9 +4,12 @@ import test from 'node:test';
 import {
   auditProjectItems,
   buildIssueSearchArgs,
+  extractActivePrimaryRepositories,
   extractIssueRecords,
+  filterIssueRecordsByRepositories,
   extractSkippedUrls,
   isTerminalStatus,
+  loadActivePrimaryRepositories,
   normalizeProjectItems,
   parseArgs,
   parseSkipLabels,
@@ -61,6 +64,7 @@ test('parseArgs accepts the status reconciliation flags and defaults them', () =
   const defaults = parseArgs(['--owner', 'o', '--project', '3', '--author', 'a']);
   assert.equal(defaults.statusField, 'Status');
   assert.equal(defaults.doneValue, 'Done');
+  assert.match(defaults.catalog, /catalog\/projects\.json$/);
   assert.equal(defaults.apply, false);
   assert.deepEqual(defaults.skipRepoLabels, ['sarthakagrawal927/portfolio:issues']);
   assert.deepEqual(defaults.skipLabels, ['deferred: portfolio-cut', 'queue: excluded']);
@@ -76,6 +80,9 @@ test('parseArgs accepts the status reconciliation flags and defaults them', () =
   assert.equal(custom.statusField, 'State');
   assert.equal(custom.doneValue, 'Shipped');
   assert.equal(custom.apply, true);
+  assert.equal(parseArgs([
+    '--owner', 'o', '--project', '3', '--author', 'a', '--catalog', './catalog/custom.json',
+  ]).catalog, `${process.cwd()}/catalog/custom.json`);
   assert.deepEqual(custom.skipRepoLabels, [
     'sarthakagrawal927/portfolio:issues',
     'org/repo:do-not-queue',
@@ -99,6 +106,40 @@ test('buildIssueSearchArgs searches one state at a time', () => {
   assert.equal(openArgs.includes('open'), true);
   assert.equal(openArgs.includes('--archived=false'), true);
   assert.throws(() => buildIssueSearchArgs('a', 5, 'all'), /Unsupported issue state/);
+});
+
+test('active primary repository extraction ignores inactive projects and history, and deduplicates URLs', () => {
+  const repositories = extractActivePrimaryRepositories({
+    projects: [
+      { lifecycle: { status: 'active' }, repositories: { url: 'https://github.com/Owner/Repo' } },
+      { lifecycle: { status: 'primary' }, repositories: { url: 'https://github.com/owner/repo.git/' } },
+      { lifecycle: { status: 'inactive' }, repositories: { url: 'https://github.com/owner/old' } },
+      { lifecycle: { status: 'active' }, repositories: { url: 'https://github.com/owner/secondary', aliases: ['https://github.com/owner/alias'] } },
+    ],
+    repositoryReview: { repositories: [{ url: 'https://github.com/history/not-a-project' }] },
+  });
+  assert.deepEqual(repositories, ['owner/repo', 'owner/secondary']);
+});
+
+test('catalog loading fails closed for missing, malformed, invalid, or empty catalogs', () => {
+  assert.throws(() => loadActivePrimaryRepositories('missing.json', () => {
+    throw new Error('missing');
+  }), /Unable to read project catalog/);
+  assert.throws(() => loadActivePrimaryRepositories('broken.json', () => '{'), /malformed JSON/);
+  assert.throws(() => extractActivePrimaryRepositories({ projects: [] }), /no active primary repositories/);
+  assert.throws(() => extractActivePrimaryRepositories({ projects: {} }), /malformed/);
+});
+
+test('issue search args scope open and closed searches to every allowed repository', () => {
+  for (const state of ['open', 'closed']) {
+    const args = buildIssueSearchArgs('a', 5, state, ['Owner/One', 'owner/two']);
+    const repoOptions = [];
+    for (let index = 0; index < args.length; index += 1) {
+      if (args[index] === '--repo') repoOptions.push(args[index + 1]);
+    }
+    assert.deepEqual(repoOptions, ['owner/one', 'owner/two']);
+  }
+  assert.throws(() => buildIssueSearchArgs('a', 5, 'open', []), /At least one allowed repository/);
 });
 
 test('normalizeProjectItems reads item ids and single-select values', () => {
@@ -243,6 +284,60 @@ test('dry run reports both directions without mutating the project', () => {
   assert.match(lines.join('\n'), /Closed issue not Done on board/);
 });
 
+test('scoped sync filters unexpected off-scope search results before adding or reconciling', () => {
+  const { calls, run } = createRunner();
+  const searchArgs = [];
+  const scopedRun = (command, args, options) => {
+    const joined = args.join(' ');
+    if (joined.startsWith('search issues') && joined.includes('--state open')) {
+      searchArgs.push(args);
+      return {
+        status: 0,
+        stdout: JSON.stringify([
+          { url: OPEN_URL, repository: { nameWithOwner: 'active/repo' } },
+          { url: MISSING_URL, repository: { nameWithOwner: 'inactive/repo' } },
+        ]),
+      };
+    }
+    if (joined.startsWith('search issues') && joined.includes('--state closed')) {
+      searchArgs.push(args);
+      return {
+        status: 0,
+        stdout: JSON.stringify([{ url: CLOSED_URL, repository: { nameWithOwner: 'inactive/repo' } }]),
+      };
+    }
+    if (joined.startsWith('project item-list')) {
+      return {
+        status: 0,
+        stdout: JSON.stringify({
+          items: [
+            { id: 'ITEM_active', status: 'Todo', content: { url: OPEN_URL } },
+            { id: 'ITEM_offscope_closed', status: 'In Progress', content: { url: CLOSED_URL } },
+          ],
+        }),
+      };
+    }
+    return run(command, args, options);
+  };
+  const result = syncPriorityQueue(
+    { ...OPTIONS, apply: true, allowedRepositories: ['active/repo'] },
+    { run: scopedRun, write: () => {} },
+  );
+
+  assert.equal(result.summary.discovered, 1);
+  assert.equal(result.summary.missing, 0);
+  assert.equal(result.summary.closedPending, 0);
+  assert.equal(result.summary.reconciled, 0);
+  assert.equal(calls.some((call) => call.startsWith('project item-add')), false);
+  assert.equal(calls.some((call) => call.startsWith('project item-edit')), false);
+  assert.equal(searchArgs.length, 2);
+  for (const args of searchArgs) {
+    const repoIndex = args.indexOf('--repo');
+    assert.notEqual(repoIndex, -1);
+    assert.equal(args[repoIndex + 1], 'active/repo');
+  }
+});
+
 test('apply adds missing issues and moves closed issues to Done', () => {
   const { calls, run } = createRunner();
   const result = syncPriorityQueue({ ...OPTIONS, apply: true }, { run, write: () => {} });
@@ -317,6 +412,15 @@ test('extractIssueRecords reads repo and labels from search rows', () => {
   assert.deepEqual(first.labels, ['issues']);
   assert.equal(second.repo, '');
   assert.deepEqual(second.labels, []);
+});
+
+test('repository filtering excludes off-scope records and records without repository identity', () => {
+  const records = extractIssueRecords([
+    { url: OPEN_URL, repository: { nameWithOwner: 'owner/repo' } },
+    { url: CLOSED_URL, repository: { nameWithOwner: 'other/repo' } },
+    { url: MISSING_URL },
+  ]);
+  assert.deepEqual(filterIssueRecordsByRepositories(records, ['Owner/Repo']), [records[0]]);
 });
 
 test('extractSkippedUrls matches repo and label case-insensitively', () => {

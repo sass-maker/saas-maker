@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 
 import { spawnSync } from 'node:child_process';
-import { pathToFileURL } from 'node:url';
+import { readFileSync } from 'node:fs';
+import { pathToFileURL, fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 
 const DEFAULT_LIMIT = 1_000;
 const DEFAULT_STATUS_FIELD = 'Status';
 const DEFAULT_DONE_VALUE = 'Done';
+const DEFAULT_CATALOG_PATH = fileURLToPath(new URL('../../catalog/projects.json', import.meta.url));
 const DEFAULT_SKIP_REPO_LABELS = ['sarthakagrawal927/portfolio:issues'];
 const DEFAULT_SKIP_LABELS = ['deferred: portfolio-cut', 'queue: excluded'];
 const TOKEN_PATTERNS = [
@@ -13,13 +16,13 @@ const TOKEN_PATTERNS = [
   /\bgithub_pat_[A-Za-z0-9_]+\b/g,
   /\bBearer\s+[^\s]+/gi,
 ];
-const VALUED_ARGUMENTS = ['owner', 'project', 'author', 'limit', 'status-field', 'done-value'];
+const VALUED_ARGUMENTS = ['owner', 'project', 'author', 'limit', 'status-field', 'done-value', 'catalog'];
 const REPEATABLE_ARGUMENTS = ['skip-repo-label', 'skip-label'];
 
 function usage() {
   return `Usage:
   node saas-maker/tooling/scripts/github-priority-queue.mjs \\
-    --owner OWNER --project NUMBER --author LOGIN [--apply]
+    --owner OWNER --project NUMBER --author LOGIN [--catalog PATH] [--apply]
 
 Reconciles a GitHub Project against the author's issues in both directions:
 adds open issues that are missing, and moves items whose issue is already
@@ -30,6 +33,7 @@ Options:
   --owner OWNER          GitHub Project owner login (required)
   --project NUMBER       GitHub Project number (required)
   --author LOGIN         Issue author login (required)
+  --catalog PATH         Fleet project catalog (default: catalog/projects.json)
   --limit NUMBER         Maximum issues to discover per state (default: ${DEFAULT_LIMIT})
   --status-field NAME    Single-select status field name (default: ${DEFAULT_STATUS_FIELD})
   --done-value NAME      Terminal option name in that field (default: ${DEFAULT_DONE_VALUE})
@@ -53,6 +57,7 @@ export function parseArgs(argv) {
     limit: DEFAULT_LIMIT,
     statusField: DEFAULT_STATUS_FIELD,
     doneValue: DEFAULT_DONE_VALUE,
+    catalog: DEFAULT_CATALOG_PATH,
     skipRepoLabels: [...DEFAULT_SKIP_REPO_LABELS],
     skipLabels: [...DEFAULT_SKIP_LABELS],
   };
@@ -86,6 +91,7 @@ export function parseArgs(argv) {
     }
     if (key === 'status-field') options.statusField = value;
     else if (key === 'done-value') options.doneValue = value;
+    else if (key === 'catalog') options.catalog = resolve(value);
     else options[key] = value;
     index += 1;
   }
@@ -105,7 +111,76 @@ export function parseArgs(argv) {
   return options;
 }
 
-export function buildIssueSearchArgs(author, limit = DEFAULT_LIMIT, state = 'open') {
+export function normalizeRepositoryName(value) {
+  const repository = String(value ?? '').trim();
+  if (!/^[^/\s]+\/[^/\s]+$/.test(repository)) {
+    throw new Error(`Invalid GitHub repository name: ${repository || '(empty)'}`);
+  }
+  return repository.toLowerCase();
+}
+
+function repositoryNameFromUrl(value) {
+  let url;
+  try {
+    url = new URL(value);
+  } catch {
+    throw new Error(`Invalid primary repository URL: ${String(value ?? '')}`);
+  }
+  if (
+    url.protocol !== 'https:' ||
+    url.hostname.toLowerCase() !== 'github.com' ||
+    url.username ||
+    url.password ||
+    url.search ||
+    url.hash
+  ) {
+    throw new Error(`Invalid primary repository URL: ${String(value ?? '')}`);
+  }
+  const parts = url.pathname.split('/').filter(Boolean);
+  if (parts.length !== 2) throw new Error(`Invalid primary repository URL: ${String(value ?? '')}`);
+  const name = parts[1].replace(/\.git$/i, '');
+  return normalizeRepositoryName(`${parts[0]}/${name}`);
+}
+
+export function extractActivePrimaryRepositories(catalog) {
+  if (!catalog || typeof catalog !== 'object' || !Array.isArray(catalog.projects)) {
+    throw new Error('Project catalog is malformed: expected a projects array');
+  }
+  const repositories = new Set();
+  for (const project of catalog.projects) {
+    const status = project?.lifecycle?.status;
+    if (status !== 'primary' && status !== 'active') continue;
+    const url = project?.repositories?.url;
+    if (!url) continue;
+    repositories.add(repositoryNameFromUrl(url));
+  }
+  if (repositories.size === 0) {
+    throw new Error('Project catalog contains no active primary repositories');
+  }
+  return [...repositories].sort();
+}
+
+export function loadActivePrimaryRepositories(
+  catalogPath = DEFAULT_CATALOG_PATH,
+  readText = (file) => readFileSync(file, 'utf8'),
+) {
+  const resolvedPath = resolve(catalogPath);
+  let contents;
+  try {
+    contents = readText(resolvedPath);
+  } catch {
+    throw new Error(`Unable to read project catalog: ${resolvedPath}`);
+  }
+  let catalog;
+  try {
+    catalog = JSON.parse(contents);
+  } catch {
+    throw new Error(`Project catalog is malformed JSON: ${resolvedPath}`);
+  }
+  return extractActivePrimaryRepositories(catalog);
+}
+
+export function buildIssueSearchArgs(author, limit = DEFAULT_LIMIT, state = 'open', repositories) {
   if (!['open', 'closed'].includes(state)) {
     throw new Error(`Unsupported issue state: ${state}`);
   }
@@ -121,6 +196,14 @@ export function buildIssueSearchArgs(author, limit = DEFAULT_LIMIT, state = 'ope
     '--json',
     'url,labels,repository',
   ];
+  if (repositories !== undefined) {
+    if (!Array.isArray(repositories) || repositories.length === 0) {
+      throw new Error('At least one allowed repository is required');
+    }
+    for (const repository of [...new Set(repositories.map(normalizeRepositoryName))]) {
+      args.push('--repo', repository);
+    }
+  }
   if (state === 'open') args.push('--archived=false');
   return args;
 }
@@ -175,6 +258,12 @@ export function extractIssueRecords(payload) {
     });
   }
   return records;
+}
+
+export function filterIssueRecordsByRepositories(records, repositories) {
+  if (repositories === undefined) return records;
+  const allowed = new Set(repositories.map(normalizeRepositoryName));
+  return records.filter((record) => allowed.has(String(record.repo ?? '').toLowerCase()));
 }
 
 export function extractSkippedUrls(records, skipRepoLabels, skipLabels = new Set()) {
@@ -345,6 +434,13 @@ export function syncPriorityQueue(
 ) {
   const statusField = options.statusField ?? DEFAULT_STATUS_FIELD;
   const doneValue = options.doneValue ?? DEFAULT_DONE_VALUE;
+  const allowedRepositories =
+    options.allowedRepositories === undefined
+      ? undefined
+      : [...new Set(options.allowedRepositories.map(normalizeRepositoryName))];
+  if (allowedRepositories !== undefined && allowedRepositories.length === 0) {
+    throw new Error('At least one allowed repository is required');
+  }
 
   const identity = runGh(run, ['api', 'user', '--jq', '.login']);
   if (!identity.ok) {
@@ -368,11 +464,17 @@ export function syncPriorityQueue(
   const projectId = parseJson(project, 'Project lookup failed')?.id;
   if (!projectId) throw new Error('Project lookup failed: no project id returned');
 
-  const openResult = runGh(run, buildIssueSearchArgs(options.author, options.limit, 'open'));
-  const openRecords = extractIssueRecords(parseJson(openResult, 'Issue discovery failed'));
+  const openResult = runGh(run, buildIssueSearchArgs(options.author, options.limit, 'open', allowedRepositories));
+  const openRecords = filterIssueRecordsByRepositories(
+    extractIssueRecords(parseJson(openResult, 'Issue discovery failed')),
+    allowedRepositories,
+  );
   const discoveredUrls = [...new Set(openRecords.map((record) => record.url))];
-  const closedResult = runGh(run, buildIssueSearchArgs(options.author, options.limit, 'closed'));
-  const closedRecords = extractIssueRecords(parseJson(closedResult, 'Closed issue discovery failed'));
+  const closedResult = runGh(run, buildIssueSearchArgs(options.author, options.limit, 'closed', allowedRepositories));
+  const closedRecords = filterIssueRecordsByRepositories(
+    extractIssueRecords(parseJson(closedResult, 'Closed issue discovery failed')),
+    allowedRepositories,
+  );
   const closedUrls = new Set(closedRecords.map((record) => record.url));
 
   const skipRepoLabels = parseSkipRepoLabels(options.skipRepoLabels ?? DEFAULT_SKIP_REPO_LABELS);
@@ -510,7 +612,8 @@ function main() {
       process.stdout.write(usage());
       return;
     }
-    const result = syncPriorityQueue(options);
+    const allowedRepositories = loadActivePrimaryRepositories(options.catalog);
+    const result = syncPriorityQueue({ ...options, allowedRepositories });
     process.exitCode = result.exitCode;
   } catch (error) {
     console.error(sanitizeError(error?.message ?? error));
