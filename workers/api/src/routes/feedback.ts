@@ -246,7 +246,7 @@ feedback.post('/', requireApiKey, async (c) => {
         project_id: projectId,
         ...(catalogProjectId ? { catalog_project_id: catalogProjectId } : {}),
         type: record.type,
-        ...(/^[a-z][a-z0-9_-]{0,63}$/.test(record.source) ? { source: record.source } : {}),
+        ...(/^[a-z][a-z0-9_-]{0,63}$/.test(record.source ?? '') ? { source: record.source } : {}),
       },
     });
     try {
