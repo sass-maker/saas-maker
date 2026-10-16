@@ -71,10 +71,10 @@ async function smokeWithRows(rows: number, jsonProjects = publicProjects) {
 }
 
 describe('directory production smoke', () => {
-  it('accepts 34 browsable rows while preserving all 38 public JSON entries', async () => {
-    expect(publicProjects).toHaveLength(38);
-    expect(publicProjects.filter(({ lifecycle }) => lifecycle !== 'inactive')).toHaveLength(34);
-    const result = await smokeWithRows(34);
+  it('accepts 33 browsable rows while preserving all 37 public JSON entries', async () => {
+    expect(publicProjects).toHaveLength(37);
+    expect(publicProjects.filter(({ lifecycle }) => lifecycle !== 'inactive')).toHaveLength(33);
+    const result = await smokeWithRows(33);
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain('4/4 passed');
   });
@@ -82,11 +82,11 @@ describe('directory production smoke', () => {
   it('rejects the old 38-row browsing view', async () => {
     const result = await smokeWithRows(38);
     expect(result.exitCode).toBe(1);
-    expect(result.stdout).toContain('expected 34 directory rows, got 38');
+    expect(result.stdout).toContain('expected 33 directory rows, got 38');
   });
 
   it('still requires the complete public JSON projection', async () => {
-    const result = await smokeWithRows(34, publicProjects.slice(0, 34));
+    const result = await smokeWithRows(33, publicProjects.slice(0, 33));
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toContain('directory IDs differ');
   });

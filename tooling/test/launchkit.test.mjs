@@ -82,6 +82,12 @@ test('coverage ledger only references public projects and real domains', () => {
   );
   const domains = new Set((launchdesk.destinations ?? launchdesk).map((r) => r.domain));
   const publicIds = new Set((catalog.directory ?? []).map((p) => p.id));
+  for (const [id, retirement] of Object.entries(ledger.retiredProjects ?? {})) {
+    assert.ok(!publicIds.has(id), `retired project is still public: ${id}`);
+    assert.ok(!ledger.projects[id], `retired project is still in the active ledger: ${id}`);
+    assert.ok(retirement.retiredAt && retirement.reason);
+    assert.ok(Object.keys(retirement.coverage.destinations).length > 0);
+  }
   const states = new Set(['prepared', 'submitted', 'scheduled', 'queued', 'live', 'skipped']);
   const covered = new Set(ledger.coveredStates);
   assert.ok(covered.isSubsetOf(states));
