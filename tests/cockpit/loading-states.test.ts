@@ -10,6 +10,8 @@ import {
   FeedbackTableSkeleton,
   SubscribersTableSkeleton,
 } from '../../apps/cockpit/src/components/table-skeleton';
+import FeedbackLoading from '../../apps/cockpit/src/app/(app)/projects/feedback/loading';
+import SubscribersLoading from '../../apps/cockpit/src/app/(app)/projects/subscribers/loading';
 import { apiFetchClient } from '../../apps/cockpit/src/lib/api-client';
 
 afterEach(() => {
@@ -36,6 +38,17 @@ function render(resource: BoundaryResource<string[]>) {
 }
 
 describe('cockpit loading and failure states', () => {
+  it.each([
+    [FeedbackLoading, 'Feedback inbox', 'Loading feedback table'],
+    [SubscribersLoading, 'Subscribers', 'Loading subscribers table'],
+  ])('shows the %s route shape without a project-key fallback', (Loading, title, table) => {
+    const html = renderToStaticMarkup(createElement(Loading));
+    expect(html).toContain(`>${title}</h1>`);
+    expect(html).toContain(table);
+    expect(html).toContain('aria-busy="true"');
+    expect(html).not.toContain('Project keys');
+  });
+
   it('offers the offline variant with a retry action', () => {
     const html = renderToStaticMarkup(createElement(ErrorState, { offline: true, onRetry: retry }));
     expect(html).toContain('you&#x27;re offline');
