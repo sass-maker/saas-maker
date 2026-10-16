@@ -481,58 +481,6 @@
       "latestCommitAt": "2026-09-22"
     },
     {
-      "id": "research-papers",
-      "name": "Research Papers",
-      "description": "Search academic papers and follow original sources; account-based research chat is not yet qualified.",
-      "makerNote": "I wanted one large, searchable research library where retrieval could help me understand what already exists in a market.",
-      "purposeContract": {
-        "purpose": "Research Papers is a structured, searchable library for discovering and interrogating academic and market research.",
-        "audience": "The Fleet owner investigating a concrete product, technical, or market question.",
-        "outcome": "Find relevant papers and retrieve grounded context from a large retained corpus.",
-        "mechanism": "A curated research dataset is indexed for search and retrieval-assisted analysis with source structure intact.",
-        "proof": "The corpus and discovery system are essentially complete and available when a real research question appears.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-      },
-      "footerArt": {
-        "src": "/footer-art/research-papers.webp",
-        "width": 2169,
-        "height": 725,
-        "alt": "Research Papers: A research reading gallery centers one open paper under a study lamp, with a visible citation thread leading back to its scholarly shelf. Indexed volumes, a magnifier and restrained specimen trays frame the study area.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Research Papers",
-        "sha256": "709c788faeb58d1de55ec50b53e35eb1b57a05754eccc499334c2e577e0a7f6b"
-      },
-      "kind": "product",
-      "category": "media",
-      "form": "Research library",
-      "platforms": [
-        "Web"
-      ],
-      "technologies": [
-        "Astro",
-        "Python",
-        "React",
-        "TypeScript"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Pages"
-      ],
-      "domains": [
-        "papers.highsignal.app"
-      ],
-      "url": "https://papers.highsignal.app",
-      "repositoryUrl": "https://github.com/High-Signal-App/research-papers",
-      "changelogUrl": "https://papers.highsignal.app/changelog",
-      "roadmapUrl": "https://github.com/High-Signal-App/research-papers/issues",
-      "firstCommitAt": "2026-05-30",
-      "latestCommitAt": "2026-09-10"
-    },
-    {
       "id": "knowledge-base",
       "name": "Knowledge Base",
       "description": "Private agent search over specialized corpora with ranked citations, provenance, and schema-aware retrieval.",
@@ -1177,58 +1125,6 @@
       "latestCommitAt": "2026-09-19"
     },
     {
-      "id": "ph-catalog",
-      "name": "PH Catalog",
-      "description": "A resumable local Product Hunt catalogue and analytics experiment with a privacy-safe synthetic demo.",
-      "makerNote": "I keep the full catalogue and analytics data local; the public repository demonstrates the real pipeline using original fictional fixtures.",
-      "purposeContract": {
-        "purpose": "Build one resumable, deduplicated local product catalogue with explicit provenance and bounded analytical enrichment.",
-        "audience": "Developers and product researchers exploring reproducible catalogue and market-analysis workflows.",
-        "outcome": "Import, verify, snapshot and explore a local catalogue without publishing third-party product data.",
-        "mechanism": "A Python pipeline normalizes public product records into DuckDB and Parquet, while a read-only local UI serves aggregate analytics.",
-        "proof": "All 88 tests pass. The three-record fictional offline demo exercises the real parser and database path, produces a verified Zstandard-compressed Parquet snapshot and refuses to overwrite an existing non-sample catalogue.",
-        "nextAction": "Finish the bounded experiment, document the repeatable local workflow and then mark the project inactive as a completed experiment."
-      },
-      "footerArt": {
-        "src": "/footer-art/ph-catalog.webp",
-        "width": 2172,
-        "height": 724,
-        "alt": "Finely drawn research cabinet containing original product objects and separate source cards, with a central structured folio and separate annotation slip.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for PH Catalog",
-        "sha256": "ca1786d2519cfafa52e2ff7ba5faecb41407f93c230b092b7c55a5febbceb945"
-      },
-      "kind": "experiment",
-      "category": "experimental",
-      "form": "Local catalogue and analytics toolkit",
-      "platforms": [
-        "CLI",
-        "Local",
-        "Web"
-      ],
-      "technologies": [
-        "Python",
-        "DuckDB",
-        "Parquet"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Pages"
-      ],
-      "domains": [
-        "ph.significanthobbies.com"
-      ],
-      "url": "https://ph.significanthobbies.com",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/ph-catalog",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/ph-catalog/issues",
-      "firstCommitAt": "2026-08-31",
-      "latestCommitAt": "2026-09-12"
-    },
-    {
       "id": "web-playables",
       "name": "Web Playables",
       "description": "Small browser-playable game experiments.",
@@ -1387,59 +1283,6 @@
       "latestCommitAt": "2026-09-19"
     },
     {
-      "id": "reddit-insights",
-      "name": "Reddit Insights",
-      "description": "Search a dated snapshot of 93 Reddit communities in your browser, with links to original posts and explicit provenance limits.",
-      "makerNote": "I wanted to understand how the signals and emotions inside a subreddit change over time, even though historical data is difficult to obtain.",
-      "purposeContract": {
-        "purpose": "Reddit Insights studies how topics, signals, and emotional tone inside a subreddit change over time.",
-        "audience": "A researcher or product operator following a specific community longitudinally.",
-        "outcome": "Recognize recurring shifts and emerging concerns from a retained body of subreddit evidence.",
-        "mechanism": "A bounded collector stores attributable snapshots and derives recurring insight views without claiming unavailable history.",
-        "proof": "The collector and snapshot model exist, but reliable lawful access to historical Reddit data remains the central blocker.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-      },
-      "footerArt": {
-        "src": "/footer-art/reddit-insights.webp",
-        "width": 2172,
-        "height": 724,
-        "alt": "Reddit Insights: A community research bulletin board centers one unlettered day folder with a source-linked discussion card inside its boundary. Separate community drawers and empty unobserved-day slots make captured scope visible.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Reddit Insights",
-        "sha256": "bf2ac20dedbae952868f879468c851773f0dc40291a43376990f3608fe1f950b"
-      },
-      "kind": "experiment",
-      "category": "experimental",
-      "form": "Research collector",
-      "platforms": [
-        "Web",
-        "API"
-      ],
-      "technologies": [
-        "TypeScript",
-        "Cloudflare Workers",
-        "R2"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Pages",
-        "Cloudflare Workers"
-      ],
-      "domains": [
-        "reddit-insights.highsignal.app"
-      ],
-      "url": "https://reddit-insights.highsignal.app",
-      "repositoryUrl": "https://github.com/High-Signal-App/research-subreddit",
-      "changelogUrl": "https://reddit-insights.highsignal.app/changelog",
-      "roadmapUrl": "https://github.com/High-Signal-App/research-subreddit/issues",
-      "firstCommitAt": "2026-08-07",
-      "latestCommitAt": "2026-09-18"
-    },
-    {
       "id": "anchor",
       "name": "Anchor",
       "description": "A local-first day planner and focus timer for Mac, iPhone, and Apple Watch that explains the gap between the schedule you planned and the day you lived.",
@@ -1495,58 +1338,6 @@
       "roadmapUrl": "https://github.com/Significant-Hobbies/anchor/issues",
       "firstCommitAt": "2026-08-16",
       "latestCommitAt": "2026-09-18"
-    },
-    {
-      "id": "nomad-data-adventure",
-      "name": "Nomad Data Adventure",
-      "description": "Nomad Atlas explores 1,374 terrestrial places with living-cost profiles, lifestyle filters, city comparisons and downloadable source data credited to Nomads.com.",
-      "makerNote": "I keep this as a completed, shareable city-data experiment for exploring the saved dataset, comparing places and downloading a shortlist.",
-      "purposeContract": {
-        "purpose": "Help people explore and compare places to live using a saved city dataset.",
-        "audience": "People comparing destinations by budget, connectivity and everyday life.",
-        "outcome": "Filter 1,374 terrestrial places, compare up to three across 22 metrics, and export matching records.",
-        "mechanism": "Static HTML, CSS, JavaScript and JSON served by Cloudflare Pages; all filtering and comparisons run in the browser.",
-        "proof": "Completed experiment verified at https://nomad.significanthobbies.com/ on September 13, commit e763b02. Six data tests, exact-commit CI and six release gates passed. Live search, comparison and downloads verified; 390px mobile layout checked. GitHub Pages disabled.",
-        "nextAction": "Share and use the completed explorer at nomad.significanthobbies.com; no active expansion or collection roadmap."
-      },
-      "footerArt": {
-        "src": "/footer-art/nomad-data-adventure.webp",
-        "width": 2170,
-        "height": 725,
-        "alt": "Nomad Data Adventure: A saved-place comparison table centers two original miniature city landscapes and a comparison foldout. Fictional coast and hill, closed dataset folders and a travel bag show tradeoffs rather than an ideal destination.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Nomad Data Adventure",
-        "sha256": "487f4de10060e4594f602009c0fe54e8569fa0753a7d5fde94a648e618f78d30"
-      },
-      "kind": "experiment",
-      "category": "experimental",
-      "form": "Static city explorer",
-      "platforms": [
-        "Web"
-      ],
-      "technologies": [
-        "Cloudflare Pages",
-        "JavaScript",
-        "HTML",
-        "CSS"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Pages"
-      ],
-      "domains": [
-        "nomad.significanthobbies.com",
-        "nomad-data-adventure.pages.dev"
-      ],
-      "url": "https://nomad.significanthobbies.com/",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure/issues",
-      "firstCommitAt": "2026-09-12",
-      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "storagedaddy",
@@ -2522,40 +2313,6 @@
       }
     },
     {
-      "id": "nomad-data-adventure",
-      "name": "Nomad Data Adventure",
-      "description": "Nomad Atlas explores 1,374 terrestrial places with living-cost profiles, lifestyle filters, city comparisons and downloadable source data credited to Nomads.com.",
-      "url": "https://nomad.significanthobbies.com/",
-      "tier": "secondary",
-      "category": "experimental",
-      "priority": "P2",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "experiment",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure/issues",
-      "pillarId": "build",
-      "purposeContract": {
-        "purpose": "Help people explore and compare places to live using a saved city dataset.",
-        "audience": "People comparing destinations by budget, connectivity and everyday life.",
-        "outcome": "Filter 1,374 terrestrial places, compare up to three across 22 metrics, and export matching records.",
-        "mechanism": "Static HTML, CSS, JavaScript and JSON served by Cloudflare Pages; all filtering and comparisons run in the browser.",
-        "proof": "Completed experiment verified at https://nomad.significanthobbies.com/ on September 13, commit e763b02. Six data tests, exact-commit CI and six release gates passed. Live search, comparison and downloads verified; 390px mobile layout checked. GitHub Pages disabled.",
-        "nextAction": "Share and use the completed explorer at nomad.significanthobbies.com; no active expansion or collection roadmap."
-      },
-      "footerArt": {
-        "src": "/footer-art/nomad-data-adventure.webp",
-        "width": 2170,
-        "height": 725,
-        "alt": "Nomad Data Adventure: A saved-place comparison table centers two original miniature city landscapes and a comparison foldout. Fictional coast and hill, closed dataset folders and a travel bag show tradeoffs rather than an ideal destination.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Nomad Data Adventure",
-        "sha256": "487f4de10060e4594f602009c0fe54e8569fa0753a7d5fde94a648e618f78d30"
-      }
-    },
-    {
       "id": "what-it-takes-to-win",
       "name": "Paths",
       "description": "Explore sourced career turning points with explicit survivorship and forecasting limits.",
@@ -2620,108 +2377,6 @@
         "focalY": 50,
         "credit": "Original illustration for PerformanceDaddy",
         "sha256": "74af2c7952c555a8737187a46fbd6393c7f58bfd2fb9124cbea5fec82909a8d8"
-      }
-    },
-    {
-      "id": "ph-catalog",
-      "name": "PH Catalog",
-      "description": "A resumable local Product Hunt catalogue and analytics experiment with a privacy-safe synthetic demo.",
-      "url": "https://ph.significanthobbies.com",
-      "tier": "secondary",
-      "category": "experimental",
-      "priority": "P2",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "experiment",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/ph-catalog",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/ph-catalog/issues",
-      "pillarId": "build",
-      "purposeContract": {
-        "purpose": "Build one resumable, deduplicated local product catalogue with explicit provenance and bounded analytical enrichment.",
-        "audience": "Developers and product researchers exploring reproducible catalogue and market-analysis workflows.",
-        "outcome": "Import, verify, snapshot and explore a local catalogue without publishing third-party product data.",
-        "mechanism": "A Python pipeline normalizes public product records into DuckDB and Parquet, while a read-only local UI serves aggregate analytics.",
-        "proof": "All 88 tests pass. The three-record fictional offline demo exercises the real parser and database path, produces a verified Zstandard-compressed Parquet snapshot and refuses to overwrite an existing non-sample catalogue.",
-        "nextAction": "Finish the bounded experiment, document the repeatable local workflow and then mark the project inactive as a completed experiment."
-      },
-      "footerArt": {
-        "src": "/footer-art/ph-catalog.webp",
-        "width": 2172,
-        "height": 724,
-        "alt": "Finely drawn research cabinet containing original product objects and separate source cards, with a central structured folio and separate annotation slip.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for PH Catalog",
-        "sha256": "ca1786d2519cfafa52e2ff7ba5faecb41407f93c230b092b7c55a5febbceb945"
-      }
-    },
-    {
-      "id": "reddit-insights",
-      "name": "Reddit Insights",
-      "description": "Search a dated snapshot of 93 Reddit communities in your browser, with links to original posts and explicit provenance limits.",
-      "url": "https://reddit-insights.highsignal.app",
-      "tier": "secondary",
-      "category": "experimental",
-      "priority": "P4",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "changelogUrl": "https://reddit-insights.highsignal.app/changelog",
-      "repositoryUrl": "https://github.com/High-Signal-App/research-subreddit",
-      "roadmapUrl": "https://github.com/High-Signal-App/research-subreddit/issues",
-      "purposeContract": {
-        "purpose": "Reddit Insights studies how topics, signals, and emotional tone inside a subreddit change over time.",
-        "audience": "A researcher or product operator following a specific community longitudinally.",
-        "outcome": "Recognize recurring shifts and emerging concerns from a retained body of subreddit evidence.",
-        "mechanism": "A bounded collector stores attributable snapshots and derives recurring insight views without claiming unavailable history.",
-        "proof": "The collector and snapshot model exist, but reliable lawful access to historical Reddit data remains the central blocker.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-      },
-      "footerArt": {
-        "src": "/footer-art/reddit-insights.webp",
-        "width": 2172,
-        "height": 724,
-        "alt": "Reddit Insights: A community research bulletin board centers one unlettered day folder with a source-linked discussion card inside its boundary. Separate community drawers and empty unobserved-day slots make captured scope visible.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Reddit Insights",
-        "sha256": "bf2ac20dedbae952868f879468c851773f0dc40291a43376990f3608fe1f950b"
-      }
-    },
-    {
-      "id": "research-papers",
-      "name": "Research Papers",
-      "description": "Search academic papers and follow original sources; account-based research chat is not yet qualified.",
-      "url": "https://papers.highsignal.app",
-      "tier": "secondary",
-      "category": "media",
-      "priority": "P2",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "experiment",
-      "changelogUrl": "https://papers.highsignal.app/changelog",
-      "repositoryUrl": "https://github.com/High-Signal-App/research-papers",
-      "roadmapUrl": "https://github.com/High-Signal-App/research-papers/issues",
-      "pillarId": "learn",
-      "purposeContract": {
-        "purpose": "Research Papers is a structured, searchable library for discovering and interrogating academic and market research.",
-        "audience": "The Fleet owner investigating a concrete product, technical, or market question.",
-        "outcome": "Find relevant papers and retrieve grounded context from a large retained corpus.",
-        "mechanism": "A curated research dataset is indexed for search and retrieval-assisted analysis with source structure intact.",
-        "proof": "The corpus and discovery system are essentially complete and available when a real research question appears.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-      },
-      "footerArt": {
-        "src": "/footer-art/research-papers.webp",
-        "width": 2169,
-        "height": 725,
-        "alt": "Research Papers: A research reading gallery centers one open paper under a study lamp, with a visible citation thread leading back to its scholarly shelf. Indexed volumes, a magnifier and restrained specimen trays frame the study area.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Research Papers",
-        "sha256": "709c788faeb58d1de55ec50b53e35eb1b57a05754eccc499334c2e577e0a7f6b"
       }
     },
     {

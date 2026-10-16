@@ -62,8 +62,11 @@ test('the shipped capability policy is complete and remains desired state, not p
   assert.deepEqual(problems, []);
   assert.equal(valid, true);
   const coverage = projectCapabilityCoverage(shipped, capabilityPolicy);
-  assert.equal(coverage.projects, 62);
-  assert.equal(coverage.wiredProjects, 34);
+  assert.equal(coverage.projects, shipped.projects.length);
+  assert.equal(
+    coverage.wiredProjects,
+    shipped.projects.filter((project) => (project.browserSurfaces ?? []).length > 0).length,
+  );
   assert.equal(coverage.capabilities.length, 17);
   assert.equal(coverage.providerVerifiedAssignments, 0);
   assert.ok(coverage.desiredAssignments > 0);
@@ -84,14 +87,20 @@ test('the shipped journey registry covers every wired surface with live-root evi
   const { valid, problems } = validateJourneyRegistry(journeys, shipped);
   assert.deepEqual(problems, []);
   assert.equal(valid, true);
-  assert.equal(journeys.projects.length, 34);
-  assert.equal(journeys.projects.filter((entry) => entry.state === 'ready').length, 34);
+  assert.equal(
+    journeys.projects.length,
+    shipped.projects.filter((project) => (project.browserSurfaces ?? []).length > 0).length,
+  );
+  assert.equal(
+    journeys.projects.filter((entry) => entry.state === 'ready').length,
+    journeys.projects.length,
+  );
   assert.equal(journeys.projects.filter((entry) => entry.state === 'discovery-required').length, 0);
 });
 
 test('journey registry rejects invented ready journeys and missing wired products', () => {
   const invented = structuredClone(journeys);
-  invented.projects.find((entry) => entry.id === 'ph-catalog').event.name = 'not a stable id';
+  invented.projects[0].event.name = 'not a stable id';
   assert.match(validateJourneyRegistry(invented, shipped).problems.join('\n'), /event.name/u);
 
   const missing = structuredClone(journeys);

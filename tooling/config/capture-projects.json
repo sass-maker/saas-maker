@@ -324,26 +324,6 @@
       ]
     },
     {
-      "id": "research-papers",
-      "applicability": "newsletter",
-      "confidence": "high",
-      "rationale": "An explicit newsletter form exists at research-papers/web/src/pages/index.astro. The live public page renders the form. Invite only occasional notes when the public snapshot, reading paths, or cited-answer demo materially changes. This is product-update capture, not a launch waitlist.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "presentation.directory.purposeContract.nextAction",
-          "value": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "Public static index and bounded paper-intent answer evidence retained. Existing Turnstile widget secret and missing production-only hostname allowlist restored under explicit owner approval; deployment34500247191 and public smoke passed. Protected general-answer success remains unverified: both headless and headed isolated browsers received no response token. Private research functions untested."
-        }
-      ]
-    },
-    {
       "id": "knowledge-base",
       "applicability": "newsletter",
       "confidence": "medium",
@@ -783,26 +763,6 @@
       ]
     },
     {
-      "id": "ph-catalog",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "An explicit newsletter form exists at ph-catalog/landing/index.html. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "internal"
-        },
-        {
-          "field": "classification.kind",
-          "value": "experiment"
-        }
-      ]
-    },
-    {
       "id": "web-playables",
       "applicability": "newsletter",
       "confidence": "medium",
@@ -863,26 +823,6 @@
       ]
     },
     {
-      "id": "reddit-insights",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "An explicit newsletter form exists at reddit-insights/scripts/build-pages.mjs. The public site source mounts the form; live submission is not yet qualified. This is product-update capture, not a launch waitlist.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "presentation.directory.purposeContract.nextAction",
-          "value": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "Hosted historical source-linked search/navigation and one original-source comparison pass. Incomplete capture provenance and full-corpus fidelity remain explicit; no live-monitoring claim."
-        }
-      ]
-    },
-    {
       "id": "anchor",
       "applicability": "newsletter",
       "confidence": "medium",
@@ -912,40 +852,6 @@
         {
           "field": "sharing.evidence.reason",
           "value": "Installed Mac build25 at5856714 passed interactive schedule/focus/pause/resume/free decline/distraction/finish/history and a same-store relaunch persistence check. Physical iPhone core flow passed; latest installed normal Release launch was build23 in native-minimum-phone-20260911.json. Owner normal data was untouched. Personal single-device core acceptance is complete. Public Mac notarization/distribution and cross-device production CloudKit continuity remain separately unverified; shareable stays false. Receipt: docs/qualification/anchor-mac-minimum-2026-09-11.json. September12 landing-only correction published from ios-landings4135729 as Pages155ccf31: HTML, Markdown and agent metadata accurately describe the existing build20 private-iCloud note behavior. Native download is unchanged; this does not close release issue52. September12 fresh installed-bundle checks confirm build25 and a valid strict/deep signature, but Gatekeeper rejects it as Unnotarized Developer ID (exit3). Public build25 distribution remains blocked. Qualification correction committed as50b2d27; issue52 remains open."
-        },
-        {
-          "field": "deployment.status",
-          "value": "live"
-        }
-      ]
-    },
-    {
-      "id": "nomad-data-adventure",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "public"
-        },
-        {
-          "field": "presentation.directory.platforms",
-          "value": [
-            "Web"
-          ]
-        },
-        {
-          "field": "presentation.directory.purposeContract.purpose",
-          "value": "Help people explore and compare places to live using a saved city dataset."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "Shareable, completed experiment. Canonical HTTPS domain, live city search and source JSON verified on 2026-09-13. Desktop/mobile workflows, exact-commit CI and deployment gates passed; GitHub Pages is disabled."
         },
         {
           "field": "deployment.status",

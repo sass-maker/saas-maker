@@ -243,6 +243,7 @@ describe('verified public Fleet directory', () => {
   it('projects only shareable identities with privacy-safe anatomy', async () => {
     const catalog = JSON.parse(await readRepository('catalog/generated/public.json'));
     const ids = catalog.directory.map((project: { id: string }) => project.id);
+    expect(ids).toContain('on-record');
     const counts = (catalog.directory as Array<{ group: string }>).reduce<Record<string, number>>(
       (result, project) => {
         result[project.group] = (result[project.group] ?? 0) + 1;
@@ -300,23 +301,16 @@ describe('verified public Fleet directory', () => {
     );
     expect(ids).not.toContain('chess');
     expect(ids).not.toContain('journal');
-    expect(
-      catalog.directory.find((project: { id: string }) => project.id === 'nomad-data-adventure')
-    ).toMatchObject({
-      lifecycle: 'active',
-      category: 'experimental',
-      url: 'https://nomad.significanthobbies.com/',
-    });
-    expect(
-      catalog.directory.find((project: { id: string }) => project.id === 'ph-catalog')
-    ).toMatchObject({
-      lifecycle: 'active',
-      category: 'experimental',
-      group: 'current',
-      deployed: true,
-      url: 'https://ph.significanthobbies.com',
-      repositoryUrl: 'https://github.com/sarthakagrawal927/ph-catalog',
-    });
+    // These retained source components are grouped under TechData instead of
+    // being published as four separate Fleet products.
+    for (const componentId of [
+      'research-papers',
+      'ph-catalog',
+      'reddit-insights',
+      'nomad-data-adventure',
+    ]) {
+      expect(ids).not.toContain(componentId);
+    }
     for (const heldId of [
       'psi-swarm',
       'everythingrated',
@@ -399,7 +393,7 @@ describe('verified public Fleet directory', () => {
   });
 
   it('keeps established web identities discoverable through the public form families', () => {
-    for (const projectId of ['starboard', 'on-record', 'research-papers']) {
+    for (const projectId of ['starboard', 'on-record']) {
       const project = DIRECTORY_PROJECTS.find((candidate) => candidate.id === projectId);
       expect(project).toBeDefined();
       expect(directoryFormFamilies(project!)).toContain('Web');

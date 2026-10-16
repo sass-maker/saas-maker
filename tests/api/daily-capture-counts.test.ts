@@ -243,6 +243,7 @@ describe('daily PII-free capture receipts', () => {
     const { d1 } = setup();
     const reportProjects = capturePolicy.projects;
     const catalogIds = reportProjects.map(({ id }) => id);
+    expect(catalogIds).toContain('techdata');
     const result = await getDailyCaptureCounts(d1, '2020-01-01', catalogIds);
 
     expect(Object.keys(result.applicabilityByCatalogId)).toHaveLength(reportProjects.length);
@@ -293,7 +294,7 @@ describe('daily PII-free capture receipts', () => {
     expect(result.serverRequestsApplicabilityByCatalogId['every-song-is-a-website']).toBe(
       'not_applicable'
     );
-    expect(result.serverRequestsApplicabilityByCatalogId['reddit-insights']).toBe('applicable');
+    expect(result.serverRequestsApplicabilityByCatalogId).not.toHaveProperty('reddit-insights');
     expect(result.serverRequestsApplicabilityByCatalogId.codevetter).toBe('not_applicable');
     expect(
       Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
@@ -337,6 +338,10 @@ describe('daily PII-free capture receipts', () => {
       'daddyrad',
       'email-manager',
       'motion',
+      'research-papers',
+      'ph-catalog',
+      'reddit-insights',
+      'nomad-data-adventure',
     ]) {
       expect(catalogIds).not.toContain(id);
       expect(result.applicabilityByCatalogId[id]).toBeUndefined();
@@ -383,7 +388,7 @@ describe('daily PII-free capture receipts', () => {
     expect(result.browserVisitorsApplicabilityByCatalogId['unified-portfolio']).toBe('applicable');
     expect(
       Object.fromEntries(
-        ['pace', 'free-ai', 'knowledge-base', 'ios-landings', 'ph-catalog'].map((id) => [
+        ['pace', 'free-ai', 'knowledge-base', 'ios-landings'].map((id) => [
           id,
           result.applicabilityByCatalogId[id],
         ])
@@ -393,7 +398,6 @@ describe('daily PII-free capture receipts', () => {
       'free-ai': 'newsletter',
       'knowledge-base': 'newsletter',
       'ios-landings': 'newsletter',
-      'ph-catalog': 'newsletter',
     });
     const internalNewsletterIds = reportProjects
       .filter(
@@ -403,13 +407,7 @@ describe('daily PII-free capture receipts', () => {
       )
       .map(({ id }) => id)
       .sort();
-    expect(internalNewsletterIds).toEqual([
-      'free-ai',
-      'ios-landings',
-      'knowledge-base',
-      'pace',
-      'ph-catalog',
-    ]);
+    expect(internalNewsletterIds).toEqual(['free-ai', 'ios-landings', 'knowledge-base', 'pace']);
 
     const notApplicable = Object.entries(result.applicabilityByCatalogId)
       .filter(([, applicability]) => applicability === 'not-applicable')
