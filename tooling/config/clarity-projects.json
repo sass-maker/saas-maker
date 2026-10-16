@@ -251,16 +251,6 @@
       "browserSurfaces": []
     },
     {
-      "id": "research-papers",
-      "name": "Research Papers",
-      "repo": "research-papers",
-      "clarityId": "y6btr00dl7",
-      "hostname": "papers.highsignal.app",
-      "wiredFiles": [],
-      "reason": "Intentionally unwired under the owner-approved tracking hold: Research Papers PR #57 (2026-10-02) removed the Clarity loader from the shared site nav; live papers.highsignal.app loads no Clarity. Re-wire only when the owner lifts the hold.",
-      "browserSurfaces": []
-    },
-    {
       "id": "materia",
       "name": "Materia",
       "repo": "materia",
@@ -731,23 +721,6 @@
       ]
     },
     {
-      "id": "reddit-insights",
-      "name": "Reddit Insights",
-      "repo": "reddit-insights",
-      "clarityId": "y6bwkyh4qb",
-      "hostname": "reddit-insights.highsignal.app",
-      "tag": "reddit-insights",
-      "wiredFiles": [
-        "reddit-insights/scripts/build-pages.mjs"
-      ],
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "reddit-insights/scripts/build-pages.mjs"
-        }
-      ]
-    },
-    {
       "id": "verified-bases",
       "name": "Verified Bases",
       "repo": "verified-bases",
@@ -774,34 +747,6 @@
           "file": "ios-landings/src/lib/clarity.ts"
         }
       ]
-    },
-    {
-      "id": "ph-catalog",
-      "name": "PH Catalog",
-      "repo": "ph-catalog",
-      "clarityId": "ymdtaonrgw",
-      "hostname": "ph.significanthobbies.com",
-      "tag": "ph-catalog",
-      "wiredFiles": [
-        "ph-catalog/landing/index.html"
-      ],
-      "reason": "Clarity covers only the public privacy-safe synthetic demo; the full local catalogue, DuckDB database, and analytics data remain outside browser analytics.",
-      "browserSurfaces": [
-        {
-          "kind": "landing",
-          "file": "ph-catalog/landing/index.html"
-        }
-      ]
-    },
-    {
-      "id": "nomad-data-adventure",
-      "name": "Nomad Data Adventure",
-      "repo": "nomad-data-adventure",
-      "clarityId": "ymdtktqqxv",
-      "hostname": "nomad.significanthobbies.com",
-      "wiredFiles": [],
-      "reason": "Active public experiment with no current local checkout; retain its dedicated Clarity identity without inventing or changing a surface.",
-      "browserSurfaces": []
     },
     {
       "id": "storagedaddy",

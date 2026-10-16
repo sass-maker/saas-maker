@@ -79,12 +79,6 @@
       "serverRequests": "applicable"
     },
     {
-      "id": "research-papers",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
-    },
-    {
       "id": "knowledge-base",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
@@ -177,12 +171,6 @@
       "serverRequests": "applicable"
     },
     {
-      "id": "ph-catalog",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "not-applicable"
-    },
-    {
       "id": "web-playables",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
@@ -201,19 +189,7 @@
       "serverRequests": "not-applicable"
     },
     {
-      "id": "reddit-insights",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
-    },
-    {
       "id": "anchor",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "not-applicable"
-    },
-    {
-      "id": "nomad-data-adventure",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"

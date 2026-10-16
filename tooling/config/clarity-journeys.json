@@ -390,22 +390,6 @@
       }
     },
     {
-      "id": "reddit-insights",
-      "state": "ready",
-      "event": {
-        "name": "source_thread_opened",
-        "text": "Ranked source thread",
-        "hrefPrefix": "https://www.reddit.com/"
-      },
-      "funnel": {
-        "name": "digest_to_source",
-        "steps": [
-          "page:/",
-          "event:source_thread_opened"
-        ]
-      }
-    },
-    {
       "id": "anchor",
       "state": "ready",
       "event": {
@@ -532,23 +516,6 @@
           "event:game_opened"
         ]
       }
-    },
-    {
-      "id": "ph-catalog",
-      "state": "ready",
-      "event": {
-        "name": "sample_opened",
-        "text": "Acme Toolkit",
-        "href": "samples/acme-toolkit.html"
-      },
-      "funnel": {
-        "name": "discover_to_sample",
-        "steps": [
-          "page:/",
-          "event:sample_opened"
-        ]
-      },
-      "source": "ph-catalog/landing/index.html"
     }
   ]
 }

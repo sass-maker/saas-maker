@@ -72,11 +72,6 @@
       "probePath": "/"
     },
     {
-      "id": "research-papers",
-      "url": "https://papers.highsignal.app",
-      "probePath": "/"
-    },
-    {
       "id": "rolepatch",
       "url": "https://rolepatch.com",
       "probePath": "/"
@@ -137,28 +132,13 @@
       "probePath": "/"
     },
     {
-      "id": "ph-catalog",
-      "url": "https://ph.significanthobbies.com",
-      "probePath": "/"
-    },
-    {
       "id": "web-playables",
       "url": "https://idle.aliveville.com",
       "probePath": "/"
     },
     {
-      "id": "reddit-insights",
-      "url": "https://reddit-insights.highsignal.app",
-      "probePath": "/"
-    },
-    {
       "id": "anchor",
       "url": "https://anchor.significanthobbies.com",
-      "probePath": "/"
-    },
-    {
-      "id": "nomad-data-adventure",
-      "url": "https://nomad.significanthobbies.com",
       "probePath": "/"
     },
     {
