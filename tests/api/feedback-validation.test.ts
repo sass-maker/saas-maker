@@ -106,6 +106,7 @@ describe('Feedback route validation with a mocked DB', () => {
           description: 'Private details',
           submitter_email: 'private@example.com',
           type: 'feature',
+          source: 'qa-issue167-20261016',
         }),
       },
       { APP_HEALTH_INGEST_KEY: 'test-ingest-key' }
@@ -124,11 +125,41 @@ describe('Feedback route validation with a mocked DB', () => {
     expect(payload.logs[0]).toMatchObject({
       event: 'feedback.submitted',
       title: 'Feedback received',
-      props: { project: 'acme', project_id: 'proj-1', type: 'feature' },
+      props: {
+        project: 'acme',
+        project_id: 'proj-1',
+        type: 'feature',
+        source: 'qa-issue167-20261016',
+      },
     });
     expect(JSON.stringify(payload)).not.toMatch(
       /Private title|Private details|private@example\.com/
     );
+  });
+
+  it.each([
+    'https://product.example/?email=private@example.com',
+    'private@example.com',
+    'a'.repeat(65),
+  ])('keeps unbounded feedback source metadata out of App Health: %s', async (source) => {
+    const send = vi.fn().mockResolvedValue(new Response(null, { status: 202 }));
+    vi.stubGlobal('fetch', send);
+    const res = await request(
+      '/v1/feedback',
+      {
+        method: 'POST',
+        headers: apiKeyHeaders(),
+        body: JSON.stringify({ title: 'Bug', description: 'Details', type: 'bug', source }),
+      },
+      { APP_HEALTH_INGEST_KEY: 'test-ingest-key' }
+    );
+    expect(res.status).toBe(201);
+    expect(mockDb.createFeedback).toHaveBeenCalledWith(expect.objectContaining({ source }));
+    const payload = JSON.parse(
+      send.mock.calls.find(([url]) => url === 'https://ingest.sassmaker.com/v1/logs')![1].body
+    );
+    expect(payload.logs[0].props).not.toHaveProperty('source');
+    expect(JSON.stringify(payload)).not.toContain(source);
   });
 
   it('adds only the server-bound catalog ID to App Health attribution', async () => {
