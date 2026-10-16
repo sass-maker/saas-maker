@@ -118,6 +118,7 @@ subscriptions.post('/', requireApiKey, async (c) => {
         project_id: projectId,
         ...(catalogProjectId ? { catalog_project_id: catalogProjectId } : {}),
         kind,
+        source,
       },
     });
     try {
