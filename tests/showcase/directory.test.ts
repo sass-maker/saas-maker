@@ -243,7 +243,7 @@ describe('verified public Fleet directory', () => {
   it('projects only shareable identities with privacy-safe anatomy', async () => {
     const catalog = JSON.parse(await readRepository('catalog/generated/public.json'));
     const ids = catalog.directory.map((project: { id: string }) => project.id);
-    expect(ids).toContain('on-record');
+    expect(ids).not.toContain('on-record');
     const counts = (catalog.directory as Array<{ group: string }>).reduce<Record<string, number>>(
       (result, project) => {
         result[project.group] = (result[project.group] ?? 0) + 1;
@@ -393,7 +393,7 @@ describe('verified public Fleet directory', () => {
   });
 
   it('keeps established web identities discoverable through the public form families', () => {
-    for (const projectId of ['starboard', 'on-record']) {
+    for (const projectId of ['starboard', 'karte']) {
       const project = DIRECTORY_PROJECTS.find((candidate) => candidate.id === projectId);
       expect(project).toBeDefined();
       expect(directoryFormFamilies(project!)).toContain('Web');

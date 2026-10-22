@@ -107,6 +107,33 @@ test('missing, null and empty values remain distinct without adding defaults', (
   }
 });
 
+test('overlapping owner purposes survive maintenance round trips independently of topic and lifecycle', () => {
+  const purposeCategories = ['attention-money-grabber', 'learn-skill-showoff', 'personal-use'];
+  const original = {
+    projects: [
+      {
+        id: 'all-three',
+        category: 'utility',
+        lifecycle: { status: 'active' },
+        portfolio: { purposeCategories },
+      },
+      {
+        id: 'attention-only',
+        category: 'experimental',
+        lifecycle: { status: 'inactive' },
+        portfolio: { purposeCategories: ['attention-money-grabber'] },
+      },
+      { id: 'absent' },
+    ],
+  };
+  const source = structureCatalog(original);
+  assert.deepEqual(source.projects[0].classification.purposeCategories, purposeCategories);
+  assert.equal(source.projects[0].classification.category, 'utility');
+  assert.equal(source.projects[1].lifecycle.status, 'inactive');
+  assert.equal(Object.hasOwn(source.projects[2], 'classification'), false);
+  assert.deepEqual(compatibilityCatalog(source), original);
+});
+
 test('edits in the source drive the legacy consumers without a second classification', () => {
   const source = structureCatalog({
     projects: [

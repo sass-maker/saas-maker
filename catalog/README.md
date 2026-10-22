@@ -22,6 +22,17 @@ Each of the 72 product identities has these sections (optional fields stay absen
 | `retainedFields` | Any unmapped fields, retained verbatim rather than discarded |
 
 `classification.futureForm` is the owner classification.
+`classification.purposeCategories` is a non-exclusive array of intended reasons
+for keeping an application: `attention-money-grabber`, `learn-skill-showoff`,
+and `personal-use`. Each primary/active application has at least one tag;
+CodeVetter has all three. Every Song Is a Website and Web Playables have only
+`attention-money-grabber`, as explicitly directed by the owner on 2026-10-22.
+These tags are separate from topic category, lifecycle, readiness, measured
+usage and earned revenue. A public URL alone does not establish commercial
+intent; an experimental stack alone does not establish a learning purpose.
+Personal use includes private Fleet infrastructure. Historical components may
+omit the array. Counts per tag overlap; report the unique application total
+separately. The singular mapping remains only for reading historical snapshots.
 `sharing.shareable` is the authoritative owner shareability decision. Primary and
 active projects are shareable; inactive projects may also be shareable. Readiness
 evidence stays separate and is not rewritten by this classification rule.

@@ -499,21 +499,21 @@ test('omitPrivate counts private repositories without naming them', () => {
   assert.equal(JSON.stringify(report.results).includes('beta'), false);
 });
 
-test('the shipped registry has distinct, wired IDs for the four active resolved projects', () => {
+test('the shipped registry retains distinct resolved IDs and excludes the absorbed Podcast source', () => {
   const violations = shipped.projects.filter((entry) => entry.violation);
   assert.deepEqual(violations, []);
 
   const resolved = Object.fromEntries(
     shipped.projects
-      .filter((entry) => ['high-signal', 'journal', 'live', 'on-record'].includes(entry.id))
+      .filter((entry) => ['high-signal', 'journal', 'live'].includes(entry.id))
       .map((entry) => [entry.id, entry.clarityId])
   );
   assert.deepEqual(resolved, {
     'high-signal': 'ybcgyx9ugh',
     journal: 'ybcifeb3uv',
     live: 'ybcglnzl4t',
-    'on-record': 'ybch0p6cta',
   });
+  assert.equal(shipped.projects.some((entry) => entry.id === 'on-record'), false);
 
   const findings = findRegistryViolations(shipped);
   assert.deepEqual(findings, []);
