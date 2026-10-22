@@ -14,7 +14,7 @@ export function apiError(
   status: 400 | 401 | 403 | 404 | 409 | 413 | 415 | 429 | 500 | 503,
   code: ErrorCode,
   message: string
-) {
+): Response {
   return c.json(
     {
       error: {
