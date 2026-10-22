@@ -107,22 +107,31 @@ test('missing, null and empty values remain distinct without adding defaults', (
   }
 });
 
-test('owner purpose categories survive maintenance round trips without changing topic categories', () => {
-  for (const purposeCategory of [
-    'attention-money-grabber',
-    'learn-skill-showoff',
-    'personal-use',
-  ]) {
-    const original = {
-      projects: [{ id: 'example', category: 'utility', portfolio: { purposeCategory } }],
-    };
-    const source = structureCatalog(original);
-    assert.equal(source.projects[0].classification.purposeCategory, purposeCategory);
-    assert.equal(source.projects[0].classification.category, 'utility');
-    assert.deepEqual(compatibilityCatalog(source), original);
-  }
-  const absent = structureCatalog({ projects: [{ id: 'absent' }] });
-  assert.equal(Object.hasOwn(absent.projects[0], 'classification'), false);
+test('overlapping owner purposes survive maintenance round trips independently of topic and lifecycle', () => {
+  const purposeCategories = ['attention-money-grabber', 'learn-skill-showoff', 'personal-use'];
+  const original = {
+    projects: [
+      {
+        id: 'all-three',
+        category: 'utility',
+        lifecycle: { status: 'active' },
+        portfolio: { purposeCategories },
+      },
+      {
+        id: 'attention-only',
+        category: 'experimental',
+        lifecycle: { status: 'inactive' },
+        portfolio: { purposeCategories: ['attention-money-grabber'] },
+      },
+      { id: 'absent' },
+    ],
+  };
+  const source = structureCatalog(original);
+  assert.deepEqual(source.projects[0].classification.purposeCategories, purposeCategories);
+  assert.equal(source.projects[0].classification.category, 'utility');
+  assert.equal(source.projects[1].lifecycle.status, 'inactive');
+  assert.equal(Object.hasOwn(source.projects[2], 'classification'), false);
+  assert.deepEqual(compatibilityCatalog(source), original);
 });
 
 test('edits in the source drive the legacy consumers without a second classification', () => {
