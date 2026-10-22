@@ -336,12 +336,13 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         conditions.push('f.status = ?');
         values.push(status);
       }
+      // Stored SQLite timestamps and ISO client bounds must compare as dates.
       if (since) {
-        conditions.push('f.created_at >= ?');
+        conditions.push('julianday(f.created_at) >= julianday(?)');
         values.push(since);
       }
       if (until) {
-        conditions.push('f.created_at <= ?');
+        conditions.push('julianday(f.created_at) <= julianday(?)');
         values.push(until);
       }
       const decoded = cursor ? decodeCursor(cursor) : null;
