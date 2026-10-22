@@ -645,10 +645,10 @@ export function compareAssessments(
   );
 }
 
-/** Total sorts by the number displayed. Incomplete/empty totals sort last. */
+/** Sort by displayed known points, including partial totals. No known score sorts last. */
 export function sortableTotal(project: ScoreProject, metric?: ScoreMetric): number | null {
   const total = scoreTotal(project, metric);
-  return total.complete && total.maximum > 0 ? total.sum : null;
+  return total.knownMax > 0 ? total.sum : null;
 }
 
 export function scoreTotal(project: ScoreProject, metric?: ScoreMetric) {

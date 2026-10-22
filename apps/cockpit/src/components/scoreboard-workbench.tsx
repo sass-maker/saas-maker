@@ -46,7 +46,7 @@ import {
   type ScoreWorkspace,
 } from '@/lib/scoreboard';
 import styles from './scoreboard-workbench.module.css';
-import { CategoryEvidence, ScorePair } from './scoreboard-evidence';
+import { CategoryEvidence, ScorePair, ScoreValue } from './scoreboard-evidence';
 import { ScoreHistory, ScoreDelta } from './scoreboard-history';
 import { ScoreboardTable } from './scoreboard-table';
 
@@ -83,21 +83,24 @@ export function ScoreboardWorkbench({
   const [domain, setDomain] = useState('all');
   const [projectFilter, setProjectFilter] = useState('');
   const [status, setStatus] = useState('all');
-  const [sort, setSort] = useState<DataSort>([]);
+  const [sort, setSort] = useState<DataSort>([{ id: 'total:result', desc: false }]);
   const [selected, setSelected] = useState('');
   const [sheet, setSheet] = useState<'evidence' | 'action' | 'review' | null>(null);
   const [view, setView] = useState('scores');
   const [metric, setMetric] = useState<ScoreMetric>('result');
+  const [evidenceMetric, setEvidenceMetric] = useState<ScoreMetric>('result');
   const [notice, setNotice] = useState('');
   const reviews = useMemo(() => assessmentHistory(workspace), [workspace]);
   const [baselineId, setBaselineId] = useState('');
   const currentReview = useMemo(() => currentAssessment(workspace), [workspace]);
   const baseline =
     reviews.find((r) => r.id === baselineId) ??
-    reviews.find((r) => r.id !== currentReview.id) ??
+    reviews.filter((r) => r.id !== currentReview.id).at(-1) ??
     currentReview;
-  const changes = compareAssessments(baseline, currentReview, metric);
-  const changeById = new Map(changes.map((c) => [c.id, c]));
+  const changesByMetric = {
+    effort: new Map(compareAssessments(baseline, currentReview, 'effort').map((c) => [c.id, c])),
+    result: new Map(compareAssessments(baseline, currentReview, 'result').map((c) => [c.id, c])),
+  };
   const byLever = useMemo(() => new Map(snapshot.levers.map((l) => [l.id, l])), [snapshot]);
   const byProject = useMemo(() => new Map(snapshot.projects.map((p) => [p.id, p])), [snapshot]);
   const active = Object.values(workspace.progress).find((p) => p?.status === 'active');
@@ -207,8 +210,13 @@ export function ScoreboardWorkbench({
   function choose(l: Lever) {
     setSelected(l.id);
   }
-  function selectScore(p: ScoreProject, category: (typeof SCORE_CATEGORIES)[number]) {
+  function selectScore(
+    p: ScoreProject,
+    category: (typeof SCORE_CATEGORIES)[number],
+    reading: ScoreMetric
+  ) {
     choose(byLever.get(`${p.id}:${category}`)!);
+    setEvidenceMetric(reading);
     setSheet('evidence');
   }
   async function copyFocus() {
@@ -234,7 +242,7 @@ export function ScoreboardWorkbench({
     setDomain('all');
     setProjectFilter('');
     setStatus('all');
-    setSort([]);
+    setSort([{ id: 'total:result', desc: false }]);
     setSelected('');
   }
 
@@ -252,70 +260,71 @@ export function ScoreboardWorkbench({
         </span>
       ),
     },
-    ...SCORE_CATEGORIES.filter((c) => area === 'all' || area === c).map((c) => ({
-      id: c,
-      header: short[c],
-      value: (p: ScoreProject) => scoreReading(p.scores[c], metric).value,
-      align: 'right' as const,
-      sortDescFirst: false,
-      minWidth: '7rem',
-      cell: (p: ScoreProject) => (
-        <button
-          className={styles.scoreButton}
-          aria-label={`${p.name}: ${CATEGORY_LABELS[c]} evidence`}
-          onKeyDown={(e) => e.stopPropagation()}
-          onClick={(e) => {
-            e.stopPropagation();
-            selectScore(p, c);
-          }}
-        >
-          <span className={styles.scoreWithChange}>
-            <ScorePair score={p.scores[c]} />
-            {reviews.length > 1 && <ScoreDelta change={changeById.get(`${p.id}:${c}`)} />}
-          </span>
-        </button>
-      ),
-    })),
-    {
-      id: 'total',
-      header: 'Total',
-      sortDescFirst: false,
-      align: 'right',
-      value: (p) => sortableTotal(p, metric),
-      cell: (p) => {
-        return (
-          <span className={styles.pairedScores}>
-            {(['effort', 'result'] as const).map((m) => {
-              const t = scoreTotal(p, m);
-              return (
-                <span key={m} title={`${t.unknown} unassessed · ${t.exempt} exempt`}>
-                  <small>{m === 'effort' ? 'Effort' : 'Result'}</small>
-                  <span className={styles.total}>
-                    {t.knownMax ? (
-                      <>
-                        {formatScore(t.sum)}
-                        <small>{t.complete ? ` / ${t.maximum}` : ' known'}</small>
-                      </>
-                    ) : t.maximum === 0 ? (
-                      'Exempt'
-                    ) : m === 'result' ? (
-                      'Unmeasured'
-                    ) : (
-                      'Unassessed'
-                    )}
-                    {t.unknown > 0 && (
-                      <small className={styles.pendingTotal}>
-                        of {t.maximum} · {t.unknown} pending
-                      </small>
-                    )}
-                  </span>
+    ...SCORE_CATEGORIES.filter((c) => area === 'all' || area === c).flatMap((c) =>
+      (['effort', 'result'] as const).map((m) => ({
+        id: `${c}:${m}`,
+        group: CATEGORY_LABELS[c],
+        header: m === 'effort' ? 'Effort' : 'Result',
+        value: (p: ScoreProject) => scoreReading(p.scores[c], m).value,
+        align: 'right' as const,
+        hideable: false,
+        sortDescFirst: false,
+        cell: (p: ScoreProject) => {
+          const change = changesByMetric[m].get(`${p.id}:${c}`);
+          return (
+            <button
+              className={styles.scoreButton}
+              aria-label={`${p.name}: ${CATEGORY_LABELS[c]} ${m === 'effort' ? 'Effort' : 'Result'} evidence`}
+              onKeyDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                selectScore(p, c, m);
+              }}
+            >
+              <ScoreValue score={scoreReading(p.scores[c], m)} unknownLabel="Unknown" />
+              {m === 'result' && scoreReading(p.scores[c], m).value !== null && (
+                <span className={styles.resultTrack} aria-hidden="true">
+                  <span style={{ width: `${scoreReading(p.scores[c], m).value! * 10}%` }} />
                 </span>
-              );
-            })}
+              )}
+              {change?.delta !== null && change?.delta !== undefined && change.delta !== 0 && (
+                <ScoreDelta change={change} />
+              )}
+              {change?.state === 'newly_assessed' && (
+                <span
+                  className={styles.newReading}
+                  title="Newly assessed; not a numeric improvement"
+                >
+                  New
+                </span>
+              )}
+            </button>
+          );
+        },
+      }))
+    ),
+    ...(['effort', 'result'] as const).map((m) => ({
+      id: `total:${m}`,
+      group: 'Total · known points',
+      header: m === 'effort' ? 'Effort' : 'Result',
+      sortDescFirst: false,
+      align: 'right' as const,
+      hideable: false,
+      value: (p: ScoreProject) => sortableTotal(p, m),
+      cell: (p: ScoreProject) => {
+        const t = scoreTotal(p, m);
+        return (
+          <span
+            className={`${styles.sheetTotal} ${t.knownMax ? '' : styles.unknownTotal}`}
+            title={`${t.unknown} unknown · ${t.exempt} exempt`}
+          >
+            <span>{t.knownMax ? formatScore(t.sum) : t.maximum === 0 ? 'Exempt' : 'Unknown'}</span>
+            {t.maximum > 0 && <small>/{t.maximum}</small>}
+            {t.unknown > 0 && <small className={styles.pendingTotal}>{t.unknown} pending</small>}
           </span>
         );
       },
-    },
+    })),
   ];
   const actionColumns: DataColumn<Lever>[] = [
     {
@@ -387,7 +396,7 @@ export function ScoreboardWorkbench({
         <div>
           <div className={styles.eyebrow}>Product quality</div>
           <h1>Product scoreboard</h1>
-          <p>Compare effort and results. Open the next change with its evidence.</p>
+          <p>Compare the work with the result. Open a number for its evidence.</p>
         </div>
         <button
           className={styles.reviewButton}
@@ -396,15 +405,27 @@ export function ScoreboardWorkbench({
         >
           <FileText size={16} />
           <span>
-            {dateLabel(snapshot.assessedAt)} review
+            Review & backup
             <small>
-              {snapshot.projects.length} products ·{' '}
-              {effortScores.filter((s) => s.status === 'estimated').length} effort ·{' '}
-              {resultScores.filter((s) => s.status === 'estimated').length} results
+              {dateLabel(snapshot.assessedAt)} · {snapshot.projects.length} products
             </small>
           </span>
         </button>
       </header>
+      <div className={styles.coverage} aria-label="Assessment coverage">
+        <span>
+          <strong>{effortScores.filter((s) => s.status === 'estimated').length}</strong> effort
+          scores
+        </span>
+        <span>
+          <strong>{resultScores.filter((s) => s.status === 'estimated').length}</strong> result
+          scores
+        </span>
+        <span>
+          <strong>{resultScores.filter((s) => s.status === 'unknown').length}</strong> outcomes
+          unknown
+        </span>
+      </div>
       {(active || waiting.length > 0) && (
         <div className={styles.cadence} aria-label="One lever cadence">
           {active ? (
@@ -496,7 +517,12 @@ export function ScoreboardWorkbench({
               onChange={(e) => {
                 setArea(e.target.value);
                 setSelected('');
-                setSort(e.target.value === 'all' ? [] : [{ id: e.target.value, desc: false }]);
+                setSort([
+                  {
+                    id: e.target.value === 'all' ? 'total:result' : `${e.target.value}:result`,
+                    desc: false,
+                  },
+                ]);
               }}
             >
               <option value="all">All six areas</option>
@@ -561,7 +587,7 @@ export function ScoreboardWorkbench({
               </select>
             </label>
           )}
-          {hasMatches && (
+          {hasMatches && view === 'actions' && (
             <button className={styles.selectedLeverLink} onClick={() => setSheet('action')}>
               <span>Next lever · {selectedProject.name}</span>
               <strong>{lever.title}</strong>
@@ -572,18 +598,18 @@ export function ScoreboardWorkbench({
             className={styles.compareGrid}
             style={hasMatches ? undefined : { gridTemplateColumns: 'minmax(0, 1fr)' }}
           >
-            <div
-              className={`${styles.tablePane} ${view === 'scores' ? styles.scoreTable : styles.actionTable}`}
-            >
+            <div className={`${styles.tablePane} ${view === 'actions' ? styles.actionTable : ''}`}>
               <div className={styles.comparisonContext}>
-                <div className={styles.metricSwitch} aria-label="Sort and changes score">
-                  <span>{view === 'scores' ? 'Sort & changes' : 'Sort score'}</span>
-                  {(['effort', 'result'] as const).map((m) => (
-                    <button key={m} aria-pressed={metric === m} onClick={() => setMetric(m)}>
-                      {m === 'effort' ? 'Effort' : 'Result'}
-                    </button>
-                  ))}
-                </div>
+                {view === 'actions' && (
+                  <div className={styles.metricSwitch} aria-label="Sort score">
+                    <span>Sort score</span>
+                    {(['effort', 'result'] as const).map((m) => (
+                      <button key={m} aria-pressed={metric === m} onClick={() => setMetric(m)}>
+                        {m === 'effort' ? 'Effort' : 'Result'}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 {view === 'scores' &&
                   (reviews.length > 1 ? (
                     <label>
@@ -611,7 +637,8 @@ export function ScoreboardWorkbench({
               </div>
               {view === 'scores' ? (
                 <ScoreboardTable
-                  key={`scores:${area}:${metric}`}
+                  key={`scores:${area}`}
+                  className={styles.portfolioTable}
                   data={projects}
                   columns={columns}
                   getRowId={(p) => p.id}
@@ -641,8 +668,8 @@ export function ScoreboardWorkbench({
               <p className={styles.tableFoot}>
                 ◦ Provisional estimate
                 <span>
-                  Total sorts by the selected Effort or Result score. Unassessed totals sort last.
-                  Click again to reverse sorting.
+                  Total sorts by displayed known points for Effort or Result. Partial totals stay
+                  marked; no known scores sort last. Click again to reverse sorting.
                 </span>
               </p>
             </div>
@@ -829,10 +856,20 @@ export function ScoreboardWorkbench({
                 </div>
               </div>
             ) : (
-              <CategoryEvidence
-                project={selectedProject}
-                score={selectedProject.scores[lever.category]}
-              />
+              <>
+                <button className={styles.evidenceLever} onClick={() => setSheet('action')}>
+                  <span>
+                    Next lever in this area<strong>{lever.title}</strong>
+                  </span>
+                  <ArrowUpRight size={17} />
+                </button>
+                <CategoryEvidence
+                  key={`${selectedProject.id}:${lever.category}:${evidenceMetric}`}
+                  project={selectedProject}
+                  score={selectedProject.scores[lever.category]}
+                  initialMetric={evidenceMetric}
+                />
+              </>
             )}
           </SheetBody>
         </SheetContent>

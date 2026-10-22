@@ -88,9 +88,11 @@ scope, device and missing evidence rather than transferring a landing score.
 1. Sign in to SaaS Maker and open Product scoreboard.
 2. Choose **Import review** and select the owner-local `scoreboard-review.json`.
 3. Review the snapshot label and counts before confirming a replacement.
-4. Compare Effort and Result together in each category. **Sort & changes** chooses
-   which reading drives header sorting, Total and displayed historical changes.
-   Click a header again to reverse sorting; exempt and unassessed totals remain last.
+4. Compare Effort and Result in paired columns under each category. Each reading
+   has its own sortable header, including both Total columns. Repeated clicks
+   alternate ascending and descending. Total sorts the displayed known points,
+   including clearly marked partial totals; entirely unassessed or exempt totals
+   remain last. A partial total is never extrapolated to sixty.
 5. Click a score for its evidence sheet, or a product row for its best next lever.
    The selected lever shows the change, finish line, full plan and prerequisites.
 6. Use search, area, domain, scope and status filters to choose a focus. Focus
@@ -98,7 +100,9 @@ scope, device and missing evidence rather than transferring a landing score.
    or **History** for dated score comparisons, evidence and lever outcomes.
 7. Open **Review & backup** for coverage, scale, private import and export.
 
-The comparison uses the full available page width. Lever details open in a
+The approved portfolio sheet uses a light working surface below the dark brand
+header and the full available page width. Category names group Effort and Result;
+subtle Result tracks aid scanning without treating unknowns as zero. Lever details open in a
 sheet when selected, rather than squeezing the table into a side panel. There
 is no nested table scroll area. The page scrolls normally and results are paged.
 At phone and tablet widths, rows reflow into labelled cards, with explicit sort
@@ -157,7 +161,9 @@ Lever transitions and follow-up plans do not create score versions.
 ## Score history
 
 Use **Change since** on the score table to choose a retained baseline. Category
-cells show the selected Effort/Result reading’s change. **History** compares any
+cells show independent Effort and Result changes. Numeric differences appear
+beside their reading; newly assessed values are marked New. The default baseline
+is the most recent retained prior assessment. **History** compares any
 two assessments, with product search, category, domain and scope filters. Its
 score-view selector separates Effort, Result and the previous combined rubric.
 Older combined reviews cannot establish separate effort/result baselines; their

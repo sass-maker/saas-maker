@@ -25,6 +25,15 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-10-23 — Portfolio sheet and sorting repair.** Implemented the
+  owner-selected portfolio sheet with grouped category headers and independently
+  sortable Effort/Result columns, including both totals. Partial totals now sort
+  by their displayed known points; unknowns remain last and repeated clicks
+  reverse direction. The private view uses a light, full-width working surface
+  under the dark brand header, paired metric cards at narrow widths, and
+  reading-specific evidence with the relevant next lever. Assessment data,
+  history and cadence storage retain their existing meaning and format.
+
 - **2026-10-22 — Owner-directed product scoreboard.** Added
   a private Projects view for six category scores, dated evidence and one next
   lever per project/category. An owner-local import contains the 39-project,

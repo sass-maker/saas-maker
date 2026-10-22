@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@saas-maker/ui": "github:sass-maker/ui-library#v0.1.20&path:/packages/ui",
+    "@saas-maker/ui": "github:sass-maker/ui-library#7c5d4f87180b250fa9ad34c1364cfaba0bb4b39f&path:/packages/ui",
     "better-auth": "1.6.30",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
