@@ -15,6 +15,7 @@ import {
   parseWorkspace,
   planNextLever,
   prerequisiteSatisfied,
+  readScoreboardStorage,
   safeEvidenceUrl,
   scoreTotal,
   transitionLever,
@@ -89,8 +90,14 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) setWorkspace(parseWorkspace(raw));
+      const stored = readScoreboardStorage(() => localStorage.getItem(storageKey));
+      if (!stored.available) {
+        setSaved(false);
+        setError(
+          'Browser storage is unavailable. You can import a review and export this tab before closing it.'
+        );
+      }
+      if (stored.raw) setWorkspace(parseWorkspace(stored.raw));
     } catch (e) {
       setError(`Saved workspace was preserved but could not be opened: ${errorText(e)}`);
     }
@@ -136,7 +143,9 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
   ) {
     const update = () => {
       try {
-        const raw = saved ? localStorage.getItem(storageKey) : null;
+        const { raw } = readScoreboardStorage(() =>
+          saved ? localStorage.getItem(storageKey) : null
+        );
         let current = workspace;
         if (raw) {
           try {
@@ -166,7 +175,8 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
       const text = await file.text();
       const incoming = parseWorkspace(text);
       setPendingBackup('snapshot' in JSON.parse(text));
-      if (workspace || localStorage.getItem(storageKey)) setPending(incoming);
+      const { raw } = readScoreboardStorage(() => localStorage.getItem(storageKey));
+      if (workspace || raw) setPending(incoming);
       else await updateWorkspace((current) => importSnapshot(current, incoming));
     } catch (e) {
       setError(`Import rejected; existing data was preserved. ${errorText(e)}`);
@@ -723,7 +733,7 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
               )}
               {levers.map((lever) => (
                 <LeverCard
-                  key={lever.id}
+                  key={`${lever.id}:${lever.followsCycleId ?? 'baseline'}`}
                   lever={lever}
                   workspace={workspace}
                   activeId={active?.leverId}

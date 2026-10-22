@@ -25,7 +25,7 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
-- **2026-10-22 — Owner-directed product scoreboard (release pending).** Added
+- **2026-10-22 — Owner-directed product scoreboard.** Added
   a private Projects view for six category scores, dated evidence and one next
   lever per project/category. An owner-local import contains the 39-project,
   234-recommendation baseline; private data stays outside the public repository.

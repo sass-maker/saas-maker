@@ -465,3 +465,12 @@ export function safeEvidenceUrl(source: string): string | null {
 
 export const formatScore = (value: number) =>
   Number.isInteger(value) ? String(value) : String(Number(value.toFixed(2)));
+
+/** Storage may be disabled; callers can continue with an in-tab workspace. */
+export function readScoreboardStorage(read: () => string | null) {
+  try {
+    return { available: true, raw: read() };
+  } catch {
+    return { available: false, raw: null };
+  }
+}

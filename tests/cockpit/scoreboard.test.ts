@@ -6,6 +6,7 @@ import {
   parseWorkspace,
   planNextLever,
   prerequisiteSatisfied,
+  readScoreboardStorage,
   safeEvidenceUrl,
   scoreTotal,
   transitionLever,
@@ -105,6 +106,21 @@ describe('scoreboard evidence semantics', () => {
     cycle.levers[0].dependencies = [cycle.levers[1].id];
     cycle.levers[1].dependencies = [cycle.levers[0].id];
     expect(() => validateSnapshot(cycle)).toThrow(/cycle/);
+  });
+  it('supports an import/export session when browser storage access throws', () => {
+    const storage = readScoreboardStorage(() => {
+      throw new DOMException('Storage denied', 'SecurityError');
+    });
+    expect(storage).toEqual({ available: false, raw: null });
+    const imported = parseWorkspace(JSON.stringify(fixture()));
+    const active = transitionLever(imported, 'example-one:product', 'active');
+    expect(parseWorkspace(JSON.stringify(active)).progress['example-one:product']?.status).toBe(
+      'active'
+    );
+    expect(readScoreboardStorage(() => 'saved backup')).toEqual({
+      available: true,
+      raw: 'saved backup',
+    });
   });
   it('opens only credential-free http(s) evidence links', () => {
     expect(safeEvidenceUrl('https://example.com/evidence')).toBe('https://example.com/evidence');

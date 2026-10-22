@@ -82,8 +82,11 @@ tools.” When a product's material stack changes, update the canonical
 `pnpm catalog:sync-public` here in the same task. Never hand-edit the generated
 catalog or expand this field into a dependency inventory.
 
-Do not deploy, migrate, publish/deprecate npm packages, change DNS, or archive
-repositories without explicit approval.
+Follow Fleet's release-autonomy policy: small fixes and additive,
+backward-compatible changes within the owner's stated scope may ship after
+appropriate verification without another approval. Other public releases need
+approval unless already approved. Keep destructive and ownership changes within
+the explicitly authorized scope.
 
 Fleet design/quality policy and UI adoption live in the private catalog.
 See [design-quality-policy](tooling/docs/design-quality-policy.md) for the schema
