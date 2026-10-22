@@ -108,7 +108,11 @@ test('missing, null and empty values remain distinct without adding defaults', (
 });
 
 test('owner purpose categories survive maintenance round trips without changing topic categories', () => {
-  for (const purposeCategory of ['attention-money-grabber', 'learn-skill-showoff', 'personal-use']) {
+  for (const purposeCategory of [
+    'attention-money-grabber',
+    'learn-skill-showoff',
+    'personal-use',
+  ]) {
     const original = {
       projects: [{ id: 'example', category: 'utility', portfolio: { purposeCategory } }],
     };
