@@ -23,9 +23,18 @@ The six categories are:
 6. **Engineering & operations**: dependable delivery, correctness, security,
    recovery and operation.
 
-Each applicable category has an estimate out of ten. Six known applicable
-categories sum to a maximum of sixty. The board does not manufacture a complete
-total when evidence is missing.
+Each applicable category has two independent readings out of ten:
+
+- **Effort**: the quality and completeness of relevant work executed against
+  the checklist. Hours, spend and the mere presence of tools do not earn points.
+- **Result**: the observed outcome against that category’s goal. Product results
+  concern the core job; SEO results concern actual search arrivals/growth; GEO
+  results concern captured recommendations/citations. Internal tools keep their
+  intended-use scope.
+
+Effort and Result each have a separate total out of sixty. They are never
+blended into one grade or added into a score out of 120. Missing readings stay
+explicit, and incomplete totals contain only known points.
 
 - **Unassessed** means unknown. It is not a zero.
 - **Exempt** means an explicit scope exemption. It is excluded from the denominator.
@@ -34,12 +43,16 @@ total when evidence is missing.
 - Every assessment includes reasoning and dated evidence or a dated evidence gap.
 - Source revisions and limitations remain available beside each recommendation.
 
-The initial review used a four-point rubric. Its estimates are multiplied by
-2.5 without rerating them: the previous 3.5 target becomes 8.75/10. This is a
-scale conversion, not additional measurement or newfound precision.
+The initial combined review used a four-point rubric, converted by multiplying
+by 2.5. Those original estimates remain in history as **Previous combined
+score**. They are never automatically relabelled as effort or result proof.
+The separate readings are independently reviewed against retained dated evidence;
+missing outcome evidence is not zero or a penalty for missing telemetry.
 
-Read the scale as 5 = competitive, 7.5 = credibly among the best in the stated
-segment, and 10 = demonstrated sustained leadership. Missing audit evidence
+For Result, 5 = competitive, 7.5 = credibly among the best in the stated
+segment, and 10 = demonstrated sustained leadership. Effort uses 2.5 = basic
+setup, 5 = material but incomplete checklist work, 7.5 = well-executed near-complete
+work, and 10 = sustained best-in-segment execution. Missing audit evidence
 lowers confidence rather than automatically lowering quality. Internal tools
 are judged against their intended task. Provisional GEO estimates must state
 their basis and retain any missing answer-engine measurements explicitly;
@@ -75,8 +88,9 @@ scope, device and missing evidence rather than transferring a landing score.
 1. Sign in to SaaS Maker and open Product scoreboard.
 2. Choose **Import review** and select the owner-local `scoreboard-review.json`.
 3. Review the snapshot label and counts before confirming a replacement.
-4. Compare products in the shared data table. Click a column header again to
-   reverse sorting; exempt and unknown values remain last in either direction.
+4. Compare Effort and Result together in each category. **Sort & changes** chooses
+   which reading drives header sorting, Total and displayed historical changes.
+   Click a header again to reverse sorting; exempt and unassessed totals remain last.
 5. Click a score for its evidence sheet, or a product row for its best next lever.
    The selected lever shows the change, finish line, full plan and prerequisites.
 6. Use search, area, domain, scope and status filters to choose a focus. Focus
@@ -84,10 +98,12 @@ scope, device and missing evidence rather than transferring a landing score.
    or **History** for dated score comparisons, evidence and lever outcomes.
 7. Open **Review & backup** for coverage, scale, private import and export.
 
-At phone and tablet widths, the selected lever opens in a sheet from a persistent
-bottom control. The table keeps its own horizontal and vertical scroll region.
-Total sorts in both directions by displayed points, with each denominator visible.
-Incomplete totals remain last. The full six category names appear in the headers.
+The comparison uses the full available page width. Lever details open in a
+sheet when selected, rather than squeezing the table into a side panel. There
+is no nested table scroll area. The page scrolls normally and results are paged.
+At phone and tablet widths, rows reflow into labelled cards, with explicit sort
+and direction controls. No sideways scroll is needed in Scores, Next levers or
+History. Full category names remain visible.
 
 The private baseline is not committed to this repository, embedded in a build,
 retrieved from a server or loaded by the public directory. The interface can
@@ -104,9 +120,9 @@ Keep one lever active across the whole workspace.
 1. Inspect the biggest gap and its prerequisite actions.
 2. Pick one bounded lever and read the evidence required to close it.
 3. Make the change in the owning product's normal workflow.
-4. Record what changed, the dated evidence and its exact scope. Use Save progress
-   note before leaving unfinished work; it preserves the text without claiming
-   an outcome.
+4. Record **Effort · work completed** separately from **Result · what actually
+   happened**, with dated evidence and scope. Save progress before leaving.
+   Work can be recorded while the result remains awaiting observation.
 5. Verify the observed outcome, wait for evidence, or park with a reason.
 6. Pick the next ready lever, or queue a follow-up in the same category.
 
@@ -121,7 +137,8 @@ It frees the active slot and retains the note, but does not claim improvement.
 Check waiting evidence at the next work session. Review the whole queue weekly.
 There is no background schedule or notification attached to this view.
 
-**Verify outcome** requires a result, evidence and observed outcome. Learning
+**Verify outcome** requires a separate observed result, evidence and outcome.
+A deployment receipt or completed checklist alone cannot satisfy that result. Learning
 that something did not help is a legitimate verified result. Verification
 records the experiment; it does not automatically raise an assessment score.
 
@@ -140,8 +157,11 @@ Lever transitions and follow-up plans do not create score versions.
 ## Score history
 
 Use **Change since** on the score table to choose a retained baseline. Category
-cells show their change beside the current score. **History** compares any two
-assessments, with product search, category, domain and scope filters. Click a
+cells show the selected Effort/Result reading’s change. **History** compares any
+two assessments, with product search, category, domain and scope filters. Its
+score-view selector separates Effort, Result and the previous combined rubric.
+Older combined reviews cannot establish separate effort/result baselines; their
+first separate ratings are newly assessed, not numerical improvements. Click a
 change to inspect the full before/after evidence. Unchanged scores can be shown.
 
 A numeric increase is an assessment change; it can reflect shipped work or a
@@ -166,7 +186,8 @@ Export immediately before closing that tab.
 
 Use **Export backup** after a review session and before clearing browser data,
 switching devices or replacing a workspace. The JSON contains the snapshot,
-current progress, retained score assessments and append-only outcome history.
+current progress, both effort/result readings and their evidence, retained score
+assessments, and append-only work/outcome history.
 Legacy backups remain importable. Imports are limited to 64 MB. Store backups privately.
 
 A new baseline import preserves history and matching progress by stable lever
@@ -225,7 +246,8 @@ dependent work can progress after the decision is verified.
 
 The focused cadence tests cover score denominators, missing evidence, invalid
 imports, prerequisites, one-active enforcement, verification requirements,
-follow-up history, baseline refreshes, assessment retention, legacy migration,
+follow-up history, independent effort/result totals and histories, separate
+work/outcome notes, baseline refreshes, assessment retention, legacy migration,
 evidence comparisons and safe history-only imports. Middleware tests cover authentication,
 private headers, cache/referrer policy and off-origin connection restrictions.
 Rendered checks cover populated scores, evidence, filters, import, reload and

@@ -39,6 +39,11 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
   distinguishes score revisions from new coverage and scope changes, and can
   import older reviews without replacing current scores or lever progress.
   Browser persistence uses IndexedDB with legacy workspace migration.
+  Effort and Result now have independent category readings, totals, evidence and
+  histories; old combined grades retain their original meaning. Work completed
+  and outcomes observed are recorded separately in the one-lever cadence.
+  Comparison uses the full page, on-demand details and labelled narrow-screen
+  rows, with page scrolling and pagination instead of nested table scrolling.
   See [the operating guide](docs/product-scoreboard.md).
 
 - **2026-10-09 — Finish sweep of stranded work.** Landed the Clarity audit's

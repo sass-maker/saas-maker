@@ -26,7 +26,9 @@ export const CATEGORY_DESCRIPTIONS: Record<ScoreCategory, string> = {
 };
 export const MAX_WORKSPACE_BYTES = 64_000_000;
 export type Evidence = { source: string; date: string; note: string };
-export type Score = {
+export type ScoreMetric = 'effort' | 'result';
+export const METRIC_LABELS: Record<ScoreMetric, string> = { effort: 'Effort', result: 'Result' };
+export type ScoreReading = {
   value: number | null;
   status: 'estimated' | 'unknown' | 'not_applicable';
   confidence: 'high' | 'medium' | 'low';
@@ -34,6 +36,20 @@ export type Score = {
   evidence: Evidence[];
   originalValue?: number | string;
 };
+export type Score = ScoreReading & { effort?: ScoreReading; result?: ScoreReading };
+
+/** Older combined estimates stay intact; they are never relabelled as outcomes. */
+export function scoreReading(score: Score, metric: ScoreMetric): ScoreReading {
+  if (score[metric]) return score[metric];
+  if (score.status === 'not_applicable') return score;
+  return {
+    value: null,
+    status: 'unknown',
+    confidence: 'low',
+    reason: `This review did not assess ${METRIC_LABELS[metric].toLowerCase()} separately. Its previous combined estimate is preserved, including its evidence; it cannot establish this separate score.`,
+    evidence: score.evidence,
+  };
+}
 export type ScoreProject = {
   id: string;
   name: string;
@@ -73,10 +89,19 @@ export type CycleRecord = {
   status: Exclude<LeverStatus, 'queued'>;
   at: string;
   result: string;
+  work?: string;
+  observedResult?: string;
   evidence: string;
   prerequisiteSatisfied: boolean;
   outcome: 'helped' | 'unchanged' | 'worse' | 'learning' | null;
-  plan: { title: string; action: string; proof: string; baselineScore: number | null };
+  plan: {
+    title: string;
+    action: string;
+    proof: string;
+    baselineScore: number | null;
+    baselineEffort?: number | null;
+    baselineResult?: number | null;
+  };
 };
 export type Assessment = {
   id: string;
@@ -108,6 +133,29 @@ const isDate = (value: unknown) => isText(value, 64) && Number.isFinite(Date.par
 export const isCategory = (value: unknown): value is ScoreCategory =>
   SCORE_CATEGORIES.includes(value as ScoreCategory);
 const isId = (value: unknown) => isText(value, 100) && /^[a-z0-9][a-z0-9-]*$/.test(value);
+
+function validateReading(s: unknown): asserts s is Score {
+  requireValue(
+    isObject(s) && ['estimated', 'unknown', 'not_applicable'].includes(s.status as string),
+    'Invalid score state.'
+  );
+  requireValue(
+    s.status === 'estimated'
+      ? typeof s.value === 'number' && Number.isFinite(s.value) && s.value >= 0 && s.value <= 10
+      : s.value === null,
+    'Unknown and exempt scores must be null; estimates must be 0–10.'
+  );
+  requireValue(
+    ['high', 'medium', 'low'].includes(s.confidence as string) && isText(s.reason),
+    'Every score needs confidence and reasoning.'
+  );
+  requireValue(
+    Array.isArray(s.evidence) &&
+      s.evidence.length > 0 &&
+      s.evidence.every((e) => isObject(e) && isText(e.source) && isDate(e.date) && isText(e.note)),
+    'Every score needs dated evidence or an explicit evidence-gap record.'
+  );
+}
 
 function validateProjects(projects: unknown): asserts projects is ScoreProject[] {
   requireValue(
@@ -143,28 +191,21 @@ function validateProjects(projects: unknown): asserts projects is ScoreProject[]
     );
     for (const c of SCORE_CATEGORIES) {
       const s = p.scores[c];
-      requireValue(
-        isObject(s) && ['estimated', 'unknown', 'not_applicable'].includes(s.status as string),
-        `Invalid ${c} score state.`
-      );
-      requireValue(
-        s.status === 'estimated'
-          ? typeof s.value === 'number' && Number.isFinite(s.value) && s.value >= 0 && s.value <= 10
-          : s.value === null,
-        'Unknown and exempt scores must be null; estimates must be 0–10.'
-      );
-      requireValue(
-        ['high', 'medium', 'low'].includes(s.confidence as string) && isText(s.reason),
-        'Every score needs confidence and reasoning.'
-      );
-      requireValue(
-        Array.isArray(s.evidence) &&
-          s.evidence.length > 0 &&
-          s.evidence.every(
-            (e) => isObject(e) && isText(e.source) && isDate(e.date) && isText(e.note)
-          ),
-        'Every score needs dated evidence or an explicit evidence-gap record.'
-      );
+      validateReading(s);
+      if (s.effort !== undefined || s.result !== undefined) {
+        requireValue(
+          s.effort !== undefined && s.result !== undefined,
+          'A split assessment needs both effort and result readings.'
+        );
+        validateReading(s.effort);
+        validateReading(s.result);
+        const exempt = s.status === 'not_applicable';
+        requireValue(
+          (s.effort.status === 'not_applicable') === exempt &&
+            (s.result.status === 'not_applicable') === exempt,
+          'Effort and result must preserve the category scope.'
+        );
+      }
     }
   }
 }
@@ -272,6 +313,20 @@ function validateCycle(input: unknown): asserts input is CycleRecord {
       input.evidence.length <= 20_000,
     'Invalid result or evidence.'
   );
+  if (input.work !== undefined || input.observedResult !== undefined) {
+    requireValue(
+      typeof input.work === 'string' &&
+        input.work.length <= 20_000 &&
+        typeof input.observedResult === 'string' &&
+        input.observedResult.length <= 20_000,
+      'Invalid effort or result note.'
+    );
+    if (input.status === 'verified')
+      requireValue(
+        isText(input.observedResult),
+        'Verification needs an observed result, separate from work completed.'
+      );
+  }
   requireValue(
     input.outcome === null ||
       ['helped', 'unchanged', 'worse', 'learning'].includes(input.outcome as string),
@@ -292,6 +347,15 @@ function validateCycle(input: unknown): asserts input is CycleRecord {
         input.plan.baselineScore <= 10),
     'Invalid historical score.'
   );
+  for (const key of ['baselineEffort', 'baselineResult']) {
+    const value = input.plan[key];
+    requireValue(
+      value === undefined ||
+        value === null ||
+        (typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 10),
+      'Invalid split historical baseline.'
+    );
+  }
   requireValue(
     typeof input.prerequisiteSatisfied === 'boolean' &&
       (!input.prerequisiteSatisfied || (input.status === 'verified' && input.outcome === 'helped')),
@@ -416,6 +480,15 @@ function validateAssessment(input: unknown): asserts input is Assessment {
 
 // Stable across object-key order and lever follow-ups. Only an assessment import
 // creates a new score version; ordinary cadence actions never manufacture one.
+function readingKey(s: ScoreReading) {
+  return [
+    s.status,
+    s.value,
+    s.confidence,
+    s.reason,
+    s.evidence.map((e) => [e.source, e.date, e.note]),
+  ];
+}
 function assessmentKey(a: Assessment) {
   return JSON.stringify([
     a.assessedAt,
@@ -435,11 +508,9 @@ function assessmentKey(a: Assessment) {
           const s = p.scores[c];
           return [
             c,
-            s.status,
-            s.value,
-            s.confidence,
-            s.reason,
-            s.evidence.map((e) => [e.source, e.date, e.note]),
+            readingKey(s),
+            s.effort ? readingKey(s.effort) : null,
+            s.result ? readingKey(s.result) : null,
           ];
         }),
       ]),
@@ -498,8 +569,8 @@ export type ScoreChange = {
   project: ScoreProject;
   beforeProject: ScoreProject | null;
   afterProject: ScoreProject | null;
-  before: Score | null;
-  after: Score | null;
+  before: ScoreReading | null;
+  after: ScoreReading | null;
   delta: number | null;
   state:
     | 'increased'
@@ -512,15 +583,23 @@ export type ScoreChange = {
     | 'removed'
     | 'unassessed';
 };
-export function compareAssessments(before: Assessment, after: Assessment): ScoreChange[] {
+export function compareAssessments(
+  before: Assessment,
+  after: Assessment,
+  metric?: ScoreMetric
+): ScoreChange[] {
   const old = new Map(before.projects.map((p) => [p.id, p]));
   const current = new Map(after.projects.map((p) => [p.id, p]));
   return [...new Set([...old.keys(), ...current.keys()])].flatMap((id) =>
     SCORE_CATEGORIES.map((category) => {
       const a = old.get(id) ?? null,
         b = current.get(id) ?? null;
-      const previous = a?.scores[category] ?? null,
-        next = b?.scores[category] ?? null;
+      const previous = a
+          ? metric
+            ? scoreReading(a.scores[category], metric)
+            : a.scores[category]
+          : null,
+        next = b ? (metric ? scoreReading(b.scores[category], metric) : b.scores[category]) : null;
       const scopeChanged =
         a &&
         b &&
@@ -567,13 +646,13 @@ export function compareAssessments(before: Assessment, after: Assessment): Score
 }
 
 /** Total sorts by the number displayed. Incomplete/empty totals sort last. */
-export function sortableTotal(project: ScoreProject): number | null {
-  const total = scoreTotal(project);
+export function sortableTotal(project: ScoreProject, metric?: ScoreMetric): number | null {
+  const total = scoreTotal(project, metric);
   return total.complete && total.maximum > 0 ? total.sum : null;
 }
 
-export function scoreTotal(project: ScoreProject) {
-  const scores = Object.values(project.scores);
+export function scoreTotal(project: ScoreProject, metric?: ScoreMetric) {
+  const scores = Object.values(project.scores).map((s) => (metric ? scoreReading(s, metric) : s));
   const known = scores.filter((s) => s.status === 'estimated');
   const unknown = scores.filter((s) => s.status === 'unknown').length;
   const exempt = scores.filter((s) => s.status === 'not_applicable').length;
@@ -599,6 +678,8 @@ export function transitionLever(
   status: Exclude<LeverStatus, 'queued'>,
   details: {
     result?: string;
+    work?: string;
+    observedResult?: string;
     evidence?: string;
     outcome?: CycleRecord['outcome'];
     prerequisiteSatisfied?: boolean;
@@ -630,12 +711,16 @@ export function transitionLever(
       'Start the lever before recording its outcome.'
     );
   }
+  const project = workspace.snapshot.projects.find((p) => p.id === lever.projectId)!;
   const record: CycleRecord = {
     id: `${leverId}:${crypto.randomUUID()}`,
     leverId,
     status,
     at,
     result: details.result?.trim() ?? '',
+    ...(details.work !== undefined || details.observedResult !== undefined
+      ? { work: details.work?.trim() ?? '', observedResult: details.observedResult?.trim() ?? '' }
+      : {}),
     evidence: details.evidence?.trim() ?? '',
     outcome: details.outcome ?? null,
     prerequisiteSatisfied: status === 'verified' && (details.prerequisiteSatisfied ?? false),
@@ -646,6 +731,8 @@ export function transitionLever(
       baselineScore:
         workspace.snapshot.projects.find((p) => p.id === lever.projectId)?.scores[lever.category]
           .value ?? null,
+      baselineEffort: scoreReading(project.scores[lever.category], 'effort').value,
+      baselineResult: scoreReading(project.scores[lever.category], 'result').value,
     },
   };
   validateCycle(record);
