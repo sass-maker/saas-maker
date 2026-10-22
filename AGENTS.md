@@ -17,6 +17,9 @@ SaaS Maker owns only:
   and from any newsletter publishing or marketing queue;
 - @saas-maker/ai-chat-footer;
 - @saas-maker/portfolio-project-strip;
+- the owner-directed product scoreboard at `/projects?view=scoreboard`: a
+  browser-local imported assessment and one-lever cadence, with no hosted
+  private dataset or operational product controls;
 - the feedback and subscription APIs, image upload, project keys, narrow auth,
   and private inbox.
 - public, credential-free reusable workflows, Fleet-owned skills, operator

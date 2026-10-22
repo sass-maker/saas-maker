@@ -4,6 +4,12 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   resolve: {
     alias: [
+      {
+        find: 'next/server',
+        replacement: fileURLToPath(
+          new URL('./apps/cockpit/node_modules/next/server.js', import.meta.url)
+        ),
+      },
       // Resolve the frontend's declared dependencies without relying on root hoisting.
       {
         find: /^@saas-maker\/ui\/(components|blocks)\/(.*)$/,

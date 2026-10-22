@@ -48,6 +48,7 @@ const project = {
   created_at: '2026-10-01T00:00:00.000Z',
   unexpected_private_field: 'must-not-be-serialized',
 };
+const listPage = () => ProjectsPage({ searchParams: Promise.resolve({}) });
 const detailPage = () => ProjectStatusPage({ params: Promise.resolve({ slug: 'example' }) });
 function render(page: Awaited<ReturnType<typeof ProjectsPage>>) {
   return renderToStaticMarkup(createElement(CockpitResources, { children: page }));
@@ -60,12 +61,17 @@ afterEach(() => {
 
 describe('server-seeded project pages', () => {
   it('preserves the authentication guard before either project fetch', async () => {
-    for (const page of [ProjectsPage, detailPage, FeedbackBoardPage, SubscribersBoardPage]) {
+    for (const page of [listPage, detailPage, FeedbackBoardPage, SubscribersBoardPage]) {
       vi.mocked(getDashboardSession).mockResolvedValueOnce(null);
       await expect(page()).rejects.toThrow('NEXT_REDIRECT');
     }
     expect(apiFetchAuthed).not.toHaveBeenCalled();
     expect(getProjectBySlug).not.toHaveBeenCalled();
+  });
+  it('opens the private scoreboard without fetching feedback data', async () => {
+    const page = await ProjectsPage({ searchParams: Promise.resolve({ view: 'scoreboard' }) });
+    expect(page.props.accountId).toBe('fixture-account');
+    expect(apiFetchAuthed).not.toHaveBeenCalled();
   });
   it('renders list data in first HTML and serializes only visible project fields', async () => {
     vi.useFakeTimers();
@@ -74,7 +80,7 @@ describe('server-seeded project pages', () => {
       data: [project, { ...project, slug: '', name: 'Hidden project' }],
       private_metadata: 'not-for-client',
     });
-    const page = await ProjectsPage();
+    const page = await listPage();
     expect(apiFetchAuthed).toHaveBeenCalledWith('/v1/projects');
     expect(page.props.initialDataUpdatedAt).toBe(Date.now());
     expect(page.props.initialData).toEqual({
@@ -122,7 +128,7 @@ describe('server-seeded project pages', () => {
 
   it('renders successful empty projects as onboarding', async () => {
     vi.mocked(apiFetchAuthed).mockResolvedValue({ data: [] });
-    const html = render(await ProjectsPage());
+    const html = render(await listPage());
     expect(html).toContain('Create a feedback project');
     expect(html).toContain('Create project key');
     expect(html).not.toContain('New Project');
@@ -135,7 +141,7 @@ describe('server-seeded project pages', () => {
   ])('falls back to an unseeded client resource for server failures: %s', async (error) => {
     vi.mocked(apiFetchAuthed).mockRejectedValue(error);
     vi.mocked(getProjectBySlug).mockRejectedValue(error);
-    for (const page of [await ProjectsPage(), await detailPage()]) {
+    for (const page of [await listPage(), await detailPage()]) {
       expect(page.props.initialData).toBeUndefined();
       expect(page.props.initialDataUpdatedAt).toBeUndefined();
       const html = render(page);

@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { Activity } from 'lucide-react';
@@ -14,6 +13,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const requestHeaders = await headers();
+  const scoreboardActive = requestHeaders.get('x-saasmaker-private-surface') === 'scoreboard';
   const session = isLocalAuthBypassEnabled(requestHeaders.get('host'))
     ? getLocalDevSession()
     : await auth.api.getSession({ headers: requestHeaders });
@@ -25,28 +25,30 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         {/* Logo */}
         <div className="border-b border-border/70 p-4">
           <div className="flex items-center justify-between">
-            <Link href="/projects/feedback" className="group flex min-w-0 items-center gap-2">
+            <a href="/projects/feedback" className="group flex min-w-0 items-center gap-2">
               <SaaSMakerMark />
               <span className="min-w-0">
                 <span className="block truncate text-sm font-semibold tracking-tight">
                   SaaS Maker
                 </span>
                 <span className="block truncate font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Feedback inbox
+                  {scoreboardActive ? 'Product quality' : 'Feedback inbox'}
                 </span>
               </span>
-            </Link>
+            </a>
             <ThemeToggle />
           </div>
           <div className="mt-4 flex items-center gap-2 rounded-md border border-border/60 bg-muted/25 px-3 py-2 text-xs text-muted-foreground">
             <Activity className="h-3.5 w-3.5 text-emerald-400" />
-            <span className="truncate">Customer feedback</span>
+            <span className="truncate">
+              {scoreboardActive ? 'Evidence and next levers' : 'Customer feedback'}
+            </span>
           </div>
         </div>
 
         {/* Navigation */}
         <div className="flex-1 overflow-y-auto p-3">
-          <SidebarNav />
+          <SidebarNav scoreboardActive={scoreboardActive} />
         </div>
 
         {/* User menu at bottom */}
@@ -60,10 +62,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         {/* Mobile header - only shows on small screens */}
         <header className="md:hidden sticky top-0 z-50 border-b border-border/70 bg-background/90 px-4 h-14 flex items-center justify-between backdrop-blur-xl">
           <div className="flex items-center gap-2">
-            <MobileNav />
-            <Link href="/projects/feedback" className="text-base font-semibold">
+            <MobileNav scoreboardActive={scoreboardActive} />
+            <a href="/projects/feedback" className="text-base font-semibold">
               SaaS Maker
-            </Link>
+            </a>
           </div>
           <ThemeToggle />
         </header>

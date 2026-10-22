@@ -11,6 +11,7 @@ const links = [
   { href: '/tools', label: 'Tools', current: path.startsWith('/tools') },
   { href: '/learnings', label: 'Learnings', current: path.startsWith('/learnings') },
   { href: '/search', label: 'Search', current: path.startsWith('/search') },
+  { href: 'https://app.sassmaker.com/projects?view=scoreboard', label: 'Scoreboard', current: false },
 ];
 ---
 <nav class="nav" aria-label="Primary navigation">
@@ -26,6 +27,7 @@ const links = [
     <a href="/tools" aria-current={links[4].current ? 'page' : undefined}>Tools</a>
     <a href="/learnings" aria-current={links[5].current ? 'page' : undefined}>Learnings</a>
     <a href="/search" aria-current={links[6].current ? 'page' : undefined}>Search</a>
+    <a href="https://app.sassmaker.com/projects?view=scoreboard" title="Private product scoreboard and next levers">Scoreboard</a>
     <a
       class="nav-source"
       href={GITHUB_REPO_URL}
@@ -80,7 +82,7 @@ const links = [
     menu.querySelectorAll('.nav-menu-sheet a').forEach((link) => {
       link.addEventListener('click', () => close());
     });
-    window.matchMedia('(min-width: 56.01rem)').addEventListener('change', (event) => {
+    window.matchMedia('(min-width: 68.01rem)').addEventListener('change', (event) => {
       if (event.matches) close();
     });
   }

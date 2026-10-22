@@ -25,6 +25,14 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-10-22 — Owner-directed product scoreboard (release pending).** Added
+  a private Projects view for six category scores, dated evidence and one next
+  lever per project/category. An owner-local import contains the 39-project,
+  234-recommendation baseline; private data stays outside the public repository.
+  The cadence preserves action plans and evidence, enforces one active lever,
+  and supports follow-ups and portable backups without automatic score changes.
+  See [the operating guide](docs/product-scoreboard.md).
+
 - **2026-10-09 — Finish sweep of stranded work.** Landed the Clarity audit's
   verified-worktree exemption: a registered tag found in a linked Git worktree
   of the cataloged checkout is reported as a warning instead of an undeclared

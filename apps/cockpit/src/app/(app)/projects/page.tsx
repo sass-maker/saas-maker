@@ -4,12 +4,21 @@ import { apiFetchAuthed } from '@/lib/api-client';
 import { visibleDashboardProjects } from '@/lib/dashboard-projects';
 import { getDashboardSession } from '@/lib/server-session';
 import { redirect } from 'next/navigation';
+import { ProductScoreboard } from '@/components/product-scoreboard';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ProjectsPage() {
+export default async function ProjectsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ view?: string }>;
+}) {
   const session = await getDashboardSession();
-  if (!session?.user) redirect('/login');
+  if (!session?.user)
+    redirect((await searchParams).view === 'scoreboard' ? '/login?returnTo=scoreboard' : '/login');
+  if ((await searchParams).view === 'scoreboard') {
+    return <ProductScoreboard accountId={session.user.id} />;
+  }
   let initialData;
   let initialDataUpdatedAt;
   try {

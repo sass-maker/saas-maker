@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { GlobalNamePolyfill } from '@/components/GlobalNamePolyfill';
 import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
+import { headers } from 'next/headers';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,20 +27,23 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const privateScoreboard = (await headers()).get('x-saasmaker-private-surface') === 'scoreboard';
   return (
     <html lang="en" className="dark" style={{ colorScheme: 'dark' }} suppressHydrationWarning>
       <head>
         {/* Microsoft Clarity — session replay + heatmaps (additive; PostHog stays) */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/y6brryt053";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","y6brryt053");window.clarity("set","project_id","saas-maker");`,
-          }}
-        />
+        {!privateScoreboard && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/y6brryt053";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","y6brryt053");window.clarity("set","project_id","saas-maker");`,
+            }}
+          />
+        )}
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         <GlobalNamePolyfill />
