@@ -52,8 +52,8 @@ function ScoreValue({ score }: { score: Score }) {
       {score.status === 'estimated'
         ? formatScore(score.value ?? 0)
         : score.status === 'unknown'
-          ? 'U'
-          : 'N/A'}
+          ? 'Unassessed'
+          : 'Exempt'}
     </span>
   );
 }
@@ -213,6 +213,11 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
   }
 
   const snapshot = workspace?.snapshot;
+  const scores = snapshot?.projects.flatMap((p) => Object.values(p.scores)) ?? [];
+  const assessed = scores.filter((s) => s.status === 'estimated');
+  const unassessed = scores.filter((s) => s.status === 'unknown').length;
+  const exempt = scores.filter((s) => s.status === 'not_applicable').length;
+  const provisional = assessed.filter((s) => s.confidence === 'low').length;
   const active = workspace && Object.values(workspace.progress).find((p) => p?.status === 'active');
   const waiting = workspace
     ? Object.values(workspace.progress).filter((p) => p?.status === 'awaiting_evidence')
@@ -408,12 +413,31 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
               <strong>{snapshot.levers.length}</strong> category recommendations
             </span>
             <span>
+              <strong>
+                {assessed.length}/{scores.length - exempt}
+              </strong>{' '}
+              applicable areas scored
+              {unassessed > 0 && ` · ${unassessed} unassessed`}
+              {` · ${provisional} provisional · ${exempt} exempt`}
+            </span>
+            <span>
               Target <strong>{formatScore(snapshot.target)}/10</strong> per applicable area
             </span>
             <span>
               {verified} verified cycles · {waiting.length} awaiting evidence
             </span>
             <span className="text-muted-foreground">Assessed {dateLabel(snapshot.assessedAt)}</span>
+          </section>
+          <section className="space-y-2 text-sm" aria-label="How to read the scores">
+            <p>
+              <strong>5 = competitive · 7.5 = among the best · 10 = sustained leader.</strong> Your
+              target is {formatScore(snapshot.target)}/10.
+            </p>
+            <p className="text-muted-foreground">
+              Low confidence means a provisional estimate. Evidence gaps reduce confidence, not
+              automatically quality. GEO readiness does not prove AI recommendation share. Exempt
+              means outside the tool’s purpose. Inspect any score for evidence and limits.
+            </p>
           </section>
           <section
             className="rounded-lg border border-border border-l-4 border-l-primary bg-card p-4 sm:p-5"
@@ -596,9 +620,9 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
           {mode === 'scores' && (
             <>
               <p className="text-sm text-muted-foreground">
-                Each area is out of 10; six applicable scores have a maximum of 60. U means
-                unassessed, N/A means exempt. Partial sums are shown without inventing missing
-                scores or comparing different denominators.
+                Each area is out of 10; six applicable scores have a maximum of 60. Exempt areas are
+                excluded from the total. Partial sums are shown without inventing missing scores or
+                comparing different denominators.
               </p>
               <div
                 className="overflow-x-auto rounded-lg border border-border"
@@ -666,7 +690,13 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
                               >
                                 <ScoreValue score={p.scores[c]} />
                                 <span className="block text-[10px] text-muted-foreground">
-                                  {p.scores[c].confidence} confidence
+                                  {p.scores[c].status === 'estimated'
+                                    ? p.scores[c].confidence === 'low'
+                                      ? 'provisional · low confidence'
+                                      : `${p.scores[c].confidence} confidence`
+                                    : p.scores[c].status === 'not_applicable'
+                                      ? 'outside scope'
+                                      : 'evidence needed'}
                                 </span>
                               </button>
                             </td>
