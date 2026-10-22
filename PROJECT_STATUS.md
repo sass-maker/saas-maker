@@ -31,6 +31,9 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
   234-recommendation baseline; private data stays outside the public repository.
   The cadence preserves action plans and evidence, enforces one active lever,
   and supports follow-ups and portable backups without automatic score changes.
+  The owner-selected comparison layout uses the existing shared DataTable with
+  reversible header sorting, focused area/domain views, a selected-lever panel,
+  evidence sheets and compact access to history and private backup controls.
   See [the operating guide](docs/product-scoreboard.md).
 
 - **2026-10-09 — Finish sweep of stranded work.** Landed the Clarity audit's
