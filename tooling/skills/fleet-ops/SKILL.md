@@ -12,6 +12,7 @@ Subskills live as sibling directories under `skills/`.
 
 | User intent | Subskill | Path |
 |---|---|---|
+| "Check all GitHub Actions" / "how is CI doing?" / "any failing or stuck workflows?" | `github-actions-health` | `../github-actions-health/SKILL.md` |
 | "Is the fleet healthy?" / "check all projects" / "what's broken?" / "fleet status" / "what's everyone working on?" / "audit the fleet" | `fleet-audit` | `../fleet-audit/SKILL.md` |
 | "Create a new project" / "scaffold X" / "add a new fleet product" / "init a new repo" | `fleet-init` | `../fleet-init/SKILL.md` |
 | "Deploy X" / "can I deploy?" / "is X safe to deploy?" / "check deploy readiness" | `fleet-deploy-parity` (deploy guard) | `../fleet-deploy-parity/references/deploy-guard.md` |

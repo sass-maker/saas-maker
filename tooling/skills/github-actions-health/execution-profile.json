@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "balanced", "reasoning": "high" },
+  "minimum": { "intelligence": "balanced", "reasoning": "medium" },
+  "degradation": "allow",
+  "rationale": "Read-only collection is mechanical; event, revision, schedule and owner-policy distinctions require careful judgment."
+}
