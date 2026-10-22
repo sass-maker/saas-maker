@@ -342,6 +342,7 @@ describe('daily PII-free capture receipts', () => {
       'ph-catalog',
       'reddit-insights',
       'nomad-data-adventure',
+      'ios-landings',
     ]) {
       expect(catalogIds).not.toContain(id);
       expect(result.applicabilityByCatalogId[id]).toBeUndefined();
@@ -367,13 +368,8 @@ describe('daily PII-free capture receipts', () => {
       .filter(([, applicability]) => applicability === 'not_applicable')
       .map(([id]) => id)
       .sort();
-    expect(browserNotApplicable).toEqual([
-      'agent-inbox',
-      'fleet-social',
-      'ios-landings',
-      'site-health',
-    ]);
-    for (const id of ['fleet-social', 'ios-landings', 'site-health']) {
+    expect(browserNotApplicable).toEqual(['agent-inbox', 'fleet-social', 'site-health']);
+    for (const id of ['fleet-social', 'site-health']) {
       const policy = nativeApplicability.products.find((product) => product.id === id);
       expect(policy?.browserVisitors).toBe('not-applicable');
       expect(policy?.browserVisitorsReason).toBeTruthy();
@@ -388,16 +384,12 @@ describe('daily PII-free capture receipts', () => {
     expect(result.browserVisitorsApplicabilityByCatalogId['unified-portfolio']).toBe('applicable');
     expect(
       Object.fromEntries(
-        ['pace', 'free-ai', 'knowledge-base', 'ios-landings'].map((id) => [
-          id,
-          result.applicabilityByCatalogId[id],
-        ])
+        ['pace', 'free-ai', 'knowledge-base'].map((id) => [id, result.applicabilityByCatalogId[id]])
       )
     ).toEqual({
       pace: 'newsletter',
       'free-ai': 'newsletter',
       'knowledge-base': 'newsletter',
-      'ios-landings': 'newsletter',
     });
     const internalNewsletterIds = reportProjects
       .filter(
@@ -407,7 +399,7 @@ describe('daily PII-free capture receipts', () => {
       )
       .map(({ id }) => id)
       .sort();
-    expect(internalNewsletterIds).toEqual(['free-ai', 'ios-landings', 'knowledge-base', 'pace']);
+    expect(internalNewsletterIds).toEqual(['free-ai', 'knowledge-base', 'pace']);
 
     const notApplicable = Object.entries(result.applicabilityByCatalogId)
       .filter(([, applicability]) => applicability === 'not-applicable')

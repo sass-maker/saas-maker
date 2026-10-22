@@ -409,13 +409,13 @@
       "hostname": "setline.significanthobbies.com",
       "tag": "setline",
       "wiredFiles": [
-        "ios-landings/src/lib/clarity.ts"
+        "ui-library/archives/ios-landings/src/lib/clarity.ts"
       ],
       "surfaceOwner": "ios-landings",
       "browserSurfaces": [
         {
           "kind": "landing",
-          "file": "ios-landings/src/lib/clarity.ts"
+          "file": "ui-library/archives/ios-landings/src/lib/clarity.ts"
         }
       ]
     },
@@ -437,20 +437,20 @@
       "hostname": "kith.significanthobbies.com",
       "tag": "kith",
       "wiredFiles": [
-        "ios-landings/src/lib/clarity.ts"
+        "ui-library/archives/ios-landings/src/lib/clarity.ts"
       ],
       "surfaceOwner": "ios-landings",
       "browserSurfaces": [
         {
           "kind": "landing",
-          "file": "ios-landings/src/lib/clarity.ts"
+          "file": "ui-library/archives/ios-landings/src/lib/clarity.ts"
         }
       ]
     },
     {
       "id": "ios-landings",
       "name": "iOS landings",
-      "repo": "ios-landings",
+      "repo": "ui-library/archives/ios-landings",
       "clarityId": "y6buu9qzrj",
       "hostname": "journal.significanthobbies.com",
       "wiredFiles": [],
@@ -721,13 +721,13 @@
       "hostname": "anchor.significanthobbies.com",
       "tag": "anchor",
       "wiredFiles": [
-        "ios-landings/src/lib/clarity.ts"
+        "ui-library/archives/ios-landings/src/lib/clarity.ts"
       ],
       "surfaceOwner": "ios-landings",
       "browserSurfaces": [
         {
           "kind": "landing",
-          "file": "ios-landings/src/lib/clarity.ts"
+          "file": "ui-library/archives/ios-landings/src/lib/clarity.ts"
         }
       ]
     },
@@ -757,14 +757,14 @@
       "hostname": "browserdaddy.significanthobbies.com",
       "tag": "browserdaddy",
       "wiredFiles": [
-        "ios-landings/src/lib/clarity.ts"
+        "ui-library/archives/ios-landings/src/lib/clarity.ts"
       ],
       "surfaceOwner": "ios-landings",
       "reason": "Clarity covers only the generated public landing site; the native macOS diagnostic app remains local and telemetry-free.",
       "browserSurfaces": [
         {
           "kind": "landing",
-          "file": "ios-landings/src/lib/clarity.ts"
+          "file": "ui-library/archives/ios-landings/src/lib/clarity.ts"
         }
       ]
     },
@@ -776,14 +776,14 @@
       "hostname": "performancedaddy.significanthobbies.com",
       "tag": "performancedaddy",
       "wiredFiles": [
-        "ios-landings/src/lib/clarity.ts"
+        "ui-library/archives/ios-landings/src/lib/clarity.ts"
       ],
       "surfaceOwner": "ios-landings",
       "reason": "Clarity covers only the generated public landing site; the native macOS performance app remains local and telemetry-free.",
       "browserSurfaces": [
         {
           "kind": "landing",
-          "file": "ios-landings/src/lib/clarity.ts"
+          "file": "ui-library/archives/ios-landings/src/lib/clarity.ts"
         }
       ]
     },
@@ -873,14 +873,14 @@
       "hostname": "context.daddyrad.com",
       "tag": "contextdaddy",
       "wiredFiles": [
-        "ios-landings/src/lib/clarity.ts"
+        "ui-library/archives/ios-landings/src/lib/clarity.ts"
       ],
       "surfaceOwner": "ios-landings",
       "reason": "context.daddyrad.com proxies all page traffic to the contextdaddy-landing Pages site, so the generated-landing map covers the public surface; /download serves only the DMG.",
       "browserSurfaces": [
         {
           "kind": "landing",
-          "file": "ios-landings/src/lib/clarity.ts"
+          "file": "ui-library/archives/ios-landings/src/lib/clarity.ts"
         }
       ]
     }
