@@ -2983,8 +2983,8 @@
         "notes": "Bounded local source inspection; Live rendered behavior was not exercised. Source revision 4abc1c6675a947bd48ba7d4350a4d60fd9dd04ab. Landing/app attribution and default theme have not been render-qualified. Theme declarations found: dark, light.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "ios-landings/src/styles/global.css:13",
-          "ios-landings/src/styles/global.css:34"
+          "ui-library/archives/ios-landings/src/styles/global.css:13",
+          "ui-library/archives/ios-landings/src/styles/global.css:34"
         ],
         "libraryVersion": {
           "state": "source-observed",
@@ -2992,7 +2992,7 @@
           "notes": "Dependency specifications from local package manifests; this does not prove installed or live asset versions. Surface attribution remains unknown.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "ios-landings/package.json"
+            "ui-library/archives/ios-landings/package.json"
           ]
         },
         "loading": {
@@ -3000,18 +3000,18 @@
           "notes": "Source loading-state signals were found; required loading, empty, error, refresh and stale behavior has not been exercised.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "ios-landings/site/index.html:201",
-            "ios-landings/site/index.html:203",
-            "ios-landings/site/index.html:210",
-            "ios-landings/site/index.html:212",
-            "ios-landings/site/index.html:219",
-            "ios-landings/site/index.html:221",
-            "ios-landings/site/index.html:228",
-            "ios-landings/site/index.html:230",
-            "ios-landings/site/index.html:248",
-            "ios-landings/site/index.html:250",
-            "ios-landings/site/index.html:257",
-            "ios-landings/site/index.html:259"
+            "ui-library/archives/ios-landings/site/index.html:201",
+            "ui-library/archives/ios-landings/site/index.html:203",
+            "ui-library/archives/ios-landings/site/index.html:210",
+            "ui-library/archives/ios-landings/site/index.html:212",
+            "ui-library/archives/ios-landings/site/index.html:219",
+            "ui-library/archives/ios-landings/site/index.html:221",
+            "ui-library/archives/ios-landings/site/index.html:228",
+            "ui-library/archives/ios-landings/site/index.html:230",
+            "ui-library/archives/ios-landings/site/index.html:248",
+            "ui-library/archives/ios-landings/site/index.html:250",
+            "ui-library/archives/ios-landings/site/index.html:257",
+            "ui-library/archives/ios-landings/site/index.html:259"
           ]
         }
       },
@@ -3021,8 +3021,8 @@
         "notes": "Bounded local source inspection; Live rendered behavior was not exercised. Source revision 4abc1c6675a947bd48ba7d4350a4d60fd9dd04ab. Landing/app attribution and default theme have not been render-qualified. Theme declarations found: dark, light.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "ios-landings/src/styles/global.css:13",
-          "ios-landings/src/styles/global.css:34"
+          "ui-library/archives/ios-landings/src/styles/global.css:13",
+          "ui-library/archives/ios-landings/src/styles/global.css:34"
         ],
         "libraryVersion": {
           "state": "source-observed",
@@ -3030,7 +3030,7 @@
           "notes": "Dependency specifications from local package manifests; this does not prove installed or live asset versions. Surface attribution remains unknown.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "ios-landings/package.json"
+            "ui-library/archives/ios-landings/package.json"
           ]
         },
         "loading": {
@@ -3038,18 +3038,18 @@
           "notes": "Source loading-state signals were found; required loading, empty, error, refresh and stale behavior has not been exercised.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "ios-landings/site/index.html:201",
-            "ios-landings/site/index.html:203",
-            "ios-landings/site/index.html:210",
-            "ios-landings/site/index.html:212",
-            "ios-landings/site/index.html:219",
-            "ios-landings/site/index.html:221",
-            "ios-landings/site/index.html:228",
-            "ios-landings/site/index.html:230",
-            "ios-landings/site/index.html:248",
-            "ios-landings/site/index.html:250",
-            "ios-landings/site/index.html:257",
-            "ios-landings/site/index.html:259"
+            "ui-library/archives/ios-landings/site/index.html:201",
+            "ui-library/archives/ios-landings/site/index.html:203",
+            "ui-library/archives/ios-landings/site/index.html:210",
+            "ui-library/archives/ios-landings/site/index.html:212",
+            "ui-library/archives/ios-landings/site/index.html:219",
+            "ui-library/archives/ios-landings/site/index.html:221",
+            "ui-library/archives/ios-landings/site/index.html:228",
+            "ui-library/archives/ios-landings/site/index.html:230",
+            "ui-library/archives/ios-landings/site/index.html:248",
+            "ui-library/archives/ios-landings/site/index.html:250",
+            "ui-library/archives/ios-landings/site/index.html:257",
+            "ui-library/archives/ios-landings/site/index.html:259"
           ]
         }
       },
@@ -3059,14 +3059,14 @@
         "notes": "Landing/app continuity requires paired rendered evidence; source inspection does not establish a score.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "ios-landings/package.json",
-          "ios-landings/site/index.html",
-          "ios-landings/src/styles/blog.css",
-          "ios-landings/src/pages/index.astro",
-          "ios-landings/src/pages/index.md.ts",
-          "ios-landings/src/styles/device.css",
-          "ios-landings/src/styles/global.css",
-          "ios-landings/src/styles/landing.css"
+          "ui-library/archives/ios-landings/package.json",
+          "ui-library/archives/ios-landings/site/index.html",
+          "ui-library/archives/ios-landings/src/styles/blog.css",
+          "ui-library/archives/ios-landings/src/pages/index.astro",
+          "ui-library/archives/ios-landings/src/pages/index.md.ts",
+          "ui-library/archives/ios-landings/src/styles/device.css",
+          "ui-library/archives/ios-landings/src/styles/global.css",
+          "ui-library/archives/ios-landings/src/styles/landing.css"
         ]
       }
     },
