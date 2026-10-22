@@ -25,6 +25,20 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-10-23 — Feedback retry identity.** The hosted endpoint accepts an
+  optional project-scoped submission UUID. Identical retries return the same
+  feedback; changed content conflicts instead of silently replacing it. A
+  database uniqueness constraint keeps concurrent retries to one feedback and
+  one daily receipt. Alert delivery reuses that record's UUIDv4 and creation
+  time, allowing a client retry to resend without a second alert identity.
+  The maintained form preserves its identity after an error and creates a new
+  one after success or edited content; legacy clients keep independent posts.
+  Product-owned endpoints and callbacks retain their existing payloads.
+  Migration `0029` is additive and must precede the hosted client rollout.
+  Local qualification covers lost responses, concurrent and conflicting
+  submissions, project isolation, images and legacy clients. Production and
+  original-cohort acceptance remain tracked in App Health issue #167.
+
 - **2026-10-23 — Portfolio sheet and sorting repair.** Implemented the
   owner-selected portfolio sheet with grouped category headers and independently
   sortable Effort/Result columns, including both totals. Partial totals now sort

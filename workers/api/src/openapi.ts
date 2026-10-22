@@ -48,9 +48,11 @@ export const openApiDocument = {
           },
         },
         responses: {
+          '200': { description: 'Identical submission_id replay; existing feedback returned' },
           '201': { description: 'Feedback created' },
           '400': { description: 'Invalid payload' },
           '401': { description: 'Missing or invalid project key' },
+          '409': { description: 'Submission ID already belongs to different feedback content' },
           '429': { description: 'Rate limited' },
         },
       },
@@ -255,6 +257,12 @@ export const openApiDocument = {
         type: 'object',
         required: ['type', 'title', 'description'],
         properties: {
+          submission_id: {
+            type: 'string',
+            format: 'uuid',
+            description:
+              'Optional project-scoped retry identity. Reuse for the same message; use a new UUID for a new or edited submission.',
+          },
           type: { type: 'string', enum: ['bug', 'feature', 'feedback'] },
           title: { type: 'string' },
           description: { type: 'string' },

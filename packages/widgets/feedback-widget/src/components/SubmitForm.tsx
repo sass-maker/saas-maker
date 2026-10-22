@@ -2,10 +2,12 @@ import type React from 'react';
 import { useCallback, useState } from 'react';
 import { anchorLabel, type ElementAnchor } from '../elementAnchor';
 import type { FeedbackSubmission, FeedbackType } from '../types';
+import { createSubmissionIntent } from '../submission-intent';
 import { ImageUpload } from './ImageUpload';
 
 interface SubmitFormProps {
   onSubmit: (feedback: FeedbackSubmission) => void | Promise<void>;
+  useSubmissionIdentity?: boolean;
   userEmail?: string;
   userName?: string;
   requireEmail?: boolean;
@@ -44,6 +46,7 @@ const CheckIcon: React.FC = () => (
 
 export const SubmitForm: React.FC<SubmitFormProps> = ({
   onSubmit,
+  useSubmissionIdentity = false,
   userEmail,
   userName,
   requireEmail = false,
@@ -67,6 +70,7 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
   const [submitted, setSubmitted] = useState(false);
   const [consented, setConsented] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [submissionIntent] = useState(createSubmissionIntent);
 
   const resetForm = useCallback(() => {
     setSelectedType(types[0] || 'feedback');
@@ -118,8 +122,10 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
         if (resolvedName.trim()) payload.name = resolvedName.trim();
         if (anchor) payload.anchor = anchor;
         if (screenshot) payload.screenshot = screenshot;
+        if (useSubmissionIdentity) payload.submissionId = submissionIntent.identify(payload);
 
         await onSubmit(payload);
+        submissionIntent.reset();
         setSubmitted(true);
         resetForm();
         onClearAnchor?.();
@@ -146,6 +152,8 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
       anchor,
       resetForm,
       onClearAnchor,
+      submissionIntent,
+      useSubmissionIdentity,
     ]
   );
 

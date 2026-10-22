@@ -105,6 +105,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
         </section>
       )}
       <Modal
+        useSubmissionIdentity={typeof projectKey === 'string' && projectKey.trim().length > 0}
         isOpen={isOpen}
         hidden={picking}
         onClose={() => setIsOpen(false)}

@@ -8,6 +8,7 @@ export interface FeedbackPageContext {
 }
 
 export interface FeedbackSubmission {
+  submissionId?: string;
   type: FeedbackType;
   title: string;
   description: string;
