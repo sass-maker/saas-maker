@@ -25,31 +25,29 @@ import {
 } from '@/components/ui/sheet';
 import {
   CATEGORY_LABELS,
+  CATEGORY_DESCRIPTIONS,
+  assessmentHistory,
+  currentAssessment,
+  compareAssessments,
+  sortableTotal,
   SCORE_CATEGORIES,
   formatScore,
   isCategory,
   planNextLever,
   prerequisiteSatisfied,
-  safeEvidenceUrl,
   scoreTotal,
   transitionLever,
   type CycleRecord,
   type Lever,
   type LeverStatus,
-  type Score,
   type ScoreProject,
   type ScoreWorkspace,
 } from '@/lib/scoreboard';
 import styles from './scoreboard-workbench.module.css';
+import { ScoreEvidence, ScoreValue as Value } from './scoreboard-evidence';
+import { ScoreHistory, ScoreDelta } from './scoreboard-history';
 
-const short = {
-  product: 'Product fit',
-  design: 'Design',
-  seo: 'SEO',
-  geo: 'GEO',
-  measurement: 'Learning',
-  engineering: 'Engineering',
-};
+const short = CATEGORY_LABELS;
 const priority = { critical: 0, high: 1, normal: 2 };
 const statusLabel: Record<LeverStatus, string> = {
   queued: 'Queued',
@@ -61,31 +59,6 @@ const statusLabel: Record<LeverStatus, string> = {
 const dateLabel = (date: string) =>
   new Date(date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 const firstSentence = (text: string) => text.match(/^.*?[.!?](?:\s|$)/)?.[0]?.trim() ?? text;
-
-function Value({ score }: { score: Score }) {
-  return (
-    <span
-      className={`${styles.score} ${score.value !== null && score.value < 5 ? styles.weak : ''}`}
-    >
-      {score.value === null ? (
-        <span className={styles.exempt}>
-          {score.status === 'not_applicable' ? 'Exempt' : 'Unassessed'}
-        </span>
-      ) : (
-        formatScore(score.value)
-      )}
-      {score.confidence === 'low' && score.value !== null && (
-        <span
-          className={styles.uncertain}
-          title="Provisional estimate"
-          aria-label="Provisional estimate"
-        >
-          ◦
-        </span>
-      )}
-    </span>
-  );
-}
 
 export function ScoreboardWorkbench({
   workspace,
@@ -112,6 +85,15 @@ export function ScoreboardWorkbench({
   const [sheet, setSheet] = useState<'evidence' | 'action' | 'review' | null>(null);
   const [view, setView] = useState('scores');
   const [notice, setNotice] = useState('');
+  const reviews = useMemo(() => assessmentHistory(workspace), [workspace]);
+  const [baselineId, setBaselineId] = useState('');
+  const currentReview = useMemo(() => currentAssessment(workspace), [workspace]);
+  const baseline =
+    reviews.find((r) => r.id === baselineId) ??
+    reviews.find((r) => r.id !== currentReview.id) ??
+    currentReview;
+  const changes = compareAssessments(baseline, currentReview);
+  const changeById = new Map(changes.map((c) => [c.id, c]));
   const byLever = useMemo(() => new Map(snapshot.levers.map((l) => [l.id, l])), [snapshot]);
   const byProject = useMemo(() => new Map(snapshot.projects.map((p) => [p.id, p])), [snapshot]);
   const active = Object.values(workspace.progress).find((p) => p?.status === 'active');
@@ -268,7 +250,7 @@ export function ScoreboardWorkbench({
       value: (p: ScoreProject) => p.scores[c].value,
       align: 'right' as const,
       sortDescFirst: false,
-      minWidth: '4.8rem',
+      minWidth: '7rem',
       cell: (p: ScoreProject) => (
         <button
           className={styles.scoreButton}
@@ -279,16 +261,19 @@ export function ScoreboardWorkbench({
             selectScore(p, c);
           }}
         >
-          <Value score={p.scores[c]} />
+          <span className={styles.scoreWithChange}>
+            <Value score={p.scores[c]} />
+            {reviews.length > 1 && <ScoreDelta change={changeById.get(`${p.id}:${c}`)} />}
+          </span>
         </button>
       ),
     })),
     {
       id: 'total',
       header: 'Total',
-      sortable: false,
+      sortDescFirst: false,
       align: 'right',
-      value: (p) => scoreTotal(p).sum,
+      value: sortableTotal,
       cell: (p) => {
         const t = scoreTotal(p);
         return (
@@ -438,7 +423,7 @@ export function ScoreboardWorkbench({
             Next levers <span>{actions.length}</span>
           </button>
           <button aria-pressed={view === 'history'} onClick={() => setView('history')}>
-            History <span>{workspace.history.length}</span>
+            History <span>{reviews.length + workspace.history.length}</span>
           </button>
         </div>
         <span>5 competitive · 7.5 among the best · target {formatScore(snapshot.target)}</span>
@@ -549,7 +534,32 @@ export function ScoreboardWorkbench({
             className={styles.compareGrid}
             style={hasMatches ? undefined : { gridTemplateColumns: 'minmax(0, 1fr)' }}
           >
-            <div className={styles.tablePane}>
+            <div className={`${styles.tablePane} ${view === 'scores' ? styles.scoreTable : ''}`}>
+              {view === 'scores' && (
+                <div className={styles.comparisonContext}>
+                  {reviews.length > 1 ? (
+                    <label>
+                      Change since{' '}
+                      <select
+                        aria-label="Score baseline"
+                        value={baseline.id}
+                        onChange={(e) => setBaselineId(e.target.value)}
+                      >
+                        {reviews.map((r, i) => (
+                          <option key={r.id} value={r.id}>
+                            {dateLabel(r.assessedAt)} · {i + 1}. {r.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  ) : (
+                    <span>Baseline saved · {dateLabel(snapshot.assessedAt)}</span>
+                  )}
+                  <button onClick={() => setView('history')}>
+                    View score history <ArrowUpRight size={12} />
+                  </button>
+                </div>
+              )}
               {view === 'scores' ? (
                 <DataTable
                   key={`scores:${area}`}
@@ -578,8 +588,8 @@ export function ScoreboardWorkbench({
               <p className={styles.tableFoot}>
                 ◦ Provisional estimate
                 <span>
-                  Exempt areas are excluded. Unassessed scores remain unknown. Click a header to
-                  reverse sorting.
+                  Total sorts by displayed points; each maximum stays visible. Unassessed totals
+                  sort last. Click again to reverse sorting.
                 </span>
               </p>
             </div>
@@ -601,39 +611,47 @@ export function ScoreboardWorkbench({
         </>
       )}
       {view === 'history' && (
-        <section className={styles.history} aria-label="Outcome history">
-          <h2>Decisions and outcomes</h2>
-          <p>Plans and proof stay in history. Verification does not automatically raise a score.</p>
-          {workspace.history.length === 0 ? (
-            <div className={styles.empty}>
-              No cycles yet. Select a lever and choose “Pick this lever”.
-            </div>
-          ) : (
-            [...workspace.history].reverse().map((record) => (
-              <article key={record.id}>
-                <div className={styles.historyHeading}>
-                  <h3>{record.plan.title}</h3>
-                  <span className={styles.priority}>{statusLabel[record.status]}</span>
+        <>
+          <ScoreHistory workspace={workspace} reviews={reviews} onImport={onImport} />
+          <details className={styles.outcomeDisclosure}>
+            <summary>Lever outcomes · {workspace.history.length} recorded steps</summary>
+            <section className={styles.history} aria-label="Outcome history">
+              <h2>Lever outcomes</h2>
+              <p>
+                Plans and proof stay in history. Verification does not automatically raise a score.
+              </p>
+              {workspace.history.length === 0 ? (
+                <div className={styles.empty}>
+                  No cycles yet. Select a lever and choose “Pick this lever”.
                 </div>
-                <p className={styles.eyebrow}>
-                  {record.leverId} · {dateLabel(record.at)} · baseline{' '}
-                  {record.plan.baselineScore === null
-                    ? 'Unassessed'
-                    : `${formatScore(record.plan.baselineScore)}/10`}
-                </p>
-                {record.result && <p className={styles.historyResult}>{record.result}</p>}
-                {record.evidence && <p>Evidence: {record.evidence}</p>}
-                {record.outcome && <p>Outcome: {record.outcome}</p>}
-                {record.prerequisiteSatisfied && <p>Prerequisite objective accepted.</p>}
-                <details>
-                  <summary>Original action and finish line</summary>
-                  <p>{record.plan.action}</p>
-                  <p>Done when: {record.plan.proof}</p>
-                </details>
-              </article>
-            ))
-          )}
-        </section>
+              ) : (
+                [...workspace.history].reverse().map((record) => (
+                  <article key={record.id}>
+                    <div className={styles.historyHeading}>
+                      <h3>{record.plan.title}</h3>
+                      <span className={styles.priority}>{statusLabel[record.status]}</span>
+                    </div>
+                    <p className={styles.eyebrow}>
+                      {record.leverId} · {dateLabel(record.at)} · baseline{' '}
+                      {record.plan.baselineScore === null
+                        ? 'Unassessed'
+                        : `${formatScore(record.plan.baselineScore)}/10`}
+                    </p>
+                    {record.result && <p className={styles.historyResult}>{record.result}</p>}
+                    {record.evidence && <p>Evidence: {record.evidence}</p>}
+                    {record.outcome && <p>Outcome: {record.outcome}</p>}
+                    {record.prerequisiteSatisfied && <p>Prerequisite objective accepted.</p>}
+                    <details>
+                      <summary>Original action and finish line</summary>
+                      <p>{record.plan.action}</p>
+                      <p>Done when: {record.plan.proof}</p>
+                    </details>
+                  </article>
+                ))
+              )}
+            </section>
+          </details>
+        </>
       )}
       <footer className={styles.workspaceFooter}>
         <button onClick={() => setSheet('review')}>
@@ -694,11 +712,21 @@ export function ScoreboardWorkbench({
                   {formatScore(snapshot.target)}/10. Low confidence describes evidence, not
                   automatically poor quality. GEO readiness does not prove AI recommendation share.
                 </p>
+                <h3>The six categories</h3>
+                <dl className={styles.categoryDefinitions}>
+                  {SCORE_CATEGORIES.map((c) => (
+                    <div key={c}>
+                      <dt>{CATEGORY_LABELS[c]}</dt>
+                      <dd>{CATEGORY_DESCRIPTIONS[c]}</dd>
+                    </div>
+                  ))}
+                </dl>
                 <h3>One lever at a time</h3>
                 <p>
                   Pick a change, collect proof, then record the outcome. Waiting for evidence frees
                   the active slot. Verified or parked work can receive a follow-up; the original
-                  plan stays in history. Only a reviewed assessment changes a score.
+                  plan stays in history. Only a reviewed assessment changes a score. Every imported
+                  assessment is retained in score history.
                 </p>
                 <p>
                   For design, observe comprehension, friction, delight and preference in the actual
@@ -709,8 +737,10 @@ export function ScoreboardWorkbench({
                   {saved
                     ? 'Saved on this device.'
                     : 'Changes are only in this tab. Export before closing it.'}{' '}
-                  Review data is not uploaded. This browser and signed-in account have their own
-                  workspace; other devices do not sync. Export after a review session.
+                  Review data is not uploaded. Dated assessments and their evidence are saved in
+                  browser history storage and included in every backup. This browser and signed-in
+                  account have their own workspace; other devices do not sync. Export after a review
+                  session.
                 </p>
                 <div className={styles.backupActions}>
                   <Button
@@ -738,59 +768,6 @@ export function ScoreboardWorkbench({
           </SheetBody>
         </SheetContent>
       </Sheet>
-    </div>
-  );
-}
-
-function ScoreEvidence({ project, score }: { project: ScoreProject; score: Score }) {
-  return (
-    <div className={styles.evidence}>
-      <div className={styles.evidenceScore}>
-        <Value score={score} />
-        <span>
-          {score.status === 'estimated'
-            ? `/10 · ${score.confidence} confidence`
-            : score.status === 'not_applicable'
-              ? 'Outside this product’s scope'
-              : 'Evidence needed'}
-        </span>
-      </div>
-      <p>{score.reason}</p>
-      <h3>
-        Supporting evidence <span>{score.evidence.length}</span>
-      </h3>
-      {score.evidence.map((e, i) => {
-        const url = safeEvidenceUrl(e.source);
-        return (
-          <details key={`${i}:${e.source}`}>
-            <summary>
-              <FileText size={15} />
-              <span>
-                {url ? new URL(url).hostname : e.source.split('/').pop()}
-                <small>{dateLabel(e.date)}</small>
-              </span>
-              <ChevronRight size={14} />
-            </summary>
-            <p>{e.note}</p>
-            {url ? (
-              <a href={url} target="_blank" rel="noopener noreferrer">
-                {e.source}
-                <ArrowUpRight size={12} />
-              </a>
-            ) : (
-              <code>Local evidence: {e.source}</code>
-            )}
-          </details>
-        );
-      })}
-      <div className={styles.evidenceLimits}>
-        <p>
-          Source revision: <code>{project.sourceRevision}</code>
-        </p>
-        {project.limitations.map((l) => (
-          <p key={l}>Limit: {l}</p>
-        ))}
-      </div>
     </div>
   );
 }

@@ -148,6 +148,53 @@
 .history details { margin-top: 12px; font-size: 11px; }
 .history summary { cursor: pointer; }
 .empty { border: 1px solid var(--line); border-radius: 8px; margin-top: 24px; padding: 28px; color: var(--quiet); font-size: 13px; }
+.comparisonContext { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 0 0 12px; color: var(--quiet); font-size: 10px; }
+.comparisonContext label { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.comparisonContext select { min-width: 0; max-width: 250px; padding: 6px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--foreground); }
+.comparisonContext button { display: inline-flex; align-items: center; gap: 5px; min-height: 28px; }
+.scoreTable [data-slot=data-table] th { white-space: normal; height: 76px; }
+.scoreTable [data-slot=data-table] th button { white-space: normal; height: auto; min-height: 48px; max-width: 112px; line-height: 1.4; text-align: left; }
+.scoreTable [data-slot=data-table] th button svg { flex-shrink: 0; }
+.scoreTable [data-slot=data-table] th:first-child, .scoreTable [data-slot=data-table] td:first-child { position: sticky; left: 0; z-index: 2; background: var(--surface); border-right: 1px solid var(--line); }
+.scoreTable [data-slot=data-table] th:first-child { z-index: 12; }
+.scoreTable [data-slot=data-table] tr[aria-current=true] > td:first-child { background: var(--selected); }
+.scoreWithChange { display: inline-flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+.delta { display: inline-block; color: var(--quiet); font-size: 10px; line-height: 1.45; white-space: normal; max-width: 110px; }
+.delta.positive { color: #39784c; }
+:global(.dark) .delta.positive { color: #9ac5a4; }
+.delta.negative { color: var(--warning); }
+.categoryDefinitions { display: grid; gap: 17px; margin: 20px 0 28px; }
+.categoryDefinitions dt { font-size: 12px; font-weight: 500; }
+.categoryDefinitions dd { font-size: 12px; line-height: 1.7; color: var(--quiet); margin-top: 4px; }
+.scoreHistory { padding: 26px 0 16px; min-width: 0; }
+.historyIntro { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.historyIntro h2 { font-size: 22px; letter-spacing: -.5px; }
+.historyIntro p, .historyFoot { font-size: 12px; line-height: 1.8; color: var(--quiet); }
+.historyIntro p { max-width: 650px; margin-top: 10px; }
+.historyIntro > button { flex-shrink: 0; font-size: 11px; }
+.reviewSelectors { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 24px; }
+.reviewSelectors label { display: grid; gap: 8px; min-width: 0; font-size: 11px; color: var(--quiet); }
+.reviewSelectors select { width: 100%; min-width: 0; height: 38px; padding: 0 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--foreground); font-size: 12px; }
+.historyCounts { font-size: 11px; color: var(--quiet); line-height: 1.8; margin-top: 13px; }
+.unchangedToggle { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--quiet); padding-bottom: 16px; }
+.historyFoot { margin: 12px 0; }
+.historyInspect { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--quiet); white-space: nowrap; }
+.assessmentList, .outcomeDisclosure { border-top: 1px solid var(--line); margin-top: 24px; padding-top: 18px; font-size: 12px; }
+.assessmentList summary, .outcomeDisclosure > summary { cursor: pointer; min-height: 28px; }
+.assessmentList article { padding: 18px 0; border-bottom: 1px solid var(--line); }
+.assessmentList strong { font-weight: 500; }
+.assessmentList p { font-size: 11px; color: var(--quiet); line-height: 1.8; margin-top: 6px; }
+.changeEvidence { overflow-wrap: anywhere; }
+.changeEvidence > section { border-top: 1px solid var(--line); margin-top: 24px; padding-top: 22px; }
+.changeEvidence > section > h3 { font-size: 14px; font-weight: 500; line-height: 1.6; }
+.historyChangeSummary { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--quiet); }
+.historyChangeSummary .delta { font-size: 18px; }
+@media (max-width: 767px) {
+  .comparisonContext label { width: 100%; }
+  .comparisonContext select { flex: 1; max-width: none; width: 0; }
+  .historyIntro { flex-direction: column; gap: 14px; }
+  .reviewSelectors { grid-template-columns: 1fr; gap: 12px; }
+}
 @media (min-width: 1600px) { .compareGrid { grid-template-columns: minmax(0, 1fr) 340px; } .desktopInspector { padding-left: 26px; } }
 @media (max-width: 1150px) {
   .compareGrid { grid-template-columns: minmax(0, 1fr); }
