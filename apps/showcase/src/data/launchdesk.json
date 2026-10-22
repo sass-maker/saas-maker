@@ -29392,6 +29392,36 @@
       ]
     },
     {
+      "name": "Toolfound",
+      "domain": "toolfound.com",
+      "website": "https://toolfound.com/",
+      "submissionUrl": "https://toolfound.com/submit",
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Launch platform / directory",
+      "pricing": "free",
+      "dr": null,
+      "link": "follow",
+      "eligibility": "Free launches include a permanent listing. Submitted listings require ownership verification before publication; verified listings receive a dofollow product link.",
+      "flags": [],
+      "route": "source-reported",
+      "provider": "Toolfound first-party llms.txt",
+      "sourceUrl": "https://toolfound.com/llms.txt",
+      "retrieved": "2026-10-22",
+      "measured": "2026-10-22",
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "toolfound-first-party",
+          "dr": null,
+          "link": "follow",
+          "pricing": "free",
+          "type": "Launch platform / directory",
+          "submissionUrl": "https://toolfound.com/submit"
+        }
+      ]
+    },
+    {
       "name": "Tool Salad",
       "domain": "toolsalad.com",
       "website": "https://toolsalad.com/submit",
