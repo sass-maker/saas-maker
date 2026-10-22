@@ -2,7 +2,12 @@
   "$schema": "fleet.launch-coverage.v1",
   "updated": "2026-10-17",
   "note": "Public projection of the owner-local submission ledger. Agents mark destinations here as submissions are posted; private receipts stay in tooling/config/directory-submissions/.",
-  "coveredStates": ["submitted", "scheduled", "queued", "live"],
+  "coveredStates": [
+    "submitted",
+    "scheduled",
+    "queued",
+    "live"
+  ],
   "denominator": {
     "destinations": 817
   },
@@ -1531,26 +1536,6 @@
         }
       }
     },
-    "on-record": {
-      "destinations": {
-        "activesearchresults.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "directorywebpromotion.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "qualityinternetdirectory.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupcollections.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        }
-      }
-    },
     "pace": {
       "destinations": {
         "activesearchresults.com": {
@@ -2403,6 +2388,30 @@
             "state": "skipped",
             "recordedAt": "2026-09-22T19:24:53Z",
             "reason": "email_verification_serial_gate"
+          }
+        }
+      }
+    },
+    "on-record": {
+      "retiredAt": "2026-10-22",
+      "reason": "High Signal Podcasts is a retained TechData source component, not an independent public Fleet project. Historical launch coverage remains retained here.",
+      "coverage": {
+        "destinations": {
+          "activesearchresults.com": {
+            "state": "submitted",
+            "recordedAt": "2026-09-22T19:24:53Z"
+          },
+          "directorywebpromotion.com": {
+            "state": "submitted",
+            "recordedAt": "2026-09-22T19:24:53Z"
+          },
+          "qualityinternetdirectory.com": {
+            "state": "submitted",
+            "recordedAt": "2026-09-22T19:24:53Z"
+          },
+          "startupcollections.com": {
+            "state": "submitted",
+            "recordedAt": "2026-09-22T19:24:53Z"
           }
         }
       }
