@@ -34,6 +34,17 @@ function independentPackageDirectory(root, relative) {
     const entry = lstatSync(target);
     if (entry.isSymbolicLink() || !entry.isDirectory()) throw new Error('--package-dir must contain only real directories, not symlinks.');
   }
+  let ownWorkspace;
+  try { ownWorkspace = lstatSync(join(target, 'pnpm-workspace.yaml')); }
+  catch (error) { if (error.code !== 'ENOENT') throw error; }
+  if (ownWorkspace) {
+    if (ownWorkspace.isSymbolicLink() || !ownWorkspace.isFile()) {
+      throw new Error('--package-dir requires a regular pnpm-workspace.yaml for its own workspace boundary.');
+    }
+    // pnpm resolves this boundary before any ancestor workspace. Keep the root
+    // writer lease while using the child's existing pin, lockfile and modules.
+    return target;
+  }
   for (let parent = dirname(target); ; parent = dirname(parent)) {
     let workspace;
     try { workspace = lstatSync(join(parent, 'pnpm-workspace.yaml')); }

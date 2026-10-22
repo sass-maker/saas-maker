@@ -70,7 +70,9 @@ For an independently locked child package, use
 `fleet-workspace lockfile-only --id <id> --package-dir app`. The child must have
 its own regular manifest, exact pnpm pin and lockfile. Absolute paths, traversal,
 symlink directories/metadata/dependency layouts and inherited parent pnpm
-workspaces are rejected. Corepack uses the child's exact pin and `--dir`, while
+workspaces are rejected. A child's own regular `pnpm-workspace.yaml` establishes
+an independent boundary even inside another workspace. Corepack uses the child's
+exact pin and `--dir`, while
 the managed command retains the root writer lease, disk budgets and shared store.
 Follow with `fleet-workspace install --repo <absolute-worktree>/app`.
 
