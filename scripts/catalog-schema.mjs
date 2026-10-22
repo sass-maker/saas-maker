@@ -4,6 +4,7 @@ export const fieldMap = {
   id: 'id',
   name: 'name',
   category: 'classification.category',
+  'portfolio.purposeCategory': 'classification.purposeCategory',
   'portfolio.futureForm': 'classification.futureForm',
   'portfolio.kind': 'classification.kind',
   family: 'classification.family',

@@ -73,12 +73,6 @@
       "serverRequests": "applicable"
     },
     {
-      "id": "on-record",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
-    },
-    {
       "id": "knowledge-base",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",

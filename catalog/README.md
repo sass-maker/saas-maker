@@ -22,6 +22,11 @@ Each of the 72 product identities has these sections (optional fields stay absen
 | `retainedFields` | Any unmapped fields, retained verbatim rather than discarded |
 
 `classification.futureForm` is the owner classification.
+`classification.purposeCategory` records the owner's primary reason to keep an
+application: `attention-money-grabber`, `learn-skill-showoff`, or `personal-use`.
+It is separate from the descriptive topic category, lifecycle and readiness.
+Personal use includes private Fleet infrastructure. Historical components may
+omit it; each primary/active application has exactly one current purpose.
 `sharing.shareable` is the authoritative owner shareability decision. Primary and
 active projects are shareable; inactive projects may also be shareable. Readiness
 evidence stays separate and is not rewritten by this classification rule.

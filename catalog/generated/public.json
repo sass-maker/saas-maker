@@ -428,59 +428,6 @@
       "latestCommitAt": "2026-09-22"
     },
     {
-      "id": "on-record",
-      "name": "High Signal Podcasts",
-      "description": "Search evidenced podcast claims and follow links back to the original episode or publication.",
-      "makerNote": "I’m building High Signal Podcasts to extract useful insights, recommendations, and emerging technology signals from top podcasts without listening to every episode.",
-      "purposeContract": {
-        "purpose": "High Signal Podcasts indexes evidenced claims, recommendations, books, and tools mentioned by notable podcast guests.",
-        "audience": "People who want useful ideas from important podcasts without listening to every episode end to end.",
-        "outcome": "Find what a person actually said or recommended and trace it back to the source episode.",
-        "mechanism": "A source-backed corpus extracts attributable claims and organizes them into people, topics, books, tools, and emerging signals.",
-        "proof": "The public corpus is live with 11,624 published claims, 294 named references, and 1,190 episodes with evidence.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-      },
-      "footerArt": {
-        "src": "/footer-art/on-record.webp",
-        "width": 2171,
-        "height": 724,
-        "alt": "High Signal Podcasts: An oral-history research room centers a claim card connected to its source reel. A microphone, attribution slips and referenced books remain distinct around it, emphasizing source-linked claims rather than a podcast directory.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for High Signal Podcasts",
-        "sha256": "10ab36994c185216c85d76ed31664227ba1a6f49e65af28e82a7822cb5c82171"
-      },
-      "kind": "product",
-      "category": "media",
-      "form": "Podcast intelligence web app",
-      "platforms": [
-        "Web",
-        "API"
-      ],
-      "technologies": [
-        "Astro",
-        "Hono",
-        "Cloudflare Workers",
-        "D1"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Workers"
-      ],
-      "domains": [
-        "podcasts.highsignal.app"
-      ],
-      "url": "https://podcasts.highsignal.app",
-      "repositoryUrl": "https://github.com/Significant-Hobbies/on-record",
-      "changelogUrl": "https://podcasts.highsignal.app/changelog",
-      "roadmapUrl": "https://github.com/Significant-Hobbies/on-record/issues",
-      "firstCommitAt": "2026-08-24",
-      "latestCommitAt": "2026-09-22"
-    },
-    {
       "id": "knowledge-base",
       "name": "Knowledge Base",
       "description": "Private agent search over specialized corpora with ranked citations, provenance, and schema-aware retrieval.",
@@ -2065,41 +2012,6 @@
         "focalY": 50,
         "credit": "Original illustration for High Signal",
         "sha256": "073b92cd7e9d6e90a77f21c46aad762544406b606019fc4c40ecb898ae528bf2"
-      }
-    },
-    {
-      "id": "on-record",
-      "name": "High Signal Podcasts",
-      "description": "Search evidenced podcast claims and follow links back to the original episode or publication.",
-      "url": "https://podcasts.highsignal.app",
-      "tier": "secondary",
-      "category": "media",
-      "priority": "P2",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "experiment",
-      "changelogUrl": "https://podcasts.highsignal.app/changelog",
-      "repositoryUrl": "https://github.com/Significant-Hobbies/on-record",
-      "roadmapUrl": "https://github.com/Significant-Hobbies/on-record/issues",
-      "pillarId": "learn",
-      "purposeContract": {
-        "purpose": "High Signal Podcasts indexes evidenced claims, recommendations, books, and tools mentioned by notable podcast guests.",
-        "audience": "People who want useful ideas from important podcasts without listening to every episode end to end.",
-        "outcome": "Find what a person actually said or recommended and trace it back to the source episode.",
-        "mechanism": "A source-backed corpus extracts attributable claims and organizes them into people, topics, books, tools, and emerging signals.",
-        "proof": "The public corpus is live with 11,624 published claims, 294 named references, and 1,190 episodes with evidence.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-      },
-      "footerArt": {
-        "src": "/footer-art/on-record.webp",
-        "width": 2171,
-        "height": 724,
-        "alt": "High Signal Podcasts: An oral-history research room centers a claim card connected to its source reel. A microphone, attribution slips and referenced books remain distinct around it, emphasizing source-linked claims rather than a podcast directory.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for High Signal Podcasts",
-        "sha256": "10ab36994c185216c85d76ed31664227ba1a6f49e65af28e82a7822cb5c82171"
       }
     },
     {

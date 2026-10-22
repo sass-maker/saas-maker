@@ -117,11 +117,6 @@
       "probePath": "/"
     },
     {
-      "id": "on-record",
-      "url": "https://podcasts.highsignal.app",
-      "probePath": "/"
-    },
-    {
       "id": "ios-landings",
       "url": "https://apps.significanthobbies.com",
       "probePath": "/"
