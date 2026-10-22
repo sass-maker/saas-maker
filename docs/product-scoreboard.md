@@ -40,8 +40,8 @@ lowers confidence rather than automatically lowering quality. Internal tools
 are judged against their intended task. Provisional GEO estimates must state
 their basis and retain any missing answer-engine measurements explicitly;
 readiness and historical captures cannot establish current recommendation share.
-The coverage strip separates scored areas, provisional estimates, unassessed
-areas and scope exemptions. It does not claim every numeric score was measured.
+The Review & backup sheet separates scored areas, provisional estimates,
+unassessed areas and scope exemptions. It does not claim every numeric score was measured.
 
 The October 22, 2026 private snapshot contains 39 current identities and 234
 category recommendations: 216 actions and 18 internal acquisition exemptions.
@@ -71,8 +71,18 @@ scope, device and missing evidence rather than transferring a landing score.
 1. Sign in to SaaS Maker and open Product scoreboard.
 2. Choose **Import review** and select the owner-local `scoreboard-review.json`.
 3. Review the snapshot label and counts before confirming a replacement.
-4. Inspect a score to see its reasoning, source date and limitations.
-5. Use the project, category, domain, scope and status filters to choose a focus.
+4. Compare products in the shared data table. Click a column header again to
+   reverse sorting; exempt and unknown values remain last in either direction.
+5. Click a score for its evidence sheet, or a product row for its best next lever.
+   The selected lever shows the change, finish line, full plan and prerequisites.
+6. Use search, area, domain, scope and status filters to choose a focus. Focus
+   links can also narrow to one product. Choose **Next levers** to browse actions
+   or **History** for recorded plans and outcomes.
+7. Open **Review & backup** for coverage, scale, private import and export.
+
+At phone and tablet widths, the selected lever opens in a sheet from a persistent
+bottom control. The table keeps its own horizontal and vertical scroll region.
+Totals with different denominators are intentionally not sortable.
 
 The private baseline is not committed to this repository, embedded in a build,
 retrieved from a server or loaded by the public directory. The interface can
