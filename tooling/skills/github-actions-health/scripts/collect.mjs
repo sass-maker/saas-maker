@@ -139,29 +139,38 @@ export async function collectRepository(repository, github = api) {
   };
 }
 
+export function catalogRepositories(data, { includeInactive = false, includeReviewed = false } = {}) {
+  const repositories = new Set();
+  for (const project of data.projects) {
+    if (!includeInactive && !['primary', 'active'].includes(project.lifecycle?.status)) continue;
+    const match = project.repositories?.url?.match(/^https:\/\/github\.com\/([^/]+\/[^/]+?)\/?$/);
+    if (match) repositories.add(match[1]);
+  }
+  if (includeReviewed) for (const row of data.repositoryReview?.repositories ?? []) {
+    if (row.currentRepository) repositories.add(row.currentRepository);
+  }
+  return [...repositories];
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const repositories = new Set();
   const excludes = new Set();
   let catalog;
   let includeReviewed = false;
+  let includeInactive = false;
   for (let index = 0; index < args.length; index++) {
     const arg = args[index];
     if (arg === '--catalog') catalog = args[++index];
     else if (arg === '--repo') repositories.add(args[++index]);
     else if (arg === '--exclude-repo') excludes.add(args[++index]);
     else if (arg === '--include-reviewed') includeReviewed = true;
+    else if (arg === '--include-inactive') includeInactive = true;
     else throw new Error(`Unknown argument: ${arg}`);
   }
   if (catalog) {
     const data = JSON.parse(readFileSync(catalog, 'utf8'));
-    for (const project of data.projects) {
-      const match = project.repositories?.url?.match(/^https:\/\/github\.com\/([^/]+\/[^/]+?)\/?$/);
-      if (match) repositories.add(match[1]);
-    }
-    if (includeReviewed) for (const row of data.repositoryReview?.repositories ?? []) {
-      if (row.currentRepository) repositories.add(row.currentRepository);
-    }
+    for (const repository of catalogRepositories(data, { includeInactive, includeReviewed })) repositories.add(repository);
   }
   const targets = [...repositories].filter((repo) => !excludes.has(repo)).sort();
   if (!targets.length || targets.some((repo) => !/^[\w.-]+\/[\w.-]+$/.test(repo))) {
@@ -173,7 +182,7 @@ async function main() {
     process.stderr.write(`${repository}: ${result.workflows.length} current workflows, ${result.errors.length} query errors\n`);
     return result;
   });
-  process.stdout.write(`${JSON.stringify({ observedAt, completedAt: new Date().toISOString(), excluded: [...excludes], repositories: results }, null, 2)}\n`);
+  process.stdout.write(`${JSON.stringify({ observedAt, completedAt: new Date().toISOString(), scope: { catalog: catalog ? (includeInactive ? 'all-catalog-projects' : 'active-and-primary-projects') : null, includeReviewed, targetCount: targets.length }, excluded: [...excludes], repositories: results }, null, 2)}\n`);
   if (results.some((result) => result.errors.length || result.unregistered?.length)) process.exitCode = 2;
 }
 

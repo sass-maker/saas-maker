@@ -1,6 +1,16 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { collectRepository, workflowConfig } from './collect.mjs';
+import { catalogRepositories, collectRepository, workflowConfig } from './collect.mjs';
+
+test('defaults to active canonical repositories; inactive and retained identities require explicit inclusion', () => {
+  const project = (status, name) => ({ lifecycle: { status }, repositories: { url: `https://github.com/acme/${name}` } });
+  const catalog = { projects: [project('active', 'app'), project('primary', 'shared'),
+    project('active', 'shared'), project('inactive', 'retired')],
+    repositoryReview: { repositories: [{ currentRepository: 'acme/history' }] } };
+  assert.deepEqual(catalogRepositories(catalog), ['acme/app', 'acme/shared']);
+  assert.deepEqual(catalogRepositories(catalog, { includeInactive: true }), ['acme/app', 'acme/shared', 'acme/retired']);
+  assert.deepEqual(catalogRepositories(catalog, { includeReviewed: true }), ['acme/app', 'acme/shared', 'acme/history']);
+});
 
 test('extracts quoted, inline and multiline triggers without reading job configuration', () => {
   assert.deepEqual(workflowConfig('name: CI\non: [push, pull_request]\njobs:\n  schedule: {}'), {

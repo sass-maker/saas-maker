@@ -23,14 +23,21 @@ rtk proxy node "$SKILL/scripts/collect.mjs" \
   --catalog "$PWD/saas-maker/catalog/projects.json"
 ```
 
-For a broader audit including retained repository identities, add
-`--include-reviewed`. The catalog's `repositoryReview` can include unrelated
+Default Fleet scope is canonical projects whose `lifecycle.status` is `primary`
+or `active`. Count projects and unique repositories separately: several products
+can share one repo. Never label an account-wide historical inventory as the active
+Fleet. Local folders alone do not establish active membership.
+
+Only broaden scope when requested. Add `--include-inactive` for inactive catalog
+projects and `--include-reviewed` for retained repository identities. Report these
+groups separately from active projects. The catalog's `repositoryReview` can include unrelated
 workspaces: explicitly exclude those with repeatable `--exclude-repo OWNER/NAME`
 (for example `sarthakagrawal927/polaris-v2` belongs to Vault Wealth).
 For selected repositories, use repeatable `--repo OWNER/NAME` instead of a catalog.
 The catalog is private input, never an artifact to commit or upload.
 Check immediate child Git remotes for uncatalogued repos when the request says
-all Fleet; report any scope gap instead of silently dropping it. Deduplicate
+all Fleet; report these as membership questions, without adding them to the active
+count or silently expanding the audit. Deduplicate
 repository aliases using live `full_name` before reporting totals.
 
 The collector needs Node 20+ and `gh`. It uses four repository workers,
@@ -64,6 +71,8 @@ have no source file and still count: inspect their run/job results.
   manual run may show recovery from that failure, but cannot prove the scheduler
   is healthy. A weeks-old daily schedule still needs attention. Treat disabled
   schedules and never-run automatic workflows explicitly, using owner policy.
+  Archived repos do not execute schedules: their old cron declarations and queued
+  records are dormant history, not evidence that the scheduler is broken.
 - **Queued/running/waiting:** report age and runner/environment evidence. A run
   taking over a day merits investigation, not automatic cancellation; runner
   availability and environment approval can be the reason. Do not call it failed
@@ -85,6 +94,22 @@ Keep product CI, deployment, scheduled data refresh and maintenance/bot workflow
 distinct. Consult project owner policy/dossier before assigning operational
 severity; retired/local-only products do not automatically need CI. Do not infer
 live product availability or deployment parity from Actions success.
+
+## Review schedule value
+
+Health includes whether a schedule should exist. Read its jobs, consuming code
+and owner policy before recommending a cadence. Check for duplicate provider crons,
+event triggers already covering the same work, repeated no-op runs, superseded
+repositories, and rebuilds of unchanged inputs. Distinguish publication/ingestion,
+production monitoring, and housekeeping; frequency alone does not prove waste.
+
+Recommend **stop**, **reduce**, or **keep**, with the concrete consumer or missing
+value. A backup tick that only skips is a stop candidate; a freshness canary with
+an explicit consumer needs that contract reviewed before removal. Prefer event
+triggers for work caused by source changes and bounded fallback schedules when
+they serve a real recovery need. Check recent run logs and durations. Declared
+cron frequency is not actual execution count or billed spend. Do not suggest
+restoring high-frequency runs merely to satisfy a freshness score.
 
 ## Investigate and report
 
