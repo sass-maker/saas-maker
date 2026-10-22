@@ -33,7 +33,7 @@
     "@huggingface/transformers": "3.8.1",
     "@observablehq/plot": "0.6.17",
     "@zip.js/zip.js": "2.8.34",
-    "astro": "7.2.8"
+    "astro": "7.3.3"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.6",

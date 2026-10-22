@@ -314,7 +314,10 @@ export function ScoreboardWorkbench({
       cell: (p: ScoreProject) => {
         const t = scoreTotal(p, m);
         return (
-          <span className={styles.sheetTotal} title={`${t.unknown} unknown · ${t.exempt} exempt`}>
+          <span
+            className={`${styles.sheetTotal} ${t.knownMax ? '' : styles.unknownTotal}`}
+            title={`${t.unknown} unknown · ${t.exempt} exempt`}
+          >
             <span>{t.knownMax ? formatScore(t.sum) : t.maximum === 0 ? 'Exempt' : 'Unknown'}</span>
             {t.maximum > 0 && <small>/{t.maximum}</small>}
             {t.unknown > 0 && <small className={styles.pendingTotal}>{t.unknown} pending</small>}
