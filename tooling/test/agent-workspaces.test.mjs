@@ -204,13 +204,17 @@ test('lockfile-only generation uses pinned Corepack, shared defaults and no scri
   assert.equal(existsSync(join(row.path, 'node_modules')), false);
 });
 
-test('independent child lockfile uses its exact pin and cwd while retaining the root writer lease', async () => {
+for (const nested of [false, true]) test(`independent child lockfile uses its exact pin and root writer lease (nested workspace: ${nested})`, async () => {
   const { manager, create } = fixture();
   const row = await create('child-lockfile');
   const child = join(row.path, 'app'); mkdirSync(child);
   writeFileSync(join(row.path, 'package.json'), JSON.stringify({ packageManager: 'pnpm@9.15.0' }));
   writeFileSync(join(child, 'package.json'), JSON.stringify({ packageManager: 'pnpm@10.33.2' }));
   writeFileSync(join(child, 'pnpm-lock.yaml'), 'lockfileVersion: 9.0\n');
+  if (nested) {
+    writeFileSync(join(row.path, 'pnpm-workspace.yaml'), 'packages: [packages/*]\n');
+    writeFileSync(join(child, 'pnpm-workspace.yaml'), 'packages: [.]\n');
+  }
   const policy = manager.policy.bind(manager);
   const storeDir = join(row.path, '.test-shared-store');
   manager.policy = () => ({ ...policy(), storeDir });
@@ -223,6 +227,25 @@ test('independent child lockfile uses its exact pin and cwd while retaining the 
   });
   assert.equal(existsSync(join(row.path, 'pnpm-lock.yaml')), false);
   assert.equal(existsSync(join(child, 'node_modules')), false);
+});
+
+test('child workspace boundaries must be regular files, not links or directories', async () => {
+  const { manager, create, folder } = fixture();
+  const row = await create('child-workspace-boundary');
+  const outside = join(folder, 'outside-workspace.yaml');
+  writeFileSync(outside, 'packages: [.]\n');
+  let launches = 0;
+  manager.run = async () => { launches++; };
+  for (const kind of ['linked', 'directory']) {
+    const child = join(row.path, kind); mkdirSync(child);
+    writeFileSync(join(child, 'package.json'), JSON.stringify({ packageManager: 'pnpm@10.33.2' }));
+    writeFileSync(join(child, 'pnpm-lock.yaml'), 'lockfileVersion: 9.0\n');
+    const boundary = join(child, 'pnpm-workspace.yaml');
+    if (kind === 'linked') symlinkSync(outside, boundary);
+    else mkdirSync(boundary);
+    await assert.rejects(manager.lockfileOnly({ id: row.id, 'package-dir': kind }), /regular pnpm-workspace.yaml/);
+  }
+  assert.equal(launches, 0);
 });
 
 test('child lockfile rejects traversal, symlink directories and inherited pnpm workspaces', async () => {
