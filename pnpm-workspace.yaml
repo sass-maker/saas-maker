@@ -20,6 +20,8 @@ allowBuilds:
 # when Astro pulls a fresher one transitively. See fleet AGENTS.md →
 # release-age policy.
 overrides:
+  '@huggingface/transformers@3.8.1>sharp': 0.35.5
+  'miniflare@5.20260820.0-alpha>sharp': 0.35.5
   # Patch the existing Cockpit OpenNext adapter graph without broad upgrades.
   'express@5.2.1>proxy-addr': 2.0.8
   'fast-xml-parser@5.7.1>fast-xml-builder': 1.1.7
