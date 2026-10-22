@@ -107,6 +107,24 @@ test('missing, null and empty values remain distinct without adding defaults', (
   }
 });
 
+test('owner purpose categories survive maintenance round trips without changing topic categories', () => {
+  for (const purposeCategory of [
+    'attention-money-grabber',
+    'learn-skill-showoff',
+    'personal-use',
+  ]) {
+    const original = {
+      projects: [{ id: 'example', category: 'utility', portfolio: { purposeCategory } }],
+    };
+    const source = structureCatalog(original);
+    assert.equal(source.projects[0].classification.purposeCategory, purposeCategory);
+    assert.equal(source.projects[0].classification.category, 'utility');
+    assert.deepEqual(compatibilityCatalog(source), original);
+  }
+  const absent = structureCatalog({ projects: [{ id: 'absent' }] });
+  assert.equal(Object.hasOwn(absent.projects[0], 'classification'), false);
+});
+
 test('edits in the source drive the legacy consumers without a second classification', () => {
   const source = structureCatalog({
     projects: [

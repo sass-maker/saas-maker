@@ -101,22 +101,6 @@
       }
     },
     {
-      "id": "on-record",
-      "state": "ready",
-      "event": {
-        "name": "claim_search_opened",
-        "text": "Search claims",
-        "href": "/search"
-      },
-      "funnel": {
-        "name": "discover_to_claim_search",
-        "steps": [
-          "page:/",
-          "event:claim_search_opened"
-        ]
-      }
-    },
-    {
       "id": "knowledge-base",
       "state": "ready",
       "event": {

@@ -224,23 +224,6 @@
       ]
     },
     {
-      "id": "on-record",
-      "name": "High Signal Podcasts",
-      "repo": "on-record",
-      "clarityId": "ybch0p6cta",
-      "hostname": "podcasts.highsignal.app",
-      "tag": "on-record",
-      "wiredFiles": [
-        "on-record/apps/web/src/layouts/Base.astro"
-      ],
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "on-record/apps/web/src/layouts/Base.astro"
-        }
-      ]
-    },
-    {
       "id": "everythingrated",
       "name": "EverythingRated",
       "repo": "everythingrated",
