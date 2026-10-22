@@ -43,8 +43,8 @@ importers:
   apps/cockpit:
     dependencies:
       '@saas-maker/ui':
-        specifier: github:sass-maker/ui-library#v0.1.20&path:/packages/ui
-        version: https://codeload.github.com/sass-maker/ui-library/tar.gz/1afddb16e172c02e2d1a86ed780330ecb3dd84fe#path:/packages/ui(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(tailwindcss@4.3.3)
+        specifier: github:sass-maker/ui-library#7c5d4f87180b250fa9ad34c1364cfaba0bb4b39f&path:/packages/ui
+        version: https://codeload.github.com/sass-maker/ui-library/tar.gz/7c5d4f87180b250fa9ad34c1364cfaba0bb4b39f#path:/packages/ui(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(tailwindcss@4.3.3)
       better-auth:
         specifier: 1.6.30
         version: 1.6.30(@cloudflare/workers-types@5.20260926.1)(@opentelemetry/api@1.9.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260926.1)(@libsql/client@0.17.3)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(kysely@0.29.5))(next@16.3.8(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.62.0)(@types/node@25.6.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(vitest@4.1.12)
@@ -4533,9 +4533,9 @@ packages:
       hono:
         optional: true
 
-  '@saas-maker/ui@https://codeload.github.com/sass-maker/ui-library/tar.gz/1afddb16e172c02e2d1a86ed780330ecb3dd84fe#path:/packages/ui':
-    resolution: {path: /packages/ui, tarball: https://codeload.github.com/sass-maker/ui-library/tar.gz/1afddb16e172c02e2d1a86ed780330ecb3dd84fe}
-    version: 0.1.20
+  '@saas-maker/ui@https://codeload.github.com/sass-maker/ui-library/tar.gz/7c5d4f87180b250fa9ad34c1364cfaba0bb4b39f#path:/packages/ui':
+    resolution: {path: /packages/ui, tarball: https://codeload.github.com/sass-maker/ui-library/tar.gz/7c5d4f87180b250fa9ad34c1364cfaba0bb4b39f}
+    version: 0.1.21
     peerDependencies:
       react: '>=19'
       react-dom: '>=19'
@@ -13131,7 +13131,7 @@ snapshots:
       express: 5.2.1
       hono: 4.13.11
 
-  '@saas-maker/ui@https://codeload.github.com/sass-maker/ui-library/tar.gz/1afddb16e172c02e2d1a86ed780330ecb3dd84fe#path:/packages/ui(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(tailwindcss@4.3.3)':
+  '@saas-maker/ui@https://codeload.github.com/sass-maker/ui-library/tar.gz/7c5d4f87180b250fa9ad34c1364cfaba0bb4b39f#path:/packages/ui(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(tailwindcss@4.3.3)':
     dependencies:
       '@tanstack/react-table': 9.2.4(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       class-variance-authority: 0.7.1
@@ -14428,10 +14428,10 @@ snapshots:
 
   cmdk@1.1.1(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
-      '@radix-ui/react-compose-refs': 1.1.2(@types/react@19.2.14)(react@19.2.5)
-      '@radix-ui/react-dialog': 1.1.15(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
-      '@radix-ui/react-id': 1.1.1(@types/react@19.2.14)(react@19.2.5)
-      '@radix-ui/react-primitive': 2.1.3(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@radix-ui/react-compose-refs': 1.1.5(@types/react@19.2.14)(react@19.2.5)
+      '@radix-ui/react-dialog': 1.1.23(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@radix-ui/react-id': 1.1.4(@types/react@19.2.14)(react@19.2.5)
+      '@radix-ui/react-primitive': 2.1.10(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
     transitivePeerDependencies:

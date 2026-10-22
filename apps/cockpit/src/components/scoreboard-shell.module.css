@@ -1,0 +1,32 @@
+.shell {
+  --background: #f4f4f0;
+  --foreground: #272d27;
+  --card: #fff;
+  --card-foreground: #272d27;
+  --muted: #e9ede3;
+  --muted-foreground: #687164;
+  --accent: #e9ede3;
+  --accent-foreground: #272d27;
+  --border: #d5dbce;
+  --primary: #a56c43;
+  --primary-foreground: #fff;
+  --ring: #a56c43;
+  color: var(--foreground);
+  background: var(--background);
+  min-height: 100dvh;
+}
+.header { --accent: #232624; --accent-foreground: #fff; --muted-foreground: #a2a6a0; --foreground: #f7f7f5; display: flex; align-items: center; gap: 40px; min-height: 66px; padding: 12px 32px; background: #0c0d0e; color: #f7f7f5; border-bottom: 1px solid #292b2e; }
+.identity, .identity > a { display: flex; align-items: center; gap: 10px; }
+.identity > a { font-size: 14px; font-weight: 600; white-space: nowrap; }
+.navigation { display: flex; align-items: center; flex: 1; gap: 26px; font-size: 12px; color: #a2a6a0; }
+.navigation a[aria-current=page] { color: #fafaf6; }
+.header > :last-child { margin-left: auto; width: auto; max-width: 200px; }
+.mobileMenu { display: none; }
+.main { max-width: 1664px; margin: 0 auto; padding: 32px; min-width: 0; }
+@media (max-width: 767px) {
+  .header { padding: 10px 18px; min-height: 58px; gap: 12px; }
+  .header > :last-child { max-width: 90px; padding: 6px; }
+  .navigation { display: none; }
+  .mobileMenu { display: inline-flex; }
+  .main { padding: 24px 18px; }
+}
