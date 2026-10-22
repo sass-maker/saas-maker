@@ -254,8 +254,9 @@ export class AgentWorkspaces {
     mkdirSync(this.root, { recursive: true, mode: 0o700 });
     for (const path of [this.root, ...['manifests', 'worktrees', 'retired', 'jobs', 'receipts'].map((name) => join(this.root, name))]) {
       mkdirSync(path, { recursive: true, mode: 0o700 });
-      if (lstatSync(path).isSymbolicLink() || !lstatSync(path).isDirectory()) throw new Error(`Unsafe state directory: ${path}`);
-      chmodSync(path, 0o700);
+      const state = lstatSync(path);
+      if (state.isSymbolicLink() || !state.isDirectory()) throw new Error(`Unsafe state directory: ${path}`);
+      if ((state.mode & 0o7777) !== 0o700) chmodSync(path, 0o700);
     }
     const instructions = join(this.root, 'AGENTS.md');
     if (!existsSync(instructions)) {
