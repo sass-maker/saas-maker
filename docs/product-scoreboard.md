@@ -23,8 +23,9 @@ Each applicable category has an estimate out of ten. Six known applicable
 categories sum to a maximum of sixty. The board does not manufacture a complete
 total when evidence is missing.
 
-- **U** means unknown or unassessed. It is not a zero.
-- **N/A** means an explicit scope exemption. It is excluded from the denominator.
+- **Unassessed** means unknown. It is not a zero.
+- **Exempt** means an explicit scope exemption. It is excluded from the denominator.
+- **Provisional** identifies a low-confidence best estimate, not a measured outcome.
 - Confidence describes the evidence behind the estimate, not product quality.
 - Every assessment includes reasoning and dated evidence or a dated evidence gap.
 - Source revisions and limitations remain available beside each recommendation.
@@ -33,9 +34,20 @@ The initial review used a four-point rubric. Its estimates are multiplied by
 2.5 without rerating them: the previous 3.5 target becomes 8.75/10. This is a
 scale conversion, not additional measurement or newfound precision.
 
+Read the scale as 5 = competitive, 7.5 = credibly among the best in the stated
+segment, and 10 = demonstrated sustained leadership. Missing audit evidence
+lowers confidence rather than automatically lowering quality. Internal tools
+are judged against their intended task. Provisional GEO estimates must state
+their basis and retain any missing answer-engine measurements explicitly;
+readiness and historical captures cannot establish current recommendation share.
+The coverage strip separates scored areas, provisional estimates, unassessed
+areas and scope exemptions. It does not claim every numeric score was measured.
+
 The October 22, 2026 private snapshot contains 39 current identities and 234
 category recommendations: 216 actions and 18 internal acquisition exemptions.
-Thirty-seven category scores remain unknown. Historical/retired identities
+That initial baseline left thirty-seven category scores unknown. Subsequent
+private review imports can resolve them with dated, qualified estimates;
+the UI computes current coverage from the imported data. Historical/retired identities
 remain in the private review appendix rather than the current execution queue.
 These are snapshot counts, not hardcoded application limits.
 
