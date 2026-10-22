@@ -431,14 +431,12 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
           <section className="space-y-2 text-sm" aria-label="How to read the scores">
             <p>
               <strong>5 = competitive · 7.5 = among the best · 10 = sustained leader.</strong> Your
-              target is {formatScore(snapshot.target)}/10. A 5 is a competitive product with room to
-              improve.
+              target is {formatScore(snapshot.target)}/10.
             </p>
             <p className="text-muted-foreground">
-              Scores are best estimates. Low confidence means provisional: inspect the evidence and
-              its limits. Missing evidence lowers confidence; it does not automatically lower
-              quality. A provisional GEO estimate does not establish actual AI recommendation share.
-              Exempt means an area is outside the tool’s purpose.
+              Low confidence means a provisional estimate. Evidence gaps reduce confidence, not
+              automatically quality. GEO readiness does not prove AI recommendation share. Exempt
+              means outside the tool’s purpose. Inspect any score for evidence and limits.
             </p>
           </section>
           <section
