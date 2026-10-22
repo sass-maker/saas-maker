@@ -402,7 +402,7 @@ a {
   height: 1.1rem;
 }
 
-@media (max-width: 56rem) {
+@media (max-width: 68rem) {
   .nav-links {
     display: none;
   }
