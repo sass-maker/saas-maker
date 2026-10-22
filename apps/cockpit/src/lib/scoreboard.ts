@@ -8,13 +8,23 @@ export const SCORE_CATEGORIES = [
 ] as const;
 export type ScoreCategory = (typeof SCORE_CATEGORIES)[number];
 export const CATEGORY_LABELS: Record<ScoreCategory, string> = {
-  product: 'Product & parity',
+  product: 'Product & feature parity',
   design: 'Design & delight',
   seo: 'SEO & growth',
   geo: 'GEO & AI visibility',
   measurement: 'Measurement & learning',
   engineering: 'Engineering & operations',
 };
+export const CATEGORY_DESCRIPTIONS: Record<ScoreCategory, string> = {
+  product:
+    'Among the best in its segment at the core job, with the features and outcomes users expect.',
+  design: 'An aha moment, clear comprehension, low friction, and joy in the actual workflow.',
+  seo: 'Up-to-date pages, proper keyword and intent matching, and growing daily organic arrivals.',
+  geo: 'Prominent recommendations and citations when people ask relevant questions in AI engines.',
+  measurement: 'Knowing what happened, what worked, and what to do next.',
+  engineering: 'Dependable delivery, correctness, security, recovery, and operation.',
+};
+export const MAX_WORKSPACE_BYTES = 64_000_000;
 export type Evidence = { source: string; date: string; note: string };
 export type Score = {
   value: number | null;
@@ -68,12 +78,22 @@ export type CycleRecord = {
   outcome: 'helped' | 'unchanged' | 'worse' | 'learning' | null;
   plan: { title: string; action: string; proof: string; baselineScore: number | null };
 };
+export type Assessment = {
+  id: string;
+  assessedAt: string;
+  recordedAt: string;
+  label: string;
+  target: number;
+  note: string;
+  projects: ScoreProject[];
+};
 export type ScoreWorkspace = {
   schemaVersion: 1;
   snapshot: ScoreSnapshot;
   progress: Partial<Record<string, CycleRecord>>;
   history: CycleRecord[];
   updatedAt: string;
+  assessments?: Assessment[];
 };
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
@@ -89,26 +109,13 @@ export const isCategory = (value: unknown): value is ScoreCategory =>
   SCORE_CATEGORIES.includes(value as ScoreCategory);
 const isId = (value: unknown) => isText(value, 100) && /^[a-z0-9][a-z0-9-]*$/.test(value);
 
-export function validateSnapshot(input: unknown): ScoreSnapshot {
-  requireValue(isObject(input) && input.schemaVersion === 1, 'Unsupported scoreboard schema.');
+function validateProjects(projects: unknown): asserts projects is ScoreProject[] {
   requireValue(
-    isDate(input.assessedAt) && isText(input.label, 200),
-    'A dated review label is required.'
-  );
-  requireValue(
-    typeof input.target === 'number' && input.target >= 0 && input.target <= 10,
-    'Target must be between 0 and 10.'
-  );
-  requireValue(
-    Array.isArray(input.projects) && input.projects.length > 0 && input.projects.length <= 500,
+    Array.isArray(projects) && projects.length > 0 && projects.length <= 500,
     'Import 1–500 projects.'
   );
-  requireValue(
-    Array.isArray(input.levers) && input.levers.length === input.projects.length * 6,
-    'Every project needs exactly six category recommendations.'
-  );
   const projectIds = new Set<string>();
-  for (const p of input.projects) {
+  for (const p of projects) {
     requireValue(
       isObject(p) && isId(p.id) && !projectIds.has(p.id as string),
       'Project IDs must be valid and unique.'
@@ -160,6 +167,24 @@ export function validateSnapshot(input: unknown): ScoreSnapshot {
       );
     }
   }
+}
+
+export function validateSnapshot(input: unknown): ScoreSnapshot {
+  requireValue(isObject(input) && input.schemaVersion === 1, 'Unsupported scoreboard schema.');
+  requireValue(
+    isDate(input.assessedAt) && isText(input.label, 200),
+    'A dated review label is required.'
+  );
+  requireValue(
+    typeof input.target === 'number' && input.target >= 0 && input.target <= 10,
+    'Target must be between 0 and 10.'
+  );
+  validateProjects(input.projects);
+  requireValue(
+    Array.isArray(input.levers) && input.levers.length === input.projects.length * 6,
+    'Every project needs exactly six category recommendations.'
+  );
+  const projectIds = new Set(input.projects.map((p) => p.id));
   const leverIds = new Set<string>();
   for (const l of input.levers) {
     requireValue(
@@ -221,7 +246,14 @@ export function createWorkspace(
   snapshot: ScoreSnapshot,
   at = new Date().toISOString()
 ): ScoreWorkspace {
-  return { schemaVersion: 1, snapshot, progress: {}, history: [], updatedAt: at };
+  return {
+    schemaVersion: 1,
+    snapshot,
+    progress: {},
+    history: [],
+    updatedAt: at,
+    assessments: [archiveAssessment(snapshot, at)],
+  };
 }
 
 function validateCycle(input: unknown): asserts input is CycleRecord {
@@ -275,7 +307,7 @@ function validateCycle(input: unknown): asserts input is CycleRecord {
 }
 
 export function parseWorkspace(text: string): ScoreWorkspace {
-  requireValue(text.length <= 8_000_000, 'Import is too large (maximum 8 MB).');
+  requireValue(text.length <= MAX_WORKSPACE_BYTES, 'Import is too large (maximum 64 MB).');
   const input: unknown = JSON.parse(text);
   if (isObject(input) && 'snapshot' in input) {
     requireValue(
@@ -296,7 +328,23 @@ export function parseWorkspace(text: string): ScoreWorkspace {
     }
     requireValue(active <= 1, 'A workspace can have only one active lever.');
     input.history.forEach(validateCycle);
-    return input as unknown as ScoreWorkspace;
+    const workspace = input as unknown as ScoreWorkspace;
+    const archived = input.assessments;
+    requireValue(
+      archived === undefined || (Array.isArray(archived) && archived.length <= 1000),
+      'Invalid assessment history.'
+    );
+    const records = (archived ?? []) as unknown[];
+    const reviewIds = new Set<string>();
+    for (const record of records) {
+      validateAssessment(record);
+      requireValue(!reviewIds.has(record.id), 'Assessment IDs must be unique.');
+      reviewIds.add(record.id);
+    }
+    workspace.assessments = mergeAssessments(records as Assessment[], [
+      archiveAssessment(snapshot, workspace.updatedAt),
+    ]);
+    return workspace;
   }
   return createWorkspace(validateSnapshot(input));
 }
@@ -327,7 +375,201 @@ export function importSnapshot(
     },
     progress: Object.fromEntries(Object.entries(current.progress).filter(([id]) => ids.has(id))),
     history: current.history,
+    assessments: mergeAssessments(assessmentHistory(current), assessmentHistory(incoming)),
   };
+}
+
+export function archiveAssessment(
+  snapshot: ScoreSnapshot,
+  recordedAt = new Date().toISOString(),
+  note = 'Imported assessment. Score changes may reflect product work or revised evidence.'
+): Assessment {
+  return {
+    id: crypto.randomUUID(),
+    assessedAt: snapshot.assessedAt,
+    recordedAt,
+    label: snapshot.label,
+    target: snapshot.target,
+    note,
+    projects: structuredClone(snapshot.projects),
+  };
+}
+
+function validateAssessment(input: unknown): asserts input is Assessment {
+  requireValue(
+    isObject(input) &&
+      isText(input.id, 200) &&
+      isDate(input.assessedAt) &&
+      isDate(input.recordedAt),
+    'Invalid assessment identity or date.'
+  );
+  requireValue(
+    isText(input.label, 200) && isText(input.note),
+    'An archived assessment needs a label and note.'
+  );
+  requireValue(
+    typeof input.target === 'number' && input.target >= 0 && input.target <= 10,
+    'Invalid historical target.'
+  );
+  validateProjects(input.projects);
+}
+
+// Stable across object-key order and lever follow-ups. Only an assessment import
+// creates a new score version; ordinary cadence actions never manufacture one.
+function assessmentKey(a: Assessment) {
+  return JSON.stringify([
+    a.assessedAt,
+    a.label,
+    a.target,
+    [...a.projects]
+      .sort((x, y) => x.id.localeCompare(y.id))
+      .map((p) => [
+        p.id,
+        p.name,
+        p.segment,
+        p.internal,
+        p.domains,
+        p.sourceRevision,
+        p.limitations,
+        SCORE_CATEGORIES.map((c) => {
+          const s = p.scores[c];
+          return [
+            c,
+            s.status,
+            s.value,
+            s.confidence,
+            s.reason,
+            s.evidence.map((e) => [e.source, e.date, e.note]),
+          ];
+        }),
+      ]),
+  ]);
+}
+
+export function mergeAssessments(before: Assessment[], after: Assessment[]): Assessment[] {
+  const unique = new Map<string, Assessment>();
+  const ids = new Set<string>();
+  for (const a of [...before, ...after]) {
+    const key = assessmentKey(a);
+    if (!unique.has(key)) {
+      requireValue(
+        !ids.has(a.id),
+        'An assessment ID refers to conflicting versions. Existing history was preserved.'
+      );
+      unique.set(key, a);
+      ids.add(a.id);
+    }
+  }
+  requireValue(
+    unique.size <= 1000,
+    'Assessment history is full. Export your history before starting a new workspace.'
+  );
+  return [...unique.values()].sort(
+    (a, b) =>
+      Date.parse(a.assessedAt) - Date.parse(b.assessedAt) ||
+      Date.parse(a.recordedAt) - Date.parse(b.recordedAt)
+  );
+}
+
+export function assessmentHistory(workspace: ScoreWorkspace): Assessment[] {
+  const current = archiveAssessment(workspace.snapshot, workspace.updatedAt);
+  return mergeAssessments(workspace.assessments ?? [], [current]);
+}
+
+export function currentAssessment(workspace: ScoreWorkspace): Assessment {
+  const current = archiveAssessment(workspace.snapshot, workspace.updatedAt);
+  return assessmentHistory(workspace).find((a) => assessmentKey(a) === assessmentKey(current))!;
+}
+
+export function addAssessmentHistory(
+  current: ScoreWorkspace,
+  incoming: ScoreWorkspace
+): ScoreWorkspace {
+  return {
+    ...current,
+    assessments: mergeAssessments(assessmentHistory(current), assessmentHistory(incoming)),
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+export type ScoreChange = {
+  id: string;
+  category: ScoreCategory;
+  project: ScoreProject;
+  beforeProject: ScoreProject | null;
+  afterProject: ScoreProject | null;
+  before: Score | null;
+  after: Score | null;
+  delta: number | null;
+  state:
+    | 'increased'
+    | 'decreased'
+    | 'unchanged'
+    | 'evidence_updated'
+    | 'newly_assessed'
+    | 'scope_changed'
+    | 'added'
+    | 'removed'
+    | 'unassessed';
+};
+export function compareAssessments(before: Assessment, after: Assessment): ScoreChange[] {
+  const old = new Map(before.projects.map((p) => [p.id, p]));
+  const current = new Map(after.projects.map((p) => [p.id, p]));
+  return [...new Set([...old.keys(), ...current.keys()])].flatMap((id) =>
+    SCORE_CATEGORIES.map((category) => {
+      const a = old.get(id) ?? null,
+        b = current.get(id) ?? null;
+      const previous = a?.scores[category] ?? null,
+        next = b?.scores[category] ?? null;
+      const scopeChanged =
+        a &&
+        b &&
+        (a.internal !== b.internal ||
+          a.segment !== b.segment ||
+          (previous?.status === 'not_applicable') !== (next?.status === 'not_applicable'));
+      const delta =
+        !scopeChanged && previous?.status === 'estimated' && next?.status === 'estimated'
+          ? Number(((next.value ?? 0) - (previous.value ?? 0)).toFixed(2))
+          : null;
+      const state: ScoreChange['state'] = !a
+        ? 'added'
+        : !b
+          ? 'removed'
+          : scopeChanged
+            ? 'scope_changed'
+            : delta !== null
+              ? delta > 0
+                ? 'increased'
+                : delta < 0
+                  ? 'decreased'
+                  : JSON.stringify([previous?.confidence, previous?.reason, previous?.evidence]) !==
+                      JSON.stringify([next?.confidence, next?.reason, next?.evidence])
+                    ? 'evidence_updated'
+                    : 'unchanged'
+              : previous?.status === 'unknown' && next?.status === 'estimated'
+                ? 'newly_assessed'
+                : previous?.status === next?.status
+                  ? 'unchanged'
+                  : 'unassessed';
+      return {
+        id: `${id}:${category}`,
+        category,
+        project: b ?? a!,
+        beforeProject: a,
+        afterProject: b,
+        before: previous,
+        after: next,
+        delta,
+        state,
+      };
+    })
+  );
+}
+
+/** Total sorts by the number displayed. Incomplete/empty totals sort last. */
+export function sortableTotal(project: ScoreProject): number | null {
+  const total = scoreTotal(project);
+  return total.complete && total.maximum > 0 ? total.sum : null;
 }
 
 export function scoreTotal(project: ScoreProject) {

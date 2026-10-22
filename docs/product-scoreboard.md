@@ -12,12 +12,16 @@ to show domain ratings; those ratings do not measure product quality.
 
 The six categories are:
 
-1. Product and feature parity: the core job, correctness and market alternatives.
-2. Design and delight: comprehension, friction, preference and a memorable result.
-3. SEO and growth: current pages, keyword/intent fit and useful organic arrivals.
-4. GEO and AI visibility: mentions, recommendations and citations in real answers.
-5. Measurement and learning: knowing what happened and what to do next.
-6. Engineering and operations: dependable delivery, security and recovery.
+1. **Product & feature parity**: among the best in its segment at the core job,
+   with expected features and outcomes.
+2. **Design & delight**: an aha moment, clarity and joy in the actual workflow.
+3. **SEO & growth**: current pages, keyword/intent matching and growing daily
+   organic arrivals.
+4. **GEO & AI visibility**: prominent recommendations and citations when people
+   ask relevant questions.
+5. **Measurement & learning**: knowing what happened, what worked and what to do next.
+6. **Engineering & operations**: dependable delivery, correctness, security,
+   recovery and operation.
 
 Each applicable category has an estimate out of ten. Six known applicable
 categories sum to a maximum of sixty. The board does not manufacture a complete
@@ -77,12 +81,13 @@ scope, device and missing evidence rather than transferring a landing score.
    The selected lever shows the change, finish line, full plan and prerequisites.
 6. Use search, area, domain, scope and status filters to choose a focus. Focus
    links can also narrow to one product. Choose **Next levers** to browse actions
-   or **History** for recorded plans and outcomes.
+   or **History** for dated score comparisons, evidence and lever outcomes.
 7. Open **Review & backup** for coverage, scale, private import and export.
 
 At phone and tablet widths, the selected lever opens in a sheet from a persistent
 bottom control. The table keeps its own horizontal and vertical scroll region.
-Totals with different denominators are intentionally not sortable.
+Total sorts in both directions by displayed points, with each denominator visible.
+Incomplete totals remain last. The full six category names appear in the headers.
 
 The private baseline is not committed to this repository, embedded in a build,
 retrieved from a server or loaded by the public directory. The interface can
@@ -128,25 +133,50 @@ the current recommendation. The previous plan, baseline score, transitions,
 result, evidence and outcome remain in history. There remains one current
 recommendation per project/category.
 
-Only a new reviewed assessment changes scores. Preserve the previous snapshot
-and describe the evidence behind any score change during that review.
+Only a new reviewed assessment changes scores. Every imported review retains
+its scores, reasoning, confidence, dated evidence, source revisions and limits.
+Lever transitions and follow-up plans do not create score versions.
+
+## Score history
+
+Use **Change since** on the score table to choose a retained baseline. Category
+cells show their change beside the current score. **History** compares any two
+assessments, with product search, category, domain and scope filters. Click a
+change to inspect the full before/after evidence. Unchanged scores can be shown.
+
+A numeric increase is an assessment change; it can reflect shipped work or a
+correction to the evidence. The interface does not claim causation. Unknown to
+known is labelled **Newly assessed**, with no numeric gain. Scope changes and
+exemptions have no numeric delta. Evidence-only revisions remain inspectable.
+One baseline is explicitly insufficient to establish a trend.
+
+Use **Add to score history only** in the import dialog to retain an older review
+without replacing current scores, active progress or lever outcomes. Reimporting
+an identical assessment does not duplicate it. A fresh baseline import preserves
+all previous assessments automatically. Retained assessments list their review
+date, retention date and note; dates alone do not prove product improvement.
 
 ## Durable progress and backup
 
-Updates save to localStorage. If storage is unavailable or full, the interface
+Updates save to account-scoped IndexedDB, allowing evidence history to grow
+beyond localStorage's small quota. Existing localStorage workspaces migrate on
+load, retaining the legacy copy for recovery. If storage is unavailable or full, the interface
 shows an unsaved warning and keeps the current tab's state available for export.
 Export immediately before closing that tab.
 
 Use **Export backup** after a review session and before clearing browser data,
 switching devices or replacing a workspace. The JSON contains the snapshot,
-current progress and append-only outcome history. Store it privately.
+current progress, retained score assessments and append-only outcome history.
+Legacy backups remain importable. Imports are limited to 64 MB. Store backups privately.
 
 A new baseline import preserves history and matching progress by stable lever
 ID, including follow-up plans. It refuses to remove an active lever: finish or
 park that work first. An imported workspace backup replaces the workspace
 after confirmation. Export the existing workspace before replacing it.
 
-Tabs on the same origin receive persisted updates. Supported browsers use a
+Tabs on the same origin receive persisted updates through BroadcastChannel and
+a localStorage invalidation token containing no review data. An older app tab
+changing the legacy copy triggers a reconciliation warning. Supported browsers use a
 Web Lock to serialize writes and read the latest saved state before a change.
 An unsaved tab warns rather than silently replacing its unexported work.
 
@@ -195,7 +225,8 @@ dependent work can progress after the decision is verified.
 
 The focused cadence tests cover score denominators, missing evidence, invalid
 imports, prerequisites, one-active enforcement, verification requirements,
-follow-up history and baseline refreshes. Middleware tests cover authentication,
+follow-up history, baseline refreshes, assessment retention, legacy migration,
+evidence comparisons and safe history-only imports. Middleware tests cover authentication,
 private headers, cache/referrer policy and off-origin connection restrictions.
 Rendered checks cover populated scores, evidence, filters, import, reload and
 cadence transitions at desktop and phone widths.

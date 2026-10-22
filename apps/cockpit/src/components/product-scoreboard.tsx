@@ -8,10 +8,12 @@ import { PageHeader } from '@/components/page-header';
 import { ScoreboardWorkbench } from '@/components/scoreboard-workbench';
 import {
   importSnapshot,
+  addAssessmentHistory,
+  MAX_WORKSPACE_BYTES,
   parseWorkspace,
-  readScoreboardStorage,
   type ScoreWorkspace,
 } from '@/lib/scoreboard';
+import { readWorkspaceStore, writeWorkspaceStore } from '@/lib/scoreboard-storage';
 
 const errorText = (error: unknown) =>
   error instanceof Error ? error.message : 'The workspace could not be updated.';
@@ -38,43 +40,81 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
   const input = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    try {
-      const stored = readScoreboardStorage(() => localStorage.getItem(storageKey));
-      if (!stored.available) {
-        setSaved(false);
-        setError(
-          'Browser storage is unavailable. You can import a review and export this tab before closing it.'
-        );
+    let cancelled = false;
+    void (async () => {
+      try {
+        const stored = await readWorkspaceStore(storageKey);
+        if (cancelled) return;
+        if (!stored.available) {
+          setSaved(false);
+          setError(
+            'History storage is unavailable. A readable legacy copy may be older; export this tab before closing and retry storage.'
+          );
+        }
+        if (stored.raw) setWorkspace(parseWorkspace(stored.raw));
+      } catch (e) {
+        if (!cancelled)
+          setError(`Saved workspace was preserved but could not be opened: ${errorText(e)}`);
+      } finally {
+        if (!cancelled) setLoaded(true);
       }
-      if (stored.raw) setWorkspace(parseWorkspace(stored.raw));
-    } catch (e) {
-      setError(`Saved workspace was preserved but could not be opened: ${errorText(e)}`);
-    }
-    setLoaded(true);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [storageKey]);
 
   useEffect(() => {
-    const receive = (event: StorageEvent) => {
-      if (event.key !== storageKey || !event.newValue) return;
+    const refresh = async () => {
       if (!saved) {
         setError('Another tab changed this workspace. Export this tab before reloading.');
         return;
       }
       try {
-        setWorkspace(parseWorkspace(event.newValue));
+        const stored = await readWorkspaceStore(storageKey);
+        if (!stored.available) {
+          setSaved(false);
+          throw new Error(
+            'History storage is unavailable. Current tab data was preserved; export it before reloading.'
+          );
+        }
+        if (stored.raw) setWorkspace(parseWorkspace(stored.raw));
       } catch (e) {
         setError(errorText(e));
       }
     };
+    const receive = (event: StorageEvent) => {
+      if (event.key === `${storageKey}:changed`) void refresh();
+      else if (event.key === storageKey && event.newValue)
+        setError(
+          'An older tab changed its legacy copy. Export that tab and import its backup here to reconcile it; score history was preserved.'
+        );
+    };
+    const channel =
+      typeof BroadcastChannel === 'undefined' ? null : new BroadcastChannel('saasmaker-scoreboard');
+    if (channel)
+      channel.onmessage = (event) => {
+        if (event.data === storageKey) void refresh();
+      };
     window.addEventListener('storage', receive);
-    return () => window.removeEventListener('storage', receive);
+    return () => {
+      window.removeEventListener('storage', receive);
+      channel?.close();
+    };
   }, [storageKey, saved]);
 
-  function persist(next: ScoreWorkspace) {
+  async function persist(next: ScoreWorkspace) {
     setError('');
     try {
-      localStorage.setItem(storageKey, JSON.stringify(next));
+      if (!saved)
+        throw new Error('Export this unsaved tab before reloading to recover history storage.');
+      await writeWorkspaceStore(storageKey, next);
       setSaved(true);
+      if (typeof BroadcastChannel !== 'undefined') {
+        const channel = new BroadcastChannel('saasmaker-scoreboard');
+        channel.postMessage(storageKey);
+        channel.close();
+      }
     } catch (e) {
       setSaved(false);
       setError(`Changes are only in this tab. Export a backup now: ${errorText(e)}`);
@@ -85,11 +125,18 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
     fn: (current: ScoreWorkspace | null) => ScoreWorkspace,
     replaceInvalid = false
   ) {
-    const update = () => {
+    const update = async () => {
       try {
-        const { raw } = readScoreboardStorage(() =>
-          saved ? localStorage.getItem(storageKey) : null
-        );
+        const stored = saved
+          ? await readWorkspaceStore(storageKey)
+          : { raw: null, available: true };
+        if (!stored.available) {
+          setSaved(false);
+          throw new Error(
+            'History storage is unavailable. Current tab data was preserved; export it before retrying.'
+          );
+        }
+        const { raw } = stored;
         let current = workspace;
         if (raw) {
           try {
@@ -98,13 +145,18 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
             if (!replaceInvalid) throw e;
           }
         }
-        persist(fn(current));
+        const next = fn(current);
+        if (new Blob([JSON.stringify(next, null, 2)]).size > MAX_WORKSPACE_BYTES)
+          throw new Error(
+            'This update would exceed the 64 MB backup limit. Export your history before starting a new workspace.'
+          );
+        await persist(next);
       } catch (e) {
         setError(errorText(e));
       }
     };
     if (navigator.locks) await navigator.locks.request(storageKey, update);
-    else update();
+    else await update();
   }
   function change(fn: (current: ScoreWorkspace) => ScoreWorkspace) {
     void updateWorkspace((current) => {
@@ -115,11 +167,11 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
   async function readImport(file: File | undefined) {
     if (!file) return;
     try {
-      if (file.size > 8_000_000) throw new Error('Import is too large (maximum 8 MB).');
+      if (file.size > MAX_WORKSPACE_BYTES) throw new Error('Import is too large (maximum 64 MB).');
       const text = await file.text();
       const incoming = parseWorkspace(text);
       setPendingBackup('snapshot' in JSON.parse(text));
-      const { raw } = readScoreboardStorage(() => localStorage.getItem(storageKey));
+      const { raw } = await readWorkspaceStore(storageKey);
       if (workspace || raw) setPending(incoming);
       else await updateWorkspace((current) => importSnapshot(current, incoming));
     } catch (e) {
@@ -154,8 +206,9 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
           <h2 className="font-semibold">Import {pending.snapshot.label}?</h2>
           <p className="text-sm text-muted-foreground">
             {pending.snapshot.projects.length} products · {pending.snapshot.levers.length}{' '}
-            recommendations. A baseline update keeps history and matching progress. Restoring a
-            backup or replacing the workspace replaces current progress; export it first if needed.
+            recommendations. A baseline update keeps score history and matching progress. “Add to
+            score history only” retains the current scores and lever progress. Restoring a backup or
+            replacing the workspace replaces current progress; export it first if needed.
           </p>
           <div className="flex flex-wrap gap-2">
             <Button
@@ -178,6 +231,20 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
                 }}
               >
                 Replace workspace
+              </Button>
+            )}
+            {workspace && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  void updateWorkspace((current) => {
+                    if (!current) throw new Error('Import a current review first.');
+                    return addAssessmentHistory(current, pending);
+                  });
+                  setPending(null);
+                }}
+              >
+                Add to score history only
               </Button>
             )}
             <Button variant="outline" onClick={() => setPending(null)}>

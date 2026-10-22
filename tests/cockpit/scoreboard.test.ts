@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
   SCORE_CATEGORIES,
+  addAssessmentHistory,
+  archiveAssessment,
+  assessmentHistory,
+  compareAssessments,
   createWorkspace,
+  currentAssessment,
   importSnapshot,
   parseWorkspace,
   planNextLever,
@@ -9,6 +14,7 @@ import {
   readScoreboardStorage,
   safeEvidenceUrl,
   scoreTotal,
+  sortableTotal,
   transitionLever,
   validateSnapshot,
   type ScoreProject,
@@ -132,6 +138,116 @@ describe('scoreboard evidence semantics', () => {
       'https://user:password@example.com/',
     ])
       expect(safeEvidenceUrl(source)).toBeNull();
+  });
+});
+
+describe('retained score assessments', () => {
+  it('migrates old backups without changing their active plan or outcomes', () => {
+    const original = transitionLever(createWorkspace(fixture()), 'example-one:product', 'active');
+    delete original.assessments;
+    const migrated = parseWorkspace(JSON.stringify(original));
+    expect(migrated.snapshot).toEqual(original.snapshot);
+    expect(migrated.progress).toEqual(original.progress);
+    expect(migrated.history).toEqual(original.history);
+    expect(assessmentHistory(migrated)).toHaveLength(1);
+    expect(parseWorkspace(JSON.stringify(migrated))).toEqual(migrated);
+  });
+
+  it('archives each changed review and its evidence while deduplicating repeat imports', () => {
+    const current = createWorkspace(fixture(), '2026-10-22T10:00:00Z');
+    const next = fixture();
+    next.projects[0].scores.product.value = 6.25;
+    next.projects[0].scores.product.reason = 'A later observed result.';
+    const incoming = createWorkspace(next, '2026-10-22T11:00:00Z');
+    const merged = importSnapshot(current, incoming);
+    expect(assessmentHistory(merged)).toHaveLength(2);
+    expect(merged.assessments![0].projects[0].scores.product.value).toBe(0);
+    expect(merged.assessments![0].projects[0].scores.product.reason).toBe(
+      'A bounded source observation.'
+    );
+    next.projects[0].scores.product.evidence[0].note = 'Mutated input';
+    expect(merged.assessments![1].projects[0].scores.product.evidence[0].note).toBe(
+      'Known synthetic evidence.'
+    );
+    const repeated = importSnapshot(merged, createWorkspace(merged.snapshot));
+    expect(assessmentHistory(repeated)).toHaveLength(3);
+    expect(
+      assessmentHistory(importSnapshot(repeated, createWorkspace(repeated.snapshot)))
+    ).toHaveLength(3);
+  });
+
+  it('adds an older review without replacing current scores, progress or lever history', () => {
+    const current = transitionLever(createWorkspace(fixture()), 'example-one:product', 'active');
+    const older = fixture();
+    older.assessedAt = '2026-10-20';
+    older.projects[0].scores.product.value = 1;
+    const merged = addAssessmentHistory(current, createWorkspace(older));
+    expect(merged.snapshot).toEqual(current.snapshot);
+    expect(merged.progress).toEqual(current.progress);
+    expect(merged.history).toEqual(current.history);
+    expect(assessmentHistory(merged)).toHaveLength(2);
+    expect(currentAssessment(merged).projects[0].scores.product.value).toBe(0);
+    const future = fixture();
+    future.assessedAt = '2026-10-25';
+    const withFuture = addAssessmentHistory(merged, createWorkspace(future));
+    expect(currentAssessment(withFuture).assessedAt).toBe('2026-10-22');
+    expect(assessmentHistory(withFuture)).toHaveLength(3);
+  });
+
+  it('distinguishes numeric changes, new evidence, new coverage and changed scope', () => {
+    const first = fixture();
+    const next = fixture();
+    next.projects[0].scores.product.value = 6.25;
+    next.projects[0].scores.geo = { ...next.projects[0].scores.geo, status: 'estimated', value: 5 };
+    next.projects[0].scores.design.reason = 'Clarified evidence, same score.';
+    next.projects[0].scores.seo = { ...next.projects[0].scores.seo, status: 'estimated', value: 6 };
+    next.projects[1].internal = true;
+    const changes = compareAssessments(archiveAssessment(first), archiveAssessment(next));
+    const byId = Object.fromEntries(changes.map((c) => [c.id, c]));
+    expect(byId['example-one:product']).toMatchObject({ delta: 6.25, state: 'increased' });
+    expect(byId['example-one:geo']).toMatchObject({ delta: null, state: 'newly_assessed' });
+    expect(byId['example-one:design']).toMatchObject({ delta: 0, state: 'evidence_updated' });
+    expect(byId['example-one:seo']).toMatchObject({ delta: null, state: 'scope_changed' });
+    expect(byId['example-two:design']).toMatchObject({ delta: null, state: 'scope_changed' });
+    const removed = archiveAssessment(next);
+    removed.projects.pop();
+    expect(
+      compareAssessments(archiveAssessment(first), removed).filter((c) => c.state === 'removed')
+    ).toHaveLength(6);
+    expect(
+      compareAssessments(removed, archiveAssessment(first)).filter((c) => c.state === 'added')
+    ).toHaveLength(6);
+  });
+
+  it('rejects malformed archived evidence without accepting a partial history', () => {
+    const workspace = createWorkspace(fixture());
+    workspace.assessments![0].projects[0].scores.design.evidence = [];
+    expect(() => parseWorkspace(JSON.stringify(workspace))).toThrow(/dated evidence/);
+  });
+
+  it('rejects conflicting archive identities rather than producing an unreadable backup', () => {
+    const current = createWorkspace(fixture());
+    const incoming = createWorkspace(fixture());
+    incoming.snapshot.projects[0].scores.product.value = 5;
+    incoming.assessments = [archiveAssessment(incoming.snapshot)];
+    incoming.assessments[0].id = current.assessments![0].id;
+    expect(() => addAssessmentHistory(current, incoming)).toThrow(/conflicting versions/);
+    expect(assessmentHistory(current)).toHaveLength(1);
+  });
+
+  it('sorts totals by their displayed points and keeps incomplete totals separate', () => {
+    const project = fixture().projects[0];
+    expect(sortableTotal(project)).toBeNull();
+    project.scores.geo = { ...project.scores.geo, status: 'estimated', value: 5 };
+    expect(sortableTotal(project)).toBe(23.75);
+    expect(scoreTotal(project).maximum).toBe(50);
+    for (const category of SCORE_CATEGORIES)
+      project.scores[category] = {
+        ...project.scores[category],
+        status: 'not_applicable',
+        value: null,
+      };
+    expect(sortableTotal(project)).toBeNull();
   });
 });
 

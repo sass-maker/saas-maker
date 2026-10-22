@@ -34,6 +34,11 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
   The owner-selected comparison layout uses the existing shared DataTable with
   reversible header sorting, focused area/domain views, a selected-lever panel,
   evidence sheets and compact access to history and private backup controls.
+  Total sorts both ways with visible denominators. Full category names match
+  the owner's six areas. Dated assessment history retains before/after evidence,
+  distinguishes score revisions from new coverage and scope changes, and can
+  import older reviews without replacing current scores or lever progress.
+  Browser persistence uses IndexedDB with legacy workspace migration.
   See [the operating guide](docs/product-scoreboard.md).
 
 - **2026-10-09 — Finish sweep of stranded work.** Landed the Clarity audit's
