@@ -204,6 +204,68 @@ test('lockfile-only generation uses pinned Corepack, shared defaults and no scri
   assert.equal(existsSync(join(row.path, 'node_modules')), false);
 });
 
+test('independent child lockfile uses its exact pin and cwd while retaining the root writer lease', async () => {
+  const { manager, create } = fixture();
+  const row = await create('child-lockfile');
+  const child = join(row.path, 'app'); mkdirSync(child);
+  writeFileSync(join(row.path, 'package.json'), JSON.stringify({ packageManager: 'pnpm@9.15.0' }));
+  writeFileSync(join(child, 'package.json'), JSON.stringify({ packageManager: 'pnpm@10.33.2' }));
+  writeFileSync(join(child, 'pnpm-lock.yaml'), 'lockfileVersion: 9.0\n');
+  const policy = manager.policy.bind(manager);
+  const storeDir = join(row.path, '.test-shared-store');
+  manager.policy = () => ({ ...policy(), storeDir });
+  let observed;
+  manager.run = async (options) => { observed = options; return { exitCode: 0 }; };
+  await manager.lockfileOnly({ id: row.id, 'package-dir': 'app' });
+  assert.deepEqual(observed, {
+    id: row.id, repo: realpathSync(row.path), installing: true,
+    argv: ['corepack', 'pnpm@10.33.2', '--dir', realpathSync(child), 'install', '--lockfile-only', '--ignore-scripts', '--store-dir', storeDir, '--package-import-method', 'auto'],
+  });
+  assert.equal(existsSync(join(row.path, 'pnpm-lock.yaml')), false);
+  assert.equal(existsSync(join(child, 'node_modules')), false);
+});
+
+test('child lockfile rejects traversal, symlink directories and inherited pnpm workspaces', async () => {
+  const { manager, create, folder } = fixture();
+  const row = await create('child-paths');
+  const child = join(row.path, 'app'); mkdirSync(child);
+  const outside = join(folder, 'outside'); mkdirSync(outside);
+  symlinkSync(outside, join(row.path, 'linked'), 'dir');
+  let launches = 0;
+  manager.run = async () => { launches++; };
+  for (const packageDir of ['', '.', '..', '../outside', 'app/../app', 'app//child', '/tmp', 'C:\\outside']) {
+    await assert.rejects(manager.lockfileOnly({ id: row.id, 'package-dir': packageDir }), /relative child directory/);
+  }
+  for (const packageDir of ['linked', 'linked/child']) {
+    await assert.rejects(manager.lockfileOnly({ id: row.id, 'package-dir': packageDir }), /real directories/);
+  }
+  writeFileSync(join(row.path, 'pnpm-workspace.yaml'), 'packages: [app]\n');
+  await assert.rejects(manager.lockfileOnly({ id: row.id, 'package-dir': 'app' }), /parent pnpm workspace/);
+  assert.equal(launches, 0);
+});
+
+test('child lockfile requires its own regular pinned manifest, lockfile and dependency layout', async () => {
+  const { manager, create, folder } = fixture();
+  const row = await create('child-metadata');
+  const outside = join(folder, 'outside'); mkdirSync(outside);
+  let launches = 0;
+  manager.run = async () => { launches++; };
+  for (const [index, kind] of ['missing-manifest', 'bad-pin', 'missing-lock', 'linked-manifest', 'linked-lock', 'linked-modules', 'linked-store'].entries()) {
+    const name = `child-${index}`;
+    const child = join(row.path, name); mkdirSync(child);
+    const manifest = join(child, 'package.json');
+    const lock = join(child, 'pnpm-lock.yaml');
+    if (kind === 'linked-manifest') symlinkSync(join(outside, 'package.json'), manifest);
+    else if (kind !== 'missing-manifest') writeFileSync(manifest, JSON.stringify({ packageManager: kind === 'bad-pin' ? 'pnpm@^10.33.2' : 'pnpm@10.33.2' }));
+    if (kind === 'linked-lock') symlinkSync(join(outside, 'pnpm-lock.yaml'), lock);
+    else if (kind !== 'missing-lock') writeFileSync(lock, 'lockfileVersion: 9.0\n');
+    if (kind === 'linked-modules') symlinkSync(outside, join(child, 'node_modules'), 'dir');
+    if (kind === 'linked-store') { mkdirSync(join(child, 'node_modules')); symlinkSync(outside, join(child, 'node_modules', '.pnpm'), 'dir'); }
+    await assert.rejects(manager.lockfileOnly({ id: row.id, 'package-dir': name }), /regular package.json|exact pnpm packageManager pin|regular pnpm-lock.yaml|separate node_modules/);
+  }
+  assert.equal(launches, 0);
+});
+
 test('lockfile-only generation fails closed for invalid pins and missing lockfiles', async () => {
   const { manager, create } = fixture();
   const row = await create('lockfile-invalid');

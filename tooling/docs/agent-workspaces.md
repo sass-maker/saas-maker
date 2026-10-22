@@ -66,6 +66,14 @@ packages into `node_modules` and cannot bootstrap a missing lockfile. Normal
 install/update commands. After intentional dependency edits, regenerate the
 lockfile first, review that diff, then run the ordinary frozen `install`.
 
+For an independently locked child package, use
+`fleet-workspace lockfile-only --id <id> --package-dir app`. The child must have
+its own regular manifest, exact pnpm pin and lockfile. Absolute paths, traversal,
+symlink directories/metadata/dependency layouts and inherited parent pnpm
+workspaces are rejected. Corepack uses the child's exact pin and `--dir`, while
+the managed command retains the root writer lease, disk budgets and shared store.
+Follow with `fleet-workspace install --repo <absolute-worktree>/app`.
+
 Configure the existing persistent store once, rather than creating per-task
 stores. Store and checkout must be on the same filesystem. Each worktree
 retains its own dependency graph, binaries and generated files. pnpm shares
