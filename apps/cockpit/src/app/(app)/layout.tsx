@@ -8,6 +8,7 @@ import { getLocalDevSession, isLocalAuthBypassEnabled } from '@/lib/local-auth';
 import { UserMenu } from '@/components/user-menu';
 import { CockpitResources } from '@/components/cockpit-resources';
 import { SaaSMakerMark } from '@/components/saas-maker-mark';
+import scoreboardShell from '@/components/scoreboard-shell.module.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +18,36 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const session = isLocalAuthBypassEnabled(requestHeaders.get('host'))
     ? getLocalDevSession()
     : await auth.api.getSession({ headers: requestHeaders });
+
+  if (scoreboardActive) {
+    return (
+      <div className={scoreboardShell.shell}>
+        <header className={scoreboardShell.header}>
+          <div className={scoreboardShell.identity}>
+            <span className={scoreboardShell.mobileMenu}>
+              <MobileNav scoreboardActive />
+            </span>
+            <a href="/projects?view=scoreboard">
+              <SaaSMakerMark />
+              <span>SaaS Maker</span>
+            </a>
+          </div>
+          <nav aria-label="SaaS Maker" className={scoreboardShell.navigation}>
+            <a href="/projects?view=scoreboard" aria-current="page">
+              Product quality
+            </a>
+            <a href="/projects/feedback">Feedback</a>
+            <a href="/projects/subscribers">Subscribers</a>
+            <a href="/projects">Project keys</a>
+          </nav>
+          <UserMenu user={session?.user ?? null} />
+        </header>
+        <CockpitResources key={session?.user?.id ?? 'guest'}>
+          <main className={scoreboardShell.main}>{children}</main>
+        </CockpitResources>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex bg-background text-foreground">

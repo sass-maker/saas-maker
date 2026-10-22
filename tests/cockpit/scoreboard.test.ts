@@ -348,9 +348,10 @@ describe('retained score assessments', () => {
     expect(assessmentHistory(current)).toHaveLength(1);
   });
 
-  it('sorts totals by their displayed points and keeps incomplete totals separate', () => {
+  it('includes partial totals in numeric ordering without extrapolating missing scores', () => {
     const project = fixture().projects[0];
-    expect(sortableTotal(project)).toBeNull();
+    expect(scoreTotal(project).complete).toBe(false);
+    expect(sortableTotal(project)).toBe(18.75);
     project.scores.geo = { ...project.scores.geo, status: 'estimated', value: 5 };
     expect(sortableTotal(project)).toBe(23.75);
     expect(scoreTotal(project).maximum).toBe(50);
@@ -361,6 +362,16 @@ describe('retained score assessments', () => {
         value: null,
       };
     expect(sortableTotal(project)).toBeNull();
+  });
+
+  it('distinguishes a known zero total from entirely unmeasured totals', () => {
+    const project = fixture().projects[0];
+    for (const category of SCORE_CATEGORIES)
+      project.scores[category] = { ...project.scores[category], status: 'unknown', value: null };
+    expect(sortableTotal(project)).toBeNull();
+    project.scores.product = { ...project.scores.product, status: 'estimated', value: 0 };
+    expect(sortableTotal(project)).toBe(0);
+    expect(scoreTotal(project).unknown).toBe(5);
   });
 });
 

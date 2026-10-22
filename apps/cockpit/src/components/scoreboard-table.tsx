@@ -37,6 +37,7 @@ export function ScoreboardTable<T extends object>({
     minWidth: undefined,
     cell: (row: T) => (
       <div className={styles.tableCell}>
+        {c.group && <span className={styles.narrowCellGroup}>{c.group}</span>}
         <span className={styles.narrowCellLabel}>{c.header}</span>
         <div>{c.cell ? c.cell(row) : c.value(row)}</div>
       </div>
@@ -52,7 +53,11 @@ export function ScoreboardTable<T extends object>({
         onRowClick={onRowClick}
         selectedId={selectedId}
         sort={sorting}
-        onSortChange={setSort}
+        onSortChange={(next) => {
+          // Header clicks alternate directions. Resetting to recommended order
+          // remains an explicit choice in the narrow-screen sort control.
+          setSort(next.length || !current ? next : [{ ...current, desc: !current.desc }]);
+        }}
         maxHeight="none"
         pageSize={20}
         toolbar={() => (
@@ -69,7 +74,7 @@ export function ScoreboardTable<T extends object>({
                 <option value="">Recommended order</option>
                 {sortable.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.header}
+                    {c.group ? `${c.group} · ${c.header}` : c.header}
                   </option>
                 ))}
               </select>

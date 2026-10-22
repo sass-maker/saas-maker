@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import { ArrowUpRight, ChevronRight, FileText } from 'lucide-react';
 import {
   formatScore,
@@ -6,6 +9,7 @@ import {
   type Score,
   type ScoreReading,
   type ScoreProject,
+  type ScoreMetric,
 } from '@/lib/scoreboard';
 import styles from './scoreboard-workbench.module.css';
 const dateLabel = (date: string) =>
@@ -56,24 +60,34 @@ export function ScorePair({ score }: { score: Score }) {
   );
 }
 
-export function CategoryEvidence({ project, score }: { project: ScoreProject; score: Score }) {
+export function CategoryEvidence({
+  project,
+  score,
+  initialMetric = 'result',
+}: {
+  project: ScoreProject;
+  score: Score;
+  initialMetric?: ScoreMetric;
+}) {
+  const [metric, setMetric] = useState(initialMetric);
   return (
     <div className={styles.categoryEvidence}>
+      <div className={styles.evidenceMetric} aria-label="Evidence reading">
+        {(['effort', 'result'] as const).map((m) => (
+          <button key={m} aria-pressed={metric === m} onClick={() => setMetric(m)}>
+            {m === 'effort' ? 'Effort' : 'Result'}
+            <ScoreValue score={scoreReading(score, m)} unknownLabel="Unknown" />
+          </button>
+        ))}
+      </div>
       <section>
-        <h2>Effort · work executed</h2>
+        <h2>{metric === 'effort' ? 'Effort · work executed' : 'Result · outcome achieved'}</h2>
         <p>
-          Quality and completeness of the relevant work, with evidence. Hours spent do not earn
-          points.
+          {metric === 'effort'
+            ? 'Quality and completeness of the relevant work. Hours spent do not earn points.'
+            : 'Observed outcomes against this category’s goal. Evidence keeps its actual date and scope.'}
         </p>
-        <ScoreEvidence project={project} score={scoreReading(score, 'effort')} />
-      </section>
-      <section>
-        <h2>Result · outcome achieved</h2>
-        <p>
-          Observed outcomes against this category’s goal. Open the evidence to see its date and
-          scope.
-        </p>
-        <ScoreEvidence project={project} score={scoreReading(score, 'result')} />
+        <ScoreEvidence project={project} score={scoreReading(score, metric)} />
       </section>
       <details className={styles.legacyEvidence}>
         <summary>

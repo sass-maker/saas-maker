@@ -33,7 +33,7 @@ overrides:
   # Memory Map runs Transformers.js in the browser only; never install the native runtime.
   '@huggingface/transformers@3.8.1>onnxruntime-node': '-'
   # Memory Map security pins carried over from chatgpt-memory-insights, scoped to its Astro.
-  'astro@7.2.8>devalue': 5.9.3
-  'astro@7.2.8>http-cache-semantics': 4.3.0
-  'astro@7.2.8>smol-toml': 1.9.0
-  'astro@7.2.8>vite': 8.1.6
+  'astro@7.3.3>devalue': 5.9.3
+  'astro@7.3.3>http-cache-semantics': 4.3.0
+  'astro@7.3.3>smol-toml': 1.9.0
+  'astro@7.3.3>vite': 8.1.6
