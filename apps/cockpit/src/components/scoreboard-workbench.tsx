@@ -13,7 +13,7 @@ import {
   Search,
   Upload,
 } from 'lucide-react';
-import { DataTable, type DataColumn, type DataSort } from '@saas-maker/ui/components/data-table';
+import { type DataColumn, type DataSort } from '@saas-maker/ui/components/data-table';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -36,6 +36,8 @@ import {
   planNextLever,
   prerequisiteSatisfied,
   scoreTotal,
+  scoreReading,
+  type ScoreMetric,
   transitionLever,
   type CycleRecord,
   type Lever,
@@ -44,8 +46,9 @@ import {
   type ScoreWorkspace,
 } from '@/lib/scoreboard';
 import styles from './scoreboard-workbench.module.css';
-import { ScoreEvidence, ScoreValue as Value } from './scoreboard-evidence';
+import { CategoryEvidence, ScorePair } from './scoreboard-evidence';
 import { ScoreHistory, ScoreDelta } from './scoreboard-history';
+import { ScoreboardTable } from './scoreboard-table';
 
 const short = CATEGORY_LABELS;
 const priority = { critical: 0, high: 1, normal: 2 };
@@ -84,6 +87,7 @@ export function ScoreboardWorkbench({
   const [selected, setSelected] = useState('');
   const [sheet, setSheet] = useState<'evidence' | 'action' | 'review' | null>(null);
   const [view, setView] = useState('scores');
+  const [metric, setMetric] = useState<ScoreMetric>('result');
   const [notice, setNotice] = useState('');
   const reviews = useMemo(() => assessmentHistory(workspace), [workspace]);
   const [baselineId, setBaselineId] = useState('');
@@ -92,7 +96,7 @@ export function ScoreboardWorkbench({
     reviews.find((r) => r.id === baselineId) ??
     reviews.find((r) => r.id !== currentReview.id) ??
     currentReview;
-  const changes = compareAssessments(baseline, currentReview);
+  const changes = compareAssessments(baseline, currentReview, metric);
   const changeById = new Map(changes.map((c) => [c.id, c]));
   const byLever = useMemo(() => new Map(snapshot.levers.map((l) => [l.id, l])), [snapshot]);
   const byProject = useMemo(() => new Map(snapshot.projects.map((p) => [p.id, p])), [snapshot]);
@@ -189,11 +193,15 @@ export function ScoreboardWorkbench({
   const lever = byLever.get(selected) ?? byLever.get(defaultSelection ?? fallback)!;
   const selectedProject = byProject.get(lever.projectId)!;
   const hasMatches = view === 'scores' ? projects.length > 0 : actions.length > 0;
-  const scores = snapshot.projects.flatMap((p) => Object.values(p.scores));
-  const assessed = scores.filter((s) => s.status === 'estimated');
-  const exempt = scores.filter((s) => s.status === 'not_applicable').length;
+  const legacyScores = snapshot.projects.flatMap((p) => Object.values(p.scores));
+  const effortScores = legacyScores.map((s) => scoreReading(s, 'effort'));
+  const resultScores = legacyScores.map((s) => scoreReading(s, 'result'));
+  const scores = [...effortScores, ...resultScores];
+  const exempt = legacyScores.filter((s) => s.status === 'not_applicable').length;
   const unknown = scores.filter((s) => s.status === 'unknown').length;
-  const provisional = assessed.filter((s) => s.confidence === 'low').length;
+  const provisional = scores.filter(
+    (s) => s.status === 'estimated' && s.confidence === 'low'
+  ).length;
   const domains = [...new Set(snapshot.projects.flatMap((p) => p.domains))].sort();
 
   function choose(l: Lever) {
@@ -247,7 +255,7 @@ export function ScoreboardWorkbench({
     ...SCORE_CATEGORIES.filter((c) => area === 'all' || area === c).map((c) => ({
       id: c,
       header: short[c],
-      value: (p: ScoreProject) => p.scores[c].value,
+      value: (p: ScoreProject) => scoreReading(p.scores[c], metric).value,
       align: 'right' as const,
       sortDescFirst: false,
       minWidth: '7rem',
@@ -262,7 +270,7 @@ export function ScoreboardWorkbench({
           }}
         >
           <span className={styles.scoreWithChange}>
-            <Value score={p.scores[c]} />
+            <ScorePair score={p.scores[c]} />
             {reviews.length > 1 && <ScoreDelta change={changeById.get(`${p.id}:${c}`)} />}
           </span>
         </button>
@@ -273,16 +281,37 @@ export function ScoreboardWorkbench({
       header: 'Total',
       sortDescFirst: false,
       align: 'right',
-      value: sortableTotal,
+      value: (p) => sortableTotal(p, metric),
       cell: (p) => {
-        const t = scoreTotal(p);
         return (
-          <span
-            className={styles.total}
-            title={`${t.unknown} unassessed · ${t.exempt} exempt · ${t.knownMax} assessed points`}
-          >
-            {formatScore(t.sum)}
-            <small>{t.complete ? ` / ${t.maximum}` : ' known'}</small>
+          <span className={styles.pairedScores}>
+            {(['effort', 'result'] as const).map((m) => {
+              const t = scoreTotal(p, m);
+              return (
+                <span key={m} title={`${t.unknown} unassessed · ${t.exempt} exempt`}>
+                  <small>{m === 'effort' ? 'Effort' : 'Result'}</small>
+                  <span className={styles.total}>
+                    {t.knownMax ? (
+                      <>
+                        {formatScore(t.sum)}
+                        <small>{t.complete ? ` / ${t.maximum}` : ' known'}</small>
+                      </>
+                    ) : t.maximum === 0 ? (
+                      'Exempt'
+                    ) : m === 'result' ? (
+                      'Unmeasured'
+                    ) : (
+                      'Unassessed'
+                    )}
+                    {t.unknown > 0 && (
+                      <small className={styles.pendingTotal}>
+                        of {t.maximum} · {t.unknown} pending
+                      </small>
+                    )}
+                  </span>
+                </span>
+              );
+            })}
           </span>
         );
       },
@@ -312,10 +341,10 @@ export function ScoreboardWorkbench({
     { id: 'area', header: 'Area', value: (l) => short[l.category], minWidth: '6rem' },
     {
       id: 'score',
-      header: 'Score',
-      value: (l) => byProject.get(l.projectId)!.scores[l.category].value,
+      header: 'Effort / result',
+      value: (l) => scoreReading(byProject.get(l.projectId)!.scores[l.category], metric).value,
       sortDescFirst: false,
-      cell: (l) => <Value score={byProject.get(l.projectId)!.scores[l.category]} />,
+      cell: (l) => <ScorePair score={byProject.get(l.projectId)!.scores[l.category]} />,
     },
     {
       id: 'action',
@@ -358,7 +387,7 @@ export function ScoreboardWorkbench({
         <div>
           <div className={styles.eyebrow}>Product quality</div>
           <h1>Product scoreboard</h1>
-          <p>Compare products and open the next fix, with its evidence.</p>
+          <p>Compare effort and results. Open the next change with its evidence.</p>
         </div>
         <button
           className={styles.reviewButton}
@@ -369,7 +398,9 @@ export function ScoreboardWorkbench({
           <span>
             {dateLabel(snapshot.assessedAt)} review
             <small>
-              {snapshot.projects.length} products · {assessed.length} scored
+              {snapshot.projects.length} products ·{' '}
+              {effortScores.filter((s) => s.status === 'estimated').length} effort ·{' '}
+              {resultScores.filter((s) => s.status === 'estimated').length} results
             </small>
           </span>
         </button>
@@ -426,7 +457,7 @@ export function ScoreboardWorkbench({
             History <span>{reviews.length + workspace.history.length}</span>
           </button>
         </div>
-        <span>5 competitive · 7.5 among the best · target {formatScore(snapshot.target)}</span>
+        <span>Effort /10 · Result /10 · two totals /60</span>
       </div>
       {view !== 'history' && (
         <>
@@ -530,14 +561,31 @@ export function ScoreboardWorkbench({
               </select>
             </label>
           )}
+          {hasMatches && (
+            <button className={styles.selectedLeverLink} onClick={() => setSheet('action')}>
+              <span>Next lever · {selectedProject.name}</span>
+              <strong>{lever.title}</strong>
+              <ArrowUpRight size={15} />
+            </button>
+          )}
           <div
             className={styles.compareGrid}
             style={hasMatches ? undefined : { gridTemplateColumns: 'minmax(0, 1fr)' }}
           >
-            <div className={`${styles.tablePane} ${view === 'scores' ? styles.scoreTable : ''}`}>
-              {view === 'scores' && (
-                <div className={styles.comparisonContext}>
-                  {reviews.length > 1 ? (
+            <div
+              className={`${styles.tablePane} ${view === 'scores' ? styles.scoreTable : styles.actionTable}`}
+            >
+              <div className={styles.comparisonContext}>
+                <div className={styles.metricSwitch} aria-label="Sort and changes score">
+                  <span>{view === 'scores' ? 'Sort & changes' : 'Sort score'}</span>
+                  {(['effort', 'result'] as const).map((m) => (
+                    <button key={m} aria-pressed={metric === m} onClick={() => setMetric(m)}>
+                      {m === 'effort' ? 'Effort' : 'Result'}
+                    </button>
+                  ))}
+                </div>
+                {view === 'scores' &&
+                  (reviews.length > 1 ? (
                     <label>
                       Change since{' '}
                       <select
@@ -554,60 +602,51 @@ export function ScoreboardWorkbench({
                     </label>
                   ) : (
                     <span>Baseline saved · {dateLabel(snapshot.assessedAt)}</span>
-                  )}
+                  ))}
+                {view === 'scores' && (
                   <button onClick={() => setView('history')}>
                     View score history <ArrowUpRight size={12} />
                   </button>
-                </div>
-              )}
+                )}
+              </div>
               {view === 'scores' ? (
-                <DataTable
-                  key={`scores:${area}`}
+                <ScoreboardTable
+                  key={`scores:${area}:${metric}`}
                   data={projects}
                   columns={columns}
                   getRowId={(p) => p.id}
                   label="Compare product scores"
                   selectedId={selectedProject.id}
-                  onRowClick={(p) => choose(byLever.get(p.bestNextLeverId)!)}
+                  onRowClick={(p) => {
+                    choose(byLever.get(p.bestNextLeverId)!);
+                    setSheet('action');
+                  }}
                   sort={sort}
                   onSortChange={setSort}
-                  maxHeight="min(65dvh, 46rem)"
                 />
               ) : (
-                <DataTable
+                <ScoreboardTable
                   key="actions"
                   data={actions}
                   columns={actionColumns}
                   getRowId={(l) => l.id}
                   label="Next lever queue"
                   selectedId={lever.id}
-                  onRowClick={choose}
-                  maxHeight="min(65dvh, 46rem)"
+                  onRowClick={(l) => {
+                    choose(l);
+                    setSheet('action');
+                  }}
                 />
               )}
               <p className={styles.tableFoot}>
                 ◦ Provisional estimate
                 <span>
-                  Total sorts by displayed points; each maximum stays visible. Unassessed totals
-                  sort last. Click again to reverse sorting.
+                  Total sorts by the selected Effort or Result score. Unassessed totals sort last.
+                  Click again to reverse sorting.
                 </span>
               </p>
             </div>
-            {hasMatches && (
-              <aside className={styles.desktopInspector} aria-label="Selected next lever">
-                {inspector}
-              </aside>
-            )}
           </div>
-          {hasMatches && (
-            <button className={styles.mobileOpen} onClick={() => setSheet('action')}>
-              <span>
-                <small>Selected lever · {selectedProject.name}</small>
-                {lever.title}
-              </span>
-              <ChevronRight size={20} />
-            </button>
-          )}
         </>
       )}
       {view === 'history' && (
@@ -632,12 +671,39 @@ export function ScoreboardWorkbench({
                       <span className={styles.priority}>{statusLabel[record.status]}</span>
                     </div>
                     <p className={styles.eyebrow}>
-                      {record.leverId} · {dateLabel(record.at)} · baseline{' '}
-                      {record.plan.baselineScore === null
-                        ? 'Unassessed'
-                        : `${formatScore(record.plan.baselineScore)}/10`}
+                      {record.leverId} · {dateLabel(record.at)} ·{' '}
+                      {record.plan.baselineEffort !== undefined ? (
+                        <>
+                          Effort baseline{' '}
+                          {record.plan.baselineEffort === null
+                            ? 'Unassessed'
+                            : `${formatScore(record.plan.baselineEffort)}/10`}{' '}
+                          · Result baseline{' '}
+                          {record.plan.baselineResult == null
+                            ? 'Unmeasured'
+                            : `${formatScore(record.plan.baselineResult)}/10`}
+                        </>
+                      ) : (
+                        <>
+                          Previous combined baseline{' '}
+                          {record.plan.baselineScore === null
+                            ? 'Unassessed'
+                            : `${formatScore(record.plan.baselineScore)}/10`}
+                        </>
+                      )}
                     </p>
-                    {record.result && <p className={styles.historyResult}>{record.result}</p>}
+                    {record.work !== undefined ? (
+                      <>
+                        <p>Effort · {record.work || 'No work note'}</p>
+                        <p>Result · {record.observedResult || 'Awaiting observation'}</p>
+                      </>
+                    ) : (
+                      record.result && (
+                        <p className={styles.historyResult}>
+                          Previous work/outcome note: {record.result}
+                        </p>
+                      )
+                    )}
                     {record.evidence && <p>Evidence: {record.evidence}</p>}
                     {record.outcome && <p>Outcome: {record.outcome}</p>}
                     {record.prerequisiteSatisfied && <p>Prerequisite objective accepted.</p>}
@@ -694,23 +760,26 @@ export function ScoreboardWorkbench({
             ) : sheet === 'review' ? (
               <div className={styles.reviewDetails}>
                 <h2>
-                  {assessed.length} areas scored.
+                  {effortScores.filter((s) => s.status === 'estimated').length} effort scores.
                   <br />
-                  {provisional} provisional estimates.
+                  {resultScores.filter((s) => s.status === 'estimated').length} result scores.
                 </h2>
                 <p>
                   {snapshot.projects.length} products · {snapshot.levers.length} category
                   recommendations · assessed {dateLabel(snapshot.assessedAt)}.
                 </p>
                 <p>
-                  {exempt} areas are exempt from their product’s scope. {unknown} are unassessed.
-                  Six applicable scores total 60; exemptions reduce the denominator. Partial totals
-                  contain only known scores.
+                  {exempt} categories are exempt from acquisition goals. {unknown} effort/result
+                  readings are unassessed; {provisional} are provisional estimates. Effort and
+                  Result each total 60 across six applicable categories. Exemptions reduce each
+                  denominator. Partial totals contain only known scores.
                 </p>
                 <p>
-                  5 means competitive. 7.5 means among the best in the stated segment. The target is{' '}
-                  {formatScore(snapshot.target)}/10. Low confidence describes evidence, not
-                  automatically poor quality. GEO readiness does not prove AI recommendation share.
+                  Effort measures the quality and completeness of work executed, not hours spent.
+                  Result measures the outcome achieved against the category goal: 5 is competitive,
+                  7.5 is among the best, and the target is {formatScore(snapshot.target)}/10. Low
+                  confidence describes the evidence. Missing outcome measurement stays explicit; GEO
+                  readiness cannot establish recommendation share.
                 </p>
                 <h3>The six categories</h3>
                 <dl className={styles.categoryDefinitions}>
@@ -760,7 +829,7 @@ export function ScoreboardWorkbench({
                 </div>
               </div>
             ) : (
-              <ScoreEvidence
+              <CategoryEvidence
                 project={selectedProject}
                 score={selectedProject.scores[lever.category]}
               />
@@ -804,10 +873,7 @@ function LeverInspector({
       </div>
       <h2>{lever.title}</h2>
       <div className={styles.baseline}>
-        <Value score={score} />
-        {score.status === 'estimated' && <span>/10 now</span>}
-        <span className={styles.baselineDivider} />
-        <span>{score.confidence === 'low' ? 'Provisional' : `${score.confidence} confidence`}</span>
+        <ScorePair score={score} />
         <button onClick={onEvidence}>
           See evidence
           <ArrowUpRight size={13} />
@@ -895,7 +961,9 @@ function LeverWorkflow({
   const state = progress?.status ?? 'queued';
   const active = Object.values(workspace.progress).find((p) => p?.status === 'active');
   const blocked = lever.dependencies.some((id) => !prerequisiteSatisfied(workspace, id));
-  const [result, setResult] = useState(progress?.result ?? '');
+  const result = progress?.result ?? '';
+  const [work, setWork] = useState(progress?.work ?? '');
+  const [observedResult, setObservedResult] = useState(progress?.observedResult ?? '');
   const [evidence, setEvidence] = useState(progress?.evidence ?? '');
   const [accepted, setAccepted] = useState(progress?.prerequisiteSatisfied ?? false);
   const [outcome, setOutcome] = useState<Exclude<CycleRecord['outcome'], null>>(
@@ -904,10 +972,13 @@ function LeverWorkflow({
   const [title, setTitle] = useState('');
   const [action, setAction] = useState('');
   const [proof, setProof] = useState('');
+  const hasNote = !!(work.trim() || observedResult.trim() || result.trim());
   const record = (next: Exclude<LeverStatus, 'queued'>) =>
     onChange((current) =>
       transitionLever(current, lever.id, next, {
-        result,
+        result: [work, observedResult].filter(Boolean).join('\n\n') || result,
+        work,
+        observedResult,
         evidence,
         outcome: next === 'verified' ? outcome : null,
         prerequisiteSatisfied: next === 'verified' && outcome === 'helped' && accepted,
@@ -946,9 +1017,27 @@ function LeverWorkflow({
               : 'Awaiting evidence · record an outcome'}
           </summary>
           <div className={styles.form}>
+            {progress?.result && progress.work === undefined && (
+              <details className={styles.legacyEvidence}>
+                <summary>Earlier work / outcome note</summary>
+                <p>{progress.result}</p>
+              </details>
+            )}
             <label>
-              What changed or what did you learn?
-              <textarea value={result} onChange={(e) => setResult(e.target.value)} />
+              Effort · work completed
+              <textarea
+                value={work}
+                placeholder="What did we implement or change?"
+                onChange={(e) => setWork(e.target.value)}
+              />
+            </label>
+            <label>
+              Result · what actually happened
+              <textarea
+                value={observedResult}
+                placeholder="Observed outcome, including no change or a negative result. Leave empty while waiting."
+                onChange={(e) => setObservedResult(e.target.value)}
+              />
             </label>
             <label>
               Evidence, date and scope
@@ -984,7 +1073,7 @@ function LeverWorkflow({
             <div className={styles.formActions}>
               <Button
                 className={styles.primary}
-                disabled={!result.trim() || !evidence.trim()}
+                disabled={!observedResult.trim() || !evidence.trim()}
                 onClick={() => record('verified')}
               >
                 <Check size={14} />
@@ -992,19 +1081,19 @@ function LeverWorkflow({
               </Button>
               <Button
                 variant="outline"
-                disabled={!result.trim()}
+                disabled={!hasNote}
                 onClick={() => record(state === 'active' ? 'active' : 'awaiting_evidence')}
               >
                 Save progress note
               </Button>
               <Button
                 variant="outline"
-                disabled={!result.trim()}
+                disabled={!hasNote}
                 onClick={() => record('awaiting_evidence')}
               >
                 Await evidence
               </Button>
-              <Button variant="ghost" disabled={!result.trim()} onClick={() => record('parked')}>
+              <Button variant="ghost" disabled={!hasNote} onClick={() => record('parked')}>
                 Park with reason
               </Button>
             </div>
@@ -1018,7 +1107,14 @@ function LeverWorkflow({
               <span className={styles.eyebrow}>
                 {statusLabel[state]} · {dateLabel(progress.at)}
               </span>
-              <p>{progress.result}</p>
+              {progress.work !== undefined ? (
+                <>
+                  <p>Effort · {progress.work || 'No work note'}</p>
+                  <p>Result · {progress.observedResult || 'Awaiting observation'}</p>
+                </>
+              ) : (
+                <p>{progress.result}</p>
+              )}
               {progress.evidence && <p>Evidence: {progress.evidence}</p>}
             </div>
           )}

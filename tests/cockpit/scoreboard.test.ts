@@ -14,6 +14,7 @@ import {
   readScoreboardStorage,
   safeEvidenceUrl,
   scoreTotal,
+  scoreReading,
   sortableTotal,
   transitionLever,
   validateSnapshot,
@@ -138,6 +139,118 @@ describe('scoreboard evidence semantics', () => {
       'https://user:password@example.com/',
     ])
       expect(safeEvidenceUrl(source)).toBeNull();
+  });
+});
+
+describe('independent effort and result scores', () => {
+  function splitFixture() {
+    const snapshot = fixture();
+    for (const p of snapshot.projects)
+      for (const c of SCORE_CATEGORIES) {
+        const s = p.scores[c];
+        s.effort = {
+          ...s,
+          value: s.status === 'not_applicable' ? null : 7,
+          status: s.status === 'not_applicable' ? 'not_applicable' : 'estimated',
+        };
+        s.result = {
+          ...s,
+          value: s.status === 'not_applicable' ? null : 3,
+          status: s.status === 'not_applicable' ? 'not_applicable' : 'estimated',
+        };
+      }
+    return snapshot;
+  }
+  it('preserves combined legacy estimates without turning them into effort or outcome proof', () => {
+    const old = fixture().projects[0];
+    expect(old.scores.design.value).toBe(6.25);
+    expect(scoreReading(old.scores.design, 'result')).toMatchObject({
+      status: 'unknown',
+      value: null,
+    });
+    expect(scoreReading(old.scores.design, 'effort')).toMatchObject({
+      status: 'unknown',
+      value: null,
+    });
+    expect(scoreReading(old.scores.seo, 'result').status).toBe('not_applicable');
+    expect(scoreTotal(old, 'result')).toMatchObject({ sum: 0, unknown: 5, maximum: 50 });
+  });
+  it('validates both readings and computes two separate totals with scope preserved', () => {
+    const snapshot = validateSnapshot(splitFixture());
+    expect(scoreTotal(snapshot.projects[0], 'effort')).toMatchObject({
+      sum: 35,
+      maximum: 50,
+      complete: true,
+    });
+    expect(scoreTotal(snapshot.projects[0], 'result')).toMatchObject({
+      sum: 15,
+      maximum: 50,
+      complete: true,
+    });
+    expect(sortableTotal(snapshot.projects[0], 'effort')).toBe(35);
+    delete snapshot.projects[0].scores.design.result;
+    expect(() => validateSnapshot(snapshot)).toThrow(/both effort and result/);
+    const inconsistent = splitFixture();
+    inconsistent.projects[0].scores.seo.result!.status = 'unknown';
+    expect(() => validateSnapshot(inconsistent)).toThrow(/preserve the category scope/);
+    const badEvidence = splitFixture();
+    badEvidence.projects[0].scores.design.result!.evidence = [];
+    expect(() => validateSnapshot(badEvidence)).toThrow(/dated evidence/);
+  });
+  it('retains changes to each metric even when the previous combined grade stays the same', () => {
+    const before = splitFixture(),
+      after = splitFixture();
+    after.projects[0].scores.design.effort!.value = 8;
+    after.projects[0].scores.design.result!.value = 2;
+    const a = archiveAssessment(before),
+      b = archiveAssessment(after);
+    expect(
+      compareAssessments(a, b, 'effort').find((c) => c.id === 'example-one:design')
+    ).toMatchObject({ delta: 1, state: 'increased' });
+    expect(
+      compareAssessments(a, b, 'result').find((c) => c.id === 'example-one:design')
+    ).toMatchObject({ delta: -1, state: 'decreased' });
+    expect(
+      compareAssessments(archiveAssessment(fixture()), a, 'result').find(
+        (c) => c.id === 'example-one:design'
+      )
+    ).toMatchObject({ delta: null, state: 'newly_assessed' });
+    const merged = importSnapshot(createWorkspace(before), createWorkspace(after));
+    expect(assessmentHistory(parseWorkspace(JSON.stringify(merged)))).toHaveLength(2);
+  });
+  it('records completed work separately and requires an observed result before verification', () => {
+    let w = transitionLever(createWorkspace(splitFixture()), 'example-one:product', 'active');
+    w = transitionLever(w, 'example-one:product', 'awaiting_evidence', {
+      result: 'Implemented the change.',
+      work: 'Implemented the change.',
+      observedResult: '',
+    });
+    expect(w.progress['example-one:product']?.plan).toMatchObject({
+      baselineEffort: 7,
+      baselineResult: 3,
+    });
+    expect(() =>
+      transitionLever(w, 'example-one:product', 'verified', {
+        result: 'Work done.',
+        work: 'Work done.',
+        observedResult: '',
+        evidence: 'A deployment receipt.',
+        outcome: 'helped',
+      })
+    ).toThrow(/observed result/);
+    w = transitionLever(w, 'example-one:product', 'verified', {
+      result: 'Observed the outcome.',
+      work: 'Implemented the change.',
+      observedResult: 'The qualified task completed.',
+      evidence: 'A dated observation.',
+      outcome: 'helped',
+    });
+    const restored = parseWorkspace(JSON.stringify(w));
+    expect(restored.progress['example-one:product']?.work).toBe('Implemented the change.');
+    expect(restored.progress['example-one:product']?.observedResult).toBe(
+      'The qualified task completed.'
+    );
+    expect(restored.snapshot.projects[0].scores.product.result!.value).toBe(3);
   });
 });
 

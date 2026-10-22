@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { ArrowUpRight, Search, Upload } from 'lucide-react';
-import { DataTable, type DataColumn } from '@saas-maker/ui/components/data-table';
+import { type DataColumn } from '@saas-maker/ui/components/data-table';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -23,6 +23,7 @@ import {
   type ScoreWorkspace,
 } from '@/lib/scoreboard';
 import { ScoreEvidence, ScoreValue } from './scoreboard-evidence';
+import { ScoreboardTable } from './scoreboard-table';
 import styles from './scoreboard-workbench.module.css';
 
 const dateLabel = (date: string) =>
@@ -74,7 +75,11 @@ export function ScoreHistory({
   const [scope, setScope] = useState('all');
   const [showUnchanged, setShowUnchanged] = useState(false);
   const [selected, setSelected] = useState<ScoreChange | null>(null);
-  const all = useMemo(() => compareAssessments(before, after), [before, after]);
+  const [metric, setMetric] = useState<'effort' | 'result' | 'legacy'>('result');
+  const all = useMemo(
+    () => compareAssessments(before, after, metric === 'legacy' ? undefined : metric),
+    [before, after, metric]
+  );
   const rows = all.filter(
     (c) =>
       (showUnchanged || c.state !== 'unchanged') &&
@@ -191,6 +196,22 @@ export function ScoreHistory({
         </div>
       ) : (
         <>
+          <label className={styles.historyMetric}>
+            Score view
+            <select
+              aria-label="History score view"
+              value={metric}
+              onChange={(e) => setMetric(e.target.value as typeof metric)}
+            >
+              <option value="result">Result</option>
+              <option value="effort">Effort</option>
+              <option value="legacy">Previous combined score</option>
+            </select>
+          </label>
+          <p className={styles.historyFoot}>
+            Effort and Result have independent histories. Older combined estimates remain available
+            in “Previous combined score”; they are not reclassified as measured outcomes.
+          </p>
           <div className={styles.reviewSelectors}>
             <label>
               Baseline assessment
@@ -276,14 +297,14 @@ export function ScoreHistory({
             />
             Show unchanged scores
           </label>
-          <DataTable
+          <ScoreboardTable
             data={rows}
             columns={columns}
             getRowId={(c) => c.id}
             label="Historical score changes"
+            className={styles.historyTable}
             onRowClick={setSelected}
             selectedId={selected?.id}
-            maxHeight="min(60dvh, 40rem)"
           />
           <p className={styles.historyFoot}>
             Unknown-to-known scores are newly assessed, not numerical gains. Exemptions and changed
