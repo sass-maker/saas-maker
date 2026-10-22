@@ -11,6 +11,7 @@ EXPOSED_FLEET_SKILLS=(
   design-workflow
   fleet-deploy-parity
   fleet-ops
+  github-actions-health
   flow-veo-browser
   jules-cloud-worker
   code-cleanup
