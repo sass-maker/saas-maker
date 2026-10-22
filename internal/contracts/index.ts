@@ -89,6 +89,7 @@ export interface UpvoteRecord {
 }
 
 export interface SubmitFeedbackRequest {
+  submission_id?: string;
   type: FeedbackType;
   title: string;
   description: string;

@@ -14,6 +14,9 @@ type PingLevel = 'debug' | 'info' | 'warn' | 'error';
 type PingScalar = string | number | boolean | null | undefined;
 
 interface PingOptions {
+  /** Stable identity and creation time allow delivery retries without a second log. */
+  logId?: string;
+  timestamp?: number;
   /** debug | info | warn | error. Default info. */
   level?: PingLevel;
   title?: string;
@@ -80,8 +83,8 @@ function buildBody(event: string, options: PingOptions, environment: string): st
     environment,
     logs: [
       {
-        log_id: crypto.randomUUID(),
-        timestamp: Date.now(),
+        log_id: options.logId ?? crypto.randomUUID(),
+        timestamp: options.timestamp ?? Date.now(),
         event,
         level: options.level ?? 'info',
         title: options.title,

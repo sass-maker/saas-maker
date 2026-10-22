@@ -49,6 +49,8 @@ type FeedbackInput = {
   source?: string | null;
 };
 
+type FeedbackSubmissionRecord = { record: FeedbackRecord; fingerprint: string | null };
+
 export type AgentTokenRow = AgentTokenRecord & { token_hash: string; can_write_flag: number };
 
 export interface FeedbackDatabase {
@@ -65,6 +67,15 @@ export interface FeedbackDatabase {
   ): Promise<ProjectRecord | null>;
   deleteProject(id: string): Promise<boolean>;
   createFeedback(input: FeedbackInput): Promise<FeedbackRecord>;
+  createFeedbackSubmission(
+    input: FeedbackInput,
+    submissionId: string,
+    fingerprint: string
+  ): Promise<FeedbackSubmissionRecord & { created: boolean }>;
+  getFeedbackSubmission(
+    projectId: string,
+    submissionId: string
+  ): Promise<FeedbackSubmissionRecord | null>;
   getFeedbackById(id: string): Promise<FeedbackRecord | null>;
   listFeedback(
     projectId: string,
@@ -171,6 +182,64 @@ export function toFeedbackRecord(row: Record<string, unknown>): FeedbackRecord {
     updated_by: row.updated_by ? String(row.updated_by) : null,
     created_at: String(row.created_at),
   };
+}
+
+async function readFeedbackSubmission(d1: D1Database, id: string, submissionId?: string) {
+  const row = await d1
+    .prepare(
+      `SELECT *, NULL AS viewer_vote FROM feedback WHERE ${submissionId === undefined ? 'id = ?' : 'project_id = ? AND submission_id = ?'}`
+    )
+    .bind(...(submissionId === undefined ? [id] : [id, submissionId]))
+    .first<Record<string, unknown>>();
+  return row
+    ? {
+        record: toFeedbackRecord(row),
+        fingerprint:
+          typeof row.submission_fingerprint === 'string' ? row.submission_fingerprint : null,
+      }
+    : null;
+}
+
+async function writeFeedback(
+  d1: D1Database,
+  input: FeedbackInput,
+  submissionId?: string,
+  fingerprint?: string
+) {
+  const values = [
+    input.id,
+    input.project_id,
+    input.type,
+    input.status,
+    input.title,
+    input.description,
+    input.image_url,
+    input.submitter_email,
+    input.submitter_name,
+    input.page?.url ?? null,
+    input.page?.title ?? null,
+    input.pinpoint ? JSON.stringify(input.pinpoint) : null,
+    input.client_version ?? null,
+    input.source ?? 'api',
+  ];
+  if (submissionId !== undefined) values.push(submissionId, fingerprint ?? null);
+  const result = await d1
+    .prepare(
+      `INSERT INTO feedback
+       (id, project_id, type, status, title, description, image_url, submitter_email, submitter_name,
+        page_url, page_title, pinpoint_json, client_version, source${submissionId === undefined ? '' : ', submission_id, submission_fingerprint'})
+       VALUES (${values.map(() => '?').join(', ')})
+       ${submissionId === undefined ? '' : 'ON CONFLICT(project_id, submission_id) DO NOTHING'}`
+    )
+    .bind(...values)
+    .run();
+  const stored = await readFeedbackSubmission(
+    d1,
+    submissionId === undefined ? input.id : input.project_id,
+    submissionId
+  );
+  if (!stored) throw new Error('Feedback write did not persist');
+  return { ...stored, created: (result.meta.changes ?? 0) > 0 };
 }
 
 export function getDb(d1: D1Database): FeedbackDatabase {
@@ -285,43 +354,16 @@ export function getDb(d1: D1Database): FeedbackDatabase {
     },
 
     async createFeedback(input) {
-      await d1
-        .prepare(
-          `INSERT INTO feedback
-             (id, project_id, type, status, title, description, image_url, submitter_email, submitter_name,
-              page_url, page_title, pinpoint_json, client_version, source)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-        )
-        .bind(
-          input.id,
-          input.project_id,
-          input.type,
-          input.status,
-          input.title,
-          input.description,
-          input.image_url,
-          input.submitter_email,
-          input.submitter_name,
-          input.page?.url ?? null,
-          input.page?.title ?? null,
-          input.pinpoint ? JSON.stringify(input.pinpoint) : null,
-          input.client_version ?? null,
-          input.source ?? 'api'
-        )
-        .run();
-      const row = await d1
-        .prepare('SELECT *, NULL AS viewer_vote FROM feedback WHERE id = ?')
-        .bind(input.id)
-        .first();
-      return toFeedbackRecord(row as Record<string, unknown>);
+      return (await writeFeedback(d1, input)).record;
     },
 
+    createFeedbackSubmission: (input, submissionId, fingerprint) =>
+      writeFeedback(d1, input, submissionId, fingerprint),
+    getFeedbackSubmission: (projectId, submissionId) =>
+      readFeedbackSubmission(d1, projectId, submissionId),
+
     async getFeedbackById(id) {
-      const row = await d1
-        .prepare('SELECT *, NULL AS viewer_vote FROM feedback WHERE id = ?')
-        .bind(id)
-        .first();
-      return row ? toFeedbackRecord(row as Record<string, unknown>) : null;
+      return (await readFeedbackSubmission(d1, id))?.record ?? null;
     },
 
     async listFeedback(projectId, query, userId) {
