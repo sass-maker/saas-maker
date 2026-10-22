@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { mkdtempSync, mkdirSync, readdirSync, writeFileSync, readFileSync, existsSync, symlinkSync, realpathSync, rmSync, chmodSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readdirSync, writeFileSync, readFileSync, existsSync, symlinkSync, realpathSync, rmSync, chmodSync, lstatSync } from 'node:fs';
 import { tmpdir, homedir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -31,6 +31,21 @@ function fixture(options = {}) {
   const create = (id) => manager.create({ id, repo, owner: 'test-agent', task: 'test workspace lifecycle' });
   return { folder, repo, manager, create };
 }
+
+test('initialization preserves a private retired directory timestamp and repairs unsafe modes', async () => {
+  const { manager } = fixture();
+  manager.initialize();
+  const retired = join(manager.root, 'retired');
+  const before = lstatSync(retired, { bigint: true });
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  manager.initialize();
+  const after = lstatSync(retired, { bigint: true });
+  assert.equal(after.ctimeNs, before.ctimeNs, 'an unrelated command must not invalidate an in-flight retired disk scan');
+  assert.equal(after.mtimeNs, before.mtimeNs);
+  chmodSync(retired, 0o1755);
+  manager.initialize();
+  assert.equal(lstatSync(retired).mode & 0o7777, 0o700, 'private mode and removal of special bits are still enforced');
+});
 
 test('linked writer shares Git objects, records ownership and preserves source on close', async () => {
   const { manager, repo, create } = fixture();
