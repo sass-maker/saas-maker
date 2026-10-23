@@ -15,7 +15,7 @@
         "audience": "Developers and teams shipping code produced with AI agents.",
         "outcome": "Higher confidence that an agent completed the requested change correctly and safely.",
         "mechanism": "Local-first review combines repository context, executable checks, targeted evaluation, and inspectable verification receipts.",
-        "proof": "Published macOS 1.16.3 is notarized: all public asset hashes match the release, and its bundled app passes strict signature, Gatekeeper and stapling checks. The corrected coverage collector matches source bytes. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
+        "proof": "Published macOS 1.16.4 is notarized: all public asset hashes match the release, and its bundled app passes strict signature, Gatekeeper and stapling checks. The corrected coverage collector matches source bytes. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
         "nextAction": "Try the current Mac release on a small local repository. Use the documented manual update path until in-app installation is qualified."
       },
       "footerArt": {
@@ -1659,7 +1659,7 @@
         "audience": "Developers and teams shipping code produced with AI agents.",
         "outcome": "Higher confidence that an agent completed the requested change correctly and safely.",
         "mechanism": "Local-first review combines repository context, executable checks, targeted evaluation, and inspectable verification receipts.",
-        "proof": "Published macOS 1.16.3 is notarized: all public asset hashes match the release, and its bundled app passes strict signature, Gatekeeper and stapling checks. The corrected coverage collector matches source bytes. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
+        "proof": "Published macOS 1.16.4 is notarized: all public asset hashes match the release, and its bundled app passes strict signature, Gatekeeper and stapling checks. The corrected coverage collector matches source bytes. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
         "nextAction": "Try the current Mac release on a small local repository. Use the documented manual update path until in-app installation is qualified."
       },
       "footerArt": {
