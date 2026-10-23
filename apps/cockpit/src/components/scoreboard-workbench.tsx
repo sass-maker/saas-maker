@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { type DataColumn, type DataSort } from '@saas-maker/ui/components/data-table';
 import { Button } from '@/components/ui/button';
+import { PageHeader } from '@/components/page-header';
 import {
   Sheet,
   SheetBody,
@@ -88,7 +89,7 @@ export function ScoreboardWorkbench({
   const searchParams = useSearchParams();
   const infoId = searchParams.get('product');
   const infoProject = snapshot.projects.find((p) => p.id === infoId);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(() => searchParams.get('q') ?? '');
   const [scope, setScope] = useState('all');
   const [purpose, setPurpose] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
@@ -463,26 +464,26 @@ export function ScoreboardWorkbench({
         </section>
       ) : (
         <>
-          <header className={styles.header}>
-            <div>
-              <div className={styles.eyebrow}>Product quality</div>
-              <h1>Product scoreboard</h1>
-              <p>Compare the work with the result. Open a number for its evidence.</p>
-            </div>
-            <button
-              className={styles.reviewButton}
-              onClick={() => setSheet('review')}
-              aria-label="Review details, import and export"
-            >
-              <FileText size={16} />
-              <span>
-                Review & backup
-                <small>
-                  {dateLabel(snapshot.assessedAt)} · {snapshot.projects.length} products
-                </small>
-              </span>
-            </button>
-          </header>
+          <div className="mb-6">
+            <PageHeader
+              className={styles.workbenchHeader}
+              title="Product scoreboard"
+              description="Compare the work with the result. Open a number for its evidence."
+              action={
+                <Button
+                  variant="outline"
+                  onClick={() => setSheet('review')}
+                  aria-label="Review details, import and export"
+                >
+                  <FileText />
+                  Review & backup
+                  <span className="hidden text-xs text-muted-foreground sm:inline">
+                    {dateLabel(snapshot.assessedAt)} · {snapshot.projects.length} products
+                  </span>
+                </Button>
+              }
+            />
+          </div>
           <ScoreboardGuide target={snapshot.target} />
           <div className={styles.coverage} aria-label="Assessment coverage">
             <span>

@@ -4,11 +4,13 @@ The private product scoreboard uses the owner's selected **Portfolio sheet**
 direction (23 October2026). Product meaning and cadence live in
 [`docs/product-scoreboard.md`](../../docs/product-scoreboard.md).
 
-- Keep the dark SaaS Maker navigation, S mark, Geist typography and copper
-  actions shared with the public product. The analytical work surface is light:
-  background `#f4f4f0`, white rows, text `#272d27`, borders `#d5dbce`.
-- Use the full page width. No sidebar compresses the comparison, and no table
-  owns a horizontal or vertical scroll area.
+- Use the existing app shell, sidebar/mobile navigation, shared PageHeader,
+  Geist typography, components and theme tokens. The scoreboard is part of the
+  same product workspace as feedback, subscribers and project keys; it has no
+  alternate navigation shell or fixed light palette. Respect the active theme.
+- Use the available content width. Table layouts respond to their container,
+  including the shared sidebar. No table owns a horizontal or vertical scroll
+  area; narrower content reflows to paired score cards.
 - Group each of the six categories over separate Effort and Result columns.
   Each leaf header sorts its own visible number and reverses on every click.
   Totals sort known displayed points, including partial totals. Unknowns stay
@@ -21,5 +23,7 @@ direction (23 October2026). Product meaning and cadence live in
 - Open evidence for the reading selected, with the other reading one click
   away. Keep its next lever reachable from the same category. History, cadence,
   imports, exports and all saved data retain their meaning.
-- Other inbox/project-key surfaces retain their established appearance.
-  The private surface remains authenticated and excludes replay scripts.
+- Project feedback pages link directly to the scoreboard filtered to their
+  project name. Preserve existing project identities, keys and inbox routes.
+- The private surface remains authenticated and excludes replay scripts. Shared
+  navigation uses full page transitions at that privacy boundary.

@@ -14,6 +14,8 @@ import {
   type ScoreWorkspace,
 } from '@/lib/scoreboard';
 import { ScoreValue } from './scoreboard-evidence';
+import { PageHeader } from '@/components/page-header';
+import { Badge } from '@/components/ui/badge';
 import styles from './scoreboard-workbench.module.css';
 
 export function ScoreboardProduct({
@@ -33,16 +35,17 @@ export function ScoreboardProduct({
       <NextLink className={styles.backLink} href="/projects?view=scoreboard">
         <ArrowLeft size={15} /> All products
       </NextLink>
-      <header className={styles.header}>
-        <div>
-          <div className={styles.eyebrow}>
-            Product information · {project.internal ? 'Internal tool' : 'Public product'}
-          </div>
-          <h1>{project.name}</h1>
-          <p>{project.segment}</p>
-        </div>
-        <span className={styles.priority}>{productPriorityLabel(project)}</span>
-      </header>
+      <div className="mb-6 space-y-2">
+        <p className="text-xs text-muted-foreground">
+          Product information · {project.internal ? 'Internal tool' : 'Public product'}
+        </p>
+        <PageHeader
+          className={styles.workbenchHeader}
+          title={project.name}
+          description={project.segment}
+          action={<Badge variant="outline">{productPriorityLabel(project)}</Badge>}
+        />
+      </div>
       <section className={styles.productOverview} aria-label="Product purpose and scope">
         <div>
           <h2>Why we keep it</h2>
