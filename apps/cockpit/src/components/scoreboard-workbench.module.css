@@ -28,7 +28,8 @@
 .guideGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; padding: 18px 0 4px; }
 .guideGrid h3 { font-weight: 550; font-size: 12px; margin-bottom: 8px; }
 .guideGrid p { color: var(--quiet); margin: 8px 0 0; }
-.purposeNames { display: block; color: var(--quiet); font-size: 9px; line-height: 1.5; margin-top: 6px; overflow-wrap: anywhere; }
+.purposeNames { display: block; color: var(--quiet); font-size: 11px; line-height: 1.5; margin-top: 6px; overflow-wrap: anywhere; }
+.purposeNames > span { display: inline-block; white-space: nowrap; }
 .productCell a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .productInfo h2 { font-size: 16px; font-weight: 550; margin-bottom: 12px; }
 .backLink { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; margin: 0 0 24px; color: var(--quiet); }
@@ -367,8 +368,6 @@
 .portfolioTable .weak { color: var(--foreground); }
 .portfolioTable .exempt { font-size: 10px; }
 .portfolioTable .uncertain { top: -5px; right: -6px; }
-.resultTrack { position: absolute; left: calc(-100% - 12px); bottom: 0; width: calc(200% + 12px); height: 2px; background: #e1e7d8; pointer-events: none; }
-.resultTrack > span { display: block; height: 100%; background: #809762; }
 .newReading { display: block; margin-top: 3px; color: var(--quiet); font-size: 9px; }
 .portfolioTable .delta { display: block; margin-top: 3px; font-size: 9px; }
 .portfolioTable [data-slot=data-table] th[data-column-id^="total:"], .portfolioTable [data-slot=data-table] td[data-column-id^="total:"] { background: #e9ede3; }
@@ -406,7 +405,6 @@
   .portfolioTable .scoreButton { min-height: 36px; padding: 6px 0 !important; }
   .portfolioTable .score { font-size: 14px; }
   .portfolioTable .exempt { font-size: 9px; }
-  .portfolioTable .resultTrack { left: calc(-100% - 38px); width: calc(200% + 38px); }
   .portfolioTable [data-slot=data-table] tr[data-row] td[data-column-id^="total:"] { padding: 26px 8px 8px; border-top: 1px solid var(--line); margin-top: 4px; }
   .portfolioTable td[data-column-id="total:effort"] { grid-column: 1 / span 2; }
   .portfolioTable td[data-column-id="total:result"] { grid-column: 3 / span 2; }

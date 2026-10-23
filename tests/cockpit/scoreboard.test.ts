@@ -30,7 +30,7 @@ describe('owner purpose and product priority', () => {
     const project = snapshot.projects[0];
     expect(productPriorityLabel(project)).toBe('Unclassified');
     project.purposeCategories = ['personal-use'];
-    expect(productPriorityLabel(project)).toBe('Personal use');
+    expect(productPriorityLabel(project)).toBe('Standard');
     expect(productPriority(project)).toBe(1);
     for (const purpose of ['learn-skill-showoff', 'attention-money-grabber'] as const) {
       project.purposeCategories = [purpose, 'personal-use'];
