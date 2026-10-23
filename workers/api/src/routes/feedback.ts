@@ -12,7 +12,9 @@ import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
 import { apiError } from '../lib/errors';
 import { createPing } from '../lib/app-health-ping';
 import { tryGetCatalogProjectId } from '../lib/catalog-project-binding';
-import { storeScreenshot } from '../lib/screenshots';
+import { storeScreenshot, validateScreenshot } from '../lib/screenshots';
+import { feedbackFingerprint, validSubmissionId } from '../lib/feedback-submission';
+import { sha256Hex } from '../lib/crypto';
 import { requireApiKey, requireInboxAuth } from '../middleware/auth';
 import type { Bindings, Variables } from '../types';
 
@@ -204,12 +206,11 @@ feedback.post('/', requireApiKey, async (c) => {
   if (!body.description?.trim())
     return apiError(c, 400, 'invalid_request', 'Description is required');
   if (!VALID_TYPES.includes(body.type)) return apiError(c, 400, 'invalid_request', 'Invalid type');
-
-  let imageUrl = body.image_url || null;
+  if (body.submission_id !== undefined && !validSubmissionId(body.submission_id))
+    return apiError(c, 400, 'invalid_request', 'Submission ID must be a UUID');
   if (screenshot) {
-    const stored = await storeScreenshot(c, screenshot);
-    if (stored instanceof Response) return stored;
-    imageUrl = stored;
+    const invalid = validateScreenshot(c, screenshot);
+    if (invalid) return invalid;
   }
 
   const page =
@@ -217,21 +218,63 @@ feedback.post('/', requireApiKey, async (c) => {
       ? { url: body.page.url, title: typeof body.page.title === 'string' ? body.page.title : '' }
       : null;
 
-  const record = await getDb(c.env.DB).createFeedback({
-    id: crypto.randomUUID(),
+  const fields = {
     project_id: projectId,
     type: body.type,
-    status: 'new',
+    status: 'new' as const,
     title: body.title.trim(),
     description: body.description.trim(),
-    image_url: imageUrl,
+    image_url: screenshot ? null : body.image_url || null,
     submitter_email: body.submitter_email?.trim() || '',
     submitter_name: body.submitter_name?.trim() || null,
     page,
     pinpoint: parsePinpoint(body.anchor),
     client_version: body.client_version?.trim() || null,
     source: body.source?.trim() || 'api',
-  });
+  };
+  const db = getDb(c.env.DB);
+  const submissionId = body.submission_id?.toLowerCase();
+  const fingerprint = submissionId ? await feedbackFingerprint(fields, screenshot) : undefined;
+  const id = crypto.randomUUID();
+  const existing =
+    submissionId && screenshot ? await db.getFeedbackSubmission(projectId, submissionId) : null;
+  const conflict = () =>
+    apiError(c, 409, 'invalid_request', 'Submission ID was already used for different feedback');
+  if (existing && existing.fingerprint !== fingerprint) return conflict();
+
+  let record: FeedbackRecord;
+  let created = false;
+  if (existing) {
+    record = existing.record;
+  } else {
+    const objectId = submissionId
+      ? await sha256Hex(JSON.stringify([projectId, submissionId, fingerprint]))
+      : undefined;
+    let imageUrl = fields.image_url;
+    if (screenshot) {
+      const stored = await storeScreenshot(c, screenshot, objectId);
+      if (stored instanceof Response) return stored;
+      imageUrl = stored;
+    }
+    const input = { ...fields, id, image_url: imageUrl };
+    if (submissionId && fingerprint !== undefined) {
+      const stored = await db.createFeedbackSubmission(input, submissionId, fingerprint);
+      if (stored.fingerprint !== fingerprint) {
+        // Only a losing simultaneous upload's own, unreferenced object is removed.
+        if (screenshot && objectId) {
+          await c.env.FEEDBACK_IMAGES.delete(
+            `feedback/${objectId}.${screenshot.type.split('/')[1]}`
+          ).catch(() => console.warn('feedback_retry_orphan_cleanup_failed'));
+        }
+        return conflict();
+      }
+      record = stored.record;
+      created = stored.created;
+    } else {
+      record = await db.createFeedback(input);
+      created = true;
+    }
+  }
 
   if (c.env.APP_HEALTH_INGEST_KEY) {
     const catalogProjectId = await tryGetCatalogProjectId(c.env.DB, projectId);
@@ -239,6 +282,12 @@ feedback.post('/', requireApiKey, async (c) => {
       key: c.env.APP_HEALTH_INGEST_KEY,
       environment: c.env.APP_HEALTH_ENVIRONMENT || 'production',
     })('feedback.submitted', {
+      logId: record.id,
+      timestamp: Date.parse(
+        record.created_at.includes('T')
+          ? record.created_at
+          : `${record.created_at.replace(' ', 'T')}Z`
+      ),
       title: 'Feedback received',
       props: {
         project: catalogProjectId ?? c.get('project')?.slug ?? projectId,
@@ -265,7 +314,7 @@ feedback.post('/', requireApiKey, async (c) => {
       status: record.status,
       created_at: record.created_at,
     },
-    201
+    created ? 201 : 200
   );
 });
 

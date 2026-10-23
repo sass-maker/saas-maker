@@ -25,6 +25,50 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-10-23 — Feedback retry identity.** The hosted endpoint accepts an
+  optional project-scoped submission UUID. Identical retries return the same
+  feedback; changed content conflicts instead of silently replacing it. A
+  database uniqueness constraint keeps concurrent retries to one feedback and
+  one daily receipt. Alert delivery reuses that record's UUIDv4 and creation
+  time, allowing a client retry to resend without a second alert identity.
+  The maintained form preserves its identity after an error and creates a new
+  one after success or edited content; legacy clients keep independent posts.
+  Product-owned endpoints and callbacks retain their existing payloads.
+  Migration `0029` is additive and must precede the hosted client rollout.
+  Local qualification covers lost responses, concurrent and conflicting
+  submissions, project isolation, images and legacy clients. Production and
+  original-cohort acceptance remain tracked in App Health issue #167.
+
+- **2026-10-23 — Portfolio sheet and sorting repair.** Implemented the
+  owner-selected portfolio sheet with grouped category headers and independently
+  sortable Effort/Result columns, including both totals. Partial totals now sort
+  by their displayed known points; unknowns remain last and repeated clicks
+  reverse direction. The private view uses a light, full-width working surface
+  under the dark brand header, paired metric cards at narrow widths, and
+  reading-specific evidence with the relevant next lever. Assessment data,
+  history and cadence storage retain their existing meaning and format.
+
+- **2026-10-22 — Owner-directed product scoreboard.** Added
+  a private Projects view for six category scores, dated evidence and one next
+  lever per project/category. An owner-local import contains the 39-project,
+  234-recommendation baseline; private data stays outside the public repository.
+  The cadence preserves action plans and evidence, enforces one active lever,
+  and supports follow-ups and portable backups without automatic score changes.
+  The owner-selected comparison layout uses the existing shared DataTable with
+  reversible header sorting, focused area/domain views, a selected-lever panel,
+  evidence sheets and compact access to history and private backup controls.
+  Total sorts both ways with visible denominators. Full category names match
+  the owner's six areas. Dated assessment history retains before/after evidence,
+  distinguishes score revisions from new coverage and scope changes, and can
+  import older reviews without replacing current scores or lever progress.
+  Browser persistence uses IndexedDB with legacy workspace migration.
+  Effort and Result now have independent category readings, totals, evidence and
+  histories; old combined grades retain their original meaning. Work completed
+  and outcomes observed are recorded separately in the one-lever cadence.
+  Comparison uses the full page, on-demand details and labelled narrow-screen
+  rows, with page scrolling and pagination instead of nested table scrolling.
+  See [the operating guide](docs/product-scoreboard.md).
+
 - **2026-10-09 — Finish sweep of stranded work.** Landed the Clarity audit's
   verified-worktree exemption: a registered tag found in a linked Git worktree
   of the cataloged checkout is reported as a warning instead of an undeclared

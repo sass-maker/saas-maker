@@ -27,6 +27,7 @@ export async function submitFeedbackToUrl(
 ): Promise<void> {
   const destination = validateIngestionUrl(ingestionUrl);
   const { screenshot, ...feedback } = submission;
+  delete feedback.submissionId;
   const body = new FormData();
   body.append('feedback', JSON.stringify(feedback));
   if (screenshot) body.append('screenshot', screenshot);
@@ -65,6 +66,7 @@ export async function submitFeedbackToProject(
   body.append(
     'feedback',
     JSON.stringify({
+      submission_id: feedback.submissionId,
       type: feedback.type,
       title: feedback.title,
       description: feedback.description,

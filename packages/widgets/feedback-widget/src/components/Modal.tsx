@@ -10,6 +10,7 @@ interface ModalProps {
   hidden?: boolean;
   onClose: () => void;
   onSubmit: (feedback: FeedbackSubmission) => void | Promise<void>;
+  useSubmissionIdentity?: boolean;
   userEmail?: string;
   userName?: string;
   requireEmail?: boolean;
@@ -45,6 +46,7 @@ export const Modal: React.FC<ModalProps> = ({
   hidden = false,
   onClose,
   onSubmit,
+  useSubmissionIdentity,
   userEmail,
   userName,
   requireEmail,
@@ -159,6 +161,7 @@ export const Modal: React.FC<ModalProps> = ({
         {/* Body */}
         <div className="smw-modal__body">
           <SubmitForm
+            useSubmissionIdentity={useSubmissionIdentity}
             onSubmit={onSubmit}
             userEmail={userEmail}
             userName={userName}

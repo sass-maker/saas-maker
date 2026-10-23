@@ -26,7 +26,8 @@ private Fleet state at runtime. Reusable public automation is canonical under
 - `@saas-maker/portfolio-project-strip` — accessible project-discovery footer
   backed by the same safe catalog as sassmaker.com.
 - `api.sassmaker.com` — Feedback and project-key API.
-- `app.sassmaker.com` — private Feedback inbox.
+- `app.sassmaker.com` — private Feedback inbox and
+  [product scoreboard](docs/product-scoreboard.md) with imported owner-local reviews.
 
 Package and service documentation stays in [`docs/`](docs/README.md) and the
 individual package READMEs.

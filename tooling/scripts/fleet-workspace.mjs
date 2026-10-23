@@ -11,7 +11,8 @@ const help = `fleet-workspace <command> [options]
   heartbeat --id <id>
   status [--no-disk]               Skip disk measurements and budget reporting.
   install (--id <id> | --repo <path>) [--offline]
-  lockfile-only --id <id>        Update an existing pnpm lockfile without installing.
+  lockfile-only --id <id> [--package-dir <relative-child>]
+                                   Update an existing pnpm lockfile without installing.
   run (--id <id> | --repo <path>) -- <command> [args...]
   close --id <id> [--dry-run] [--landed <sha>]
   close --all-landed [--dry-run] [--idle-minutes <n>] (default: 30)
@@ -36,6 +37,7 @@ export async function main(argv = process.argv.slice(2)) {
   const { values: opts, positionals } = parseArgs({ args: input, allowPositionals: true, strict: true, options: {
     root: { type: 'string' }, id: { type: 'string' }, repo: { type: 'string' }, owner: { type: 'string' }, task: { type: 'string' },
     base: { type: 'string' }, path: { type: 'string' }, landed: { type: 'string' }, 'store-dir': { type: 'string' },
+    'package-dir': { type: 'string' },
     'max-writers': { type: 'string' }, 'max-heavy-jobs': { type: 'string' }, 'workspace-gib': { type: 'string' },
     'total-gib': { type: 'string' }, 'min-free-gib': { type: 'string' }, 'idle-minutes': { type: 'string' },
     'all-landed': { type: 'boolean' }, 'no-disk': { type: 'boolean' },

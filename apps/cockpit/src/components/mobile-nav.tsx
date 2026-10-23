@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { SidebarNav } from '@/components/sidebar-nav';
 
-export function MobileNav() {
+export function MobileNav({ scoreboardActive = false }: { scoreboardActive?: boolean }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -27,7 +27,7 @@ export function MobileNav() {
             <SheetTitle className="text-lg font-bold">SaaS Maker</SheetTitle>
           </SheetHeader>
           <div className="flex-1 overflow-y-auto p-3">
-            <SidebarNav onNavigate={() => setOpen(false)} />
+            <SidebarNav scoreboardActive={scoreboardActive} onNavigate={() => setOpen(false)} />
           </div>
         </SheetContent>
       </Sheet>

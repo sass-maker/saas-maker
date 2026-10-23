@@ -9,9 +9,26 @@ function hasSessionCookie(req: NextRequest): boolean {
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const scoreboard =
+    pathname === '/projects' && req.nextUrl.searchParams.get('view') === 'scoreboard';
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.delete('x-saasmaker-private-surface');
+  if (scoreboard) requestHeaders.set('x-saasmaker-private-surface', 'scoreboard');
+  const proceed = () => {
+    const response = NextResponse.next({ request: { headers: requestHeaders } });
+    if (scoreboard) {
+      response.headers.set('Cache-Control', 'private, no-store');
+      response.headers.set('Referrer-Policy', 'no-referrer');
+      response.headers.set(
+        'Content-Security-Policy',
+        "connect-src 'self'; frame-src 'none'; form-action 'self'"
+      );
+    }
+    return response;
+  };
 
   if (isLocalAuthBypassEnabled(req.headers.get('host'))) {
-    return NextResponse.next();
+    return proceed();
   }
 
   // Do not call better-auth here. Middleware runs on the Edge isolate and
@@ -20,10 +37,12 @@ export async function middleware(req: NextRequest) {
     if (pathname.startsWith('/api/')) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    return NextResponse.redirect(new URL('/login', req.url));
+    const login = new URL('/login', req.url);
+    if (scoreboard) login.searchParams.set('returnTo', 'scoreboard');
+    return NextResponse.redirect(login);
   }
 
-  return NextResponse.next();
+  return proceed();
 }
 
 export const config = {

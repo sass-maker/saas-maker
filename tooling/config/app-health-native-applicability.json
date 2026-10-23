@@ -127,14 +127,6 @@
       "serverRequests": "not-applicable"
     },
     {
-      "id": "ios-landings",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "not-applicable",
-      "browserVisitorsReason": "Shared landing factory has no standalone visitor identity; its consumer pages report under their own product IDs.",
-      "browserVisitorsSourceIssue": "https://github.com/sass-maker/app-health/issues/91",
-      "serverRequests": "not-applicable"
-    },
-    {
       "id": "rolepatch",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",

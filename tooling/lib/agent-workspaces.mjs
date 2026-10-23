@@ -3,7 +3,7 @@ import {
   readdirSync, unlinkSync, realpathSync, statSync, statfsSync, chmodSync,
 } from 'node:fs';
 import { homedir } from 'node:os';
-import { dirname, join, resolve, sep } from 'node:path';
+import { dirname, isAbsolute, join, resolve, sep } from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
@@ -22,6 +22,38 @@ export const defaults = Object.freeze({
   maxTotalBytes: 40 * GiB, minFreeBytes: 20 * GiB, staleHours: 24,
 });
 const exactPnpmPin = /^pnpm@\d+\.\d+\.\d+(?:\+sha\d+\.[a-f0-9]+)?$/;
+
+function independentPackageDirectory(root, relative) {
+  if (typeof relative !== 'string' || isAbsolute(relative) || /[\\:]/.test(relative) ||
+      relative.split('/').some((part) => !part || part === '.' || part === '..')) {
+    throw new Error('--package-dir requires a relative child directory without traversal.');
+  }
+  let target = root;
+  for (const part of relative.split('/')) {
+    target = join(target, part);
+    const entry = lstatSync(target);
+    if (entry.isSymbolicLink() || !entry.isDirectory()) throw new Error('--package-dir must contain only real directories, not symlinks.');
+  }
+  let ownWorkspace;
+  try { ownWorkspace = lstatSync(join(target, 'pnpm-workspace.yaml')); }
+  catch (error) { if (error.code !== 'ENOENT') throw error; }
+  if (ownWorkspace) {
+    if (ownWorkspace.isSymbolicLink() || !ownWorkspace.isFile()) {
+      throw new Error('--package-dir requires a regular pnpm-workspace.yaml for its own workspace boundary.');
+    }
+    // pnpm resolves this boundary before any ancestor workspace. Keep the root
+    // writer lease while using the child's existing pin, lockfile and modules.
+    return target;
+  }
+  for (let parent = dirname(target); ; parent = dirname(parent)) {
+    let workspace;
+    try { workspace = lstatSync(join(parent, 'pnpm-workspace.yaml')); }
+    catch (error) { if (error.code !== 'ENOENT') throw error; }
+    if (workspace) throw new Error('--package-dir cannot inherit a parent pnpm workspace.');
+    if (parent === dirname(parent)) break;
+  }
+  return target;
+}
 export const defaultRoot = join(homedir(), 'Library', 'Application Support', 'Fleet', 'Agent Workspaces.noindex');
 
 function command(bin, args, cwd) {
@@ -254,8 +286,9 @@ export class AgentWorkspaces {
     mkdirSync(this.root, { recursive: true, mode: 0o700 });
     for (const path of [this.root, ...['manifests', 'worktrees', 'retired', 'jobs', 'receipts'].map((name) => join(this.root, name))]) {
       mkdirSync(path, { recursive: true, mode: 0o700 });
-      if (lstatSync(path).isSymbolicLink() || !lstatSync(path).isDirectory()) throw new Error(`Unsafe state directory: ${path}`);
-      chmodSync(path, 0o700);
+      const state = lstatSync(path);
+      if (state.isSymbolicLink() || !state.isDirectory()) throw new Error(`Unsafe state directory: ${path}`);
+      if ((state.mode & 0o7777) !== 0o700) chmodSync(path, 0o700);
     }
     const instructions = join(this.root, 'AGENTS.md');
     if (!existsSync(instructions)) {
@@ -633,33 +666,35 @@ export class AgentWorkspaces {
     if (offline) args.push('--offline');
     return this.run({ id, repo, argv: args, installing: true });
   }
-  async lockfileOnly({ id }) {
+  async lockfileOnly({ id, 'package-dir': packageDir }) {
     if (!id) throw new Error('Lockfile-only generation requires --id for a managed workspace.');
     const row = this.record(id);
     if (row.state !== 'active') throw new Error('Lockfile-only generation requires an active workspace.');
     const repo = realpathSync(resolve(row.path));
-    for (const path of [join(repo, 'node_modules'), join(repo, 'node_modules', '.pnpm')]) {
+    const packageRoot = packageDir === undefined ? repo : independentPackageDirectory(repo, packageDir);
+    for (const path of [join(packageRoot, 'node_modules'), join(packageRoot, 'node_modules', '.pnpm')]) {
       let pathStat;
       try { pathStat = lstatSync(path); }
       catch (error) { if (error.code === 'ENOENT') continue; throw error; }
       if (pathStat.isSymbolicLink()) throw new Error('Keep a separate node_modules layout in each checkout; a shared mutable directory is not supported.');
     }
-    const manifestPath = join(repo, 'package.json');
+    const manifestPath = join(packageRoot, 'package.json');
     let manifestStat;
     try { manifestStat = lstatSync(manifestPath); }
     catch { throw new Error('Requires a regular package.json with an exact pnpm packageManager pin.'); }
     if (!manifestStat.isFile() || manifestStat.isSymbolicLink()) throw new Error('Requires a regular package.json with an exact pnpm packageManager pin.');
     const manifest = json(manifestPath);
     if (!exactPnpmPin.test(manifest.packageManager ?? '')) throw new Error('Requires an exact pnpm packageManager pin for lockfile-only generation.');
-    const lockPath = join(repo, 'pnpm-lock.yaml');
+    const lockPath = join(packageRoot, 'pnpm-lock.yaml');
     let lockStat;
     try { lockStat = lstatSync(lockPath); }
     catch { throw new Error('Requires an existing regular pnpm-lock.yaml for lockfile-only generation.'); }
     if (!lockStat.isFile() || lockStat.isSymbolicLink()) throw new Error('Requires an existing regular pnpm-lock.yaml for lockfile-only generation.');
     const storeDir = this.policy().storeDir;
     mkdirSync(storeDir, { recursive: true });
-    if (statSync(storeDir).dev !== statSync(repo).dev) throw new Error('The shared store and checkout must use the same filesystem.');
-    const args = ['pnpm', 'install', '--lockfile-only', '--ignore-scripts', '--store-dir', storeDir, '--package-import-method', 'auto'];
+    if (statSync(storeDir).dev !== statSync(packageRoot).dev) throw new Error('The shared store and checkout must use the same filesystem.');
+    const prefix = packageDir === undefined ? ['pnpm'] : [manifest.packageManager, '--dir', packageRoot];
+    const args = [...prefix, 'install', '--lockfile-only', '--ignore-scripts', '--store-dir', storeDir, '--package-import-method', 'auto'];
     return this.run({ id, repo, argv: ['corepack', ...args], installing: true });
   }
   async run({ id, repo, argv, installing = false }) {

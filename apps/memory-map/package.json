@@ -33,7 +33,7 @@
     "@huggingface/transformers": "3.8.1",
     "@observablehq/plot": "0.6.17",
     "@zip.js/zip.js": "2.8.34",
-    "astro": "7.2.8"
+    "astro": "7.3.3"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.6",
@@ -49,7 +49,7 @@
     "ultracite": "7.10.2",
     "vite": "8.1.6",
     "vitest": "4.1.12",
-    "wrangler": "4.85.0"
+    "wrangler": "4.125.0"
   },
   "description": "Memory Map: browser-local ChatGPT export analysis, deployed to the chatgpt-memory-insights Cloudflare Pages project (chatgpt.significanthobbies.com)."
 }

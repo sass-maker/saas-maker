@@ -7,7 +7,10 @@ export function GoogleSignInButton() {
   async function handleSignIn() {
     await authClient.signIn.social({
       provider: 'google',
-      callbackURL: '/projects',
+      callbackURL:
+        new URLSearchParams(window.location.search).get('returnTo') === 'scoreboard'
+          ? '/projects?view=scoreboard'
+          : '/projects',
     });
   }
 

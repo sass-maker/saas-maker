@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { Activity } from 'lucide-react';
@@ -9,14 +8,46 @@ import { getLocalDevSession, isLocalAuthBypassEnabled } from '@/lib/local-auth';
 import { UserMenu } from '@/components/user-menu';
 import { CockpitResources } from '@/components/cockpit-resources';
 import { SaaSMakerMark } from '@/components/saas-maker-mark';
+import scoreboardShell from '@/components/scoreboard-shell.module.css';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const requestHeaders = await headers();
+  const scoreboardActive = requestHeaders.get('x-saasmaker-private-surface') === 'scoreboard';
   const session = isLocalAuthBypassEnabled(requestHeaders.get('host'))
     ? getLocalDevSession()
     : await auth.api.getSession({ headers: requestHeaders });
+
+  if (scoreboardActive) {
+    return (
+      <div className={scoreboardShell.shell}>
+        <header className={scoreboardShell.header}>
+          <div className={scoreboardShell.identity}>
+            <span className={scoreboardShell.mobileMenu}>
+              <MobileNav scoreboardActive />
+            </span>
+            <a href="/projects?view=scoreboard">
+              <SaaSMakerMark />
+              <span>SaaS Maker</span>
+            </a>
+          </div>
+          <nav aria-label="SaaS Maker" className={scoreboardShell.navigation}>
+            <a href="/projects?view=scoreboard" aria-current="page">
+              Product quality
+            </a>
+            <a href="/projects/feedback">Feedback</a>
+            <a href="/projects/subscribers">Subscribers</a>
+            <a href="/projects">Project keys</a>
+          </nav>
+          <UserMenu user={session?.user ?? null} />
+        </header>
+        <CockpitResources key={session?.user?.id ?? 'guest'}>
+          <main className={scoreboardShell.main}>{children}</main>
+        </CockpitResources>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex bg-background text-foreground">
@@ -25,28 +56,30 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         {/* Logo */}
         <div className="border-b border-border/70 p-4">
           <div className="flex items-center justify-between">
-            <Link href="/projects/feedback" className="group flex min-w-0 items-center gap-2">
+            <a href="/projects/feedback" className="group flex min-w-0 items-center gap-2">
               <SaaSMakerMark />
               <span className="min-w-0">
                 <span className="block truncate text-sm font-semibold tracking-tight">
                   SaaS Maker
                 </span>
                 <span className="block truncate font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Feedback inbox
+                  {scoreboardActive ? 'Product quality' : 'Feedback inbox'}
                 </span>
               </span>
-            </Link>
+            </a>
             <ThemeToggle />
           </div>
           <div className="mt-4 flex items-center gap-2 rounded-md border border-border/60 bg-muted/25 px-3 py-2 text-xs text-muted-foreground">
             <Activity className="h-3.5 w-3.5 text-emerald-400" />
-            <span className="truncate">Customer feedback</span>
+            <span className="truncate">
+              {scoreboardActive ? 'Evidence and next levers' : 'Customer feedback'}
+            </span>
           </div>
         </div>
 
         {/* Navigation */}
         <div className="flex-1 overflow-y-auto p-3">
-          <SidebarNav />
+          <SidebarNav scoreboardActive={scoreboardActive} />
         </div>
 
         {/* User menu at bottom */}
@@ -56,20 +89,28 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       </aside>
 
       {/* Main content */}
-      <main className="min-w-0 flex-1 overflow-y-auto">
+      <main className={scoreboardActive ? 'min-w-0 flex-1' : 'min-w-0 flex-1 overflow-y-auto'}>
         {/* Mobile header - only shows on small screens */}
         <header className="md:hidden sticky top-0 z-50 border-b border-border/70 bg-background/90 px-4 h-14 flex items-center justify-between backdrop-blur-xl">
           <div className="flex items-center gap-2">
-            <MobileNav />
-            <Link href="/projects/feedback" className="text-base font-semibold">
+            <MobileNav scoreboardActive={scoreboardActive} />
+            <a href="/projects/feedback" className="text-base font-semibold">
               SaaS Maker
-            </Link>
+            </a>
           </div>
           <ThemeToggle />
         </header>
 
         <CockpitResources key={session?.user?.id ?? 'guest'}>
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
+          <div
+            className={
+              scoreboardActive
+                ? 'px-4 py-6 sm:px-6 lg:px-8'
+                : 'mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8'
+            }
+          >
+            {children}
+          </div>
         </CockpitResources>
       </main>
     </div>
