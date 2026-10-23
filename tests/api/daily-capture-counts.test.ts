@@ -399,7 +399,12 @@ describe('daily PII-free capture receipts', () => {
       )
       .map(({ id }) => id)
       .sort();
-    expect(internalNewsletterIds).toEqual(['free-ai', 'knowledge-base', 'pace']);
+    expect(internalNewsletterIds).toEqual([
+      'app-health',
+      'free-ai',
+      'knowledge-base',
+      'nutrition-formula-engine',
+    ]);
 
     const notApplicable = Object.entries(result.applicabilityByCatalogId)
       .filter(([, applicability]) => applicability === 'not-applicable')
