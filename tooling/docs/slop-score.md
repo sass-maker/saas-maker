@@ -97,16 +97,20 @@ design tokens; do not commit private output. The runner does not save output its
 
 ## Design workflow checkpoints
 
-For meaningful web design work, use this throughout the Fleet design workflow:
+The [design-workflow skill](../skills/design-workflow/SKILL.md) determines the
+process. PRESERVE work requires rendered review, with no scanner, score or receipt
+requirement. OVERHAUL requires rendered directions and owner selection; its
+scanner and receipt tooling is optional too. A scan is useful when its findings
+help the work, not as an extra completion gate.
+
+When using the scanner, these checkpoints help compare meaningful states:
 
 1. **Direction review:** scan each rendered comparison direction before owner
    selection; scan the supplied/delegated direction when using that exception.
-   Review the patterns before presenting the options. These records are required
-   at implementation preflight for overhaul work.
+   Review the patterns before presenting the options.
 2. **Iteration:** scan the first working render before final polish. Address
    patterns that weaken the brief, record intentional decisions, and inspect fixes.
-3. **Final:** scan the corrected render again. This and the iteration record are
-   required at completion for preserve and overhaul web work.
+3. **Final:** scan the corrected render again to inspect the remaining patterns.
 
 Capture a baseline scan when an existing surface is available. New surfaces
 have no baseline; do not invent one. Keep score comparisons to the same source
@@ -114,7 +118,8 @@ pin, definitions version, preset, viewport and meaningful page state. Use a
 separate report file for every checkpoint and comparison direction. Reports are
 retained under the owning project's gitignored `.fleet-local/` directory.
 
-Record entries in `evidence.slopScale.checkpoints`:
+If using the optional structured review receipt, record entries in
+`evidence.slopScale.checkpoints`:
 
 ```json
 {
@@ -131,16 +136,18 @@ Use `stage: iteration` and `stage: final` without `direction` for the working an
 corrected render. The report is the runner's unchanged JSON, containing its pin,
 definitions version, preset, viewport, measured score and triggered evidence.
 The validator reads it; a missing, failed or malformed report cannot qualify as
-a scored checkpoint. Heavy results still qualify once their evidence is reviewed:
-the workflow requires the check, never a numeric taste threshold.
+a scored checkpoint. Heavy results still qualify once their evidence is reviewed;
+the optional receipt validator does not impose a numeric taste threshold.
 
 If the scanner fails, save its error output and record `status: blocked`, the
 report path, and a concrete `reason`. Static image/SVG directions can use a
 capability limitation record, without claiming a scan ran. Scores remain unknown;
 blocked records must not carry a numeric score or be described as Clean. Record
 the limitation in the final handoff and continue the rendered craft review.
-For native work, set `evidence.slopScale.platform: native` and explain the web
-scanner's inapplicability in `reason`; do not manufacture a browser score.
+For native work using a receipt, set `evidence.slopScale.platform: native` and
+explain the web scanner's inapplicability in `reason`; do not manufacture a browser
+score.
 
-Preserve intentional choices in `DESIGN.md` and continue Impeccable and rendered
-design review. Required checkpoint evidence is separate from advisory scoring.
+Continue rendered design review regardless of whether scanner or receipt tooling
+is used. Record intentional choices in an existing `DESIGN.md` when they need
+durable explanation; the scanner does not require creating one.
