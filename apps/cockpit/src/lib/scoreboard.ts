@@ -38,6 +38,25 @@ export type ScoreReading = {
 };
 export type Score = ScoreReading & { effort?: ScoreReading; result?: ScoreReading };
 
+export const PURPOSE_LABELS = {
+  'learn-skill-showoff': 'Learning / skill',
+  'attention-money-grabber': 'Commercial / attention',
+  'personal-use': 'I use it',
+} as const;
+export type PurposeCategory = keyof typeof PURPOSE_LABELS;
+
+/** Owner intent, independent of quality scores and individual lever urgency. */
+export function productPriority(project: ScoreProject): number {
+  const purposes = project.purposeCategories ?? [];
+  if (purposes.some((p) => p === 'learn-skill-showoff' || p === 'attention-money-grabber'))
+    return 0;
+  return purposes.includes('personal-use') ? 1 : 2;
+}
+
+export function productPriorityLabel(project: ScoreProject): string {
+  return ['Focus', 'Personal use', 'Unclassified'][productPriority(project)];
+}
+
 /** Older combined estimates stay intact; they are never relabelled as outcomes. */
 export function scoreReading(score: Score, metric: ScoreMetric): ScoreReading {
   if (score[metric]) return score[metric];
@@ -56,6 +75,7 @@ export type ScoreProject = {
   segment: string;
   domains: string[];
   internal: boolean;
+  purposeCategories?: PurposeCategory[];
   bestNextLeverId: string;
   sourceRevision: string;
   limitations: string[];
@@ -169,6 +189,15 @@ function validateProjects(projects: unknown): asserts projects is ScoreProject[]
       'Project IDs must be valid and unique.'
     );
     projectIds.add(p.id as string);
+    requireValue(
+      p.purposeCategories === undefined ||
+        (Array.isArray(p.purposeCategories) &&
+          p.purposeCategories.every(
+            (x) => typeof x === 'string' && Object.hasOwn(PURPOSE_LABELS, x)
+          ) &&
+          new Set(p.purposeCategories).size === p.purposeCategories.length),
+      'Purpose categories must be unique owner-purpose labels.'
+    );
     requireValue(
       isText(p.name, 160) && isText(p.segment) && typeof p.internal === 'boolean',
       'Project name, segment and evaluation scope are required.'
