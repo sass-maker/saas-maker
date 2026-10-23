@@ -91,6 +91,7 @@ export function ScoreboardWorkbench({
   const [query, setQuery] = useState('');
   const [scope, setScope] = useState('all');
   const [purpose, setPurpose] = useState('all');
+  const [priorityFilter, setPriorityFilter] = useState('all');
   const [area, setArea] = useState('all');
   const [domain, setDomain] = useState('all');
   const [projectFilter, setProjectFilter] = useState('');
@@ -163,6 +164,7 @@ export function ScoreboardWorkbench({
             (!projectFilter || p.id === projectFilter) &&
             (scope === 'all' || (scope === 'internal' ? p.internal : !p.internal)) &&
             matchesPurpose(p) &&
+            matchesPriority(p) &&
             (domain === 'all' || p.domains.includes(domain)) &&
             (!query ||
               [p.name, p.segment, ...p.domains]
@@ -177,7 +179,7 @@ export function ScoreboardWorkbench({
               priority[byLever.get(b.bestNextLeverId)!.priority] ||
             a.name.localeCompare(b.name)
         ),
-    [snapshot, scope, purpose, domain, query, projectFilter, byLever]
+    [snapshot, scope, purpose, priorityFilter, domain, query, projectFilter, byLever]
   );
   const actions = orderedLevers.filter((l) => {
     const p = byProject.get(l.projectId)!;
@@ -185,6 +187,7 @@ export function ScoreboardWorkbench({
       (!projectFilter || p.id === projectFilter) &&
       (scope === 'all' || (scope === 'internal' ? p.internal : !p.internal)) &&
       matchesPurpose(p) &&
+      matchesPriority(p) &&
       (domain === 'all' || p.domains.includes(domain)) &&
       (!query ||
         [p.name, ...p.domains, l.title, l.action]
@@ -208,6 +211,7 @@ export function ScoreboardWorkbench({
     projectFilter ||
     scope !== 'all' ||
     purpose !== 'all' ||
+    priorityFilter !== 'all' ||
     area !== 'all' ||
     domain !== 'all' ||
     status !== 'all';
@@ -228,8 +232,11 @@ export function ScoreboardWorkbench({
 
   function matchesPurpose(p: ScoreProject) {
     if (purpose === 'all') return true;
-    if (purpose === 'focus') return productPriority(p) === 0;
     return p.purposeCategories?.some((category) => category === purpose) ?? false;
+  }
+
+  function matchesPriority(p: ScoreProject) {
+    return priorityFilter === 'all' || productPriority(p) === Number(priorityFilter);
   }
 
   function choose(l: Lever) {
@@ -264,6 +271,7 @@ export function ScoreboardWorkbench({
     setQuery('');
     setScope('all');
     setPurpose('all');
+    setPriorityFilter('all');
     setArea('all');
     setDomain('all');
     setProjectFilter('');
@@ -326,11 +334,6 @@ export function ScoreboardWorkbench({
               }}
             >
               <ScoreValue score={scoreReading(p.scores[c], m)} unknownLabel="Unknown" />
-              {m === 'result' && scoreReading(p.scores[c], m).value !== null && (
-                <span className={styles.resultTrack} aria-hidden="true">
-                  <span style={{ width: `${scoreReading(p.scores[c], m).value! * 10}%` }} />
-                </span>
-              )}
               {change?.delta !== null && change?.delta !== undefined && change.delta !== 0 && (
                 <ScoreDelta change={change} />
               )}
@@ -513,6 +516,8 @@ export function ScoreboardWorkbench({
                     setStatus('awaiting_evidence');
                     setQuery('');
                     setScope('all');
+                    setPurpose('all');
+                    setPriorityFilter('all');
                     setDomain('all');
                     setArea('all');
                     setProjectFilter('');
@@ -571,12 +576,24 @@ export function ScoreboardWorkbench({
                   }}
                 >
                   <option value="all">All purposes</option>
-                  <option value="focus">Focus: learning or commercial</option>
                   {Object.entries(PURPOSE_LABELS).map(([id, label]) => (
                     <option key={id} value={id}>
                       {label}
                     </option>
                   ))}
+                </select>
+                <select
+                  aria-label="Priority"
+                  value={priorityFilter}
+                  onChange={(e) => {
+                    setPriorityFilter(e.target.value);
+                    setSelected('');
+                  }}
+                >
+                  <option value="all">All priorities</option>
+                  <option value="0">Focus</option>
+                  <option value="1">Standard</option>
+                  <option value="2">Unclassified</option>
                 </select>
                 <select
                   aria-label="Scope"
@@ -625,13 +642,7 @@ export function ScoreboardWorkbench({
                   ))}
                 </select>
               </div>
-              {(query ||
-                scope !== 'all' ||
-                purpose !== 'all' ||
-                area !== 'all' ||
-                domain !== 'all' ||
-                projectFilter ||
-                status !== 'all') && (
+              {hasFocus && (
                 <div className={styles.filterSummary}>
                   <span>
                     {projectFilter ? `Product: ${byProject.get(projectFilter)?.name} · ` : ''}

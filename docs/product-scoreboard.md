@@ -108,12 +108,14 @@ totals, confidence, internal exemptions and weekly review process.
 
 `purposeCategories` is optional imported owner metadata using the canonical
 catalog's three non-exclusive labels. Learning/skill and commercial/attention
-bets receive **Focus** priority, ahead of personal-use-only tools. Unclassified
+bets receive **Focus** priority, ahead of **Standard** products whose only
+recorded purpose is personal use. Unclassified
 older imports remain explicitly unclassified. This priority is separate from
 quality scores, maturity, revenue and individual lever urgency. It is the
 default product ordering; the Priority header reverses it like every numeric
-header, and the Purpose filter supports both the combined Focus group and each
-individual label. The private catalog is never bundled into the application.
+header. Purpose filters the three owner-intent labels; the separate Priority
+filter selects Focus, Standard or Unclassified. The private catalog is never
+bundled into the application.
 
 The owner reset the working reports to one baseline on 23 October 2026. Older
 review exports remain in a recoverable local archive; they are not active
@@ -125,10 +127,11 @@ cadence is not an automatic rating increase or a newly installed scheduler.
 7. Open **Review & backup** for coverage, scale, private import and export.
 
 The approved portfolio sheet uses a light working surface below the dark brand
-header and the full available page width. Category names group Effort and Result;
-subtle Result tracks aid scanning without treating unknowns as zero. Lever details open in a
+header and the full available page width. Category names group Effort and Result,
+displayed as plain numbers. Lever details open in a
 sheet when selected, rather than squeezing the table into a side panel. There
-is no nested table scroll area. The page scrolls normally and results are paged.
+is no nested table scroll area. The page scrolls normally and shows all matches
+without pagination.
 At phone and tablet widths, rows reflow into labelled cards, with explicit sort
 and direction controls. No sideways scroll is needed in Scores, Next levers or
 History. Full category names remain visible.

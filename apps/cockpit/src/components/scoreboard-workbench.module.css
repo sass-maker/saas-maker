@@ -367,8 +367,6 @@
 .portfolioTable .weak { color: var(--foreground); }
 .portfolioTable .exempt { font-size: 10px; }
 .portfolioTable .uncertain { top: -5px; right: -6px; }
-.resultTrack { position: absolute; left: calc(-100% - 12px); bottom: 0; width: calc(200% + 12px); height: 2px; background: #e1e7d8; pointer-events: none; }
-.resultTrack > span { display: block; height: 100%; background: #809762; }
 .newReading { display: block; margin-top: 3px; color: var(--quiet); font-size: 9px; }
 .portfolioTable .delta { display: block; margin-top: 3px; font-size: 9px; }
 .portfolioTable [data-slot=data-table] th[data-column-id^="total:"], .portfolioTable [data-slot=data-table] td[data-column-id^="total:"] { background: #e9ede3; }
@@ -406,7 +404,6 @@
   .portfolioTable .scoreButton { min-height: 36px; padding: 6px 0 !important; }
   .portfolioTable .score { font-size: 14px; }
   .portfolioTable .exempt { font-size: 9px; }
-  .portfolioTable .resultTrack { left: calc(-100% - 38px); width: calc(200% + 38px); }
   .portfolioTable [data-slot=data-table] tr[data-row] td[data-column-id^="total:"] { padding: 26px 8px 8px; border-top: 1px solid var(--line); margin-top: 4px; }
   .portfolioTable td[data-column-id="total:effort"] { grid-column: 1 / span 2; }
   .portfolioTable td[data-column-id="total:result"] { grid-column: 3 / span 2; }

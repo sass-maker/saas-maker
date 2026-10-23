@@ -39,8 +39,10 @@ export function ScoreboardGuide({ target }: { target: number }) {
           <div>
             <h3>Choose work, then review weekly</h3>
             <p>
-              Learning / skill and Commercial / attention bets receive Focus priority. I use it is a
-              separate, overlapping label. These describe owner intent, not quality or revenue.
+              Learning / skill and Commercial / attention bets receive Focus priority. Other
+              classified products have Standard priority. I use it is an overlapping purpose label.
+              Purpose describes owner intent; priority sets the order of work. Neither is a quality
+              or revenue score.
             </p>
             <p>
               Complete the chosen task, record the work and outcome separately, then update this

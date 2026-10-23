@@ -54,7 +54,7 @@ export function productPriority(project: ScoreProject): number {
 }
 
 export function productPriorityLabel(project: ScoreProject): string {
-  return ['Focus', 'Personal use', 'Unclassified'][productPriority(project)];
+  return ['Focus', 'Standard', 'Unclassified'][productPriority(project)];
 }
 
 /** Older combined estimates stay intact; they are never relabelled as outcomes. */

@@ -14,7 +14,8 @@ direction (23 October2026). Product meaning and cadence live in
   Totals sort known displayed points, including partial totals. Unknowns stay
   unknown; exemptions keep their reduced denominators.
 - Keep numbers readable and labels in the header, rather than repeating long
-  labels in every desktop cell. Small result tracks support scanning.
+  labels in every desktop cell. Scores use plain numbers without decorative
+  bars. Purpose labels appear once; priority uses Focus or Standard.
 - Tablet and phone layouts use labelled product cards. Each category still
   pairs its own two readings. Provide explicit sort and direction controls.
 - Open evidence for the reading selected, with the other reading one click
