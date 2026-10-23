@@ -620,7 +620,8 @@
       "clarityId": "y6bw57fiim",
       "hostname": "idle.aliveville.com",
       "wiredFiles": [
-        "web-playables/apps/hub/index.html"
+        "web-playables/apps/hub/index.html",
+        "web-playables/apps/hub/public/clarity.js"
       ],
       "reason": "Clarity covers only the public hub; the playable game, embeddable build, and YouTube certification bundle remain analytics-free.",
       "browserSurfaces": [
