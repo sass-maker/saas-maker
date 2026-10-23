@@ -25,7 +25,7 @@
         },
         {
           "field": "sharing.evidence.reason",
-          "value": "Published v1.16.0 (2026-10-09, GitHub Latest, release run 37886067815 from d54a3c19): CodeVetter-1.16.0-arm64.dmg SHA-256 d1e43ea2325c904efa296f9db0bb70614a649812f3fdf2273746a1b96031f8cd matches the GitHub asset digest; the bundled CodeVetter.app 1.16.0 (build 11600) passes strict codesign and Gatekeeper as a notarized Developer ID app. The DMG container itself is unsigned and unstapled. The release publishes a Sparkle appcast for 1.16.0. Not installed or launched in this audit; foreground native workflow and in-app Sparkle installation remain unexercised."
+          "value": "Published macOS v1.16.3 (build 11603) from c65347e37fb6709db04b3b93b66da1f1bf66095d on 2026-10-23. All three public assets match their release digests; the ZIP SHA-256 is 9eb363f185237abd1456a4d2b9c2f4592e1b746bccbd44393547712b41a28a8b. Strict code signing, notarized Developer ID Gatekeeper, stapling and DMG checksum checks pass. The isolated bundled CLI reports 1.16.3, and its corrected coverage module matches source bytes. All 17 release readiness checks and isolated hosted upgrade, relaunch, data-preservation and rollback proofs pass. The matching Pages and Worker website releases show correct download links at three widths. Owner foreground use and in-app Sparkle installation remain unqualified. Earlier qualifications remain historical."
         }
       ]
     },
