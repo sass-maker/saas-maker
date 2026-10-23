@@ -41,7 +41,7 @@
         },
         {
           "field": "purpose.audience",
-          "value": "internal"
+          "value": "public"
         },
         {
           "field": "classification.kind",
@@ -699,7 +699,7 @@
         },
         {
           "field": "purpose.audience",
-          "value": "public"
+          "value": "internal"
         },
         {
           "field": "presentation.directory.platforms",
@@ -991,7 +991,7 @@
         },
         {
           "field": "purpose.audience",
-          "value": "public"
+          "value": "internal"
         },
         {
           "field": "presentation.directory.platforms",

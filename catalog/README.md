@@ -25,8 +25,13 @@ Each of the 72 product identities has these sections (optional fields stay absen
 `classification.purposeCategories` is a non-exclusive array of intended reasons
 for keeping an application: `attention-money-grabber`, `learn-skill-showoff`,
 and `personal-use`. Each primary/active application has at least one tag;
-CodeVetter has all three. Every Song Is a Website and Web Playables have only
-`attention-money-grabber`, as explicitly directed by the owner on 2026-10-22.
+CodeVetter has all three. Every Song Is a Website has only
+`attention-money-grabber`. The owner's 2026-10-23 correction classifies the current
+Daddy-series and iOS apps, HeyPace, Live, RolePatch and Starboard as external
+commercial/attention bets, with personal use retained as an overlapping purpose.
+Web Playables, App Health and Formula Composition Engine are internal personal
+tools, exempt from competitive SEO/GEO scoring. These scope decisions supersede
+the earlier assignments and do not reopen deferred development or change lifecycle.
 These tags are separate from topic category, lifecycle, readiness, measured
 usage and earned revenue. A public URL alone does not establish commercial
 intent; an experimental stack alone does not establish a learning purpose.
