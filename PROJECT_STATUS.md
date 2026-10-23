@@ -25,6 +25,15 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-10-23 — Integrated product-quality workspace.** The scoreboard now uses
+  the same sidebar/mobile navigation, shared page headers, theme tokens and
+  controls as feedback, subscribers and project keys. Removed its alternate
+  shell and fixed light palette; comparisons reflow to the available content
+  width without horizontal scrolling. Project feedback pages link to the
+  scoreboard filtered by product name. Existing private storage, evidence,
+  cadence, history and privacy boundaries retain their meaning.
+
+
 - **2026-10-23 — Feedback retry identity.** The hosted endpoint accepts an
   optional project-scoped submission UUID. Identical retries return the same
   feedback; changed content conflicts instead of silently replacing it. A

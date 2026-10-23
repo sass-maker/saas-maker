@@ -19,10 +19,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'SaaS Maker Feedback',
+    default: 'SaaS Maker',
     template: '%s | SaaS Maker',
   },
-  description: 'Review product feedback and manage SaaS Maker project keys.',
+  description:
+    'Review product quality, choose the next improvement and manage feedback and project keys.',
   metadataBase: new URL('https://app.sassmaker.com'),
   robots: { index: false, follow: false },
 };

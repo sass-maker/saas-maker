@@ -8,7 +8,6 @@ import { getLocalDevSession, isLocalAuthBypassEnabled } from '@/lib/local-auth';
 import { UserMenu } from '@/components/user-menu';
 import { CockpitResources } from '@/components/cockpit-resources';
 import { SaaSMakerMark } from '@/components/saas-maker-mark';
-import scoreboardShell from '@/components/scoreboard-shell.module.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,40 +18,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     ? getLocalDevSession()
     : await auth.api.getSession({ headers: requestHeaders });
 
-  if (scoreboardActive) {
-    return (
-      <div className={scoreboardShell.shell}>
-        <header className={scoreboardShell.header}>
-          <div className={scoreboardShell.identity}>
-            <span className={scoreboardShell.mobileMenu}>
-              <MobileNav scoreboardActive />
-            </span>
-            <a href="/projects?view=scoreboard">
-              <SaaSMakerMark />
-              <span>SaaS Maker</span>
-            </a>
-          </div>
-          <nav aria-label="SaaS Maker" className={scoreboardShell.navigation}>
-            <a href="/projects?view=scoreboard" aria-current="page">
-              Product quality
-            </a>
-            <a href="/projects/feedback">Feedback</a>
-            <a href="/projects/subscribers">Subscribers</a>
-            <a href="/projects">Project keys</a>
-          </nav>
-          <UserMenu user={session?.user ?? null} />
-        </header>
-        <CockpitResources key={session?.user?.id ?? 'guest'}>
-          <main className={scoreboardShell.main}>{children}</main>
-        </CockpitResources>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen flex bg-background text-foreground">
       {/* Sidebar - hidden on mobile */}
-      <aside className="hidden md:flex h-screen w-64 flex-col border-r border-border/70 bg-background/82 shadow-[20px_0_70px_-58px_rgba(125,211,252,0.65)] backdrop-blur-xl sticky top-0">
+      <aside className="hidden md:flex h-screen w-64 shrink-0 flex-col border-r border-border/70 bg-background/82 shadow-[20px_0_70px_-58px_rgba(125,211,252,0.65)] backdrop-blur-xl sticky top-0">
         {/* Logo */}
         <div className="border-b border-border/70 p-4">
           <div className="flex items-center justify-between">
@@ -63,7 +32,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                   SaaS Maker
                 </span>
                 <span className="block truncate font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  {scoreboardActive ? 'Product quality' : 'Feedback inbox'}
+                  Product workspace
                 </span>
               </span>
             </a>
@@ -71,9 +40,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           </div>
           <div className="mt-4 flex items-center gap-2 rounded-md border border-border/60 bg-muted/25 px-3 py-2 text-xs text-muted-foreground">
             <Activity className="h-3.5 w-3.5 text-emerald-400" />
-            <span className="truncate">
-              {scoreboardActive ? 'Evidence and next levers' : 'Customer feedback'}
-            </span>
+            <span className="truncate">Quality and feedback</span>
           </div>
         </div>
 
