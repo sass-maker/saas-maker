@@ -498,6 +498,15 @@ export function ScoreboardWorkbench({
               <strong>{resultScores.filter((s) => s.status === 'unknown').length}</strong> outcomes
               unknown
             </span>
+            <span>
+              <strong>
+                {
+                  resultScores.filter((s) => s.status === 'estimated' && s.confidence === 'low')
+                    .length
+                }
+              </strong>{' '}
+              provisional results
+            </span>
           </div>
           {(active || waiting.length > 0) && (
             <div className={styles.cadence} aria-label="One lever cadence">
