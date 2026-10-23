@@ -298,8 +298,14 @@ export function ScoreboardWorkbench({
           </NextLink>
           <small>{p.internal ? 'Internal utility' : p.domains[0]}</small>
           <span className={styles.purposeNames}>
-            {p.purposeCategories?.map((category) => PURPOSE_LABELS[category]).join(' · ') ||
-              'Purpose unclassified'}
+            {p.purposeCategories?.length
+              ? p.purposeCategories.map((category, index) => (
+                  <span key={category}>
+                    {index > 0 && ' · '}
+                    {PURPOSE_LABELS[category]}
+                  </span>
+                ))
+              : 'Purpose unclassified'}
           </span>
         </span>
       ),

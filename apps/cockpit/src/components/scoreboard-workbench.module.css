@@ -29,6 +29,7 @@
 .guideGrid h3 { font-weight: 550; font-size: 12px; margin-bottom: 8px; }
 .guideGrid p { color: var(--quiet); margin: 8px 0 0; }
 .purposeNames { display: block; color: var(--quiet); font-size: 11px; line-height: 1.5; margin-top: 6px; overflow-wrap: anywhere; }
+.purposeNames > span { display: inline-block; white-space: nowrap; }
 .productCell a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .productInfo h2 { font-size: 16px; font-weight: 550; margin-bottom: 12px; }
 .backLink { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; margin: 0 0 24px; color: var(--quiet); }
