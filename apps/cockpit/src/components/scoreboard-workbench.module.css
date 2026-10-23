@@ -45,7 +45,7 @@
 .productReadings { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .productReadings button { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; padding: 8px; font-size: 11px; border: 1px solid var(--line); border-radius: 5px; }
 .productReadings .score { font-size: 18px; }
-.productTask { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; border-top: 1px solid var(--line); padding-top: 16px; margin-top: 18px; text-align: left; font-size: 10px; color: var(--quiet); }
+.productInfo .productTask { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; border-top: 1px solid var(--line); padding-top: 16px; margin-top: 18px; text-align: left; font-size: 10px; color: var(--quiet); }
 .productTask strong { display: block; color: var(--foreground); font-size: 12px; line-height: 1.7; margin-top: 5px; font-weight: 500; }
 .productTask svg { flex-shrink: 0; }
 .tools { flex-wrap: wrap; }
@@ -229,7 +229,7 @@
   .tabs button { font-size: 12px; padding: 12px 0; }
   .tools { gap: 7px; padding: 13px 0 8px; }
   .tools > .search { height: 40px; }
-  .tools select { height: 40px; font-size: 10px; padding: 0 7px; }
+  .tools select { flex: 1 1 calc(50% - 7px); width: calc(50% - 7px); height: 40px; font-size: 11px; padding: 0 9px; }
   .tableFoot { font-size: 9px; }
   .tableFoot span { max-width: 170px; }
   .workbench [data-slot=data-table] th { height: 40px; }
@@ -402,7 +402,7 @@
   .portfolioTable .tableCell { display: flex; align-items: center; gap: 4px; min-width: 0; }
   .portfolioTable .tableCell > div { flex: 1; }
   .portfolioTable .narrowCellLabel { display: inline; flex-shrink: 0; min-height: 0; margin: 0; font-size: 9px; line-height: 1.4; color: var(--quiet); }
-  .portfolioTable td[data-column-id$=":effort"] .narrowCellGroup { display: block; position: absolute; top: 3px; left: 0; width: calc(200% + 4px); font-size: 10px; font-weight: 500; line-height: 1.4; color: var(--foreground); }
+  .portfolioTable td[data-column-id$=":effort"] .narrowCellGroup { display: block; position: absolute; z-index: 1; pointer-events: none; top: 3px; left: 0; width: calc(200% + 4px); font-size: 10px; font-weight: 500; line-height: 1.4; color: var(--foreground); }
   .portfolioTable .scoreButton { min-height: 36px; padding: 6px 0 !important; }
   .portfolioTable .score { font-size: 14px; }
   .portfolioTable .exempt { font-size: 9px; }

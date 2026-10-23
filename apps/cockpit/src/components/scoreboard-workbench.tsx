@@ -281,7 +281,11 @@ export function ScoreboardWorkbench({
       minWidth: '10rem',
       cell: (p) => (
         <span className={styles.productCell}>
-          <NextLink href={`/projects?view=scoreboard&product=${encodeURIComponent(p.id)}`}>
+          <NextLink
+            href={`/projects?view=scoreboard&product=${encodeURIComponent(p.id)}`}
+            onClick={(event) => event.stopPropagation()}
+            onKeyDown={(event) => event.stopPropagation()}
+          >
             <strong>{p.name}</strong>
           </NextLink>
           <small>{p.internal ? 'Internal utility' : p.domains[0]}</small>
@@ -721,7 +725,6 @@ export function ScoreboardWorkbench({
                       columns={columns}
                       getRowId={(p) => p.id}
                       label="Compare product scores"
-                      selectedId={selectedProject.id}
                       onRowClick={(p) => {
                         router.push(
                           `/projects?view=scoreboard&product=${encodeURIComponent(p.id)}`
