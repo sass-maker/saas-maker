@@ -1,16 +1,32 @@
 # Fleet product checklist
 
-Use this checklist for initial readiness and ongoing care of existing Fleet
-products. New projects start only when the owner explicitly asks for one.
-Keep this canonical path so existing project instructions continue to find it.
-Each item points at its owning workflow; this is the index, not another tracker.
+Use this canonical checklist for initial readiness and ongoing product care.
+New projects require an explicit owner request. Each item points at its owning
+workflow; this is the index, not another tracker.
 
 The operating cycle is **inspect → prioritize → improve → verify live →
-measure outcomes → decide the next action**. Apply it to SEO, GEO, design,
-product capabilities, performance, reliability, and distribution. A connected
-collector, passing source audit, or completed report covers only part of that
-cycle. A good review may justify leaving a surface alone, with a reason and
-next review date.
+measure outcomes → decide the next action**. A collector, source audit or report
+covers only part of that cycle. A review may justify leaving a surface alone,
+with a reason and next review date.
+
+## The six scored categories
+
+The phases feed the [product scoreboard's](../../docs/product-scoreboard.md) six categories:
+
+| Category | Evidence of execution and outcomes |
+| --- | --- |
+| Product & feature parity | Complete promised workflows and useful results against relevant alternatives |
+| Design & delight | Rendered usability, recovery and uncoached comprehension/preference observations |
+| SEO & growth | Current intent-matched pages, qualified discovery and useful organic actions |
+| GEO & AI visibility | Answer-ready evidence and observed inclusion, citations and accurate recommendations |
+| Measurement & learning | Reliable collection plus a dated signal → decision → action → follow-up result |
+| Engineering & operations | Correctness, performance, privacy, reliability and recovery in intended runtimes |
+
+Each category has separate Effort and Result readings out of 10, with independent
+totals out of 60 before justified exemptions. Effort is execution quality and
+completeness; Result is demonstrated benefit. Keep evidence, dates, confidence
+and unknowns explicit. Use the guide's rubric and one-lever cadence; hours and
+tool presence do not earn points.
 
 ## Scope and completion
 
@@ -23,13 +39,15 @@ next review date.
 - [ ] Keep implementation, live verification, and observed outcomes separate.
       Record the relevant release/URL, evidence date, measurement window and
       coverage. An old pass does not qualify a changed product indefinitely.
-- [ ] Agree realistic targets and review horizons. Report improving, flat,
-      declining or unknown outcomes with reasons and the next action. Working
-      instrumentation does not establish growth; flat results are not an
-      automatic implementation failure or permission for endless expansion.
-- [ ] Finish safe work within the authorized scope. Surface public release,
-      purchase and other owner decisions with concrete prepared work. Do not
-      install schedules, publish pages or send outreach merely by checking a box.
+- [ ] Set realistic targets and review horizons; report improving, flat,
+      declining or unknown outcomes with reasons and a next action.
+      Instrumentation does not establish growth; flat results alone do not
+      justify endless expansion.
+- [ ] Finish safe work within the authorized scope, following the global
+      release-autonomy policy. Small fixes and additive compatible changes have
+      standing release authorization after checks and rollback preparation;
+      other public releases need approval unless already approved. Do not install
+      schedules or send outreach merely by checking a box.
 
 ## 0. Decide
 
@@ -55,8 +73,7 @@ Via the `fleet-init` skill (`tooling/scripts/fleet-init.sh`):
 - [ ] README that gets a stranger running, plus a local clone-to-serving check
       (`tooling/scripts/verify-local.mjs`)
 
-The Fleet root is not a Git repository and has no README index; the catalog
-in phase 2 is the project list.
+The Fleet root is unversioned; the catalog in phase 2 is the project list.
 
 ## 2. Register in the portfolio
 
@@ -101,8 +118,10 @@ in phase 2 is the project list.
       remain appropriate as the product changes; failures have an owner and a
       tested recovery path where data or service continuity requires one
 
-## 5. Deploy + links (owner approves the deploy)
+## 5. Deploy + links
 
+- [ ] Confirm release authorization under the global policy above; prepare
+      rollback and verify the actual live change after release
 - [ ] Deployed (Cloudflare by default); every Cloudflare resource attributed
       to this project in the catalog/dossier, nothing unowned
 - [ ] `cloudflare-spend-guard`: new resources stay inside free tier or
@@ -253,10 +272,9 @@ also applies; technical eligibility does not guarantee visibility or growth.
       investigate, retire or wait for a defined observation window. Name the
       affected page/workflow, reason, expected outcome and follow-up date;
       complete in-scope repairs rather than only producing another report
-- [ ] Maintain page and product freshness, keyword/intent fit, competitive
-      coverage, AI-answer accuracy, rendered usability, core-workflow parity,
-      performance and reliability. Prioritize the highest-value evidenced gaps
-      within the product's intended lifecycle
+- [ ] Maintain freshness, intent fit, competitive coverage, AI-answer accuracy,
+      usability, core-workflow parity, performance and reliability; prioritize
+      evidenced gaps within the product's intended lifecycle
 - [ ] After an authorized release, verify the live change and compare outcomes
       with the recorded baseline. Explain flat/declining results, concurrent
       changes and uncertainty; do not claim causation from a before/after chart
@@ -265,6 +283,10 @@ also applies; technical eligibility does not guarantee visibility or growth.
       implemented, live-verified and outcome-reviewed work, with justified
       exceptions and current dates. Checklist completion never means every
       future outcome is guaranteed
+- [ ] For scored product work, update the affected private assessment and lever:
+      work completed, observed result, dated proof, remaining gate and best next
+      action. Keep prior assessments/progress, validate the import, refresh the
+      live workspace and export a backup as the scoreboard guide describes
 
 ## Conditional branches
 
