@@ -25,7 +25,7 @@
         },
         {
           "field": "sharing.evidence.reason",
-          "value": "Published macOS v1.16.3 (build 11603) from c65347e37fb6709db04b3b93b66da1f1bf66095d on 2026-10-23. All three public assets match their release digests; the ZIP SHA-256 is 9eb363f185237abd1456a4d2b9c2f4592e1b746bccbd44393547712b41a28a8b. Strict code signing, notarized Developer ID Gatekeeper, stapling and DMG checksum checks pass. The isolated bundled CLI reports 1.16.3, and its corrected coverage module matches source bytes. All 17 release readiness checks and isolated hosted upgrade, relaunch, data-preservation and rollback proofs pass. The matching Pages and Worker website releases show correct download links at three widths. Owner foreground use and in-app Sparkle installation remain unqualified. Earlier qualifications remain historical."
+          "value": "Published macOS v1.16.4 (build 11604) from bea17e4272ee9aa7f612a37389b6572041994954 on 2026-10-23 at 13:11:30 UTC. All three public assets match their release digests; the ZIP SHA-256 is b6ccf2d93ea79d720e860a9c71eb797bc98b77a5f4bef25dfd1e8c6ac725ee91. Strict code signing, notarized Developer ID Gatekeeper, stapling and DMG checksum checks pass. The isolated bundled CLI reports 1.16.4, and its corrected coverage module matches source bytes and passes all 17 published-module provenance regressions. All 17 release readiness checks and isolated hosted upgrade, relaunch, data-preservation and rollback proofs pass. The matching Pages and Worker website releases show correct download links at three widths. Installed 1.15.0 and active MCP clients were preserved. Owner foreground use and in-app Sparkle installation remain unqualified. Earlier qualifications remain historical."
         }
       ]
     },
