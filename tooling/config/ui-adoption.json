@@ -584,8 +584,8 @@
         ],
         "libraryVersion": {
           "state": "unknown",
-          "notes": "No SaaS Maker UI dependency specification was found in the bounded manifest inspection; copied or vendored assets and live versions remain unverified.",
-          "checkedAt": "2026-10-14",
+          "notes": "No UI package dependency specification exists in the bounded manifest inspection. The copied Studio footer is now byte-verified from UI Library45222b86 (asset7f69cbbe) and passes real production three-width retry checks. Other shared components and full landing/app continuity remain unqualified.",
+          "checkedAt": "2026-10-23",
           "evidence": [
             "saas-maker/package.json",
             "saas-maker/workers/api/package.json",
@@ -594,7 +594,8 @@
             "saas-maker/packages/ai-chat-footer/package.json",
             "saas-maker/packages/newsletter-capture/package.json",
             "saas-maker/packages/portfolio-project-strip/package.json",
-            "saas-maker/packages/widgets/feedback-widget/package.json"
+            "saas-maker/packages/widgets/feedback-widget/package.json",
+            "saas-maker/.fleet-local/feedback-retry-167-20261023/studio-production-summary.json"
           ]
         },
         "loading": {
