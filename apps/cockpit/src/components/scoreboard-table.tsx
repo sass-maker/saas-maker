@@ -5,7 +5,7 @@ import { ArrowDown, ArrowUp } from 'lucide-react';
 import { DataTable, type DataColumn, type DataSort } from '@saas-maker/ui/components/data-table';
 import styles from './scoreboard-workbench.module.css';
 
-/** The shared table's sorting/paging, with page scrolling and labelled narrow rows. */
+/** One sortable report, with page scrolling and labelled narrow rows. */
 export function ScoreboardTable<T extends object>({
   data,
   columns,
@@ -46,6 +46,9 @@ export function ScoreboardTable<T extends object>({
   return (
     <div className={`${styles.responsiveTable} ${className}`}>
       <DataTable
+        // The shared table initializes page size on mount. Keep every filtered
+        // row visible; sorting stays controlled above when the row count changes.
+        key={data.length}
         data={data}
         columns={labelled}
         getRowId={getRowId}
@@ -59,7 +62,7 @@ export function ScoreboardTable<T extends object>({
           setSort(next.length || !current ? next : [{ ...current, desc: !current.desc }]);
         }}
         maxHeight="none"
-        pageSize={20}
+        pageSize={Math.max(1, data.length)}
         toolbar={() => (
           <div className={styles.narrowSort}>
             <label>

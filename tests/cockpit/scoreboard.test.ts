@@ -11,6 +11,8 @@ import {
   parseWorkspace,
   planNextLever,
   prerequisiteSatisfied,
+  productPriority,
+  productPriorityLabel,
   readScoreboardStorage,
   safeEvidenceUrl,
   scoreTotal,
@@ -21,6 +23,37 @@ import {
   type ScoreProject,
   type ScoreSnapshot,
 } from '../../apps/cockpit/src/lib/scoreboard';
+
+describe('owner purpose and product priority', () => {
+  it('prioritizes either learning or commercial intent and preserves overlapping personal use', () => {
+    const snapshot = fixture();
+    const project = snapshot.projects[0];
+    expect(productPriorityLabel(project)).toBe('Unclassified');
+    project.purposeCategories = ['personal-use'];
+    expect(productPriorityLabel(project)).toBe('Personal use');
+    expect(productPriority(project)).toBe(1);
+    for (const purpose of ['learn-skill-showoff', 'attention-money-grabber'] as const) {
+      project.purposeCategories = [purpose, 'personal-use'];
+      expect(productPriority(project)).toBe(0);
+      expect(productPriorityLabel(project)).toBe('Focus');
+      expect(
+        parseWorkspace(JSON.stringify(snapshot)).snapshot.projects[0].purposeCategories
+      ).toEqual([purpose, 'personal-use']);
+    }
+  });
+
+  it('rejects invalid or duplicated purposes while accepting older imports', () => {
+    const snapshot = fixture();
+    expect(() => validateSnapshot(snapshot)).not.toThrow();
+    for (const purposes of [['unknown'], ['__proto__'], ['personal-use', 'personal-use']]) {
+      const invalid = structuredClone(snapshot) as unknown as {
+        projects: { purposeCategories: string[] }[];
+      };
+      invalid.projects[0].purposeCategories = purposes;
+      expect(() => validateSnapshot(invalid)).toThrow(/Purpose categories/);
+    }
+  });
+});
 
 function fixture(): ScoreSnapshot {
   const projects = ['example-one', 'example-two'].map((id) => ({

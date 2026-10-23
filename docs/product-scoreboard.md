@@ -93,11 +93,35 @@ scope, device and missing evidence rather than transferring a landing score.
    alternate ascending and descending. Total sorts the displayed known points,
    including clearly marked partial totals; entirely unassessed or exempt totals
    remain last. A partial total is never extrapolated to sixty.
-5. Click a score for its evidence sheet, or a product row for its best next lever.
-   The selected lever shows the change, finish line, full plan and prerequisites.
+5. Click a product row or its name for that product's information page: owner
+   purposes, priority, scope, six score pairs and the best next lever. Click a
+   score for its evidence sheet; score buttons do not navigate away. The next
+   task in each area opens its change, finish line, full plan and prerequisites.
 6. Use search, area, domain, scope and status filters to choose a focus. Focus
    links can also narrow to one product. Choose **Next levers** to browse actions
    or **History** for dated score comparisons, evidence and lever outcomes.
+
+The report shows all matching rows on one page, with normal page scrolling.
+There is no pagination or nested table scroll. Search, filters and sorting work
+across the complete set. The inline scoring guide explains the rubric, partial
+totals, confidence, internal exemptions and weekly review process.
+
+`purposeCategories` is optional imported owner metadata using the canonical
+catalog's three non-exclusive labels. Learning/skill and commercial/attention
+bets receive **Focus** priority, ahead of personal-use-only tools. Unclassified
+older imports remain explicitly unclassified. This priority is separate from
+quality scores, maturity, revenue and individual lever urgency. It is the
+default product ordering; the Priority header reverses it like every numeric
+header, and the Purpose filter supports both the combined Focus group and each
+individual label. The private catalog is never bundled into the application.
+
+The owner reset the working reports to one baseline on 23 October 2026. Older
+review exports remain in a recoverable local archive; they are not active
+scoreboard assessments. From this baseline, finish selected tasks and record
+work, observed outcomes and evidence before the weekly report update. Reassess
+only affected readings. Deferred participant checks and observation windows
+stay explicit tasks. Weekly reports retain subsequent dated comparisons; this
+cadence is not an automatic rating increase or a newly installed scheduler.
 7. Open **Review & backup** for coverage, scale, private import and export.
 
 The approved portfolio sheet uses a light working surface below the dark brand

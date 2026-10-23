@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import NextLink from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -37,6 +39,9 @@ import {
   prerequisiteSatisfied,
   scoreTotal,
   scoreReading,
+  PURPOSE_LABELS,
+  productPriority,
+  productPriorityLabel,
   type ScoreMetric,
   transitionLever,
   type CycleRecord,
@@ -49,6 +54,8 @@ import styles from './scoreboard-workbench.module.css';
 import { CategoryEvidence, ScorePair, ScoreValue } from './scoreboard-evidence';
 import { ScoreHistory, ScoreDelta } from './scoreboard-history';
 import { ScoreboardTable } from './scoreboard-table';
+import { ScoreboardGuide } from './scoreboard-guide';
+import { ScoreboardProduct } from './scoreboard-product';
 
 const short = CATEGORY_LABELS;
 const priority = { critical: 0, high: 1, normal: 2 };
@@ -77,13 +84,18 @@ export function ScoreboardWorkbench({
   saved: boolean;
 }) {
   const { snapshot } = workspace;
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const infoId = searchParams.get('product');
+  const infoProject = snapshot.projects.find((p) => p.id === infoId);
   const [query, setQuery] = useState('');
   const [scope, setScope] = useState('all');
+  const [purpose, setPurpose] = useState('all');
   const [area, setArea] = useState('all');
   const [domain, setDomain] = useState('all');
   const [projectFilter, setProjectFilter] = useState('');
   const [status, setStatus] = useState('all');
-  const [sort, setSort] = useState<DataSort>([{ id: 'total:result', desc: false }]);
+  const [sort, setSort] = useState<DataSort>([{ id: 'priority', desc: false }]);
   const [selected, setSelected] = useState('');
   const [sheet, setSheet] = useState<'evidence' | 'action' | 'review' | null>(null);
   const [view, setView] = useState('scores');
@@ -111,6 +123,8 @@ export function ScoreboardWorkbench({
     () =>
       [...snapshot.levers].sort(
         (a, b) =>
+          productPriority(byProject.get(a.projectId)!) -
+            productPriority(byProject.get(b.projectId)!) ||
           priority[a.priority] - priority[b.priority] ||
           byProject.get(a.projectId)!.name.localeCompare(byProject.get(b.projectId)!.name)
       ),
@@ -148,6 +162,7 @@ export function ScoreboardWorkbench({
           (p) =>
             (!projectFilter || p.id === projectFilter) &&
             (scope === 'all' || (scope === 'internal' ? p.internal : !p.internal)) &&
+            matchesPurpose(p) &&
             (domain === 'all' || p.domains.includes(domain)) &&
             (!query ||
               [p.name, p.segment, ...p.domains]
@@ -157,16 +172,19 @@ export function ScoreboardWorkbench({
         )
         .sort(
           (a, b) =>
+            productPriority(a) - productPriority(b) ||
             priority[byLever.get(a.bestNextLeverId)!.priority] -
-              priority[byLever.get(b.bestNextLeverId)!.priority] || a.name.localeCompare(b.name)
+              priority[byLever.get(b.bestNextLeverId)!.priority] ||
+            a.name.localeCompare(b.name)
         ),
-    [snapshot, scope, domain, query, projectFilter, byLever]
+    [snapshot, scope, purpose, domain, query, projectFilter, byLever]
   );
   const actions = orderedLevers.filter((l) => {
     const p = byProject.get(l.projectId)!;
     return (
       (!projectFilter || p.id === projectFilter) &&
       (scope === 'all' || (scope === 'internal' ? p.internal : !p.internal)) &&
+      matchesPurpose(p) &&
       (domain === 'all' || p.domains.includes(domain)) &&
       (!query ||
         [p.name, ...p.domains, l.title, l.action]
@@ -189,6 +207,7 @@ export function ScoreboardWorkbench({
     query ||
     projectFilter ||
     scope !== 'all' ||
+    purpose !== 'all' ||
     area !== 'all' ||
     domain !== 'all' ||
     status !== 'all';
@@ -206,6 +225,12 @@ export function ScoreboardWorkbench({
     (s) => s.status === 'estimated' && s.confidence === 'low'
   ).length;
   const domains = [...new Set(snapshot.projects.flatMap((p) => p.domains))].sort();
+
+  function matchesPurpose(p: ScoreProject) {
+    if (purpose === 'all') return true;
+    if (purpose === 'focus') return productPriority(p) === 0;
+    return p.purposeCategories?.some((category) => category === purpose) ?? false;
+  }
 
   function choose(l: Lever) {
     setSelected(l.id);
@@ -238,11 +263,12 @@ export function ScoreboardWorkbench({
   function resetFilters() {
     setQuery('');
     setScope('all');
+    setPurpose('all');
     setArea('all');
     setDomain('all');
     setProjectFilter('');
     setStatus('all');
-    setSort([{ id: 'total:result', desc: false }]);
+    setSort([{ id: 'priority', desc: false }]);
     setSelected('');
   }
 
@@ -255,10 +281,24 @@ export function ScoreboardWorkbench({
       minWidth: '10rem',
       cell: (p) => (
         <span className={styles.productCell}>
-          <strong>{p.name}</strong>
+          <NextLink href={`/projects?view=scoreboard&product=${encodeURIComponent(p.id)}`}>
+            <strong>{p.name}</strong>
+          </NextLink>
           <small>{p.internal ? 'Internal utility' : p.domains[0]}</small>
+          <span className={styles.purposeNames}>
+            {p.purposeCategories?.map((category) => PURPOSE_LABELS[category]).join(' · ') ||
+              'Purpose unclassified'}
+          </span>
         </span>
       ),
+    },
+    {
+      id: 'priority',
+      header: 'Priority',
+      value: productPriority,
+      hideable: false,
+      sortDescFirst: false,
+      cell: (p) => <span className={styles.priority}>{productPriorityLabel(p)}</span>,
     },
     ...SCORE_CATEGORIES.filter((c) => area === 'all' || area === c).flatMap((c) =>
       (['effort', 'result'] as const).map((m) => ({
@@ -320,7 +360,7 @@ export function ScoreboardWorkbench({
           >
             <span>{t.knownMax ? formatScore(t.sum) : t.maximum === 0 ? 'Exempt' : 'Unknown'}</span>
             {t.maximum > 0 && <small>/{t.maximum}</small>}
-            {t.unknown > 0 && <small className={styles.pendingTotal}>{t.unknown} pending</small>}
+            {t.unknown > 0 && <small className={styles.pendingTotal}>{t.unknown} unknown</small>}
           </span>
         );
       },
@@ -392,373 +432,415 @@ export function ScoreboardWorkbench({
 
   return (
     <div className={styles.workbench}>
-      <header className={styles.header}>
-        <div>
-          <div className={styles.eyebrow}>Product quality</div>
-          <h1>Product scoreboard</h1>
-          <p>Compare the work with the result. Open a number for its evidence.</p>
-        </div>
-        <button
-          className={styles.reviewButton}
-          onClick={() => setSheet('review')}
-          aria-label="Review details, import and export"
-        >
-          <FileText size={16} />
-          <span>
-            Review & backup
-            <small>
-              {dateLabel(snapshot.assessedAt)} · {snapshot.projects.length} products
-            </small>
-          </span>
-        </button>
-      </header>
-      <div className={styles.coverage} aria-label="Assessment coverage">
-        <span>
-          <strong>{effortScores.filter((s) => s.status === 'estimated').length}</strong> effort
-          scores
-        </span>
-        <span>
-          <strong>{resultScores.filter((s) => s.status === 'estimated').length}</strong> result
-          scores
-        </span>
-        <span>
-          <strong>{resultScores.filter((s) => s.status === 'unknown').length}</strong> outcomes
-          unknown
-        </span>
-      </div>
-      {(active || waiting.length > 0) && (
-        <div className={styles.cadence} aria-label="One lever cadence">
-          {active ? (
-            <button
-              onClick={() => {
-                setSelected(active.leverId);
-                setSheet('action');
-              }}
-            >
-              <span className={styles.activeDot} />
-              Active · {byProject.get(byLever.get(active.leverId)!.projectId)!.name}
-              <strong>{active.plan.title}</strong>
-              <ArrowUpRight size={14} />
-            </button>
-          ) : (
-            <span>No active lever. Choose the next ready change.</span>
-          )}
-          {waiting.length > 0 && (
-            <button
-              onClick={() => {
-                setView('actions');
-                setStatus('awaiting_evidence');
-                setQuery('');
-                setScope('all');
-                setDomain('all');
-                setArea('all');
-                setProjectFilter('');
-              }}
-            >
-              {waiting.length} awaiting evidence
-            </button>
-          )}
-        </div>
-      )}
-      <div className={styles.tabs}>
-        <div>
-          <button
-            aria-pressed={view === 'scores'}
-            onClick={() => {
-              setView('scores');
-              setStatus('all');
-            }}
-          >
-            Scores <span>{projects.length}</span>
-          </button>
-          <button aria-pressed={view === 'actions'} onClick={() => setView('actions')}>
-            Next levers <span>{actions.length}</span>
-          </button>
-          <button aria-pressed={view === 'history'} onClick={() => setView('history')}>
-            History <span>{reviews.length + workspace.history.length}</span>
-          </button>
-        </div>
-        <span>Effort /10 · Result /10 · two totals /60</span>
-      </div>
-      {view !== 'history' && (
+      {infoProject ? (
+        <ScoreboardProduct
+          project={infoProject}
+          workspace={workspace}
+          onEvidence={(category, reading) => selectScore(infoProject, category, reading)}
+          onLever={(id) => {
+            setSelected(id);
+            setSheet('action');
+          }}
+        />
+      ) : infoId ? (
+        <section className={styles.empty}>
+          <h1>Product not in this report</h1>
+          <p>The saved report on this device does not contain this product.</p>
+          <NextLink href="/projects?view=scoreboard">Back to all products</NextLink>
+        </section>
+      ) : (
         <>
-          <div className={styles.tools}>
-            <label className={styles.search}>
-              <Search size={15} />
-              <input
-                aria-label="Search products or domains"
-                placeholder={
-                  view === 'actions'
-                    ? 'Find a product, domain or fix…'
-                    : 'Find a product or domain…'
-                }
-                value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  setSelected('');
-                }}
-              />
-            </label>
-            <select
-              aria-label="Scope"
-              value={scope}
-              onChange={(e) => {
-                setScope(e.target.value);
-                setSelected('');
-              }}
+          <header className={styles.header}>
+            <div>
+              <div className={styles.eyebrow}>Product quality</div>
+              <h1>Product scoreboard</h1>
+              <p>Compare the work with the result. Open a number for its evidence.</p>
+            </div>
+            <button
+              className={styles.reviewButton}
+              onClick={() => setSheet('review')}
+              aria-label="Review details, import and export"
             >
-              <option value="all">All products</option>
-              <option value="products">Public products</option>
-              <option value="internal">Internal tools</option>
-            </select>
-            <select
-              aria-label="Area"
-              value={area}
-              onChange={(e) => {
-                setArea(e.target.value);
-                setSelected('');
-                setSort([
-                  {
-                    id: e.target.value === 'all' ? 'total:result' : `${e.target.value}:result`,
-                    desc: false,
-                  },
-                ]);
-              }}
-            >
-              <option value="all">All six areas</option>
-              {SCORE_CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {CATEGORY_LABELS[c]}
-                </option>
-              ))}
-            </select>
-            <select
-              aria-label="Domain"
-              value={domain}
-              onChange={(e) => {
-                setDomain(e.target.value);
-                setSelected('');
-              }}
-            >
-              <option value="all">All domains</option>
-              {domains.map((d) => (
-                <option key={d}>{d}</option>
-              ))}
-            </select>
-          </div>
-          {(query ||
-            scope !== 'all' ||
-            area !== 'all' ||
-            domain !== 'all' ||
-            projectFilter ||
-            status !== 'all') && (
-            <div className={styles.filterSummary}>
+              <FileText size={16} />
               <span>
-                {projectFilter ? `Product: ${byProject.get(projectFilter)?.name} · ` : ''}
-                {view === 'scores'
-                  ? `${projects.length} products`
-                  : `${actions.length} recommendations`}{' '}
-                match
+                Review & backup
+                <small>
+                  {dateLabel(snapshot.assessedAt)} · {snapshot.projects.length} products
+                </small>
               </span>
-              <button onClick={resetFilters}>
-                <RotateCcw size={12} />
-                Reset filters
-              </button>
+            </button>
+          </header>
+          <ScoreboardGuide target={snapshot.target} />
+          <div className={styles.coverage} aria-label="Assessment coverage">
+            <span>
+              <strong>{effortScores.filter((s) => s.status === 'estimated').length}</strong> effort
+              scores
+            </span>
+            <span>
+              <strong>{resultScores.filter((s) => s.status === 'estimated').length}</strong> result
+              scores
+            </span>
+            <span>
+              <strong>{resultScores.filter((s) => s.status === 'unknown').length}</strong> outcomes
+              unknown
+            </span>
+          </div>
+          {(active || waiting.length > 0) && (
+            <div className={styles.cadence} aria-label="One lever cadence">
+              {active ? (
+                <button
+                  onClick={() => {
+                    setSelected(active.leverId);
+                    setSheet('action');
+                  }}
+                >
+                  <span className={styles.activeDot} />
+                  Active · {byProject.get(byLever.get(active.leverId)!.projectId)!.name}
+                  <strong>{active.plan.title}</strong>
+                  <ArrowUpRight size={14} />
+                </button>
+              ) : (
+                <span>No active lever. Choose the next ready change.</span>
+              )}
+              {waiting.length > 0 && (
+                <button
+                  onClick={() => {
+                    setView('actions');
+                    setStatus('awaiting_evidence');
+                    setQuery('');
+                    setScope('all');
+                    setDomain('all');
+                    setArea('all');
+                    setProjectFilter('');
+                  }}
+                >
+                  {waiting.length} awaiting evidence
+                </button>
+              )}
             </div>
           )}
-          {view === 'actions' && (
-            <label className={styles.statusFilter}>
-              Status{' '}
-              <select
-                aria-label="Lever status"
-                value={status}
-                onChange={(e) => {
-                  setStatus(e.target.value);
-                  setSelected('');
+          <div className={styles.tabs}>
+            <div>
+              <button
+                aria-pressed={view === 'scores'}
+                onClick={() => {
+                  setView('scores');
+                  setStatus('all');
                 }}
               >
-                <option value="all">All actions</option>
-                {Object.entries(statusLabel).map(([id, label]) => (
-                  <option key={id} value={id}>
-                    {label}
-                  </option>
-                ))}
-                <option value="scope">Scope decisions</option>
-              </select>
-            </label>
-          )}
-          {hasMatches && view === 'actions' && (
-            <button className={styles.selectedLeverLink} onClick={() => setSheet('action')}>
-              <span>Next lever · {selectedProject.name}</span>
-              <strong>{lever.title}</strong>
-              <ArrowUpRight size={15} />
-            </button>
-          )}
-          <div
-            className={styles.compareGrid}
-            style={hasMatches ? undefined : { gridTemplateColumns: 'minmax(0, 1fr)' }}
-          >
-            <div className={`${styles.tablePane} ${view === 'actions' ? styles.actionTable : ''}`}>
-              <div className={styles.comparisonContext}>
-                {view === 'actions' && (
-                  <div className={styles.metricSwitch} aria-label="Sort score">
-                    <span>Sort score</span>
-                    {(['effort', 'result'] as const).map((m) => (
-                      <button key={m} aria-pressed={metric === m} onClick={() => setMetric(m)}>
-                        {m === 'effort' ? 'Effort' : 'Result'}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                {view === 'scores' &&
-                  (reviews.length > 1 ? (
-                    <label>
-                      Change since{' '}
-                      <select
-                        aria-label="Score baseline"
-                        value={baseline.id}
-                        onChange={(e) => setBaselineId(e.target.value)}
-                      >
-                        {reviews.map((r, i) => (
-                          <option key={r.id} value={r.id}>
-                            {dateLabel(r.assessedAt)} · {i + 1}. {r.label}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  ) : (
-                    <span>Baseline saved · {dateLabel(snapshot.assessedAt)}</span>
-                  ))}
-                {view === 'scores' && (
-                  <button onClick={() => setView('history')}>
-                    View score history <ArrowUpRight size={12} />
-                  </button>
-                )}
-              </div>
-              {view === 'scores' ? (
-                <ScoreboardTable
-                  key={`scores:${area}`}
-                  className={styles.portfolioTable}
-                  data={projects}
-                  columns={columns}
-                  getRowId={(p) => p.id}
-                  label="Compare product scores"
-                  selectedId={selectedProject.id}
-                  onRowClick={(p) => {
-                    choose(byLever.get(p.bestNextLeverId)!);
-                    setSheet('action');
-                  }}
-                  sort={sort}
-                  onSortChange={setSort}
-                />
-              ) : (
-                <ScoreboardTable
-                  key="actions"
-                  data={actions}
-                  columns={actionColumns}
-                  getRowId={(l) => l.id}
-                  label="Next lever queue"
-                  selectedId={lever.id}
-                  onRowClick={(l) => {
-                    choose(l);
-                    setSheet('action');
-                  }}
-                />
-              )}
-              <p className={styles.tableFoot}>
-                ◦ Provisional estimate
-                <span>
-                  Total sorts by displayed known points for Effort or Result. Partial totals stay
-                  marked; no known scores sort last. Click again to reverse sorting.
-                </span>
-              </p>
+                Scores <span>{projects.length}</span>
+              </button>
+              <button aria-pressed={view === 'actions'} onClick={() => setView('actions')}>
+                Next levers <span>{actions.length}</span>
+              </button>
+              <button aria-pressed={view === 'history'} onClick={() => setView('history')}>
+                History <span>{reviews.length + workspace.history.length}</span>
+              </button>
             </div>
+            <span>Effort /10 · Result /10 · two totals /60</span>
           </div>
-        </>
-      )}
-      {view === 'history' && (
-        <>
-          <ScoreHistory workspace={workspace} reviews={reviews} onImport={onImport} />
-          <details className={styles.outcomeDisclosure}>
-            <summary>Lever outcomes · {workspace.history.length} recorded steps</summary>
-            <section className={styles.history} aria-label="Outcome history">
-              <h2>Lever outcomes</h2>
-              <p>
-                Plans and proof stay in history. Verification does not automatically raise a score.
-              </p>
-              {workspace.history.length === 0 ? (
-                <div className={styles.empty}>
-                  No cycles yet. Select a lever and choose “Pick this lever”.
+          {view !== 'history' && (
+            <>
+              <div className={styles.tools}>
+                <label className={styles.search}>
+                  <Search size={15} />
+                  <input
+                    aria-label="Search products or domains"
+                    placeholder={
+                      view === 'actions'
+                        ? 'Find a product, domain or fix…'
+                        : 'Find a product or domain…'
+                    }
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      setSelected('');
+                    }}
+                  />
+                </label>
+                <select
+                  aria-label="Purpose"
+                  value={purpose}
+                  onChange={(e) => {
+                    setPurpose(e.target.value);
+                    setSelected('');
+                  }}
+                >
+                  <option value="all">All purposes</option>
+                  <option value="focus">Focus: learning or commercial</option>
+                  {Object.entries(PURPOSE_LABELS).map(([id, label]) => (
+                    <option key={id} value={id}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  aria-label="Scope"
+                  value={scope}
+                  onChange={(e) => {
+                    setScope(e.target.value);
+                    setSelected('');
+                  }}
+                >
+                  <option value="all">All products</option>
+                  <option value="products">Public products</option>
+                  <option value="internal">Internal tools</option>
+                </select>
+                <select
+                  aria-label="Area"
+                  value={area}
+                  onChange={(e) => {
+                    setArea(e.target.value);
+                    setSelected('');
+                    setSort([
+                      {
+                        id: e.target.value === 'all' ? 'total:result' : `${e.target.value}:result`,
+                        desc: false,
+                      },
+                    ]);
+                  }}
+                >
+                  <option value="all">All six areas</option>
+                  {SCORE_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {CATEGORY_LABELS[c]}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  aria-label="Domain"
+                  value={domain}
+                  onChange={(e) => {
+                    setDomain(e.target.value);
+                    setSelected('');
+                  }}
+                >
+                  <option value="all">All domains</option>
+                  {domains.map((d) => (
+                    <option key={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
+              {(query ||
+                scope !== 'all' ||
+                purpose !== 'all' ||
+                area !== 'all' ||
+                domain !== 'all' ||
+                projectFilter ||
+                status !== 'all') && (
+                <div className={styles.filterSummary}>
+                  <span>
+                    {projectFilter ? `Product: ${byProject.get(projectFilter)?.name} · ` : ''}
+                    {view === 'scores'
+                      ? `${projects.length} products`
+                      : `${actions.length} recommendations`}{' '}
+                    match
+                  </span>
+                  <button onClick={resetFilters}>
+                    <RotateCcw size={12} />
+                    Reset filters
+                  </button>
                 </div>
-              ) : (
-                [...workspace.history].reverse().map((record) => (
-                  <article key={record.id}>
-                    <div className={styles.historyHeading}>
-                      <h3>{record.plan.title}</h3>
-                      <span className={styles.priority}>{statusLabel[record.status]}</span>
-                    </div>
-                    <p className={styles.eyebrow}>
-                      {record.leverId} · {dateLabel(record.at)} ·{' '}
-                      {record.plan.baselineEffort !== undefined ? (
-                        <>
-                          Effort baseline{' '}
-                          {record.plan.baselineEffort === null
-                            ? 'Unassessed'
-                            : `${formatScore(record.plan.baselineEffort)}/10`}{' '}
-                          · Result baseline{' '}
-                          {record.plan.baselineResult == null
-                            ? 'Unmeasured'
-                            : `${formatScore(record.plan.baselineResult)}/10`}
-                        </>
-                      ) : (
-                        <>
-                          Previous combined baseline{' '}
-                          {record.plan.baselineScore === null
-                            ? 'Unassessed'
-                            : `${formatScore(record.plan.baselineScore)}/10`}
-                        </>
-                      )}
-                    </p>
-                    {record.work !== undefined ? (
-                      <>
-                        <p>Effort · {record.work || 'No work note'}</p>
-                        <p>Result · {record.observedResult || 'Awaiting observation'}</p>
-                      </>
-                    ) : (
-                      record.result && (
-                        <p className={styles.historyResult}>
-                          Previous work/outcome note: {record.result}
-                        </p>
-                      )
-                    )}
-                    {record.evidence && <p>Evidence: {record.evidence}</p>}
-                    {record.outcome && <p>Outcome: {record.outcome}</p>}
-                    {record.prerequisiteSatisfied && <p>Prerequisite objective accepted.</p>}
-                    <details>
-                      <summary>Original action and finish line</summary>
-                      <p>{record.plan.action}</p>
-                      <p>Done when: {record.plan.proof}</p>
-                    </details>
-                  </article>
-                ))
               )}
-            </section>
-          </details>
+              {view === 'actions' && (
+                <label className={styles.statusFilter}>
+                  Status{' '}
+                  <select
+                    aria-label="Lever status"
+                    value={status}
+                    onChange={(e) => {
+                      setStatus(e.target.value);
+                      setSelected('');
+                    }}
+                  >
+                    <option value="all">All actions</option>
+                    {Object.entries(statusLabel).map(([id, label]) => (
+                      <option key={id} value={id}>
+                        {label}
+                      </option>
+                    ))}
+                    <option value="scope">Scope decisions</option>
+                  </select>
+                </label>
+              )}
+              {hasMatches && view === 'actions' && (
+                <button className={styles.selectedLeverLink} onClick={() => setSheet('action')}>
+                  <span>Next lever · {selectedProject.name}</span>
+                  <strong>{lever.title}</strong>
+                  <ArrowUpRight size={15} />
+                </button>
+              )}
+              <div
+                className={styles.compareGrid}
+                style={hasMatches ? undefined : { gridTemplateColumns: 'minmax(0, 1fr)' }}
+              >
+                <div
+                  className={`${styles.tablePane} ${view === 'actions' ? styles.actionTable : ''}`}
+                >
+                  <div className={styles.comparisonContext}>
+                    {view === 'actions' && (
+                      <div className={styles.metricSwitch} aria-label="Sort score">
+                        <span>Sort score</span>
+                        {(['effort', 'result'] as const).map((m) => (
+                          <button key={m} aria-pressed={metric === m} onClick={() => setMetric(m)}>
+                            {m === 'effort' ? 'Effort' : 'Result'}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {view === 'scores' &&
+                      (reviews.length > 1 ? (
+                        <label>
+                          Change since{' '}
+                          <select
+                            aria-label="Score baseline"
+                            value={baseline.id}
+                            onChange={(e) => setBaselineId(e.target.value)}
+                          >
+                            {reviews.map((r, i) => (
+                              <option key={r.id} value={r.id}>
+                                {dateLabel(r.assessedAt)} · {i + 1}. {r.label}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      ) : (
+                        <span>Baseline saved · {dateLabel(snapshot.assessedAt)}</span>
+                      ))}
+                    {view === 'scores' && (
+                      <button onClick={() => setView('history')}>
+                        View score history <ArrowUpRight size={12} />
+                      </button>
+                    )}
+                  </div>
+                  {view === 'scores' ? (
+                    <ScoreboardTable
+                      key={`scores:${area}`}
+                      className={styles.portfolioTable}
+                      data={projects}
+                      columns={columns}
+                      getRowId={(p) => p.id}
+                      label="Compare product scores"
+                      selectedId={selectedProject.id}
+                      onRowClick={(p) => {
+                        router.push(
+                          `/projects?view=scoreboard&product=${encodeURIComponent(p.id)}`
+                        );
+                      }}
+                      sort={sort}
+                      onSortChange={setSort}
+                    />
+                  ) : (
+                    <ScoreboardTable
+                      key="actions"
+                      data={actions}
+                      columns={actionColumns}
+                      getRowId={(l) => l.id}
+                      label="Next lever queue"
+                      selectedId={lever.id}
+                      onRowClick={(l) => {
+                        choose(l);
+                        setSheet('action');
+                      }}
+                    />
+                  )}
+                  <p className={styles.tableFoot}>
+                    ◦ Provisional estimate
+                    <span>
+                      Total sorts by displayed known points for Effort or Result. Partial totals
+                      stay marked; no known scores sort last. Click again to reverse sorting.
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
+          {view === 'history' && (
+            <>
+              <ScoreHistory workspace={workspace} reviews={reviews} onImport={onImport} />
+              <details className={styles.outcomeDisclosure}>
+                <summary>Lever outcomes · {workspace.history.length} recorded steps</summary>
+                <section className={styles.history} aria-label="Outcome history">
+                  <h2>Lever outcomes</h2>
+                  <p>
+                    Plans and proof stay in history. Verification does not automatically raise a
+                    score.
+                  </p>
+                  {workspace.history.length === 0 ? (
+                    <div className={styles.empty}>
+                      No cycles yet. Select a lever and choose “Pick this lever”.
+                    </div>
+                  ) : (
+                    [...workspace.history].reverse().map((record) => (
+                      <article key={record.id}>
+                        <div className={styles.historyHeading}>
+                          <h3>{record.plan.title}</h3>
+                          <span className={styles.priority}>{statusLabel[record.status]}</span>
+                        </div>
+                        <p className={styles.eyebrow}>
+                          {record.leverId} · {dateLabel(record.at)} ·{' '}
+                          {record.plan.baselineEffort !== undefined ? (
+                            <>
+                              Effort baseline{' '}
+                              {record.plan.baselineEffort === null
+                                ? 'Unassessed'
+                                : `${formatScore(record.plan.baselineEffort)}/10`}{' '}
+                              · Result baseline{' '}
+                              {record.plan.baselineResult == null
+                                ? 'Unmeasured'
+                                : `${formatScore(record.plan.baselineResult)}/10`}
+                            </>
+                          ) : (
+                            <>
+                              Previous combined baseline{' '}
+                              {record.plan.baselineScore === null
+                                ? 'Unassessed'
+                                : `${formatScore(record.plan.baselineScore)}/10`}
+                            </>
+                          )}
+                        </p>
+                        {record.work !== undefined ? (
+                          <>
+                            <p>Effort · {record.work || 'No work note'}</p>
+                            <p>Result · {record.observedResult || 'Awaiting observation'}</p>
+                          </>
+                        ) : (
+                          record.result && (
+                            <p className={styles.historyResult}>
+                              Previous work/outcome note: {record.result}
+                            </p>
+                          )
+                        )}
+                        {record.evidence && <p>Evidence: {record.evidence}</p>}
+                        {record.outcome && <p>Outcome: {record.outcome}</p>}
+                        {record.prerequisiteSatisfied && <p>Prerequisite objective accepted.</p>}
+                        <details>
+                          <summary>Original action and finish line</summary>
+                          <p>{record.plan.action}</p>
+                          <p>Done when: {record.plan.proof}</p>
+                        </details>
+                      </article>
+                    ))
+                  )}
+                </section>
+              </details>
+            </>
+          )}
+          <footer className={styles.workspaceFooter}>
+            <button onClick={() => setSheet('review')}>
+              {saved ? 'Saved on this device' : 'Unsaved · export now'} · review & backup
+            </button>
+            <button onClick={() => void copyFocus()}>
+              <Link size={12} />
+              Copy selected focus
+            </button>
+          </footer>
+          {notice && (
+            <p className={styles.notice} role="status">
+              {notice}
+            </p>
+          )}
         </>
-      )}
-      <footer className={styles.workspaceFooter}>
-        <button onClick={() => setSheet('review')}>
-          {saved ? 'Saved on this device' : 'Unsaved · export now'} · review & backup
-        </button>
-        <button onClick={() => void copyFocus()}>
-          <Link size={12} />
-          Copy selected focus
-        </button>
-      </footer>
-      {notice && (
-        <p className={styles.notice} role="status">
-          {notice}
-        </p>
       )}
       <Sheet
         open={sheet !== null}

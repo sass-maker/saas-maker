@@ -21,6 +21,36 @@
 .header p { color: var(--quiet); font-size: 13px; margin: 0; }
 .reviewButton { display: flex; gap: 9px; align-items: center; border: 1px solid var(--line); border-radius: 7px; background: transparent; padding: 10px 12px; font-size: 12px !important; text-align: left; flex-shrink: 0; }
 .reviewButton small { display: block; color: var(--quiet); font-size: 10px; margin-top: 3px; }
+.scoringGuide { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 14px 0; margin-bottom: 18px; font-size: 12px; line-height: 1.7; }
+.scoringGuide > p { max-width: 105ch; color: var(--quiet); margin: 0 0 8px; }
+.scoringGuide strong { color: var(--foreground); font-weight: 550; }
+.scoringGuide summary { cursor: pointer; font-size: 11px; font-weight: 500; }
+.guideGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; padding: 18px 0 4px; }
+.guideGrid h3 { font-weight: 550; font-size: 12px; margin-bottom: 8px; }
+.guideGrid p { color: var(--quiet); margin: 8px 0 0; }
+.purposeNames { display: block; color: var(--quiet); font-size: 9px; line-height: 1.5; margin-top: 6px; overflow-wrap: anywhere; }
+.productCell a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.productInfo h2 { font-size: 16px; font-weight: 550; margin-bottom: 12px; }
+.backLink { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; margin: 0 0 24px; color: var(--quiet); }
+.backLink:hover { color: var(--foreground); }
+.productInfo .header { align-items: flex-start; }
+.productInfo .header p { max-width: 80ch; line-height: 1.7; }
+.productOverview { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 24px; padding: 24px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 32px; }
+.productOverview p { color: var(--quiet); font-size: 12px; line-height: 1.7; margin-top: 8px; overflow-wrap: anywhere; }
+.purposeTags { display: flex; flex-wrap: wrap; gap: 6px; }
+.purposeTags span { border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px; font-size: 11px; }
+.productAreas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 28px; }
+.productAreas > section { border: 1px solid var(--line); border-radius: 7px; padding: 18px; min-width: 0; }
+.productAreas h3 { font-size: 13px; font-weight: 550; margin-bottom: 18px; }
+.productReadings { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.productReadings button { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; padding: 8px; font-size: 11px; border: 1px solid var(--line); border-radius: 5px; }
+.productReadings .score { font-size: 18px; }
+.productTask { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; border-top: 1px solid var(--line); padding-top: 16px; margin-top: 18px; text-align: left; font-size: 10px; color: var(--quiet); }
+.productTask strong { display: block; color: var(--foreground); font-size: 12px; line-height: 1.7; margin-top: 5px; font-weight: 500; }
+.productTask svg { flex-shrink: 0; }
+.tools { flex-wrap: wrap; }
+@media (max-width: 1000px) { .guideGrid, .productOverview { grid-template-columns: 1fr; gap: 18px; } .productAreas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .productAreas { grid-template-columns: 1fr; } .productInfo .header { gap: 12px; } }
 .tabs { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); font-size: 11px; color: var(--quiet); }
 .tabs > div { display: flex; gap: 24px; }
 .tabs button { border: 0; background: none; color: var(--quiet); font-size: 13px; padding: 12px 0; border-bottom: 2px solid transparent; }
@@ -355,6 +385,9 @@
 .evidenceLever strong { display: block; margin-top: 5px; color: var(--foreground); font-size: 13px; font-weight: 500; line-height: 1.6; }
 .evidenceLever > svg { flex-shrink: 0; }
 @media (max-width: 1100px) {
+  .portfolioTable tr[data-row] td[data-column-id=priority] { grid-column: 1 / -1; padding: 0 0 12px; }
+  .portfolioTable td[data-column-id=priority] .tableCell { display: flex; align-items: center; justify-content: flex-start; gap: 10px; }
+  .portfolioTable td[data-column-id=priority] .narrowCellLabel { display: block; }
   .portfolioTable .narrowSort { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 8px 0 14px; color: var(--quiet); font-size: 11px; }
   .portfolioTable .narrowSort label { display: flex; align-items: center; gap: 8px; min-width: 0; }
   .portfolioTable .narrowSort select { min-width: 0; max-width: 235px; padding: 9px 8px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--foreground); }
