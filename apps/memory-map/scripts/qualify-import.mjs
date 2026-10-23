@@ -75,7 +75,7 @@ function isPinnedModelRequest(request) {
 
 const archive = await createSyntheticArchive();
 
-for (const width of [390, 1280]) {
+for (const width of [390, 768, 1280]) {
   test(`synthetic ZIP exposes model-download recovery at ${width}px`, async () => {
     const { server, origin } = await serveBuiltApp();
     const browser = await chromium.launch();
@@ -115,6 +115,7 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const pageErrors = [];
   let pinnedModelRequested = false;
+  let failFirstModelRequest = true;
   page.on("pageerror", (error) => pageErrors.push(error.message));
   try {
     await page.addInitScript(() => {
@@ -132,6 +133,10 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
     });
     await page.route("**/*", (route) => {
       const url = new URL(route.request().url());
+      if (isPinnedModelRequest(route.request()) && failFirstModelRequest) {
+        failFirstModelRequest = false;
+        return route.abort("failed");
+      }
       if (
         url.origin === origin ||
         (url.protocol === "https:" &&
@@ -145,6 +150,15 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
     });
     await page.goto(origin);
     await page.locator('input[name="model-profile"][value="compact"]').check();
+    await page
+      .locator("#archive-input")
+      .setInputFiles({ name: "synthetic.zip", mimeType: "application/zip", buffer: archive });
+    await expect(page.locator("#report-view")).toBeVisible({ timeout: 30000 });
+    await expect(page.locator("#local-trace-summary")).toContainText("import completed");
+    await expect(page.locator("#error-view")).toBeVisible({ timeout: 30000 });
+    await expect(page.locator("#local-trace-summary")).toContainText("bottleneck: model");
+    await page.locator("#error-reset").click();
+    await expect(page.locator("#import-view")).toBeVisible();
     await page
       .locator("#archive-input")
       .setInputFiles({ name: "synthetic.zip", mimeType: "application/zip", buffer: archive });
@@ -165,6 +179,39 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
       "coverage must include the fixture conversation, prompt, and 20 topic anchors"
     );
     assert.ok(pinnedModelRequested, "the pinned compact model revision must be requested");
+    await page.locator("#analysis-details").evaluate((element) => {
+      if (element instanceof HTMLDetailsElement) element.open = true;
+    });
+    const downloadPromise = page.waitForEvent("download");
+    await page.locator("#export-local-trace").click();
+    const download = await downloadPromise;
+    assert.equal(download.suggestedFilename(), "memory-map-local-measurement-trace.json");
+    const tracePath = await download.path();
+    assert.ok(tracePath, "the local diagnostic trace must be downloadable");
+    const trace = JSON.parse(await readFile(tracePath, "utf8"));
+    assert.equal(trace.schemaVersion, 1);
+    assert.match(trace.privacy, /tab-local/);
+    assert.deepEqual(
+      trace.events.map(({ milestone }) => milestone),
+      [
+        "import_started",
+        "import_completed",
+        "failure",
+        "import_started",
+        "import_completed",
+        "first_evidence_backed_insight",
+        "recovery",
+      ]
+    );
+    assert.ok(trace.events[5].sourceBackedItems >= 1);
+    assert.equal(trace.events[2].errorClass, "model_prepare");
+    assert.deepEqual(trace.bottleneck, {
+      stage: "model",
+      reason: "fixture_failure",
+      nextAction:
+        "Retry model preparation from the parsed archive without asking for the ZIP again.",
+    });
+    assert.doesNotMatch(JSON.stringify(trace), /synthetic-1|How can I grow basil|synthetic\.zip/i);
     assert.deepEqual(pageErrors, []);
   } finally {
     await browser.close();

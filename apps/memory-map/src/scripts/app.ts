@@ -8,6 +8,7 @@ import {
   normalizeSettings,
 } from "../lib/analysis";
 import { formatDuration } from "../lib/performance";
+import { LocalMeasurementTrace } from "../lib/measurement-trace";
 import { activityMonthWindow } from "../lib/period";
 import {
   FORMATION_ROUTES,
@@ -78,6 +79,9 @@ const progressRuntime = $("#progress-runtime");
 const analysisDetails = $<HTMLDetailsElement>("#analysis-details");
 const analysisDetailsSummary = $("#analysis-details-summary");
 const analysisTimingBoard = $("#analysis-timing-board");
+const localTraceSection = $("#local-trace-section");
+const localTraceSummary = $("#local-trace-summary");
+const exportLocalTraceButton = $<HTMLButtonElement>("#export-local-trace");
 const errorMessage = $("#error-message");
 const appStatus = $("#app-status");
 const graph = $<SVGSVGElement>("#topic-graph");
@@ -113,6 +117,7 @@ const graphFormationLatest = $("#graph-formation-latest");
 const graphFormationRoutes = $("#graph-formation-routes");
 
 const analysisLease = new AnalysisLease(navigator.locks);
+const measurementTrace = new LocalMeasurementTrace();
 let worker = createWorker();
 let memoryChatWorker: Worker | null = null;
 let memoryChatReady = false;
@@ -153,6 +158,8 @@ function createWorker() {
   });
   nextWorker.addEventListener("message", onWorkerMessage);
   nextWorker.addEventListener("error", () => {
+    measurementTrace.failed(performance.now(), null);
+    renderLocalMeasurementTrace();
     showError("The analysis worker stopped unexpectedly. Choose the archive again.");
   });
   return nextWorker;
@@ -698,6 +705,8 @@ async function analyzeFile(file: File) {
     );
     return;
   }
+  measurementTrace.startAttempt(performance.now());
+  renderLocalMeasurementTrace();
   currentReport = null;
   semanticFailure = null;
   currentSnapshot = null;
@@ -726,6 +735,42 @@ function showError(message: string, keepReport = false) {
   else errorView.hidden = false;
 }
 
+function sourceBackedInsightCount(report: FullReport): number {
+  const semantic = report.semantic;
+  if (!semantic) return 0;
+  return (
+    semantic.topics.filter((topic) => topic.sources.length > 0).length +
+    semantic.facts.filter((fact) => fact.sources.length > 0).length +
+    semantic.repeats.filter((repeat) => repeat.sources.length > 0).length
+  );
+}
+
+function renderLocalMeasurementTrace() {
+  const trace = measurementTrace.export();
+  localTraceSection.hidden = !measurementTrace.hasEvents();
+  const failure = [...trace.events].reverse().find((event) => event.milestone === "failure");
+  const recovered = trace.events.some(
+    (event) => event.milestone === "recovery" && event.attempt > (failure?.attempt ?? Infinity)
+  );
+  const stageDurations = Object.entries(trace.maxObservedStageDurationsMs)
+    .map(([stage, duration]) => `${stage}: ${duration} ms`)
+    .join(" · ");
+  const failureStatus = failure
+    ? ` · ${failure.stage?.replaceAll("_", " ") ?? "worker"} failure ${recovered ? "recovered" : "needs recovery"}`
+    : "";
+  localTraceSummary.textContent = `This tab only · ${trace.events.length} milestones${failureStatus}${stageDurations ? ` · max observed stage duration: ${stageDurations}` : ""}. Archive contents and derived text stay out of this trace.`;
+}
+
+function downloadLocalMeasurementTrace() {
+  const content = JSON.stringify(measurementTrace.export(), null, 2);
+  const url = URL.createObjectURL(new Blob([content], { type: "application/json" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "memory-map-local-measurement-trace.json";
+  link.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
 function onWorkerMessage(event: MessageEvent<WorkerResponse>) {
   const message = event.data;
   if (message.type === "progress") {
@@ -743,6 +788,7 @@ function onWorkerMessage(event: MessageEvent<WorkerResponse>) {
     progressFill.style.transform = `scaleX(${Math.max(4, percent) / 100})`;
     appStatus.textContent = `${message.label} ${Math.round(percent)}%`;
     if (message.timing) {
+      measurementTrace.observeStages(message.timing.completedStages);
       latestTiming = {
         phase: message.phase,
         label: message.label,
@@ -781,6 +827,8 @@ function onWorkerMessage(event: MessageEvent<WorkerResponse>) {
     return;
   }
   if (message.type === "deterministic") {
+    measurementTrace.importCompleted(performance.now());
+    renderLocalMeasurementTrace();
     currentReport = message.report;
     setConfidence(message.report.analysis.confidence, false);
     renderReport(message.report);
@@ -798,6 +846,13 @@ function onWorkerMessage(event: MessageEvent<WorkerResponse>) {
     return;
   }
   if (message.type === "complete") {
+    measurementTrace.importCompleted(performance.now());
+    measurementTrace.observeStages(message.report.performance?.stages ?? []);
+    measurementTrace.firstEvidenceBackedInsight(
+      performance.now(),
+      sourceBackedInsightCount(message.report)
+    );
+    renderLocalMeasurementTrace();
     finishGraphFormation();
     currentReport = message.report;
     currentSnapshot = message.snapshot;
@@ -830,8 +885,11 @@ function onWorkerMessage(event: MessageEvent<WorkerResponse>) {
     renderSearchResults(message.results);
     return;
   }
+  const failedPhase = latestTiming?.phase ?? null;
   resetWorker();
   void analysisLease.release();
+  measurementTrace.failed(performance.now(), failedPhase);
+  renderLocalMeasurementTrace();
   if (graphFormationFrame !== null) window.cancelAnimationFrame(graphFormationFrame);
   graphFormationFrame = null;
   if (message.recoverable && currentReport && !currentReport.semantic) {
@@ -2301,6 +2359,8 @@ forgetButton.addEventListener("click", async () => {
   saveButton.textContent = "Keep on this device";
   appStatus.textContent = "Saved memory forgotten.";
 });
+
+exportLocalTraceButton.addEventListener("click", downloadLocalMeasurementTrace);
 
 enableMemoryChatButton.addEventListener("click", () => {
   if (!currentReport?.semantic || memoryChatWorker) return;
