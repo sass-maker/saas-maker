@@ -24,6 +24,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
+          check-latest: true
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm catalog:validate-public
@@ -39,6 +40,23 @@ jobs:
       - run: pnpm --filter gitstat build
       - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
       - run: pnpm check:memory-map
+      - name: Install Playwright Chromium
+        run: pnpm --filter @saas-maker/memory-map exec playwright install --with-deps chromium
+      - name: Qualify the synthetic Memory Map import and recovery workflow
+        timeout-minutes: 10
+        env:
+          MEMORY_MAP_TRACE_ARTIFACT_DIR: ${{ runner.temp }}/memory-map-qualification
+        run: pnpm --filter @saas-maker/memory-map run test:import
+      - name: Retain Memory Map build for rendered review
+        uses: actions/upload-artifact@v7
+        with:
+          name: memory-map-build-${{ github.sha }}
+          path: |
+            apps/memory-map/dist/
+            ${{ runner.temp }}/memory-map-qualification/*
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 6
       - name: Retain public showcase build
         uses: actions/upload-artifact@v7
         with:

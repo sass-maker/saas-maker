@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
+import { join } from "node:path";
 import { test } from "node:test";
 import { chromium, expect } from "@playwright/test";
 import { BlobWriter, TextReader, ZipWriter } from "@zip.js/zip.js";
@@ -73,13 +74,88 @@ function isPinnedModelRequest(request) {
   );
 }
 
+async function downloadLocalTrace(page) {
+  await page.locator("#analysis-details").evaluate((element) => {
+    if (element instanceof HTMLDetailsElement) element.open = true;
+  });
+  const downloadPromise = page.waitForEvent("download");
+  await page.locator("#export-local-trace").click();
+  const download = await downloadPromise;
+  const tracePath = await download.path();
+  const trace = JSON.parse(await readFile(tracePath, "utf8"));
+  const milestones = trace.events.map(({ milestone }) => milestone);
+  const failureIndex = milestones.lastIndexOf("failure");
+  const recoveryIndex = milestones.lastIndexOf("recovery");
+  const failure = trace.events[failureIndex];
+  const recovery = trace.events[recoveryIndex];
+  const insight = trace.events.find((event) => event.milestone === "first_evidence_backed_insight");
+  const requiredMilestones = [
+    "import_started",
+    "import_completed",
+    "failure",
+    "first_evidence_backed_insight",
+    "recovery",
+  ];
+  return {
+    filename: download.suggestedFilename(),
+    hasPath: Boolean(tracePath),
+    trace,
+    qualification: {
+      schemaVersion: trace.schemaVersion,
+      privacy: /tab-local/.test(trace.privacy),
+      missingMilestones: requiredMilestones.filter((milestone) => !milestones.includes(milestone)),
+      recoveryAfterFailure: recoveryIndex > failureIndex,
+      recoveryAfterFailedAttempt: Boolean(
+        failure && recovery && recovery.attempt > failure.attempt
+      ),
+      recoveryMatchesInsight:
+        Boolean(recovery && insight) &&
+        recovery.attempt === insight.attempt &&
+        recovery.elapsedMs === insight.elapsedMs,
+      recoveryDurationMs: recovery?.recoveryDurationMs,
+      hasSourceBackedItems: (insight?.sourceBackedItems ?? 0) >= 1,
+      errorClass: failure?.errorClass,
+      bottleneckStage: trace.bottleneck?.stage,
+      bottleneckReason: trace.bottleneck?.reason,
+      leaksFixtureText: /synthetic-1|How can I grow basil|synthetic\.zip/i.test(
+        JSON.stringify(trace)
+      ),
+    },
+  };
+}
+
+async function captureMeasurementScreenshots(page, phase, includeError = false) {
+  const artifactDirectory = process.env.MEMORY_MAP_TRACE_ARTIFACT_DIR;
+  if (process.env.CI && !artifactDirectory) {
+    throw new Error("CI must retain the content-free Memory Map fixture screenshots");
+  }
+  if (!artifactDirectory) return [];
+  await mkdir(artifactDirectory, { recursive: true });
+  const filenames = [];
+  for (const width of [390, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    const detailsPath = join(artifactDirectory, `memory-map-${phase}-details-${width}.jpg`);
+    await page
+      .locator("#analysis-details")
+      .screenshot({ path: detailsPath, type: "jpeg", quality: 85 });
+    filenames.push(detailsPath.split("/").at(-1));
+    if (includeError) {
+      const errorPath = join(artifactDirectory, `memory-map-${phase}-error-${width}.jpg`);
+      await page.locator("#error-view").screenshot({ path: errorPath, type: "jpeg", quality: 85 });
+      filenames.push(errorPath.split("/").at(-1));
+    }
+  }
+  return filenames;
+}
+
 const archive = await createSyntheticArchive();
 
-for (const width of [390, 1280]) {
+for (const width of [390, 768, 1280]) {
   test(`synthetic ZIP exposes model-download recovery at ${width}px`, async () => {
     const { server, origin } = await serveBuiltApp();
-    const browser = await chromium.launch();
+    let browser;
     try {
+      browser = await chromium.launch();
       const page = await browser.newPage({ viewport: { width, height: 900 } });
       await page.route("**/*", (route) =>
         route.request().url().startsWith(origin) ? route.continue() : route.abort()
@@ -101,74 +177,179 @@ for (const width of [390, 1280]) {
       await expect(page.locator("#import-view")).toBeVisible();
       assert.equal(await page.locator("#archive-input").inputValue(), "");
     } finally {
-      await browser.close();
-      await closeServer(server);
+      try {
+        await browser?.close();
+      } finally {
+        await closeServer(server);
+      }
     }
   });
+}
+
+function routeModelRequests(page, origin, state) {
+  page.on("request", (request) => {
+    if (isPinnedModelRequest(request)) state.pinnedModelRequested = true;
+  });
+  page.route("**/*", (route) => {
+    const url = new URL(route.request().url());
+    if (isPinnedModelRequest(route.request()) && state.blockPinnedModelRequests) {
+      state.blockedPinnedModelRequestCount += 1;
+      return route.abort("failed");
+    }
+    if (
+      url.origin === origin ||
+      (url.protocol === "https:" &&
+        (isPinnedModelRequest(route.request()) ||
+          (url.hostname === "cdn.jsdelivr.net" &&
+            url.pathname.startsWith("/npm/@huggingface/transformers@3.8.1/dist/"))))
+    ) {
+      return route.continue();
+    }
+    return route.abort();
+  });
+}
+
+async function observeModelFailure(page, archive, state) {
+  await page.locator('input[name="model-profile"][value="compact"]').check();
+  await page
+    .locator("#archive-input")
+    .setInputFiles({ name: "synthetic.zip", mimeType: "application/zip", buffer: archive });
+  await expect(page.locator("#report-view")).toBeVisible({ timeout: 30000 });
+  await expect(page.locator("#local-trace-summary")).toContainText("milestones");
+  await expect(page.locator("#error-view")).toBeVisible({ timeout: 30000 });
+  await expect(page.locator("#local-trace-summary")).toContainText("model failure needs recovery");
+  const screenshots = await captureMeasurementScreenshots(page, "model-failure", true);
+  state.blockPinnedModelRequests = false;
+  await page.locator("#error-reset").click();
+  await expect(page.locator("#import-view")).toBeVisible();
+  return { blockedPinnedModelRequestCount: state.blockedPinnedModelRequestCount, screenshots };
+}
+
+async function observeModelRecovery(page, archive) {
+  await page
+    .locator("#archive-input")
+    .setInputFiles({ name: "synthetic.zip", mimeType: "application/zip", buffer: archive });
+  await expect(page.locator("#report-view")).toBeVisible({ timeout: 30000 });
+  await expect(page.locator("#error-view")).toBeHidden();
+  await expect(page.locator("#report-timing-status")).toContainText("Complete map ready", {
+    timeout: 240000,
+  });
+  await expect(page.locator("#report-timing-runtime")).toContainText("Compatibility mode · q8");
+  await expect(page.locator("#model-profile-note")).toContainText(
+    `${MODEL_ID}@${MODEL_REVISION.slice(0, 8)}`
+  );
+  const coverage = await page.locator("#report-timing-coverage").textContent();
+  const coverageMatch = /^(\d+) vectors · selected set preserved$/.exec(coverage ?? "");
+  const exported = await downloadLocalTrace(page);
+  return {
+    coverageMatches: Boolean(coverageMatch),
+    coverageVectors: Number(coverageMatch?.[1] ?? 0),
+    exported,
+  };
+}
+
+async function retainFixtureEvidence(exported, state, coverageVectors, screenshots) {
+  const artifactDirectory = process.env.MEMORY_MAP_TRACE_ARTIFACT_DIR;
+  if (process.env.CI && !artifactDirectory) {
+    throw new Error("CI must retain the content-free Memory Map fixture trace");
+  }
+  if (!artifactDirectory) return;
+  await mkdir(artifactDirectory, { recursive: true });
+  await writeFile(
+    join(artifactDirectory, "memory-map-local-measurement-trace.json"),
+    `${JSON.stringify(exported.trace, null, 2)}\n`
+  );
+  await writeFile(
+    join(artifactDirectory, "memory-map-qualification-summary.json"),
+    `${JSON.stringify(
+      {
+        schemaVersion: 1,
+        fixture: "synthetic_archive",
+        viewportWidths: [390, 768, 1280],
+        screenshots,
+        pinnedModelRequested: state.pinnedModelRequested,
+        blockedPinnedModelRequestCount: state.blockedPinnedModelRequestCount,
+        recoveredAfterRetry: exported.qualification.recoveryAfterFailure,
+        coverageVectors,
+        qualification: exported.qualification,
+        bottleneck: exported.trace.bottleneck,
+        maxObservedStageDurationsMs: exported.trace.maxObservedStageDurationsMs,
+      },
+      null,
+      2
+    )}\n`
+  );
 }
 
 test("synthetic ZIP completes pinned compact browser WASM inference", {
   timeout: 300000,
 }, async () => {
   const { server, origin } = await serveBuiltApp();
-  const browser = await chromium.launch({ args: ["--disable-webgpu"] });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-  const pageErrors = [];
-  let pinnedModelRequested = false;
-  page.on("pageerror", (error) => pageErrors.push(error.message));
+  let browser;
+  const modelRequests = {
+    pinnedModelRequested: false,
+    blockPinnedModelRequests: true,
+    blockedPinnedModelRequestCount: 0,
+  };
   try {
+    browser = await chromium.launch({ args: ["--disable-webgpu"] });
+    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    const pageErrors = [];
+    page.on("pageerror", (error) => pageErrors.push(error.message));
     await page.addInitScript(() => {
       Object.defineProperty(navigator, "gpu", { configurable: true, value: undefined });
     });
-    page.on("request", (request) => {
-      const url = new URL(request.url());
-      if (
-        url.hostname === "huggingface.co" &&
-        url.pathname ===
-          `/Xenova/all-MiniLM-L6-v2/resolve/${MODEL_REVISION}/onnx/model_quantized.onnx`
-      ) {
-        pinnedModelRequested = true;
-      }
-    });
-    await page.route("**/*", (route) => {
-      const url = new URL(route.request().url());
-      if (
-        url.origin === origin ||
-        (url.protocol === "https:" &&
-          (isPinnedModelRequest(route.request()) ||
-            (url.hostname === "cdn.jsdelivr.net" &&
-              url.pathname.startsWith("/npm/@huggingface/transformers@3.8.1/dist/"))))
-      ) {
-        return route.continue();
-      }
-      return route.abort();
-    });
+    routeModelRequests(page, origin, modelRequests);
     await page.goto(origin);
-    await page.locator('input[name="model-profile"][value="compact"]').check();
-    await page
-      .locator("#archive-input")
-      .setInputFiles({ name: "synthetic.zip", mimeType: "application/zip", buffer: archive });
-    await expect(page.locator("#report-view")).toBeVisible({ timeout: 30000 });
-    await expect(page.locator("#error-view")).toBeHidden();
-    await expect(page.locator("#report-timing-status")).toContainText("Complete map ready", {
-      timeout: 240000,
-    });
-    await expect(page.locator("#report-timing-runtime")).toContainText("Compatibility mode · q8");
-    await expect(page.locator("#model-profile-note")).toContainText(
-      `${MODEL_ID}@${MODEL_REVISION.slice(0, 8)}`
-    );
-    const coverage = await page.locator("#report-timing-coverage").textContent();
-    const coverageMatch = /^(\d+) vectors · selected set preserved$/.exec(coverage ?? "");
-    assert.ok(coverageMatch, "completed coverage must preserve the selected set");
+    const failure = await observeModelFailure(page, archive, modelRequests);
+    const blockedPinnedModelRequestCount = failure.blockedPinnedModelRequestCount;
     assert.ok(
-      Number(coverageMatch[1]) >= 22,
+      blockedPinnedModelRequestCount > 0,
+      "first import model requests must remain blocked"
+    );
+    assert.ok(
+      modelRequests.pinnedModelRequested,
+      "the pinned compact model revision must be requested"
+    );
+    const { coverageMatches, coverageVectors, exported } = await observeModelRecovery(
+      page,
+      archive
+    );
+    const screenshots = [
+      ...failure.screenshots,
+      ...(await captureMeasurementScreenshots(page, "recovered-insight")),
+    ];
+    const { recoveryDurationMs, ...recoveryQualification } = exported.qualification;
+    assert.ok(coverageMatches, "completed coverage must preserve the selected set");
+    assert.ok(
+      coverageVectors >= 22,
       "coverage must include the fixture conversation, prompt, and 20 topic anchors"
     );
-    assert.ok(pinnedModelRequested, "the pinned compact model revision must be requested");
+    assert.equal(exported.filename, "memory-map-local-measurement-trace.json");
+    assert.ok(exported.hasPath, "the local diagnostic trace must be downloadable");
+    assert.deepEqual(recoveryQualification, {
+      schemaVersion: 1,
+      privacy: true,
+      missingMilestones: [],
+      recoveryAfterFailure: true,
+      recoveryAfterFailedAttempt: true,
+      recoveryMatchesInsight: true,
+      hasSourceBackedItems: true,
+      errorClass: "model_prepare",
+      bottleneckStage: "model",
+      bottleneckReason: "observed_failure_recovered",
+      leaksFixtureText: false,
+    });
+    assert.ok(Number.isFinite(recoveryDurationMs) && recoveryDurationMs >= 0);
+    if (process.env.CI) assert.equal(screenshots.length, 9);
+    await retainFixtureEvidence(exported, modelRequests, coverageVectors, screenshots);
     assert.deepEqual(pageErrors, []);
   } finally {
-    await browser.close();
-    await closeServer(server);
+    try {
+      await browser?.close();
+    } finally {
+      await closeServer(server);
+    }
   }
 });
 

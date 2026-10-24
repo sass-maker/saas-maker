@@ -952,6 +952,42 @@ h2 {
   display: none;
 }
 
+.local-trace-section {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem clamp(1rem, 5vw, 3rem);
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper-raised);
+}
+
+.local-trace-section[hidden] {
+  display: none;
+}
+
+.local-trace-section h3 {
+  margin: 0.25rem 0 0;
+  font-size: 1.1rem;
+}
+
+.local-trace-section p {
+  max-width: 76ch;
+  margin: 0.4rem 0 0;
+  line-height: 1.5;
+}
+
+.local-trace-section button {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 600px) {
+  .local-trace-section {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
 .analysis-timing-heading {
   display: flex;
   gap: 2rem;
