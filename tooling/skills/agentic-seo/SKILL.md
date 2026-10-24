@@ -88,8 +88,8 @@ Reload on conflicts, inspect the existing state, then decide whether to retry.
 current digest and all six checks: readability, originality, SEO, claims, images,
 CTA, each with `passed` and a specific note. Any draft edit invalidates review.
 `publish` only records a supplied live receipt after real publication; it does
-not deploy, submit indexing, post socially or send outreach. Content receipts
-must match the mapped URL. Work then awaits evidence, not a success claim.
+not deploy, submit indexing, post socially or send outreach. Store `revision` is an integer; the published source revision string belongs
+in `receipt.revision`. Content receipts must match the mapped URL. Work then awaits evidence, not a success claim.
 `measure` requires a complete post-publication window, source attribution and at
 least one real count; null means unavailable, zero means observed zero. AI
 mentions need an answer denominator and channel. Measured refreshes cite
