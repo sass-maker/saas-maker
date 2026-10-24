@@ -11,6 +11,7 @@
  */
 import AgentPrompt from '../components/AgentPrompt.astro';
 import Footer from '../components/Footer.astro';
+import CatalogActions from '../components/CatalogActions.astro';
 import Nav from '../components/Nav.astro';
 import { FUNDING_AGENT_PROMPT } from '../data/catalogPrompts';
 import {
@@ -27,6 +28,9 @@ import {
 import Layout from '../layouts/Layout.astro';
 
 const programs = FUNDING_PROGRAMS_SORTED;
+const valuesFor = (name: string) => [...new Set(programs.map(program => field(program, name)).filter(Boolean))].sort() as string[];
+const statuses = valuesFor('External Status');
+const evidenceLevels = valuesFor('Evidence Quality');
 
 const viewMembership = new Map(
   programs.map((program) => [
@@ -109,7 +113,7 @@ const deadlineText = (program: (typeof programs)[number]) =>
             <input
               type="search"
               name="query"
-              placeholder="Program or organization…"
+              placeholder="Program, organization, location or terms…"
               autocomplete="off"
               data-fd-query
             />
@@ -151,19 +155,42 @@ const deadlineText = (program: (typeof programs)[number]) =>
             </select>
           </label>
 
+          <label>
+            <span>Program status</span>
+            <select name="status" data-fd-status>
+              <option value="">Any status</option>
+              {statuses.map(status => <option value={status}>{status}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>Evidence quality</span>
+            <select name="evidence" data-fd-evidence>
+              <option value="">Any evidence</option>
+              {evidenceLevels.map(evidence => <option value={evidence}>{evidence}</option>)}
+            </select>
+          </label>
           <label class="funding-sort-mobile">
             <span>Sort</span>
             <select name="sort" data-fd-sort>
+              <option value="view:asc">Default / decision view order</option>
               <option value="priority:asc">Priority, high to low</option>
+              <option value="priority:desc">Priority, low to high</option>
               <option value="name:asc">Program, A–Z</option>
+              <option value="name:desc">Program, Z–A</option>
               <option value="category:asc">Category, A–Z</option>
+              <option value="category:desc">Category, Z–A</option>
+              <option value="fit:asc">Portfolio fit, strongest first</option>
+              <option value="fit:desc">Portfolio fit, weakest first</option>
               <option value="deadline:asc">Deadline, soonest</option>
+              <option value="deadline:desc">Deadline, latest</option>
+              <option value="verified:desc">Last verified, newest first</option>
+              <option value="verified:asc">Last verified, oldest first</option>
             </select>
           </label>
 
           <div class="funding-result-line">
             <output data-fd-count aria-live="polite">Showing all {programs.length} programs</output>
-            <button type="reset" data-fd-reset>Reset</button>
+            <CatalogActions />
           </div>
         </form>
 
@@ -199,17 +226,26 @@ const deadlineText = (program: (typeof programs)[number]) =>
                 const officialUrl = field(program, 'Official URL') as string | null;
                 const nextAction = field(program, 'Next Action') as string | null;
                 const terms = field(program, 'Investment Terms') as string | null;
+                const status = field(program, 'External Status') as string | null;
+                const evidence = field(program, 'Evidence Quality') as string | null;
+                const verified = field(program, 'Last Verified') as string | null;
                 const priorityKey = priority.split(' ')[0].toLowerCase();
                 return (
                   <tr
                     data-fd-row
                     data-slug={program.slug}
-                    data-name={`${program.name} ${org ?? ''}`.toLowerCase()}
+                    data-name={`${program.name} ${Object.values(program.fields).join(' ')}`.toLowerCase()}
                     data-namekey={program.name.toLowerCase()}
+                    data-title={program.name}
+                    data-org={org ?? ''}
+                    data-official={officialUrl ?? ''}
                     data-category={category}
                     data-priority={priority}
                     data-fit={fit}
-                    data-deadline={deadline ?? '9999'}
+                    data-deadline={deadline ?? ''}
+                    data-status={status ?? ''}
+                    data-evidence={evidence ?? ''}
+                    data-verified={verified ?? ''}
                     data-views={(viewMembership.get(program.slug) ?? []).join(',')}
                   >
                     <td class="fd-priority" data-label="Priority">
@@ -228,6 +264,7 @@ const deadlineText = (program: (typeof programs)[number]) =>
                         <div class="fd-detail">
                           {nextAction && <p><strong>Next action:</strong> {nextAction}</p>}
                           {terms && <p>{terms}</p>}
+                          <p>{status ?? 'Status unreported'} · {evidence ?? 'Evidence unreported'} · Last verified: {verified ?? 'unreported'}</p>
                           <p>
                             <a href={`/funding/${program.slug}`}>Full record →</a>
                             {' · '}
@@ -317,119 +354,83 @@ const deadlineText = (program: (typeof programs)[number]) =>
 <script type="application/json" data-fd-view-order set:html={JSON.stringify(FUNDING_VIEW_ORDER)} />
 
 <script>
-  const controls = document.querySelector('[data-fd-controls]');
-  const body = document.querySelector('[data-fd-body]');
-  const rows = Array.from(document.querySelectorAll('[data-fd-row]'));
-  const query = document.querySelector('[data-fd-query]');
-  const view = document.querySelector('[data-fd-view]');
-  const category = document.querySelector('[data-fd-category]');
-  const priority = document.querySelector('[data-fd-priority]');
-  const fit = document.querySelector('[data-fd-fit]');
-  const mobileSort = document.querySelector('[data-fd-sort]');
-  const count = document.querySelector('[data-fd-count]');
-  const empty = document.querySelector('[data-fd-empty]');
-  const viewOrderEl = document.querySelector('[data-fd-view-order]');
-  const viewOrder = viewOrderEl ? JSON.parse(viewOrderEl.textContent || '{}') : {};
-  const PRIORITY_RANK = { p0: 0, p1: 1, p2: 2, monitor: 3, skip: 4, archive: 5 };
-  let sortKey = 'priority';
-  let sortDirection = 'asc';
+  import { bindCatalogControls, compareKnown, recordedDate } from '../lib/catalog-controls';
 
-  function valueFor(row, key) {
-    if (key === 'priority') {
-      const bucket = (row.dataset.priority || '').split(' ')[0].toLowerCase();
-      return PRIORITY_RANK[bucket] ?? 9;
-    }
+  const controls = document.querySelector<HTMLFormElement>('[data-fd-controls]');
+  const body = document.querySelector<HTMLElement>('[data-fd-body]');
+  const rows = Array.from(document.querySelectorAll<HTMLTableRowElement>('[data-fd-row]'));
+  const query = controls?.querySelector<HTMLInputElement>('[data-fd-query]');
+  const view = controls?.querySelector<HTMLSelectElement>('[data-fd-view]');
+  const sort = controls?.querySelector<HTMLSelectElement>('[data-fd-sort]');
+  const count = document.querySelector<HTMLElement>('[data-fd-count]');
+  const empty = document.querySelector<HTMLElement>('[data-fd-empty]');
+  const viewOrderEl = document.querySelector('[data-fd-view-order]');
+  const viewOrder: Record<string, string[]> = JSON.parse(viewOrderEl?.textContent || '{}');
+  const PRIORITY_RANK: Record<string, number> = { p0: 0, p1: 1, p2: 2, monitor: 3, skip: 4, archive: 5 };
+  const FIT_RANK: Record<string, number> = { 'Excellent now': 0, 'Good now': 1, 'Possible now': 2, Later: 3, 'Poor fit': 4, 'Not applicable': 5 };
+
+  function valueFor(row: HTMLTableRowElement, key: string) {
+    if (key === 'priority') return PRIORITY_RANK[(row.dataset.priority || '').split(' ')[0].toLowerCase()] ?? null;
+    if (key === 'fit') return FIT_RANK[row.dataset.fit ?? ''] ?? null;
     if (key === 'name') return row.dataset.namekey ?? '';
-    return row.dataset[key] ?? '';
+    if (key === 'deadline' || key === 'verified') return recordedDate(row.dataset[key]);
+    return row.dataset[key] || null;
   }
 
-  function applyRows() {
+  function render() {
     if (!body || !count || !empty) return;
     const search = query?.value.trim().toLowerCase() ?? '';
     const viewKey = view?.value ?? '';
-    const orderIndex = viewKey && viewOrder[viewKey]
-      ? new Map(viewOrder[viewKey].map((slug, index) => [slug, index]))
-      : null;
-
-    const ordered = orderIndex
-      ? rows.toSorted(
-          (a, b) => (orderIndex.get(a.dataset.slug) ?? 9999) - (orderIndex.get(b.dataset.slug) ?? 9999)
-        )
-      : rows.toSorted((left, right) => {
-          const leftValue = valueFor(left, sortKey);
-          const rightValue = valueFor(right, sortKey);
-          const comparison =
-            typeof leftValue === 'number' && typeof rightValue === 'number'
-              ? leftValue - rightValue
-              : String(leftValue).localeCompare(String(rightValue));
-          return sortDirection === 'desc' ? -comparison : comparison;
-        });
-
+    const [sortKey, direction] = (sort?.value || 'view:asc').split(':');
+    const orderIndex = sortKey === 'view' && viewKey && viewOrder[viewKey]
+      ? new Map(viewOrder[viewKey].map((slug, index) => [slug, index])) : null;
+    const ordered = rows.toSorted((a, b) => {
+      if (orderIndex) return (orderIndex.get(a.dataset.slug ?? '') ?? 9999) - (orderIndex.get(b.dataset.slug ?? '') ?? 9999);
+      return compareKnown(valueFor(a, sortKey === 'view' ? 'priority' : sortKey), valueFor(b, sortKey === 'view' ? 'priority' : sortKey), direction)
+        || (a.dataset.namekey ?? '').localeCompare(b.dataset.namekey ?? '');
+    });
     let visibleCount = 0;
     for (const row of ordered) {
-      const inView = !viewKey || (row.dataset.views ?? '').split(',').includes(viewKey);
-      const matches =
-        inView &&
-        (!category?.value || row.dataset.category === category.value) &&
-        (!priority?.value || row.dataset.priority === priority.value) &&
-        (!fit?.value || row.dataset.fit === fit.value) &&
-        (!search || row.dataset.name?.includes(search));
+      const matches = (!viewKey || (row.dataset.views ?? '').split(',').includes(viewKey))
+        && ['category', 'priority', 'fit', 'status', 'evidence'].every(key => {
+          const value = controls?.querySelector<HTMLSelectElement>(`[data-fd-${key}]`)?.value;
+          return !value || row.dataset[key] === value;
+        })
+        && (!search || row.dataset.name?.includes(search));
       row.hidden = !matches;
       if (matches) visibleCount += 1;
       body.append(row);
     }
-
-    count.textContent =
-      visibleCount === rows.length
-        ? `Showing all ${rows.length} programs`
-        : `Showing ${visibleCount} of ${rows.length} programs`;
+    count.textContent = visibleCount === rows.length ? `Showing all ${rows.length} programs` : `Showing ${visibleCount} of ${rows.length} programs`;
     empty.hidden = visibleCount > 0;
-
-    document.querySelectorAll('[data-sort-heading]').forEach((heading) => {
-      if (!orderIndex && heading.dataset.sortHeading === sortKey) {
-        heading.setAttribute('aria-sort', sortDirection === 'desc' ? 'descending' : 'ascending');
-      } else {
-        heading.removeAttribute('aria-sort');
-      }
+    document.querySelectorAll<HTMLElement>('[data-sort-heading]').forEach(heading => {
+      const activeKey = sortKey === 'view' && !orderIndex ? 'priority' : sortKey;
+      if (heading.dataset.sortHeading === activeKey) heading.setAttribute('aria-sort', direction === 'desc' ? 'descending' : 'ascending');
+      else heading.removeAttribute('aria-sort');
     });
   }
 
-  controls?.addEventListener('input', applyRows);
-  controls?.addEventListener('change', applyRows);
-  controls?.addEventListener('reset', () => {
-    sortKey = 'priority';
-    sortDirection = 'asc';
-    requestAnimationFrame(applyRows);
-  });
+  function exportRows() {
+    const visible = Array.from(body?.querySelectorAll<HTMLTableRowElement>('[data-fd-row]') ?? []).filter(row => !row.hidden);
+    return [['Program', 'Organization', 'Category', 'Portfolio priority', 'Portfolio fit', 'Recorded deadline', 'Program status', 'Evidence quality', 'Last verified', 'Official URL', 'Record URL'],
+      ...visible.map(({ dataset: d }) => [d.title, d.org, d.category, d.priority, d.fit, d.deadline, d.status, d.evidence, d.verified, d.official, new URL(`/funding/${d.slug}`, location.origin).href])];
+  }
 
-  document.querySelectorAll('[data-sort]').forEach((button) => {
-    button.addEventListener('click', () => {
-      const nextKey = button.dataset.sort;
-      if (!nextKey) return;
-      if (nextKey === sortKey) sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
-      else {
-        sortKey = nextKey;
-        sortDirection = 'desc';
-      }
-      if (mobileSort) mobileSort.value = `${sortKey}:${sortDirection}`;
-      if (view) view.value = '';
-      applyRows();
+  if (controls) {
+    // A view narrows membership. Choosing another sort must keep that membership.
+    view?.addEventListener('change', () => { if (sort) sort.value = 'view:asc'; });
+    const update = bindCatalogControls(controls, render, exportRows, 'funding-results.csv');
+    document.querySelectorAll<HTMLButtonElement>('[data-sort]').forEach(button => {
+      button.addEventListener('click', () => {
+        if (!sort) return;
+        const [rawKey, direction] = sort.value.split(':');
+        const key = rawKey === 'view' && !view?.value ? 'priority' : rawKey;
+        sort.value = `${button.dataset.sort}:${key === button.dataset.sort && direction === 'asc' ? 'desc' : 'asc'}`;
+        update();
+      });
     });
-  });
-
-  mobileSort?.addEventListener('change', () => {
-    [sortKey, sortDirection] = mobileSort.value.split(':');
-    if (view) view.value = '';
-    applyRows();
-  });
-
-  document.querySelector('[data-fd-empty-reset]')?.addEventListener('click', () => {
-    controls?.reset();
-    sortKey = 'priority';
-    sortDirection = 'asc';
-    applyRows();
-    query?.focus();
-  });
+    document.querySelector('[data-fd-empty-reset]')?.addEventListener('click', () => { controls.reset(); query?.focus(); });
+  }
 </script>
 
 <style>
@@ -596,7 +597,7 @@ const deadlineText = (program: (typeof programs)[number]) =>
 
   .funding-controls {
     display: grid;
-    grid-template-columns: minmax(14rem, 1.4fr) repeat(4, minmax(9rem, 0.8fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     border: 1px solid var(--line-strong);
     background: var(--surface);
   }
@@ -641,10 +642,11 @@ const deadlineText = (program: (typeof programs)[number]) =>
   }
 
   .funding-sort-mobile {
-    display: none !important;
+    display: flex;
   }
 
   .funding-result-line {
+    flex-wrap: wrap;
     grid-column: 1 / -1;
     display: flex;
     align-items: center;
