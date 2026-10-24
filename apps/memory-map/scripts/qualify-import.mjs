@@ -129,8 +129,9 @@ const archive = await createSyntheticArchive();
 for (const width of [390, 768, 1280]) {
   test(`synthetic ZIP exposes model-download recovery at ${width}px`, async () => {
     const { server, origin } = await serveBuiltApp();
-    const browser = await chromium.launch();
+    let browser;
     try {
+      browser = await chromium.launch();
       const page = await browser.newPage({ viewport: { width, height: 900 } });
       await page.route("**/*", (route) =>
         route.request().url().startsWith(origin) ? route.continue() : route.abort()
@@ -152,8 +153,11 @@ for (const width of [390, 768, 1280]) {
       await expect(page.locator("#import-view")).toBeVisible();
       assert.equal(await page.locator("#archive-input").inputValue(), "");
     } finally {
-      await browser.close();
-      await closeServer(server);
+      try {
+        await browser?.close();
+      } finally {
+        await closeServer(server);
+      }
     }
   });
 }
@@ -262,16 +266,17 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
   timeout: 300000,
 }, async () => {
   const { server, origin } = await serveBuiltApp();
-  const browser = await chromium.launch({ args: ["--disable-webgpu"] });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-  const pageErrors = [];
+  let browser;
   const modelRequests = {
     pinnedModelRequested: false,
     blockPinnedModelRequests: true,
     blockedPinnedModelRequestCount: 0,
   };
-  page.on("pageerror", (error) => pageErrors.push(error.message));
   try {
+    browser = await chromium.launch({ args: ["--disable-webgpu"] });
+    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    const pageErrors = [];
+    page.on("pageerror", (error) => pageErrors.push(error.message));
     await page.addInitScript(() => {
       Object.defineProperty(navigator, "gpu", { configurable: true, value: undefined });
     });
@@ -314,8 +319,11 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
     await retainFixtureEvidence(exported, modelRequests, coverageVectors);
     assert.deepEqual(pageErrors, []);
   } finally {
-    await browser.close();
-    await closeServer(server);
+    try {
+      await browser?.close();
+    } finally {
+      await closeServer(server);
+    }
   }
 });
 

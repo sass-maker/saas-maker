@@ -40,7 +40,10 @@ jobs:
       - run: pnpm --filter gitstat build
       - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
       - run: pnpm check:memory-map
+      - name: Install Playwright Chromium
+        run: pnpm --filter @saas-maker/memory-map exec playwright install --with-deps chromium
       - name: Qualify the synthetic Memory Map import and recovery workflow
+        timeout-minutes: 10
         env:
           MEMORY_MAP_TRACE_ARTIFACT_DIR: ${{ runner.temp }}/memory-map-qualification
         run: pnpm --filter @saas-maker/memory-map run test:import
