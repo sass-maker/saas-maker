@@ -9,7 +9,7 @@
     "repository": "https://github.com/sass-maker/ui-library",
     "visibility": "public",
     "npmPublish": false,
-    "currentTag": "v0.1.27",
+    "currentTag": "v0.1.28",
     "web": {
       "installMethod": "Set tagged GitHub subdirectory specs with pnpm pkg set, then pnpm install.",
       "packages": [
@@ -40,7 +40,7 @@
         "Do not use pnpm add for these GitHub specs: pnpm 10.33 drops the tag and subdirectory when saving them.",
         "React templates need React, React DOM and the Astro React integration in Astro consumers; follow the library consumer guide.",
         "Share tokens, variants and templates rather than making per-product forks.",
-        "Component explorer (2026-10-24): https://sass-maker.github.io/ui-library/ — atoms, molecules, organisms and templates; 125 UI modules, 190 stories, 129 guides and 29 standalone source examples. Connected first-run and Kith Studio workflows, plus a source-backed component catalog with compiled imports, selection and export. Visual shelf: 35 sources with reuse terms, four original CSS materials and two local CC0 samples; measured four-family typography bench and complete media narrative. Release v0.1.27 at 6dfbaa3e5d87e58bc4e9cbb9f65e0e7781794810; 111 unit and 198 browser checks, 140 Linux baselines across 390/820/1440 paper/light and ink/dark. Touch captures retain pointer emulation; keyboard, focus recovery and modal wrapping qualified. Legacy registry dependencies are pinned. Pages source files match the successful main artifact. Swift source is unchanged; macOS 14/15 CI build/test/render passed. Physical-phone qualification, global design ranking and consumer outcomes remain separate. Pages shared steward saas-maker; consumer adoption is independently qualified."
+        "Component explorer (2026-10-24): https://sass-maker.github.io/ui-library/ — atoms, molecules, organisms and templates; 125 UI modules, 193 stories, 129 guides and 29 standalone source examples. Connected first-run and Kith Studio workflows, with a source-backed component catalog and compiled imports. Visual shelf: 35 sources with reuse terms, four original CSS materials and two local CC0 samples. Typography: ten self-hosted OFL families and four curated landing/app pairings with copyable page and CSS configuration. Carousel qualification covers measured geometry, keyboard/touch/RTL navigation, focus isolation, changing collections and finished image frames. Release v0.1.28 at 18142fa46680d492c369519f041d73ffdf7facc5; 112 unit and 264 browser checks, five inapplicable touch-emulation skips, and 170 reviewed Linux baselines across 390/820/1440 paper/light and ink/dark. Visible Safari 27.2 MCP review covers typography and media layouts at phone, tablet and desktop widths. Pages source files match the successful main artifact. Web-only release; Swift sources are unchanged and native install guidance remains 0.1.27. Physical-device qualification, global design ranking and consumer outcomes remain separate. Pages shared steward saas-maker; consumer adoption is independently qualified."
       ]
     },
     "native": {
