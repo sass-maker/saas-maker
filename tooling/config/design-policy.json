@@ -9,7 +9,7 @@
     "repository": "https://github.com/sass-maker/ui-library",
     "visibility": "public",
     "npmPublish": false,
-    "currentTag": "v0.1.23",
+    "currentTag": "v0.1.26",
     "web": {
       "installMethod": "Set tagged GitHub subdirectory specs with pnpm pkg set, then pnpm install.",
       "packages": [
@@ -40,14 +40,14 @@
         "Do not use pnpm add for these GitHub specs: pnpm 10.33 drops the tag and subdirectory when saving them.",
         "React templates need React, React DOM and the Astro React integration in Astro consumers; follow the library consumer guide.",
         "Share tokens, variants and templates rather than making per-product forks.",
-        "Live component explorer (2026-10-24): https://sass-maker.github.io/ui-library/ — atoms, molecules, organisms and templates; 121 UI modules, 175 stories, 126 guides, and 25 standalone source examples. Linked atomic composition, interactive state lab, contextual forms, and smooth state transitions. GitHub Pages on sass-maker/ui-library; shared operational steward saas-maker. Release v0.1.23; source 8af7708a2199a2b812a3b2764845c448e09ee10a. Product consumer upgrades remain separate."
+        "Component explorer (2026-10-24): https://sass-maker.github.io/ui-library/ — atoms, molecules, organisms and templates; 125 UI modules, 183 stories, 129 guides and 26 standalone source examples. Visual shelf: 35 sources with reuse terms, four original CSS materials and two local CC0 samples. Measured four-family typography bench. Complete Kith media narrative, native video with captions, responsive source recovery and truthful clipboard feedback. Release v0.1.26 at 91af7e112e7d0e165fa05b3ef90367607d8e03f6; 111 unit and 108 browser checks, 60 Linux visual baselines at 390/820/1440 across paper/light and ink/dark. Swift source is unchanged; local Swift build passed. Physical-phone qualification and comparative product outcomes remain separate. Pages shared steward saas-maker; consumer adoption is independently qualified."
       ]
     },
     "native": {
       "name": "SaaSMakerUI",
       "url": "https://github.com/sass-maker/ui-library",
       "manifest": "Package.swift (repository root; sources under swift/Sources/SaaSMakerUI)",
-      "install": ".package(url: \"https://github.com/sass-maker/ui-library\", from: \"0.1.23\")"
+      "install": ".package(url: \"https://github.com/sass-maker/ui-library\", from: \"0.1.26\")"
     },
     "templates": {
       "landing": [
