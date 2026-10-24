@@ -1,6 +1,6 @@
 ---
 name: site-health
-description: Route site health, Microsoft Clarity traffic, AI indexing, technical SEO, competitive content coverage, performance, visibility trends, and public guest-journey audits to one relevant Fleet subskill.
+description: Route site health, Microsoft Clarity traffic, AI indexing, technical SEO, agentic growth cycles, competitive content coverage, performance, visibility trends, and public guest-journey audits to one relevant Fleet subskill.
 ---
 
 # site-health — fleet website measurement (routing parent)
@@ -12,6 +12,7 @@ one you need, not all of them.
 |---|---|
 | AI/agent readiness: llms.txt, /api/ai, index.md, robots vs AI crawlers, GEO surfaces | `skills/agent-ready/SKILL.md` |
 | On-page SEO: title/meta/canonical/OG/JSON-LD/hreflang/sitemap coverage | `skills/seo-audit/SKILL.md` |
+| Agentic SEO / FirstIndex-style growth cycles: opportunities, briefs, writing, QA, publication evidence, conversions and refreshes | `../agentic-seo/SKILL.md` |
 | SEO market research: keywords, search competitors, backlink prospects, local-search opportunities, optional provider metrics | `skills/seo-research/SKILL.md` |
 | SEO content sufficiency: article inventory, competitive intent/page gaps, comparison/alternative/use-case pages, create or publish missing pages | `skills/content-coverage/SKILL.md` |
 | Performance: Core Web Vitals, Lighthouse, "why is X slow" | the global `web-perf` skill |
