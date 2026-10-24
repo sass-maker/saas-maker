@@ -43,6 +43,8 @@ import {
   PURPOSE_LABELS,
   productPriority,
   productPriorityLabel,
+  formatUsageCount,
+  portfolioUsageStatus,
   type ScoreMetric,
   transitionLever,
   type CycleRecord,
@@ -50,6 +52,7 @@ import {
   type LeverStatus,
   type ScoreProject,
   type ScoreWorkspace,
+  type PortfolioUsageStatus,
 } from '@/lib/scoreboard';
 import styles from './scoreboard-workbench.module.css';
 import { CategoryEvidence, ScorePair, ScoreValue } from './scoreboard-evidence';
@@ -70,6 +73,17 @@ const statusLabel: Record<LeverStatus, string> = {
 const dateLabel = (date: string) =>
   new Date(date).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 const firstSentence = (text: string) => text.match(/^.*?[.!?](?:\s|$)/)?.[0]?.trim() ?? text;
+const usageStatusLabel: Record<PortfolioUsageStatus, string> = {
+  use_recorded: 'Use recorded',
+  audience_only: 'Audience only',
+  closure_review: 'Closure review',
+  tracking_gap: 'Tracking gap',
+  stale: 'Stale',
+};
+const usageUnitLabel = (unit: string) =>
+  ({ users: 'users', browsers: 'browser IDs', devices: 'devices', sessions: 'sessions' })[
+    unit as 'users' | 'browsers' | 'devices' | 'sessions'
+  ] ?? unit;
 
 export function ScoreboardWorkbench({
   workspace,
@@ -97,6 +111,7 @@ export function ScoreboardWorkbench({
   const [domain, setDomain] = useState('all');
   const [projectFilter, setProjectFilter] = useState('');
   const [status, setStatus] = useState('all');
+  const [usageFilter, setUsageFilter] = useState('all');
   const [sort, setSort] = useState<DataSort>([{ id: 'priority', desc: false }]);
   const [selected, setSelected] = useState('');
   const [sheet, setSheet] = useState<'evidence' | 'action' | 'review' | null>(null);
@@ -167,6 +182,8 @@ export function ScoreboardWorkbench({
             matchesPurpose(p) &&
             matchesPriority(p) &&
             (domain === 'all' || p.domains.includes(domain)) &&
+            (usageFilter === 'all' ||
+              portfolioUsageStatus(workspace.usage, p.id) === usageFilter) &&
             (!query ||
               [p.name, p.segment, ...p.domains]
                 .join(' ')
@@ -180,7 +197,18 @@ export function ScoreboardWorkbench({
               priority[byLever.get(b.bestNextLeverId)!.priority] ||
             a.name.localeCompare(b.name)
         ),
-    [snapshot, scope, purpose, priorityFilter, domain, query, projectFilter, byLever]
+    [
+      snapshot,
+      scope,
+      purpose,
+      priorityFilter,
+      domain,
+      query,
+      projectFilter,
+      byLever,
+      usageFilter,
+      workspace.usage,
+    ]
   );
   const actions = orderedLevers.filter((l) => {
     const p = byProject.get(l.projectId)!;
@@ -215,7 +243,8 @@ export function ScoreboardWorkbench({
     priorityFilter !== 'all' ||
     area !== 'all' ||
     domain !== 'all' ||
-    status !== 'all';
+    status !== 'all' ||
+    usageFilter !== 'all';
   const defaultSelection = hasFocus ? matchingFallback : (active?.leverId ?? matchingFallback);
   const lever = byLever.get(selected) ?? byLever.get(defaultSelection ?? fallback)!;
   const selectedProject = byProject.get(lever.projectId)!;
@@ -277,6 +306,7 @@ export function ScoreboardWorkbench({
     setDomain('all');
     setProjectFilter('');
     setStatus('all');
+    setUsageFilter('all');
     setSort([{ id: 'priority', desc: false }]);
     setSelected('');
   }
@@ -308,8 +338,44 @@ export function ScoreboardWorkbench({
                 ))
               : 'Purpose unclassified'}
           </span>
+          {(() => {
+            const record = workspace.usage?.records[p.id];
+            const usageStatus = portfolioUsageStatus(workspace.usage, p.id);
+            return (
+              <small className={styles.inlineUsage}>
+                30d{' '}
+                {record
+                  ? `${formatUsageCount(record.proxy.count, record.proxy.precision)} ${usageUnitLabel(record.proxy.unit)} · ${record.proxy.precision.replace('_', ' ')}`
+                  : 'Unknown'}
+                {' · '}
+                {usageStatusLabel[usageStatus]}
+              </small>
+            );
+          })()}
         </span>
       ),
+    },
+    {
+      id: 'usage:count',
+      header: '30d proxy',
+      value: (p) => workspace.usage?.records[p.id]?.proxy.count ?? null,
+      sortDescFirst: false,
+      minWidth: '6rem',
+      cell: (p) => {
+        const record = workspace.usage?.records[p.id];
+        const usageStatus = portfolioUsageStatus(workspace.usage, p.id);
+        return (
+          <span className={styles.usageCell}>
+            <strong>
+              {record
+                ? `${formatUsageCount(record.proxy.count, record.proxy.precision)} ${usageUnitLabel(record.proxy.unit)}`
+                : 'Unknown'}
+            </strong>
+            {record && <small>{record.proxy.precision.replace('_', ' ')}</small>}
+            <small>{usageStatusLabel[usageStatus]}</small>
+          </span>
+        );
+      },
     },
     {
       id: 'priority',
@@ -448,9 +514,11 @@ export function ScoreboardWorkbench({
     <div className={styles.workbench}>
       {infoProject ? (
         <ScoreboardProduct
+          key={infoProject.id}
           project={infoProject}
           workspace={workspace}
           onEvidence={(category, reading) => selectScore(infoProject, category, reading)}
+          onChange={onChange}
           onLever={(id) => {
             setSelected(id);
             setSheet('action');
@@ -644,6 +712,20 @@ export function ScoreboardWorkbench({
                     </option>
                   ))}
                 </select>
+                {view === 'scores' && (
+                  <select
+                    aria-label="30-day usage status"
+                    value={usageFilter}
+                    onChange={(e) => setUsageFilter(e.target.value)}
+                  >
+                    <option value="all">All usage status</option>
+                    {Object.entries(usageStatusLabel).map(([id, label]) => (
+                      <option key={id} value={id}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                )}
                 <select
                   aria-label="Domain"
                   value={domain}

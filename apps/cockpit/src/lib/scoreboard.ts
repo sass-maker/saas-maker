@@ -17,7 +17,7 @@ export const CATEGORY_LABELS: Record<ScoreCategory, string> = {
 };
 export const CATEGORY_DESCRIPTIONS: Record<ScoreCategory, string> = {
   product:
-    'Among the best in its segment at the core job, with expected features and outcomes across promised interfaces, including fit-for-purpose CLI, API, MCP or agent workflows.',
+    'Among the best in its segment at the core job, with agent-executable workflows and expected outcomes across promised, fit-for-purpose CLI, API, MCP or agent interfaces.',
   design: 'An aha moment, clear comprehension, low friction, and joy in the actual workflow.',
   seo: 'Up-to-date pages, proper keyword and intent matching, and growing daily organic arrivals.',
   geo: 'Prominent recommendations and citations when people ask relevant questions in AI engines.',
@@ -27,6 +27,60 @@ export const CATEGORY_DESCRIPTIONS: Record<ScoreCategory, string> = {
 export const MAX_WORKSPACE_BYTES = 64_000_000;
 export type Evidence = { source: string; date: string; note: string };
 export type ScoreMetric = 'effort' | 'result';
+export type UsagePrecision = 'exact' | 'lower_bound' | 'estimate' | 'unknown';
+export type UsageOwnerReport = { date: string; note: string };
+export type UsageEvent = {
+  name: string;
+  count: number;
+  lastSeen: string | null;
+  precision: 'exact' | 'estimate';
+};
+export type ProductUsageRecord = {
+  windowStart: string;
+  windowEnd: string;
+  checkedAt: string;
+  proxy: {
+    count: number | null;
+    unit: 'users' | 'browsers' | 'devices' | 'sessions';
+    precision: UsagePrecision;
+  };
+  core: {
+    count: number | null;
+    definition: string;
+    lastUsedAt: string | null;
+    qualified: boolean;
+    precision: UsagePrecision;
+    coverage: 'complete' | 'partial' | 'unknown';
+  };
+  tracking: 'healthy' | 'partial' | 'missing';
+  evidence: Evidence[];
+  limitations: string;
+  events?: UsageEvent[];
+};
+export type PortfolioUsage = {
+  schemaVersion: 1;
+  updatedAt: string;
+  records: Record<string, ProductUsageRecord>;
+  /** Local owner statements; these never add to an imported audience count. */
+  ownerReports?: Record<string, UsageOwnerReport[]>;
+};
+export type PortfolioUsageBundle = {
+  kind: 'portfolio-usage';
+  schemaVersion: 1;
+  usage: Omit<PortfolioUsage, 'ownerReports'>;
+};
+export type PortfolioUsageStatus =
+  | 'use_recorded'
+  | 'audience_only'
+  | 'closure_review'
+  | 'tracking_gap'
+  | 'stale';
+export function formatUsageCount(count: number | null, precision: UsagePrecision): string {
+  if (count === null) return 'Unknown';
+  if (precision === 'lower_bound') return `≥${count}`;
+  if (precision === 'estimate') return `~${count}`;
+  return String(count);
+}
 export const METRIC_LABELS: Record<ScoreMetric, string> = { effort: 'Effort', result: 'Result' };
 export type ScoreReading = {
   value: number | null;
@@ -139,6 +193,7 @@ export type ScoreWorkspace = {
   history: CycleRecord[];
   updatedAt: string;
   assessments?: Assessment[];
+  usage?: PortfolioUsage;
 };
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
@@ -150,9 +205,325 @@ function isText(value: unknown, max = 20_000): value is string {
   return typeof value === 'string' && value.trim().length > 0 && value.length <= max;
 }
 const isDate = (value: unknown) => isText(value, 64) && Number.isFinite(Date.parse(value));
+const isDateOnly = (value: unknown): value is string =>
+  typeof value === 'string' &&
+  /^\d{4}-\d{2}-\d{2}$/.test(value) &&
+  Number.isFinite(Date.parse(`${value}T00:00:00.000Z`)) &&
+  new Date(`${value}T00:00:00.000Z`).toISOString().slice(0, 10) === value;
+const localDateOnly = (date: Date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+const isRecentOwnerUse = (date: string, now: number) => {
+  const today = localDateOnly(new Date(now));
+  const daysAgo = Date.parse(`${today}T00:00:00.000Z`) - Date.parse(`${date}T00:00:00.000Z`);
+  return daysAgo >= 0 && daysAgo < THIRTY_DAYS;
+};
+const isIsoTimestamp = (value: unknown): value is string => {
+  if (typeof value !== 'string') return false;
+  const match = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.\d{1,9})?Z$/.exec(value);
+  return Boolean(
+    match &&
+      Number.isFinite(Date.parse(value)) &&
+      new Date(`${match[1]}.000Z`).toISOString().slice(0, 19) === match[1]
+  );
+};
 export const isCategory = (value: unknown): value is ScoreCategory =>
   SCORE_CATEGORIES.includes(value as ScoreCategory);
 const isId = (value: unknown) => isText(value, 100) && /^[a-z0-9][a-z0-9-]*$/.test(value);
+const MAX_USAGE_RECORDS = 500;
+const MAX_USAGE_EVENTS = 100;
+const MAX_OWNER_REPORTS = 1000;
+const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+
+function exactKeys(value: Record<string, unknown>, allowed: string[]) {
+  return Object.keys(value).every((key) => allowed.includes(key));
+}
+
+function validateUsageRecord(input: unknown): asserts input is ProductUsageRecord {
+  requireValue(
+    isObject(input) &&
+      exactKeys(input, [
+        'windowStart',
+        'windowEnd',
+        'checkedAt',
+        'proxy',
+        'core',
+        'tracking',
+        'evidence',
+        'limitations',
+        'events',
+      ]) &&
+      isIsoTimestamp(input.windowStart) &&
+      isIsoTimestamp(input.windowEnd) &&
+      isIsoTimestamp(input.checkedAt) &&
+      Date.parse(input.windowEnd) - Date.parse(input.windowStart) === THIRTY_DAYS &&
+      Date.parse(input.checkedAt) >= Date.parse(input.windowEnd),
+    'Usage needs an exact rolling 30-day UTC window and check date.'
+  );
+  requireValue(
+    isObject(input.proxy) &&
+      exactKeys(input.proxy, ['count', 'unit', 'precision']) &&
+      ['users', 'browsers', 'devices', 'sessions'].includes(input.proxy.unit as string) &&
+      ['exact', 'lower_bound', 'estimate', 'unknown'].includes(input.proxy.precision as string) &&
+      (input.proxy.count === null ||
+        (typeof input.proxy.count === 'number' &&
+          Number.isSafeInteger(input.proxy.count) &&
+          input.proxy.count >= 0)) &&
+      ((input.proxy.count === null && input.proxy.precision === 'unknown') ||
+        (input.proxy.count !== null && input.proxy.precision !== 'unknown')),
+    'Invalid audience proxy count, unit or precision.'
+  );
+  requireValue(
+    isObject(input.core) &&
+      exactKeys(input.core, [
+        'count',
+        'definition',
+        'lastUsedAt',
+        'qualified',
+        'precision',
+        'coverage',
+      ]) &&
+      (input.core.count === null ||
+        (typeof input.core.count === 'number' &&
+          Number.isSafeInteger(input.core.count) &&
+          input.core.count >= 0)) &&
+      isText(input.core.definition, 1000) &&
+      (input.core.lastUsedAt === null || isIsoTimestamp(input.core.lastUsedAt)) &&
+      typeof input.core.qualified === 'boolean' &&
+      ['exact', 'lower_bound', 'estimate', 'unknown'].includes(input.core.precision as string) &&
+      ['complete', 'partial', 'unknown'].includes(input.core.coverage as string) &&
+      ((input.core.count === null && input.core.precision === 'unknown' && !input.core.qualified) ||
+        (input.core.count !== null && input.core.precision !== 'unknown')) &&
+      (!input.core.qualified ||
+        (input.core.count !== null &&
+          Array.isArray(input.evidence) &&
+          input.evidence.length > 0 &&
+          input.evidence.some(
+            (e) =>
+              isObject(e) &&
+              (isIsoTimestamp(e.date) || isDateOnly(e.date)) &&
+              Date.parse(e.date as string) <= Date.parse(input.checkedAt as string)
+          ) &&
+          ((input.core.count > 0 &&
+            input.core.lastUsedAt !== null &&
+            Date.parse(input.core.lastUsedAt) >= Date.parse(input.windowStart) &&
+            Date.parse(input.core.lastUsedAt) < Date.parse(input.windowEnd)) ||
+            (input.core.count === 0 &&
+              input.core.lastUsedAt === null &&
+              input.core.precision === 'exact' &&
+              input.core.coverage === 'complete' &&
+              input.tracking === 'healthy')))),
+    'Invalid core-action count, definition, coverage or qualification.'
+  );
+  requireValue(
+    ['healthy', 'partial', 'missing'].includes(input.tracking as string) &&
+      typeof input.limitations === 'string' &&
+      input.limitations.length <= 2000 &&
+      Array.isArray(input.evidence) &&
+      input.evidence.length <= 100 &&
+      input.evidence.every(
+        (e) =>
+          isObject(e) &&
+          exactKeys(e, ['source', 'date', 'note']) &&
+          typeof e.source === 'string' &&
+          /^[A-Za-z][A-Za-z0-9 ._-]{0,99}$/.test(e.source) &&
+          (isIsoTimestamp(e.date) || isDateOnly(e.date)) &&
+          isText(e.note, 5000) &&
+          !/https?:\/\/|[?&][A-Za-z0-9_]*id=/i.test(e.note)
+      ),
+    'Invalid usage tracking, limitations or evidence.'
+  );
+  if (input.events !== undefined)
+    requireValue(
+      Array.isArray(input.events) &&
+        input.events.length <= MAX_USAGE_EVENTS &&
+        input.events.every(
+          (e) =>
+            isObject(e) &&
+            exactKeys(e, ['name', 'count', 'lastSeen', 'precision']) &&
+            typeof e.name === 'string' &&
+            /^[A-Za-z][A-Za-z0-9_.:-]{0,99}$/.test(e.name) &&
+            typeof e.count === 'number' &&
+            Number.isFinite(e.count) &&
+            e.count >= 0 &&
+            e.count <= Number.MAX_SAFE_INTEGER &&
+            (e.lastSeen === null || isIsoTimestamp(e.lastSeen)) &&
+            ['exact', 'estimate'].includes(e.precision as string)
+        ),
+      'Invalid candidate event aggregates.'
+    );
+}
+
+function validatePortfolioUsage(
+  input: unknown,
+  allowOwnerReports: boolean
+): asserts input is PortfolioUsage {
+  requireValue(
+    isObject(input) &&
+      exactKeys(
+        input,
+        allowOwnerReports
+          ? ['schemaVersion', 'updatedAt', 'records', 'ownerReports']
+          : ['schemaVersion', 'updatedAt', 'records']
+      ) &&
+      input.schemaVersion === 1 &&
+      isIsoTimestamp(input.updatedAt) &&
+      isObject(input.records) &&
+      Object.keys(input.records).length <= MAX_USAGE_RECORDS,
+    'Invalid portfolio-usage update.'
+  );
+  for (const [id, record] of Object.entries(input.records)) {
+    requireValue(isId(id), 'Usage record IDs must be canonical project IDs.');
+    validateUsageRecord(record);
+  }
+  if (input.ownerReports !== undefined)
+    requireValue(
+      allowOwnerReports &&
+        isObject(input.ownerReports) &&
+        Object.entries(input.ownerReports).every(
+          ([id, reports]) =>
+            isId(id) &&
+            Array.isArray(reports) &&
+            reports.length <= MAX_OWNER_REPORTS &&
+            reports.every(
+              (report) =>
+                isObject(report) &&
+                exactKeys(report, ['date', 'note']) &&
+                isDateOnly(report.date) &&
+                isText(report.note, 500)
+            )
+        ),
+      'Invalid local owner-use reports.'
+    );
+}
+
+export function parsePortfolioUsageBundle(text: string): PortfolioUsageBundle {
+  requireValue(text.length <= MAX_WORKSPACE_BYTES, 'Import is too large (maximum 64 MB).');
+  const input: unknown = JSON.parse(text);
+  requireValue(
+    isObject(input) &&
+      exactKeys(input, ['kind', 'schemaVersion', 'usage']) &&
+      input.kind === 'portfolio-usage' &&
+      input.schemaVersion === 1,
+    'This is not a supported portfolio-usage import.'
+  );
+  validatePortfolioUsage(input.usage, false);
+  return input as unknown as PortfolioUsageBundle;
+}
+
+export function mergePortfolioUsage(
+  current: ScoreWorkspace,
+  incoming: PortfolioUsageBundle
+): { workspace: ScoreWorkspace; matched: number; unmatched: number; skippedOlder: number } {
+  const currentIds = new Set(current.snapshot.projects.map((project) => project.id));
+  const incomingIds = Object.keys(incoming.usage.records);
+  const existing = current.usage;
+  const matchingIds = incomingIds.filter((id) => currentIds.has(id));
+  const skippedOlder = matchingIds.filter((id) => {
+    const stored = existing?.records[id];
+    return (
+      stored && Date.parse(incoming.usage.records[id].checkedAt) < Date.parse(stored.checkedAt)
+    );
+  }).length;
+  const matchedRecords = Object.fromEntries(
+    matchingIds
+      .filter((id) => {
+        const stored = existing?.records[id];
+        return (
+          !stored ||
+          Date.parse(incoming.usage.records[id].checkedAt) >= Date.parse(stored.checkedAt)
+        );
+      })
+      .map((id) => [id, incoming.usage.records[id]])
+  );
+  const usage: PortfolioUsage = {
+    schemaVersion: 1,
+    updatedAt:
+      existing && Date.parse(existing.updatedAt) > Date.parse(incoming.usage.updatedAt)
+        ? existing.updatedAt
+        : incoming.usage.updatedAt,
+    records: { ...existing?.records, ...matchedRecords },
+    ...(existing?.ownerReports && { ownerReports: existing.ownerReports }),
+  };
+  validatePortfolioUsage(usage, true);
+  return {
+    workspace: { ...current, usage },
+    matched: matchingIds.length,
+    unmatched: incomingIds.length - matchingIds.length,
+    skippedOlder,
+  };
+}
+
+export function recordOwnerUse(
+  current: ScoreWorkspace,
+  projectId: string,
+  report: UsageOwnerReport,
+  at = new Date().toISOString(),
+  now = Date.now()
+): ScoreWorkspace {
+  requireValue(
+    current.snapshot.projects.some((project) => project.id === projectId),
+    'Unknown product.'
+  );
+  requireValue(
+    isDateOnly(report.date) &&
+      report.date <= localDateOnly(new Date(now)) &&
+      isText(report.note, 500),
+    'Enter a past date and a brief non-sensitive action note.'
+  );
+  const usage = current.usage ?? { schemaVersion: 1 as const, updatedAt: at, records: {} };
+  const reports = usage.ownerReports?.[projectId] ?? [];
+  requireValue(
+    reports.length < MAX_OWNER_REPORTS,
+    'Owner-use history is full; export a backup first.'
+  );
+  const nextUsage = {
+    ...usage,
+    updatedAt: at,
+    ownerReports: { ...usage.ownerReports, [projectId]: [...reports, report] },
+  };
+  validatePortfolioUsage(nextUsage, true);
+  return { ...current, usage: nextUsage };
+}
+
+export function portfolioUsageStatus(
+  usage: PortfolioUsage | undefined,
+  projectId: string,
+  now = Date.now()
+): PortfolioUsageStatus {
+  const recentOwnerUse = usage?.ownerReports?.[projectId]?.some((report) => {
+    return isRecentOwnerUse(report.date, now);
+  });
+  if (recentOwnerUse) return 'use_recorded';
+  const record = usage?.records[projectId];
+  if (!record) return 'tracking_gap';
+  const checkedAt = Date.parse(record.checkedAt);
+  const windowEnd = Date.parse(record.windowEnd);
+  const fresh =
+    checkedAt <= now &&
+    now - checkedAt <= SEVEN_DAYS &&
+    windowEnd <= now &&
+    now - windowEnd <= SEVEN_DAYS;
+  const recentCoreUse =
+    record.core.qualified &&
+    record.core.count !== null &&
+    record.core.count > 0 &&
+    record.core.lastUsedAt !== null &&
+    Date.parse(record.core.lastUsedAt) <= now &&
+    now - Date.parse(record.core.lastUsedAt) <= THIRTY_DAYS;
+  if (recentCoreUse) return 'use_recorded';
+  const completeZero =
+    fresh &&
+    record.tracking === 'healthy' &&
+    record.core.coverage === 'complete' &&
+    record.core.qualified &&
+    record.core.precision === 'exact' &&
+    record.core.count === 0;
+  if (completeZero) return 'closure_review';
+  if (fresh && record.proxy.count !== null && record.proxy.count > 0) return 'audience_only';
+  if (!fresh) return 'stale';
+  return 'tracking_gap';
+}
 
 function validateReading(s: unknown): asserts s is Score {
   requireValue(
@@ -434,6 +805,7 @@ export function parseWorkspace(text: string): ScoreWorkspace {
       requireValue(!reviewIds.has(record.id), 'Assessment IDs must be unique.');
       reviewIds.add(record.id);
     }
+    if (input.usage !== undefined) validatePortfolioUsage(input.usage, true);
     workspace.assessments = mergeAssessments(records as Assessment[], [
       archiveAssessment(snapshot, workspace.updatedAt),
     ]);
@@ -447,8 +819,11 @@ export function importSnapshot(
   incoming: ScoreWorkspace
 ): ScoreWorkspace {
   if (!current) return incoming;
+  const preserveUsage =
+    incoming.usage === undefined && current.usage !== undefined ? { usage: current.usage } : {};
   // A workspace backup is explicit replacement. A new baseline preserves the cadence by stable ID.
-  if (incoming.history.length || Object.keys(incoming.progress).length) return incoming;
+  if (incoming.history.length || Object.keys(incoming.progress).length)
+    return { ...incoming, ...preserveUsage };
   const ids = new Set(incoming.snapshot.levers.map((l) => l.id));
   const active = Object.values(current.progress).find((p) => p?.status === 'active');
   requireValue(
@@ -462,6 +837,7 @@ export function importSnapshot(
   );
   return {
     ...incoming,
+    ...preserveUsage,
     snapshot: {
       ...incoming.snapshot,
       levers: incoming.snapshot.levers.map((l) => retained.get(l.id) ?? l),

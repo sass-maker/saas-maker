@@ -48,6 +48,10 @@ evidence, not GEO visibility or a seventh score. The [canonical checklist](../to
 defines applicability and shipped-runtime proof; interface presence or source
 fixtures alone do not establish readiness or change a score.
 
+The private usage view tracks rolling 30-day audience proxies, meaningful core
+actions and dated owner reports separately. Audience alone is not use; qualified
+inactivity prompts owner closure review without changing a score or archiving a product.
+
 The initial combined review used a four-point rubric, converted by multiplying
 by 2.5. Those original estimates remain in history as **Previous combined
 score**. They are never automatically relabelled as effort or result proof.

@@ -32,6 +32,27 @@
 .guideGrid p { color: var(--quiet); margin: 8px 0 0; }
 .purposeNames { display: block; color: var(--quiet); font-size: 11px; line-height: 1.5; margin-top: 6px; overflow-wrap: anywhere; }
 .purposeNames > span { display: inline-block; white-space: nowrap; }
+.productCell .inlineUsage { display: none; margin-top: 7px !important; max-width: none !important; height: auto !important; overflow: visible !important; white-space: normal !important; overflow-wrap: anywhere; color: var(--quiet); font-size: 10px !important; }
+.usageCell { display: grid; gap: 4px; line-height: 1.4; }
+.usageCell strong { font-size: 10px; font-weight: 500; }
+.usageCell small { color: var(--quiet); font-size: 9px; }
+.usagePanel { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 22px 0; margin: 8px 0 32px; }
+.usagePanel > p { color: var(--quiet); font-size: 12px; line-height: 1.7; margin: 12px 0; overflow-wrap: anywhere; }
+.usageHeading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.usageHeading h2 { margin-bottom: 5px; }
+.usageHeading p, .usageDetails dd, .usageEvidenceLine, .usageLimit { color: var(--quiet); font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+.usageDetails { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 24px; margin-top: 18px; }
+.usageDetails dt { font-size: 10px; color: var(--quiet); }
+.usageDetails dd { margin-top: 4px; }
+.usageEvidence { margin-top: 15px; border-top: 1px solid var(--line); padding-top: 12px; }
+.usageEvidence summary { cursor: pointer; font-size: 11px; }
+.usageEvidence p { color: var(--quiet); font-size: 11px; line-height: 1.7; margin-top: 8px; overflow-wrap: anywhere; }
+.usageLimit { padding: 10px; border: 1px solid var(--line); border-radius: 5px; margin-top: 12px; }
+.ownerUseForm { display: grid; grid-template-columns: minmax(150px, .5fr) minmax(200px, 1fr) auto; align-items: end; gap: 12px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+.ownerUseForm label { display: grid; gap: 6px; color: var(--quiet); font-size: 10px; }
+.ownerUseForm input { min-width: 0; height: 38px; padding: 7px 9px; border: 1px solid var(--line); border-radius: 5px; color: var(--foreground); background: var(--surface); font: inherit; font-size: 11px; }
+.ownerUseForm p { grid-column: 1 / 3; color: var(--quiet); font-size: 10px; line-height: 1.6; }
+.ownerUseForm button { min-height: 38px; border: 1px solid var(--line); border-radius: 5px; padding: 0 12px; font-size: 11px; }
 .productCell a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .productInfo h2 { font-size: 16px; font-weight: 550; margin-bottom: 12px; }
 .backLink { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; margin: 0 0 24px; color: var(--quiet); }
@@ -53,6 +74,7 @@
 .productTask svg { flex-shrink: 0; }
 .tools { flex-wrap: wrap; }
 @media (max-width: 1000px) { .guideGrid, .productOverview { grid-template-columns: 1fr; gap: 18px; } .productAreas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .usageDetails, .ownerUseForm { grid-template-columns: 1fr; } .ownerUseForm p { grid-column: auto; } }
 @media (max-width: 600px) { .productAreas { grid-template-columns: 1fr; } .productInfo .header { gap: 12px; } }
 .tabs { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); font-size: 11px; color: var(--quiet); }
 .tabs > div { display: flex; gap: 24px; }
@@ -328,11 +350,12 @@
 .coverage > span { display: flex; gap: 9px; align-items: baseline; }
 .coverage strong { color: var(--foreground); font: 23px var(--font-geist-mono), monospace; letter-spacing: -1px; }
 .portfolioTable [data-slot=data-table] > div[role=region] { border-radius: 0; border: 0; background: transparent; }
-.portfolioTable [data-slot=data-table] table { border-collapse: collapse; }
+.portfolioTable [data-slot=data-table] table { border-collapse: collapse; table-layout: auto; }
 .portfolioTable [data-slot=data-table] th { position: static; height: 36px; font-size: 11px; color: var(--quiet); border-color: var(--line); padding: 0 6px; background: transparent; }
 .portfolioTable [data-slot=data-table] th[data-group-header] { height: 56px; text-align: center; color: var(--foreground); font-size: 12px; font-weight: 500; line-height: 1.5; padding: 8px 12px; vertical-align: middle; }
-.portfolioTable thead tr:first-child th:first-child { width: 16%; }
-.portfolioTable thead tr:first-child th:nth-child(2) { width: 6%; }
+.portfolioTable [data-slot=data-table] th[data-column-id=name] { width: 16%; }
+.portfolioTable [data-slot=data-table] th[data-column-id="usage:count"] { width: 11%; }
+.portfolioTable [data-slot=data-table] th[data-column-id=priority] { width: 6%; }
 .portfolioTable th[data-group-header="Total · known points"] { width: 16%; }
 .portfolioTable [data-slot=data-table] th[data-column-id=name] { text-align: left; }
 .portfolioTable [data-slot=data-table] th button { min-height: 36px; font-size: 10px; justify-content: center; width: 100%; gap: 4px; padding-inline: 0; white-space: nowrap; }
@@ -372,6 +395,8 @@
   .workbench .tools select:last-of-type { flex-basis: 100%; }
 
   .portfolioTable tr[data-row] td[data-column-id=priority] { grid-column: 1 / -1; padding: 0 0 12px; }
+  .portfolioTable tr[data-row] td[data-column-id="usage:count"] { display: none !important; }
+  .portfolioTable .productCell .inlineUsage { display: block; }
   .portfolioTable td[data-column-id=priority] .tableCell { display: flex; align-items: center; justify-content: flex-start; gap: 10px; }
   .portfolioTable td[data-column-id=priority] .narrowCellLabel { display: block; }
   .portfolioTable .narrowSort { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 8px 0 14px; color: var(--quiet); font-size: 11px; }
