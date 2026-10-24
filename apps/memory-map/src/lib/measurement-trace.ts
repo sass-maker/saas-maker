@@ -2,7 +2,7 @@ import type { AnalysisPhase, AnalysisStageTiming } from "./types";
 
 const MAX_EVENTS = 16;
 
-export type MeasurementFailureClass =
+type MeasurementFailureClass =
   | "archive_read"
   | "model_prepare"
   | "semantic_mapping"
@@ -10,7 +10,7 @@ export type MeasurementFailureClass =
   | "worker_stopped"
   | "unknown_stage";
 
-export type MeasurementMilestone =
+type MeasurementMilestone =
   | "import_started"
   | "import_completed"
   | "first_evidence_backed_insight"
@@ -44,7 +44,7 @@ export type MeasurementTraceExport = {
 
 const PHASES: AnalysisPhase[] = ["discover", "parse", "statistics", "model", "embed", "cluster"];
 
-export function failureClassForStage(stage: AnalysisPhase | null): MeasurementFailureClass {
+function failureClassForStage(stage: AnalysisPhase | null): MeasurementFailureClass {
   switch (stage) {
     case "discover":
     case "parse":
