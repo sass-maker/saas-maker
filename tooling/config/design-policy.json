@@ -9,7 +9,7 @@
     "repository": "https://github.com/sass-maker/ui-library",
     "visibility": "public",
     "npmPublish": false,
-    "currentTag": "v0.1.26",
+    "currentTag": "v0.1.27",
     "web": {
       "installMethod": "Set tagged GitHub subdirectory specs with pnpm pkg set, then pnpm install.",
       "packages": [
@@ -40,14 +40,14 @@
         "Do not use pnpm add for these GitHub specs: pnpm 10.33 drops the tag and subdirectory when saving them.",
         "React templates need React, React DOM and the Astro React integration in Astro consumers; follow the library consumer guide.",
         "Share tokens, variants and templates rather than making per-product forks.",
-        "Component explorer (2026-10-24): https://sass-maker.github.io/ui-library/ — atoms, molecules, organisms and templates; 125 UI modules, 183 stories, 129 guides and 26 standalone source examples. Visual shelf: 35 sources with reuse terms, four original CSS materials and two local CC0 samples. Measured four-family typography bench. Complete Kith media narrative, native video with captions, responsive source recovery and truthful clipboard feedback. Release v0.1.26 at 91af7e112e7d0e165fa05b3ef90367607d8e03f6; 111 unit and 108 browser checks, 60 Linux visual baselines at 390/820/1440 across paper/light and ink/dark. Swift source is unchanged; local Swift build passed. Physical-phone qualification and comparative product outcomes remain separate. Pages shared steward saas-maker; consumer adoption is independently qualified."
+        "Component explorer (2026-10-24): https://sass-maker.github.io/ui-library/ — atoms, molecules, organisms and templates; 125 UI modules, 190 stories, 129 guides and 29 standalone source examples. Connected first-run and Kith Studio workflows, plus a source-backed component catalog with compiled imports, selection and export. Visual shelf: 35 sources with reuse terms, four original CSS materials and two local CC0 samples; measured four-family typography bench and complete media narrative. Release v0.1.27 at 6dfbaa3e5d87e58bc4e9cbb9f65e0e7781794810; 111 unit and 198 browser checks, 140 Linux baselines across 390/820/1440 paper/light and ink/dark. Touch captures retain pointer emulation; keyboard, focus recovery and modal wrapping qualified. Legacy registry dependencies are pinned. Pages source files match the successful main artifact. Swift source is unchanged; macOS 14/15 CI build/test/render passed. Physical-phone qualification, global design ranking and consumer outcomes remain separate. Pages shared steward saas-maker; consumer adoption is independently qualified."
       ]
     },
     "native": {
       "name": "SaaSMakerUI",
       "url": "https://github.com/sass-maker/ui-library",
       "manifest": "Package.swift (repository root; sources under swift/Sources/SaaSMakerUI)",
-      "install": ".package(url: \"https://github.com/sass-maker/ui-library\", from: \"0.1.26\")"
+      "install": ".package(url: \"https://github.com/sass-maker/ui-library\", from: \"0.1.27\")"
     },
     "templates": {
       "landing": [
