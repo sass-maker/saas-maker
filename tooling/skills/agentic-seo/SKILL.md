@@ -69,9 +69,13 @@ Availability of a tool, skill or config file does not prove account access.
 
 ## Site Health operating path
 
-From the Site Health checkout, read `apps/backend/docs/growth-cycle.md` for exact
-JSON inputs, and `apps/backend/docs/ai-visibility-operations.md` for collection.
-Use the private store; never place raw analytics, answers or drafts in SaaS Maker.
+Use a current Site Health checkout containing the CLI. If the default
+`~/Desktop/fleet/site-health` is behind with dirty work, preserve it; inspect
+`git worktree list --porcelain` for a verified current checkout. In worktrees,
+pass growth commands `--registry ~/Desktop/fleet/saas-maker/catalog/generated/operations.json`
+when their relative catalog link is unavailable. Never use a synthetic registry
+for real work. Read `apps/backend/docs/growth-cycle.md` for JSON inputs and
+`apps/backend/docs/ai-visibility-operations.md` for collection. Keep raw data private.
 
 ```sh
 node apps/backend/scripts/brand-evidence.mjs profile <project> --input /private/profile.json
