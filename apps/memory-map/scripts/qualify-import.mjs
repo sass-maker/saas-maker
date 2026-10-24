@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
+import { join } from "node:path";
 import { test } from "node:test";
 import { chromium, expect } from "@playwright/test";
 import { BlobWriter, TextReader, ZipWriter } from "@zip.js/zip.js";
@@ -96,6 +97,7 @@ async function downloadLocalTrace(page) {
   return {
     filename: download.suggestedFilename(),
     hasPath: Boolean(tracePath),
+    trace,
     qualification: {
       schemaVersion: trace.schemaVersion,
       privacy: /tab-local/.test(trace.privacy),
@@ -154,7 +156,8 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const pageErrors = [];
   let pinnedModelRequested = false;
-  let failFirstModelRequest = true;
+  let blockPinnedModelRequests = true;
+  let blockedPinnedModelRequestCount = 0;
   page.on("pageerror", (error) => pageErrors.push(error.message));
   try {
     await page.addInitScript(() => {
@@ -172,8 +175,8 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
     });
     await page.route("**/*", (route) => {
       const url = new URL(route.request().url());
-      if (isPinnedModelRequest(route.request()) && failFirstModelRequest) {
-        failFirstModelRequest = false;
+      if (isPinnedModelRequest(route.request()) && blockPinnedModelRequests) {
+        blockedPinnedModelRequestCount += 1;
         return route.abort("failed");
       }
       if (
@@ -193,9 +196,16 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
       .locator("#archive-input")
       .setInputFiles({ name: "synthetic.zip", mimeType: "application/zip", buffer: archive });
     await expect(page.locator("#report-view")).toBeVisible({ timeout: 30000 });
-    await expect(page.locator("#local-trace-summary")).toContainText("import completed");
+    await expect(page.locator("#local-trace-summary")).toContainText("milestones");
     await expect(page.locator("#error-view")).toBeVisible({ timeout: 30000 });
-    await expect(page.locator("#local-trace-summary")).toContainText("bottleneck: model");
+    await expect(page.locator("#local-trace-summary")).toContainText(
+      "model failure needs recovery"
+    );
+    assert.ok(
+      blockedPinnedModelRequestCount > 0,
+      "first import model requests must remain blocked"
+    );
+    blockPinnedModelRequests = false;
     await page.locator("#error-reset").click();
     await expect(page.locator("#import-view")).toBeVisible();
     await page
@@ -232,6 +242,36 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
       bottleneckReason: "observed_failure_recovered",
       leaksFixtureText: false,
     });
+    const artifactDirectory = process.env.MEMORY_MAP_TRACE_ARTIFACT_DIR;
+    if (process.env.CI && !artifactDirectory) {
+      throw new Error("CI must retain the content-free Memory Map fixture trace");
+    }
+    if (artifactDirectory) {
+      await mkdir(artifactDirectory, { recursive: true });
+      await writeFile(
+        join(artifactDirectory, "memory-map-local-measurement-trace.json"),
+        `${JSON.stringify(exported.trace, null, 2)}\n`
+      );
+      await writeFile(
+        join(artifactDirectory, "memory-map-qualification-summary.json"),
+        `${JSON.stringify(
+          {
+            schemaVersion: 1,
+            fixture: "synthetic_archive",
+            viewportWidths: [390, 768, 1280],
+            pinnedModelRequested,
+            blockedPinnedModelRequestCount,
+            recoveredAfterRetry: exported.qualification.recoveryAfterFailure,
+            coverageVectors: Number(coverageMatch[1]),
+            qualification: exported.qualification,
+            bottleneck: exported.trace.bottleneck,
+            maxObservedStageDurationsMs: exported.trace.maxObservedStageDurationsMs,
+          },
+          null,
+          2
+        )}\n`
+      );
+    }
     assert.deepEqual(pageErrors, []);
   } finally {
     await browser.close();
