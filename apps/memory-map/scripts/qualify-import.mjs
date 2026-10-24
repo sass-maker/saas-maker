@@ -164,14 +164,7 @@ for (const width of [390, 768, 1280]) {
 
 function routeModelRequests(page, origin, state) {
   page.on("request", (request) => {
-    const url = new URL(request.url());
-    if (
-      url.hostname === "huggingface.co" &&
-      url.pathname ===
-        `/Xenova/all-MiniLM-L6-v2/resolve/${MODEL_REVISION}/onnx/model_quantized.onnx`
-    ) {
-      state.pinnedModelRequested = true;
-    }
+    if (isPinnedModelRequest(request)) state.pinnedModelRequested = true;
   });
   page.route("**/*", (route) => {
     const url = new URL(route.request().url());
