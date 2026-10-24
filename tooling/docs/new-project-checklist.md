@@ -269,9 +269,7 @@ also applies; technical eligibility does not guarantee visibility or growth.
 - [ ] Maintain freshness, intent fit, competitive coverage, AI-answer accuracy,
       usability, core-workflow parity, performance and reliability; prioritize
       evidenced gaps within the product's intended lifecycle
-- [ ] After an authorized release, verify the live change and compare outcomes
-      with the recorded baseline. Explain flat/declining results, concurrent
-      changes and uncertainty; do not claim causation from a before/after chart
+- [ ] After an authorized release, verify the live change against the recorded baseline; explain flat/declining results, concurrent changes and uncertainty without claiming before/after causation.
 - [ ] Keep unresolved work in the owning repository's existing GitHub Issues
       and update the existing acceptance record. Status reports distinguish
       implemented, live-verified and outcome-reviewed work, with justified
@@ -284,10 +282,12 @@ also applies; technical eligibility does not guarantee visibility or growth.
 
 ## AI and agent readiness
 
-- [ ] Declare core workflows and promised CLI, API, MCP, agent and browser surfaces; justify each N/A, treat missing promised coverage as a gap, and add no interface the core job does not benefit from.
-- [ ] Where promised, document and verify installed CLI version/help, noninteractive stable JSON schema/exit codes, bounded timeouts and errors; discover and call real MCP tools end to end with scoped, revocable auth and explicit read/write boundaries.
-- [ ] Align agent instructions and machine contracts with shipped capabilities; test a fresh agent on a shipped core task and negative case, with least privilege, private prompt/data handling, untrusted-input defenses, preview, idempotence, cancellation and recovery.
-      Persist dated observed useful-completion and recovery results/receipts with permission scope; separate QA from real use and assess internal tools too. This is cross-category Product/Engineering/Measurement evidence, not GEO or a new score formula.
+- [ ] Declare core workflows and promised CLI, API, MCP, agent and browser surfaces; justify N/A, treat missing promised coverage as a gap, and require only interfaces the core job benefits from.
+- [ ] For each promised CLI, verify installed version/help, noninteractive stable JSON schemas, exit codes, bounded timeouts and errors.
+- [ ] For each promised API/MCP surface, verify documented request/response contracts and end-to-end calls; for MCP, verify real tool discovery/calls, scoped revocable auth and explicit read/write boundaries.
+- [ ] Keep agent instructions, skills, examples and capability discovery aligned with shipped behavior.
+- [ ] Verify least privilege, private prompt/data handling, untrusted-input defenses, preview, idempotence, cancellation and recovery.
+- [ ] Have a fresh agent complete a shipped core task and negative case end to end; retain dated, permission-scoped results/receipts and observed useful completion/recovery, separating QA from real use. This applies to internal tools and is cross-category Product/Engineering/Measurement evidence, not GEO or a new score formula.
 
 ## Conditional branches
 

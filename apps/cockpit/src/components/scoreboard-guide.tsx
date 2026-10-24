@@ -36,11 +36,14 @@ export function ScoreboardGuide({ target }: { target: number }) {
               workflow. A checklist or a screenshot alone cannot prove a great experience.
             </p>
             <p>
-              AI and agent readiness is cross-category, not GEO: assess promised core tasks through
-              applicable CLI, API, MCP, agent and browser surfaces, with a reason for each N/A and
-              dated, permission-scoped shipped-runtime completion and recovery proof. Tool presence
-              or source fixtures alone do not establish readiness. See the canonical product
-              checklist.
+              AI and agent readiness spans Product, Engineering and Measurement, not GEO. Assess
+              promised core tasks through applicable CLI, API, MCP, agent and browser surfaces, with
+              a reason for each N/A and dated, permission-scoped shipped-runtime completion and
+              recovery proof; tool presence or source fixtures alone are insufficient. Read the{' '}
+              <a href="https://github.com/sass-maker/saas-maker/blob/main/tooling/docs/new-project-checklist.md">
+                canonical checklist
+              </a>
+              .
             </p>
           </div>
           <div>
