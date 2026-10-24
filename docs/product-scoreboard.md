@@ -48,9 +48,27 @@ evidence, not GEO visibility or a seventh score. The [canonical checklist](../to
 defines applicability and shipped-runtime proof; interface presence or source
 fixtures alone do not establish readiness or change a score.
 
-The private usage view tracks rolling 30-day audience proxies, meaningful core
-actions and dated owner reports separately. Audience alone is not use; qualified
-inactivity prompts owner closure review without changing a score or archiving a product.
+The private usage view tracks rolling 30-day audience proxies and meaningful
+core actions separately. Collection must work without manual owner reports;
+preserve any existing owner notes as separate historical evidence.
+
+During the weekly review, export App Health's current 30-day usage and collect
+the automatic internal-tool reports: Agent Inbox's local aggregate CLI, Site
+Health's local **Export usage summary**, and Fleet Social's read-only workflow
+metadata aggregate. These retain no inbox text, search terms or post bodies.
+Read the owner-local latest-review pointer for the current collector and helper
+paths. Apply internal reports after the public-browser export so an intentionally
+disabled browser source cannot replace local measurement.
+
+Start from a fresh scoreboard backup, prepare one combined usage bundle, then
+use the normal **Restore backup** flow and export again. Compare every prepared
+field before advancing the verified-live pointer; preserve scores, assessments,
+history and existing owner notes. Keep each source's actual window, check date,
+unit, sampling and coverage limits. QA and background work do not prove natural
+core use; a newly installed counter cannot recover the previous month.
+Audience alone is not core use. Missing tracking is unknown, never zero;
+qualified inactivity prompts owner closure review without changing a score or
+archiving a product automatically.
 
 The initial combined review used a four-point rubric, converted by multiplying
 by 2.5. Those original estimates remain in history as **Previous combined

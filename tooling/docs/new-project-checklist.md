@@ -203,7 +203,7 @@ also applies; technical eligibility does not guarantee visibility or growth.
 - [ ] Configure applicable Microsoft Clarity and verify live collection with `clarity-fleet-health`; preserve holds/N/A decisions and use it for browser behavior alongside App Health.
 - [ ] Use `ping` for useful alertable events such as signup, waitlist.join or payment.failed; verify the selected destination without adding unrequested notifications.
 - [ ] Verify Site Health picks up the domain for performance and Search Console collection; catalog registration is not proof of collection.
-- [ ] For every catalog product, including internal/local tools, record a rolling 30-day MAU/audience proxy with unit, exact window, freshness, coverage, sampling, bot and identity limits; keep people, browser IDs, devices, sessions, actions and backend requests distinct. Add a reviewed meaningful core-action definition and dated owner-use source; local/internal or privacy-held products may use a dated local owner report without new telemetry. Unknown is a tracking gap, never zero.
+- [ ] For every catalog product, including internal/local tools, provide automatic rolling 30-day usage collection with unit, exact window, freshness, coverage, sampling, bot and identity limits; keep people, browser IDs, devices, sessions, actions and backend requests distinct. Define meaningful core actions separately from the audience proxy. Use privacy-safe local counters or existing first-party metadata when public browser analytics is inapplicable; do not require manual owner-use reports or add hosted telemetry to private tools. Unknown is a tracking gap, never zero, and new counters cannot reconstruct earlier use.
 - [ ] Treat only fresh, healthy, complete, qualified exact core-action zero across the full 30-day window as closure-review evidence; positive audience alone is not use, sampled/estimated/lower-bound zero never qualifies, and verified inactivity prompts owner review rather than automatic closure or archive.
 - [ ] Verify scheduled execution and surface failures using existing operational tooling.
 
@@ -240,6 +240,10 @@ also applies; technical eligibility does not guarantee visibility or growth.
       meaningful product, content or deployment changes. Reuse existing Site
       Health reporting and App Health collection; verify actual execution,
       current coverage and failed/stale streams before interpreting trends
+- [ ] Refresh automatic usage sources in the weekly review. Combine App Health
+      and internal-tool reports once, preserve their source dates and limits,
+      and verify a fresh visible-scoreboard export after import. Apply local
+      reports after disabled browser sources; retain prior scores and history.
 - [ ] For actively maintained products, review collection health, relevant
       acquisition/conversion trends and regressions weekly. Review priority-page
       freshness, keyword/intent and competitive coverage, AI-answer evidence,
