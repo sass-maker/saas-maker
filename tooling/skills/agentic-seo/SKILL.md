@@ -82,7 +82,9 @@ node apps/backend/scripts/growth-cycle.mjs apply <project> --input /private/chan
 Every change contains the current `revision` and `command`. `plan` records this
 UTC week without duplicate unresolved work; it makes no provider calls. `add`
 requires a qualified kind, intent, mapped URL, brief, baseline and source evidence.
-Reload on conflicts, inspect the existing state, then decide whether to retry.
+Use `brief` to update existing unpublished task instructions, baseline, sources
+and issue link without duplicating its intent; this invalidates QA. Reload on
+conflicts, inspect the existing state, then decide whether to retry.
 
 `draft` returns a SHA-256 digest. `review` must name a different reviewer, the
 current digest and all six checks: readability, originality, SEO, claims, images,
@@ -92,8 +94,8 @@ not deploy, submit indexing, post socially or send outreach. Store `revision` is
 in `receipt.revision`. Content receipts must match the mapped URL. Work then awaits evidence, not a success claim.
 `measure` requires a complete post-publication window, source attribution and at
 least one real count; null means unavailable, zero means observed zero. AI
-mentions need an answer denominator and channel. Measured refreshes cite
-`refreshOf`; `complete` is for sourced research/check/report work only. `park`
+mentions need an answer denominator and channel. Published refreshes cite
+`refreshOf` and keep the URL; a sourced urgent fix need not wait for traffic data; `complete` is for sourced research/check/report work only. `park`
 retains a reason. Delivery stays in product issues; this store is the evidence loop.
 
 For third-party best-tools listicles use the installed `ai-listicle-outreach`
