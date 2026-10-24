@@ -35,6 +35,16 @@ export function ScoreboardGuide({ target }: { target: number }) {
               Design needs observed comprehension, friction, delight and preference in the real
               workflow. A checklist or a screenshot alone cannot prove a great experience.
             </p>
+            <p>
+              AI and agent readiness spans Product, Engineering and Measurement, not GEO. Assess
+              promised core tasks through applicable CLI, API, MCP, agent and browser surfaces, with
+              a reason for each N/A and dated, permission-scoped shipped-runtime completion and
+              recovery proof; tool presence or source fixtures alone are insufficient. Read the{' '}
+              <a href="https://github.com/sass-maker/saas-maker/blob/main/tooling/docs/new-project-checklist.md">
+                canonical checklist
+              </a>
+              .
+            </p>
           </div>
           <div>
             <h3>Choose work, then review weekly</h3>

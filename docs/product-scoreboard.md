@@ -43,6 +43,11 @@ explicit, and incomplete totals contain only known points.
 - Every assessment includes reasoning and dated evidence or a dated evidence gap.
 - Source revisions and limitations remain available beside each recommendation.
 
+AI and agent readiness is cross-category Product, Engineering and Measurement
+evidence, not GEO visibility or a seventh score. The [canonical checklist](../tooling/docs/new-project-checklist.md)
+defines applicability and shipped-runtime proof; interface presence or source
+fixtures alone do not establish readiness or change a score.
+
 The initial combined review used a four-point rubric, converted by multiplying
 by 2.5. Those original estimates remain in history as **Previous combined
 score**. They are never automatically relabelled as effort or result proof.

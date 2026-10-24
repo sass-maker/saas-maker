@@ -225,14 +225,8 @@ also applies; technical eligibility does not guarantee visibility or growth.
 
 ## 8. Product acceptance + launch (owner approves the launch plan)
 
-- [ ] Compare the promised core workflows with relevant alternatives and
-      category expectations. Record required capabilities, deliberate omissions
-      and actual gaps; prioritize fit and a complete useful task over feature
-      counts. Do not claim parity from a feature list or mockup
-- [ ] Verify the actual promised workflow end to end, including applicable
-      signup/install, permissions, input, useful result, save/reopen/export and
-      failure recovery. Check supported platforms and published package/app
-      versions; unavailable private/native checks remain explicit
+- [ ] Compare promised core workflows with alternatives and category expectations. Record required capabilities, deliberate omissions and actual gaps; prioritize fit and complete useful tasks over feature counts. Do not claim parity from a feature list or mockup.
+- [ ] Verify the promised workflow end to end, including applicable signup/install, permissions, input, useful result, save/reopen/export and recovery. Check supported platforms and package/app versions; keep unavailable private/native checks explicit.
 - [ ] `test-quality`: a regression test on the core loop
 - [ ] Positioning/copy pass (`marketing` skill): claims match what shipped
 - [ ] `launch-campaign`: one owner-approved plan; directory runs use its
@@ -275,9 +269,7 @@ also applies; technical eligibility does not guarantee visibility or growth.
 - [ ] Maintain freshness, intent fit, competitive coverage, AI-answer accuracy,
       usability, core-workflow parity, performance and reliability; prioritize
       evidenced gaps within the product's intended lifecycle
-- [ ] After an authorized release, verify the live change and compare outcomes
-      with the recorded baseline. Explain flat/declining results, concurrent
-      changes and uncertainty; do not claim causation from a before/after chart
+- [ ] After an authorized release, verify the live change against the recorded baseline; explain flat/declining results, concurrent changes and uncertainty without claiming before/after causation.
 - [ ] Keep unresolved work in the owning repository's existing GitHub Issues
       and update the existing acceptance record. Status reports distinguish
       implemented, live-verified and outcome-reviewed work, with justified
@@ -288,13 +280,21 @@ also applies; technical eligibility does not guarantee visibility or growth.
       action. Keep prior assessments/progress, validate the import, refresh the
       live workspace and export a backup as the scoreboard guide describes
 
+## AI and agent readiness
+
+- [ ] Declare core workflows and promised CLI, API, MCP, agent and browser surfaces; justify N/A, treat missing promised coverage as a gap, and require only interfaces the core job benefits from.
+- [ ] For each promised CLI, verify installed version/help, noninteractive stable JSON schemas, exit codes, bounded timeouts and errors.
+- [ ] For each promised API/MCP surface, verify documented request/response contracts and end-to-end calls; for MCP, verify real tool discovery/calls, scoped revocable auth and explicit read/write boundaries.
+- [ ] Keep agent instructions, skills, examples and capability discovery aligned with shipped behavior.
+- [ ] Verify least privilege, private prompt/data handling, untrusted-input defenses, preview, idempotence, cancellation and recovery.
+- [ ] Have a fresh agent complete a shipped core task and negative case end to end; retain dated, permission-scoped results/receipts and observed useful completion/recovery, separating QA from real use. This applies to internal tools and is cross-category Product/Engineering/Measurement evidence, not GEO or a new score formula.
+
 ## Conditional branches
 
 - **iOS / native app**: the public page comes from the `ios-landings`
   factory, not `web-landing`. `apple-native` covers build and QA,
   `apple-release` covers release.
-- **LLM-powered product**: follow `tooling/docs/ai-client-standard.md`; set a
-  spend cap, bounded retries, and output caps before launch.
+- **LLM-powered product**: follow `tooling/docs/ai-client-standard.md`; set spend, retry and output caps before launch.
 - **No public web surface**: public landing/SEO/GEO and Clarity checks can be
   N/A with a cataloged reason. Product design, core usefulness, reliability,
   privacy and appropriate measurement still apply.
