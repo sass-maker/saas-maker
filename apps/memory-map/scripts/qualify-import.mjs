@@ -288,6 +288,7 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
       page,
       archive
     );
+    const { recoveryDurationMs, ...recoveryQualification } = exported.qualification;
     assert.ok(coverageMatches, "completed coverage must preserve the selected set");
     assert.ok(
       coverageVectors >= 22,
@@ -295,20 +296,20 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
     );
     assert.equal(exported.filename, "memory-map-local-measurement-trace.json");
     assert.ok(exported.hasPath, "the local diagnostic trace must be downloadable");
-    assert.deepEqual(exported.qualification, {
+    assert.deepEqual(recoveryQualification, {
       schemaVersion: 1,
       privacy: true,
       missingMilestones: [],
       recoveryAfterFailure: true,
       recoveryAfterFailedAttempt: true,
       recoveryMatchesInsight: true,
-      recoveryDurationMs: expect.any(Number),
       hasSourceBackedItems: true,
       errorClass: "model_prepare",
       bottleneckStage: "model",
       bottleneckReason: "observed_failure_recovered",
       leaksFixtureText: false,
     });
+    assert.ok(Number.isFinite(recoveryDurationMs) && recoveryDurationMs >= 0);
     await retainFixtureEvidence(exported, modelRequests, coverageVectors);
     assert.deepEqual(pageErrors, []);
   } finally {
