@@ -7,8 +7,13 @@ import {
   compareAssessments,
   createWorkspace,
   currentAssessment,
+  formatUsageCount,
   importSnapshot,
+  mergePortfolioUsage,
+  parsePortfolioUsageBundle,
   parseWorkspace,
+  portfolioUsageStatus,
+  recordOwnerUse,
   planNextLever,
   prerequisiteSatisfied,
   productPriority,
@@ -23,6 +28,29 @@ import {
   type ScoreProject,
   type ScoreSnapshot,
 } from '../../apps/cockpit/src/lib/scoreboard';
+
+const usageFixture = (now: number, patch: Record<string, unknown> = {}) => {
+  const end = new Date(now).toISOString();
+  const start = new Date(now - 30 * 24 * 60 * 60 * 1000).toISOString();
+  return {
+    windowStart: start,
+    windowEnd: end,
+    checkedAt: end,
+    proxy: { count: 0, unit: 'browsers', precision: 'exact' },
+    core: {
+      count: 0,
+      definition: 'A completed synthetic core task',
+      lastUsedAt: null,
+      qualified: true,
+      precision: 'exact',
+      coverage: 'complete',
+    },
+    tracking: 'healthy',
+    evidence: [{ source: 'synthetic-runtime-report', date: end, note: 'Synthetic dated proof.' }],
+    limitations: '',
+    ...patch,
+  };
+};
 
 describe('owner purpose and product priority', () => {
   it('prioritizes either learning or commercial intent and preserves overlapping personal use', () => {
@@ -52,6 +80,310 @@ describe('owner purpose and product priority', () => {
       invalid.projects[0].purposeCategories = purposes;
       expect(() => validateSnapshot(invalid)).toThrow(/Purpose categories/);
     }
+  });
+});
+
+describe('rolling portfolio usage', () => {
+  const now = Date.parse('2026-10-24T12:00:00.000Z');
+
+  it('derives closure review only from a fresh, healthy, exact complete zero', () => {
+    const record = usageFixture(now);
+    const usage = {
+      schemaVersion: 1 as const,
+      updatedAt: new Date(now).toISOString(),
+      records: { 'example-one': record },
+    };
+    expect(portfolioUsageStatus(usage, 'example-one', now)).toBe('closure_review');
+    const estimated = structuredClone(record);
+    estimated.core.precision = 'estimate';
+    expect(
+      portfolioUsageStatus({ ...usage, records: { 'example-one': estimated } }, 'example-one', now)
+    ).toBe('tracking_gap');
+    const partial = structuredClone(record);
+    partial.core.coverage = 'partial';
+    expect(
+      portfolioUsageStatus({ ...usage, records: { 'example-one': partial } }, 'example-one', now)
+    ).toBe('tracking_gap');
+  });
+
+  it('renders proxy precision as part of the displayed value', () => {
+    expect(formatUsageCount(5, 'exact')).toBe('5');
+    expect(formatUsageCount(5, 'lower_bound')).toBe('≥5');
+    expect(formatUsageCount(1.5, 'estimate')).toBe('~1.5');
+    expect(formatUsageCount(null, 'unknown')).toBe('Unknown');
+  });
+
+  it('labels proxy counts as audience only and rejects sampled zeros as inactivity', () => {
+    const base = usageFixture(now, {
+      proxy: { count: 7, unit: 'sessions', precision: 'estimate' },
+      core: {
+        count: null,
+        definition: 'Unreviewed task',
+        lastUsedAt: null,
+        qualified: false,
+        precision: 'unknown',
+        coverage: 'unknown',
+      },
+      tracking: 'partial',
+      events: [
+        {
+          name: 'task.complete',
+          count: 4,
+          lastSeen: new Date(now).toISOString(),
+          precision: 'exact',
+        },
+      ],
+    });
+    const usage = {
+      schemaVersion: 1 as const,
+      updatedAt: new Date(now).toISOString(),
+      records: { 'example-one': base },
+    };
+    expect(portfolioUsageStatus(usage, 'example-one', now)).toBe('audience_only');
+    const zeroProxy = structuredClone(base);
+    zeroProxy.proxy = { count: 0, unit: 'browsers', precision: 'exact' };
+    expect(
+      portfolioUsageStatus({ ...usage, records: { 'example-one': zeroProxy } }, 'example-one', now)
+    ).toBe('tracking_gap');
+  });
+
+  it('does not present a stale positive core count as current use', () => {
+    const record = usageFixture(now, {
+      core: {
+        count: 4,
+        definition: 'Reviewed core task',
+        lastUsedAt: new Date(now - 31 * 86400000).toISOString(),
+        qualified: true,
+        precision: 'exact',
+        coverage: 'complete',
+      },
+    });
+    const usage = {
+      schemaVersion: 1 as const,
+      updatedAt: new Date(now).toISOString(),
+      records: { 'example-one': record },
+    };
+    expect(portfolioUsageStatus(usage, 'example-one', now)).toBe('tracking_gap');
+    record.core.lastUsedAt = new Date(now - 29 * 86400000).toISOString();
+    expect(portfolioUsageStatus(usage, 'example-one', now)).toBe('use_recorded');
+  });
+
+  it('requires dated evidence and an in-window last-use date for qualified core counts', () => {
+    const base = usageFixture(now, {
+      core: {
+        count: 2,
+        definition: 'Reviewed core task',
+        lastUsedAt: new Date(now - 31 * 86400000).toISOString(),
+        qualified: true,
+        precision: 'exact',
+        coverage: 'complete',
+      },
+    });
+    const bundle = (record: unknown) =>
+      JSON.stringify({
+        kind: 'portfolio-usage',
+        schemaVersion: 1,
+        usage: {
+          schemaVersion: 1,
+          updatedAt: new Date(now).toISOString(),
+          records: { 'example-one': record },
+        },
+      });
+    expect(() => parsePortfolioUsageBundle(bundle(base))).toThrow(/core-action/);
+    const noProof = structuredClone(base);
+    noProof.core.lastUsedAt = new Date(now - 2 * 86400000).toISOString();
+    noProof.evidence = [];
+    expect(() => parsePortfolioUsageBundle(bundle(noProof))).toThrow(/core-action/);
+    const zeroWithLastUse = usageFixture(now);
+    zeroWithLastUse.core.lastUsedAt = new Date(now - 86400000).toISOString();
+    expect(() => parsePortfolioUsageBundle(bundle(zeroWithLastUse))).toThrow(/core-action/);
+    const evidenceAfterCheck = structuredClone(base);
+    evidenceAfterCheck.core.lastUsedAt = new Date(now - 86400000).toISOString();
+    evidenceAfterCheck.evidence[0].date = new Date(now + 86400000).toISOString();
+    expect(() => parsePortfolioUsageBundle(bundle(evidenceAfterCheck))).toThrow(/core-action/);
+  });
+
+  it('preserves workspace history and local reports when merging only matching records', () => {
+    const current = createWorkspace(fixture());
+    const withHistory = transitionLever(current, 'example-one:product', 'active');
+    const nowIso = new Date(now).toISOString();
+    const incoming = parsePortfolioUsageBundle(
+      JSON.stringify({
+        kind: 'portfolio-usage',
+        schemaVersion: 1,
+        usage: {
+          schemaVersion: 1,
+          updatedAt: nowIso,
+          records: {
+            'example-one': usageFixture(now, {
+              core: {
+                count: null,
+                definition: 'Unknown',
+                lastUsedAt: null,
+                qualified: false,
+                precision: 'unknown',
+                coverage: 'unknown',
+              },
+              tracking: 'missing',
+            }),
+            'not-in-review': usageFixture(now),
+          },
+        },
+      })
+    );
+    const before = structuredClone(withHistory);
+    const first = mergePortfolioUsage(withHistory, incoming);
+    expect(first.matched).toBe(1);
+    expect(first.unmatched).toBe(1);
+    const reported = recordOwnerUse(
+      first.workspace,
+      'example-one',
+      { date: '2026-10-24', note: 'Completed a local planning task.' },
+      nowIso,
+      now
+    );
+    expect(reported.usage?.ownerReports?.['example-one']).toHaveLength(1);
+    expect(reported.usage?.records['example-one'].proxy).toEqual(
+      first.workspace.usage?.records['example-one'].proxy
+    );
+    expect(reported.snapshot).toEqual(before.snapshot);
+    expect(reported.progress).toEqual(before.progress);
+    expect(reported.history).toEqual(before.history);
+    expect(reported.assessments).toEqual(before.assessments);
+    expect(reported.updatedAt).toBe(before.updatedAt);
+    expect(portfolioUsageStatus(reported.usage, 'example-one', now)).toBe('use_recorded');
+  });
+
+  it('validates safe aggregate identifiers and preserves usage through old backup restore', () => {
+    const nowIso = new Date(now).toISOString();
+    const record = usageFixture(now, {
+      core: {
+        count: null,
+        definition: 'Unknown',
+        lastUsedAt: null,
+        qualified: false,
+        precision: 'unknown',
+        coverage: 'unknown',
+      },
+      tracking: 'missing',
+      events: [{ name: 'task:complete.v1', count: 1.5, lastSeen: nowIso, precision: 'exact' }],
+    });
+    const json = JSON.stringify({
+      kind: 'portfolio-usage',
+      schemaVersion: 1,
+      usage: { schemaVersion: 1, updatedAt: nowIso, records: { 'example-one': record } },
+    });
+    expect(parsePortfolioUsageBundle(json).usage.records['example-one'].events).toHaveLength(1);
+    const unsafe = JSON.parse(json);
+    unsafe.usage.records['example-one'].events[0].name = 'https://private.example/?q=raw';
+    expect(() => parsePortfolioUsageBundle(JSON.stringify(unsafe))).toThrow(/candidate event/);
+    const existing = createWorkspace(fixture());
+    const enriched = mergePortfolioUsage(existing, parsePortfolioUsageBundle(json)).workspace;
+    const legacy = parseWorkspace(JSON.stringify(existing));
+    expect(importSnapshot(enriched, legacy).usage).toEqual(enriched.usage);
+    expect(parseWorkspace(JSON.stringify(enriched)).usage).toEqual(enriched.usage);
+    expect(() =>
+      recordOwnerUse(enriched, 'example-one', { date: '2026-02-30', note: 'Bad date' }, nowIso, now)
+    ).toThrow(/past date/);
+  });
+
+  it('accepts the shared safe aggregate shape with fractional event estimates', () => {
+    const shared = {
+      kind: 'portfolio-usage',
+      schemaVersion: 1,
+      usage: {
+        schemaVersion: 1,
+        updatedAt: '2026-10-24T00:00:00.000Z',
+        records: {
+          'sample-project': {
+            windowStart: '2026-09-24T00:00:00.000Z',
+            windowEnd: '2026-10-24T00:00:00.000Z',
+            checkedAt: '2026-10-24T00:00:00.000Z',
+            proxy: { count: 5, unit: 'browsers', precision: 'lower_bound' },
+            core: {
+              count: null,
+              definition: 'No owner-reviewed core action is mapped.',
+              lastUsedAt: null,
+              qualified: false,
+              precision: 'unknown',
+              coverage: 'unknown',
+            },
+            tracking: 'partial',
+            evidence: [
+              {
+                source: 'app-health.browser-report',
+                date: '2026-10-24T00:00:00.000Z',
+                note: 'Synthetic aggregate example.',
+              },
+            ],
+            limitations: 'Synthetic example; not product evidence.',
+            events: [
+              {
+                name: 'sample.action',
+                count: 1.5,
+                lastSeen: '2026-10-23T00:00:00.000Z',
+                precision: 'estimate',
+              },
+            ],
+          },
+        },
+      },
+    };
+    expect(
+      parsePortfolioUsageBundle(JSON.stringify(shared)).usage.records['sample-project'].events?.[0]
+        .count
+    ).toBe(1.5);
+  });
+
+  it('accepts the local owner date just after midnight even when UTC is the previous day', () => {
+    const justAfterLocalMidnight = new Date(2026, 9, 24, 0, 15).getTime();
+    const date = new Date(justAfterLocalMidnight);
+    const localDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    const workspace = createWorkspace(fixture());
+    const updated = recordOwnerUse(
+      workspace,
+      'example-one',
+      { date: localDate, note: 'Completed a real local task.' },
+      new Date(justAfterLocalMidnight).toISOString(),
+      justAfterLocalMidnight
+    );
+    expect(updated.usage?.ownerReports?.['example-one']).toHaveLength(1);
+    expect(portfolioUsageStatus(updated.usage, 'example-one', justAfterLocalMidnight)).toBe(
+      'use_recorded'
+    );
+  });
+
+  it('does not replace a newer provider record with an older import', () => {
+    const nowIso = new Date(now).toISOString();
+    const current = createWorkspace(fixture());
+    const newest = parsePortfolioUsageBundle(
+      JSON.stringify({
+        kind: 'portfolio-usage',
+        schemaVersion: 1,
+        usage: {
+          schemaVersion: 1,
+          updatedAt: nowIso,
+          records: { 'example-one': usageFixture(now) },
+        },
+      })
+    );
+    const currentWithUsage = mergePortfolioUsage(current, newest).workspace;
+    const olderEnd = now - 86400000;
+    const older = parsePortfolioUsageBundle(
+      JSON.stringify({
+        kind: 'portfolio-usage',
+        schemaVersion: 1,
+        usage: {
+          schemaVersion: 1,
+          updatedAt: new Date(olderEnd).toISOString(),
+          records: { 'example-one': usageFixture(olderEnd) },
+        },
+      })
+    );
+    const result = mergePortfolioUsage(currentWithUsage, older);
+    expect(result.matched).toBe(1);
+    expect(result.skippedOlder).toBe(1);
+    expect(result.workspace.usage?.records['example-one'].checkedAt).toBe(nowIso);
   });
 });
 

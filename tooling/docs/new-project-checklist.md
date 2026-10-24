@@ -197,31 +197,15 @@ also applies; technical eligibility does not guarantee visibility or growth.
 
 ## 7. Analytics + observability
 
-- [ ] Use the existing App Health integration for applicable browser/native
-      analytics, source attribution, named product actions, endpoint health
-      and intentional logs. Verify each applicable capability, project and
-      environment; do not treat it as a pings-only service or build a duplicate
-      measurement pipeline. Follow
-      [App Health's integration guides](https://github.com/sass-maker/app-health/blob/main/docs/integration-readiness.md)
-- [ ] Define meaningful steps from discovery to first successful core task
-      and repeated value. Distinguish CTA clicks, completed outcomes, failures,
-      repeat events and returning use; collect only privacy-appropriate data
-- [ ] Verify accepted events and report readback using bounded, labelled QA:
-      correct scope/source/window, retries/deduplication, alert and daily count
-      where applicable. Exclude QA from organic demand; source wiring alone
-      does not prove delivery or report correctness
-- [ ] Microsoft Clarity is configured where applicable, with live collection
-      verified via `clarity-fleet-health`; preserve explicit holds and N/A
-      decisions. Use it for browser behavior alongside App Health
-- [ ] Explicit alertable events use `ping` where useful, such as signup,
-      waitlist.join and payment.failed. Verify the selected alert destination
-      without adding unrequested external notifications
-- [ ] Site Health picks the domain up for performance + Search Console
-      collection (follows from the catalog entry; verify, don't assume)
-- [ ] Report coverage, freshness, sampling, known bots, unknown automation and
-      identity limits. Keep people, browsers, sessions, actions and backend
-      requests distinct; qualify exact counts separately. Verify scheduled
-      execution and surface failures using the existing operational tooling
+- [ ] Use the existing [App Health integration](https://github.com/sass-maker/app-health/blob/main/docs/integration-readiness.md) for applicable browser/native analytics, source attribution, named product actions, endpoint health and intentional logs; verify each capability, project and environment without building duplicate measurement.
+- [ ] Define meaningful discovery-to-core-task and repeated-value steps. Distinguish clicks, completed outcomes, failures, repeats and returning use; collect only privacy-appropriate data.
+- [ ] Verify accepted events and bounded, labelled QA readbacks: scope, source, window, retries/deduplication, alerts and daily counts where applicable. Exclude QA from organic demand; source wiring alone proves neither delivery nor report correctness.
+- [ ] Configure applicable Microsoft Clarity and verify live collection with `clarity-fleet-health`; preserve holds/N/A decisions and use it for browser behavior alongside App Health.
+- [ ] Use `ping` for useful alertable events such as signup, waitlist.join or payment.failed; verify the selected destination without adding unrequested notifications.
+- [ ] Verify Site Health picks up the domain for performance and Search Console collection; catalog registration is not proof of collection.
+- [ ] For every catalog product, including internal/local tools, record a rolling 30-day MAU/audience proxy with unit, exact window, freshness, coverage, sampling, bot and identity limits; keep people, browser IDs, devices, sessions, actions and backend requests distinct. Add a reviewed meaningful core-action definition and dated owner-use source; local/internal or privacy-held products may use a dated local owner report without new telemetry. Unknown is a tracking gap, never zero.
+- [ ] Treat only fresh, healthy, complete, qualified exact core-action zero across the full 30-day window as closure-review evidence; positive audience alone is not use, sampled/estimated/lower-bound zero never qualifies, and verified inactivity prompts owner review rather than automatic closure or archive.
+- [ ] Verify scheduled execution and surface failures using existing operational tooling.
 
 ## 8. Product acceptance + launch (owner approves the launch plan)
 

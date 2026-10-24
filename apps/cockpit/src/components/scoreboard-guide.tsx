@@ -45,6 +45,12 @@ export function ScoreboardGuide({ target }: { target: number }) {
               </a>
               .
             </p>
+            <p>
+              The rolling 30-day audience count is a labelled MAU proxy; sessions stay labelled as
+              sessions. Meaningful core actions and dated owner reports establish use separately.
+              Fresh, healthy, complete, qualified exact core-action zero prompts owner closure
+              review, never automatic closure.
+            </p>
           </div>
           <div>
             <h3>Choose work, then review weekly</h3>

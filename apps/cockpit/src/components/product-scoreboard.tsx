@@ -9,7 +9,9 @@ import { ScoreboardWorkbench } from '@/components/scoreboard-workbench';
 import {
   importSnapshot,
   addAssessmentHistory,
+  mergePortfolioUsage,
   MAX_WORKSPACE_BYTES,
+  parsePortfolioUsageBundle,
   parseWorkspace,
   type ScoreWorkspace,
 } from '@/lib/scoreboard';
@@ -37,6 +39,9 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
   const [saved, setSaved] = useState(true);
   const [pending, setPending] = useState<ScoreWorkspace | null>(null);
   const [pendingBackup, setPendingBackup] = useState(false);
+  const [pendingUsage, setPendingUsage] = useState<ReturnType<
+    typeof parsePortfolioUsageBundle
+  > | null>(null);
   const input = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -169,6 +174,25 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
     try {
       if (file.size > MAX_WORKSPACE_BYTES) throw new Error('Import is too large (maximum 64 MB).');
       const text = await file.text();
+      const parsed: unknown = JSON.parse(text);
+      if (
+        parsed !== null &&
+        typeof parsed === 'object' &&
+        'kind' in parsed &&
+        parsed.kind === 'portfolio-usage'
+      ) {
+        const usage = parsePortfolioUsageBundle(text);
+        const { raw } = await readWorkspaceStore(storageKey);
+        const current = raw ? parseWorkspace(raw) : workspace;
+        if (!current) throw new Error('Import a review before importing usage data.');
+        const preview = mergePortfolioUsage(current, usage);
+        setPendingUsage(usage);
+        setPendingUsageMatch(preview.matched);
+        setPendingUsageUnmatched(preview.unmatched);
+        setPendingUsageOlder(preview.skippedOlder);
+        if (input.current) input.current.value = '';
+        return;
+      }
       const incoming = parseWorkspace(text);
       setPendingBackup('snapshot' in JSON.parse(text));
       const { raw } = await readWorkspaceStore(storageKey);
@@ -180,6 +204,10 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
     if (input.current) input.current.value = '';
   }
 
+  const [pendingUsageMatch, setPendingUsageMatch] = useState(0);
+  const [pendingUsageUnmatched, setPendingUsageUnmatched] = useState(0);
+  const [pendingUsageOlder, setPendingUsageOlder] = useState(0);
+
   return (
     <div data-clarity-mask="true">
       <input
@@ -187,7 +215,7 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
         type="file"
         accept=".json,application/json"
         className="sr-only"
-        aria-label="Import private scoreboard"
+        aria-label="Import private review or usage data"
         onChange={(e) => void readImport(e.target.files?.[0])}
       />
       {error && (
@@ -253,6 +281,36 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
           </div>
         </section>
       )}
+      {pendingUsage && (
+        <section
+          className="mb-5 space-y-3 rounded-lg border border-primary/50 p-4"
+          aria-label="Review usage import"
+        >
+          <h2 className="font-semibold">Import 30-day usage data?</h2>
+          <p className="text-sm text-muted-foreground">
+            {pendingUsageMatch} products match this review · {pendingUsageUnmatched} unmatched
+            records and {pendingUsageOlder} older provider reports will be skipped. This updates
+            usage only; scores, assessments, lever progress and history stay unchanged. Existing
+            owner reports stay on this device.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              onClick={() => {
+                void updateWorkspace((current) => {
+                  if (!current) throw new Error('Import a review first.');
+                  return mergePortfolioUsage(current, pendingUsage).workspace;
+                });
+                setPendingUsage(null);
+              }}
+            >
+              Import usage
+            </Button>
+            <Button variant="outline" onClick={() => setPendingUsage(null)}>
+              Cancel
+            </Button>
+          </div>
+        </section>
+      )}
       {!loaded ? (
         <p role="status">Opening your saved scoreboard…</p>
       ) : workspace ? (
@@ -285,7 +343,7 @@ export function ProductScoreboard({ accountId }: { accountId: string }) {
             </p>
             <Button className="mt-6" onClick={() => input.current?.click()}>
               <Upload />
-              Import review
+              Import review or usage
             </Button>
             <p className="mt-4 text-xs text-muted-foreground">
               No review data is uploaded. Export a backup to move devices or preserve your work.

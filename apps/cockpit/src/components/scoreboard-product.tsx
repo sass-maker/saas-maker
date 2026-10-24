@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import NextLink from 'next/link';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import {
@@ -8,28 +9,68 @@ import {
   productPriorityLabel,
   scoreReading,
   scoreTotal,
+  portfolioUsageStatus,
+  recordOwnerUse,
+  formatUsageCount,
   type ScoreCategory,
   type ScoreMetric,
   type ScoreProject,
   type ScoreWorkspace,
+  type PortfolioUsageStatus,
 } from '@/lib/scoreboard';
 import { ScoreValue } from './scoreboard-evidence';
 import { PageHeader } from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
 import styles from './scoreboard-workbench.module.css';
 
+const usageStatusLabel: Record<PortfolioUsageStatus, string> = {
+  use_recorded: 'Use recorded',
+  audience_only: 'Audience only',
+  closure_review: 'Closure review',
+  tracking_gap: 'Tracking gap',
+  stale: 'Stale',
+};
+const usageUnitLabel = (unit: string) =>
+  ({
+    users: 'users',
+    browsers: 'recognized browser IDs',
+    devices: 'devices',
+    sessions: 'sessions',
+  })[unit as 'users' | 'browsers' | 'devices' | 'sessions'] ?? unit;
+const localToday = () => {
+  const date = new Date();
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+};
+
 export function ScoreboardProduct({
   project,
   workspace,
+  onChange,
   onEvidence,
   onLever,
 }: {
   project: ScoreProject;
   workspace: ScoreWorkspace;
+  onChange: (fn: (current: ScoreWorkspace) => ScoreWorkspace) => void;
   onEvidence: (category: ScoreCategory, metric: ScoreMetric) => void;
   onLever: (id: string) => void;
 }) {
+  const [ownerDate, setOwnerDate] = useState(localToday());
+  const [ownerNote, setOwnerNote] = useState('');
   const next = workspace.snapshot.levers.find((l) => l.id === project.bestNextLeverId)!;
+  const usage = workspace.usage;
+  const record = usage?.records[project.id];
+  const usageStatus = portfolioUsageStatus(usage, project.id);
+  const now = Date.now();
+  const checkedAt = record ? Date.parse(record.checkedAt) : null;
+  const fresh =
+    record !== undefined &&
+    checkedAt !== null &&
+    checkedAt <= now &&
+    now - checkedAt <= 7 * 24 * 60 * 60 * 1000 &&
+    Date.parse(record.windowEnd) <= now &&
+    now - Date.parse(record.windowEnd) <= 7 * 24 * 60 * 60 * 1000;
+  const checkedAgeDays = checkedAt === null ? null : Math.floor((now - checkedAt) / 86400000);
   return (
     <article className={styles.productInfo} aria-label={`${project.name} product information`}>
       <NextLink className={styles.backLink} href="/projects?view=scoreboard">
@@ -90,6 +131,125 @@ export function ScoreboardProduct({
             );
           })}
         </div>
+      </section>
+      <section className={styles.usagePanel} aria-label="Rolling 30-day usage">
+        <div className={styles.usageHeading}>
+          <div>
+            <h2>Rolling 30-day usage</h2>
+            <p>
+              Audience counts are reach proxies. Only a qualified core action or a dated owner
+              report records use.
+            </p>
+          </div>
+          <Badge variant="outline">{usageStatusLabel[usageStatus]}</Badge>
+        </div>
+        {!record ? (
+          <p>No provider report is available. Unknown usage is a tracking gap, not zero.</p>
+        ) : (
+          <dl className={styles.usageDetails}>
+            <div>
+              <dt>Audience proxy</dt>
+              <dd>
+                {formatUsageCount(record.proxy.count, record.proxy.precision)}{' '}
+                {usageUnitLabel(record.proxy.unit)} · {record.proxy.precision.replace('_', ' ')}
+              </dd>
+            </div>
+            <div>
+              <dt>Window</dt>
+              <dd>
+                <code>
+                  {record.windowStart} → {record.windowEnd}
+                </code>
+              </dd>
+            </div>
+            <div>
+              <dt>Provider check</dt>
+              <dd>
+                <code>{record.checkedAt}</code> · {checkedAgeDays} days ago ·{' '}
+                {fresh ? 'fresh' : 'stale'}
+              </dd>
+            </div>
+            <div>
+              <dt>Meaningful core action</dt>
+              <dd>
+                {record.core.definition} ·{' '}
+                {formatUsageCount(record.core.count, record.core.precision)} ·{' '}
+                {record.core.precision.replace('_', ' ')} · {record.core.coverage} coverage
+                {' · '}
+                {record.core.qualified ? 'qualified' : 'unqualified'}
+                {record.core.lastUsedAt
+                  ? ` · last used ${new Date(record.core.lastUsedAt).toLocaleDateString()}`
+                  : ''}
+              </dd>
+            </div>
+            <div>
+              <dt>Tracking health</dt>
+              <dd>{record.tracking}</dd>
+            </div>
+          </dl>
+        )}
+        {record?.events?.length ? (
+          <details className={styles.usageEvidence}>
+            <summary>Unqualified candidate event aggregates · {record.events.length}</summary>
+            {record.events.map((event) => (
+              <p key={event.name}>
+                {event.name}: {formatUsageCount(event.count, event.precision)} · {event.precision}
+                {event.lastSeen
+                  ? ` · last seen ${new Date(event.lastSeen).toLocaleDateString()}`
+                  : ''}
+              </p>
+            ))}
+          </details>
+        ) : null}
+        {record?.evidence.map((evidence, index) => (
+          <p className={styles.usageEvidenceLine} key={`${evidence.source}:${index}`}>
+            {evidence.source} · {evidence.date}: {evidence.note}
+          </p>
+        ))}
+        {record?.limitations && <p className={styles.usageLimit}>{record.limitations}</p>}
+        <form
+          className={styles.ownerUseForm}
+          onSubmit={(event) => {
+            event.preventDefault();
+            onChange((current) =>
+              recordOwnerUse(current, project.id, { date: ownerDate, note: ownerNote })
+            );
+          }}
+        >
+          <label>
+            Date of use
+            <input
+              type="date"
+              value={ownerDate}
+              max={localToday()}
+              onChange={(event) => setOwnerDate(event.target.value)}
+              required
+            />
+          </label>
+          <label>
+            Brief non-sensitive action note
+            <input
+              type="text"
+              value={ownerNote}
+              onChange={(event) => setOwnerNote(event.target.value)}
+              maxLength={500}
+              placeholder="What useful task did you complete?"
+              required
+            />
+          </label>
+          <p>Owner-reported, saved only in this browser, and not added to the audience proxy.</p>
+          <button type="submit">Record my use</button>
+        </form>
+        {usage?.ownerReports?.[project.id]?.length ? (
+          <details className={styles.usageEvidence}>
+            <summary>Owner-reported use · {usage.ownerReports[project.id].length}</summary>
+            {usage.ownerReports[project.id].map((report, index) => (
+              <p key={`${report.date}:${index}`}>
+                {report.date}: {report.note}
+              </p>
+            ))}
+          </details>
+        ) : null}
       </section>
       <section aria-label="Scores and next tasks">
         <h2>Six areas · evidence and next tasks</h2>
