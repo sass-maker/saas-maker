@@ -225,14 +225,8 @@ also applies; technical eligibility does not guarantee visibility or growth.
 
 ## 8. Product acceptance + launch (owner approves the launch plan)
 
-- [ ] Compare the promised core workflows with relevant alternatives and
-      category expectations. Record required capabilities, deliberate omissions
-      and actual gaps; prioritize fit and a complete useful task over feature
-      counts. Do not claim parity from a feature list or mockup
-- [ ] Verify the actual promised workflow end to end, including applicable
-      signup/install, permissions, input, useful result, save/reopen/export and
-      failure recovery. Check supported platforms and published package/app
-      versions; unavailable private/native checks remain explicit
+- [ ] Compare promised core workflows with alternatives and category expectations. Record required capabilities, deliberate omissions and actual gaps; prioritize fit and complete useful tasks over feature counts. Do not claim parity from a feature list or mockup.
+- [ ] Verify the promised workflow end to end, including applicable signup/install, permissions, input, useful result, save/reopen/export and recovery. Check supported platforms and package/app versions; keep unavailable private/native checks explicit.
 - [ ] `test-quality`: a regression test on the core loop
 - [ ] Positioning/copy pass (`marketing` skill): claims match what shipped
 - [ ] `launch-campaign`: one owner-approved plan; directory runs use its
@@ -288,13 +282,19 @@ also applies; technical eligibility does not guarantee visibility or growth.
       action. Keep prior assessments/progress, validate the import, refresh the
       live workspace and export a backup as the scoreboard guide describes
 
+## AI and agent readiness
+
+- [ ] Declare core workflows and promised CLI, API, MCP, agent and browser surfaces; justify each N/A, treat missing promised coverage as a gap, and add no interface the core job does not benefit from.
+- [ ] Where promised, document and verify installed CLI version/help, noninteractive stable JSON schema/exit codes, bounded timeouts and errors; discover and call real MCP tools end to end with scoped, revocable auth and explicit read/write boundaries.
+- [ ] Align agent instructions and machine contracts with shipped capabilities; test a fresh agent on a shipped core task and negative case, with least privilege, private prompt/data handling, untrusted-input defenses, preview, idempotence, cancellation and recovery.
+      Persist dated observed useful-completion and recovery results/receipts with permission scope; separate QA from real use and assess internal tools too. This is cross-category Product/Engineering/Measurement evidence, not GEO or a new score formula.
+
 ## Conditional branches
 
 - **iOS / native app**: the public page comes from the `ios-landings`
   factory, not `web-landing`. `apple-native` covers build and QA,
   `apple-release` covers release.
-- **LLM-powered product**: follow `tooling/docs/ai-client-standard.md`; set a
-  spend cap, bounded retries, and output caps before launch.
+- **LLM-powered product**: follow `tooling/docs/ai-client-standard.md`; set spend, retry and output caps before launch.
 - **No public web surface**: public landing/SEO/GEO and Clarity checks can be
   N/A with a cataloged reason. Product design, core usefulness, reliability,
   privacy and appropriate measurement still apply.

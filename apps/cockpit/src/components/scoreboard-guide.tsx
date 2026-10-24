@@ -35,6 +35,13 @@ export function ScoreboardGuide({ target }: { target: number }) {
               Design needs observed comprehension, friction, delight and preference in the real
               workflow. A checklist or a screenshot alone cannot prove a great experience.
             </p>
+            <p>
+              AI and agent readiness is cross-category, not GEO: assess promised core tasks through
+              applicable CLI, API, MCP, agent and browser surfaces, with a reason for each N/A and
+              dated, permission-scoped shipped-runtime completion and recovery proof. Tool presence
+              or source fixtures alone do not establish readiness. See the canonical product
+              checklist.
+            </p>
           </div>
           <div>
             <h3>Choose work, then review weekly</h3>

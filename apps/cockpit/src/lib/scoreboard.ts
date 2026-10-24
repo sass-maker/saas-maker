@@ -17,7 +17,7 @@ export const CATEGORY_LABELS: Record<ScoreCategory, string> = {
 };
 export const CATEGORY_DESCRIPTIONS: Record<ScoreCategory, string> = {
   product:
-    'Among the best in its segment at the core job, with the features and outcomes users expect.',
+    'Among the best in its segment at the core job, with expected features and outcomes across promised interfaces, including fit-for-purpose CLI, API, MCP or agent workflows.',
   design: 'An aha moment, clear comprehension, low friction, and joy in the actual workflow.',
   seo: 'Up-to-date pages, proper keyword and intent matching, and growing daily organic arrivals.',
   geo: 'Prominent recommendations and citations when people ask relevant questions in AI engines.',
