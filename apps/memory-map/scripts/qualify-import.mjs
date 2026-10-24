@@ -73,6 +73,45 @@ function isPinnedModelRequest(request) {
   );
 }
 
+async function downloadLocalTrace(page) {
+  await page.locator("#analysis-details").evaluate((element) => {
+    if (element instanceof HTMLDetailsElement) element.open = true;
+  });
+  const downloadPromise = page.waitForEvent("download");
+  await page.locator("#export-local-trace").click();
+  const download = await downloadPromise;
+  const tracePath = await download.path();
+  const trace = JSON.parse(await readFile(tracePath, "utf8"));
+  const milestones = trace.events.map(({ milestone }) => milestone);
+  const failureIndex = milestones.lastIndexOf("failure");
+  const recoveryIndex = milestones.lastIndexOf("recovery");
+  const insight = trace.events.find((event) => event.milestone === "first_evidence_backed_insight");
+  const requiredMilestones = [
+    "import_started",
+    "import_completed",
+    "failure",
+    "first_evidence_backed_insight",
+    "recovery",
+  ];
+  return {
+    filename: download.suggestedFilename(),
+    hasPath: Boolean(tracePath),
+    qualification: {
+      schemaVersion: trace.schemaVersion,
+      privacy: /tab-local/.test(trace.privacy),
+      missingMilestones: requiredMilestones.filter((milestone) => !milestones.includes(milestone)),
+      recoveryAfterFailure: recoveryIndex > failureIndex,
+      hasSourceBackedItems: (insight?.sourceBackedItems ?? 0) >= 1,
+      errorClass: trace.events[failureIndex]?.errorClass,
+      bottleneckStage: trace.bottleneck?.stage,
+      bottleneckReason: trace.bottleneck?.reason,
+      leaksFixtureText: /synthetic-1|How can I grow basil|synthetic\.zip/i.test(
+        JSON.stringify(trace)
+      ),
+    },
+  };
+}
+
 const archive = await createSyntheticArchive();
 
 for (const width of [390, 768, 1280]) {
@@ -179,39 +218,20 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
       "coverage must include the fixture conversation, prompt, and 20 topic anchors"
     );
     assert.ok(pinnedModelRequested, "the pinned compact model revision must be requested");
-    await page.locator("#analysis-details").evaluate((element) => {
-      if (element instanceof HTMLDetailsElement) element.open = true;
+    const exported = await downloadLocalTrace(page);
+    assert.equal(exported.filename, "memory-map-local-measurement-trace.json");
+    assert.ok(exported.hasPath, "the local diagnostic trace must be downloadable");
+    assert.deepEqual(exported.qualification, {
+      schemaVersion: 1,
+      privacy: true,
+      missingMilestones: [],
+      recoveryAfterFailure: true,
+      hasSourceBackedItems: true,
+      errorClass: "model_prepare",
+      bottleneckStage: "model",
+      bottleneckReason: "observed_failure_recovered",
+      leaksFixtureText: false,
     });
-    const downloadPromise = page.waitForEvent("download");
-    await page.locator("#export-local-trace").click();
-    const download = await downloadPromise;
-    assert.equal(download.suggestedFilename(), "memory-map-local-measurement-trace.json");
-    const tracePath = await download.path();
-    assert.ok(tracePath, "the local diagnostic trace must be downloadable");
-    const trace = JSON.parse(await readFile(tracePath, "utf8"));
-    assert.equal(trace.schemaVersion, 1);
-    assert.match(trace.privacy, /tab-local/);
-    assert.deepEqual(
-      trace.events.map(({ milestone }) => milestone),
-      [
-        "import_started",
-        "import_completed",
-        "failure",
-        "import_started",
-        "import_completed",
-        "first_evidence_backed_insight",
-        "recovery",
-      ]
-    );
-    assert.ok(trace.events[5].sourceBackedItems >= 1);
-    assert.equal(trace.events[2].errorClass, "model_prepare");
-    assert.deepEqual(trace.bottleneck, {
-      stage: "model",
-      reason: "fixture_failure",
-      nextAction:
-        "Retry model preparation from the parsed archive without asking for the ZIP again.",
-    });
-    assert.doesNotMatch(JSON.stringify(trace), /synthetic-1|How can I grow basil|synthetic\.zip/i);
     assert.deepEqual(pageErrors, []);
   } finally {
     await browser.close();
