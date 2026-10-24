@@ -291,6 +291,15 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://acidtools.com/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://acidtools.com/",
+          "type": "AI Directory",
+          "dr": 61,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -355,6 +364,15 @@
           "pricing": "free",
           "type": "Directory / Citation",
           "submissionUrl": "https://www.activesearchresults.com/addwebsite.php"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.activesearchresults.com/",
+          "type": "Others",
+          "dr": 74,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -1848,6 +1866,15 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://aitechviral.com/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://aitechviral.com/",
+          "type": "AI Directory",
+          "dr": 51,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -3499,6 +3526,15 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://aixcollection.com/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://aixcollection.com/",
+          "type": "AI Directory",
+          "dr": 54,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -4420,7 +4456,7 @@
       "dr": 25,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -4433,6 +4469,15 @@
           "dr": 25,
           "link": "follow",
           "pricing": "freemium"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://anyfp.com/",
+          "type": "AI Directory",
+          "dr": 17,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -6104,6 +6149,15 @@
           "dr": 42,
           "link": "follow",
           "pricing": "free"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://bestofai.com/",
+          "type": "AI Directory",
+          "dr": 51,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -6621,7 +6675,7 @@
       "dr": 49,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -6634,6 +6688,15 @@
           "dr": 49,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://bowora.com/",
+          "type": "Startup Directory",
+          "dr": 9,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -6765,6 +6828,15 @@
           "pricing": "free",
           "type": "Directory / Citation",
           "submissionUrl": "https://www.brownbook.net/account/signup"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.brownbook.net/",
+          "type": "General Directory",
+          "dr": 79,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -7050,7 +7122,7 @@
       "dr": 38,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable"],
+      "flags": ["Domain unreachable","DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -7063,6 +7135,15 @@
           "dr": 38,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://bulletin.so/",
+          "type": "Software Directory",
+          "dr": 35,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -7391,6 +7472,15 @@
           "dr": 76,
           "link": "follow",
           "pricing": "freemium"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.callupcontact.com/",
+          "type": "General Directory",
+          "dr": 76,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -8664,7 +8754,7 @@
       "dr": 89,
       "link": "nofollow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -8677,6 +8767,15 @@
           "dr": 89,
           "link": "nofollow",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.crunchbase.com/",
+          "type": "Startup Directory",
+          "dr": 90,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -8801,6 +8900,15 @@
           "dr": 29,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://dailypings.com/",
+          "type": "Software Directory",
+          "dr": 29,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -9182,6 +9290,15 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://desifounder.com/",
+          "type": "Community",
+          "dr": 24,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -9686,7 +9803,7 @@
       "dr": 32,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -9699,6 +9816,15 @@
           "dr": 32,
           "link": "follow",
           "pricing": "freemium"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.directory-free.com/",
+          "type": "General Directory",
+          "dr": 31,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -10728,6 +10854,15 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://fastlaunch.io/",
+          "type": "Launchpad",
+          "dr": 30,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -11277,6 +11412,15 @@
           "dr": 44,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.findyoursaas.com/",
+          "type": "Software Directory",
+          "dr": 31,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -11395,6 +11539,15 @@
           "dr": 55,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://firsto.co/",
+          "type": "Launchpad",
+          "dr": 57,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -11930,7 +12083,7 @@
       "dr": 69,
       "link": "nofollow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree", "Submission routes disagree"],
+      "flags": ["DR sources disagree","Submission routes disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -11969,6 +12122,15 @@
           "pricing": "free",
           "type": "Directory / Tool",
           "submissionUrl": "https://www.futuretools.io/submit-a-tool"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.futuretools.io/",
+          "type": "AI Directory",
+          "dr": 69,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -12431,7 +12593,7 @@
       "dr": null,
       "link": "unknown",
       "eligibility": "Listed in the LaunchRepo directory catalog (observed 2026-09-25); acceptance, pricing, and current requirements need checking.",
-      "flags": ["quarantined: HTTP 402 \u2014 hosting lapsed"],
+      "flags": ["quarantined: HTTP 402 — hosting lapsed"],
       "route": "needs-research",
       "provider": "Not supplied by source",
       "sourceUrl": "https://launchrepo.dev/directories/",
@@ -12450,6 +12612,15 @@
           "retrieved": "2026-10-02",
           "quarantined": true,
           "note": "HTTP 402 \u2014 hosting lapsed"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.go-publicly.com/",
+          "type": "Launchpad",
+          "dr": 26,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -13528,6 +13699,15 @@
           "dr": 56,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://ideakiln.com/",
+          "type": "Launchpad",
+          "dr": 56,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -13924,6 +14104,15 @@
           "source": "playbook-research",
           "retrieved": "2026-09-26",
           "note": "Live indie-maker directory; free Add your product/stack after login"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://indiehackerstacks.com/",
+          "type": "Startup Directory",
+          "dr": 35,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -14008,6 +14197,15 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.indieproducts.io/",
+          "type": "Startup Directory",
+          "dr": 11,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -14095,6 +14293,15 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.indietools.app/",
+          "type": "Software Directory",
+          "dr": 18,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -14859,7 +15066,7 @@
       "dr": 23,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable"],
+      "flags": ["Domain unreachable","DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -14872,6 +15079,15 @@
           "dr": 23,
           "link": "follow",
           "pricing": "freemium"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://kyi.ai/",
+          "type": "AI Directory",
+          "dr": 1,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -15180,6 +15396,15 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.launch-list.org/",
+          "type": "Launchpad",
+          "dr": 41,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -15195,9 +15420,7 @@
       "dr": 1,
       "link": "follow",
       "eligibility": null,
-      "flags": [
-        "Research: dormant \u2014 \"taking a break, rebuilding\", not accepting submissions"
-      ],
+      "flags": ["Research: dormant — \"taking a break, rebuilding\", not accepting submissions","DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -15210,6 +15433,15 @@
           "dr": 1,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://launch.cab/",
+          "type": "Launchpad",
+          "dr": 22,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -15820,6 +16052,15 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.listyourtool.com/",
+          "type": "Software Directory",
+          "dr": 8,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -16138,7 +16379,7 @@
       "dr": 30,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable"],
+      "flags": ["Domain unreachable","DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -16151,6 +16392,15 @@
           "dr": 30,
           "link": "follow",
           "pricing": "freemium"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://make.rs/",
+          "type": "Community",
+          "dr": 38,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -17154,7 +17404,7 @@
       "dr": 45,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -17167,6 +17417,15 @@
           "dr": 45,
           "link": "follow",
           "pricing": "freemium"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://navs.site/",
+          "type": "AI Directory",
+          "dr": 63,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -17546,7 +17805,7 @@
       "dr": 56,
       "link": "follow",
       "eligibility": null,
-      "flags": ["DR sources disagree", "Submission route broken"],
+      "flags": ["DR sources disagree","Submission route broken"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -17565,6 +17824,15 @@
           "dr": 70,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.nxgntools.com/",
+          "type": "Launchpad",
+          "dr": 57,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -18214,7 +18482,7 @@
       "dr": 70,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree", "Submission routes disagree"],
+      "flags": ["DR sources disagree","Submission routes disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -18253,6 +18521,15 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://openhunts.com/sign-up"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://openhunts.com/",
+          "type": "Launchpad",
+          "dr": 50,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -18598,7 +18875,7 @@
       "dr": 73,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree", "Domain redirects elsewhere"],
+      "flags": ["DR sources disagree","Domain redirects elsewhere"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -18623,6 +18900,15 @@
           "dr": 73,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://peerpush.net/",
+          "type": "Launchpad",
+          "dr": 72,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -19432,6 +19718,15 @@
           "dr": 41,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://productburst.com/",
+          "type": "Launchpad",
+          "dr": 45,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -19460,6 +19755,15 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.productcool.com/",
+          "type": "Software Directory",
+          "dr": 11,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -19746,6 +20050,15 @@
           "pricing": "free",
           "type": "Directory / Startup",
           "submissionUrl": "https://www.promoteproject.com/submit-startup"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.promoteproject.com/",
+          "type": "Startup Directory",
+          "dr": 47,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -19761,7 +20074,7 @@
       "dr": 30,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -19774,6 +20087,15 @@
           "dr": 30,
           "link": "follow",
           "pricing": "freemium"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.promptzone.com/",
+          "type": "Community",
+          "dr": 14,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -19789,7 +20111,7 @@
       "dr": 34,
       "link": "nofollow",
       "eligibility": null,
-      "flags": ["Source path requires review", "DR sources disagree"],
+      "flags": ["Source path requires review","DR sources disagree"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -19810,6 +20132,15 @@
           "pricing": "free",
           "type": "Directory / Web",
           "submissionUrl": "https://proofstories.io/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.proofstories.io/",
+          "type": "Launchpad",
+          "dr": 36,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -21466,7 +21797,7 @@
       "dr": 35,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -21479,6 +21810,15 @@
           "dr": 35,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.rankmyai.com/",
+          "type": "AI Directory",
+          "dr": 27,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -21772,6 +22112,15 @@
           "dr": 31,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://resource.fyi/",
+          "type": "Software Directory",
+          "dr": 30,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -22234,7 +22583,7 @@
       "dr": 16,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -22247,6 +22596,15 @@
           "dr": 16,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://saasbison.com/",
+          "type": "Software Directory",
+          "dr": 19,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -22402,12 +22760,7 @@
       "dr": 76,
       "link": "nofollow",
       "eligibility": null,
-      "flags": [
-        "DR sources disagree",
-        "Link sources disagree",
-        "Submission routes disagree",
-        "Example link observed nofollow"
-      ],
+      "flags": ["DR sources disagree","Link sources disagree","Submission routes disagree","Example link observed nofollow"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -22434,6 +22787,15 @@
           "pricing": "free",
           "type": "Directory / Review",
           "submissionUrl": "https://www.saashub.com/submit-service"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.saashub.com/",
+          "type": "Software Directory",
+          "dr": 76,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -22449,7 +22811,7 @@
       "dr": 48,
       "link": "nofollow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -22467,6 +22829,15 @@
           "source": "playbook-research",
           "retrieved": "2026-09-26",
           "note": "Live PH-alternative; Submit Project is account-gated; paid launch tiers from $10 and Outbid auction slots dominate"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://saashunt.best/",
+          "type": "Launchpad",
+          "dr": 49,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -22557,6 +22928,15 @@
           "dr": 41,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.saaspa.ge/",
+          "type": "Launchpad",
+          "dr": 37,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -22834,7 +23214,7 @@
       "dr": 15,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -22847,6 +23227,15 @@
           "dr": 15,
           "link": "follow",
           "pricing": "free"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://scoutforge.net/",
+          "type": "Launchpad",
+          "dr": 47,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -22947,6 +23336,15 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://www.seewhatnewai.com/sign-up"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.seewhatnewai.com/",
+          "type": "Software Directory",
+          "dr": 56,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -23071,6 +23469,15 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://shinylaunch.com/",
+          "type": "Launchpad",
+          "dr": 35,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -23412,7 +23819,7 @@
       "dr": 70,
       "link": "nofollow",
       "eligibility": "Requires a suitable app, integration, extension, deal, or seller account for this platform; not a generic backlink submission.",
-      "flags": ["DR sources disagree", "Link sources disagree", "Submission routes disagree"],
+      "flags": ["DR sources disagree","Link sources disagree","Submission routes disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -23445,6 +23852,15 @@
           "pricing": "free",
           "type": "Directory / Launch",
           "submissionUrl": "https://www.sideprojectors.com/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.sideprojectors.com/",
+          "type": "Software Directory",
+          "dr": 70,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -23460,7 +23876,7 @@
       "dr": 26,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -23473,6 +23889,15 @@
           "dr": 26,
           "link": "follow",
           "pricing": "freemium"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://sideprojects.net/",
+          "type": "Community",
+          "dr": 12,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -23668,7 +24093,7 @@
       "dr": 66,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree", "Link sources disagree"],
+      "flags": ["DR sources disagree","Link sources disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -23693,6 +24118,15 @@
           "dr": 63,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.sitelike.org/",
+          "type": "Software Directory",
+          "dr": 66,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -24307,6 +24741,15 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.sololaunches.com/",
+          "type": "Launchpad",
+          "dr": 24,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -24953,7 +25396,7 @@
       "dr": 38,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -24966,6 +25409,15 @@
           "dr": 38,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://startupaideas.com/",
+          "type": "AI Directory",
+          "dr": 41,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -24981,7 +25433,7 @@
       "dr": 22,
       "link": "nofollow",
       "eligibility": null,
-      "flags": ["DR sources disagree", "Link sources disagree"],
+      "flags": ["DR sources disagree","Link sources disagree"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -25002,6 +25454,15 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://startupbenchmarks.com/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://startupbenchmarks.com/",
+          "type": "Software Directory",
+          "dr": 54,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -26683,6 +27144,15 @@
           "dr": 12,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://startuups.com/",
+          "type": "Launchpad",
+          "dr": 12,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -26754,7 +27224,7 @@
       "dr": 28,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -26767,6 +27237,15 @@
           "dr": 28,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.stellarlaunch.org/",
+          "type": "Launchpad",
+          "dr": 27,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -27083,7 +27562,7 @@
       "dr": 29,
       "link": "nofollow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -27096,6 +27575,15 @@
           "dr": 29,
           "link": "nofollow",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.submithunt.com/",
+          "type": "Startup Directory",
+          "dr": 30,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -27111,7 +27599,7 @@
       "dr": 30,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -27124,6 +27612,15 @@
           "dr": 30,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://submitmatic.com/tools",
+          "type": "Software Directory",
+          "dr": 26,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -27322,7 +27819,7 @@
       "dr": 18,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Source path requires review", "DR sources disagree"],
+      "flags": ["Source path requires review","DR sources disagree"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -27343,6 +27840,15 @@
           "pricing": "free",
           "type": "Directory / Startup",
           "submissionUrl": "https://taalk.com/submit-startup/"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://taalk.com/",
+          "type": "Media",
+          "dr": 16,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -29161,7 +29667,7 @@
       "dr": 73,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree", "Domain unreachable"],
+      "flags": ["DR sources disagree","Domain unreachable"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -29186,6 +29692,15 @@
           "dr": 73,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.tinylaunch.com/",
+          "type": "Launchpad",
+          "dr": 71,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -29257,7 +29772,7 @@
       "dr": 35,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable"],
+      "flags": ["Domain unreachable","DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -29270,6 +29785,15 @@
           "dr": 35,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://tinylaunchpad.com/",
+          "type": "Launchpad",
+          "dr": 39,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -29557,7 +30081,7 @@
       "dr": 45,
       "link": "follow",
       "eligibility": null,
-      "flags": ["DR sources disagree", "Domain unreachable"],
+      "flags": ["DR sources disagree","Domain unreachable"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -29584,6 +30108,15 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://toolfio.com/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://toolfio.com/",
+          "type": "Software Directory",
+          "dr": 46,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -30373,7 +30906,7 @@
       "dr": 15,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable"],
+      "flags": ["Domain unreachable","DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -30386,6 +30919,15 @@
           "dr": 15,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://toshilist.com/",
+          "type": "Software Directory",
+          "dr": 45,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -31284,7 +31826,7 @@
       "dr": 53,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -31297,6 +31839,15 @@
           "dr": 53,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.verifiedtools.info/",
+          "type": "Software Directory",
+          "dr": 47,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -31443,6 +31994,15 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://viesearch.com/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://viesearch.com/",
+          "type": "General Directory",
+          "dr": 73,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -31629,6 +32189,15 @@
           "dr": 52,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://weliketools.com/",
+          "type": "Software Directory",
+          "dr": 44,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -32147,7 +32716,7 @@
       "dr": 71,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": ["DR sources disagree", "Submission routes disagree"],
+      "flags": ["DR sources disagree","Submission routes disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -32168,6 +32737,15 @@
           "pricing": "free",
           "type": "Directory / Launch",
           "submissionUrl": "https://www.whatlaunched.today/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://whatlaunched.today/",
+          "type": "Launchpad",
+          "dr": 18,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -32216,6 +32794,15 @@
           "pricing": "free",
           "type": "Directory / AI tools",
           "submissionUrl": "https://whattheai.tech/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://whattheai.tech/",
+          "type": "AI Directory",
+          "dr": 34,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -33561,7 +34148,7 @@
       "dr": 56,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://dofollowback.link/",
@@ -33576,6 +34163,15 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://productwing.com/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://productwing.com/",
+          "type": "Software Directory",
+          "dr": 53,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -33852,7 +34448,7 @@
       "dr": 50,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://dofollowback.link/",
@@ -33867,6 +34463,15 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://mylaunchstash.com/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://mylaunchstash.com/",
+          "type": "Software Directory",
+          "dr": 48,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -33882,7 +34487,7 @@
       "dr": 50,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://dofollowback.link/",
@@ -33897,6 +34502,15 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://poweruptools.com/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://poweruptools.com/",
+          "type": "AI Directory",
+          "dr": 48,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -33912,7 +34526,7 @@
       "dr": 49,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable"],
+      "flags": ["Domain unreachable","DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://dofollowback.link/",
@@ -33927,6 +34541,15 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://besttoolvault.com/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://besttoolvault.com/",
+          "type": "Software Directory",
+          "dr": 46,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -33942,7 +34565,7 @@
       "dr": 49,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://dofollowback.link/",
@@ -33957,6 +34580,15 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://trustiner.com/submit"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://trustiner.com/",
+          "type": "Software Directory",
+          "dr": 46,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -36549,7 +37181,7 @@
       "dr": 43,
       "link": "unknown",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://dofollowback.link/",
@@ -36564,6 +37196,15 @@
           "pricing": "free",
           "type": "Directory / Software",
           "submissionUrl": "https://businesshunt.co"
+        },
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://businesshunt.co/",
+          "type": "Launchpad",
+          "dr": 51,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     },
@@ -36624,6 +37265,2614 @@
           "pricing": "free",
           "type": "Directory / Citation",
           "submissionUrl": "https://localpages.com/"
+        }
+      ]
+    },
+    {
+      "name": "91wink",
+      "domain": "91wink.com",
+      "website": "https://91wink.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Press",
+      "type": "Media",
+      "pricing": "unknown",
+      "dr": 27,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://91wink.com/",
+          "type": "Media",
+          "dr": 27,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "aat.ee",
+      "domain": "aat.ee",
+      "website": "https://www.aat.ee/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 23,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.aat.ee/",
+          "type": "Launchpad",
+          "dr": 23,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "AI Finder Guru",
+      "domain": "aifinderguru.com",
+      "website": "https://aifinderguru.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 3.5,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://aifinderguru.com/",
+          "type": "AI Directory",
+          "dr": 3.5,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "AI SaaS",
+      "domain": "ai-saas.org",
+      "website": "https://ai-saas.org/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 2.2,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://ai-saas.org/",
+          "type": "Launchpad",
+          "dr": 2.2,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "AI Tools Buzz",
+      "domain": "aitoolbuzz.com",
+      "website": "https://aitoolbuzz.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 13,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://aitoolbuzz.com/",
+          "type": "AI Directory",
+          "dr": 13,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "AIGC 160",
+      "domain": "aigc160.com",
+      "website": "https://aigc160.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 47,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://aigc160.com/",
+          "type": "AI Directory",
+          "dr": 47,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "AITACH",
+      "domain": "aitach.com",
+      "website": "https://aitach.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 8,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://aitach.com/",
+          "type": "AI Directory",
+          "dr": 8,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "AiToolHub",
+      "domain": "aitoolhub.co",
+      "website": "https://aitoolhub.co/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 15,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://aitoolhub.co/",
+          "type": "AI Directory",
+          "dr": 15,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "AllYourTech",
+      "domain": "allyourtech.ai",
+      "website": "https://allyourtech.ai/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 36,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://allyourtech.ai/",
+          "type": "AI Directory",
+          "dr": 36,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Appsy Tools",
+      "domain": "appsytools.com",
+      "website": "https://appsytools.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 45,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://appsytools.com/",
+          "type": "Software Directory",
+          "dr": 45,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Ash List",
+      "domain": "ashlist.com",
+      "website": "https://ashlist.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 44,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://ashlist.com/",
+          "type": "Software Directory",
+          "dr": 44,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Ben's Bites",
+      "domain": "news.bensbites.com",
+      "website": "https://news.bensbites.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 59,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://news.bensbites.com/",
+          "type": "AI Directory",
+          "dr": 59,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "BestSaaSList.com",
+      "domain": "bestsaaslist.com",
+      "website": "https://www.bestsaaslist.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 0,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.bestsaaslist.com/",
+          "type": "Software Directory",
+          "dr": 0,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Betalists",
+      "domain": "betalists.xyz",
+      "website": "https://www.betalists.xyz/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 3.2,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.betalists.xyz/",
+          "type": "Launchpad",
+          "dr": 3.2,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "BRO Directory",
+      "domain": "bro.directory",
+      "website": "https://bro.directory/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 25,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://bro.directory/",
+          "type": "Software Directory",
+          "dr": 25,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Ceered",
+      "domain": "ceered.com",
+      "website": "https://ceered.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 0.2,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://ceered.com/",
+          "type": "Software Directory",
+          "dr": 0.2,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Daily Tools",
+      "domain": "dailytools.cc",
+      "website": "https://dailytools.cc/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 0,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://dailytools.cc/",
+          "type": "Software Directory",
+          "dr": 0,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "DevHub",
+      "domain": "devhub.best",
+      "website": "https://devhub.best/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 33,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://devhub.best/",
+          "type": "Launchpad",
+          "dr": 33,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "FF2050.AI",
+      "domain": "ff2050.com",
+      "website": "https://ff2050.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 39,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://ff2050.com/",
+          "type": "Launchpad",
+          "dr": 39,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "GoodProducts",
+      "domain": "goodproducts.site",
+      "website": "https://www.goodproducts.site/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 0.8,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.goodproducts.site/",
+          "type": "Software Directory",
+          "dr": 0.8,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "GrowDR",
+      "domain": "growdr.io",
+      "website": "https://growdr.io/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 26,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://growdr.io/",
+          "type": "Software Directory",
+          "dr": 26,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Indie Launchers",
+      "domain": "indielaunchers.com",
+      "website": "https://www.indielaunchers.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 3.3,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.indielaunchers.com/",
+          "type": "Launchpad",
+          "dr": 3.3,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "IndieMap",
+      "domain": "indiemap.world",
+      "website": "https://www.indiemap.world/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 21,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.indiemap.world/",
+          "type": "Software Directory",
+          "dr": 21,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "InstantLaun.ch",
+      "domain": "instantlaun.ch",
+      "website": "https://instantlaun.ch/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 25,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://instantlaun.ch/",
+          "type": "Software Directory",
+          "dr": 25,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "kj123.cn",
+      "domain": "kj123.cn",
+      "website": "https://www.kj123.cn/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 41,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.kj123.cn/",
+          "type": "Software Directory",
+          "dr": 41,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Latest AI Updates",
+      "domain": "latestaiupdates.com",
+      "website": "https://latestaiupdates.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 42,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://latestaiupdates.com/",
+          "type": "AI Directory",
+          "dr": 42,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Launch Scroll",
+      "domain": "launchscroll.com",
+      "website": "https://launchscroll.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 44,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://launchscroll.com/",
+          "type": "Software Directory",
+          "dr": 44,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Launch.community",
+      "domain": "launch.community",
+      "website": "https://launch.community/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 0.2,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://launch.community/",
+          "type": "Launchpad",
+          "dr": 0.2,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "LaunchitX",
+      "domain": "launchitx.com",
+      "website": "https://launchitx.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 47,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://launchitx.com/",
+          "type": "Launchpad",
+          "dr": 47,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "LaunchLog",
+      "domain": "launchlog.fun",
+      "website": "https://launchlog.fun/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Startup Directory",
+      "pricing": "unknown",
+      "dr": 24,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://launchlog.fun/",
+          "type": "Startup Directory",
+          "dr": 24,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Launchpad",
+      "domain": "launchpad.ms",
+      "website": "https://launchpad.ms/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 16,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://launchpad.ms/",
+          "type": "Launchpad",
+          "dr": 16,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "LaunchYourApp",
+      "domain": "launchurapp.com",
+      "website": "https://launchurapp.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 25,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://launchurapp.com/",
+          "type": "Launchpad",
+          "dr": 25,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "MicroSaaS Directory",
+      "domain": "microsaas.directory",
+      "website": "https://microsaas.directory/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 29,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://microsaas.directory/",
+          "type": "Software Directory",
+          "dr": 29,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Million Dot Homepage",
+      "domain": "milliondothomepage.com",
+      "website": "https://milliondothomepage.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 35,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://milliondothomepage.com/",
+          "type": "Software Directory",
+          "dr": 35,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "My Start Tools",
+      "domain": "mystarttools.com",
+      "website": "https://mystarttools.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 44,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://mystarttools.com/",
+          "type": "Software Directory",
+          "dr": 44,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "NavGood",
+      "domain": "navgood.com",
+      "website": "https://www.navgood.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 2.1,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.navgood.com/",
+          "type": "AI Directory",
+          "dr": 2.1,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Next Big Product",
+      "domain": "nextbigproduct.com",
+      "website": "https://nextbigproduct.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 35,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://nextbigproduct.com/",
+          "type": "Launchpad",
+          "dr": 35,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "NextGenTools",
+      "domain": "nextgentools.me",
+      "website": "https://nextgentools.me/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Startup Directory",
+      "pricing": "unknown",
+      "dr": 8,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://nextgentools.me/",
+          "type": "Startup Directory",
+          "dr": 8,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Oksaas",
+      "domain": "oksaas.co",
+      "website": "https://www.oksaas.co/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 0.2,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.oksaas.co/",
+          "type": "Launchpad",
+          "dr": 0.2,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Online AI Tools Directory",
+      "domain": "tools-ai.online",
+      "website": "https://www.tools-ai.online/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 17,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.tools-ai.online/",
+          "type": "AI Directory",
+          "dr": 17,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Open Launch",
+      "domain": "openlaunch.ai",
+      "website": "https://openlaunch.ai/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 35,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://openlaunch.ai/",
+          "type": "Launchpad",
+          "dr": 35,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "OpenUpvote",
+      "domain": "openupvote.com",
+      "website": "https://openupvote.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 5,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://openupvote.com/",
+          "type": "Software Directory",
+          "dr": 5,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "PaveLaunch",
+      "domain": "pavelaunch.com",
+      "website": "https://www.pavelaunch.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 17,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.pavelaunch.com/",
+          "type": "Launchpad",
+          "dr": 17,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Product List Dir",
+      "domain": "productlistdir.com",
+      "website": "https://productlistdir.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 44,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://productlistdir.com/",
+          "type": "Software Directory",
+          "dr": 44,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "ProductHubX",
+      "domain": "producthubx.com",
+      "website": "https://producthubx.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 30,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://producthubx.com/",
+          "type": "Software Directory",
+          "dr": 30,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "ProductLaunchpad.app",
+      "domain": "productlaunchpad.app",
+      "website": "https://productlaunchpad.app/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 0.3,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://productlaunchpad.app/",
+          "type": "Launchpad",
+          "dr": 0.3,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "RaceToShip",
+      "domain": "racetoship.com",
+      "website": "https://racetoship.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 16,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://racetoship.com/",
+          "type": "Launchpad",
+          "dr": 16,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Rank Anything",
+      "domain": "rankanything.online",
+      "website": "https://www.rankanything.online/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "General Directory",
+      "pricing": "unknown",
+      "dr": 12,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://www.rankanything.online/",
+          "type": "General Directory",
+          "dr": 12,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "SaaS Browser",
+      "domain": "saasbrowser.com",
+      "website": "https://saasbrowser.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 57,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://saasbrowser.com/",
+          "type": "Software Directory",
+          "dr": 57,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Saas Field",
+      "domain": "saasfield.com",
+      "website": "https://saasfield.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 46,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://saasfield.com/",
+          "type": "AI Directory",
+          "dr": 46,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "SaaS Roots",
+      "domain": "saasroots.com",
+      "website": "https://saasroots.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 43,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://saasroots.com/",
+          "type": "Software Directory",
+          "dr": 43,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "SaaS Tools Dir",
+      "domain": "saastoolsdir.com",
+      "website": "https://saastoolsdir.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 42,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://saastoolsdir.com/",
+          "type": "Software Directory",
+          "dr": 42,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "SaaS Wheel",
+      "domain": "saaswheel.com",
+      "website": "https://saaswheel.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 47,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://saaswheel.com/",
+          "type": "Software Directory",
+          "dr": 47,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "SayWall",
+      "domain": "saywall.io",
+      "website": "https://saywall.io/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Review",
+      "type": "Review Platform",
+      "pricing": "unknown",
+      "dr": 4,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://saywall.io/",
+          "type": "Review Platform",
+          "dr": 4,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Secret Search Engine Labs",
+      "domain": "secretsearchenginelabs.com",
+      "website": "http://www.secretsearchenginelabs.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Others",
+      "pricing": "unknown",
+      "dr": 45,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified",
+        "Source uses HTTP"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "http://www.secretsearchenginelabs.com/",
+          "type": "Others",
+          "dr": 45,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Share Fast",
+      "domain": "sharefast.co",
+      "website": "https://sharefast.co/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 11,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://sharefast.co/",
+          "type": "Software Directory",
+          "dr": 11,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Solver Tools",
+      "domain": "solvertools.com",
+      "website": "https://solvertools.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 48,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://solvertools.com/",
+          "type": "Software Directory",
+          "dr": 48,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Stack Directory",
+      "domain": "stackdirectory.com",
+      "website": "https://stackdirectory.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 44,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://stackdirectory.com/",
+          "type": "Software Directory",
+          "dr": 44,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Startup Vessel",
+      "domain": "startupvessel.com",
+      "website": "https://startupvessel.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 46,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://startupvessel.com/",
+          "type": "Software Directory",
+          "dr": 46,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "StartupRanked",
+      "domain": "startupranked.com",
+      "website": "https://startupranked.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launchpad",
+      "pricing": "unknown",
+      "dr": 6,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://startupranked.com/",
+          "type": "Launchpad",
+          "dr": 6,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Super AI Boom",
+      "domain": "superaiboom.com",
+      "website": "https://superaiboom.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 43,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://superaiboom.com/",
+          "type": "AI Directory",
+          "dr": 43,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "The App Tools",
+      "domain": "theapptools.com",
+      "website": "https://theapptools.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 41,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://theapptools.com/",
+          "type": "AI Directory",
+          "dr": 41,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "The Core Tools",
+      "domain": "thecoretools.com",
+      "website": "https://thecoretools.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 43,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://thecoretools.com/",
+          "type": "Software Directory",
+          "dr": 43,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "The Hack Stack",
+      "domain": "thehackstack.com",
+      "website": "https://thehackstack.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Startup Directory",
+      "pricing": "unknown",
+      "dr": 12,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://thehackstack.com/",
+          "type": "Startup Directory",
+          "dr": 12,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "The Key Tools",
+      "domain": "thekeytools.com",
+      "website": "https://thekeytools.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 41,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://thekeytools.com/",
+          "type": "AI Directory",
+          "dr": 41,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "The Mega Tools",
+      "domain": "themegatools.com",
+      "website": "https://themegatools.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 41,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://themegatools.com/",
+          "type": "Software Directory",
+          "dr": 41,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "TheFastestWeb",
+      "domain": "thefastestweb.site",
+      "website": "https://thefastestweb.site/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 5,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://thefastestweb.site/",
+          "type": "Software Directory",
+          "dr": 5,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Tiny Tool Hub",
+      "domain": "tinytoolhub.com",
+      "website": "https://tinytoolhub.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 42,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://tinytoolhub.com/",
+          "type": "Software Directory",
+          "dr": 42,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Tool Finddir",
+      "domain": "toolfinddir.com",
+      "website": "https://toolfinddir.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 47,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://toolfinddir.com/",
+          "type": "AI Directory",
+          "dr": 47,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Tool Signal",
+      "domain": "toolsignal.com",
+      "website": "https://toolsignal.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 42,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://toolsignal.com/",
+          "type": "Software Directory",
+          "dr": 42,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "tool/",
+      "domain": "toolslash.com",
+      "website": "https://toolslash.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 1.5,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://toolslash.com/",
+          "type": "Software Directory",
+          "dr": 1.5,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Tools Ai",
+      "domain": "toolsaiapp.com",
+      "website": "https://toolsaiapp.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "AI",
+      "type": "AI Directory",
+      "pricing": "unknown",
+      "dr": 38,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://toolsaiapp.com/",
+          "type": "AI Directory",
+          "dr": 38,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Tools Cosmos",
+      "domain": "toolcosmos.com",
+      "website": "https://toolcosmos.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 41,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://toolcosmos.com/",
+          "type": "Software Directory",
+          "dr": 41,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Tools List HQ",
+      "domain": "toolslisthq.com",
+      "website": "https://toolslisthq.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 42,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://toolslisthq.com/",
+          "type": "Software Directory",
+          "dr": 42,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Top Trend Tools",
+      "domain": "toptrendtools.com",
+      "website": "https://toptrendtools.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 44,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://toptrendtools.com/",
+          "type": "Software Directory",
+          "dr": 44,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Upvote Spot",
+      "domain": "upvotespot.com",
+      "website": "https://upvotespot.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "General Directory",
+      "pricing": "unknown",
+      "dr": 5,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://upvotespot.com/",
+          "type": "General Directory",
+          "dr": 5,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "VerifiedDR",
+      "domain": "verifieddr.com",
+      "website": "https://verifieddr.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 40,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://verifieddr.com/",
+          "type": "Software Directory",
+          "dr": 40,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Vibe Apps",
+      "domain": "vibeapps.dev",
+      "website": "https://vibeapps.dev/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 19,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://vibeapps.dev/",
+          "type": "Software Directory",
+          "dr": 19,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "Viberank",
+      "domain": "viberank.dev",
+      "website": "https://viberank.dev/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Software Directory",
+      "pricing": "unknown",
+      "dr": 33,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": [
+        "Submission route unverified"
+      ],
+      "route": "needs-research",
+      "provider": "RankInPublic (source-reported; underlying provider unspecified)",
+      "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+      "retrieved": "2026-10-24",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "rankinpublic-public",
+          "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
+          "retrieved": "2026-10-24",
+          "website": "https://viberank.dev/",
+          "type": "Software Directory",
+          "dr": 33,
+          "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
         }
       ]
     }
