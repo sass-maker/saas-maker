@@ -53,7 +53,7 @@ jobs:
           name: memory-map-build-${{ github.sha }}
           path: |
             apps/memory-map/dist/
-            ${{ runner.temp }}/memory-map-qualification/*.json
+            ${{ runner.temp }}/memory-map-qualification/*
           if-no-files-found: error
           retention-days: 1
           compression-level: 6

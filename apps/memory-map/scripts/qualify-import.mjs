@@ -124,6 +124,30 @@ async function downloadLocalTrace(page) {
   };
 }
 
+async function captureMeasurementScreenshots(page, phase, includeError = false) {
+  const artifactDirectory = process.env.MEMORY_MAP_TRACE_ARTIFACT_DIR;
+  if (process.env.CI && !artifactDirectory) {
+    throw new Error("CI must retain the content-free Memory Map fixture screenshots");
+  }
+  if (!artifactDirectory) return [];
+  await mkdir(artifactDirectory, { recursive: true });
+  const filenames = [];
+  for (const width of [390, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    const detailsPath = join(artifactDirectory, `memory-map-${phase}-details-${width}.jpg`);
+    await page
+      .locator("#analysis-details")
+      .screenshot({ path: detailsPath, type: "jpeg", quality: 85 });
+    filenames.push(detailsPath.split("/").at(-1));
+    if (includeError) {
+      const errorPath = join(artifactDirectory, `memory-map-${phase}-error-${width}.jpg`);
+      await page.locator("#error-view").screenshot({ path: errorPath, type: "jpeg", quality: 85 });
+      filenames.push(errorPath.split("/").at(-1));
+    }
+  }
+  return filenames;
+}
+
 const archive = await createSyntheticArchive();
 
 for (const width of [390, 768, 1280]) {
@@ -194,10 +218,11 @@ async function observeModelFailure(page, archive, state) {
   await expect(page.locator("#local-trace-summary")).toContainText("milestones");
   await expect(page.locator("#error-view")).toBeVisible({ timeout: 30000 });
   await expect(page.locator("#local-trace-summary")).toContainText("model failure needs recovery");
+  const screenshots = await captureMeasurementScreenshots(page, "model-failure", true);
   state.blockPinnedModelRequests = false;
   await page.locator("#error-reset").click();
   await expect(page.locator("#import-view")).toBeVisible();
-  return state.blockedPinnedModelRequestCount;
+  return { blockedPinnedModelRequestCount: state.blockedPinnedModelRequestCount, screenshots };
 }
 
 async function observeModelRecovery(page, archive) {
@@ -223,7 +248,7 @@ async function observeModelRecovery(page, archive) {
   };
 }
 
-async function retainFixtureEvidence(exported, state, coverageVectors) {
+async function retainFixtureEvidence(exported, state, coverageVectors, screenshots) {
   const artifactDirectory = process.env.MEMORY_MAP_TRACE_ARTIFACT_DIR;
   if (process.env.CI && !artifactDirectory) {
     throw new Error("CI must retain the content-free Memory Map fixture trace");
@@ -241,6 +266,7 @@ async function retainFixtureEvidence(exported, state, coverageVectors) {
         schemaVersion: 1,
         fixture: "synthetic_archive",
         viewportWidths: [390, 768, 1280],
+        screenshots,
         pinnedModelRequested: state.pinnedModelRequested,
         blockedPinnedModelRequestCount: state.blockedPinnedModelRequestCount,
         recoveredAfterRetry: exported.qualification.recoveryAfterFailure,
@@ -275,7 +301,8 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
     });
     routeModelRequests(page, origin, modelRequests);
     await page.goto(origin);
-    const blockedPinnedModelRequestCount = await observeModelFailure(page, archive, modelRequests);
+    const failure = await observeModelFailure(page, archive, modelRequests);
+    const blockedPinnedModelRequestCount = failure.blockedPinnedModelRequestCount;
     assert.ok(
       blockedPinnedModelRequestCount > 0,
       "first import model requests must remain blocked"
@@ -288,6 +315,10 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
       page,
       archive
     );
+    const screenshots = [
+      ...failure.screenshots,
+      ...(await captureMeasurementScreenshots(page, "recovered-insight")),
+    ];
     const { recoveryDurationMs, ...recoveryQualification } = exported.qualification;
     assert.ok(coverageMatches, "completed coverage must preserve the selected set");
     assert.ok(
@@ -310,7 +341,8 @@ test("synthetic ZIP completes pinned compact browser WASM inference", {
       leaksFixtureText: false,
     });
     assert.ok(Number.isFinite(recoveryDurationMs) && recoveryDurationMs >= 0);
-    await retainFixtureEvidence(exported, modelRequests, coverageVectors);
+    if (process.env.CI) assert.equal(screenshots.length, 9);
+    await retainFixtureEvidence(exported, modelRequests, coverageVectors, screenshots);
     assert.deepEqual(pageErrors, []);
   } finally {
     try {
