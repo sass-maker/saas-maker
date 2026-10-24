@@ -10,6 +10,7 @@ export const GET: APIRoute = () =>
         exportedAt: FUNDING.exportedAt,
         workspaceRebuilt: FUNDING.workspaceRebuilt,
         count: FUNDING.count,
+        schema: FUNDING.schema,
         views: FUNDING_VIEWS.map((view) => ({
           key: view.key,
           name: view.name,

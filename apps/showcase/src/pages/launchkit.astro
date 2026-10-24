@@ -7,8 +7,11 @@
  * STORY: What it is → the five pieces → the quickstart → why the states are honest.
  * FIRST VIEWPORT: Kicker, one-line promise, quickstart block visible without scroll.
  */
+import AgentPrompt from '../components/AgentPrompt.astro';
 import Footer from '../components/Footer.astro';
 import Nav from '../components/Nav.astro';
+
+import { LAUNCH_AGENT_PROMPT } from '../data/catalogPrompts';
 import launchdeskData from '../data/launchdesk.json';
 import Layout from '../layouts/Layout.astro';
 
@@ -37,8 +40,14 @@ const playbookCount = Object.keys(playbookModules).filter(
         </p>
       </header>
 
+      <AgentPrompt
+        title="Start with one prompt"
+        description="Paste this into your agent with your product URL and goals. It can read the catalog, verify routes and prepare your launch plan without cloning the repository."
+        prompt={LAUNCH_AGENT_PROMPT}
+      />
+
       <section class="launchkit-pane">
-        <h2>Quickstart</h2>
+        <h2>Run locally with the planner and tracker</h2>
         <pre><code>git clone --depth 1 https://github.com/sass-maker/saas-maker.git
 cd saas-maker
 cp tooling/launchkit/brief.template.md brief.md   # fill once

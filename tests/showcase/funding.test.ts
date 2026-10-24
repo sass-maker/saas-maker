@@ -10,6 +10,7 @@ import {
   field,
 } from '../../apps/showcase/src/data/funding';
 import { PUBLIC_ROUTES } from '../../apps/showcase/src/data/publicRoutes';
+import { GET } from '../../apps/showcase/src/pages/funding.json';
 
 const programSlugs = new Set(FUNDING_PROGRAMS.map((program) => program.slug));
 
@@ -18,6 +19,17 @@ async function readShowcase(relativePath: string) {
 }
 
 describe('SaaS Maker funding directory', () => {
+  it('exports the schema needed to interpret every program field', async () => {
+    const response = await GET({} as Parameters<typeof GET>[0]);
+    const exported = await response.json();
+    expect(exported.count).toBe(exported.programs.length);
+    for (const program of exported.programs) {
+      for (const key of Object.keys(program.fields)) {
+        expect(exported.schema[key]?.name, `${program.slug}: ${key}`).toBeTruthy();
+      }
+    }
+  });
+
   it('imports the complete program set with unique, routable slugs', () => {
     expect(FUNDING_PROGRAMS).toHaveLength(FUNDING.programs.length);
     expect(programSlugs.size).toBe(FUNDING_PROGRAMS.length);
