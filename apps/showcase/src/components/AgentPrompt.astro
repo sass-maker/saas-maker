@@ -1,0 +1,128 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  prompt: string;
+}
+
+const { title, description, prompt } = Astro.props;
+---
+
+<section class="agent-prompt" data-agent-prompt aria-label={title}>
+  <div class="agent-prompt-heading">
+    <div>
+      <h2>{title}</h2>
+      <p>{description}</p>
+    </div>
+    <button type="button" data-agent-prompt-copy>Copy agent prompt</button>
+  </div>
+  <details>
+    <summary>Read the prompt before copying</summary>
+    <textarea aria-label={title} readonly rows="12" spellcheck="false">{prompt}</textarea>
+  </details>
+  <p class="agent-prompt-status" role="status" aria-live="polite" data-agent-prompt-status></p>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-agent-prompt]').forEach((panel) => {
+    const button = panel.querySelector<HTMLButtonElement>('[data-agent-prompt-copy]');
+    const text = panel.querySelector<HTMLTextAreaElement>('textarea');
+    const status = panel.querySelector<HTMLElement>('[data-agent-prompt-status]');
+    if (!button || !text || !status) return;
+
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(text.value);
+        status.textContent = 'Copied. Paste into your agent and fill in the placeholders.';
+      } catch {
+        const details = panel.querySelector('details');
+        if (details) details.open = true;
+        text.focus();
+        text.select();
+        status.textContent = 'Select the prompt below and copy it.';
+      }
+    });
+  });
+</script>
+
+<style>
+  .agent-prompt {
+    margin: 1.5rem 0;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--ink);
+  }
+  .agent-prompt-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .agent-prompt h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.15rem;
+  }
+  .agent-prompt-heading p {
+    max-width: 48rem;
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .agent-prompt button {
+    flex-shrink: 0;
+    min-height: 44px;
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--copper);
+    color: var(--surface);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .agent-prompt button:hover {
+    background: var(--copper-hi);
+  }
+  .agent-prompt button:focus-visible,
+  .agent-prompt summary:focus-visible,
+  .agent-prompt textarea:focus-visible {
+    outline: 2px solid var(--copper-hi);
+    outline-offset: 3px;
+  }
+  .agent-prompt details {
+    margin-top: 1rem;
+  }
+  .agent-prompt summary {
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .agent-prompt textarea {
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+  }
+  .agent-prompt-status {
+    margin: 0.75rem 0 0;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+  .agent-prompt-status:empty {
+    display: none;
+  }
+  @media (max-width: 640px) {
+    .agent-prompt-heading {
+      flex-direction: column;
+    }
+  }
+</style>

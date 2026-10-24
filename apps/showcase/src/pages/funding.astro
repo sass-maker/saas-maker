@@ -9,8 +9,10 @@
  * FIRST VIEWPORT: Studio navigation, identity bay with counts, then the controls and ledger.
  * FORM: Operator ledger within the established workshop wall; no new visual world.
  */
+import AgentPrompt from '../components/AgentPrompt.astro';
 import Footer from '../components/Footer.astro';
 import Nav from '../components/Nav.astro';
+import { FUNDING_AGENT_PROMPT } from '../data/catalogPrompts';
 import {
   FUNDING,
   FUNDING_CATEGORIES,
@@ -71,6 +73,12 @@ const deadlineText = (program: (typeof programs)[number]) =>
           </div>
         </dl>
       </header>
+
+      <AgentPrompt
+        title="Find the right opportunities with your agent"
+        description="Copy the prompt, add your project and constraints, and let your agent build a shortlist from current official sources. No account or repository setup needed."
+        prompt={FUNDING_AGENT_PROMPT}
+      />
 
       <section class="funding-workbench" aria-labelledby="funding-directory-title">
         <div class="funding-intro">

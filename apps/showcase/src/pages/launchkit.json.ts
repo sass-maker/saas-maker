@@ -1,4 +1,5 @@
 import launchdeskData from '../data/launchdesk.json';
+import { LAUNCH_AGENT_PROMPT } from '../data/catalogPrompts';
 
 export const prerender = true;
 
@@ -21,6 +22,7 @@ export function GET() {
       'Free agent-executable launch toolkit: one product brief, a truthful run planner over the launchdesk catalog, per-platform submission playbooks, an evidence-based tracker, and a run prompt. The open equivalent of paid launch-repo kits.',
     gradeSemantics:
       'Playbook grade "researched" = assembled from cited public pages; "observed" = witnessed during a real submission run. Tracker states are evidence-based: a draft is prepared, a confirmed date is scheduled, live requires a resolving public URL.',
+    starterPrompt: LAUNCH_AGENT_PROMPT,
     quickstart: [
       `curl ${RAW}/tooling/launchkit/brief.template.md -o brief.md  # fill once`,
       `git clone --depth 1 ${REPO}.git  # or fetch the two data files below`,
