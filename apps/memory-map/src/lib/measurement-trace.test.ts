@@ -38,12 +38,19 @@ describe("local completion measurement trace", () => {
       sourceBackedItems: 2,
       elapsedMs: 10,
     });
-    expect(result.events[6]).toMatchObject({ milestone: "recovery", elapsedMs: 16 });
+    expect(result.events[6]).toMatchObject({
+      milestone: "recovery",
+      attempt: 2,
+      elapsedMs: 10,
+      recoveryDurationMs: 16,
+    });
+    expect(result.events[6]?.attempt).toBe(result.events[5]?.attempt);
+    expect(result.events[6]?.elapsedMs).toBe(result.events[5]?.elapsedMs);
     expect(result.bottleneck).toEqual({
       stage: "model",
       reason: "observed_failure_recovered",
       nextAction:
-        "Retry model preparation from the parsed archive without asking for the ZIP again.",
+        "Implement model-preparation retry from the parsed archive without asking for the ZIP again.",
     });
     expect(result.maxObservedStageDurationsMs).toEqual({ parse: 4, model: 8 });
     expect(result.durationScope).toContain("independent of the latest 16 events");
@@ -57,6 +64,26 @@ describe("local completion measurement trace", () => {
     expect(trace.export().events).toEqual([
       { milestone: "import_started", attempt: 1, elapsedMs: 0 },
     ]);
+  });
+
+  it("retains worker-stop failures instead of substituting a completed stage", () => {
+    const trace = new LocalMeasurementTrace();
+    trace.startAttempt(10);
+    trace.observeStages([{ phase: "parse", label: "private stage", elapsedMs: 90 }]);
+    trace.failed(40, null);
+
+    const result = trace.export();
+    expect(result.events[1]).toMatchObject({
+      milestone: "failure",
+      stage: "worker",
+      errorClass: "worker_stopped",
+      elapsedMs: 30,
+    });
+    expect(result.bottleneck).toEqual({
+      stage: "worker",
+      reason: "observed_failure_unresolved",
+      nextAction: "Implement a clear worker-stop error and retry path.",
+    });
   });
 
   it("caps the trace to the latest bounded milestones", () => {

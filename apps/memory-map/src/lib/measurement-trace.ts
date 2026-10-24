@@ -16,13 +16,15 @@ type MeasurementMilestone =
   | "first_evidence_backed_insight"
   | "failure"
   | "recovery";
+type MeasurementStage = AnalysisPhase | "worker";
 
 export type MeasurementEvent = {
   milestone: MeasurementMilestone;
   attempt: number;
   elapsedMs: number;
-  stage?: AnalysisPhase;
+  stage?: MeasurementStage;
   errorClass?: MeasurementFailureClass;
+  recoveryDurationMs?: number;
   sourceBackedItems?: number;
 };
 
@@ -33,7 +35,7 @@ export type MeasurementTraceExport = {
   events: MeasurementEvent[];
   maxObservedStageDurationsMs: Partial<Record<AnalysisPhase, number>>;
   bottleneck: {
-    stage: AnalysisPhase;
+    stage: MeasurementStage;
     reason:
       | "observed_failure_recovered"
       | "observed_failure_unresolved"
@@ -66,7 +68,7 @@ function failureClassForStage(stage: AnalysisPhase | null): MeasurementFailureCl
   }
 }
 
-function nextActionForStage(stage: AnalysisPhase): string {
+function nextActionForStage(stage: MeasurementStage): string {
   switch (stage) {
     case "discover":
     case "parse":
@@ -74,10 +76,12 @@ function nextActionForStage(stage: AnalysisPhase): string {
     case "statistics":
       return "Keep import progress visible until the first statistics report is ready.";
     case "model":
-      return "Retry model preparation from the parsed archive without asking for the ZIP again.";
+      return "Implement model-preparation retry from the parsed archive without asking for the ZIP again.";
     case "embed":
     case "cluster":
-      return "Retry semantic mapping from the parsed archive without repeating import.";
+      return "Implement semantic-mapping retry from the parsed archive without repeating import.";
+    case "worker":
+      return "Implement a clear worker-stop error and retry path.";
     default: {
       const exhaustive: never = stage;
       return exhaustive;
@@ -95,6 +99,7 @@ export class LocalMeasurementTrace {
   private attempt = 0;
   private attemptStartedAt: number | null = null;
   private lastFailureAt: number | null = null;
+  private lastFailureStage: MeasurementStage | null = null;
   private recoveredFailure = false;
   private importedThisAttempt = false;
   private insightThisAttempt = false;
@@ -141,7 +146,8 @@ export class LocalMeasurementTrace {
       this.push({
         milestone: "recovery",
         attempt: this.attempt,
-        elapsedMs: boundedDuration(now - this.lastFailureAt),
+        elapsedMs,
+        recoveryDurationMs: boundedDuration(now - this.lastFailureAt),
       });
       this.lastFailureAt = null;
       this.recoveredFailure = true;
@@ -151,12 +157,13 @@ export class LocalMeasurementTrace {
   failed(now: number, stage: AnalysisPhase | null): void {
     if (this.attemptStartedAt === null) return;
     this.lastFailureAt = now;
+    this.lastFailureStage = stage ?? "worker";
     this.recoveredFailure = false;
     this.push({
       milestone: "failure",
       attempt: this.attempt,
       elapsedMs: boundedDuration(now - this.attemptStartedAt),
-      ...(stage ? { stage } : {}),
+      stage: this.lastFailureStage,
       errorClass: failureClassForStage(stage),
     });
   }
@@ -166,9 +173,7 @@ export class LocalMeasurementTrace {
   }
 
   export(): MeasurementTraceExport {
-    const failedStage = [...this.events]
-      .reverse()
-      .find((event) => event.milestone === "failure")?.stage;
+    const failedStage = this.lastFailureStage;
     const longestStage = PHASES.reduce<AnalysisPhase | null>((longest, phase) => {
       if (this.stageDurationsMs[phase] === undefined) return longest;
       if (longest === null) return phase;
