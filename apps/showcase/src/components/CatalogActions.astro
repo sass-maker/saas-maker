@@ -1,0 +1,26 @@
+<div class="catalog-actions">
+  <button type="button" data-catalog-copy>Copy filtered link</button>
+  <button type="button" data-catalog-export>Export results CSV</button>
+  <button type="reset">Reset</button>
+</div>
+<p class="catalog-action-status" data-catalog-status role="status" aria-live="polite"></p>
+
+<style>
+  .catalog-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .catalog-actions button {
+    min-height: 44px;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--copper-hi);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .catalog-actions button:hover { border-color: var(--copper-hi); }
+  .catalog-actions button:focus-visible { outline: 2px solid var(--copper-hi); outline-offset: 3px; }
+  .catalog-actions button:disabled { opacity: 0.5; cursor: default; }
+  .catalog-action-status { flex-basis: 100%; margin: 0; color: var(--ink-soft); }
+  .catalog-action-status:empty { display: none; }
+</style>

@@ -9,6 +9,7 @@
  * FORM: Operator ledger within the established workshop wall; no new visual world.
  */
 import Footer from '../components/Footer.astro';
+import CatalogActions from '../components/CatalogActions.astro';
 import Nav from '../components/Nav.astro';
 import coverageData from '../data/launch-coverage.json';
 import { DIRECTORY_PROJECTS } from '../data/directory';
@@ -194,17 +195,35 @@ const coverageRows = DIRECTORY_PROJECTS.map((project) => {
 
         <label>
           <span>Min reported DR</span>
-          <input type="number" name="dr" min="0" max="100" value="0" step="5" data-ld-dr />
+          <input type="number" name="dr" min="0" max="100" value="0" step="1" data-ld-dr />
         </label>
 
         <label class="launchdesk-sort-mobile">
           <span>Sort</span>
           <select name="sort" data-ld-sort>
             <option value="dr:desc">Reported DR, high to low</option>
+            <option value="dr:asc">Reported DR, low to high</option>
             <option value="name:asc">Name, A–Z</option>
+            <option value="name:desc">Name, Z–A</option>
             <option value="category:asc">Category, A–Z</option>
+            <option value="category:desc">Category, Z–A</option>
             <option value="type:asc">Type, A–Z</option>
+            <option value="type:desc">Type, Z–A</option>
             <option value="link:asc">Link type, A–Z</option>
+            <option value="link:desc">Link type, Z–A</option>
+            <option value="pricing:asc">Price, free first</option>
+            <option value="pricing:desc">Price, paid first</option>
+            <option value="retrieved:desc">Source retrieved, newest first</option>
+            <option value="retrieved:asc">Source retrieved, oldest first</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Submission guide</span>
+          <select name="playbook" data-ld-playbook>
+            <option value="">Any destination</option>
+            <option value="1">Has researched playbook</option>
+            <option value="0">Catalog record only</option>
           </select>
         </label>
 
@@ -215,7 +234,7 @@ const coverageRows = DIRECTORY_PROJECTS.map((project) => {
 
         <div class="launchdesk-result-line">
           <output data-ld-count aria-live="polite">Showing all {destinations.length} destinations</output>
-          <button type="reset" data-ld-reset>Reset</button>
+          <CatalogActions />
         </div>
       </form>
 
@@ -246,9 +265,16 @@ const coverageRows = DIRECTORY_PROJECTS.map((project) => {
             {destinations.map((row) => (
               <tr
                 data-ld-row
-                data-dr={row.dr ?? -1}
+                data-dr={row.dr ?? ''}
                 data-name={`${row.name} ${row.domain}`.toLowerCase()}
                 data-namekey={row.name.toLowerCase()}
+                data-title={row.name}
+                data-domain={row.domain}
+                data-website={row.website}
+                data-submission={row.submissionUrl ?? ''}
+                data-source={row.sourceUrl ?? ''}
+                data-retrieved={row.retrieved ?? ''}
+                data-playbook={playbookDomains.has(row.domain) ? '1' : '0'}
                 data-link={row.link}
                 data-category={row.category}
                 data-type={row.type ?? ''}
@@ -436,114 +462,79 @@ const coverageRows = DIRECTORY_PROJECTS.map((project) => {
 </Layout>
 
 <script>
-  const controls = document.querySelector('[data-ld-controls]');
-  const body = document.querySelector('[data-ld-body]');
-  const rows = Array.from(document.querySelectorAll('[data-ld-row]'));
-  const query = document.querySelector('[data-ld-query]');
-  const category = document.querySelector('[data-ld-category]');
-  const link = document.querySelector('[data-ld-link]');
-  const pricing = document.querySelector('[data-ld-pricing]');
-  const minimumDr = document.querySelector('[data-ld-dr]');
-  const routeOnly = document.querySelector('[data-ld-route]');
-  const mobileSort = document.querySelector('[data-ld-sort]');
-  const count = document.querySelector('[data-ld-count]');
-  const empty = document.querySelector('[data-ld-empty]');
-  const disclosures = Array.from(document.querySelectorAll('[data-ld-disclosure]'));
+  import { bindCatalogControls, compareKnown, recordedDate } from '../lib/catalog-controls';
+
+  const controls = document.querySelector<HTMLFormElement>('[data-ld-controls]');
+  const body = document.querySelector<HTMLElement>('[data-ld-body]');
+  const rows = Array.from(document.querySelectorAll<HTMLTableRowElement>('[data-ld-row]'));
+  const query = controls?.querySelector<HTMLInputElement>('[data-ld-query]');
+  const minimumDr = controls?.querySelector<HTMLInputElement>('[data-ld-dr]');
+  const routeOnly = controls?.querySelector<HTMLInputElement>('[data-ld-route]');
+  const sort = controls?.querySelector<HTMLSelectElement>('[data-ld-sort]');
+  const count = document.querySelector<HTMLElement>('[data-ld-count]');
+  const empty = document.querySelector<HTMLElement>('[data-ld-empty]');
+  const disclosures = Array.from(document.querySelectorAll<HTMLDetailsElement>('[data-ld-disclosure]'));
   const mobileLayout = window.matchMedia('(max-width: 47.99rem)');
-  let sortKey = 'dr';
-  let sortDirection = 'desc';
+  const PRICE_RANK: Record<string, number> = { free: 0, freemium: 1, paid: 2 };
 
-  function syncDisclosures() {
-    for (const disclosure of disclosures) {
-      if (mobileLayout.matches) disclosure.removeAttribute('open');
-    }
-  }
-
-  function valueFor(row, key) {
-    if (key === 'dr') return Number(row.dataset.dr);
+  function valueFor(row: HTMLTableRowElement, key: string) {
+    if (key === 'dr') return row.dataset.dr ? Number(row.dataset.dr) : null;
     if (key === 'name') return row.dataset.namekey ?? '';
-    return row.dataset[key] ?? '';
+    if (key === 'pricing') return PRICE_RANK[row.dataset.pricing ?? ''] ?? null;
+    if (key === 'retrieved') return recordedDate(row.dataset.retrieved);
+    if (key === 'link' && row.dataset.link === 'unknown') return null;
+    return row.dataset[key] || null;
   }
 
-  function applyDestinations() {
+  function render() {
     if (!body || !count || !empty) return;
     const search = query?.value.trim().toLowerCase() ?? '';
-    const minimumDrValue = Number(minimumDr?.value ?? 0);
-
-    const ordered = rows.toSorted((left, right) => {
-      const leftValue = valueFor(left, sortKey);
-      const rightValue = valueFor(right, sortKey);
-      const comparison =
-        typeof leftValue === 'number'
-          ? leftValue - rightValue
-          : String(leftValue).localeCompare(String(rightValue));
-      return sortDirection === 'desc' ? -comparison : comparison;
-    });
-
+    const minimum = Number(minimumDr?.value || 0);
+    const [key, direction] = (sort?.value || 'dr:desc').split(':');
+    const ordered = rows.toSorted((a, b) => compareKnown(valueFor(a, key), valueFor(b, key), direction)
+      || (a.dataset.namekey ?? '').localeCompare(b.dataset.namekey ?? ''));
     let visibleCount = 0;
     for (const row of ordered) {
-      const matches =
-        (!routeOnly?.checked || row.dataset.route === '1') &&
-        (!category?.value || row.dataset.category === category.value) &&
-        (!link?.value || row.dataset.link === link.value) &&
-        (!pricing?.value || row.dataset.pricing === pricing.value) &&
-        Number(row.dataset.dr) >= minimumDrValue &&
-        (!search || row.dataset.name?.includes(search));
+      const matches = (!routeOnly?.checked || row.dataset.route === '1')
+        && ['category', 'link', 'pricing', 'playbook'].every(filter => {
+          const value = controls?.querySelector<HTMLSelectElement>(`[data-ld-${filter}]`)?.value;
+          return !value || row.dataset[filter] === value;
+        })
+        && (minimum <= 0 || (row.dataset.dr !== '' && Number(row.dataset.dr) >= minimum))
+        && (!search || row.dataset.name?.includes(search));
       row.hidden = !matches;
       if (matches) visibleCount += 1;
       body.append(row);
     }
-
-    count.textContent =
-      visibleCount === rows.length
-        ? `Showing all ${rows.length} destinations`
-        : `Showing ${visibleCount} of ${rows.length} destinations`;
+    count.textContent = visibleCount === rows.length ? `Showing all ${rows.length} destinations` : `Showing ${visibleCount} of ${rows.length} destinations`;
     empty.hidden = visibleCount > 0;
-
-    document.querySelectorAll('[data-sort-heading]').forEach((heading) => {
-      if (heading.dataset.sortHeading === sortKey) {
-        heading.setAttribute('aria-sort', sortDirection === 'desc' ? 'descending' : 'ascending');
-      } else {
-        heading.removeAttribute('aria-sort');
-      }
+    document.querySelectorAll<HTMLElement>('[data-sort-heading]').forEach(heading => {
+      if (heading.dataset.sortHeading === key) heading.setAttribute('aria-sort', direction === 'desc' ? 'descending' : 'ascending');
+      else heading.removeAttribute('aria-sort');
     });
   }
 
-  controls?.addEventListener('input', applyDestinations);
-  controls?.addEventListener('change', applyDestinations);
-  controls?.addEventListener('reset', () => {
-    sortKey = 'dr';
-    sortDirection = 'desc';
-    requestAnimationFrame(applyDestinations);
-  });
+  function exportRows() {
+    const visible = Array.from(body?.querySelectorAll<HTMLTableRowElement>('[data-ld-row]') ?? []).filter(row => !row.hidden);
+    return [['Destination', 'Domain', 'Category', 'Type', 'Reported DR (source claim)', 'Link type', 'Reported pricing', 'Website', 'Submission URL', 'Has researched playbook', 'Source URL', 'Source retrieved'],
+      ...visible.map(({ dataset: d }) => [d.title, d.domain, d.category, d.type, d.dr, d.link, d.pricing, d.website, d.submission, d.playbook === '1' ? 'Yes' : 'No', d.source, d.retrieved])];
+  }
 
-  document.querySelectorAll('[data-sort]').forEach((button) => {
-    button.addEventListener('click', () => {
-      const nextKey = button.dataset.sort;
-      if (!nextKey) return;
-      if (nextKey === sortKey) sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
-      else {
-        sortKey = nextKey;
-        sortDirection = nextKey === 'dr' ? 'desc' : 'asc';
-      }
-      if (mobileSort) mobileSort.value = `${sortKey}:${sortDirection}`;
-      applyDestinations();
+  if (controls) {
+    const update = bindCatalogControls(controls, render, exportRows, 'launch-results.csv');
+    document.querySelectorAll<HTMLButtonElement>('[data-sort]').forEach(button => {
+      button.addEventListener('click', () => {
+        if (!sort) return;
+        const [key, direction] = sort.value.split(':');
+        sort.value = `${button.dataset.sort}:${key === button.dataset.sort ? (direction === 'asc' ? 'desc' : 'asc') : (button.dataset.sort === 'dr' ? 'desc' : 'asc')}`;
+        update();
+      });
     });
-  });
-
-  mobileSort?.addEventListener('change', () => {
-    [sortKey, sortDirection] = mobileSort.value.split(':');
-    applyDestinations();
-  });
-
-  document.querySelector('[data-ld-empty-reset]')?.addEventListener('click', () => {
-    controls?.reset();
-    sortKey = 'dr';
-    sortDirection = 'desc';
-    applyDestinations();
-    query?.focus();
-  });
-
+    document.querySelector('[data-ld-empty-reset]')?.addEventListener('click', () => { controls.reset(); query?.focus(); });
+  }
+  function syncDisclosures() {
+    if (mobileLayout.matches) for (const disclosure of disclosures) disclosure.open = false;
+  }
   syncDisclosures();
   mobileLayout.addEventListener('change', syncDisclosures);
 </script>
@@ -712,7 +703,7 @@ const coverageRows = DIRECTORY_PROJECTS.map((project) => {
 
   .launchdesk-controls {
     display: grid;
-    grid-template-columns: minmax(16rem, 1.6fr) repeat(4, minmax(8rem, 0.7fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     border: 1px solid var(--line-strong);
     background: var(--surface);
   }
@@ -757,7 +748,7 @@ const coverageRows = DIRECTORY_PROJECTS.map((project) => {
   }
 
   .launchdesk-route-toggle {
-    grid-column: 1 / 3;
+    grid-column: auto;
     flex-direction: row !important;
     align-items: center;
     gap: 0.75rem !important;
@@ -776,11 +767,12 @@ const coverageRows = DIRECTORY_PROJECTS.map((project) => {
   }
 
   .launchdesk-sort-mobile {
-    display: none !important;
+    display: flex;
   }
 
   .launchdesk-result-line {
-    grid-column: 3 / -1;
+    flex-wrap: wrap;
+    grid-column: 1 / -1;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -1158,11 +1150,11 @@ const coverageRows = DIRECTORY_PROJECTS.map((project) => {
     }
 
     .launchdesk-route-toggle {
-      grid-column: 1 / 2;
+      grid-column: 1 / -1;
     }
 
     .launchdesk-result-line {
-      grid-column: 2 / -1;
+      grid-column: 1 / -1;
     }
   }
 
