@@ -29,7 +29,7 @@ const help = `fleet-workspace <command> [options]
                                   Same merge, unknown-data and busy-work checks.
   maintain (--dry-run | --apply) [--idle-minutes <n>] (default: 1440)
                                   Close eligible worktrees and prune the shared
-                                  pnpm cache daily or when over budget.
+                                  pnpm cache only when over budget.
   schedule (--dry-run | --apply)   Install hourly macOS maintenance; no startup run.
   inventory --path <path>          Read-only legacy checkout/store discovery.
   configure [--store-dir <path>] [--max-writers <n>] [--max-heavy-jobs <n>]

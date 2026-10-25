@@ -421,7 +421,7 @@ async function cacheFixture(options = {}) {
   return { ...f, row, storeDir };
 }
 
-test('cache maintenance previews, prunes only through pnpm, and enforces daily retention', async () => {
+test('cache maintenance previews and prunes only through pnpm under byte pressure', async () => {
   const { manager, storeDir } = await cacheFixture();
   let bytes = 2 * GiB; let calls = 0;
   manager.measure = (path) => path === storeDir ? bytes : 0;
@@ -441,10 +441,10 @@ test('cache maintenance previews, prunes only through pnpm, and enforces daily r
   assert.equal(applied.reportedBytesAfter, GiB / 2);
   assert.equal(manager.jobs().length, 0);
   assert.equal((await manager.pruneStore({ apply: true })).action, 'keep');
-  assert.equal(calls, 1, 'a warm cache is not pruned on every scheduler tick');
+  assert.equal(calls, 1, 'a warm cache is preserved while within budget');
   bytes = 2 * GiB;
-  assert.equal((await manager.pruneStore({ apply: true, onlyOverBudget: true })).action, 'pruned');
-  assert.equal(calls, 2, 'a cache over budget bypasses the daily interval');
+  assert.equal((await manager.pruneStore({ apply: true })).action, 'pruned');
+  assert.equal(calls, 2, 'new byte pressure allows another native prune');
 });
 
 test('managed jobs, external pnpm, and unknown process state preserve the store', async () => {
@@ -463,11 +463,24 @@ test('managed jobs, external pnpm, and unknown process state preserve the store'
 });
 
 test('failed native pruning releases its lease and does not record a successful prune', async () => {
-  const { manager } = await cacheFixture();
+  const { manager, storeDir } = await cacheFixture();
+  manager.measure = (path) => path === storeDir ? 2 * GiB : 0;
   manager.pruneNativeStore = async () => { throw new Error('native failure'); };
   await assert.rejects(manager.pruneStore({ apply: true }), /native failure/);
   assert.equal(manager.jobs().length, 0);
   assert.equal(existsSync(join(manager.root, 'storage-maintenance.json')), false);
+});
+
+test('an old shared cache below budget is preserved across scheduled maintenance', async () => {
+  const { manager, storeDir } = await cacheFixture();
+  manager.measure = (path) => path === storeDir ? GiB / 2 : 0;
+  manager.pruneNativeStore = async () => assert.fail('a reusable cache under budget must not be evicted');
+  writeFileSync(join(manager.root, 'storage-maintenance.json'), JSON.stringify({ lastPrunedAt: '2000-01-01T00:00:00Z' }));
+  const marker = join(storeDir, 'cached-package'); writeFileSync(marker, 'reusable content');
+  const result = await manager.maintain({ apply: true });
+  assert.equal(result.store.action, 'keep'); assert.equal(result.store.error, undefined);
+  assert.equal(readFileSync(marker, 'utf8'), 'reusable content');
+  assert.equal(manager.jobs().length, 0);
 });
 
 test('scheduled failures remain visible in one overwritten result with a failing exit code', async () => {

@@ -287,51 +287,14 @@ or permission to signal unrelated processes.
 
 ## Bounded Node storage and automatic maintenance
 
-`fleet-workspace maintain --dry-run` previews the same clean, merged, idle,
-no-open-files close/GC rules described above. `maintain --apply` applies them,
-then asks the pinned native pnpm to prune its shared store at most daily, or
-sooner if the store exceeds its budget. The maintenance idle threshold defaults
-to 24 hours. Dirty source, unmerged commits, active jobs, unknown ignored data,
-locked trees and unmanaged checkouts remain protected. Unknown data can keep a
-whole worktree and its generated output; maintenance reports that blocker.
-
-The shared pnpm store has a separate 20 GiB reported-allocation budget. Managed
-pnpm installs and lockfile generation check it before, every 15 seconds during,
-and after execution. A store over budget triggers a native prune before a
-frozen install; if pruning cannot bring it under budget, installation fails
-with a maintenance hint. Source-only commands remain available. This is a
-sampled admission limit, not a filesystem quota or a whole-machine usage cap.
-
-Native pruning waits until all managed commands and visible external pnpm or
-Corepack processes are idle. A registry lease prevents new managed commands
-from starting during pruning. Unknown process visibility keeps the store.
-Unmanaged shells can bypass these cooperative checks. The pruning driver is
-pinned separately (default pnpm 10.33.2), runs with Corepack network disabled,
-and never changes any repository's package-manager pin or lockfile. It prunes
-its own store format only; other formats still count toward the budget and may
-require separate native maintenance. Downloading evicted packages again trades
-some install time for less retained cache.
-
-```sh
-fleet-workspace configure --store-gib 20 --package-import-method clone
-fleet-workspace maintain --dry-run
-fleet-workspace maintain --apply
-fleet-workspace schedule --dry-run
-fleet-workspace schedule --apply
-```
-
-On macOS, `schedule` installs the per-user
-`com.sarthak.fleet-workspace-maintenance` LaunchAgent. It runs hourly with the
-24-hour worktree idle threshold, without an immediate startup run. Install it
-from a durable, pinned CLI release, not a disposable writer checkout. The
-latest result overwrites `storage-maintenance.json` under private state; no
-rolling log archive is created. The plist uses direct argument arrays, validates
-with plutil, and preserves one previous schedule for rollback. To disable it:
-`launchctl bootout gui/$(id -u)/com.sarthak.fleet-workspace-maintenance`.
-Other operating systems can invoke `maintain --apply` from their scheduler.
-
-Do not share one mutable `node_modules`, build directory, or experimental global
-virtual store across writers. The PNPM 10 global virtual store is experimental
-and has ESM/hoisting compatibility caveats; APFS clones provide shared physical
-package storage with independent writable files. Browser downloads, npm caches,
-Docker volumes and native SDKs are outside this Node-store budget.
+- `maintain --dry-run` previews close/GC; `maintain --apply` removes eligible clean, merged worktrees idle for 24 hours.
+- Dirty, unmerged, active, locked, unknown and unmanaged data stays protected, including generated output when unknown data blocks a whole-tree deletion.
+- The shared pnpm store has a separate 20 GiB reported-allocation budget. Installs check it before, every 15 seconds during, and after execution; excess bytes block installation.
+- Native pruning runs only above budget. Warm caches stay reusable: PNPM 10 uses hard-link counts, while APFS clones have separate inodes. Pruning those copies forces later downloads.
+- Pruning waits for all managed commands and visible external pnpm/Corepack processes to be idle; its leases block new managed commands. Unknown visibility keeps the store.
+- The pruning driver defaults to pnpm 10.33.2 with Corepack network disabled. Other store formats count toward the budget but require their own native maintenance.
+- `configure --store-gib 20 --package-import-method clone` sets the cache budget and APFS sharing policy without rewriting repository pins or lockfiles.
+- `schedule --dry-run` / `schedule --apply` install hourly macOS launchd maintenance from a durable CLI release, with no startup run. Other systems can schedule `maintain --apply`.
+- The latest result overwrites private `storage-maintenance.json`; there is no rolling log archive. One previous schedule plist is kept for rollback.
+- Disable with `launchctl bootout gui/$(id -u)/com.sarthak.fleet-workspace-maintenance`. Never schedule a CLI inside a disposable writer checkout.
+- These are sampled managed limits, not filesystem quotas or a whole-machine cap. Browser/npm caches, native SDKs and Docker are outside the shared-store budget.
