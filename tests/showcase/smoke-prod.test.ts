@@ -89,10 +89,7 @@ describe('directory production smoke', () => {
   });
 
   it('still requires the complete public JSON projection', async () => {
-    const result = await smokeWithRows(
-      browsableProjectCount,
-      publicProjects.slice(0, browsableProjectCount)
-    );
+    const result = await smokeWithRows(browsableProjectCount, publicProjects.slice(0, -1));
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toContain('directory IDs differ');
   });

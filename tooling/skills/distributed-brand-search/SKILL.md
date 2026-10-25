@@ -47,12 +47,12 @@ For a one-off launch, use the existing launch-campaign workflow rather than crea
 a second campaign tracker. Do not manufacture engagement, irrelevant links, fake
 reviews, duplicate low-value pages or independent-looking endorsements.
 
-Before any public post, use the Humanizer skill when it is available. If it is
-not listed with advertised skills, check the managed install at
+Before every public post, run the Humanizer skill. If it is not listed with
+advertised skills, check the managed install at
 `~/.local/share/agent-config/skills/humanizer/SKILL.md`. Review the rewrite
 against the approved facts and preserve claims, links and disclosures; retain
-the final copy revision. If the owner specifically requests Humanizer and it
-cannot be loaded, hold that post and report the missing step.
+the final copy revision. If the skill cannot be loaded, hold that post and
+report the missing step.
 
 ## Indexing services
 

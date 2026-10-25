@@ -114,9 +114,11 @@ export function ScoreboardChecklist() {
                 destination, URL, date, and submission/index receipt.
               </li>
               <li>
-                Before public posting, use the Humanizer skill when available. Check factual claims,
-                links, and disclosures, and retain the final copy revision. If specifically
-                requested but unavailable, hold that post and report it.
+                Before every public post, run the Humanizer skill. If it is not listed with
+                advertised skills, check the managed install at
+                ~/.local/share/agent-config/skills/humanizer/SKILL.md. Check factual claims, links,
+                and disclosures, and retain the final copy revision. If the skill cannot be loaded,
+                hold that post and report the missing step.
               </li>
             </ul>
             <h4>SEO & growth · result</h4>
