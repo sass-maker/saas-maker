@@ -64,7 +64,7 @@ applicable authorization.
    cannot reach the form, stop after this fallback attempt and record the
    remaining blocker.
 5. Record `browser=fortress`, the observed engine version, initial blocker,
-   outcome and any manual step in tracker `notes`. Keep intake confirmation
+   outcome and any human-gate blocker in tracker `notes`. Keep intake confirmation
    in `evidence`; engine access or a completed click does not prove intake.
    Preserve `prepared`, `submitted`, `scheduled` and `live` meanings. Verify
    a claimed live listing separately in a normal logged-out browser.

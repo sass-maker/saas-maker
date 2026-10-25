@@ -40,7 +40,10 @@ test('Fortress launcher pins its runtime and overrides inherited service setting
   withRuntime('console.log(JSON.stringify({ args: process.argv.slice(2), env: process.env }));', (dir) => {
     const inherited = Object.fromEntries([...removed, ...Object.keys(enforced)].map((key) => [key, 'inherited-test-value']));
     const result = spawnSync('/bin/bash', [launcher], {
-      env: { PATH: dir, ...inherited, TILION_LICENSE_KEY: 'test-license-value' }, encoding: 'utf8',
+      env: {
+        PATH: dir, ...inherited,
+        TILION_LICENSE_KEY: 'test-license-value', TILLION_LICENSE_KEY: 'legacy-test-license-value',
+      }, encoding: 'utf8',
     });
     assert.equal(result.status, 0, result.stderr);
     const observed = JSON.parse(result.stdout);
@@ -51,6 +54,7 @@ test('Fortress launcher pins its runtime and overrides inherited service setting
     for (const key of removed) assert.equal(observed.env[key], undefined, key);
     for (const [key, value] of Object.entries(enforced)) assert.equal(observed.env[key], value, key);
     assert.equal(observed.env.TILION_LICENSE_KEY, 'test-license-value');
+    assert.equal(observed.env.TILLION_LICENSE_KEY, 'legacy-test-license-value');
   });
 });
 
