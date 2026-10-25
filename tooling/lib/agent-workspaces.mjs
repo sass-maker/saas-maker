@@ -58,7 +58,7 @@ export const defaultRoot = join(homedir(), 'Library', 'Application Support', 'Fl
 
 function command(bin, args, cwd) {
   const result = spawnSync(bin, args, {
-    cwd, encoding: 'utf8', timeout: bin === 'du' ? 180_000 : 60_000, maxBuffer: 32 * 1024 ** 2,
+    cwd, encoding: 'utf8', timeout: bin === 'du' || (bin === 'git' && args[0] === 'worktree' && args[1] === 'remove') ? 180_000 : 60_000, maxBuffer: 32 * 1024 ** 2,
     env: { ...process.env, GIT_OPTIONAL_LOCKS: '0', COREPACK_ENABLE_AUTO_PIN: '0' },
   });
   if (result.error || result.status !== 0) {
@@ -273,6 +273,61 @@ function acceptLandedBranch(info) {
   }
 }
 
+function regularFile(path) {
+  try { return lstatSync(path).isFile(); }
+  catch (error) { if (error.code === 'ENOENT' || error.code === 'ENOTDIR') return false; throw error; }
+}
+
+// Git worktree remove also deletes ignored files, even without --force.
+// Only known generated directories with an owning build/package manifest are
+// disposable. Local databases, env files, evidence and other ignored data block.
+function disposableIgnored(repo) {
+  const ignored = git(repo, 'ls-files', '--others', '--ignored', '--exclude-standard', '--directory', '-z').split('\0').filter(Boolean);
+  const artifacts = new Set(); const unknown = [];
+  for (const path of ignored) {
+    const parts = path.replace(/\/$/, '').split('/');
+    let artifact;
+    for (let index = 0; index < parts.length; index++) {
+      const name = parts[index];
+      const parent = join(repo, ...parts.slice(0, index));
+      const root = join(parent, name);
+      let directory;
+      try { directory = lstatSync(root).isDirectory(); } catch { directory = false; }
+      if (!directory) continue;
+      if (name === 'node_modules' && regularFile(join(parent, 'package.json'))
+        && (regularFile(join(root, '.modules.yaml')) || regularFile(join(root, '.package-lock.json')))) artifact = parts.slice(0, index + 1).join('/');
+      if (name === '.build' && regularFile(join(parent, 'Package.swift'))) {
+        // SwiftPM checkouts are source repositories. A local edit there is
+        // unknown work, even though the enclosing build directory is ignored.
+        const checkouts = join(root, 'checkouts');
+        let clean = true;
+        if (existsSync(checkouts)) {
+          if (!lstatSync(checkouts).isDirectory() || lstatSync(checkouts).isSymbolicLink()) clean = false;
+          else for (const entry of readdirSync(checkouts)) {
+            const checkout = join(checkouts, entry);
+            try {
+              if (lstatSync(checkout).isSymbolicLink() || git(checkout, 'rev-parse', '--show-toplevel') !== realpathSync(checkout)
+                || git(checkout, 'status', '--porcelain=v1', '--untracked-files=all', '--ignored=matching')
+                || !git(checkout, 'for-each-ref', '--format=%(refname)', '--contains', 'HEAD', 'refs/remotes/', 'refs/tags/')) clean = false;
+            } catch { clean = false; }
+          }
+        }
+        if (clean) artifact = parts.slice(0, index + 1).join('/');
+      }
+      if (name === 'target' && regularFile(join(parent, 'Cargo.toml'))) artifact = parts.slice(0, index + 1).join('/');
+      if (['.next', '.nuxt', '.svelte-kit', '.astro', '.turbo', '.vite', 'dist', 'build', 'coverage', '.output'].includes(name)
+        && regularFile(join(parent, 'package.json'))) {
+        const manifest = json(join(parent, 'package.json'));
+        if (typeof manifest.scripts?.build === 'string' || typeof manifest.scripts?.test === 'string') artifact = parts.slice(0, index + 1).join('/');
+      }
+      if (artifact) break;
+    }
+    if (artifact) artifacts.add(artifact);
+    else unknown.push(path);
+  }
+  return { ignoredArtifacts: [...artifacts].sort(), unknownIgnored: unknown };
+}
+
 export class AgentWorkspaces {
   constructor({ root = defaultRoot, measure = diskBytes, freeBytes, openFiles = openFileCount, gh = (args, repo) => command('gh', args, repo) } = {}) {
     this.root = resolve(root);
@@ -293,7 +348,7 @@ export class AgentWorkspaces {
     const instructions = join(this.root, 'AGENTS.md');
     if (!existsSync(instructions)) {
       try {
-        writeFileSync(instructions, `# Managed agent workspaces\n\nRead the owning repository's AGENTS.md before work. Use fleet-workspace for\nwriter creation, pinned frozen pnpm installs, heavy commands and task closeout.\nRead ${fileURLToPath(new URL('../docs/agent-workspaces.md', import.meta.url))}.\nReview-only agents reuse source. Do not create per-task stores or copy build/\ndependency folders. Respect shared limits and heartbeat long idle tasks.\nClose only verified clean work with retained remote commits; unknown, dirty\nor active work stays protected. gc is dry-run only. Do not commit, push,\ndeploy, migrate or release unless the owner explicitly requested it.\n`, { flag: 'wx', mode: 0o600 });
+        writeFileSync(instructions, `# Managed agent workspaces\n\nRead the owning repository's AGENTS.md before work. Use fleet-workspace for\nwriter creation, pinned frozen pnpm installs, heavy commands and task closeout.\nRead ${fileURLToPath(new URL('../docs/agent-workspaces.md', import.meta.url))}.\nReview-only agents reuse source. Do not create per-task stores or copy build/\ndependency folders. Respect shared limits and heartbeat long idle tasks.\nClose deletes only verified clean merged work and recognized generated output;\nunknown, dirty or active work stays protected. Use gc --dry-run then gc --apply\nfor old retained checkouts; --retain is explicit. Do not commit, push,\ndeploy, migrate or release unless the owner explicitly requested it.\n`, { flag: 'wx', mode: 0o600 });
       } catch (error) { if (error.code !== 'EEXIST') throw error; }
     }
   }
@@ -465,7 +520,7 @@ export class AgentWorkspaces {
       if (!remotes.length) info.blockers.push('head-not-in-local-remote-refs');
       info.remoteRefs = remotes;
     } catch (error) { info.blockers.push(`git-state-unknown: ${error.message}`); }
-    if (this.jobs().some((job) => job.id === row.id && jobAlive(job))) info.blockers.push('command-running');
+    if (this.jobs().some((job) => (job.id === row.id || job.repo === realpathSync(row.path)) && jobAlive(job))) info.blockers.push('command-running');
     acceptLandedBranch(info);
     return info;
   }
@@ -509,6 +564,9 @@ export class AgentWorkspaces {
       if (probe.status === 0) { ref = candidate; break; }
     }
     if (ref) {
+      if (spawnSync('git', ['merge-base', '--is-ancestor', info.head, ref], { cwd: repo }).status === 0) {
+        return { landedBy: 'merged-ancestor', landedRef: ref, landedRefSha: git(repo, 'rev-parse', ref) };
+      }
       const base = spawnSync('git', ['merge-base', info.head, ref], { cwd: repo, encoding: 'utf8' });
       if (base.error || ![0, 1].includes(base.status)) throw new Error('Cannot determine landing merge base');
       if (base.status === 0) {
@@ -543,30 +601,75 @@ export class AgentWorkspaces {
     }
     return null;
   }
-  async close(id, { dryRun = false, landed, idleMinutes } = {}) {
+  async close(id, { dryRun = false, landed, idleMinutes, retain = false } = {}) {
     if (idleMinutes !== undefined && (!Number.isFinite(idleMinutes) || idleMinutes < 0)) throw new Error('--idle-minutes must be a non-negative number.');
-    return this.locked(async () => {
-      const row = this.record(id);
-      if (row.state !== 'active') throw new Error('Only active workspaces can be closed.');
-      const info = await this.inspect(row, { noDisk: true });
-      let flagIgnored = landed !== undefined && info.remoteRefs?.length > 0;
-      if (info.blockers.includes('head-not-in-local-remote-refs')) {
-        try {
-          let evidence = await this.landing(info);
-          flagIgnored = landed !== undefined && evidence !== null;
-          if (!evidence && landed !== undefined) evidence = await this.landing(info, landed);
-          if (evidence) { info.blockers = info.blockers.filter((item) => item !== 'head-not-in-local-remote-refs'); info.landing = evidence; }
-        } catch (error) { info.blockers.push(`landing-unverified: ${error.message}`); }
+    this.initialize();
+    const row = this.record(id);
+    if (row.state !== 'active' && !(row.state === 'closed' && !retain)) throw new Error('Only active workspaces or retained closed workspaces can be closed.');
+    const info = await this.inspect(row, { noDisk: true });
+    let mergeChecked = false;
+    let flagIgnored = landed !== undefined && info.remoteRefs?.length > 0;
+    if (info.blockers.includes('head-not-in-local-remote-refs')) {
+      mergeChecked = true;
+      try {
+        let evidence = await this.landing(info);
+        flagIgnored = landed !== undefined && evidence !== null;
+        if (!evidence && landed !== undefined) evidence = await this.landing(info, landed);
+        if (evidence) { info.blockers = info.blockers.filter((item) => item !== 'head-not-in-local-remote-refs'); info.landing = evidence; }
+      } catch (error) { info.blockers.push(`landing-unverified: ${error.message}`); }
+    }
+    if (flagIgnored) info.notes.push('Ignored --landed: current HEAD is already landed.');
+    if (!retain) {
+      // A pushed feature branch is recoverable, but is not proof of a
+      // completed merge. Deletion always needs default-branch/PR evidence.
+      try {
+        const evidence = info.landing ?? (mergeChecked ? null : await this.landing(info) ?? (landed !== undefined ? await this.landing(info, landed) : null));
+        if (evidence) {
+          info.landing = evidence;
+          info.blockers = info.blockers.filter((item) => item !== 'head-not-in-local-remote-refs');
+        } else info.blockers.push('merge-not-verified');
+      } catch (error) { info.blockers.push(`merge-unverified: ${error.message}`); }
+      try {
+        Object.assign(info, disposableIgnored(row.path));
+        if (info.unknownIgnored.length) info.blockers.push('unknown-ignored-data');
+        // Catch locked worktrees in the preview as well as Git's final check.
+        let path;
+        for (const field of git(row.repo, 'worktree', 'list', '--porcelain', '-z').split('\0')) {
+          if (field.startsWith('worktree ')) path = field.slice(9);
+          if (path === realpathSync(row.path) && (field === 'locked' || field.startsWith('locked '))) info.blockers.push('worktree-locked');
+        }
+        if (git(row.path, 'ls-files', '--stage', '-z').split('\0').some((entry) => entry.startsWith('160000 '))) info.blockers.push('submodules');
+      } catch (error) { info.blockers.push(`ignored-data-unknown: ${error.message}`); }
+    }
+    acceptLandedBranch(info);
+    if (idleMinutes !== undefined && Date.now() - Date.parse(row.heartbeatAt) <= idleMinutes * 60_000) info.blockers.push('heartbeat-not-idle');
+    try { if (this.openFiles(row.path)) info.blockers.push('open-files'); }
+    catch (error) { info.blockers.push(error.message); }
+    if (dryRun) return { ...info, dryRun: true, action: info.blockers.length ? 'keep' : retain ? 'move-to-retired' : 'delete-worktree' };
+    if (info.blockers.length) {
+      const error = new Error(`Keeping ${id}: ${info.blockers.join(', ')}`);
+      error.blockers = info.blockers; throw error;
+    }
+    const deletionToken = 'delete-' + randomUUID();
+    const deletionLease = join(this.root, 'jobs', deletionToken + '.json');
+    const operation = await this.locked(async () => {
+      const current = this.record(id);
+      if (JSON.stringify(current) !== JSON.stringify(row)) throw new Error('Workspace changed during close checks; inspect it again.');
+      const fresh = await this.inspect(current, { noDisk: true });
+      const blockers = fresh.blockers.filter((item) => item !== 'head-not-in-local-remote-refs' && item !== 'branch-changed');
+      if (fresh.head !== info.head || fresh.branchNow !== info.branchNow) blockers.push('head-or-branch-changed');
+      if (!retain && disposableIgnored(row.path).unknownIgnored.length) blockers.push('unknown-ignored-data');
+      if (blockers.length) {
+        const error = new Error('Keeping ' + id + ': ' + blockers.join(', '));
+        error.blockers = blockers; throw error;
       }
-      if (flagIgnored) info.notes.push('Ignored --landed: current HEAD is already landed.');
-      acceptLandedBranch(info);
-      if (idleMinutes !== undefined && Date.now() - Date.parse(row.heartbeatAt) <= idleMinutes * 60_000) info.blockers.push('heartbeat-not-idle');
-      try { if (this.openFiles(row.path)) info.blockers.push('open-files'); }
-      catch (error) { info.blockers.push(error.message); }
-      if (dryRun) return { ...info, dryRun: true, action: info.blockers.length ? 'keep' : 'move-to-retired' };
-      if (info.blockers.length) {
-        const error = new Error(`Keeping ${id}: ${info.blockers.join(', ')}`);
-        error.blockers = info.blockers; throw error;
+      if (!retain) {
+        const receipt = { id, owner: row.owner, task: row.task, head: info.head, branch: row.branch, branchNow: info.branchNow, notes: info.notes, landing: info.landing, original: row.path, createdAt: now(), ignoredArtifacts: info.ignoredArtifacts, action: 'delete-worktree', note: 'Merged worktree and recognized generated artifacts deleted with Git. No recovery copy or extra Git history retained.' };
+        // Reserve this checkout, then release the registry before potentially
+        // slow filesystem removal. Other agents can continue using the tool.
+        save(join(this.root, 'receipts', id + '.deletion-pending.json'), receipt);
+        save(deletionLease, { token: deletionToken, id, repo: realpathSync(row.path), pid: process.pid, childPid: null, startedAt: now() });
+        return receipt;
       }
       const destination = join(this.root, 'retired', row.id);
       if (existsSync(destination)) throw new Error('Retirement path already exists.');
@@ -577,15 +680,30 @@ export class AgentWorkspaces {
       row.state = 'closed'; row.path = destination; row.closedAt = now(); this.write(row);
       return receipt;
     });
+    if (!retain) {
+      try {
+        git(row.repo, 'worktree', 'remove', row.path);
+        await this.locked(() => {
+          const current = this.record(id);
+          if (current.path !== row.path || current.commonDir !== row.commonDir) throw new Error('Workspace identity changed; inspect the pending deletion record.');
+          save(join(this.root, 'receipts', id + '.json'), operation);
+          unlinkSync(join(this.root, 'manifests', id + '.json'));
+          unlinkSync(join(this.root, 'receipts', id + '.deletion-pending.json'));
+        });
+      } finally {
+        await this.locked(() => { if (existsSync(deletionLease)) unlinkSync(deletionLease); });
+      }
+    }
+    return operation;
   }
-  async closeAllLanded({ dryRun = false, idleMinutes = 30 } = {}) {
+  async closeAllLanded({ dryRun = false, idleMinutes = 30, retain = false } = {}) {
     if (!Number.isFinite(idleMinutes) || idleMinutes < 0) throw new Error('--idle-minutes must be a non-negative number.');
     const closed = []; const kept = [];
     for (const row of this.records().filter((item) => item.state === 'active')) {
       try {
-        const result = await this.close(row.id, { dryRun, idleMinutes });
+        const result = await this.close(row.id, { dryRun, idleMinutes, retain });
         if (result.action === 'keep') kept.push({ id: row.id, blockers: result.blockers, reason: result.blockers.join(', ') });
-        else closed.push({ id: row.id, blockers: [], reason: dryRun ? 'would-retire' : 'retired' });
+        else closed.push({ id: row.id, blockers: [], reason: retain ? dryRun ? 'would-retire' : 'retired' : dryRun ? 'would-delete' : 'deleted' });
       } catch (error) { kept.push({ id: row.id, blockers: error.blockers ?? [], reason: error.message }); }
     }
     return { dryRun, idleMinutes, closed, kept, counts: { closed: closed.length, kept: kept.length, total: closed.length + kept.length } };
@@ -613,13 +731,22 @@ export class AgentWorkspaces {
       return { dryRun, changes, note: 'Only manifest state changes; no folder, branch or Git metadata is deleted.' };
     });
   }
-  async gc() {
-    return { dryRun: true, workspaces: (await this.status()).workspaces.map((info) => ({
-      id: info.id, owner: info.owner, task: info.task, state: info.state, path: info.path,
-      reportedBytes: info.reportedBytes, stale: info.stale, blockers: info.blockers,
-      action: info.state === 'closed' && !info.blockers.length ? 'review-retired-artifacts'
-        : ['closed', 'missing'].includes(info.state) && info.blockers.includes('missing-worktree') ? 'record-only' : 'keep',
-    })), note: 'No automatic deletion. Stale heartbeats never make source disposable. Reported sizes do not account for APFS shared blocks.' };
+  async gc({ apply = false, idleMinutes = 30 } = {}) {
+    if (!Number.isFinite(idleMinutes) || idleMinutes < 0) throw new Error('--idle-minutes must be a non-negative number.');
+    const workspaces = [];
+    for (const row of this.records()) {
+      if (row.state !== 'closed' || !existsSync(row.path)) {
+        workspaces.push({ id: row.id, state: row.state, path: row.path, action: ['closed', 'missing'].includes(row.state) && !existsSync(row.path) ? 'record-only' : 'keep' });
+        continue;
+      }
+      try {
+        const result = await this.close(row.id, { dryRun: !apply, idleMinutes });
+        workspaces.push({ id: row.id, state: apply ? 'deleted' : row.state, path: row.path, action: result.action, blockers: result.blockers ?? [], unknownIgnored: result.unknownIgnored ?? [] });
+      } catch (error) {
+        workspaces.push({ id: row.id, state: row.state, path: row.path, action: 'keep', blockers: error.blockers ?? [], reason: error.message });
+      }
+    }
+    return { dryRun: !apply, workspaces, counts: { deleted: apply ? workspaces.filter((row) => row.action === 'delete-worktree').length : 0, eligible: workspaces.filter((row) => row.action === 'delete-worktree').length, kept: workspaces.filter((row) => row.action === 'keep').length }, note: 'Only clean, merged, idle worktrees with recognized disposable output qualify. Unknown data and active work are preserved; no disk scan or recovery copy.' };
   }
   async install({ id, repo, offline = false }) {
     if (id) {
