@@ -187,7 +187,7 @@ describe('SaaS Maker public source boundary', () => {
     const currentIds = catalog.directory.map((project: { id: string }) => project.id);
     const archivedIds = catalog.archivedDirectory.map((project: { id: string }) => project.id);
     const pastRepositoryIds = catalog.pastProjects.map((project: { id: string }) => project.id);
-    expect(currentIds).toHaveLength(40);
+    expect(currentIds).toHaveLength(41);
     expect(archivedIds).toHaveLength(38);
     expect(currentIds).toEqual(
       expect.arrayContaining(catalog.products.map((product: { id: string }) => product.id))

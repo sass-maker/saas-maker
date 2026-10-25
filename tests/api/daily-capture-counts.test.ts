@@ -289,8 +289,12 @@ describe('daily PII-free capture receipts', () => {
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'unknown'
       )
-    ).toHaveLength(1);
+    ).toHaveLength(
+      nativeApplicability.products.filter(({ serverRequests }) => serverRequests === 'unknown')
+        .length
+    );
     expect(result.serverRequestsApplicabilityByCatalogId.motion).toBe('unknown');
+    expect(result.serverRequestsApplicabilityByCatalogId['app-store-research']).toBe('unknown');
     expect(result.serverRequestsApplicabilityByCatalogId['ai-game']).toBe('not_applicable');
     expect(result.serverRequestsApplicabilityByCatalogId['swe-interview-prep']).toBe('applicable');
     expect(result.serverRequestsApplicabilityByCatalogId['every-song-is-a-website']).toBe(
@@ -414,6 +418,7 @@ describe('daily PII-free capture receipts', () => {
       .sort();
     expect(notApplicable).toEqual([
       'agent-inbox',
+      'app-store-research',
       'chatgpt-connections',
       'fleet-social',
       'site-health',

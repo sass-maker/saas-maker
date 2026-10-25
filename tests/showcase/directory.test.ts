@@ -252,7 +252,16 @@ describe('verified public Fleet directory', () => {
       {}
     );
     expect(catalog.schemaVersion).toBe(6);
-    expect(ids).toHaveLength(40);
+    expect(ids).toHaveLength(41);
+    const appResearch = catalog.directory.find(
+      (project: { id: string }) => project.id === 'app-store-research'
+    );
+    expect(appResearch).toMatchObject({ form: 'Website', availability: 'unreleased-prototype' });
+    expect(appResearch).not.toHaveProperty('publicUrl');
+    expect(appResearch).not.toHaveProperty('repositoryUrl');
+    expect(catalog.products.map((project: { id: string }) => project.id)).not.toContain(
+      'app-store-research'
+    );
     expect(new Set(ids).size).toBe(catalog.directory.length);
     const archivedIds = catalog.archivedDirectory.map((project: { id: string }) => project.id);
     expect(archivedIds).toHaveLength(38);
