@@ -5,6 +5,7 @@ import { parseArgs } from 'node:util';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { AgentWorkspaces, GiB, inventory } from '../lib/agent-workspaces.mjs';
+import { installMaintenanceSchedule } from '../lib/workspace-maintenance-schedule.mjs';
 
 const help = `fleet-workspace <command> [options]
   create --id <id> --repo <path> --owner <agent> --task <task> [--base HEAD]
@@ -26,9 +27,15 @@ const help = `fleet-workspace <command> [options]
   reconcile [--dry-run]           Mark records whose folder is gone as missing.
   gc (--dry-run | --apply)         Delete eligible previously retired worktrees.
                                   Same merge, unknown-data and busy-work checks.
+  maintain (--dry-run | --apply) [--idle-minutes <n>] (default: 1440)
+                                  Close eligible worktrees and prune the shared
+                                  pnpm cache daily or when over budget.
+  schedule (--dry-run | --apply)   Install hourly macOS maintenance; no startup run.
   inventory --path <path>          Read-only legacy checkout/store discovery.
   configure [--store-dir <path>] [--max-writers <n>] [--max-heavy-jobs <n>]
             [--workspace-gib <n>] [--total-gib <n>] [--min-free-gib <n>]
+            [--store-gib <n>] [--package-import-method clone|auto]
+            [--store-pnpm-version <x.y.z>]
   --root <path>                    Private state override for all commands.
 `;
 
@@ -40,6 +47,7 @@ export async function main(argv = process.argv.slice(2)) {
     root: { type: 'string' }, id: { type: 'string' }, repo: { type: 'string' }, owner: { type: 'string' }, task: { type: 'string' },
     base: { type: 'string' }, path: { type: 'string' }, landed: { type: 'string' }, 'store-dir': { type: 'string' },
     'package-dir': { type: 'string' },
+    'package-import-method': { type: 'string' }, 'store-pnpm-version': { type: 'string' }, 'store-gib': { type: 'string' },
     'max-writers': { type: 'string' }, 'max-heavy-jobs': { type: 'string' }, 'workspace-gib': { type: 'string' },
     'total-gib': { type: 'string' }, 'min-free-gib': { type: 'string' }, 'idle-minutes': { type: 'string' },
     'all-landed': { type: 'boolean' }, 'no-disk': { type: 'boolean' },
@@ -71,15 +79,27 @@ export async function main(argv = process.argv.slice(2)) {
     case 'gc':
       if (Boolean(opts['dry-run']) === Boolean(opts.apply)) throw new Error('Choose exactly one of gc --dry-run or gc --apply.');
       result = await manager.gc({ apply: opts.apply, idleMinutes: opts['idle-minutes'] === undefined ? 30 : Number(opts['idle-minutes']) }); break;
+    case 'maintain':
+      if (Boolean(opts['dry-run']) === Boolean(opts.apply)) throw new Error('Choose exactly one of maintain --dry-run or maintain --apply.');
+      result = await manager.maintain({ apply: opts.apply, idleMinutes: opts['idle-minutes'] === undefined ? 1440 : Number(opts['idle-minutes']) });
+      break;
+    case 'schedule':
+      if (Boolean(opts['dry-run']) === Boolean(opts.apply)) throw new Error('Choose exactly one of schedule --dry-run or schedule --apply.');
+      manager.initialize();
+      result = installMaintenanceSchedule({ root: manager.root, cli: new URL(import.meta.url), apply: opts.apply });
+      break;
     case 'inventory':
       if (!opts.path) throw new Error('inventory requires --path.');
       result = inventory(opts.path); break;
     case 'configure': {
       const patch = {};
       if (opts['store-dir']) patch.storeDir = resolve(opts['store-dir']);
+      if (opts['package-import-method']) patch.packageImportMethod = opts['package-import-method'];
+      if (opts['store-pnpm-version']) patch.storePnpmVersion = opts['store-pnpm-version'];
       for (const [flag, key, multiplier] of [
         ['max-writers', 'maxWriters', 1], ['max-heavy-jobs', 'maxHeavyJobs', 1],
         ['workspace-gib', 'maxWorkspaceBytes', GiB], ['total-gib', 'maxTotalBytes', GiB], ['min-free-gib', 'minFreeBytes', GiB],
+        ['store-gib', 'maxStoreBytes', GiB],
       ]) if (opts[flag] !== undefined) patch[key] = Number(opts[flag]) * multiplier;
       result = await manager.configure(patch); break;
     }

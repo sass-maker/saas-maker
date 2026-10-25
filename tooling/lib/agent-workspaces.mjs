@@ -18,6 +18,8 @@ export class StaleWorkspaceSnapshotError extends Error {
 export const GiB = 1024 ** 3;
 export const defaults = Object.freeze({
   storeDir: join(homedir(), 'Library', 'pnpm', 'store'),
+  packageImportMethod: process.platform === 'darwin' ? 'clone' : 'auto',
+  maxStoreBytes: 20 * GiB, storePnpmVersion: '10.33.2',
   maxWriters: 8, maxHeavyJobs: 2, maxWorkspaceBytes: 8 * GiB,
   maxTotalBytes: 40 * GiB, minFreeBytes: 20 * GiB, staleHours: 24,
 });
@@ -72,6 +74,8 @@ const now = () => new Date().toISOString();
 function validatePolicy(value) {
   if (Object.keys(value).some((key) => !Object.hasOwn(defaults, key))) throw new Error('Unknown workspace policy setting.');
   const policy = { ...defaults, ...value };
+  if (!['clone', 'auto'].includes(policy.packageImportMethod)) throw new Error('packageImportMethod must be clone or auto; plain copies and mutable shared node_modules are not supported.');
+  if (!/^\d+\.\d+\.\d+$/.test(policy.storePnpmVersion)) throw new Error('storePnpmVersion requires an exact pnpm version.');
   if (typeof policy.storeDir !== 'string' || !policy.storeDir.startsWith('/') || policy.storeDir.includes('\0')) throw new Error('storeDir must be an absolute persistent path.');
   let ancestor = resolve(policy.storeDir);
   const tail = [];
@@ -81,7 +85,7 @@ function validatePolicy(value) {
     throw new Error('The shared pnpm store cannot live in a temporary folder.');
   }
   for (const [key, value] of Object.entries(policy)) {
-    if (key !== 'storeDir' && (!Number.isSafeInteger(value) || value < 1)) throw new Error(`Invalid policy value: ${key}`);
+    if (!['storeDir', 'packageImportMethod', 'storePnpmVersion'].includes(key) && (!Number.isSafeInteger(value) || value < 1)) throw new Error(`Invalid policy value: ${key}`);
   }
   return policy;
 }
@@ -255,6 +259,33 @@ function openFileCount(path) {
   if (result.error || result.status !== 0) throw new Error('Cannot verify open files with lsof; keep the workspace.');
   return result.stdout.split('\n').filter((line) => line === `n${path}` || line.startsWith(`n${path}${sep}`)).length;
 }
+function storeWriters() {
+  const result = spawnSync('ps', ['-axo', 'pid=,args='], { encoding: 'utf8', timeout: 5_000, maxBuffer: 16 * 1024 ** 2 });
+  if (result.error || result.status !== 0) throw new Error('Cannot verify external pnpm processes; keep the shared store.');
+  // Inspect locally; never return process arguments or environment values.
+  return result.stdout.split('\n').filter((line) => Number(line.trim().split(/\s/)[0]) !== process.pid
+    && /(?:^|[\/\s])(?:pnpm(?:\.[cm]?js)?(?:@\d+\.\d+\.\d+)?|corepack(?:\.[cm]?js)?)(?=\s|$)/.test(line)).length;
+}
+async function pruneNativeStore(policy, root, onSpawn) {
+  const child = spawn('corepack', [`pnpm@${policy.storePnpmVersion}`, 'store', 'prune', '--store-dir', policy.storeDir], {
+    cwd: root, stdio: ['ignore', 'pipe', 'pipe'],
+    env: { ...process.env, COREPACK_ENABLE_AUTO_PIN: '0', COREPACK_ENABLE_NETWORK: '0' },
+  });
+  let output = ''; let failure;
+  const completion = new Promise((done, fail) => {
+    child.once('error', fail);
+    child.once('close', (code) => code === 0 && !failure ? done() : fail(failure ?? new Error('Native pnpm store prune failed; inspect maintenance before retrying.')));
+  });
+  completion.catch(() => {});
+  const timer = setTimeout(() => { failure = new Error('Native pnpm store prune timed out.'); child.kill('SIGKILL'); }, 180_000);
+  for (const stream of [child.stdout, child.stderr]) stream.on('data', (part) => {
+    output += part;
+    if (output.length > 1024 ** 2) { failure = new Error('Native pnpm store prune exceeded its output bound.'); child.kill('SIGKILL'); }
+  });
+  try { await onSpawn(child.pid); await completion; }
+  catch (error) { child.kill('SIGKILL'); await completion.catch(() => {}); throw error; }
+  finally { clearTimeout(timer); }
+}
 async function mapBounded(items, action, limit = 4) {
   const results = []; let next = 0;
   await Promise.all(Array.from({ length: Math.min(limit, items.length) }, async () => {
@@ -365,12 +396,14 @@ function disposableIgnored(repo) {
 }
 
 export class AgentWorkspaces {
-  constructor({ root = defaultRoot, measure = diskBytes, freeBytes, openFiles = openFileCount, gh = (args, repo) => command('gh', args, repo) } = {}) {
+  constructor({ root = defaultRoot, measure = diskBytes, freeBytes, openFiles = openFileCount, gh = (args, repo) => command('gh', args, repo), externalStoreWriters = storeWriters, pruneStore = pruneNativeStore } = {}) {
     this.root = resolve(root);
     this.measure = measure;
     this.freeBytes = freeBytes ?? (() => { const fs = statfsSync(this.root); return fs.bavail * fs.bsize; });
     this.openFiles = openFiles;
     this.gh = gh;
+    this.externalStoreWriters = externalStoreWriters;
+    this.pruneNativeStore = pruneStore;
   }
   initialize() {
     if (this.root === sep || this.root === homedir() || existsSync(join(this.root, '.git'))) throw new Error('Choose a dedicated private state directory outside a Git checkout.');
@@ -449,7 +482,7 @@ export class AgentWorkspaces {
   identities() {
     return JSON.stringify(this.records().map(({ id, state, path }) => ({ id, state, path })).sort((a, b) => a.id.localeCompare(b.id)));
   }
-  async measureBudgets(path, phase) {
+  async measureBudgets(path, phase, { includeStore = false } = {}) {
     this.initialize();
     const identities = this.identities();
     const measure = async (target, role) => {
@@ -467,23 +500,27 @@ export class AgentWorkspaces {
     const bytes = existsSync(path) ? await measure(path, 'workspace') : 0;
     const active = await measure(join(this.root, 'worktrees'), 'active-worktrees');
     const retired = await measure(join(this.root, 'retired'), 'retired-worktrees');
-    return { bytes, total: active + retired, identities };
+    const storeDir = this.policy().storeDir;
+    const storeBytes = includeStore && existsSync(storeDir) ? await measure(storeDir, 'shared-pnpm-store') : 0;
+    return { bytes, total: active + retired, identities, ...(includeStore ? { storeBytes, storeDir } : {}) };
   }
   validateBudgets(snapshot) {
     requireBytes(snapshot.bytes, 'workspace');
     requireBytes(snapshot.total, 'total');
     const policy = this.policy();
+    if (snapshot.storeDir !== undefined && snapshot.storeDir !== policy.storeDir) throw new StaleWorkspaceSnapshotError();
+    if (snapshot.storeBytes !== undefined && requireBytes(snapshot.storeBytes, 'shared store') > policy.maxStoreBytes) throw new Error('Shared pnpm store exceeds its cache budget; run fleet-workspace maintain --apply when package jobs are idle.');
     if (snapshot.bytes > policy.maxWorkspaceBytes) throw new Error('Workspace exceeds its disk budget; review its artifacts before starting another command.');
     if (snapshot.total > policy.maxTotalBytes) throw new Error('Managed workspaces exceed the total disk budget (including retired worktrees).');
     if (requireBytes(this.freeBytes(), 'free-space') < policy.minFreeBytes) throw new Error('Available disk space is below the workspace reserve.');
     if (snapshot.identities !== undefined && snapshot.identities !== this.identities()) throw new StaleWorkspaceSnapshotError();
     return snapshot;
   }
-  async withFreshBudgets(path, phase, action = () => {}) {
+  async withFreshBudgets(path, phase, action = () => {}, options = {}) {
     // Only a changed identity snapshot is retriable. Unknown bytes, policy,
     // reserve, lock and command-admission failures remain conservative failures.
     for (let attempt = 1; attempt <= 3; attempt++) {
-      const snapshot = await this.measureBudgets(path, phase);
+      const snapshot = await this.measureBudgets(path, phase, options);
       try {
         return await this.locked(() => {
           this.validateBudgets(snapshot);
@@ -642,7 +679,17 @@ export class AgentWorkspaces {
     this.initialize();
     const row = this.record(id);
     if (row.state !== 'active' && !(row.state === 'closed' && !retain)) throw new Error('Only active workspaces or retained closed workspaces can be closed.');
+    const keep = (info) => {
+      if (dryRun) return { ...info, dryRun: true, action: 'keep' };
+      const error = new Error('Keeping ' + id + ': ' + info.blockers.join(', '));
+      error.blockers = info.blockers; throw error;
+    };
+    // Fresh tasks cannot qualify. Skip Git/provider/open-file scans entirely.
+    if (idleMinutes !== undefined && Date.now() - Date.parse(row.heartbeatAt) <= idleMinutes * 60_000) {
+      return keep({ ...row, reportedBytes: null, blockers: ['heartbeat-not-idle'], notes: [] });
+    }
     const info = await this.inspect(row, { noDisk: true });
+    if (idleMinutes !== undefined && info.blockers.some((item) => item === 'dirty-or-untracked' || item === 'command-running' || item.startsWith('git-state-unknown:') || item === 'missing-worktree')) return keep(info);
     let mergeChecked = false;
     let flagIgnored = landed !== undefined && info.remoteRefs?.length > 0;
     if (info.blockers.includes('head-not-in-local-remote-refs')) {
@@ -678,7 +725,9 @@ export class AgentWorkspaces {
       } catch (error) { info.blockers.push(`ignored-data-unknown: ${error.message}`); }
     }
     acceptLandedBranch(info);
-    if (idleMinutes !== undefined && Date.now() - Date.parse(row.heartbeatAt) <= idleMinutes * 60_000) info.blockers.push('heartbeat-not-idle');
+    // A known blocker already prohibits deletion; avoid a whole-machine lsof
+    // scan for every preserved unknown/unmerged tree on each scheduler tick.
+    if (info.blockers.length) return keep(info);
     try { if (this.openFiles(row.path)) info.blockers.push('open-files'); }
     catch (error) { info.blockers.push(error.message); }
     if (dryRun) return { ...info, dryRun: true, action: info.blockers.length ? 'keep' : retain ? 'move-to-retired' : 'delete-worktree' };
@@ -784,6 +833,60 @@ export class AgentWorkspaces {
     }
     return { dryRun: !apply, workspaces, counts: { deleted: apply ? workspaces.filter((row) => row.action === 'delete-worktree').length : 0, eligible: workspaces.filter((row) => row.action === 'delete-worktree').length, kept: workspaces.filter((row) => row.action === 'keep').length }, note: 'Only clean, merged, idle worktrees with recognized disposable output qualify. Unknown data and active work are preserved; no disk scan or recovery copy.' };
   }
+  async pruneStore({ apply = false, onlyOverBudget = false } = {}) {
+    this.initialize();
+    const policy = this.policy();
+    const beforeBytes = existsSync(policy.storeDir) ? await this.measuredBytes(policy.storeDir, 'shared store') : 0;
+    const statePath = join(this.root, 'storage-maintenance.json');
+    const previous = existsSync(statePath) ? json(statePath) : {};
+    const overBudget = beforeBytes > policy.maxStoreBytes;
+    const due = overBudget || (!onlyOverBudget && Date.now() - Date.parse(previous.lastPrunedAt ?? '1970-01-01') >= 24 * 3_600_000);
+    const result = { storeDir: policy.storeDir, reportedBytesBefore: beforeBytes, maxStoreBytes: policy.maxStoreBytes, overBudget, action: 'keep' };
+    if (!due || !existsSync(policy.storeDir)) return { ...result, reason: 'Cache is within budget and pruning is not due.' };
+    if (!apply) return { ...result, action: 'would-prune', reason: 'Native pnpm prune only; no arbitrary cache file deletion.' };
+    const token = 'storage-' + randomUUID();
+    // Fill the existing heavy lease pool too: an older CLI already measuring
+    // admission must also wait, even before it knows the storage-token rule.
+    const leases = Array.from({ length: policy.maxHeavyJobs }, (_, index) => ({
+      token: token + '-' + index, path: join(this.root, 'jobs', token + '-' + index + '.json'),
+    }));
+    try {
+      const reserved = await this.locked(() => {
+        if (this.policy().storeDir !== policy.storeDir) throw new Error('Shared store changed during maintenance.');
+        if (this.jobs().some(jobAlive)) return false;
+        if (this.externalStoreWriters()) return false;
+        for (const lease of leases) save(lease.path, { token: lease.token, id: null, repo: policy.storeDir, pid: process.pid, childPid: null, startedAt: now() });
+        return true;
+      });
+      if (!reserved) return { ...result, reason: 'Package or managed commands are active; maintenance will retry later.' };
+      await this.pruneNativeStore(policy, this.root, async (pid) => {
+        await this.locked(() => { for (const lease of leases) save(lease.path, { ...json(lease.path), childPid: pid ?? null }); });
+      });
+      const afterBytes = await this.measuredBytes(policy.storeDir, 'shared store');
+      const lastPrunedAt = now();
+      save(statePath, { ...previous, lastPrunedAt });
+      return { ...result, action: 'pruned', reportedBytesAfter: afterBytes, overBudget: afterBytes > this.policy().maxStoreBytes, lastPrunedAt,
+        note: 'Reported allocation is not physical recovery. Missing cached packages are downloaded on demand.' };
+    } finally {
+      await this.locked(() => { for (const lease of leases) if (existsSync(lease.path)) unlinkSync(lease.path); });
+    }
+  }
+  async maintain({ apply = false, idleMinutes = 1440 } = {}) {
+    const startedAt = now();
+    const closed = await this.closeAllLanded({ dryRun: !apply, idleMinutes });
+    const retired = await this.gc({ apply, idleMinutes });
+    let store;
+    try { store = await this.pruneStore({ apply }); }
+    catch (error) { store = { action: 'keep', error: error.message }; }
+    const result = { startedAt, finishedAt: now(), dryRun: !apply, idleMinutes, closed, retired, store,
+      ...(apply && (store.error || store.overBudget) ? { exitCode: 1 } : {}) };
+    if (apply) {
+      const path = join(this.root, 'storage-maintenance.json');
+      const previous = existsSync(path) ? json(path) : {};
+      save(path, { ...previous, latest: result });
+    }
+    return result;
+  }
   async install({ id, repo, offline = false }) {
     if (id) {
       const row = this.record(id);
@@ -801,7 +904,8 @@ export class AgentWorkspaces {
       const storeDir = this.policy().storeDir;
       mkdirSync(storeDir, { recursive: true });
       if (statSync(storeDir).dev !== statSync(repo).dev) throw new Error('The shared store and checkout must use the same filesystem.');
-      const args = ['pnpm', 'install', '--frozen-lockfile', '--store-dir', storeDir, '--package-import-method', 'auto'];
+      await this.pruneStore({ apply: true, onlyOverBudget: true });
+      const args = ['pnpm', 'install', '--frozen-lockfile', '--store-dir', storeDir, '--package-import-method', this.policy().packageImportMethod, '--config.modules-cache-max-age=0'];
       if (offline) args.push('--offline');
       return this.run({ id, repo, argv: ['corepack', ...args], installing: true });
     }
@@ -857,7 +961,7 @@ export class AgentWorkspaces {
     mkdirSync(storeDir, { recursive: true });
     if (statSync(storeDir).dev !== statSync(packageRoot).dev) throw new Error('The shared store and checkout must use the same filesystem.');
     const prefix = packageDir === undefined ? ['pnpm'] : [manifest.packageManager, '--dir', packageRoot];
-    const args = [...prefix, 'install', '--lockfile-only', '--ignore-scripts', '--store-dir', storeDir, '--package-import-method', 'auto'];
+    const args = [...prefix, 'install', '--lockfile-only', '--ignore-scripts', '--store-dir', storeDir, '--package-import-method', this.policy().packageImportMethod];
     return this.run({ id, repo, argv: ['corepack', ...args], installing: true });
   }
   async run({ id, repo, argv, installing = false }) {
@@ -869,14 +973,16 @@ export class AgentWorkspaces {
     if (id) { const row = this.record(id); if (row.state !== 'active') throw new Error('Run requires an active workspace.'); repo = row.path; }
     repo = realpathSync(resolve(repo));
     const token = randomUUID();
+    const storeBudget = { includeStore: installing && argv[0].endsWith('corepack') && /^pnpm(?:@|$)/.test(argv[1] ?? '') };
     const jobPath = join(this.root, 'jobs', `${token}.json`);
     await this.withFreshBudgets(repo, 'startup', () => {
       const active = this.jobs().filter(jobAlive);
+      if (active.some((job) => job.token.startsWith('storage-'))) throw new Error('Shared store maintenance is in progress; retry this command shortly.');
       if (active.length >= this.policy().maxHeavyJobs) throw new Error('Heavy-command limit reached; wait for an existing job to finish.');
       if (active.some((job) => job.repo === repo)) throw new Error('Another managed command is using this checkout.');
       if (id && this.record(id).state !== 'active') throw new Error('Workspace was closed before the command started.');
       save(jobPath, { token, id: id ?? null, repo, pid: process.pid, childPid: null, startedAt: now() });
-    });
+    }, storeBudget);
     let child;
     const signals = new Map();
     let timer;
@@ -893,7 +999,8 @@ export class AgentWorkspaces {
     };
     try {
       child = spawn(argv[0], argv.slice(1), { cwd: repo, stdio: 'inherit', detached: process.platform !== 'win32', env: {
-        ...process.env, COREPACK_ENABLE_AUTO_PIN: '0', npm_config_store_dir: this.policy().storeDir, npm_config_package_import_method: 'auto',
+        ...process.env, COREPACK_ENABLE_AUTO_PIN: '0', npm_config_store_dir: this.policy().storeDir,
+        npm_config_package_import_method: this.policy().packageImportMethod, npm_config_modules_cache_max_age: '0',
       } });
       const completion = new Promise((done, fail) => { child.once('error', fail); child.once('exit', (status, signal) => done(status ?? (signal ? 128 : 1))); });
       // Observe an immediate spawn failure while the lease update is awaited.
@@ -914,7 +1021,7 @@ export class AgentWorkspaces {
         checkingBudgets = true;
         budgetCheck = (async () => {
           await heartbeatCheck;
-          await this.withFreshBudgets(repo, 'periodic');
+          await this.withFreshBudgets(repo, 'periodic', undefined, storeBudget);
         })().catch((error) => {
           limitError = error;
           console.error(error.message);
@@ -928,7 +1035,7 @@ export class AgentWorkspaces {
       if (limitError) throw limitError;
       await this.withFreshBudgets(repo, 'post-command', () => {
         if (id) { const row = this.record(id); row.heartbeatAt = now(); row.lastCommandAt = now(); row.lastExitCode = code; this.write(row); }
-      });
+      }, storeBudget);
       return { exitCode: code, storeDir: this.policy().storeDir };
     } catch (error) {
       primaryError = error;
