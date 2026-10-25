@@ -31,13 +31,21 @@ export interface CollectorOptions {
   browserFallback?: boolean;
   chromeExecutable?: string;
   profileDir?: string;
-  /** Optional consumer policy, called before every HTTP request and redirect. */
+  /** Called on target URLs and before every HTTP request/redirect. Requires HTTP transport. */
   validateUrl?: (url: string) => void | Promise<void>;
 }
 export declare class UpstreamBlockedError extends Error {
   code: "upstream_blocked";
   status: number;
   constructor(status: number);
+}
+export declare class CollectorClosedError extends Error {
+  code: "collector_closed";
+  constructor();
+}
+export declare class UrlPolicyDeniedError extends Error {
+  code: "url_policy_denied";
+  constructor(cause: unknown);
 }
 export declare function createCollector(options?: CollectorOptions): {
   collect(target: Target): Promise<CollectionResult>;

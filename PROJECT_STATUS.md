@@ -26,7 +26,7 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 ## Timeline
 
 - **2026-10-25:** Packaged the retained Slow SERP engine as
-  \`@saas-maker/collect\` 0.3.0 under \`tooling/collect\`. Imports start no server
+  \`@saas-maker/collect\` 0.3.1 under \`tooling/collect\`. Imports start no server
   or browser; the Node API supports bounded page/JSON/text/jobs extraction,
   optional installed-Chrome rendering, memory or explicit private caching,
   partial batch failures, and a consumer URL policy checked across HTTP

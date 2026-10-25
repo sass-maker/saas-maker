@@ -2,7 +2,8 @@
 
 Reusable Node.js package for bounded public web extraction. Site Health owns
 brand monitoring, evidence and follow-ups; this package owns only collection.
-The CLI commands below remain compatible with the original Slow SERP tooling.
+The CLI commands retain their original entry points. HTTP 401, 403 and 429 now
+stop immediately in both the SDK and CLI, without retry or browser escalation.
 
 ```js
 import { createCollector } from "@saas-maker/collect";
@@ -21,16 +22,31 @@ opt into `browserFallback: true` to use installed Chrome for rendered pages.
 JSON and text sources use HTTP. `collectMany` accepts at most 100 targets and
 returns successful results alongside explicit per-target failures. HTTP 401,
 403 and 429 stop with `upstream_blocked` without browser escalation or retry.
-Cache is in memory unless the consumer supplies `cacheFile`. Persisted caches
+Cache is in memory unless the consumer supplies `cacheFile`. Both forms retain
+at most 128 entries and 16 MB of serialized entries, evicting least recently
+used entries. Larger individual entries are not cached; oversized persisted
+files are discarded without loading their contents. Persisted caches
 contain collected public content: keep them outside Git and private artifacts.
 The consumer chooses and authorizes source URLs; this is an operator library,
 not an endpoint for untrusted URL submissions.
+
+`validateUrl` checks the target and jobs careers URL before collection, then
+each HTTP request and redirect. A denial returns nonretryable `url_policy_denied`.
+Collectors with this policy default to HTTP even when
+`browserFallback` is enabled; explicit `auto` and `browser` cannot enforce this policy
+and are refused. JSON and text always use HTTP and reject those transports.
+`close()` stops admission, rejects queued collections, and waits for active
+collections before saving cache and closing Chrome. Active HTTP work that later
+needs browser escalation is rejected with `collector_closed`, as is queued work;
+an already running browser collection may finish. SDK-generated temporary
+browser profiles are deleted on close; caller-supplied profiles are preserved.
+Each HTTP retry attempt has one timeout shared by all redirect hops.
 
 `pnpm pack --pack-destination /private/local/packages` produces an installable
 tarball with the library, TypeScript declarations, README and MIT attribution.
 No profiles, logs, caches, collected data or runtime credentials are packaged.
 
-This is SaaS Maker shared collection tooling, formerly the standalone Slow SERP repo. Source history: sarthakagrawal927 / Significant-Hobbies/slow-serp @ `ae8662f`. It is not a hosted service or a CAPTCHA bypass. Google search availability is not established: upstream HTTP 429 was seen, and search needs authorized outbound IP capacity.
+This is SaaS Maker shared collection tooling, formerly the standalone Slow SERP repo. Source history: sarthakagrawal927 / Significant-Hobbies/slow-serp @ `ae8662f`. It is not a hosted service or a CAPTCHA bypass. Google search remains unavailable in the checked environment: standard automated Chrome reached Google's CAPTCHA on 2026-10-25. An approved SERP connection is needed before claiming working search.
 
 It provides a local scraping API and scheduled crawler. It uses bounded HTTP fetching first, then automatically falls back to the machine's installed **Google Chrome** only when rendering is required.
 
@@ -167,7 +183,7 @@ curl -sS http://127.0.0.1:8787/v1/search \
 | `SCRAPER_HTTP_RETRIES` | `2` | Transient HTTP/network retries |
 | `SCRAPER_HTTP_RETRY_BASE_MS` | `500` | Exponential backoff base delay |
 | `SCRAPER_MAX_RESPONSE_BYTES` | `5000000` | Maximum buffered HTML response size |
-| `SCRAPER_HTTP_CACHE_FILE` | `work/http-cache.json` | Conditional-request and content cache |
+| `SCRAPER_HTTP_CACHE_FILE` | `work/http-cache.json` | Conditional-request/content cache; same 128-entry/16 MB LRU cap as the SDK. Oversized files are discarded on load. |
 | `SCRAPER_USER_AGENT` | `slow-serp/0.2 (...)` | HTTP transport user agent |
 | `SCRAPER_TARGETS_FILE` | `targets/default.json` | General crawler registry |
 | `SCRAPER_OUTPUT_DIR` | `data/crawls` | General crawler output directory |
