@@ -1,6 +1,6 @@
 import { ProjectsContent } from './projects-content';
 import type { ProjectRecord } from '@saas-maker/contracts';
-import { apiFetchAuthed } from '@/lib/api-client';
+import { apiFetchAuthed } from '@/lib/server-api';
 import { visibleDashboardProjects } from '@/lib/dashboard-projects';
 import { getDashboardSession } from '@/lib/server-session';
 import { redirect } from 'next/navigation';

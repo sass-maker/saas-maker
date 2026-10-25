@@ -1,7 +1,7 @@
 import { PageHeader } from '@/components/page-header';
 import { FeedbackBoard } from './feedback-board';
 import { getDashboardSession } from '@/lib/server-session';
-import { apiFetchAuthed } from '@/lib/api-client';
+import { apiFetchAuthed } from '@/lib/server-api';
 import { redirect } from 'next/navigation';
 import type { FeedbackBoardSeed, FeedbackInboxData } from './feedback-board';
 

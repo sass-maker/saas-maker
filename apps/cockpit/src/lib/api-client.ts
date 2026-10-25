@@ -26,21 +26,6 @@ export async function fetchJsonWithFallback<T>(path: string, init: RequestInit):
   throw lastError ?? new Error(`Failed to fetch ${API_BASE}${path}`);
 }
 
-/** Server-side fetch with session token auto-attached */
-export async function apiFetchAuthed<T>(path: string, init?: RequestInit): Promise<T> {
-  const { getServerToken } = await import('./api');
-  const token = await getServerToken();
-
-  return fetchJsonWithFallback<T>(path, {
-    ...init,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(init?.headers as Record<string, string>),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-  });
-}
-
 /** Client-side fetch — pass token from getClientToken() */
 export async function apiFetchClient<T>(
   path: string,

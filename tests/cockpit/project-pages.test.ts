@@ -7,9 +7,18 @@ import ProjectStatusPage from '../../apps/cockpit/src/app/(app)/projects/[slug]/
 import FeedbackBoardPage from '../../apps/cockpit/src/app/(app)/projects/feedback/page';
 import SubscribersBoardPage from '../../apps/cockpit/src/app/(app)/projects/subscribers/page';
 import { seedForFeedbackResource } from '../../apps/cockpit/src/app/(app)/projects/feedback/feedback-board';
-import { apiFetchAuthed } from '../../apps/cockpit/src/lib/api-client';
-import { getProjectBySlug, getServerToken } from '../../apps/cockpit/src/lib/api';
+import {
+  apiFetchAuthed,
+  getProjectBySlug,
+  getServerToken,
+} from '../../apps/cockpit/src/lib/server-api';
 import { getDashboardSession } from '../../apps/cockpit/src/lib/server-session';
+
+const serverApiMocks = vi.hoisted(() => ({
+  apiFetchAuthed: vi.fn(),
+  getServerToken: vi.fn(async () => 'server-session-only'),
+  getProjectBySlug: vi.fn(),
+}));
 
 // Resolve the cockpit's own Next dependency, matching its component imports.
 vi.mock('../../apps/cockpit/node_modules/next/navigation.js', () => ({
@@ -27,15 +36,7 @@ vi.mock('../../apps/cockpit/node_modules/next/navigation.js', () => ({
 vi.mock('../../apps/cockpit/src/lib/server-session', () => ({
   getDashboardSession: vi.fn(async () => ({ user: { id: 'fixture-account' } })),
 }));
-vi.mock('../../apps/cockpit/src/lib/api-client', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('../../apps/cockpit/src/lib/api-client')>()),
-  apiFetchAuthed: vi.fn(),
-}));
-vi.mock('../../apps/cockpit/src/lib/api', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('../../apps/cockpit/src/lib/api')>()),
-  getServerToken: vi.fn(async () => 'server-session-only'),
-  getProjectBySlug: vi.fn(),
-}));
+vi.mock('../../apps/cockpit/src/lib/server-api', () => serverApiMocks);
 
 const project = {
   id: 'project-one',

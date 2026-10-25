@@ -1,7 +1,7 @@
 import { cache } from 'react';
 import { getDashboardSession } from '@/lib/server-session';
 import { redirect, notFound } from 'next/navigation';
-import { getServerToken, getProjectBySlug } from '@/lib/api';
+import { getServerToken, getProjectBySlug } from '@/lib/server-api';
 import type { ProjectRecord } from '@saas-maker/contracts';
 
 /**
