@@ -1,4 +1,34 @@
-# Collection tooling
+# @saas-maker/collect
+
+Reusable Node.js package for bounded public web extraction. Site Health owns
+brand monitoring, evidence and follow-ups; this package owns only collection.
+The CLI commands below remain compatible with the original Slow SERP tooling.
+
+```js
+import { createCollector } from "@saas-maker/collect";
+
+const collector = createCollector({ cacheFile: "/private/local/cache.json" });
+try {
+  const page = await collector.collect({ url: "https://example.com", extractor: "page" });
+  console.log(page.data); // title, description, headings, links, text
+} finally {
+  await collector.close();
+}
+```
+
+Importing starts no service and launches no browser. HTTP is the default;
+opt into `browserFallback: true` to use installed Chrome for rendered pages.
+JSON and text sources use HTTP. `collectMany` accepts at most 100 targets and
+returns successful results alongside explicit per-target failures. HTTP 401,
+403 and 429 stop with `upstream_blocked` without browser escalation or retry.
+Cache is in memory unless the consumer supplies `cacheFile`. Persisted caches
+contain collected public content: keep them outside Git and private artifacts.
+The consumer chooses and authorizes source URLs; this is an operator library,
+not an endpoint for untrusted URL submissions.
+
+`pnpm pack --pack-destination /private/local/packages` produces an installable
+tarball with the library, TypeScript declarations, README and MIT attribution.
+No profiles, logs, caches, collected data or runtime credentials are packaged.
 
 This is SaaS Maker shared collection tooling, formerly the standalone Slow SERP repo. Source history: sarthakagrawal927 / Significant-Hobbies/slow-serp @ `ae8662f`. It is not a hosted service or a CAPTCHA bypass. Google search availability is not established: upstream HTTP 429 was seen, and search needs authorized outbound IP capacity.
 
