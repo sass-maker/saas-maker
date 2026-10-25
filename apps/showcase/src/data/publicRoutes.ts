@@ -12,8 +12,10 @@ import ideas from './ideas.json';
 import { CORE } from './projects';
 import {
   ARCHIVED_DIRECTORY_PROJECTS,
+  ARCHIVED_REPOSITORY_PROJECTS,
   DIRECTORY_PROJECTS,
   type ArchivedDirectoryProject,
+  type ArchivedRepositoryProject,
   type DirectoryProject,
 } from './directory';
 import { STUDIO_PROFILE } from './studio';
@@ -29,9 +31,16 @@ export type PublicRoute = {
 
 const SITE_URL = 'https://sassmaker.com';
 
-function productMarkdown(product: DirectoryProject | ArchivedDirectoryProject): string {
-  const archived = product.roster === 'archived';
+type PublicProductProfile = DirectoryProject | ArchivedDirectoryProject | ArchivedRepositoryProject;
+
+function productMarkdown(product: PublicProductProfile): string {
+  const archived = product.roster !== 'current';
+  const archivedRepository = product.roster === 'archived-repository';
   const profile = product as DirectoryProject;
+  const describedProduct = product as DirectoryProject | ArchivedDirectoryProject;
+  const form = archivedRepository ? 'Standalone repository' : describedProduct.form;
+  const platforms = archivedRepository ? ['GitHub'] : describedProduct.platforms;
+  const technologies = archivedRepository ? [] : describedProduct.technologies;
   const lines = [
     `# ${product.name}`,
     '',
@@ -39,7 +48,9 @@ function productMarkdown(product: DirectoryProject | ArchivedDirectoryProject): 
     '',
     ...(archived
       ? [
-          'Archived identity. This historical profile is retained for reference; no public destination is listed.',
+          archivedRepository
+            ? 'Past standalone repository. This historical profile remains available with its public source link; it is not part of the current product roster.'
+            : 'Archived identity. This historical profile is retained for reference; no public destination is listed.',
           '',
         ]
       : []),
@@ -58,22 +69,24 @@ function productMarkdown(product: DirectoryProject | ArchivedDirectoryProject): 
       : []),
     '## Public anatomy',
     '',
-    `- Form: ${product.form}`,
-    `- Platforms: ${product.platforms.join(', ')}`,
-    `- Prominent tools: ${product.technologies.join(', ')}`,
+    `- Form: ${form}`,
+    `- Platforms: ${platforms.join(', ')}`,
+    ...(technologies.length > 0 ? [`- Prominent tools: ${technologies.join(', ')}`] : []),
     ...(!archived ? [`- Availability: ${profile.availability}`] : []),
     '',
   ];
-  const links = archived
-    ? []
-    : [
-        ...(profile.publicUrl
-          ? [{ title: profile.publicUrlLabel ?? 'Product', url: profile.publicUrl }]
-          : []),
-        ...(profile.changelogUrl ? [{ title: 'Changelog', url: profile.changelogUrl }] : []),
-        ...(profile.roadmapUrl ? [{ title: 'Issues', url: profile.roadmapUrl }] : []),
-        ...(profile.repositoryUrl ? [{ title: 'Source', url: profile.repositoryUrl }] : []),
-      ];
+  const links = archivedRepository
+    ? [{ title: 'Source', url: product.repositoryUrl }]
+    : archived
+      ? []
+      : [
+          ...(profile.publicUrl
+            ? [{ title: profile.publicUrlLabel ?? 'Product', url: profile.publicUrl }]
+            : []),
+          ...(profile.changelogUrl ? [{ title: 'Changelog', url: profile.changelogUrl }] : []),
+          ...(profile.roadmapUrl ? [{ title: 'Issues', url: profile.roadmapUrl }] : []),
+          ...(profile.repositoryUrl ? [{ title: 'Source', url: profile.repositoryUrl }] : []),
+        ];
 
   if (links.length > 0) {
     lines.push(
@@ -244,6 +257,16 @@ function directoryMarkdown(): string {
     '- Status: archived identity; no public destination exposed',
     '',
   ]);
+  const pastRepositories = ARCHIVED_REPOSITORY_PROJECTS.flatMap((project) => [
+    `## ${project.name}`,
+    '',
+    project.description,
+    '',
+    `- Historical profile: ${SITE_URL}/p/${project.id}`,
+    `- Public source: ${project.repositoryUrl}`,
+    '- Status: past standalone repository; excluded from the current product roster',
+    '',
+  ]);
 
   return [
     '# SaaS Maker current product directory',
@@ -258,6 +281,11 @@ function directoryMarkdown(): string {
     'These historical profiles are kept separately from the current product directory.',
     '',
     ...archive,
+    '# Past standalone repositories',
+    '',
+    'These public repository profiles remain available as historical routes and do not count as current or archived product identities.',
+    '',
+    ...pastRepositories,
   ].join('\n');
 }
 
@@ -583,7 +611,11 @@ const fundingDocRoutes: PublicRoute[] = FUNDING_DOCS.map((doc) => ({
   markdown: fundingDocMarkdown[doc.slug],
 }));
 
-const productRoutes: PublicRoute[] = [...DIRECTORY_PROJECTS, ...ARCHIVED_DIRECTORY_PROJECTS]
+const productRoutes: PublicRoute[] = [
+  ...DIRECTORY_PROJECTS,
+  ...ARCHIVED_DIRECTORY_PROJECTS,
+  ...ARCHIVED_REPOSITORY_PROJECTS,
+]
   .filter((product) => product.id !== 'saas-maker')
   .map((product) => ({
     id: `product-${product.id}`,

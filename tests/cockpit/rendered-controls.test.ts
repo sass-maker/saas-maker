@@ -2,7 +2,10 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import { CockpitResources } from '../../apps/cockpit/src/components/cockpit-resources';
-import { FeedbackBoard } from '../../apps/cockpit/src/app/(app)/projects/feedback/feedback-board';
+import {
+  FeedbackBoard,
+  FeedbackEmptyState,
+} from '../../apps/cockpit/src/app/(app)/projects/feedback/feedback-board';
 import { SubscribersBoard } from '../../apps/cockpit/src/app/(app)/projects/subscribers/subscribers-board';
 import { FilterBar } from '../../apps/cockpit/src/components/filter-bar';
 
@@ -25,6 +28,25 @@ vi.mock('../../apps/cockpit/src/components/cockpit-resources', async (importOrig
 }));
 
 describe('controls before hydration', () => {
+  it('keeps setup guidance for an unfiltered empty feedback inbox', () => {
+    const html = renderToStaticMarkup(
+      createElement(FeedbackEmptyState, { filtered: false, onClearFilters: vi.fn() })
+    );
+    expect(html).toContain('No feedback yet');
+    expect(html).toContain('Set up a feedback project');
+    expect(html).not.toContain('Clear filters');
+  });
+
+  it('offers a filter reset rather than setup guidance for a filtered empty inbox', () => {
+    const html = renderToStaticMarkup(
+      createElement(FeedbackEmptyState, { filtered: true, onClearFilters: vi.fn() })
+    );
+    expect(html).toContain('No matching feedback');
+    expect(html).toContain('Clear filters');
+    expect(html).not.toContain('No feedback yet');
+    expect(html).not.toContain('Set up a feedback project');
+  });
+
   it('names the default feedback selections while the first response is pending', () => {
     const html = renderToStaticMarkup(
       createElement(CockpitResources, { children: createElement(FeedbackBoard) })

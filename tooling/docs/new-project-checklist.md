@@ -153,10 +153,12 @@ The Fleet root is unversioned; the catalog in phase 2 is the project list.
       destination serves the audience. Keep an evidence-backed destination and
       date for each contribution; avoid duplicate blasts, unsupported claims,
       or treating publication volume as growth
-- [ ] Before public posting, use the Humanizer skill when it is available.
-      Review the final copy against approved facts and preserve its claims,
-      links, and disclosures; retain the final copy revision. If specifically
-      requested but unavailable, hold that post and report the missing step
+- [ ] Before every public post, run the Humanizer skill. If it is not listed
+      with advertised skills, check the managed install at
+      `~/.local/share/agent-config/skills/humanizer/SKILL.md`. Review the rewrite
+      against approved facts and preserve claims, links, and disclosures; retain
+      the final copy revision. If the skill cannot be loaded, hold that post and
+      report the missing step
 - [ ] Keep important pages accurate as the product and market change:
       capabilities, instructions, comparisons, examples, screenshots, pricing,
       links and sources. Refresh stale answers substantively; do not change a

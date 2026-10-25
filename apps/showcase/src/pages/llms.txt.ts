@@ -46,6 +46,7 @@ export function GET() {
     '- [Studio thesis](https://sassmaker.com/studio): owner position, operating principles, representative work, and boundaries',
     `- [Current product directory](https://sassmaker.com/projects): ${publicCatalog.directory.length} profiles with explicit availability labels; archived identities are separate`,
     `- [Archived identities](https://sassmaker.com/archive.json): ${publicCatalog.archivedDirectory.length} historical profiles, without public destination links`,
+    `- [Past standalone repositories](https://sassmaker.com/projects): ${publicCatalog.pastProjects.length} historical source profiles, outside both current and archived product identity counts`,
     '- [Scored ideas](https://sassmaker.com/ideas): 140 tech-heavy product ideas with transparent Money, Fun, feasibility, competition, source, and customer context',
     `- [Reusable tooling](https://sassmaker.com/tools): ${TOOLING_CAPABILITIES.length} public skills, scripts, templates, and guides`,
     '- [Launchkit](https://sassmaker.com/launchkit): free agent-executable launch toolkit — product brief, truthful run planner, per-platform submission playbooks, evidence tracker',
@@ -68,6 +69,13 @@ export function GET() {
     '',
     ...publicCatalog.archivedDirectory.map(
       (project) => `- ${project.name}: archived identity (${project.form})`
+    ),
+    '',
+    '## Past standalone repository profiles',
+    '',
+    ...publicCatalog.pastProjects.map(
+      (project) =>
+        `- [${project.name}](https://sassmaker.com/p/${project.id}): [public source](${project.repositoryUrl}); retained historical route, not a current product identity`
     ),
     '',
     '## Machine surfaces',

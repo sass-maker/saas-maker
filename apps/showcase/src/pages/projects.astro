@@ -4,6 +4,7 @@ import Nav from '../components/Nav.astro';
 import GitHubIcon from '../components/GitHubIcon.astro';
 import {
   ARCHIVED_DIRECTORY_PROJECTS,
+  ARCHIVED_REPOSITORY_PROJECTS,
   directoryFormFamilies,
   type DirectoryProject,
 } from '../data/directory';
@@ -332,6 +333,26 @@ const projectProfilePath = (project: DirectoryProject) =>
                   <p>{project.description}</p>
                 </div>
                 <small>{project.form} · {project.platforms.join(' · ')} · archived</small>
+              </li>
+            ))}
+          </ul>
+        </details>
+        <details>
+          <summary>
+            Past standalone repositories <span>{ARCHIVED_REPOSITORY_PROJECTS.length} historical routes</span>
+          </summary>
+          <p>
+            These public source profiles remain available at their historical URLs. They are
+            separate from the current product roster and archived product identities.
+          </p>
+          <ul>
+            {ARCHIVED_REPOSITORY_PROJECTS.map((project) => (
+              <li>
+                <div>
+                  <a href={project.profileUrl}>{project.name}</a>
+                  <p>{project.description}</p>
+                </div>
+                <small><a href={project.repositoryUrl} target="_blank" rel="noopener noreferrer">Public source ↗</a></small>
               </li>
             ))}
           </ul>

@@ -25,6 +25,14 @@ export function GET() {
     `Platforms: ${project.platforms.join(', ')}`,
     '',
   ]);
+  const pastRepositories = publicCatalog.pastProjects.flatMap((project) => [
+    `## ${project.name} (past standalone repository)`,
+    project.description,
+    `Historical profile: https://sassmaker.com/p/${project.id}`,
+    `Public source: ${project.repositoryUrl}`,
+    'This retained route is outside the current product and archived-identity counts.',
+    '',
+  ]);
   const body = [
     '# SaaS Maker — full product index',
     '',
@@ -76,6 +84,9 @@ export function GET() {
     '# Archived identities',
     '',
     ...archived,
+    '# Past standalone repositories',
+    '',
+    ...pastRepositories,
   ].join('\n');
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 }

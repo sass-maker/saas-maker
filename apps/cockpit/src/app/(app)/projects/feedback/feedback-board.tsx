@@ -31,6 +31,40 @@ export function seedForFeedbackResource(path: string, seed: FeedbackBoardSeed): 
   return path === DEFAULT_FEEDBACK_RESOURCE ? seed : {};
 }
 
+export function FeedbackEmptyState({
+  filtered,
+  onClearFilters,
+}: {
+  filtered: boolean;
+  onClearFilters: () => void;
+}) {
+  if (filtered) {
+    return (
+      <EmptyState
+        title="No matching feedback"
+        description="No submissions match these filters. Clear them to see the full inbox."
+        primaryAction={
+          <Button variant="outline" onClick={onClearFilters}>
+            Clear filters
+          </Button>
+        }
+      />
+    );
+  }
+
+  return (
+    <EmptyState
+      title="No feedback yet"
+      description="New submissions from the hosted widget will appear here. Set up a feedback project and install the widget to get started."
+      primaryAction={
+        <Button asChild variant="outline">
+          <Link href="/projects">Set up a feedback project</Link>
+        </Button>
+      }
+    />
+  );
+}
+
 const TYPE_OPTIONS = [
   { value: 'all', label: 'All types' },
   { value: 'bug', label: 'Bugs' },
@@ -126,14 +160,12 @@ export function FeedbackBoard(seed: FeedbackBoardSeed = {}) {
         resource={resource}
         skeleton={<FeedbackTableSkeleton />}
         empty={
-          <EmptyState
-            title="No feedback yet"
-            description="New submissions from the hosted widget will appear here. Set up a feedback project and install the widget to get started."
-            primaryAction={
-              <Button asChild variant="outline">
-                <Link href="/projects">Set up a feedback project</Link>
-              </Button>
-            }
+          <FeedbackEmptyState
+            filtered={type !== 'all' || status !== 'all'}
+            onClearFilters={() => {
+              setType('all');
+              setStatus('all');
+            }}
           />
         }
       >

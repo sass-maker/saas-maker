@@ -65,6 +65,26 @@ export interface ArchivedDirectoryProject {
 export const ARCHIVED_DIRECTORY_PROJECTS =
   publicCatalog.archivedDirectory as ArchivedDirectoryProject[];
 
+export interface ArchivedRepositoryProject {
+  id: string;
+  name: string;
+  description: string;
+  repositoryUrl: string;
+  roster: 'archived-repository';
+  profileUrl: string;
+}
+
+// Keep historical standalone repository profiles resolvable without adding
+// these repositories to the current portfolio roster.
+export const ARCHIVED_REPOSITORY_PROJECTS = publicCatalog.pastProjects.map((project) => ({
+  id: project.id,
+  name: project.name,
+  description: project.description,
+  repositoryUrl: project.repositoryUrl,
+  roster: 'archived-repository' as const,
+  profileUrl: `/p/${project.id}`,
+})) as ArchivedRepositoryProject[];
+
 const GROUP_COPY: Record<DirectoryGroupId, { label: string; description: string }> = {
   featured: {
     label: 'Featured',

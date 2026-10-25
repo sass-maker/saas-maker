@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   ARCHIVED_DIRECTORY_PROJECTS,
+  ARCHIVED_REPOSITORY_PROJECTS,
   DIRECTORY_PROJECTS,
   directoryFormFamilies,
 } from '../../apps/showcase/src/data/directory';
+import { PUBLIC_ROUTES } from '../../apps/showcase/src/data/publicRoutes';
 import {
   PROJECTS_DIRECTORY,
   PROJECTS_DIRECTORY_COUNT,
@@ -52,5 +54,17 @@ describe('current projects browsing boundary', () => {
         left.localeCompare(right)
       )
     );
+  });
+  it('preserves historical standalone repository routes without changing roster counts', () => {
+    const legacyIds = ['ai-badges', 'pinpoint', 'port-whisperer', 'society-relay'];
+    expect(ARCHIVED_REPOSITORY_PROJECTS.map((project) => project.id).sort()).toEqual(legacyIds);
+    expect(DIRECTORY_PROJECTS).toHaveLength(40);
+    expect(ARCHIVED_DIRECTORY_PROJECTS).toHaveLength(38);
+
+    for (const project of ARCHIVED_REPOSITORY_PROJECTS) {
+      const route = PUBLIC_ROUTES.find((candidate) => candidate.path === project.profileUrl);
+      expect(route?.markdown).toContain('Past standalone repository');
+      expect(route?.markdown).toContain(project.repositoryUrl);
+    }
   });
 });
