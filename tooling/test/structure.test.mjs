@@ -36,6 +36,7 @@ const activeScripts = new Set([
   'install-skill-run-hook.mjs',
   'link-graph-audit.mjs',
   'link-project-agent-assets.sh',
+  'native-usage-report.mjs',
   'psi-portfolio-delta.mjs',
   'psi-swarm-fleet.mjs',
   'public-profile.mjs',

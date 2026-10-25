@@ -18,7 +18,7 @@ function object(value, keys) {
   assert(Object.keys(value).every((key) => keys.includes(key)), 'Unexpected aggregate field.');
 }
 function timestamp(value) {
-  assert(typeof value === 'string' && /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z$/.test(value), 'Invalid aggregate timestamp.');
+  assert(typeof value === 'string' && /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,9})?Z$/.test(value), 'Invalid aggregate timestamp.');
   const time = Date.parse(value);
   assert(Number.isFinite(time) && new Date(time).toISOString().slice(0, 19) === value.slice(0, 19), 'Invalid aggregate timestamp.');
   return time;
@@ -38,7 +38,8 @@ export function validateAggregate(input, project, now) {
   assert(input.schemaVersion === 1 && input.projectId === project, 'Aggregate project/schema mismatch.');
   assert(timestamp(input.coverageStartedAtISO) <= timestamp(input.updatedAtISO) && timestamp(input.updatedAtISO) <= end, 'Invalid aggregate coverage.');
   assert(typeof input.timeZoneIdentifier === 'string' && input.timeZoneIdentifier.length <= 100, 'Invalid aggregate timezone.');
-  new Intl.DateTimeFormat('en', { timeZone: input.timeZoneIdentifier });
+  try { new Intl.DateTimeFormat('en', { timeZone: input.timeZoneIdentifier }); }
+  catch { throw new Error('Invalid aggregate timezone.'); }
   assert(Array.isArray(input.days) && input.days.length <= 730, 'Invalid aggregate day count.');
   const dates = new Set();
   for (const day of input.days) {
@@ -92,12 +93,19 @@ export async function readAggregate(file) {
   assert(basename(file) === 'interaction-metrics-v1.json', 'Only an explicitly selected interaction sidecar may be read.');
   let handle;
   try {
-    handle = await open(file, constants.O_RDONLY | constants.O_NOFOLLOW);
+    assert(Number.isInteger(constants.O_NOFOLLOW) && Number.isInteger(constants.O_NONBLOCK), 'Safe file flags unavailable.');
+    handle = await open(file, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
     const stat = await handle.stat();
     assert(stat.isFile() && stat.size <= MAX_BYTES, 'Invalid aggregate file.');
-    const bytes = await handle.readFile();
-    assert(bytes.length <= MAX_BYTES, 'Invalid aggregate size.');
-    return JSON.parse(bytes.toString('utf8'));
+    const bytes = Buffer.alloc(MAX_BYTES + 1);
+    let size = 0;
+    while (size < bytes.length) {
+      const { bytesRead } = await handle.read(bytes, size, bytes.length - size, size);
+      if (bytesRead === 0) break;
+      size += bytesRead;
+    }
+    assert(size <= MAX_BYTES, 'Invalid aggregate size.');
+    return JSON.parse(bytes.subarray(0, size).toString('utf8'));
   } catch (error) {
     if (error.code === 'ENOENT') return null;
     throw new Error('Cannot read a valid content-free interaction sidecar.');
@@ -105,6 +113,10 @@ export async function readAggregate(file) {
 }
 
 async function main(args) {
+  if (args.length === 1 && args[0] === '--help') {
+    console.log('Usage: node native-usage-report.mjs --input FILE --project ID [--output NEW_FILE] [--now UTC_ISO]\nReads only an explicit interaction-metrics-v1.json sidecar; no scan or network.\nEmits a private portfolio-usage import with partial device activity proxies, not people or core-use qualification.\nMissing inputs fail without producing an import; existing output files are preserved.');
+    return;
+  }
   const options = {};
   for (let i = 0; i < args.length; i += 2) {
     assert(['--input', '--project', '--output', '--now'].includes(args[i]) && args[i + 1] && !Object.hasOwn(options, args[i]), 'Expected --input FILE --project ID [--output FILE] [--now UTC_ISO].');
@@ -112,7 +124,9 @@ async function main(args) {
   }
   assert(options['--input'] && options['--project'], 'An explicit sidecar and project are required.');
   if (options['--output']) assert(resolve(options['--input']) !== resolve(options['--output']), 'Output must differ from input.');
-  const bundle = usageBundle(await readAggregate(options['--input']), options['--project'], options['--now']);
+  const input = await readAggregate(options['--input']);
+  assert(input !== null, 'Explicit aggregate input is missing; preserve earlier usage evidence.');
+  const bundle = usageBundle(input, options['--project'], options['--now']);
   const result = `${JSON.stringify(bundle, null, 2)}\n`;
   if (options['--output']) await writeFile(options['--output'], result, { mode: 0o600, flag: 'wx' });
   else process.stdout.write(result);

@@ -3,6 +3,8 @@ import { mkdtemp, mkdir, writeFile, symlink, rm, readFile } from 'node:fs/promis
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { readAggregate, usageBundle, validateAggregate } from '../scripts/native-usage-report.mjs';
 
 const now = '2026-10-26T12:00:00.000Z';
@@ -29,7 +31,7 @@ test('first ambiguous local date is excluded rather than pulled into the rolling
   assert.equal(usageBundle(input, 'kith', now).usage.records.kith.proxy.count, 1);
 });
 test('rejects content, identifiers, unknown counter names and malformed amounts without echoing input', () => {
-  for (const modify of [x => { x.notes = 'PRIVATE_SENTINEL'; }, x => { x.days[0].personId = 'PRIVATE_SENTINEL'; }, x => { x.days[0].counters.PRIVATE_SENTINEL = 1; }, x => { x.days[0].counters.result_opened = -1; }, x => { x.days[0].counters.result_opened = 0.5; }]) {
+  for (const modify of [x => { x.notes = 'PRIVATE_SENTINEL'; }, x => { x.days[0].personId = 'PRIVATE_SENTINEL'; }, x => { x.days[0].counters.PRIVATE_SENTINEL = 1; }, x => { x.days[0].counters.result_opened = -1; }, x => { x.days[0].counters.result_opened = 0.5; }, x => { x.timeZoneIdentifier = 'PRIVATE_SENTINEL'; }]) {
     const input = fixture(); modify(input);
     assert.throws(() => validateAggregate(input, 'kith', now), e => !e.message.includes('PRIVATE_SENTINEL'));
   }
@@ -41,6 +43,27 @@ test('rejects mismatched identity, future or invalid dates, duplicates, stale up
   const input = fixture(); input.days[0].counters.result_opened = Number.MAX_SAFE_INTEGER;
   input.days.push({ ...structuredClone(input.days[0]), date: '2026-10-24' });
   assert.throws(() => usageBundle(input, 'kith', now), /overflow/);
+  assert.throws(() => usageBundle(fixture(), 'kith', '2026-10-26T12:00:00.1234567890Z'), /timestamp/);
+});
+test('CLI refuses missing inputs and unsafe FIFO files, emits only valid explicit reports and preserves existing output', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'native-aggregate-cli-'));
+  const file = join(dir, 'interaction-metrics-v1.json');
+  const script = fileURLToPath(new URL('../scripts/native-usage-report.mjs', import.meta.url));
+  const run = (...extra) => spawnSync(process.execPath, [script, '--input', file, '--project', 'kith', '--now', now, ...extra], { encoding: 'utf8', timeout: 5000 });
+  try {
+    const missing = run(); assert.equal(missing.status, 1); assert.equal(missing.stdout, '');
+    if (process.platform !== 'win32') {
+      const made = spawnSync('mkfifo', [file], { encoding: 'utf8' }); assert.equal(made.status, 0);
+      const fifo = run(); assert.equal(fifo.status, 1); assert.equal(fifo.stdout, '');
+      await rm(file);
+    }
+    await writeFile(file, JSON.stringify(fixture()));
+    const valid = run(); assert.equal(valid.status, 0); assert.equal(JSON.parse(valid.stdout).usage.records.kith.proxy.count, 1);
+    const output = join(dir, 'report.json'); await writeFile(output, 'existing-evidence');
+    assert.equal(run('--output', output).status, 1); assert.equal(await readFile(output, 'utf8'), 'existing-evidence');
+    const bad = fixture(); bad.timeZoneIdentifier = 'PRIVATE_SENTINEL'; await writeFile(file, JSON.stringify(bad));
+    const rejected = run(); assert.equal(rejected.status, 1); assert.equal(rejected.stdout, ''); assert(!rejected.stderr.includes('PRIVATE_SENTINEL'));
+  } finally { await rm(dir, { recursive: true, force: true }); }
 });
 test('reader uses only the named regular sidecar, rejects symlinks and journals, and preserves inputs', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'native-aggregate-test-'));
