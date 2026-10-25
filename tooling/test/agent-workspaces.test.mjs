@@ -382,7 +382,7 @@ test('install requires an exact pnpm pin and lockfile, and generic run cannot by
   await assert.rejects(manager.install({ id: row.id }), /separate node_modules/);
 });
 
-test('install arguments enforce one shared store, frozen lockfile and auto imports', async () => {
+test('install arguments enforce shared content, isolated imports and no orphan package cache', async () => {
   const { manager, create } = fixture();
   const row = await create('install');
   writeFileSync(join(row.path, 'package.json'), JSON.stringify({ packageManager: 'pnpm@10.33.2' }));
@@ -394,9 +394,153 @@ test('install arguments enforce one shared store, frozen lockfile and auto impor
   assert.equal(observed.argv[0], 'corepack');
   assert.ok(observed.argv.includes('--frozen-lockfile'));
   assert.ok(observed.argv.includes('--offline'));
+  assert.ok(observed.argv.includes('--config.modules-cache-max-age=0'));
   assert.equal(observed.argv[observed.argv.indexOf('--store-dir') + 1], manager.policy().storeDir);
-  assert.equal(observed.argv[observed.argv.indexOf('--package-import-method') + 1], 'auto');
+  assert.equal(observed.argv[observed.argv.indexOf('--package-import-method') + 1], manager.policy().packageImportMethod);
   assert.equal(readFileSync(join(row.path, 'pnpm-lock.yaml'), 'utf8'), before);
+});
+
+test('creation leaves dependencies absent until an explicit install and rejects copy-only imports', async () => {
+  const { manager, create } = fixture();
+  const row = await create('thin-worktree');
+  assert.equal(existsSync(join(row.path, 'node_modules')), false);
+  for (const packageImportMethod of ['copy', 'hardlink', 'clone-or-copy']) {
+    await assert.rejects(manager.configure({ packageImportMethod }), /clone or auto/);
+  }
+  await manager.configure({ packageImportMethod: 'clone', maxStoreBytes: GiB });
+  assert.equal(manager.policy().packageImportMethod, 'clone');
+  await assert.rejects(manager.configure({ storePnpmVersion: 'latest' }), /exact pnpm/);
+});
+
+async function cacheFixture(options = {}) {
+  const f = fixture({ externalStoreWriters: () => 0, ...options });
+  const row = await f.create('cache-task');
+  const storeDir = join(f.manager.root, 'shared-cache'); mkdirSync(storeDir);
+  const policy = f.manager.policy.bind(f.manager);
+  f.manager.policy = () => ({ ...policy(), storeDir, maxStoreBytes: GiB });
+  return { ...f, row, storeDir };
+}
+
+test('cache maintenance previews, prunes only through pnpm, and enforces daily retention', async () => {
+  const { manager, storeDir } = await cacheFixture();
+  let bytes = 2 * GiB; let calls = 0;
+  manager.measure = (path) => path === storeDir ? bytes : 0;
+  manager.pruneNativeStore = async (policy, root, onSpawn) => {
+    calls++; assert.equal(policy.storeDir, storeDir); assert.equal(root, manager.root);
+    await onSpawn(process.pid);
+    const leases = manager.jobs();
+    assert.equal(leases.length, manager.policy().maxHeavyJobs);
+    assert.ok(leases.every((lease) => lease.token.startsWith('storage-')));
+    await assert.rejects(manager.run({ repo: manager.root, argv: [process.execPath, '-e', 'process.exit(0)'] }), /maintenance is in progress/);
+    bytes = GiB / 2;
+  };
+  assert.equal((await manager.pruneStore()).action, 'would-prune');
+  assert.equal(calls, 0);
+  const applied = await manager.pruneStore({ apply: true });
+  assert.equal(applied.action, 'pruned'); assert.equal(applied.overBudget, false);
+  assert.equal(applied.reportedBytesAfter, GiB / 2);
+  assert.equal(manager.jobs().length, 0);
+  assert.equal((await manager.pruneStore({ apply: true })).action, 'keep');
+  assert.equal(calls, 1, 'a warm cache is not pruned on every scheduler tick');
+  bytes = 2 * GiB;
+  assert.equal((await manager.pruneStore({ apply: true, onlyOverBudget: true })).action, 'pruned');
+  assert.equal(calls, 2, 'a cache over budget bypasses the daily interval');
+});
+
+test('managed jobs, external pnpm, and unknown process state preserve the store', async () => {
+  const { manager, storeDir } = await cacheFixture();
+  manager.measure = (path) => path === storeDir ? 2 * GiB : 0;
+  manager.pruneNativeStore = async () => assert.fail('busy cache was pruned');
+  const lease = join(manager.root, 'jobs', 'busy.json');
+  writeFileSync(lease, JSON.stringify({ token: 'busy', id: null, repo: manager.root, pid: process.pid, childPid: null, startedAt: new Date().toISOString() }));
+  assert.match((await manager.pruneStore({ apply: true })).reason, /active/);
+  rmSync(lease);
+  manager.externalStoreWriters = () => 1;
+  assert.match((await manager.pruneStore({ apply: true })).reason, /active/);
+  manager.externalStoreWriters = () => { throw new Error('process visibility unknown'); };
+  await assert.rejects(manager.pruneStore({ apply: true }), /visibility unknown/);
+  assert.equal(manager.jobs().length, 0);
+});
+
+test('failed native pruning releases its lease and does not record a successful prune', async () => {
+  const { manager } = await cacheFixture();
+  manager.pruneNativeStore = async () => { throw new Error('native failure'); };
+  await assert.rejects(manager.pruneStore({ apply: true }), /native failure/);
+  assert.equal(manager.jobs().length, 0);
+  assert.equal(existsSync(join(manager.root, 'storage-maintenance.json')), false);
+});
+
+test('scheduled failures remain visible in one overwritten result with a failing exit code', async () => {
+  const { manager } = await cacheFixture();
+  manager.closeAllLanded = async () => ({ counts: { closed: 0, kept: 0 } });
+  manager.gc = async () => ({ counts: { deleted: 0, kept: 0 } });
+  manager.pruneStore = async () => { throw new Error('native prune unavailable'); };
+  const first = await manager.maintain({ apply: true });
+  assert.equal(first.exitCode, 1); assert.equal(first.store.error, 'native prune unavailable');
+  manager.pruneStore = async () => ({ action: 'keep', overBudget: false });
+  const second = await manager.maintain({ apply: true });
+  assert.equal(second.exitCode, undefined);
+  const state = JSON.parse(readFileSync(join(manager.root, 'storage-maintenance.json')));
+  assert.equal(state.latest.store.error, undefined); assert.equal(state.latest.startedAt, second.startedAt);
+});
+
+test('shared-store budget and unknown bytes prevent pnpm admission before spawn', async () => {
+  const { manager, row, storeDir } = await cacheFixture();
+  manager.measure = (path) => path === storeDir ? 2 * GiB : 0;
+  await assert.rejects(manager.run({ id: row.id, installing: true, argv: ['corepack', 'pnpm', 'install'] }), /cache budget/);
+  assert.equal(manager.jobs().length, 0);
+  manager.measure = (path) => { if (path === storeDir) throw new Error('store unreadable'); return 0; };
+  await assert.rejects(manager.run({ id: row.id, installing: true, argv: ['corepack', 'pnpm', 'install'] }), /startup, shared-pnpm-store/);
+  assert.equal(manager.jobs().length, 0);
+  assert.equal((await manager.run({ id: row.id, argv: [process.execPath, '-e', 'process.exit(0)'] })).exitCode, 0, 'source-only work remains available');
+});
+
+test('a growing shared store terminates only its owned pnpm command and releases the lease', async () => {
+  const { manager, row, folder, storeDir } = await cacheFixture();
+  const corepack = join(folder, 'corepack');
+  writeFileSync(corepack, '#!' + process.execPath + '\nsetTimeout(() => {}, 2000);\n', { mode: 0o700 });
+  manager.measure = (path) => path === storeDir && manager.jobs().some((job) => job.childPid) ? 2 * GiB : 0;
+  const restore = acceleratedTicks();
+  try {
+    await assert.rejects(manager.run({ id: row.id, installing: true, argv: [corepack, 'pnpm', 'install'] }), /cache budget/);
+    assert.equal(manager.jobs().length, 0);
+    assert.equal(existsSync(row.path), true);
+  } finally { restore(); }
+});
+
+test('maintenance removes only old clean merged tasks and keeps dirty, recent and unknown data', async () => {
+  const { manager, repo, create } = fixture({ externalStoreWriters: () => 0 });
+  writeFileSync(join(repo, '.gitignore'), 'private-data/\n'); git(repo, 'add', '.'); git(repo, 'commit', '-m', 'ignore private data');
+  git(repo, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
+  const old = await create('old-merged');
+  const recent = await create('recent');
+  const dirty = await create('dirty');
+  const unknown = await create('unknown');
+  for (const row of [old, dirty, unknown]) { row.heartbeatAt = '2000-01-01T00:00:00Z'; manager.write(row); }
+  writeFileSync(join(dirty.path, 'source.txt'), 'unfinished work');
+  mkdirSync(join(unknown.path, 'private-data')); writeFileSync(join(unknown.path, 'private-data', 'note'), 'retained');
+  manager.pruneStore = async () => ({ action: 'keep' });
+  const preview = await manager.maintain();
+  assert.equal(preview.closed.closed.length, 1); assert.equal(existsSync(old.path), true);
+  assert.equal(existsSync(join(manager.root, 'storage-maintenance.json')), false);
+  const result = await manager.maintain({ apply: true });
+  assert.equal(result.closed.closed.length, 1); assert.equal(existsSync(old.path), false);
+  for (const row of [recent, dirty, unknown]) assert.equal(existsSync(row.path), true);
+  assert.equal(readFileSync(join(dirty.path, 'source.txt'), 'utf8'), 'unfinished work');
+  assert.equal(readFileSync(join(unknown.path, 'private-data', 'note'), 'utf8'), 'retained');
+  assert.equal(JSON.parse(readFileSync(join(manager.root, 'storage-maintenance.json'))).latest.dryRun, false);
+});
+
+test('fresh and already-blocked cleanup candidates do not run provider or open-file scans', async () => {
+  const { manager, create } = fixture();
+  const row = await create('fresh-no-scan');
+  manager.inspect = async () => assert.fail('fresh task scanned Git');
+  manager.openFiles = () => assert.fail('blocked task scanned open files');
+  manager.gh = () => assert.fail('blocked task queried provider');
+  assert.deepEqual((await manager.close(row.id, { dryRun: true, idleMinutes: 1440 })).blockers, ['heartbeat-not-idle']);
+  row.heartbeatAt = '2000-01-01T00:00:00Z'; manager.write(row);
+  manager.inspect = async () => ({ ...row, blockers: ['dirty-or-untracked'], notes: [] });
+  assert.deepEqual((await manager.close(row.id, { dryRun: true, idleMinutes: 1440 })).blockers, ['dirty-or-untracked']);
 });
 
 test('lockfile-only generation uses pinned Corepack, shared defaults and no scripts', async () => {
@@ -416,7 +560,7 @@ test('lockfile-only generation uses pinned Corepack, shared defaults and no scri
   assert.deepEqual(observed, {
     id: row.id,
     repo: realpathSync(row.path),
-    argv: ['corepack', 'pnpm', 'install', '--lockfile-only', '--ignore-scripts', '--store-dir', storeDir, '--package-import-method', 'auto'],
+    argv: ['corepack', 'pnpm', 'install', '--lockfile-only', '--ignore-scripts', '--store-dir', storeDir, '--package-import-method', manager.policy().packageImportMethod],
     installing: true,
   });
   assert.equal(readFileSync(join(row.path, 'pnpm-lock.yaml'), 'utf8'), before);
@@ -442,7 +586,7 @@ for (const nested of [false, true]) test(`independent child lockfile uses its ex
   await manager.lockfileOnly({ id: row.id, 'package-dir': 'app' });
   assert.deepEqual(observed, {
     id: row.id, repo: realpathSync(row.path), installing: true,
-    argv: ['corepack', 'pnpm@10.33.2', '--dir', realpathSync(child), 'install', '--lockfile-only', '--ignore-scripts', '--store-dir', storeDir, '--package-import-method', 'auto'],
+    argv: ['corepack', 'pnpm@10.33.2', '--dir', realpathSync(child), 'install', '--lockfile-only', '--ignore-scripts', '--store-dir', storeDir, '--package-import-method', manager.policy().packageImportMethod],
   });
   assert.equal(existsSync(join(row.path, 'pnpm-lock.yaml')), false);
   assert.equal(existsSync(join(child, 'node_modules')), false);
