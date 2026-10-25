@@ -54,6 +54,7 @@ export function GET() {
         },
         products: publicCatalog.products,
         directory: publicCatalog.directory,
+        archivedDirectory: publicCatalog.archivedDirectory,
         historySemantics: publicCatalog.historySemantics,
         pastProjects: publicCatalog.pastProjects,
         learnings: LEARNINGS.map((learning) => ({

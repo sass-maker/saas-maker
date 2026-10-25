@@ -1,14 +1,21 @@
 import publicCatalog from '../../../../catalog/generated/public.json';
 
 export type DirectoryGroupId = 'featured' | 'current' | 'past';
+export type DirectoryAvailability =
+  | 'public-link'
+  | 'no-public-link'
+  | 'not-publicly-available'
+  | 'internal-private'
+  | 'preview-not-qualified'
+  | 'unreleased-prototype';
 
 export interface PurposeContract {
   purpose: string;
   audience: string;
   outcome: string;
   mechanism: string;
-  proof: string;
-  nextAction: string;
+  proof?: string;
+  nextAction?: string;
 }
 
 export interface DirectoryProject {
@@ -16,41 +23,60 @@ export interface DirectoryProject {
   name: string;
   description: string;
   makerNote: string;
-  logoUrl?: string;
   purposeContract?: PurposeContract;
-  kind: 'product' | 'platform' | 'experiment';
-  category: 'utility' | 'media' | 'experimental';
+  logoUrl?: string;
+  kind?: 'product' | 'platform' | 'experiment' | 'utility' | 'project';
+  category?: 'utility' | 'media' | 'experimental';
   form: string;
   platforms: string[];
   technologies: string[];
   group: DirectoryGroupId;
-  lifecycle: string;
-  deployed: boolean;
-  deploymentProviders: string[];
-  domains: string[];
+  lifecycle?: string;
+  shareable?: boolean;
+  deployed?: boolean;
+  deploymentProviders?: string[];
+  domains?: string[];
   url?: string;
+  firstCommitAt?: string | null;
+  latestCommitAt?: string | null;
+  footerArt?: unknown;
+  roster: 'current';
+  availability: DirectoryAvailability;
+  publicUrl?: string;
+  publicUrlLabel?: string;
   repositoryUrl?: string;
   changelogUrl?: string;
   roadmapUrl?: string;
-  firstCommitAt: string | null;
-  latestCommitAt: string | null;
 }
 
 export const DIRECTORY_PROJECTS = publicCatalog.directory as DirectoryProject[];
+export interface ArchivedDirectoryProject {
+  id: string;
+  name: string;
+  description: string;
+  form: string;
+  platforms: string[];
+  technologies: string[];
+  roster: 'archived';
+  availability: 'archived';
+  profileUrl: string;
+}
+
+export const ARCHIVED_DIRECTORY_PROJECTS =
+  publicCatalog.archivedDirectory as ArchivedDirectoryProject[];
 
 const GROUP_COPY: Record<DirectoryGroupId, { label: string; description: string }> = {
   featured: {
     label: 'Featured',
-    description: 'Shareable work from the primary focus.',
+    description: 'Featured products within the current roster.',
   },
   current: {
     label: 'Current work',
-    description: 'Products and platforms inside the current Fleet working set.',
+    description: 'Products and platforms inside the current roster.',
   },
   past: {
     label: 'More experiments · paused',
-    description:
-      'Useful experiments and retained work, shared without an active development commitment.',
+    description: 'Paused experiments and retained work included in the current roster.',
   },
 };
 

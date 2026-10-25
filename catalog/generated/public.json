@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "generatedFrom": [
     "saas-maker/catalog/projects.json"
   ],
@@ -9,6 +9,17 @@
       "id": "codevetter",
       "name": "CodeVetter",
       "description": "Execution-backed verification for AI-written software changes — local-first and inspectable.",
+      "form": "Desktop app",
+      "platforms": [
+        "macOS"
+      ],
+      "technologies": [
+        "Swift",
+        "SwiftUI",
+        "Rust",
+        "SQLite"
+      ],
+      "group": "featured",
       "makerNote": "I built CodeVetter to make reviewing AI-generated code rigorous without giving up a local-first workflow.",
       "purposeContract": {
         "purpose": "CodeVetter verifies whether AI-written software changes actually satisfy their task, not merely whether the diff looks plausible.",
@@ -30,17 +41,6 @@
       },
       "kind": "product",
       "category": "utility",
-      "form": "Desktop app",
-      "platforms": [
-        "macOS"
-      ],
-      "technologies": [
-        "Swift",
-        "SwiftUI",
-        "Rust",
-        "SQLite"
-      ],
-      "group": "featured",
       "lifecycle": "primary",
       "shareable": true,
       "deployed": true,
@@ -56,12 +56,28 @@
       "changelogUrl": "https://codevetter.com/changelog",
       "roadmapUrl": "https://github.com/Codevetter/codevetter/issues",
       "firstCommitAt": "2025-11-30",
-      "latestCommitAt": "2026-09-23"
+      "latestCommitAt": "2026-09-23",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://codevetter.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "pace",
       "name": "HeyPace",
       "description": "An experimental macOS voice-agent preview; installation and permission-dependent workflows are still being qualified.",
+      "form": "macOS app",
+      "platforms": [
+        "macOS",
+        "Web"
+      ],
+      "technologies": [
+        "Swift",
+        "SwiftUI",
+        "Astro",
+        "Cloudflare Pages"
+      ],
+      "group": "current",
       "makerNote": "I wanted a fast, privacy-first Mac assistant that could understand what is on my screen while keeping the work local.",
       "purposeContract": {
         "purpose": "HeyPace is a private Mac assistant for fast voice-driven help grounded in what is currently on screen.",
@@ -83,18 +99,6 @@
       },
       "kind": "product",
       "category": "experimental",
-      "form": "macOS app",
-      "platforms": [
-        "macOS",
-        "Web"
-      ],
-      "technologies": [
-        "Swift",
-        "SwiftUI",
-        "Astro",
-        "Cloudflare Pages"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -109,12 +113,28 @@
       "changelogUrl": "https://heypace.app/changelog",
       "roadmapUrl": "https://github.com/HeyPace/pace/issues",
       "firstCommitAt": "2026-07-13",
-      "latestCommitAt": "2026-09-18"
+      "latestCommitAt": "2026-09-18",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://heypace.app",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "posttrainllm",
       "name": "PostTrainLLM",
       "description": "An experimental browser model playground: run small language models locally with visible generation metrics.",
+      "form": "Research platform",
+      "platforms": [
+        "Web",
+        "Local"
+      ],
+      "technologies": [
+        "Astro",
+        "Python",
+        "Rust",
+        "Cloudflare Pages"
+      ],
+      "group": "featured",
       "makerNote": "I use PostTrainLLM to explore local model training and turn those experiments into repeatable recipes for specialist models.",
       "purposeContract": {
         "purpose": "PostTrainLLM turns local model-training experiments into measured, reproducible recipes for useful specialist language models.",
@@ -136,18 +156,6 @@
       },
       "kind": "product",
       "category": "utility",
-      "form": "Research platform",
-      "platforms": [
-        "Web",
-        "Local"
-      ],
-      "technologies": [
-        "Astro",
-        "Python",
-        "Rust",
-        "Cloudflare Pages"
-      ],
-      "group": "featured",
       "lifecycle": "primary",
       "shareable": true,
       "deployed": true,
@@ -162,12 +170,52 @@
       "changelogUrl": "https://posttrainllm.com/changelog",
       "roadmapUrl": "https://github.com/PostTrainLLM/posttrainllm/issues",
       "firstCommitAt": "2026-05-21",
-      "latestCommitAt": "2026-09-23"
+      "latestCommitAt": "2026-09-23",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://posttrainllm.com",
+      "publicUrlLabel": "Visit website"
+    },
+    {
+      "id": "site-health",
+      "name": "Site Health",
+      "description": "A local portfolio dashboard for domains, performance, search, and AI visibility evidence.",
+      "form": "Local dashboard",
+      "platforms": [
+        "Web",
+        "Local"
+      ],
+      "technologies": [
+        "Astro",
+        "TypeScript",
+        "Node.js"
+      ],
+      "group": "current",
+      "makerNote": "I built Site Health because I needed one clear view of Fleet’s domains, performance, search visibility, and AI visibility.",
+      "purposeContract": {
+        "purpose": "Site Health gives the Fleet owner one private, evidence-backed view of portfolio inventory and public-surface health.",
+        "audience": "The owner operating a large portfolio of independent software projects.",
+        "outcome": "Know what exists, what is live, and where domains, performance, search, or AI visibility need attention.",
+        "mechanism": "A local five-area dashboard joins the canonical catalog with provider, repository, performance, search, and visibility evidence."
+      },
+      "roster": "current",
+      "availability": "internal-private"
     },
     {
       "id": "live",
       "name": "Live",
       "description": "Explore hobbies and possibilities, build a personal bucket list, and save your progress on this device or in your account.",
+      "form": "Web app",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Next.js",
+        "TypeScript",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "current",
       "makerNote": "I wanted a product that helps people live more intentionally through goals, possibilities, and things worth anticipating.",
       "purposeContract": {
         "purpose": "Live helps a person turn passive wanting into a life they can deliberately imagine, plan, and experience.",
@@ -189,17 +237,6 @@
       },
       "kind": "product",
       "category": "media",
-      "form": "Web app",
-      "platforms": [
-        "Web"
-      ],
-      "technologies": [
-        "Next.js",
-        "TypeScript",
-        "Cloudflare Workers",
-        "D1"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -214,12 +251,53 @@
       "changelogUrl": "https://live.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/live/issues",
       "firstCommitAt": "2026-03-01",
-      "latestCommitAt": "2026-09-22"
+      "latestCommitAt": "2026-09-22",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://live.significanthobbies.com",
+      "publicUrlLabel": "Visit website"
+    },
+    {
+      "id": "chatgpt-connections",
+      "name": "ChatGPT Connections",
+      "description": "A read-only MCP gateway that exposes selected public Fleet data to ChatGPT connections.",
+      "form": "MCP service",
+      "platforms": [
+        "API",
+        "ChatGPT"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Cloudflare Workers",
+        "MCP"
+      ],
+      "group": "current",
+      "makerNote": "I had many projects but no solid way to connect them to ChatGPT, so I built a selective gateway for that.",
+      "purposeContract": {
+        "purpose": "ChatGPT Connections lets ChatGPT read selected Fleet product data through one bounded gateway.",
+        "audience": "The Fleet owner and approved ChatGPT conversations that need specific project context.",
+        "outcome": "Ask useful cross-project questions without exposing the private portfolio catalog or granting write access.",
+        "mechanism": "A read-only MCP gateway publishes explicit, privacy-filtered resources for named consumers."
+      },
+      "roster": "current",
+      "availability": "internal-private"
     },
     {
       "id": "saas-maker",
       "name": "SaaS Maker",
       "description": "A public directory of working experiments, launch destinations, reference projects and reusable tooling.",
+      "form": "Web directory and service",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "Astro",
+        "Cloudflare",
+        "D1",
+        "IssuePages"
+      ],
+      "group": "current",
       "makerNote": "I use SaaS Maker as the public home for Fleet and as a workshop for launch research, reusable feedback, workflow, and automation tools.",
       "purposeContract": {
         "purpose": "SaaS Maker is the public product studio and reusable tooling workshop for the Fleet portfolio.",
@@ -241,18 +319,6 @@
       },
       "kind": "product",
       "category": "media",
-      "form": "Web directory and service",
-      "platforms": [
-        "Web",
-        "API"
-      ],
-      "technologies": [
-        "Astro",
-        "Cloudflare",
-        "D1",
-        "IssuePages"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -268,12 +334,53 @@
       "changelogUrl": "https://sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/saas-maker/issues",
       "firstCommitAt": "2026-02-26",
-      "latestCommitAt": "2026-09-22"
+      "latestCommitAt": "2026-09-22",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://sassmaker.com",
+      "publicUrlLabel": "Visit website"
+    },
+    {
+      "id": "fleet-social",
+      "name": "Fleet Social",
+      "description": "Private video review, scheduling and delivery tracking for Fleet projects, with local Mashup exports.",
+      "form": "Private web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "SvelteKit",
+        "Cloudflare Workers",
+        "D1",
+        "R2",
+        "Cloudflare Pages"
+      ],
+      "group": "current",
+      "makerNote": "I wanted one reviewable social publishing place for Fleet projects.",
+      "purposeContract": {
+        "purpose": "Fleet Social is a private social publishing hub for Fleet projects.",
+        "audience": "The Fleet owner and internal product feeds.",
+        "outcome": "Prepare, approve, schedule, and account for project posts from one place.",
+        "mechanism": "Project-attributed drafts pass through owner review before per-account publishing and receipt tracking."
+      },
+      "roster": "current",
+      "availability": "internal-private"
     },
     {
       "id": "chatgpt-memory-insights",
       "name": "Memory Map",
       "description": "A browser-local experiment for importing a ChatGPT export, exploring semantic themes and search, and optionally saving analysis on your device.",
+      "form": "Web app",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Astro",
+        "TypeScript",
+        "Cloudflare Pages"
+      ],
+      "group": "current",
       "makerNote": "I wanted to learn what my exported AI conversations reveal about my themes, emotions, memory, and personal change.",
       "purposeContract": {
         "purpose": "Memory Map turns an exported AI conversation history into a private map of recurring themes, facts, emotions, and change.",
@@ -295,16 +402,6 @@
       },
       "kind": "product",
       "category": "utility",
-      "form": "Web app",
-      "platforms": [
-        "Web"
-      ],
-      "technologies": [
-        "Astro",
-        "TypeScript",
-        "Cloudflare Pages"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -319,12 +416,28 @@
       "changelogUrl": "https://chatgpt.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/saas-maker/issues",
       "firstCommitAt": "2026-07-28",
-      "latestCommitAt": "2026-09-19"
+      "latestCommitAt": "2026-09-19",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://chatgpt.significanthobbies.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "free-ai",
       "name": "Free AI",
       "description": "An OpenAI-compatible free-tier model gateway with operator-provisioned project access.",
+      "form": "API gateway",
+      "platforms": [
+        "API",
+        "Web"
+      ],
+      "technologies": [
+        "Hono",
+        "TypeScript",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "current",
       "makerNote": "I built Free AI to make genuinely useful free model capacity easier to discover and use through one resilient interface.",
       "purposeContract": {
         "purpose": "Free AI makes useful free-tier language-model capacity available through one resilient, OpenAI-compatible interface.",
@@ -346,18 +459,6 @@
       },
       "kind": "platform",
       "category": "utility",
-      "form": "API gateway",
-      "platforms": [
-        "API",
-        "Web"
-      ],
-      "technologies": [
-        "Hono",
-        "TypeScript",
-        "Cloudflare Workers",
-        "D1"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -372,12 +473,28 @@
       "changelogUrl": "https://ai-gateway.sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/free-ai/issues",
       "firstCommitAt": "2026-02-15",
-      "latestCommitAt": "2026-09-20"
+      "latestCommitAt": "2026-09-20",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://ai-gateway.sassmaker.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "high-signal",
       "name": "High Signal",
       "description": "Evidence-backed daily intelligence across technology, startups, finance, and public markets.",
+      "form": "Intelligence web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "Next.js",
+        "React",
+        "Hono",
+        "Cloudflare"
+      ],
+      "group": "current",
       "makerNote": "I built High Signal to combine scattered news and data sources and extract the signals that are actually useful.",
       "purposeContract": {
         "purpose": "High Signal turns scattered technology, startup, finance, and market sources into an evidence-backed daily intelligence brief.",
@@ -399,18 +516,6 @@
       },
       "kind": "product",
       "category": "media",
-      "form": "Intelligence web app",
-      "platforms": [
-        "Web",
-        "API"
-      ],
-      "technologies": [
-        "Next.js",
-        "React",
-        "Hono",
-        "Cloudflare"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -425,12 +530,28 @@
       "changelogUrl": "https://highsignal.app/changelog",
       "roadmapUrl": "https://github.com/High-Signal-App/high-signal/issues",
       "firstCommitAt": "2026-04-25",
-      "latestCommitAt": "2026-09-22"
+      "latestCommitAt": "2026-09-22",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://highsignal.app",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "knowledge-base",
       "name": "Knowledge Base",
       "description": "Private agent search over specialized corpora with ranked citations, provenance, and schema-aware retrieval.",
+      "form": "Knowledge platform",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "Astro",
+        "Hono",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "current",
       "makerNote": "I built Knowledge Base as the private, cited retrieval layer that other Fleet applications can rely on.",
       "purposeContract": {
         "purpose": "Knowledge Base supplies private, cited retrieval over specialized corpora to other Fleet applications and agents.",
@@ -452,18 +573,6 @@
       },
       "kind": "platform",
       "category": "utility",
-      "form": "Knowledge platform",
-      "platforms": [
-        "Web",
-        "API"
-      ],
-      "technologies": [
-        "Astro",
-        "Hono",
-        "Cloudflare Workers",
-        "D1"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -480,12 +589,29 @@
       "changelogUrl": "https://knowledgebase.sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/knowledge-base/issues",
       "firstCommitAt": "2026-05-27",
-      "latestCommitAt": "2026-09-19"
+      "latestCommitAt": "2026-09-19",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://knowledgebase.sassmaker.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "significanthobbies",
       "name": "Significant Hobbies",
       "description": "The shared Hub for Live, Calorie, Setline, Kith, and Anchor, backed by one privacy-aware control plane.",
+      "form": "Personal-app Hub",
+      "platforms": [
+        "Web",
+        "API",
+        "Swift package"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Cloudflare Workers",
+        "D1",
+        "Swift"
+      ],
+      "group": "current",
       "makerNote": "I wanted one Hub for my maintained personal apps while letting every app keep ownership of its own data.",
       "purposeContract": {
         "purpose": "Significant Hobbies is the shared home and privacy-aware control plane for five independently owned personal applications.",
@@ -507,19 +633,6 @@
       },
       "kind": "product",
       "category": "utility",
-      "form": "Personal-app Hub",
-      "platforms": [
-        "Web",
-        "API",
-        "Swift package"
-      ],
-      "technologies": [
-        "TypeScript",
-        "Cloudflare Workers",
-        "D1",
-        "Swift"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -534,12 +647,28 @@
       "changelogUrl": "https://significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/significanthobbies/issues",
       "firstCommitAt": "2026-03-01",
-      "latestCommitAt": "2026-09-22"
+      "latestCommitAt": "2026-09-22",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://significanthobbies.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "anime-list",
       "name": "Anime List",
       "description": "Anime and manga discovery with multi-axis filtering and personal watchlists.",
+      "form": "Web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "React",
+        "Vite",
+        "Hono",
+        "Cloudflare"
+      ],
+      "group": "current",
       "makerNote": "I wanted better anime filtering and discovery than the standard catalog experience, with a watchlist that works for me.",
       "purposeContract": {
         "purpose": "Anime List helps anime and manga fans filter a large catalogue, discover what fits, and maintain a personal watchlist.",
@@ -561,18 +690,6 @@
       },
       "kind": "product",
       "category": "media",
-      "form": "Web app",
-      "platforms": [
-        "Web",
-        "API"
-      ],
-      "technologies": [
-        "React",
-        "Vite",
-        "Hono",
-        "Cloudflare"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -588,12 +705,28 @@
       "changelogUrl": "https://anime.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/anime-list/issues",
       "firstCommitAt": "2025-02-16",
-      "latestCommitAt": "2026-09-22"
+      "latestCommitAt": "2026-09-22",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://anime.significanthobbies.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "looptv",
       "name": "LoopTV",
       "description": "An experimental lean-back queue of curated science and other videos.",
+      "form": "Web app",
+      "platforms": [
+        "Web",
+        "TV"
+      ],
+      "technologies": [
+        "Astro",
+        "React",
+        "Vite",
+        "Cloudflare Pages"
+      ],
+      "group": "current",
       "makerNote": "I wanted a more controlled and curated way to watch YouTube, shaped like television rather than an endless feed.",
       "purposeContract": {
         "purpose": "LoopTV turns curated YouTube channels into a calmer, lean-back television experience.",
@@ -615,18 +748,6 @@
       },
       "kind": "product",
       "category": "media",
-      "form": "Web app",
-      "platforms": [
-        "Web",
-        "TV"
-      ],
-      "technologies": [
-        "Astro",
-        "React",
-        "Vite",
-        "Cloudflare Pages"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -641,12 +762,55 @@
       "changelogUrl": "https://tv.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/looptv/issues",
       "firstCommitAt": "2026-04-04",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-07",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://tv.significanthobbies.com",
+      "publicUrlLabel": "Visit website"
+    },
+    {
+      "id": "reader",
+      "name": "Reader",
+      "description": "A saved-link inbox for ChatGPT: save links, search them, track read state, and connect through MCP.",
+      "form": "Saved-link inbox web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "React",
+        "Hono",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "current",
+      "makerNote": "I wanted any article or PDF to become a focused reading and research surface instead of another forgotten browser tab.",
+      "purposeContract": {
+        "purpose": "Reader is a saved-link inbox for use with ChatGPT: save a link, search it later, keep read state, and let ChatGPT find and fetch it over MCP.",
+        "audience": "People who save serious reading but lose it among browser tabs and undifferentiated bookmarks.",
+        "outcome": "Move from saved links to ChatGPT-assisted retrieval of what was saved, with read and unread state kept in one place.",
+        "mechanism": "A web app and Chrome extension capture links; a Hono Worker on D1 stores them and exposes search, fetch, and set_read tools over an MCP endpoint."
+      },
+      "roster": "current",
+      "availability": "preview-not-qualified",
+      "publicUrl": "https://read.significanthobbies.com",
+      "publicUrlLabel": "Preview site"
     },
     {
       "id": "swe-interview-prep",
       "name": "SWE Interview Prep",
       "description": "A learning OS for software-engineering interview practice.",
+      "form": "Learning web app",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "React",
+        "Vite",
+        "TypeScript",
+        "Cloudflare Pages"
+      ],
+      "group": "current",
       "makerNote": "I built this as a learning-by-doing system that combines Pomodoro, Feynman, retrieval practice, and practical roadmaps.",
       "purposeContract": {
         "purpose": "SWE Interview Prep is a personal learning OS that turns software-engineering study into retained, artifact-backed understanding.",
@@ -668,17 +832,6 @@
       },
       "kind": "product",
       "category": "media",
-      "form": "Learning web app",
-      "platforms": [
-        "Web"
-      ],
-      "technologies": [
-        "React",
-        "Vite",
-        "TypeScript",
-        "Cloudflare Pages"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -694,12 +847,28 @@
       "changelogUrl": "https://learn.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/swe-interview-prep/issues",
       "firstCommitAt": "2026-02-08",
-      "latestCommitAt": "2026-09-20"
+      "latestCommitAt": "2026-09-20",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://learn.significanthobbies.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "calorie",
       "name": "Calorie",
       "description": "A private, local-first food, water, and weight journal with transparent timing guidance.",
+      "form": "iOS app",
+      "platforms": [
+        "iOS",
+        "API"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "Hono",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "current",
       "makerNote": "I wanted one personal system for weight loss that connects food logging, fasting, exercise timing, and daily performance.",
       "logoUrl": "/images/project-icons/calorie.png",
       "purposeContract": {
@@ -722,18 +891,6 @@
       },
       "kind": "product",
       "category": "utility",
-      "form": "iOS app",
-      "platforms": [
-        "iOS",
-        "API"
-      ],
-      "technologies": [
-        "SwiftUI",
-        "Hono",
-        "Cloudflare Workers",
-        "D1"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -749,12 +906,26 @@
       "changelogUrl": "https://calorie.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/calorie/issues",
       "firstCommitAt": "2026-07-25",
-      "latestCommitAt": "2026-09-22"
+      "latestCommitAt": "2026-09-22",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://calorie.significanthobbies.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "setline",
       "name": "Setline",
       "description": "An iOS-native training tracker that runs a written strength, cardio and mobility programme one set at a time and measures each exercise against an authored target.",
+      "form": "iOS app",
+      "platforms": [
+        "iOS"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "CloudKit",
+        "PersonalSyncKit"
+      ],
+      "group": "current",
       "makerNote": "I built Setline to make workouts easier to execute one set at a time, with timing and performance kept accurate.",
       "logoUrl": "/images/project-icons/setline.png",
       "purposeContract": {
@@ -777,16 +948,6 @@
       },
       "kind": "product",
       "category": "utility",
-      "form": "iOS app",
-      "platforms": [
-        "iOS"
-      ],
-      "technologies": [
-        "SwiftUI",
-        "CloudKit",
-        "PersonalSyncKit"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -802,12 +963,26 @@
       "changelogUrl": "https://setline.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/setline/issues",
       "firstCommitAt": "2026-07-27",
-      "latestCommitAt": "2026-09-22"
+      "latestCommitAt": "2026-09-22",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://setline.significanthobbies.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "kith",
       "name": "Kith",
       "description": "A private iPhone app for the people you actually want to stay close to — closeness-weighted constellation home, standing notes, and a chronological log per person.",
+      "form": "iOS app",
+      "platforms": [
+        "iOS"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "CloudKit",
+        "PersonalSyncKit"
+      ],
+      "group": "current",
       "makerNote": "I wanted a beautiful personal relationship-memory app that helps me stay more thoughtful about the people in my life.",
       "logoUrl": "/images/project-icons/kith.png",
       "purposeContract": {
@@ -830,16 +1005,6 @@
       },
       "kind": "product",
       "category": "utility",
-      "form": "iOS app",
-      "platforms": [
-        "iOS"
-      ],
-      "technologies": [
-        "SwiftUI",
-        "CloudKit",
-        "PersonalSyncKit"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -855,12 +1020,28 @@
       "changelogUrl": "https://kith.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/kith/issues",
       "firstCommitAt": "2026-08-16",
-      "latestCommitAt": "2026-09-19"
+      "latestCommitAt": "2026-09-19",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://kith.significanthobbies.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "rolepatch",
       "name": "RolePatch",
       "description": "A guest resume-tailoring experiment with a reviewable diff and browser-local document exports.",
+      "form": "Web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "Next.js",
+        "React",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "current",
       "makerNote": "I wanted a focused way to tailor a resume and its supporting material to the actual job description.",
       "purposeContract": {
         "purpose": "RolePatch tailors a resume and supporting application material to the evidence and language of a specific job.",
@@ -882,18 +1063,6 @@
       },
       "kind": "product",
       "category": "utility",
-      "form": "Web app",
-      "platforms": [
-        "Web",
-        "API"
-      ],
-      "technologies": [
-        "Next.js",
-        "React",
-        "Cloudflare Workers",
-        "D1"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -908,12 +1077,28 @@
       "changelogUrl": "https://rolepatch.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/rolepatch/issues",
       "firstCommitAt": "2026-02-23",
-      "latestCommitAt": "2026-09-22"
+      "latestCommitAt": "2026-09-22",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://rolepatch.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "karte",
       "name": "Karte",
       "description": "A creator-owned public profile that answers visitor questions and preserves context for better inbound.",
+      "form": "Web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "Next.js",
+        "React",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "current",
       "makerNote": "I wanted a link-in-bio surface that could grow into something more personal: a greeting card, profile, and small agent.",
       "purposeContract": {
         "purpose": "Karte gives a creator or independent operator a public profile that answers visitor questions and preserves context for better inbound.",
@@ -935,18 +1120,6 @@
       },
       "kind": "product",
       "category": "utility",
-      "form": "Web app",
-      "platforms": [
-        "Web",
-        "API"
-      ],
-      "technologies": [
-        "Next.js",
-        "React",
-        "Cloudflare Workers",
-        "D1"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -962,12 +1135,28 @@
       "changelogUrl": "https://karte.cc/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/karte/issues",
       "firstCommitAt": "2026-03-05",
-      "latestCommitAt": "2026-09-22"
+      "latestCommitAt": "2026-09-22",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://karte.cc",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "starboard",
       "name": "Starboard",
       "description": "Explore public GitHub repositories and related projects through a searchable discovery experiment.",
+      "form": "Web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "Next.js",
+        "React",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "current",
       "makerNote": "GitHub Stars stopped working for me at scale, so I built a better personal interface for exploring what I had saved.",
       "purposeContract": {
         "purpose": "Starboard makes a large GitHub Stars collection useful for personal exploration and project-aware tool discovery.",
@@ -989,18 +1178,6 @@
       },
       "kind": "product",
       "category": "utility",
-      "form": "Web app",
-      "platforms": [
-        "Web",
-        "API"
-      ],
-      "technologies": [
-        "Next.js",
-        "React",
-        "Cloudflare Workers",
-        "D1"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -1015,12 +1192,55 @@
       "changelogUrl": "https://starboard.codevetter.com/changelog",
       "roadmapUrl": "https://github.com/Codevetter/starboard/issues",
       "firstCommitAt": "2026-02-22",
-      "latestCommitAt": "2026-09-22"
+      "latestCommitAt": "2026-09-22",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://starboard.codevetter.com",
+      "publicUrlLabel": "Visit website"
+    },
+    {
+      "id": "ai-game",
+      "name": "AliveVille",
+      "description": "Persistent AI world and multi-agent simulation experiments.",
+      "form": "Web game",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "React",
+        "Vite",
+        "Three.js",
+        "Cloudflare"
+      ],
+      "group": "current",
+      "makerNote": "I wanted to create a long-running world where AI characters remember, form grudges, make choices, and live through open-ended conflict.",
+      "purposeContract": {
+        "purpose": "AliveVille explores a playable world where AI characters remember, form relationships and grudges, and act through persistent conflict.",
+        "audience": "Players drawn to open-ended agent worlds rather than a demonstration of model APIs.",
+        "outcome": "Feel that a small town and its characters remain alive, consequential, and worth returning to.",
+        "mechanism": "A persistent simulation combines autonomous NPC memory, quests, dialogue, combat, and a browser-playable 3D town."
+      },
+      "roster": "current",
+      "availability": "preview-not-qualified",
+      "publicUrl": "https://aliveville.com",
+      "publicUrlLabel": "Preview site"
     },
     {
       "id": "app-health",
       "name": "App Health",
       "description": "Web analytics, product events, logs, and endpoint health in one workspace.",
+      "form": "Product analytics and monitoring service",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "React",
+        "shadcn/ui",
+        "Cloudflare Workers",
+        "Swift"
+      ],
+      "group": "current",
       "makerNote": "I built App Health because checking Sentry, PostHog, Slack, and cloud consoles separately made basic product health too fragmented.",
       "purposeContract": {
         "purpose": "App Health helps product teams understand web traffic, intentional user actions, and application health across their projects.",
@@ -1042,18 +1262,6 @@
       },
       "kind": "product",
       "category": "utility",
-      "form": "Product analytics and monitoring service",
-      "platforms": [
-        "Web",
-        "API"
-      ],
-      "technologies": [
-        "React",
-        "shadcn/ui",
-        "Cloudflare Workers",
-        "Swift"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -1069,12 +1277,57 @@
       "changelogUrl": "https://health.sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/app-health/issues",
       "firstCommitAt": "2026-07-20",
-      "latestCommitAt": "2026-09-19"
+      "latestCommitAt": "2026-09-19",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://health.sassmaker.com",
+      "publicUrlLabel": "Visit website"
+    },
+    {
+      "id": "motion",
+      "name": "Motion",
+      "description": "An unreleased iPhone motion-control game prototype that mirrors to a larger screen; physical-device control feel and gameplay remain unverified.",
+      "form": "iOS game",
+      "platforms": [
+        "iOS",
+        "iPadOS",
+        "Web"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "Apple Vision",
+        "Vite",
+        "TypeScript"
+      ],
+      "group": "current",
+      "makerNote": "I wanted body movement captured by a phone to become playful games on a television—and a workout without feeling like one.",
+      "purposeContract": {
+        "purpose": "Motion turns body movement seen by an iPhone into the controls for playful games on a larger screen.",
+        "audience": "People who want active, social play without buying a dedicated motion-console system.",
+        "outcome": "Move, play, and exercise through a game that responds directly to the body.",
+        "mechanism": "The iPhone performs body tracking and hosts the game while mirroring the experience to a television or larger display."
+      },
+      "roster": "current",
+      "availability": "unreleased-prototype",
+      "publicUrl": "https://motion.significanthobbies.com",
+      "publicUrlLabel": "Landing page"
     },
     {
       "id": "web-playables",
       "name": "Web Playables",
       "description": "Small browser-playable game experiments.",
+      "form": "Game collection",
+      "platforms": [
+        "Web",
+        "YouTube Playables"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Vite",
+        "Cloudflare Pages",
+        "Cloudflare Workers"
+      ],
+      "group": "current",
       "makerNote": "I built this laboratory to understand how idle and HTML-based games are designed, shipped, and distributed.",
       "purposeContract": {
         "purpose": "Web Playables is a small laboratory for learning how browser and YouTube-ready games are designed, packaged, and distributed.",
@@ -1096,18 +1349,6 @@
       },
       "kind": "experiment",
       "category": "experimental",
-      "form": "Game collection",
-      "platforms": [
-        "Web",
-        "YouTube Playables"
-      ],
-      "technologies": [
-        "TypeScript",
-        "Vite",
-        "Cloudflare Pages",
-        "Cloudflare Workers"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -1124,12 +1365,26 @@
       "changelogUrl": "https://idle.aliveville.com/changelog",
       "roadmapUrl": "https://github.com/sarthakagrawal927/web-playables/issues",
       "firstCommitAt": "2026-07-10",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-07",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://idle.aliveville.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "what-it-takes-to-win",
       "name": "Paths",
       "description": "Explore sourced career turning points with explicit survivorship and forecasting limits.",
+      "form": "Research publication",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Astro",
+        "TypeScript",
+        "Cloudflare Pages"
+      ],
+      "group": "current",
       "makerNote": "I wanted to study the real advantages behind success and replace unhelpful comparison with evidence-based understanding.",
       "purposeContract": {
         "purpose": "Look Sideways shows why visible success cannot be reduced to a simple formula or a fair comparison with your own path.",
@@ -1151,16 +1406,6 @@
       },
       "kind": "product",
       "category": "media",
-      "form": "Research publication",
-      "platforms": [
-        "Web"
-      ],
-      "technologies": [
-        "Astro",
-        "TypeScript",
-        "Cloudflare Pages"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -1175,12 +1420,27 @@
       "changelogUrl": "https://paths.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win/issues",
       "firstCommitAt": "2026-07-21",
-      "latestCommitAt": "2026-09-22"
+      "latestCommitAt": "2026-09-22",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://paths.significanthobbies.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "sarthakagrawal-personal",
       "name": "Sarthak Agrawal",
       "description": "Selected engineering case studies, technical writing and working project demonstrations.",
+      "form": "Portfolio website",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Astro",
+        "React",
+        "Cloudflare Pages",
+        "IssuePages"
+      ],
+      "group": "current",
       "makerNote": "I maintain a personal website because I need one durable, accurate public record of my work and professional identity.",
       "purposeContract": {
         "purpose": "Sarthak Agrawal’s personal site is the durable public record of his work, writing, résumé, and professional identity.",
@@ -1202,17 +1462,6 @@
       },
       "kind": "product",
       "category": "media",
-      "form": "Portfolio website",
-      "platforms": [
-        "Web"
-      ],
-      "technologies": [
-        "Astro",
-        "React",
-        "Cloudflare Pages",
-        "IssuePages"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -1227,12 +1476,30 @@
       "changelogUrl": "https://sarthakagrawal.dev/changelog",
       "roadmapUrl": "https://github.com/sarthakagrawal927/portfolio/issues",
       "firstCommitAt": "2026-05-22",
-      "latestCommitAt": "2026-09-19"
+      "latestCommitAt": "2026-09-19",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://sarthakagrawal.dev",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "anchor",
       "name": "Anchor",
       "description": "A local-first day planner and focus timer for Mac, iPhone, and Apple Watch that explains the gap between the schedule you planned and the day you lived.",
+      "form": "Apple app",
+      "platforms": [
+        "macOS",
+        "iOS",
+        "watchOS",
+        "Web"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "SwiftData",
+        "CloudKit",
+        "Foundation Models"
+      ],
+      "group": "current",
       "makerNote": "I wanted a realistic daily planner that could help me follow the day and explain why the lived plan diverged from the intended one.",
       "logoUrl": "/images/project-icons/anchor.png",
       "purposeContract": {
@@ -1255,20 +1522,6 @@
       },
       "kind": "product",
       "category": "utility",
-      "form": "Apple app",
-      "platforms": [
-        "macOS",
-        "iOS",
-        "watchOS",
-        "Web"
-      ],
-      "technologies": [
-        "SwiftUI",
-        "SwiftData",
-        "CloudKit",
-        "Foundation Models"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -1284,12 +1537,29 @@
       "changelogUrl": "https://anchor.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/anchor/issues",
       "firstCommitAt": "2026-08-16",
-      "latestCommitAt": "2026-09-18"
+      "latestCommitAt": "2026-09-18",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://anchor.significanthobbies.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "storagedaddy",
       "name": "storagedaddy",
       "description": "An open-source native Mac storage analyzer for developer caches, builds, dependencies and AI session archives, with reviewed cleanup. Free during early access.",
+      "form": "macOS app",
+      "platforms": [
+        "macOS",
+        "Web"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "Rust",
+        "Cloudflare Workers",
+        "Sparkle",
+        "Astro"
+      ],
+      "group": "current",
       "makerNote": "I am building a native Mac storage analyzer that makes disk usage clear and cleanup easy to review.",
       "purposeContract": {
         "purpose": "storagedaddy helps developers understand and review local storage through a native visual scanner, developer classifications and verified, deliberate cleanup.",
@@ -1311,19 +1581,6 @@
       },
       "kind": "experiment",
       "category": "utility",
-      "form": "macOS app",
-      "platforms": [
-        "macOS",
-        "Web"
-      ],
-      "technologies": [
-        "SwiftUI",
-        "Rust",
-        "Cloudflare Workers",
-        "Sparkle",
-        "Astro"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -1338,12 +1595,29 @@
       "repositoryUrl": "https://github.com/Significant-Hobbies/storagedaddy",
       "roadmapUrl": "https://github.com/Significant-Hobbies/storagedaddy/issues",
       "firstCommitAt": "2026-09-13",
-      "latestCommitAt": "2026-09-20"
+      "latestCommitAt": "2026-09-20",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://storage.daddyrad.com/",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "browserdaddy",
       "name": "BrowserDaddy",
       "description": "A local-first Mac browsing intelligence app for a unified history archive and real attention tracking.",
+      "form": "macOS app",
+      "platforms": [
+        "macOS",
+        "Web"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "SQLite",
+        "Astro",
+        "Cloudflare Workers",
+        "Sparkle"
+      ],
+      "group": "current",
       "makerNote": "I am building a local-first Mac browsing intelligence app that turns browser history and attention into an inspectable archive.",
       "purposeContract": {
         "purpose": "BrowserDaddy helps people understand their browsing history and attention locally across browsers.",
@@ -1365,19 +1639,6 @@
       },
       "kind": "experiment",
       "category": "utility",
-      "form": "macOS app",
-      "platforms": [
-        "macOS",
-        "Web"
-      ],
-      "technologies": [
-        "SwiftUI",
-        "SQLite",
-        "Astro",
-        "Cloudflare Workers",
-        "Sparkle"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -1393,12 +1654,29 @@
       "repositoryUrl": "https://github.com/Significant-Hobbies/browserdaddy",
       "roadmapUrl": "https://github.com/Significant-Hobbies/browserdaddy/issues",
       "firstCommitAt": "2026-09-19",
-      "latestCommitAt": "2026-09-22"
+      "latestCommitAt": "2026-09-22",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://browser.daddyrad.com/",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "performancedaddy",
       "name": "PerformanceDaddy",
       "description": "A local Mac performance investigator for background apps, helpers and developer workloads, with measured evidence and reviewed actions.",
+      "form": "macOS app",
+      "platforms": [
+        "macOS",
+        "Web"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "AppKit",
+        "Astro",
+        "Cloudflare Workers",
+        "Sparkle"
+      ],
+      "group": "current",
       "makerNote": "I am building a local Mac performance investigator that makes process, port and slowdown evidence easier to review.",
       "purposeContract": {
         "purpose": "PerformanceDaddy helps developers inspect local processes, ports and measured slowdown signals before taking action.",
@@ -1420,19 +1698,6 @@
       },
       "kind": "experiment",
       "category": "utility",
-      "form": "macOS app",
-      "platforms": [
-        "macOS",
-        "Web"
-      ],
-      "technologies": [
-        "SwiftUI",
-        "AppKit",
-        "Astro",
-        "Cloudflare Workers",
-        "Sparkle"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -1448,12 +1713,134 @@
       "repositoryUrl": "https://github.com/Significant-Hobbies/performancedaddy",
       "roadmapUrl": "https://github.com/Significant-Hobbies/performancedaddy/issues",
       "firstCommitAt": "2026-09-20",
-      "latestCommitAt": "2026-09-23"
+      "latestCommitAt": "2026-09-23",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://performance.daddyrad.com/",
+      "publicUrlLabel": "Visit website"
+    },
+    {
+      "id": "unified-portfolio",
+      "name": "Unified Portfolio",
+      "description": "Private read-only investment observability.",
+      "form": "Web app with private user workspaces",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Cloudflare Workers",
+        "D1",
+        "Next.js / vinext",
+        "MCP"
+      ],
+      "group": "current",
+      "makerNote": "my private normalized view of personal investments across brokers.",
+      "purposeContract": {
+        "purpose": "Unified Portfolio helps people understand their own investments through an isolated read-only portfolio.",
+        "audience": "People signed in with Google, each accessing only their own investments.",
+        "outcome": "Understand holdings, allocation, portfolio history and connection freshness without trading.",
+        "mechanism": "Official broker adapters and an INDmoney MCP client feed immutable normalized snapshots shared by the web dashboard and read-only MCP tools."
+      },
+      "roster": "current",
+      "availability": "internal-private"
+    },
+    {
+      "id": "meme-lab",
+      "name": "Meme Lab",
+      "description": "A public tool that ranks 3,000 reaction memes for a comment; its Anna review candidate also creates personal photo memes with private saves and PNG downloads.",
+      "form": "Local experiment, Worker playground and Anna review candidate",
+      "platforms": [
+        "Web",
+        "Local"
+      ],
+      "technologies": [
+        "Cloudflare Workers",
+        "Workers AI",
+        "Vectorize",
+        "D1",
+        "Anna SDK"
+      ],
+      "group": "current",
+      "makerNote": "I built Meme Lab to test whether a model can pick the right reaction meme for a comment, with a public playground for feedback.",
+      "purposeContract": {
+        "purpose": "Turn one pasted comment or situation into a useful meme immediately.",
+        "audience": "People selecting reactions for everyday conversations; the owner evaluates selection quality.",
+        "outcome": "Return the best meme first, with four scored alternatives across distinct perspectives when available.",
+        "mechanism": "A corrected 3,000-reference catalogue uses dual-view BGE embeddings and Vectorize to retrieve 30 candidates, then Jev rates tone, social fit, and distinct perspectives. GIF results load their full animated asset while the searchable collection uses lightweight still previews. The Anna review candidate uses the same shortlist with Anna-hosted contextual ranking and private saved reactions; it shares stable reference links without submitted situations. Anna version 1.2.0 adds user-supplied static templates and identity photos, one host image request, paired review, private generated-output storage and host PNG downloads."
+      },
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://memes.significanthobbies.com",
+      "publicUrlLabel": "Visit website"
+    },
+    {
+      "id": "nutrition-formula-engine",
+      "name": "Formula Composition Engine",
+      "description": "A browser-first formulation tool that converts reviewed batch formulas into traceable theoretical composition reports.",
+      "form": "Formulation analysis web app",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Python",
+        "Cloudflare Workers",
+        "Cloudflare D1",
+        "Vite",
+        "Tesseract.js"
+      ],
+      "group": "current",
+      "makerNote": "I built this to turn mixed-format batch formulas into traceable composition drafts while keeping uncertain ingredient identities visible and correctable.",
+      "purposeContract": {
+        "purpose": "Formula Composition Engine converts reviewed manufacturing formulas into theoretical macro, micronutrient, active-moiety, preservative, and missing-evidence reports.",
+        "audience": "Food, nutraceutical, supplement, and medicinal-product formulation teams preparing composition work before label and regulatory review.",
+        "outcome": "Recover a mixed-format formula, correct ambiguous rows and identities, and export a traceable non-zero composition report.",
+        "mechanism": "Browser-local parsing and OCR feed a mandatory review step, then a Decimal-based Worker resolves versioned ingredient profiles, calculates normalized totals, ranges, coverage, and assumptions, and stores explicit saves in one public D1 history shared by every device."
+      },
+      "roster": "current",
+      "availability": "internal-private"
+    },
+    {
+      "id": "every-song-is-a-website",
+      "name": "Every Song Is a Website",
+      "description": "A playful static site where each of 143 songs gets its own interactive visual world — old desktop, picnic blanket, acid poster, neon night, or scrapbook page — with embedded video and licensed lyrics.",
+      "form": "Static website",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "Cloudflare Workers"
+      ],
+      "group": "current",
+      "makerNote": "Built as a visual experiment: a composition system of themes, artifacts, and behaviours where each song becomes a tiny interactive world.",
+      "purposeContract": {
+        "purpose": "Every Song Is a Website gives each song a curated visual world — a shareable URL with embedded video, licensed lyrics, and playful interactions.",
+        "audience": "Anyone who loves music and the web.",
+        "outcome": "Browse 143 songs as interactive themed worlds.",
+        "mechanism": "Static registry + theme skins (desktop, picnic, kinetic) + seeded layouts; YouTube and Genius embeds supply media and lyrics."
+      },
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://music.significanthobbies.com",
+      "publicUrlLabel": "Visit website"
     },
     {
       "id": "contextdaddy",
       "name": "ContextDaddy",
       "description": "A native Mac workspace for coding-agent skills, context, usage and telemetry, with a unified skill library, explicit local changes, and recovery history.",
+      "form": "macOS app",
+      "platforms": [
+        "macOS",
+        "Web"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "Astro",
+        "Cloudflare Workers"
+      ],
+      "group": "current",
       "makerNote": "ContextDaddy is supposed to handle all things AI agents locally (context, skills, usage, otel etc) to help debug/speed up",
       "purposeContract": {
         "purpose": "Help developers inspect coding-agent context, skill exposure, usage, and available local telemetry.",
@@ -1475,17 +1862,6 @@
       },
       "kind": "product",
       "category": "utility",
-      "form": "macOS app",
-      "platforms": [
-        "macOS",
-        "Web"
-      ],
-      "technologies": [
-        "SwiftUI",
-        "Astro",
-        "Cloudflare Workers"
-      ],
-      "group": "current",
       "lifecycle": "active",
       "shareable": true,
       "deployed": true,
@@ -1500,141 +1876,762 @@
       "repositoryUrl": "https://github.com/Significant-Hobbies/contextdaddy",
       "roadmapUrl": "https://github.com/Significant-Hobbies/contextdaddy/issues",
       "firstCommitAt": "2026-09-13",
-      "latestCommitAt": "2026-09-26"
+      "latestCommitAt": "2026-09-26",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://context.daddyrad.com/",
+      "publicUrlLabel": "Visit website"
     },
     {
-      "id": "ai-badges",
-      "name": "AI Badges",
-      "description": "Embeddable README badges for declaring AI contribution and welcoming AI-assisted pull requests.",
-      "makerNote": "Finished experiment; the existing badge endpoints remain available to try.",
+      "id": "agent-inbox",
+      "name": "Agent Inbox",
+      "description": "A local inbox for coding-agent status, attention requests and verified conversation replies.",
+      "form": "Local macOS app",
+      "platforms": [
+        "macOS",
+        "Local"
+      ],
+      "technologies": [
+        "Electron",
+        "TypeScript",
+        "Swift"
+      ],
+      "group": "current",
+      "makerNote": "I want a local inbox that shows which coding agents need me and lets me reach the correct conversation.",
       "purposeContract": {
-        "purpose": "Embeddable README badges for declaring AI contribution and welcoming AI-assisted pull requests.",
-        "audience": "Maintainers who want visible AI-use declarations in repository READMEs.",
-        "outcome": "Embed a badge representing an explicit AI-use declaration.",
-        "mechanism": "Public HTTP endpoints render the requested declaration as SVG.",
-        "proof": "The public homepage and documented percentage and AI-PR SVG endpoints returned successful responses.",
-        "nextAction": "Copy a documented badge example into a README."
+        "purpose": "Notice local coding-agent work that needs attention and reply through a verified connection.",
+        "audience": "The owner running local Claude Code and Codex conversations.",
+        "outcome": "Find the correct live conversation, review its status and respond to requests without confusing transcripts with live sessions.",
+        "mechanism": "A local inbox, floating pill and bounded lifecycle metadata connect observed agents to verified conversation transports or host-app handoff."
       },
-      "kind": "experiment",
-      "category": "utility",
-      "form": "Badge service",
+      "roster": "current",
+      "availability": "internal-private"
+    },
+    {
+      "id": "techdata",
+      "name": "techdata",
+      "description": "A public, read-only data workbench: Nomad Atlas places, High Signal Podcasts claims, Reddit Insights, Research Papers and the full Product Hunt catalogue in one console with ⌘K search, filters, comparison and provenance-carrying exports.",
+      "form": "Public data workbench",
       "platforms": [
         "Web"
       ],
       "technologies": [
-        "HTML",
-        "SVG"
+        "Astro",
+        "React",
+        "Cloudflare Workers",
+        "Hono",
+        "SaaS Maker UI"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
-      "shareable": true,
-      "deployed": false,
-      "deploymentProviders": [],
-      "domains": [],
-      "url": "https://github.com/sarthakagrawal927/ai-badges",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/ai-badges",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/ai-badges/issues"
+      "group": "current",
+      "makerNote": "A public, read-only data workbench: Nomad Atlas places, High Signal Podcasts claims, Reddit Insights, Research Papers and the full Product Hunt catalogue in one console with ⌘K search, filters, comparison and provenance-carrying exports.",
+      "purposeContract": {
+        "purpose": "One public, indexable entry point to browse, search and export the owner's data collections with source provenance; content duplicates the five source sites, which stay live until the owner retires them.",
+        "audience": "Anyone browsing these public datasets.",
+        "outcome": "Answer questions across the data collections from one console without losing source provenance.",
+        "mechanism": "Astro and React islands on one Worker with Hono /api routes and one read-only adapter per collection; every response carries provenance."
+      },
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://data.highsignal.app",
+      "publicUrlLabel": "Visit website"
+    }
+  ],
+  "archivedDirectory": [
+    {
+      "id": "gitstat",
+      "name": "GitStat",
+      "description": "An experimental public GitHub analysis tool for repository activity, contributions and code churn.",
+      "form": "Web app",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "React",
+        "Vite",
+        "TypeScript",
+        "Cloudflare Pages"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/gitstat"
     },
     {
-      "id": "pinpoint",
-      "name": "Pinpoint",
-      "description": "A local developer preview for selecting an app element, attaching a comment and handing context to a coding agent.",
-      "makerNote": "Finished experiment shared through its runnable local demo and source.",
-      "purposeContract": {
-        "purpose": "A local developer preview for selecting an app element, attaching a comment and handing context to a coding agent.",
-        "audience": "Developers giving UI-specific feedback to coding agents.",
-        "outcome": "Attach feedback to a selected element in a running demo.",
-        "mechanism": "A browser feedback surface connects element context with a local development workflow.",
-        "proof": "16 tests pass and the documented local demo serves successfully; broad framework support is not claimed.",
-        "nextAction": "Install the repository dependencies and run the documented demo."
-      },
-      "kind": "experiment",
-      "category": "utility",
-      "form": "Developer tool",
+      "id": "reel-pipeline",
+      "name": "Reel Pipeline",
+      "description": "A cost-bounded pipeline for planning, producing, and retaining short-form video artifacts.",
+      "form": "Video pipeline",
+      "platforms": [
+        "CLI",
+        "API",
+        "Local"
+      ],
+      "technologies": [
+        "Python",
+        "Rust",
+        "Cloudflare Workers",
+        "R2"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/reel-pipeline"
+    },
+    {
+      "id": "mobile-dev-cockpit",
+      "name": "Mobile Dev Cockpit",
+      "description": "A parked mobile supervision client retained for possible future reactivation.",
+      "form": "Mobile app",
+      "platforms": [
+        "iOS",
+        "Android"
+      ],
+      "technologies": [
+        "React Native",
+        "TypeScript"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/mobile-dev-cockpit"
+    },
+    {
+      "id": "drank",
+      "name": "DRank",
+      "description": "Domain Rating intelligence for product, SEO, and market research.",
+      "form": "Web tool",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Cloudflare Pages"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/drank"
+    },
+    {
+      "id": "email-manager",
+      "name": "Kinetic",
+      "description": "A private Gmail workspace for local semantic search, sender insights, and explicit unsubscribe workflows.",
+      "form": "Web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "React",
+        "Hono",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/email-manager"
+    },
+    {
+      "id": "psi-swarm",
+      "name": "PSI Swarm",
+      "description": "Source-installed local Lighthouse audits with saved history; use the documented source setup, not the older packaged release.",
+      "form": "Local performance tool",
+      "platforms": [
+        "Web",
+        "CLI"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Lighthouse",
+        "SQLite",
+        "Astro"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/psi-swarm"
+    },
+    {
+      "id": "on-record",
+      "name": "High Signal Podcasts",
+      "description": "Search evidenced podcast claims and follow links back to the original episode or publication.",
+      "form": "Podcast intelligence web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "Astro",
+        "Hono",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/on-record"
+    },
+    {
+      "id": "issue-pages",
+      "name": "IssuePages",
+      "description": "Read public GitHub issues as focused articles; publishing requires repository-owner access.",
+      "form": "Issue-backed publishing website",
+      "platforms": [
+        "Web",
+        "GitHub"
+      ],
+      "technologies": [
+        "Hono",
+        "TypeScript",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/issue-pages"
+    },
+    {
+      "id": "everythingrated",
+      "name": "EverythingRated",
+      "description": "A ratings experiment for comparing AI developer tools, with visible small-sample counts and shareable weighting.",
+      "form": "Ratings experiment",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Astro",
+        "Next.js",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/everythingrated"
+    },
+    {
+      "id": "research-papers",
+      "name": "Research Papers",
+      "description": "Search academic papers and follow original sources; account-based research chat is not yet qualified.",
+      "form": "Research library",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Astro",
+        "Python",
+        "React",
+        "TypeScript"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/research-papers"
+    },
+    {
+      "id": "materia",
+      "name": "Materia",
+      "description": "An educational body-and-remedy reference with condition-specific research citations and explicit uncertainty.",
+      "form": "Interactive experiment",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Astro",
+        "React",
+        "Three.js",
+        "Cloudflare Pages"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/materia"
+    },
+    {
+      "id": "india-standards",
+      "name": "India Standards",
+      "description": "A transparent India demographic standards calculator using aggregate PLFS data, explicit uncertainty ranges, and clear source limits.",
+      "form": "Reference web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Cloudflare Workers"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/india-standards"
+    },
+    {
+      "id": "chess",
+      "name": "Chess Coach",
+      "description": "Browser chess against Stockfish with optional AI move coaching.",
+      "form": "Web game",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Astro",
+        "React",
+        "Vite",
+        "Cloudflare Pages"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/chess"
+    },
+    {
+      "id": "journal",
+      "name": "Journal",
+      "description": "A private iPhone journal for daily writing, reflection, and a personal archive that stays under the owner's control.",
+      "form": "iOS app",
+      "platforms": [
+        "iOS",
+        "Web"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "Swift",
+        "XcodeGen",
+        "Astro"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/journal"
+    },
+    {
+      "id": "ios-landings",
+      "name": "iOS landings",
+      "description": "Retained native-app landing and journal factory inside UI Library; product artwork, content, checks and existing deploy targets are preserved.",
+      "form": "Retained landing factory inside UI Library",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Astro",
+        "SaaS Maker UI",
+        "Cloudflare Pages"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/ios-landings"
+    },
+    {
+      "id": "protein-index",
+      "name": "Protein Index",
+      "description": "Explore dated nutrition records with original label links, observation dates and explicit verification limits.",
+      "form": "Data API and web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "React",
+        "Hono",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/protein-index"
+    },
+    {
+      "id": "veg-protein-food",
+      "name": "Recipe Index",
+      "description": "Search vegetarian recipes by protein and calories, with links to the original recipe publishers.",
+      "form": "Food directory",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Astro",
+        "Cloudflare Pages"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/veg-protein-food"
+    },
+    {
+      "id": "mashup",
+      "name": "Mashup",
+      "description": "Two playable examples of a local media-editing pipeline, with captions and inspectable source and approval receipts.",
+      "form": "Local media tool with public proof",
+      "platforms": [
+        "Web",
+        "CLI",
+        "Local"
+      ],
+      "technologies": [
+        "Python",
+        "FFmpeg",
+        "Astro",
+        "Cloudflare Pages"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/mashup"
+    },
+    {
+      "id": "truehire",
+      "name": "TrueHire",
+      "description": "Earlier resume and hiring workflow superseded by RolePatch.",
+      "form": "Hiring experiment",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Cloudflare"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/truehire"
+    },
+    {
+      "id": "open-historia",
+      "name": "Open Historia",
+      "description": "Interactive historical storytelling and world simulation.",
+      "form": "Strategy web game",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "React",
+        "Vite",
+        "Hono",
+        "Cloudflare Workers"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/open-historia"
+    },
+    {
+      "id": "ph-catalog",
+      "name": "PH Catalog",
+      "description": "A resumable local Product Hunt catalogue and analytics experiment with a privacy-safe synthetic demo.",
+      "form": "Local catalogue and analytics toolkit",
+      "platforms": [
+        "CLI",
+        "Local",
+        "Web"
+      ],
+      "technologies": [
+        "Python",
+        "DuckDB",
+        "Parquet"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/ph-catalog"
+    },
+    {
+      "id": "companion-robot",
+      "name": "Companion Robot",
+      "description": "Earlier companion robotics and embodied-agent exploration.",
+      "form": "Hardware experiment",
+      "platforms": [
+        "iOS",
+        "macOS",
+        "ESP32"
+      ],
+      "technologies": [
+        "Swift",
+        "Apple Vision",
+        "ESP32",
+        "Local AI"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/companion-robot"
+    },
+    {
+      "id": "forecast-lab",
+      "name": "Forecast Lab",
+      "description": "Forecasting experiments and evaluation tooling.",
+      "form": "Research toolkit",
+      "platforms": [
+        "CLI",
+        "Web"
+      ],
+      "technologies": [
+        "Rust",
+        "Python",
+        "PyTorch",
+        "React",
+        "Vite"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/forecast-lab"
+    },
+    {
+      "id": "agent-office",
+      "name": "Office OS",
+      "description": "A local-first Mac workplace where named AI employees have bounded responsibilities and their work stays inspectable.",
+      "form": "macOS app",
+      "platforms": [
+        "macOS",
+        "Local"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "SpriteKit",
+        "Codex CLI"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/agent-office"
+    },
+    {
+      "id": "local-ai-video-studio",
+      "name": "Local AI Video Studio",
+      "description": "A local-first Mac studio for comparing reproducible video-effect variants before export.",
+      "form": "macOS app",
+      "platforms": [
+        "macOS",
+        "Local"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "AVFoundation",
+        "Core Image",
+        "VideoToolbox"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/local-ai-video-studio"
+    },
+    {
+      "id": "field-track",
+      "name": "Field Track",
+      "description": "A labelled synthetic field-team demo for exploring routes, visits and agent summaries; Android tracking is not qualified.",
+      "form": "Android app and dashboard",
+      "platforms": [
+        "Android",
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "React Native",
+        "MapLibre",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/field-track"
+    },
+    {
+      "id": "reddit-insights",
+      "name": "Reddit Insights",
+      "description": "Search a dated snapshot of 93 Reddit communities in your browser, with links to original posts and explicit provenance limits.",
+      "form": "Research collector",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Cloudflare Workers",
+        "R2"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/reddit-insights"
+    },
+    {
+      "id": "verified-bases",
+      "name": "Verified Bases",
+      "description": "A retained research-data identity with no retained local Git history or standalone public destination.",
+      "form": "Research dataset",
+      "platforms": [
+        "GitHub"
+      ],
+      "technologies": [
+        "Markdown",
+        "Git"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/verified-bases"
+    },
+    {
+      "id": "nomad-data-adventure",
+      "name": "Nomad Data Adventure",
+      "description": "Nomad Atlas explores 1,374 terrestrial places with living-cost profiles, lifestyle filters, city comparisons and downloadable source data credited to Nomads.com.",
+      "form": "Static city explorer",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Cloudflare Pages",
+        "JavaScript",
+        "HTML",
+        "CSS"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/nomad-data-adventure"
+    },
+    {
+      "id": "slow-serp",
+      "name": "Slow SERP",
+      "description": "A private HTTP-first crawler and paced search service with bounded Chrome fallback.",
+      "form": "Local service and CLI",
+      "platforms": [
+        "macOS",
+        "Local"
+      ],
+      "technologies": [
+        "Node.js",
+        "Cheerio",
+        "Playwright"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/slow-serp"
+    },
+    {
+      "id": "shoulders",
+      "name": "Shoulders",
+      "description": "An editorial exploration of software foundations. Cancelled local prototype.",
+      "form": "Static technical explainer",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Astro",
+        "TypeScript"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/shoulders"
+    },
+    {
+      "id": "agent-testing",
+      "name": "Browser Agent Testing",
+      "description": "A completed local web and iOS experiment comparing browser-agent strategies with independent verification.",
+      "form": "Completed benchmark and static guide",
+      "platforms": [
+        "Web",
+        "iOS",
+        "CLI"
+      ],
+      "technologies": [
+        "Node.js",
+        "Cloudflare Workers",
+        "Playwright",
+        "Maestro"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/agent-testing"
+    },
+    {
+      "id": "scale",
+      "name": "Scale",
+      "description": "The original standalone Scale idle-game prototype, superseded by the game inside SWE Interview Prep.",
+      "form": "Idle game prototype",
       "platforms": [
         "Web",
         "Local"
+      ],
+      "technologies": [
+        "Vite",
+        "TypeScript"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/scale"
+    },
+    {
+      "id": "war-chest",
+      "name": "War Chest",
+      "description": "An experimental local tactical war game.",
+      "form": "Local macOS game",
+      "platforms": [
+        "macOS",
+        "Local"
+      ],
+      "technologies": [
+        "Godot",
+        "GDScript"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/war-chest"
+    },
+    {
+      "id": "mentionpilot",
+      "name": "MentionPilot",
+      "description": "Evidence-first visibility research across AI answers and selected community signals.",
+      "form": "Web intelligence workspace",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "Next.js",
+        "Cloudflare Workers",
+        "D1",
+        "Drizzle",
+        "Better Auth"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/mentionpilot"
+    },
+    {
+      "id": "daddyrad",
+      "name": "DaddyRad",
+      "description": "Series home and a local read-only MCP source preview for performance, storage, browser rules and agent context.",
+      "form": "website",
+      "platforms": [
+        "Web",
+        "macOS"
+      ],
+      "technologies": [
+        "Swift",
+        "MCP",
+        "Cloudflare Workers"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/daddyrad"
+    },
+    {
+      "id": "digital-life",
+      "name": "Digital Life",
+      "description": "A bounded experimental world of resource-conserving bytecode organisms.",
+      "form": "Local research sandbox",
+      "platforms": [
+        "Node.js",
+        "Web"
       ],
       "technologies": [
         "JavaScript",
         "Node.js"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
-      "shareable": true,
-      "deployed": false,
-      "deploymentProviders": [],
-      "domains": [],
-      "url": "https://github.com/sarthakagrawal927/pinpoint",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/pinpoint",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/pinpoint/issues"
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/digital-life"
     },
     {
-      "id": "port-whisperer",
-      "name": "Port Whisperer",
-      "description": "A command-line port scanner with framework detection and structured output for local development.",
-      "makerNote": "Finished utility experiment shared through its source and reproducible CLI workflow.",
-      "purposeContract": {
-        "purpose": "A command-line port scanner with framework detection and structured output for local development.",
-        "audience": "Developers identifying services listening on their own machine.",
-        "outcome": "Inspect listening ports and retrieve structured service information.",
-        "mechanism": "A Rust command-line scanner produces human-readable and JSON port data.",
-        "proof": "62 tests pass and the JSON command produced live local port data.",
-        "nextAction": "Follow the README installation instructions and run a local scan."
-      },
-      "kind": "experiment",
-      "category": "utility",
-      "form": "CLI tool",
+      "id": "human-v2",
+      "name": "Human V2",
+      "description": "One-page body experiments with a locally qualified coupled physiology engine, simultaneous mechanisms and explicit yearly/fatal prediction limits.",
+      "form": "Browser optimization arena",
       "platforms": [
-        "CLI",
-        "Local"
+        "Web"
       ],
       "technologies": [
-        "Rust"
+        "React",
+        "TypeScript",
+        "Pulse Physiology Engine",
+        "Node.js"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
-      "shareable": true,
-      "deployed": false,
-      "deploymentProviders": [],
-      "domains": [],
-      "url": "https://github.com/sarthakagrawal927/port-whisperer",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/port-whisperer",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/port-whisperer/issues"
-    },
-    {
-      "id": "society-relay",
-      "name": "Society Relay",
-      "description": "A fixture-driven community repair-planning experiment with human approval, work orders and calendar export.",
-      "makerNote": "Finished experiment shared as a reproducible demo; it is not a production resident-management service.",
-      "purposeContract": {
-        "purpose": "A fixture-driven community repair-planning experiment with human approval, work orders and calendar export.",
-        "audience": "Builders exploring human-approved coordination for apartment communities.",
-        "outcome": "Walk a fixture repair request through approval, a work order and calendar export.",
-        "mechanism": "A Strands agent coordinates the workflow with explicit human approval steps.",
-        "proof": "55 tests and fixture-mode end-to-end approval, work-order and calendar export checks passed.",
-        "nextAction": "Run the documented fixture demo from the public repository."
-      },
-      "kind": "experiment",
-      "category": "experimental",
-      "form": "Agent demo",
-      "platforms": [
-        "Web",
-        "Local"
-      ],
-      "technologies": [
-        "Python",
-        "Strands Agents"
-      ],
-      "group": "past",
-      "lifecycle": "inactive",
-      "shareable": true,
-      "deployed": false,
-      "deploymentProviders": [],
-      "domains": [],
-      "url": "https://github.com/sarthakagrawal927/society-relay",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/society-relay",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/society-relay/issues"
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/human-v2"
     }
   ],
   "products": [

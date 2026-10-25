@@ -46,14 +46,15 @@ function toProof(project: PublicProject): StudioProof {
     description: project.description,
     makerNote: project.makerNote,
     profileUrl: `${SITE_URL}/p/${project.id}`,
-    destinationUrl: project.domains[0] ? `https://${project.domains[0]}` : null,
+    destinationUrl: project.publicUrl ?? null,
     repositoryUrl: project.repositoryUrl ?? null,
-    studioSignal: project.purposeContract.outcome,
+    studioSignal: project.purposeContract?.outcome ?? project.description,
   };
 }
 
 const representativeWork = publicCatalog.directory
-  .filter((project) => project.group === 'featured')
+  .filter((project) => project.availability === 'public-link')
+  .slice(0, 4)
   .map(toProof);
 
 export const STUDIO_PROFILE: StudioProfile = {

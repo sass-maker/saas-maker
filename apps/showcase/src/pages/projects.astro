@@ -3,10 +3,11 @@ import Footer from '../components/Footer.astro';
 import Nav from '../components/Nav.astro';
 import GitHubIcon from '../components/GitHubIcon.astro';
 import {
-  HISTORY_SEMANTICS,
+  ARCHIVED_DIRECTORY_PROJECTS,
   directoryFormFamilies,
   type DirectoryProject,
 } from '../data/directory';
+import { formatDirectoryDate } from '../data/format-directory-date';
 import {
   PROJECTS_DIRECTORY_COUNT as DIRECTORY_COUNT,
   PROJECTS_DIRECTORY_FORMS as DIRECTORY_FORMS,
@@ -14,7 +15,14 @@ import {
   PROJECTS_DIRECTORY_PLATFORMS as DIRECTORY_PLATFORMS,
 } from '../data/projects-directory';
 import Layout from '../layouts/Layout.astro';
-import { formatDirectoryDate } from '../data/format-directory-date';
+const availabilityLabel = (availability: DirectoryProject['availability']) => ({
+  'public-link': 'Public destination available',
+  'no-public-link': 'No public product link',
+  'not-publicly-available': 'Not publicly available',
+  'internal-private': 'Internal or private',
+  'preview-not-qualified': 'Preview · not qualified for public use',
+  'unreleased-prototype': 'Unreleased prototype',
+})[availability];
 
 const deploymentLabel = (project: DirectoryProject) => {
   if (project.group === 'past' && project.deployed) return 'Live archive';
@@ -32,21 +40,19 @@ const searchableText = (project: DirectoryProject) =>
     project.form,
     ...project.platforms,
     ...project.technologies,
-    ...project.domains,
+    ...(project.domains ?? []),
   ]
     .join(' ')
     .toLocaleLowerCase();
 
-const currentCount = DIRECTORY_GROUPS.find((group) => group.id === 'current')?.projects.length ?? 0;
-const featuredCount = DIRECTORY_GROUPS.find((group) => group.id === 'featured')?.projects.length ?? 0;
 const projectCountLabel = (count: number) => `${count} ${count === 1 ? 'project' : 'projects'}`;
 const projectProfilePath = (project: DirectoryProject) =>
   project.id === 'saas-maker' ? '/' : `/p/${project.id}`;
 ---
 
 <Layout
-  title={`${projectCountLabel(DIRECTORY_COUNT)} — SaaS Maker directory`}
-  description="Working Fleet experiments and reference projects, grouped by featured and current work."
+  title={`${projectCountLabel(DIRECTORY_COUNT)} — SaaS Maker Products`}
+  description={`${DIRECTORY_COUNT} current product profiles with clear public availability labels. Historical identities remain in a separate archive.`}
 >
   <!--
   THESIS: A complete portfolio is clearest as a working register, not a promotional card grid.
@@ -60,17 +66,17 @@ const projectProfilePath = (project: DirectoryProject) =>
     <main id="main-content" class="directory-shell">
       <header class="directory-intro">
         <div class="directory-intro-copy">
-          <p class="directory-kicker">Selected work and experiments</p>
-          <h1>Useful things to try.<br />Experiments welcome.</h1>
+          <p class="directory-kicker">The product register</p>
+          <h1>{DIRECTORY_COUNT} current products.<br />Availability made clear.</h1>
           <p>
-            Working experiments and reference projects, with their scope and limits explained.
-            Inclusion does not imply a finished product; inspect each project’s scope before trying it.
+            Browse the current products and their purpose, platform, and public access status.
+            A profile can be visible here without being available for public use.
           </p>
         </div>
-        <div class="directory-count-pane" aria-label={`${projectCountLabel(DIRECTORY_COUNT)} total`}>
+        <div class="directory-count-pane" aria-label={`${projectCountLabel(DIRECTORY_COUNT)} current profiles`}>
           <strong>{DIRECTORY_COUNT}</strong>
-          <span>total {DIRECTORY_COUNT === 1 ? 'project' : 'projects'}</span>
-          <small>{featuredCount} featured · {currentCount} current</small>
+          <span>current profiles</span>
+          <small>{ARCHIVED_DIRECTORY_PROJECTS.length} archived identities kept separately</small>
         </div>
       </header>
 
@@ -82,7 +88,7 @@ const projectProfilePath = (project: DirectoryProject) =>
         aria-label="Filter the project directory"
       >
         <div class="directory-search">
-          <label for="directory-search">Search name, purpose, stack, or domain</label>
+            <label for="directory-search">Search name, purpose, or stack</label>
           <input
             id="directory-search"
             name="query"
@@ -140,8 +146,8 @@ const projectProfilePath = (project: DirectoryProject) =>
               <span>Project</span>
               <span>Shape</span>
               <span>Prominent tools</span>
-              <span>Where</span>
-              <span>Evidence</span>
+              <span>Availability</span>
+              <span>Profile</span>
             </div>
 
             <div class="directory-rows">
@@ -154,7 +160,7 @@ const projectProfilePath = (project: DirectoryProject) =>
                   data-platforms={project.platforms.join('|')}
                   data-search={searchableText(project)}
                 >
-                  <summary class="directory-summary" aria-label={`Open evidence for ${project.name}`}>
+                  <summary class="directory-summary" aria-label={`Open profile for ${project.name}`}>
                     <h3 class="directory-identity">
                       {project.logoUrl && (
                         <img class="directory-project-logo" src={project.logoUrl} alt="" width="48" height="48" loading="lazy" />
@@ -181,13 +187,12 @@ const projectProfilePath = (project: DirectoryProject) =>
                     </span>
 
                     <span class="directory-glance directory-glance--where">
-                      <span>Where</span>
-                      <strong>{project.domains[0] ?? deploymentLabel(project)}</strong>
-                      {project.domains[0] && <small>{deploymentLabel(project)}</small>}
+                      <span>Availability</span>
+                      <strong>{availabilityLabel(project.availability)}</strong>
                     </span>
 
                     <span class="directory-disclosure" aria-hidden="true">
-                      <span>Evidence</span>
+                      <span>Profile</span>
                       <svg viewBox="0 0 16 16" focusable="false">
                         <path d="M3.5 6 8 10.5 12.5 6" />
                       </svg>
@@ -199,18 +204,27 @@ const projectProfilePath = (project: DirectoryProject) =>
                       <span>Public destinations</span>
                       <div class="directory-links" aria-label={`${project.name} public links`}>
                         <a class="directory-link--profile" href={projectProfilePath(project)}>
-                          Why I made this <span aria-hidden="true">→</span>
+                          Read profile <span aria-hidden="true">→</span>
                         </a>
-                        {project.domains.map((domain, index) => (
-                          <a
-                            class:list={{ 'directory-link--primary': index === 0 }}
-                            href={`https://${domain}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {domain} <span aria-hidden="true">↗</span>
+                        {project.publicUrl && (
+                          <a class="directory-link--primary" href={project.publicUrl} target="_blank" rel="noopener noreferrer">
+                            {project.publicUrlLabel ?? 'Open product'} <span aria-hidden="true">↗</span>
                           </a>
-                        ))}
+                        )}
+                        {(project.domains ?? [])
+                          .filter((domain) => {
+                            if (!project.publicUrl) return true;
+                            try {
+                              return new URL(project.publicUrl).hostname !== domain;
+                            } catch {
+                              return true;
+                            }
+                          })
+                          .map((domain) => (
+                            <a href={`https://${domain}`} target="_blank" rel="noopener noreferrer">
+                              {domain} <span aria-hidden="true">↗</span>
+                            </a>
+                          ))}
                         {project.repositoryUrl && (
                           <a href={project.repositoryUrl} target="_blank" rel="noopener noreferrer">
                             Source <GitHubIcon /> <span aria-hidden="true">↗</span>
@@ -226,7 +240,7 @@ const projectProfilePath = (project: DirectoryProject) =>
                             Issues <span aria-hidden="true">↗</span>
                           </a>
                         )}
-                        {project.domains.length === 0 && !project.repositoryUrl && (
+                        {!project.publicUrl && !project.repositoryUrl && !(project.domains ?? []).length && (
                           <span>No public destination</span>
                         )}
                       </div>
@@ -234,30 +248,64 @@ const projectProfilePath = (project: DirectoryProject) =>
 
                     <dl class="directory-evidence">
                       <div>
-                        <dt>Catalog kind</dt>
-                        <dd>{project.kind}</dd>
+                        <dt>Purpose</dt>
+                        <dd>{project.purposeContract.purpose}</dd>
                       </div>
                       <div>
-                        <dt>Deployment</dt>
-                        <dd>
-                          <span
-                            class:list={['deployment-state', { 'deployment-state--live': project.deployed }]}
-                          >
-                            {deploymentLabel(project)}
-                          </span>
-                          {project.deploymentProviders.length > 0 && (
-                            <small>{project.deploymentProviders.join(' · ')}</small>
-                          )}
-                        </dd>
+                        <dt>For</dt>
+                        <dd>{project.purposeContract.audience}</dd>
                       </div>
                       <div>
-                        <dt>First retained commit</dt>
-                        <dd>{project.firstCommitAt ? <time datetime={project.firstCommitAt}>{formatDirectoryDate(project.firstCommitAt)}</time> : 'Not retained'}</dd>
+                        <dt>Outcome</dt>
+                        <dd>{project.purposeContract.outcome}</dd>
                       </div>
                       <div>
-                        <dt>Latest retained commit</dt>
-                        <dd>{project.latestCommitAt ? <time datetime={project.latestCommitAt}>{formatDirectoryDate(project.latestCommitAt)}</time> : 'Not retained'}</dd>
+                        <dt>How</dt>
+                        <dd>{project.purposeContract.mechanism}</dd>
                       </div>
+                        {project.purposeContract.proof && (
+                          <div>
+                            <dt>Evidence</dt>
+                            <dd>{project.purposeContract.proof}</dd>
+                          </div>
+                        )}
+                        {project.purposeContract.nextAction && (
+                          <div>
+                            <dt>Next action</dt>
+                            <dd>{project.purposeContract.nextAction}</dd>
+                          </div>
+                        )}
+                        {project.kind && (
+                          <div>
+                            <dt>Catalog kind</dt>
+                            <dd>{project.kind}</dd>
+                          </div>
+                        )}
+                        {project.deployed !== undefined && (
+                          <div>
+                            <dt>Deployment</dt>
+                            <dd>
+                              <span class:list={['deployment-state', { 'deployment-state--live': project.deployed }]}>
+                                {deploymentLabel(project)}
+                              </span>
+                              {(project.deploymentProviders ?? []).length > 0 && (
+                                <small>{project.deploymentProviders?.join(' · ')}</small>
+                              )}
+                            </dd>
+                          </div>
+                        )}
+                        {project.firstCommitAt !== undefined && (
+                          <div>
+                            <dt>First retained commit</dt>
+                            <dd>{project.firstCommitAt ? <time datetime={project.firstCommitAt}>{formatDirectoryDate(project.firstCommitAt)}</time> : 'Not retained'}</dd>
+                          </div>
+                        )}
+                        {project.latestCommitAt !== undefined && (
+                          <div>
+                            <dt>Latest retained commit</dt>
+                            <dd>{project.latestCommitAt ? <time datetime={project.latestCommitAt}>{formatDirectoryDate(project.latestCommitAt)}</time> : 'Not retained'}</dd>
+                          </div>
+                        )}
                     </dl>
                   </div>
                 </details>
@@ -266,6 +314,29 @@ const projectProfilePath = (project: DirectoryProject) =>
           </section>
         ))}
       </div>
+
+      <section class="directory-archive" aria-label="Archived project identities">
+        <details>
+          <summary>
+            Archive <span>{ARCHIVED_DIRECTORY_PROJECTS.length} historical identities</span>
+          </summary>
+          <p>
+            These identities remain available for historical reference and are not part of the
+            current roster. Archive profiles do not publish public access links.
+          </p>
+          <ul>
+            {ARCHIVED_DIRECTORY_PROJECTS.map((project) => (
+              <li>
+                <div>
+                  <a href={`/p/${project.id}`}>{project.name}</a>
+                  <p>{project.description}</p>
+                </div>
+                <small>{project.form} · {project.platforms.join(' · ')} · archived</small>
+              </li>
+            ))}
+          </ul>
+        </details>
+      </section>
 
       <section class="directory-empty" data-directory-empty hidden aria-live="polite">
         <strong>No projects match those filters.</strong>
@@ -276,16 +347,18 @@ const projectProfilePath = (project: DirectoryProject) =>
       <aside class="directory-provenance" aria-labelledby="directory-provenance-title">
         <div>
           <p class="directory-kicker">How to read this</p>
-          <h2 id="directory-provenance-title">Shareable does not mean finished.</h2>
+          <h2 id="directory-provenance-title">A profile is not a public access promise.</h2>
         </div>
         <div>
           <p>
-            These projects have a useful public surface. “Current” marks active work; archived
-            experiments remain available through their direct profiles.
+            The current register contains {DIRECTORY_COUNT} profiles, including products that are internal or
+            private. Only approved public destinations appear as tryable links. Older identities
+            remain in the separate archive.
           </p>
-          <p>Deployment labels reflect catalog ownership, not a real-time availability check.</p>
-          <p>{HISTORY_SEMANTICS}</p>
-          <a href="/projects.json">Open the machine-readable directory <span aria-hidden="true">→</span></a>
+          <p>“Public destination” means a product link is listed; it is not a live health check.</p>
+          <p>Public profiles explain purpose and platform. They do not include private operational or assessment data.</p>
+          <a href="/projects.json">Open the current product JSON <span aria-hidden="true">→</span></a>
+          <a href="/archive.json">Open the archive JSON <span aria-hidden="true">→</span></a>
         </div>
       </aside>
 
@@ -966,6 +1039,64 @@ const projectProfilePath = (project: DirectoryProject) =>
   .directory-empty button {
     margin-top: 1.5rem;
     border-color: var(--bg);
+  }
+
+  .directory-archive {
+    margin-top: 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    background: var(--surface);
+  }
+
+  .directory-archive summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 650;
+  }
+
+  .directory-archive summary span,
+  .directory-archive li small {
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+
+  .directory-archive > details > p {
+    margin-top: 1rem;
+    color: var(--ink-muted);
+  }
+
+  .directory-archive ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: 1px;
+    margin-top: 1rem;
+    border: 1px solid var(--line);
+    background: var(--line);
+    list-style: none;
+  }
+
+  .directory-archive li {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--surface-muted);
+  }
+
+  .directory-archive li a {
+    font-weight: 650;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .directory-archive li p {
+    margin-top: 0.3rem;
+    color: var(--ink-muted);
+    font-size: 0.85rem;
   }
 
   .directory-provenance {

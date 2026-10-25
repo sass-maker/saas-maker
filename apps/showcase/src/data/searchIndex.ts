@@ -44,7 +44,15 @@ const productEntries: SearchEntry[] = DIRECTORY_PROJECTS.map((product) => ({
   title: product.name,
   url: product.id === 'saas-maker' ? '/' : `/p/${product.id}`,
   summary: product.description,
-  keywords: [product.form, ...product.technologies, ...product.domains].filter(Boolean).join(' '),
+  keywords: [
+    product.form,
+    ...product.technologies,
+    product.purposeContract?.purpose,
+    product.purposeContract?.audience,
+    product.purposeContract?.outcome,
+  ]
+    .filter(Boolean)
+    .join(' '),
 }));
 
 const ideaEntries: SearchEntry[] = IDEA_ENTRIES.map(({ idea, slug }) => ({

@@ -30,6 +30,27 @@
 .guideGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; padding: 18px 0 4px; }
 .guideGrid h3 { font-weight: 550; font-size: 12px; margin-bottom: 8px; }
 .guideGrid p { color: var(--quiet); margin: 8px 0 0; }
+.checklist { padding: 22px 0 36px; }
+.checklistHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+.checklistHeader h2 { font-size: 21px; font-weight: 550; letter-spacing: -.4px; margin: 6px 0; }
+.checklistHeader p:not(.eyebrow) { max-width: 85ch; color: var(--quiet); font-size: 12px; line-height: 1.65; margin: 0; }
+.checklistLink { display: inline-flex; align-items: center; gap: 5px; color: var(--foreground); font-size: 11px; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+.checklistGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.checklistCard { min-width: 0; padding: 15px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); }
+.checklistCard h3 { font-size: 13px; font-weight: 550; margin-bottom: 12px; }
+.checklistCard dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 0; }
+.checklistCard dt, .distributionColumns h4 { color: var(--quiet); font-size: 10px; font-weight: 550; text-transform: uppercase; letter-spacing: .04em; }
+.checklistCard dd { color: var(--quiet); font-size: 11px; line-height: 1.6; margin: 5px 0 0; }
+.distributionChecklist { margin-top: 18px; padding: 18px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); }
+.distributionChecklist header h3 { font-size: 16px; font-weight: 550; margin: 6px 0; }
+.distributionChecklist header > p:last-child { max-width: 110ch; color: var(--quiet); font-size: 11px; line-height: 1.7; margin: 0; }
+.distributionColumns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 18px; }
+.distributionColumns h4 { margin: 14px 0 7px; }
+.distributionColumns h4:first-child { margin-top: 0; }
+.distributionColumns ul { display: grid; gap: 7px; margin: 0; padding-left: 18px; }
+.distributionColumns li { color: var(--quiet); font-size: 11px; line-height: 1.6; }
+.checklistBoundary { padding: 11px 13px; border: 1px solid var(--line); border-radius: 5px; margin: 18px 0 0; color: var(--quiet); font-size: 10px; line-height: 1.65; }
+.checklistResources { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 14px; }
 .purposeNames { display: block; color: var(--quiet); font-size: 11px; line-height: 1.5; margin-top: 6px; overflow-wrap: anywhere; }
 .purposeNames > span { display: inline-block; white-space: nowrap; }
 .productCell .inlineUsage { display: none; margin-top: 7px !important; max-width: none !important; height: auto !important; overflow: visible !important; white-space: normal !important; overflow-wrap: anywhere; color: var(--quiet); font-size: 10px !important; }
@@ -73,8 +94,8 @@
 .productTask strong { display: block; color: var(--foreground); font-size: 12px; line-height: 1.7; margin-top: 5px; font-weight: 500; }
 .productTask svg { flex-shrink: 0; }
 .tools { flex-wrap: wrap; }
-@media (max-width: 1000px) { .guideGrid, .productOverview { grid-template-columns: 1fr; gap: 18px; } .productAreas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 700px) { .usageDetails, .ownerUseForm { grid-template-columns: 1fr; } .ownerUseForm p { grid-column: auto; } }
+@media (max-width: 1000px) { .guideGrid, .productOverview, .checklistGrid, .distributionColumns { grid-template-columns: 1fr; gap: 18px; } .productAreas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .usageDetails, .ownerUseForm, .checklistCard dl { grid-template-columns: 1fr; } .ownerUseForm p { grid-column: auto; } .checklistHeader { flex-direction: column; gap: 12px; } }
 @media (max-width: 600px) { .productAreas { grid-template-columns: 1fr; } .productInfo .header { gap: 12px; } }
 .tabs { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); font-size: 11px; color: var(--quiet); }
 .tabs > div { display: flex; gap: 24px; }
@@ -250,8 +271,9 @@
   .reviewButton { width: 38px; height: 38px; padding: 10px; }
   .reviewButton > span { display: none; }
   .header .eyebrow { font-size: 10px; }
-  .tabs > div { gap: 22px; }
-  .tabs button { font-size: 12px; padding: 12px 0; }
+  .tabs { align-items: flex-start; }
+  .tabs > div { flex-wrap: wrap; gap: 2px 14px; }
+  .tabs button { font-size: 11px; padding: 12px 0; white-space: nowrap; }
   .tools { gap: 7px; padding: 13px 0 8px; }
   .tools > .search { height: 40px; }
   .tools select { flex: 1 1 calc(50% - 7px); width: calc(50% - 7px); height: 40px; font-size: 11px; padding: 0 9px; }

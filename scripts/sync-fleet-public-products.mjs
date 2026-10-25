@@ -53,14 +53,55 @@ const DIRECTORY_FIELDS = new Set([
   'deploymentProviders',
   'domains',
   'url',
+  'firstCommitAt',
+  'latestCommitAt',
+  'roster',
+  'availability',
+  'publicUrl',
+  'publicUrlLabel',
+  'repositoryUrl',
+  'changelogUrl',
+  'roadmapUrl',
+]);
+const LEGACY_DIRECTORY_FIELDS = new Set([
+  'category',
+  'shareable',
+  'id',
+  'name',
+  'description',
+  'makerNote',
+  'logoUrl',
+  'purposeContract',
+  'footerArt',
+  'kind',
+  'form',
+  'platforms',
+  'technologies',
+  'group',
+  'lifecycle',
+  'deployed',
+  'deploymentProviders',
+  'domains',
+  'url',
   'repositoryUrl',
   'changelogUrl',
   'roadmapUrl',
   'firstCommitAt',
   'latestCommitAt',
 ]);
+const ARCHIVED_DIRECTORY_FIELDS = new Set([
+  'id',
+  'name',
+  'description',
+  'form',
+  'platforms',
+  'technologies',
+  'roster',
+  'availability',
+  'profileUrl',
+]);
 const FORBIDDEN_KEYS =
-  /(?:secret|token|password|credential|private|owner|cfProject|notes|dependencies|evidenceSources|contracts)/i;
+  /(?:secret|token|password|credential|private|owner|cfProject|notes|dependencies|evidence|assessment|contracts)/i;
 const CREDENTIAL_VALUE =
   /(?:bearer\s+[a-z0-9._-]+|(?:api|access|secret)[_-]?key\s*[:=]|-----BEGIN [A-Z ]+PRIVATE KEY-----)/i;
 
@@ -82,7 +123,7 @@ function assertNoPrivateData(value, trail = 'projection') {
 }
 
 export function validateProjection(parsed, sourcePath) {
-  if (![1, 2, 3, 4, 5].includes(parsed.schemaVersion) || !Array.isArray(parsed.products)) {
+  if (![1, 2, 3, 4, 5, 6].includes(parsed.schemaVersion) || !Array.isArray(parsed.products)) {
     throw new Error(`Unsupported Fleet public projection: ${sourcePath}`);
   }
 
@@ -102,16 +143,15 @@ export function validateProjection(parsed, sourcePath) {
     ids.add(product.id);
     validateFooterArt(product.footerArt, product.id);
   }
-  if (parsed.schemaVersion >= 3) {
+  if (parsed.schemaVersion >= 3 && parsed.schemaVersion < 6) {
     if (!Array.isArray(parsed.directory) || parsed.directory.length === 0) {
       throw new Error(`${sourcePath}: complete public directory is required`);
     }
     const directoryIds = new Set();
     for (const project of parsed.directory) {
       for (const key of Object.keys(project)) {
-        if (!DIRECTORY_FIELDS.has(key)) {
+        if (!LEGACY_DIRECTORY_FIELDS.has(key))
           throw new Error(`${project.id ?? 'unknown'}: unsupported directory field ${key}`);
-        }
       }
       for (const key of ['id', 'name', 'description', 'makerNote', 'form', 'group', 'lifecycle']) {
         if (!project[key]) throw new Error(`${project.id ?? 'unknown'}: missing directory ${key}`);
@@ -123,6 +163,124 @@ export function validateProjection(parsed, sourcePath) {
       validateFooterArt(project.footerArt, project.id);
       if (project.id !== 'ios-landings')
         validatePurposeContract(project.purposeContract, project.id);
+    }
+  }
+  if (parsed.schemaVersion >= 6) {
+    if (!Array.isArray(parsed.directory) || parsed.directory.length === 0) {
+      throw new Error(`${sourcePath}: complete public directory is required`);
+    }
+    const directoryIds = new Set();
+    for (const project of parsed.directory) {
+      for (const key of Object.keys(project)) {
+        if (!DIRECTORY_FIELDS.has(key)) {
+          throw new Error(`${project.id ?? 'unknown'}: unsupported directory field ${key}`);
+        }
+      }
+      for (const key of [
+        'id',
+        'name',
+        'description',
+        'makerNote',
+        'form',
+        'group',
+        'roster',
+        'availability',
+      ]) {
+        if (!project[key]) throw new Error(`${project.id ?? 'unknown'}: missing directory ${key}`);
+      }
+      if (project.roster !== 'current') {
+        throw new Error(`${project.id}: current directory entry has the wrong roster`);
+      }
+      if (
+        ![
+          'public-link',
+          'no-public-link',
+          'not-publicly-available',
+          'internal-private',
+          'preview-not-qualified',
+          'unreleased-prototype',
+        ].includes(project.availability)
+      ) {
+        throw new Error(`${project.id}: invalid current profile availability`);
+      }
+      if (
+        ['not-publicly-available', 'internal-private'].includes(project.availability) &&
+        (project.publicUrl || project.repositoryUrl || project.url || project.domains)
+      ) {
+        throw new Error(
+          `${project.id}: unavailable current profile cannot publish an external link`
+        );
+      }
+      if (project.availability === 'public-link' && !project.publicUrl) {
+        throw new Error(`${project.id}: public website availability requires a public destination`);
+      }
+      if (project.publicUrl && !/^https:\/\//.test(project.publicUrl)) {
+        throw new Error(`${project.id}: public destination must use HTTPS`);
+      }
+      if (project.publicUrl && typeof project.publicUrlLabel !== 'string') {
+        throw new Error(`${project.id}: public destination needs an accurate label`);
+      }
+      if (
+        project.availability === 'unreleased-prototype' &&
+        project.publicUrl &&
+        project.publicUrlLabel !== 'Landing page'
+      ) {
+        throw new Error(
+          `${project.id}: unreleased prototype destination must be identified as a landing page`
+        );
+      }
+      if (
+        project.availability === 'preview-not-qualified' &&
+        project.publicUrl &&
+        project.publicUrlLabel !== 'Preview site'
+      ) {
+        throw new Error(`${project.id}: preview destination must not imply a released product`);
+      }
+      validateProfilePurposeContract(project.purposeContract, project.id);
+      if (directoryIds.has(project.id)) {
+        throw new Error(`public directory ids must be unique: ${project.id}`);
+      }
+      directoryIds.add(project.id);
+    }
+    if (!Array.isArray(parsed.archivedDirectory) || parsed.archivedDirectory.length === 0) {
+      throw new Error(`${sourcePath}: archived identity directory is required`);
+    }
+    const archivedIds = new Set();
+    for (const project of parsed.archivedDirectory) {
+      for (const key of Object.keys(project)) {
+        if (!ARCHIVED_DIRECTORY_FIELDS.has(key)) {
+          throw new Error(
+            `${project.id ?? 'unknown'}: unsupported archived directory field ${key}`
+          );
+        }
+      }
+      for (const key of [
+        'id',
+        'name',
+        'description',
+        'form',
+        'roster',
+        'availability',
+        'profileUrl',
+      ]) {
+        if (!project[key]) throw new Error(`${project.id ?? 'unknown'}: missing archived ${key}`);
+      }
+      if (
+        project.roster !== 'archived' ||
+        project.availability !== 'archived' ||
+        project.profileUrl !== `https://sassmaker.com/p/${project.id}`
+      ) {
+        throw new Error(`${project.id}: archived profile must remain explicitly archived`);
+      }
+      if (directoryIds.has(project.id) || archivedIds.has(project.id)) {
+        throw new Error(`${project.id}: current/archive identities must be unique and disjoint`);
+      }
+      archivedIds.add(project.id);
+    }
+    if (
+      [...directoryIds, ...archivedIds].length !== new Set([...directoryIds, ...archivedIds]).size
+    ) {
+      throw new Error(`${sourcePath}: current and archived identities must be unique`);
     }
   }
   for (const project of parsed.pastProjects ?? []) {
@@ -143,6 +301,30 @@ function validatePurposeContract(contract, projectId) {
   for (const field of fields) {
     if (typeof contract[field] !== 'string' || contract[field].trim().length < 8) {
       throw new Error(`${projectId}: missing purpose contract ${field}`);
+    }
+  }
+}
+
+function validateProfilePurposeContract(contract, projectId) {
+  const fields = ['purpose', 'audience', 'outcome', 'mechanism', 'proof', 'nextAction'];
+  if (!contract || typeof contract !== 'object' || Array.isArray(contract)) {
+    throw new Error(`${projectId}: missing profile purpose contract`);
+  }
+  const unsupported = Object.keys(contract).filter((key) => !fields.includes(key));
+  if (unsupported.length > 0) {
+    throw new Error(`${projectId}: unsupported profile contract field ${unsupported[0]}`);
+  }
+  for (const field of fields.slice(0, 4)) {
+    if (typeof contract[field] !== 'string' || contract[field].trim().length < 8) {
+      throw new Error(`${projectId}: missing profile contract ${field}`);
+    }
+  }
+  for (const field of fields.slice(4)) {
+    if (
+      contract[field] !== undefined &&
+      (typeof contract[field] !== 'string' || !contract[field].trim())
+    ) {
+      throw new Error(`${projectId}: invalid optional profile contract ${field}`);
     }
   }
 }

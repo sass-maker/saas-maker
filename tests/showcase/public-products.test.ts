@@ -22,7 +22,12 @@ function catalog() {
       description: 'A useful public experiment',
       maturity: 'experiment',
     },
-    portfolio: { priority: 'P2', kind: 'experiment', deployed: true },
+    portfolio: {
+      status: id === 'unverified' ? 'archived' : 'active',
+      priority: 'P2',
+      kind: 'experiment',
+      deployed: true,
+    },
   }));
   return {
     projects,
@@ -35,6 +40,12 @@ function catalog() {
             form: 'Web app',
             platforms: ['Web'],
             technologies: ['TypeScript'],
+            purposeContract: {
+              purpose: 'Publish a useful public experiment.',
+              audience: 'People evaluating experiments.',
+              outcome: 'Understand a focused product idea.',
+              mechanism: 'A small web app with a clear workflow.',
+            },
           },
         ])
       ),
@@ -80,6 +91,90 @@ function standaloneRepository(overrides: Record<string, unknown> = {}) {
 }
 
 describe('shareability projection boundary', () => {
+  it('retains the established public profile evidence while keeping it off internal profiles', () => {
+    const input = catalog();
+    input.publicDirectory.projects.primary = {
+      ...input.publicDirectory.projects.primary,
+      logoUrl: 'https://primary.example/logo.svg',
+      purposeContract: {
+        ...input.publicDirectory.projects.primary.purposeContract,
+        proof: 'A public proof point.',
+        nextAction: 'Try the maintained site.',
+      },
+      firstCommitAt: '2026-01-01',
+      latestCommitAt: '2026-02-01',
+    };
+    input.projects[1].lifecycle.shareable = false;
+    input.projects[1].public.listing = 'hidden';
+    const result = buildPublicProducts(input);
+    const listed = result.directory.find(({ id }) => id === 'primary');
+    const internal = result.directory.find(({ id }) => id === 'active');
+
+    expect(listed).toMatchObject({
+      logoUrl: 'https://primary.example/logo.svg',
+      domains: ['primary.example'],
+      deployed: true,
+      firstCommitAt: '2026-01-01',
+      latestCommitAt: '2026-02-01',
+      purposeContract: {
+        proof: 'A public proof point.',
+        nextAction: 'Try the maintained site.',
+      },
+    });
+    expect(internal).not.toHaveProperty('logoUrl');
+    expect(internal).not.toHaveProperty('domains');
+    expect(internal?.purposeContract).not.toHaveProperty('proof');
+    expect(internal?.purposeContract).not.toHaveProperty('nextAction');
+  });
+
+  it('publishes every active-roster profile with status and isolates archived identities', () => {
+    const input = catalog();
+    input.projects[1].lifecycle.shareable = false;
+    const result = buildPublicProducts(input);
+    const internal = result.directory.find(({ id }) => id === 'active');
+    const archived = result.archivedDirectory.find(({ id }) => id === 'unverified');
+
+    expect(internal).toMatchObject({ roster: 'current', availability: 'not-publicly-available' });
+    expect(internal).not.toHaveProperty('url');
+    expect(internal).not.toHaveProperty('domains');
+    expect(internal).not.toHaveProperty('repositoryUrl');
+    expect(internal?.purposeContract).toEqual({
+      purpose: 'Publish a useful public experiment.',
+      audience: 'People evaluating experiments.',
+      outcome: 'Understand a focused product idea.',
+      mechanism: 'A small web app with a clear workflow.',
+    });
+    expect(archived).toMatchObject({
+      roster: 'archived',
+      availability: 'archived',
+      profileUrl: 'https://sassmaker.com/p/unverified',
+    });
+    expect(archived).not.toHaveProperty('repositoryUrl');
+    expect(archived).not.toHaveProperty('purposeContract');
+    expect(() => validateProjection(result, 'fixture')).not.toThrow();
+  });
+
+  it('keeps public destinations separate from product availability and internal profiles', () => {
+    const input = catalog();
+    input.publicDirectory.projects.active.availabilityLabel = 'preview-not-qualified';
+    input.publicDirectory.projects.active.publicDestinationUrl = 'https://preview.example';
+    input.publicDirectory.projects.active.publicDestinationLabel = 'Preview site';
+    input.publicDirectory.projects.primary.availabilityLabel = 'internal-private';
+    input.projects[0].lifecycle.shareable = false;
+    input.projects[0].public.listing = 'hidden';
+    const result = buildPublicProducts(input);
+    expect(result.directory.find(({ id }) => id === 'active')).toMatchObject({
+      availability: 'preview-not-qualified',
+      publicUrl: 'https://preview.example',
+      publicUrlLabel: 'Preview site',
+    });
+    expect(result.directory.find(({ id }) => id === 'primary')).toMatchObject({
+      availability: 'internal-private',
+    });
+    expect(result.directory.find(({ id }) => id === 'primary')).not.toHaveProperty('publicUrl');
+    expect(() => validateProjection(result, 'fixture')).not.toThrow();
+  });
+
   it('optionally projects explicitly presented standalone repositories', () => {
     const input = catalog();
     input.repositoryReview = {
@@ -122,12 +217,7 @@ describe('shareability projection boundary', () => {
       repositoryUrl: 'https://github.com/owner/finished-lab',
       lifecycle: 'inactive',
     });
-    expect(result.directory.find(({ id }) => id === 'source-lab')).toMatchObject({
-      url: 'https://github.com/owner/source-lab',
-      deployed: false,
-      deploymentProviders: [],
-      domains: [],
-    });
+    expect(result.directory.some(({ id }) => id === 'source-lab')).toBe(false);
   });
 
   it('excludes standalone rows without explicit safe publication eligibility', () => {
@@ -234,7 +324,11 @@ describe('shareability projection boundary', () => {
     input.projects[0].public.listing = 'hidden';
     Reflect.set(input.projects[1], 'lifecycle', 'maintained');
     const result = buildPublicProducts(input);
-    expect(result.directory.map((project) => project.id)).toEqual(['inactive']);
+    expect(result.directory.map((project) => project.id)).toEqual([
+      'primary',
+      'active',
+      'inactive',
+    ]);
     expect(result.products.map((project) => project.id)).toEqual(['inactive']);
   });
 
@@ -249,7 +343,7 @@ describe('shareability projection boundary', () => {
         project.lifecycle = { status: 'inactive', shareable, resumeCondition };
         const before = structuredClone(input);
         const result = buildPublicProducts(input);
-        expect(result.directory.some(({ id }) => id === 'inactive')).toBe(shareable);
+        expect(result.directory.some(({ id }) => id === 'inactive')).toBe(true);
         expect(result.products.some(({ id }) => id === 'inactive')).toBe(shareable);
         expect(JSON.stringify(result)).not.toContain('resumeCondition');
         expect(JSON.stringify(result)).not.toContain('Three named pilot users');
@@ -278,7 +372,7 @@ describe('optional public footer artwork', () => {
     input.projects[0].presentation.footerArt = artwork();
     const before = structuredClone(input);
     const output = buildPublicProducts(input);
-    expect(output.schemaVersion).toBe(5);
+    expect(output.schemaVersion).toBe(6);
     expect(output.products.find(({ id }) => id === 'primary')?.footerArt).toEqual(artwork());
     expect(output.directory.find(({ id }) => id === 'primary')?.footerArt).toEqual(artwork());
     expect(input).toEqual(before);

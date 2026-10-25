@@ -1,4 +1,5 @@
 import { SaaSMakerMark } from '@/components/saas-maker-mark';
+import Link from 'next/link';
 
 import { GoogleSignInButton } from '@/components/google-sign-in-button';
 
@@ -10,8 +11,13 @@ export default function LoginPage() {
         <p className="text-sm font-medium text-muted-foreground">SaaS Maker</p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight">SaaS Maker workspace</h1>
         <p className="mt-3 text-sm leading-6 text-muted-foreground">
-          Review product quality, choose your next lever, or manage customer feedback and project
-          keys.
+          Manage customer feedback or create the project key that powers the hosted widget. You can
+          browse the public product directory before signing in.
+        </p>
+        <p className="mt-3 text-sm">
+          <Link className="underline underline-offset-4" href="https://sassmaker.com/projects">
+            Browse products
+          </Link>
         </p>
         <div className="mt-8">
           <GoogleSignInButton />

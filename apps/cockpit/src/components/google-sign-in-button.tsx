@@ -5,12 +5,15 @@ import { authClient } from '@/lib/auth-client';
 
 export function GoogleSignInButton() {
   async function handleSignIn() {
+    const returnTo = new URLSearchParams(window.location.search).get('returnTo');
     await authClient.signIn.social({
       provider: 'google',
       callbackURL:
-        new URLSearchParams(window.location.search).get('returnTo') === 'scoreboard'
+        returnTo === 'scoreboard'
           ? '/projects?view=scoreboard'
-          : '/projects',
+          : returnTo === 'feedback'
+            ? '/projects/feedback'
+            : '/projects',
     });
   }
 

@@ -6,6 +6,7 @@ import ProjectsPage from '../../apps/cockpit/src/app/(app)/projects/page';
 import ProjectStatusPage from '../../apps/cockpit/src/app/(app)/projects/[slug]/page';
 import FeedbackBoardPage from '../../apps/cockpit/src/app/(app)/projects/feedback/page';
 import SubscribersBoardPage from '../../apps/cockpit/src/app/(app)/projects/subscribers/page';
+import { seedForFeedbackResource } from '../../apps/cockpit/src/app/(app)/projects/feedback/feedback-board';
 import { apiFetchAuthed } from '../../apps/cockpit/src/lib/api-client';
 import { getProjectBySlug, getServerToken } from '../../apps/cockpit/src/lib/api';
 import { getDashboardSession } from '../../apps/cockpit/src/lib/server-session';
@@ -72,6 +73,33 @@ describe('server-seeded project pages', () => {
     const page = await ProjectsPage({ searchParams: Promise.resolve({ view: 'scoreboard' }) });
     expect(page.props.accountId).toBe('fixture-account');
     expect(apiFetchAuthed).not.toHaveBeenCalled();
+  });
+  it('seeds the default feedback inbox in the first HTML with its exact resource key', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-10-25T00:00:00Z'));
+    vi.mocked(apiFetchAuthed).mockResolvedValue({ data: [] });
+
+    const page = await FeedbackBoardPage();
+
+    expect(apiFetchAuthed).toHaveBeenCalledWith('/v1/feedback?', { cache: 'no-store' });
+    expect(page.props.children[1].props.initialData).toEqual({ data: [] });
+    expect(page.props.children[1].props.initialDataUpdatedAt).toBe(Date.now());
+    expect(render(page)).toContain('No feedback yet');
+    expect(render(page)).not.toContain('data-table-skeleton');
+  });
+  it('leaves the feedback resource unseeded when the server fetch fails', async () => {
+    vi.mocked(apiFetchAuthed).mockRejectedValueOnce(new Error('unavailable'));
+
+    const page = await FeedbackBoardPage();
+
+    expect(page.props.children[1].props.initialData).toBeUndefined();
+    expect(render(page)).toContain('data-table-skeleton');
+  });
+  it('never reuses unfiltered inbox data for a filtered resource key', () => {
+    const seed = { initialData: { data: [] }, initialDataUpdatedAt: 123 };
+    expect(seedForFeedbackResource('/v1/feedback?', seed)).toEqual(seed);
+    expect(seedForFeedbackResource('/v1/feedback?type=bug', seed)).toEqual({});
+    expect(seedForFeedbackResource('/v1/feedback?status=planned', seed)).toEqual({});
   });
   it('renders list data in first HTML and serializes only visible project fields', async () => {
     vi.useFakeTimers();
