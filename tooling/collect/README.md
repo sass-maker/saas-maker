@@ -166,6 +166,71 @@ curl -sS http://127.0.0.1:8787/v1/search \
   --data '{"q":"playwright persistent context","num":5,"hl":"en","gl":"us"}'
 ```
 
+## Apple App Store collection
+
+`@saas-maker/collect/apple` is a dependency-free subpath for credential-free
+public Apple search/lookup. Importing it starts no service, browser or scheduler,
+reads no credentials and writes no cache or files.
+
+```js
+import { createAppleCollector, appleSourceUrl } from "@saas-maker/collect/apple";
+
+const apple = createAppleCollector({
+  async reserve({ query, sourceUrl, signal }) {
+    // The owner supplies its shared persisted provider quota here.
+    await providerGate.reserve({ query, sourceUrl, signal });
+  },
+});
+const capture = await apple.search({
+  term: "notes", country: "us", platform: "ios", limit: 50,
+}, { signal: controller.signal });
+```
+
+`reserve` is required and runs before every network dispatch. A rejected
+reservation propagates unchanged and makes no provider call. The consumer owns
+shared pacing, retries, cache and scheduling; this package has no hidden retry or
+per-instance cache that could bypass that authority. A Node/SQLite consumer such as Site Health can reserve at most 18 uncached
+calls/minute across its processes. Every consumer must supply its own bounded
+shared provider gate.
+
+- `search({term,country,platform,limit?}, {signal?})` returns one frozen capture
+  `{id,kind:"search",key,sourceUrl,fetchedAt,apps}`. `key` includes normalized
+  term, storefront, platform and coverage. Result limit defaults to 50 and must
+  be 20–200. Search order stays exactly as returned. Mac search may include iPad apps
+  available on Mac; a capture notice explains this. An unexpected native Mac
+  result in an iOS search rejects the whole capture rather than shifting positions.
+- `lookup({id,country,platform}, {signal?})` accepts only a numeric Apple ID or
+  an HTTPS `apps.apple.com/.../app/.../id...` URL (developer URLs are rejected). It returns the same evidence fields
+  plus `match:"matched"|"not-found"|"platform-mismatch"` and an optional notice.
+  Apple lookup ignores the entity filter: native Mac apps cannot match iOS,
+  while software-kind app metadata can match a Mac lookup with a notice that
+  Mac compatibility is unconfirmed. A Mac search or App Store check is needed.
+  Numeric developer IDs return not-found rather than related apps. Unknown
+  rating metadata stays null; missing optional text is empty and actual zero
+  ratings stay zero. The requested source/time stays inspectable in every case.
+- `normalizeAppleQuery`, `appleSourceUrl` and `parseAppleAppId` are exported
+  pure helpers. `APPLE_PROVIDER_VERSION` is available for consumer cache keys.
+  Each capture stores the app list once; consumers cache that public capture
+  and keep its original ID/time on cache hits. Cache delivery time belongs in a
+  separate field, never in `fetchedAt`.
+- Provider requests use only `https://itunes.apple.com/search` or `/lookup`.
+  Mac uses `macSoftware`, iOS uses `software`. Redirects are refused, bodies
+  are limited to 2 MB, and the combined fetch/body deadline is 10 seconds. Tests
+  may inject a shorter deadline, fetch implementation and clock. Abort signals
+  cancel collection and reservation waiting without scheduling another call.
+- `AppleCollectionError` exposes `code`, safe `status` and nullable
+  `retryAfter` seconds. Valid Retry-After headers are preserved on any upstream
+  HTTP error, including 503; absent or invalid headers yield null. Apple HTTP
+  429 remains 429; other upstream HTTP errors map to 502. Network,
+  timeout, invalid query, platform mismatch and malformed/oversized response
+  states remain distinct. No failure is returned as a successful empty capture.
+
+This subpath owns provider normalization and evidence only. Research boards,
+keyword estimates, listing drafts, private storage, owner authentication,
+canonical-project attribution and publication are consumer responsibilities.
+The public API position does not guarantee native App Store search parity;
+absence means missing from the returned set, not a lower or zero rank.
+
 ## Runtime configuration
 
 | Variable | Default | Purpose |
