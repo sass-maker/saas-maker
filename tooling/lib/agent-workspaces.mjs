@@ -278,12 +278,41 @@ function regularFile(path) {
   catch (error) { if (error.code === 'ENOENT' || error.code === 'ENOTDIR') return false; throw error; }
 }
 
+function packageInstallRoot(parent, repo) {
+  for (let current = parent; ; current = dirname(current)) {
+    if (regularFile(join(current, 'package.json')) && (regularFile(join(current, 'node_modules', '.modules.yaml')) || regularFile(join(current, 'node_modules', '.package-lock.json')))) return current;
+    if (current === repo || current === dirname(current)) return null;
+  }
+}
+
+function generatedHusky(parent, repo) {
+  const installRoot = packageInstallRoot(parent, repo);
+  if (!installRoot) return false;
+  const root = join(parent, '.husky', '_');
+  if (!lstatSync(root).isDirectory() || lstatSync(root).isSymbolicLink()) return false;
+  const runtime = join(installRoot, 'node_modules', 'husky', 'husky');
+  if (!regularFile(runtime) || !regularFile(join(root, 'h'))) return false;
+  if (!readFileSync(runtime).equals(readFileSync(join(root, 'h')))) return false;
+  const wrappers = new Set(['applypatch-msg', 'pre-applypatch', 'post-applypatch', 'pre-commit', 'pre-merge-commit', 'prepare-commit-msg', 'commit-msg', 'post-commit', 'pre-rebase', 'post-checkout', 'post-merge', 'pre-push', 'pre-auto-gc', 'post-rewrite', 'sendemail-validate']);
+  for (const name of readdirSync(root)) {
+    const path = join(root, name);
+    if (!regularFile(path)) return false;
+    const content = readFileSync(path, 'utf8');
+    if (name === 'h') continue;
+    if (name === '.gitignore' && content.trim() === '*') continue;
+    if (name === 'husky.sh' && content === "echo \"husky - DEPRECATED\n\nPlease remove the following two lines from $0:\n\n#!/usr/bin/env sh\n. \\\"\\$(dirname -- \\\"\\$0\\\")/_/husky.sh\\\"\n\nThey WILL FAIL in v10.0.0\n\"") continue;
+    if (wrappers.has(name) && content.trim() === '#!/usr/bin/env sh\n. "$(dirname "$0")/h"') continue;
+    return false;
+  }
+  return true;
+}
+
 // Git worktree remove also deletes ignored files, even without --force.
 // Only known generated directories with an owning build/package manifest are
 // disposable. Local databases, env files, evidence and other ignored data block.
 function disposableIgnored(repo) {
   const ignored = git(repo, 'ls-files', '--others', '--ignored', '--exclude-standard', '--directory', '-z').split('\0').filter(Boolean);
-  const artifacts = new Set(); const unknown = [];
+  const artifacts = new Set(); const unknown = []; const husky = new Map();
   for (const path of ignored) {
     const parts = path.replace(/\/$/, '').split('/');
     let artifact;
@@ -295,7 +324,14 @@ function disposableIgnored(repo) {
       try { directory = lstatSync(root).isDirectory(); } catch { directory = false; }
       if (!directory) continue;
       if (name === 'node_modules' && regularFile(join(parent, 'package.json'))
-        && (regularFile(join(root, '.modules.yaml')) || regularFile(join(root, '.package-lock.json')))) artifact = parts.slice(0, index + 1).join('/');
+        && packageInstallRoot(parent, repo)) artifact = parts.slice(0, index + 1).join('/');
+      if (name === '.husky') {
+        const collapsed = parts[index + 1] === undefined && readdirSync(root).every((entry) => entry === '_');
+        if (parts[index + 1] === '_' || collapsed) {
+          if (!husky.has(parent)) husky.set(parent, generatedHusky(parent, repo));
+          if (husky.get(parent)) artifact = parts.slice(0, index + (collapsed ? 1 : 2)).join('/');
+        }
+      }
       if (name === '.build' && regularFile(join(parent, 'Package.swift'))) {
         // SwiftPM checkouts are source repositories. A local edit there is
         // unknown work, even though the enclosing build directory is ignored.

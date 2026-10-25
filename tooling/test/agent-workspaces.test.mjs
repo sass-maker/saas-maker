@@ -106,6 +106,49 @@ test('a pushed unmerged branch cannot be deleted', async () => {
   assert.ok(existsSync(row.path));
 });
 
+test('workspace package dependency links use the ancestor install marker', async () => {
+  const { manager, repo, create } = fixture();
+  writeFileSync(join(repo, '.gitignore'), 'node_modules/\n');
+  writeFileSync(join(repo, 'package.json'), '{"name":"root"}\n');
+  mkdirSync(join(repo, 'packages', 'child'), { recursive: true });
+  writeFileSync(join(repo, 'packages', 'child', 'package.json'), '{"name":"child"}\n');
+  git(repo, 'add', '.'); git(repo, 'commit', '-m', 'workspace fixture');
+  git(repo, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
+  const row = await create('workspace-links');
+  mkdirSync(join(row.path, 'node_modules'));
+  writeFileSync(join(row.path, 'node_modules', '.modules.yaml'), '{}\n');
+  const modules = join(row.path, 'packages', 'child', 'node_modules');
+  mkdirSync(modules);
+  symlinkSync(join(row.path, 'node_modules'), join(modules, 'root-link'));
+  const preview = await manager.close(row.id, { dryRun: true });
+  assert.equal(preview.action, 'delete-worktree');
+  assert.deepEqual(preview.ignoredArtifacts, ['node_modules', 'packages/child/node_modules']);
+  await manager.close(row.id);
+  assert.equal(existsSync(row.path), false);
+});
+
+test('only unchanged installed Husky runtime and generated wrappers are disposable', async () => {
+  const { manager, repo, create } = fixture();
+  writeFileSync(join(repo, '.gitignore'), 'node_modules/\n.husky/_/\n');
+  writeFileSync(join(repo, 'package.json'), '{"name":"husky-fixture"}\n');
+  git(repo, 'add', '.'); git(repo, 'commit', '-m', 'Husky fixture');
+  git(repo, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
+  const row = await create('husky-generated');
+  const runtime = join(row.path, 'node_modules', 'husky');
+  mkdirSync(runtime, { recursive: true });
+  writeFileSync(join(row.path, 'node_modules', '.modules.yaml'), '{}\n');
+  writeFileSync(join(runtime, 'husky'), 'installed runtime\n');
+  const hooks = join(row.path, '.husky', '_');
+  mkdirSync(hooks, { recursive: true });
+  writeFileSync(join(hooks, 'h'), 'installed runtime\n');
+  writeFileSync(join(hooks, '.gitignore'), '*');
+  writeFileSync(join(hooks, 'pre-commit'), '#!/usr/bin/env sh\n. "$(dirname "$0")/h"');
+  assert.equal((await manager.close(row.id, { dryRun: true })).action, 'delete-worktree');
+  writeFileSync(join(hooks, 'pre-commit'), 'custom hook work\n');
+  await assert.rejects(manager.close(row.id), /unknown-ignored-data/);
+  assert.equal(readFileSync(join(hooks, 'pre-commit'), 'utf8'), 'custom hook work\n');
+});
+
 test('ignored local data and unproven generated directories prevent deletion', async () => {
   const { manager, repo, create } = fixture();
   writeFileSync(join(repo, '.gitignore'), 'private-data/\nnode_modules/\n');

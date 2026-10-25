@@ -156,7 +156,10 @@ remote refs may be stale. No fetch happens implicitly.
 Git also deletes ignored files without `--force`, so close separately inventories
 ignored paths. Established `node_modules` installs, SwiftPM `.build`, Cargo
 `target`, and recognized JavaScript build/cache directories require an owning
-package/build manifest. SwiftPM dependency checkouts with local edits or ignored
+package/build manifest. Workspace package dependency links inherit their
+installed workspace root. Generated Husky hooks qualify only when their runtime
+matches the installed package and wrappers match known generated templates;
+custom hooks remain protected. SwiftPM dependency checkouts with local edits or ignored
 files stay protected. Unknown ignored data (including local databases, env
 files, evidence and unproven directories) blocks deletion. No file contents from
 these unknown paths are read or published. Native build/dependency directories
