@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -12,7 +12,10 @@ const removed = [
   'TILLION_CAPTCHA_CHAIN', 'TILLION_CAPTCHA_KEY', 'TILLION_UNLOCKER_KEY',
   'TILLION_BRIGHTDATA_API_KEY', 'TILLION_BRIGHTDATA_ZONE',
   'TILION_CAPTCHA_CHAIN', 'TILION_CAPTCHA_KEY', 'TILION_FUTURE_SERVICE',
-  'TURING_ENDPOINT', 'TURING_KEY',
+  'TURING_ENDPOINT', 'TURING_KEY', 'TILLION_LICENSE_KEY',
+  'FORTRESS_REPO', 'FORTRESS_TAG', 'FORTRESS_BROWSERS_PATH', 'FORTRESS_DOWNLOAD_HOST',
+  'HTTP_PROXY', 'HTTPS_PROXY', 'ALL_PROXY', 'NO_PROXY',
+  'http_proxy', 'https_proxy', 'all_proxy', 'no_proxy',
 ];
 const enforced = {
   TILION_SELFHEAL: '0', TILLION_SELFHEAL_ENABLED: '0', TILLION_CAPTCHA_PROVIDER: 'none',
@@ -41,8 +44,8 @@ test('Fortress launcher pins its runtime and overrides inherited service setting
     const inherited = Object.fromEntries([...removed, ...Object.keys(enforced)].map((key) => [key, 'inherited-test-value']));
     const result = spawnSync('/bin/bash', [launcher], {
       env: {
-        PATH: dir, ...inherited,
-        TILION_LICENSE_KEY: 'test-license-value', TILLION_LICENSE_KEY: 'legacy-test-license-value',
+        PATH: `${dir}:/usr/bin:/bin`, ...inherited,
+        TILION_LICENSE_KEY: 'test-license-value',
       }, encoding: 'utf8',
     });
     assert.equal(result.status, 0, result.stderr);
@@ -54,7 +57,12 @@ test('Fortress launcher pins its runtime and overrides inherited service setting
     for (const key of removed) assert.equal(observed.env[key], undefined, key);
     for (const [key, value] of Object.entries(enforced)) assert.equal(observed.env[key], value, key);
     assert.equal(observed.env.TILION_LICENSE_KEY, 'test-license-value');
-    assert.equal(observed.env.TILLION_LICENSE_KEY, 'legacy-test-license-value');
+    assert.match(observed.env.TILION_MCP_WRITE_DIR, /fortress-directory\.[^/]+$/);
+    const second = spawnSync('/bin/bash', [launcher], {
+      env: { PATH: `${dir}:/usr/bin:/bin` }, encoding: 'utf8',
+    });
+    assert.equal(second.status, 0, second.stderr);
+    assert.notEqual(JSON.parse(second.stdout).env.TILION_MCP_WRITE_DIR, observed.env.TILION_MCP_WRITE_DIR);
   });
 });
 
@@ -69,7 +77,29 @@ test('Fortress launcher reports missing uv without starting a browser', () => {
 
 test('Fortress launcher propagates runtime startup failure', () => {
   withRuntime('process.exit(41);', (dir) => {
-    const result = spawnSync('/bin/bash', [launcher], { env: { PATH: dir }, encoding: 'utf8' });
+    const result = spawnSync('/bin/bash', [launcher], { env: { PATH: `${dir}:/usr/bin:/bin` }, encoding: 'utf8' });
     assert.equal(result.status, 41);
   });
+});
+
+
+test('Fortress launcher forwards host termination to its MCP process', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'fortress-launcher-signal-'));
+  let runtimePid;
+  try {
+    const binary = join(dir, 'uvx');
+    writeFileSync(binary, `#!${process.execPath}\nprocess.on('SIGTERM', () => process.exit(0)); console.log(process.pid); setTimeout(() => process.exit(1), 2000);\n`);
+    chmodSync(binary, 0o755);
+    const child = spawn('/bin/bash', [launcher], { env: { PATH: `${dir}:/usr/bin:/bin` } });
+    const exited = new Promise((resolve) => child.once('exit', (code, signal) => resolve({ code, signal })));
+    const ready = await new Promise((resolve) => child.stdout.once('data', (data) => resolve(data.toString())));
+    runtimePid = Number(ready.trim());
+    child.kill('SIGTERM');
+    assert.deepEqual(await exited, { code: 0, signal: null });
+  } finally {
+    if (runtimePid) {
+      try { process.kill(runtimePid, 'SIGTERM'); } catch (error) { if (error.code !== 'ESRCH') throw error; }
+    }
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

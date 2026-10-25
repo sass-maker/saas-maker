@@ -102,7 +102,8 @@ distribution copy. Other distribution may be broad and lightweight, but it
 must remain relevant, accurate, destination-specific, and compliant.
 
 Never create fake accounts or reviews, fake community engagement, solve
-human-verification challenges automatically, buy an unexpected placement, or
+human-verification challenges automatically, bypass anti-bot controls outside
+the bounded directory exception, buy an unexpected placement, or
 run `ops/scripts/directory-submit/spray.py` or other force-submit code.
 Fortress is the bounded directory-only browser fallback described above;
 do not add other automation-evasion paths or override platform prohibitions.
