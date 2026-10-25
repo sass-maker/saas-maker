@@ -10,6 +10,7 @@
  */
 import Footer from '../../components/Footer.astro';
 import Nav from '../../components/Nav.astro';
+import { launchdeskEvent } from '../../data/launchdesk-analytics';
 import launchdeskData from '../../data/launchdesk.json';
 import Layout from '../../layouts/Layout.astro';
 
@@ -140,7 +141,12 @@ const GRADE_LABELS: Record<string, string> = {
             </p>
             <h1>{destination.name}</h1>
             <p class="playbook-domain">
-              <a href={destination.website} target="_blank" rel="noopener noreferrer">
+              <a
+                href={destination.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-app-health-event={launchdeskEvent(destination.domain, 'resource')}
+              >
                 {destination.domain} ↗
               </a>
             </p>
@@ -168,7 +174,12 @@ const GRADE_LABELS: Record<string, string> = {
             <h2>Submission route</h2>
             {destination.submissionUrl ? (
               <p>
-                <a href={destination.submissionUrl} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={destination.submissionUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-app-health-event={launchdeskEvent(destination.domain, 'submitIntent')}
+                >
                   {destination.submissionUrl} ↗
                 </a>
               </p>
@@ -237,7 +248,12 @@ const GRADE_LABELS: Record<string, string> = {
         </p>
         <h1>{playbook.name}</h1>
         <p class="playbook-domain">
-          <a href={`https://${playbook.domain}`} target="_blank" rel="noopener noreferrer">
+          <a
+            href={`https://${playbook.domain}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-app-health-event={launchdeskEvent(playbook.domain, 'resource')}
+          >
             {playbook.domain} ↗
           </a>
         </p>
