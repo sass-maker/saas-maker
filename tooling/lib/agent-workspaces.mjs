@@ -833,16 +833,18 @@ export class AgentWorkspaces {
     }
     return { dryRun: !apply, workspaces, counts: { deleted: apply ? workspaces.filter((row) => row.action === 'delete-worktree').length : 0, eligible: workspaces.filter((row) => row.action === 'delete-worktree').length, kept: workspaces.filter((row) => row.action === 'keep').length }, note: 'Only clean, merged, idle worktrees with recognized disposable output qualify. Unknown data and active work are preserved; no disk scan or recovery copy.' };
   }
-  async pruneStore({ apply = false, onlyOverBudget = false } = {}) {
+  async pruneStore({ apply = false } = {}) {
     this.initialize();
     const policy = this.policy();
     const beforeBytes = existsSync(policy.storeDir) ? await this.measuredBytes(policy.storeDir, 'shared store') : 0;
     const statePath = join(this.root, 'storage-maintenance.json');
     const previous = existsSync(statePath) ? json(statePath) : {};
     const overBudget = beforeBytes > policy.maxStoreBytes;
-    const due = overBudget || (!onlyOverBudget && Date.now() - Date.parse(previous.lastPrunedAt ?? '1970-01-01') >= 24 * 3_600_000);
     const result = { storeDir: policy.storeDir, reportedBytesBefore: beforeBytes, maxStoreBytes: policy.maxStoreBytes, overBudget, action: 'keep' };
-    if (!due || !existsSync(policy.storeDir)) return { ...result, reason: 'Cache is within budget and pruning is not due.' };
+    // APFS clones have independent inodes. PNPM 10's native prune uses link
+    // counts, so a timed prune can evict still-useful shared package contents.
+    // Preserve the warm store until its byte budget actually requires eviction.
+    if (!overBudget || !existsSync(policy.storeDir)) return { ...result, reason: 'Cache is within budget; reusable shared packages stay warm.' };
     if (!apply) return { ...result, action: 'would-prune', reason: 'Native pnpm prune only; no arbitrary cache file deletion.' };
     const token = 'storage-' + randomUUID();
     // Fill the existing heavy lease pool too: an older CLI already measuring
@@ -904,7 +906,7 @@ export class AgentWorkspaces {
       const storeDir = this.policy().storeDir;
       mkdirSync(storeDir, { recursive: true });
       if (statSync(storeDir).dev !== statSync(repo).dev) throw new Error('The shared store and checkout must use the same filesystem.');
-      await this.pruneStore({ apply: true, onlyOverBudget: true });
+      await this.pruneStore({ apply: true });
       const args = ['pnpm', 'install', '--frozen-lockfile', '--store-dir', storeDir, '--package-import-method', this.policy().packageImportMethod, '--config.modules-cache-max-age=0'];
       if (offline) args.push('--offline');
       return this.run({ id, repo, argv: ['corepack', ...args], installing: true });
