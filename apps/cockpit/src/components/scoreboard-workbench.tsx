@@ -60,6 +60,7 @@ import { ScoreHistory, ScoreDelta } from './scoreboard-history';
 import { ScoreboardTable } from './scoreboard-table';
 import { ScoreboardGuide } from './scoreboard-guide';
 import { ScoreboardProduct } from './scoreboard-product';
+import { ScoreboardChecklist } from './scoreboard-checklist';
 
 const short = CATEGORY_LABELS;
 const priority = { critical: 0, high: 1, normal: 2 };
@@ -115,7 +116,7 @@ export function ScoreboardWorkbench({
   const [sort, setSort] = useState<DataSort>([{ id: 'priority', desc: false }]);
   const [selected, setSelected] = useState('');
   const [sheet, setSheet] = useState<'evidence' | 'action' | 'review' | null>(null);
-  const [view, setView] = useState('scores');
+  const [view, setView] = useState<'scores' | 'actions' | 'history' | 'checklist'>('scores');
   const [metric, setMetric] = useState<ScoreMetric>('result');
   const [evidenceMetric, setEvidenceMetric] = useState<ScoreMetric>('result');
   const [notice, setNotice] = useState('');
@@ -629,10 +630,13 @@ export function ScoreboardWorkbench({
               <button aria-pressed={view === 'history'} onClick={() => setView('history')}>
                 History <span>{reviews.length + workspace.history.length}</span>
               </button>
+              <button aria-pressed={view === 'checklist'} onClick={() => setView('checklist')}>
+                Checklist <span>6</span>
+              </button>
             </div>
             <span>Effort /10 · Result /10 · two totals /60</span>
           </div>
-          {view !== 'history' && (
+          {view !== 'history' && view !== 'checklist' && (
             <>
               <div className={styles.tools}>
                 <label className={styles.search}>
@@ -867,6 +871,7 @@ export function ScoreboardWorkbench({
               </div>
             </>
           )}
+          {view === 'checklist' && <ScoreboardChecklist />}
           {view === 'history' && (
             <>
               <ScoreHistory workspace={workspace} reviews={reviews} onImport={onImport} />

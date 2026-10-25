@@ -7,18 +7,32 @@ export function GET() {
     return [
       `## ${project.name}`,
       project.description,
-      `Group: ${project.group}`,
       `Form: ${project.form}`,
       `Platforms: ${project.platforms.join(', ')}`,
       `Uses: ${project.technologies.join(', ')}`,
-      `Deployment: ${project.deployed ? 'deployed' : 'not deployed'}`,
-      ...project.domains.map((domain) => `Destination: https://${domain}`),
+      `Availability: ${project.availability}`,
+      ...(project.publicUrl
+        ? [`${project.publicUrlLabel ?? 'Destination'}: ${project.publicUrl}`]
+        : []),
       ...(project.repositoryUrl ? [`Source: ${project.repositoryUrl}`] : []),
-      `First retained commit: ${project.firstCommitAt ?? 'not retained'}`,
-      `Latest retained commit: ${project.latestCommitAt ?? 'not retained'}`,
       '',
     ];
   });
+  const archived = publicCatalog.archivedDirectory.flatMap((project) => [
+    `## ${project.name} (archived identity)`,
+    project.description,
+    `Form: ${project.form}`,
+    `Platforms: ${project.platforms.join(', ')}`,
+    '',
+  ]);
+  const pastRepositories = publicCatalog.pastProjects.flatMap((project) => [
+    `## ${project.name} (past standalone repository)`,
+    project.description,
+    `Historical profile: https://sassmaker.com/p/${project.id}`,
+    `Public source: ${project.repositoryUrl}`,
+    'This retained route is outside the current product and archived-identity counts.',
+    '',
+  ]);
   const body = [
     '# SaaS Maker — full product index',
     '',
@@ -62,11 +76,17 @@ export function GET() {
       `Author: ${learning.author}`,
       '',
     ]),
-    '# Complete project directory',
+    '# Current product directory',
     '',
-    publicCatalog.historySemantics,
+    `${publicCatalog.directory.length} profiles with explicit availability labels. Profile visibility does not promise public product access.`,
     '',
     ...projects,
+    '# Archived identities',
+    '',
+    ...archived,
+    '# Past standalone repositories',
+    '',
+    ...pastRepositories,
   ].join('\n');
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 }

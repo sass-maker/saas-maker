@@ -3,22 +3,40 @@ import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import GitHubIcon from '../../components/GitHubIcon.astro';
-import { DIRECTORY_PROJECTS, type DirectoryProject } from '../../data/directory';
+import {
+  ARCHIVED_DIRECTORY_PROJECTS,
+  ARCHIVED_REPOSITORY_PROJECTS,
+  DIRECTORY_PROJECTS,
+  type ArchivedDirectoryProject,
+  type ArchivedRepositoryProject,
+  type DirectoryProject,
+} from '../../data/directory';
 import { formatDirectoryDate } from '../../data/format-directory-date';
 
 export function getStaticPaths() {
-  return DIRECTORY_PROJECTS.filter((product) => product.id !== 'saas-maker').map((product) => ({
-    params: { id: product.id },
-    props: { product },
-  }));
+  return [
+    ...DIRECTORY_PROJECTS,
+    ...ARCHIVED_DIRECTORY_PROJECTS,
+    ...ARCHIVED_REPOSITORY_PROJECTS,
+  ]
+    .filter((product) => product.id !== 'saas-maker')
+    .map((product) => ({
+      params: { id: product.id },
+      props: { product },
+    }));
 }
 
 interface Props {
-  product: DirectoryProject;
+  product: DirectoryProject | ArchivedDirectoryProject | ArchivedRepositoryProject;
 }
 
 const { product } = Astro.props as Props;
-const repositoryMatch = product.repositoryUrl?.match(
+const archived = product.roster === 'archived';
+const archivedRepository = product.roster === 'archived-repository';
+const pastProfile = archived || archivedRepository;
+const current = product as DirectoryProject;
+const repositoryUrl = archivedRepository ? product.repositoryUrl : !archived ? current.repositoryUrl : undefined;
+const repositoryMatch = repositoryUrl?.match(
   /^https:\/\/github\.com\/([a-z\d](?:[a-z\d-]*[a-z\d])?)\/([a-z\d._-]+?)(?:\.git)?\/?$/i
 );
 const repositorySlug = repositoryMatch ? `${repositoryMatch[1]}/${repositoryMatch[2]}` : null;
@@ -26,48 +44,72 @@ const issuePagesOrigin = import.meta.env.DEV
   ? 'http://localhost:8787'
   : 'https://issues.sarthakagrawal.dev';
 const profileUrl = `https://sassmaker.com/p/${product.id}`;
-const publicLinks = [
-  ...(product.changelogUrl
-    ? [{ title: 'Changelog', url: product.changelogUrl, description: 'Product-owned release history' }]
+const publicLinks = archivedRepository
+  ? [{ title: 'Source', url: product.repositoryUrl, description: 'Historical public repository' }]
+  : archived ? [] : [
+  ...(current.changelogUrl
+    ? [{ title: 'Changelog', url: current.changelogUrl!, description: 'Product-owned release history' }]
     : []),
-  ...(product.roadmapUrl
-    ? [{ title: 'Issues', url: product.roadmapUrl, description: 'Open work in the issue tracker' }]
+  ...(current.roadmapUrl
+    ? [{ title: 'Issues', url: current.roadmapUrl!, description: 'Open work in the issue tracker' }]
     : []),
-  ...(product.repositoryUrl
-    ? [{ title: 'Source', url: product.repositoryUrl, description: 'Canonical public repository' }]
+    ...(current.repositoryUrl
+    ? [{ title: 'Source', url: current.repositoryUrl!, description: 'Canonical public repository' }]
     : []),
 ];
-const primaryUrl = product.url ?? product.repositoryUrl;
+const primaryUrl = archivedRepository ? product.repositoryUrl : archived ? undefined : current.publicUrl ?? current.repositoryUrl;
 const primaryHost = primaryUrl?.replace(/^https?:\/\//, '').replace(/\/$/, '');
-const primaryLabel = product.url ? 'Open product' : product.repositoryUrl ? 'Open source' : 'Public status';
-const groupLabel = {
-  current: 'Current work',
-  supporting: 'Supporting work',
-  past: 'Past project',
-}[product.group];
-const deploymentLabel = product.deployed
-  ? product.group === 'past'
-    ? 'Live archive'
-    : 'Deployed'
-  : product.lifecycle === 'local-only' || product.platforms.includes('Local')
-    ? 'Local only'
-    : 'Not deployed';
+const primaryLabel = archivedRepository ? 'Open archived source' : !archived && current.publicUrl ? current.publicUrlLabel ?? 'Open product' : !archived && current.repositoryUrl ? 'Open source' : 'Public profile';
+const availabilityText = archivedRepository ? 'Past standalone repository' : archived ? 'Archived identity' : {
+  'public-link': 'Public destination available',
+  'no-public-link': 'No public product link',
+  'not-publicly-available': 'Not publicly available',
+  'internal-private': 'Internal or private',
+  'preview-not-qualified': 'Preview · not qualified for public use',
+  'unreleased-prototype': 'Unreleased prototype',
+}[current.availability];
+const groupLabel = archivedRepository
+  ? 'Past repository'
+  : archived
+    ? 'Archived identity'
+  : { featured: 'Featured', current: 'Current work', past: 'Paused work' }[current.group];
+const deploymentLabel = availabilityText;
 const hasPublicEvidence = publicLinks.length > 0;
 const productSummary = product.description;
+const progressLabel = archivedRepository
+  ? 'Historical source'
+  : hasPublicEvidence
+    ? 'Maintained evidence'
+    : 'Public boundary';
+const progressTitle = archivedRepository
+  ? 'Browse the repository.'
+  : hasPublicEvidence
+    ? 'Follow the work.'
+    : 'Private by design.';
+const progressDescription = archivedRepository
+  ? 'The public source is retained as a historical reference; it does not describe current product operations.'
+  : hasPublicEvidence
+    ? 'Public destinations and repository evidence, when this project publishes them.'
+    : 'The project can be understood here without exposing private or local source.';
 const productJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: product.name,
   url: profileUrl,
   description: productSummary,
-  ...(primaryUrl || product.repositoryUrl
-    ? {
-        sameAs: [primaryUrl, product.repositoryUrl].filter(
-          (value, index, values): value is string => Boolean(value) && values.indexOf(value) === index
-        ),
-      }
-    : {}),
-  applicationCategory: product.form,
+  ...(archivedRepository && primaryUrl
+    ? { sameAs: [primaryUrl] }
+    : !pastProfile && (primaryUrl || current.repositoryUrl)
+      ? {
+          sameAs: [primaryUrl, current.repositoryUrl].filter(
+            (value, index, values): value is string =>
+              Boolean(value) && values.indexOf(value) === index
+          ),
+        }
+      : {}),
+  applicationCategory: archivedRepository
+    ? 'Standalone repository'
+    : (product as DirectoryProject | ArchivedDirectoryProject).form,
 };
 ---
 
@@ -87,14 +129,16 @@ const productJsonLd = {
       <div class="project-wall">
         <div class="project-back">
           <a href="/projects">← Complete register</a>
-          <span>{product.kind} · {groupLabel}</span>
+          <span>{groupLabel}</span>
         </div>
 
         <header class="project-hero">
-          <div class:list={['project-identity', { 'project-identity--with-logo': product.logoUrl }]}>
+          <div class:list={['project-identity', { 'project-identity--with-logo': current.logoUrl && !archived }]}>
             <p class="project-folio">SaaS Maker directory</p>
-            {product.logoUrl && (
-              <img class="project-logo" src={product.logoUrl} alt="" width="96" height="96" />
+            {archived && <p class="project-folio">Historical profile · no public destination listed</p>}
+            {archivedRepository && <p class="project-folio">Past standalone repository · retained public source</p>}
+            {!pastProfile && current.logoUrl && (
+              <img class="project-logo" src={current.logoUrl} alt="" width="96" height="96" />
             )}
             <h1>{product.name}</h1>
             <p class="project-summary">{productSummary}</p>
@@ -108,33 +152,33 @@ const productJsonLd = {
           ) : (
             <div class="project-primary project-primary--quiet">
               <span>Availability</span>
-              <strong>{deploymentLabel === 'Local only' ? 'Maintained local tool' : 'Profile only'}</strong>
-              <span>No public destination</span>
+              <strong>{archived ? 'Archived identity' : deploymentLabel}</strong>
+              <span>{archived ? 'No public destination listed' : 'Profile visibility does not imply public access'}</span>
             </div>
           )}
         </header>
 
-        <section class="project-why" aria-labelledby="why-title">
+        {!pastProfile && <section class="project-why" aria-labelledby="why-title">
           <div class="project-why-title">
             <p class="project-folio">Maker note</p>
             <h2 id="why-title">Why I made this.</h2>
           </div>
-          <blockquote>{product.makerNote}</blockquote>
-        </section>
+          <blockquote>{current.makerNote}</blockquote>
+        </section>}
 
-        {product.purposeContract && (
+        {!pastProfile && current.purposeContract && (
           <section class="project-contract" aria-labelledby="contract-title">
             <header>
               <p class="project-folio">Product contract</p>
               <h2 id="contract-title">What this product promises.</h2>
-              <p>{product.purposeContract.purpose}</p>
+              <p>{current.purposeContract.purpose}</p>
             </header>
             <dl>
-              <div><dt>For</dt><dd>{product.purposeContract.audience}</dd></div>
-              <div><dt>Outcome</dt><dd>{product.purposeContract.outcome}</dd></div>
-              <div><dt>How</dt><dd>{product.purposeContract.mechanism}</dd></div>
-              <div><dt>Proof</dt><dd>{product.purposeContract.proof}</dd></div>
-              <div class="project-contract-action"><dt>Next action</dt><dd>{product.purposeContract.nextAction}</dd></div>
+              <div><dt>For</dt><dd>{current.purposeContract.audience}</dd></div>
+              <div><dt>Outcome</dt><dd>{current.purposeContract.outcome}</dd></div>
+              <div><dt>How</dt><dd>{current.purposeContract.mechanism}</dd></div>
+              {current.purposeContract.proof && <div><dt>Proof</dt><dd>{current.purposeContract.proof}</dd></div>}
+              {current.purposeContract.nextAction && <div class="project-contract-action"><dt>Next action</dt><dd>{current.purposeContract.nextAction}</dd></div>}
             </dl>
           </section>
         )}
@@ -145,28 +189,50 @@ const productJsonLd = {
             <h2 id="anatomy-title">What it is made of.</h2>
           </header>
           <dl>
-            <div><dt>Form</dt><dd>{product.form}</dd></div>
-            <div><dt>Platforms</dt><dd>{product.platforms.join(' · ')}</dd></div>
-            <div><dt>Prominent tools</dt><dd>{product.technologies.join(' · ')}</dd></div>
+            <div><dt>Form</dt><dd>{archivedRepository ? 'Standalone repository' : product.form}</dd></div>
+            <div><dt>Platforms</dt><dd>{archivedRepository ? 'GitHub' : product.platforms.join(' · ')}</dd></div>
+            {!archivedRepository && <div><dt>Prominent tools</dt><dd>{product.technologies.join(' · ')}</dd></div>}
             <div>
-              <dt>Deployment</dt>
-              <dd>{deploymentLabel}</dd>
-              {product.deploymentProviders.length > 0 && <small>{product.deploymentProviders.join(' · ')}</small>}
+              <dt>{pastProfile ? 'Record' : current.deployed === undefined ? 'Availability' : 'Deployment'}</dt>
+              <dd>{archivedRepository ? 'Past standalone repository' : archived ? deploymentLabel : current.deployed === undefined ? deploymentLabel : current.deployed ? 'Deployed' : 'Not deployed'}</dd>
+              {!pastProfile && current.deploymentProviders?.length > 0 && <small>{current.deploymentProviders.join(' · ')}</small>}
             </div>
-            <div><dt>First retained commit</dt><dd>{product.firstCommitAt ? <time datetime={product.firstCommitAt}>{formatDirectoryDate(product.firstCommitAt)}</time> : 'Not retained'}</dd></div>
-            <div><dt>Latest retained commit</dt><dd>{product.latestCommitAt ? <time datetime={product.latestCommitAt}>{formatDirectoryDate(product.latestCommitAt)}</time> : 'Not retained'}</dd></div>
+            {!pastProfile && (
+              <div>
+                <dt>First retained commit</dt>
+                <dd>
+                  {current.firstCommitAt ? (
+                    <time datetime={current.firstCommitAt}>
+                      {formatDirectoryDate(current.firstCommitAt)}
+                    </time>
+                  ) : (
+                    'Not retained'
+                  )}
+                </dd>
+              </div>
+            )}
+            {!pastProfile && (
+              <div>
+                <dt>Latest retained commit</dt>
+                <dd>
+                  {current.latestCommitAt ? (
+                    <time datetime={current.latestCommitAt}>
+                      {formatDirectoryDate(current.latestCommitAt)}
+                    </time>
+                  ) : (
+                    'Not retained'
+                  )}
+                </dd>
+              </div>
+            )}
           </dl>
         </section>
 
         <section class="project-progress" aria-labelledby="progress-title">
           <div class="project-section-head">
-            <p class="project-folio">{hasPublicEvidence ? 'Maintained evidence' : 'Public boundary'}</p>
-            <h2 id="progress-title">{hasPublicEvidence ? 'Follow the work.' : 'Private by design.'}</h2>
-            <p>
-              {hasPublicEvidence
-                ? 'Public destinations and repository evidence, when this project publishes them.'
-                : 'The project can be understood here without exposing private or local source.'}
-            </p>
+            <p class="project-folio">{progressLabel}</p>
+            <h2 id="progress-title">{progressTitle}</h2>
+            <p>{progressDescription}</p>
           </div>
 
           <div class="project-evidence">
@@ -184,8 +250,9 @@ const productJsonLd = {
               </ul>
             ) : (
               <p class="project-empty">
-                This project does not publish repository evidence. Its reviewed rationale and
-                public anatomy remain available on this profile.
+                {archivedRepository
+                  ? 'This historical repository remains linked above. Product operations and status are not implied.'
+                  : 'This project does not publish repository evidence. Its reviewed rationale and public anatomy remain available on this profile.'}
               </p>
             )}
           </div>
@@ -215,7 +282,7 @@ const productJsonLd = {
               ></script>
               <p class="project-issues-fallback">
                 The embedded reader is loading or unavailable.
-                <a href={`${product.repositoryUrl}/issues`}>Read the issues in the source repository.</a>
+                <a href={`${repositoryUrl}/issues`}>Read the issues in the source repository.</a>
               </p>
             </div>
           </section>

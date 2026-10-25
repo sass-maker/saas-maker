@@ -11,7 +11,7 @@ const links = [
   { href: '/tools', label: 'Tools', current: path.startsWith('/tools') },
   { href: '/learnings', label: 'Learnings', current: path.startsWith('/learnings') },
   { href: '/search', label: 'Search', current: path.startsWith('/search') },
-  { href: 'https://app.sassmaker.com/projects?view=scoreboard', label: 'Scoreboard', current: false },
+  { href: 'https://app.sassmaker.com/login?returnTo=feedback', label: 'Log in', current: false },
 ];
 ---
 <nav class="nav" aria-label="Primary navigation">
@@ -27,7 +27,7 @@ const links = [
     <a href="/tools" aria-current={links[4].current ? 'page' : undefined}>Tools</a>
     <a href="/learnings" aria-current={links[5].current ? 'page' : undefined}>Learnings</a>
     <a href="/search" aria-current={links[6].current ? 'page' : undefined}>Search</a>
-    <a href="https://app.sassmaker.com/projects?view=scoreboard" title="Private product scoreboard and next levers">Scoreboard</a>
+    <a href="https://app.sassmaker.com/login?returnTo=feedback">Log in</a>
     <a
       class="nav-source"
       href={GITHUB_REPO_URL}

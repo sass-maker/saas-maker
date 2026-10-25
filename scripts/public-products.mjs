@@ -52,15 +52,30 @@ const DIRECTORY_FIELDS = new Set([
   'deploymentProviders',
   'domains',
   'url',
+  'roster',
+  'availability',
+  'publicUrl',
+  'publicUrlLabel',
   'repositoryUrl',
   'changelogUrl',
   'roadmapUrl',
   'firstCommitAt',
   'latestCommitAt',
 ]);
+const ARCHIVED_DIRECTORY_FIELDS = new Set([
+  'id',
+  'name',
+  'description',
+  'form',
+  'platforms',
+  'technologies',
+  'roster',
+  'availability',
+  'profileUrl',
+]);
 
 const FORBIDDEN_KEYS =
-  /(?:secret|token|password|credential|private|owner|cfProject|notes|dependencies|evidenceSources|contracts|sourcePath|attention)/i;
+  /(?:secret|token|password|credential|private|owner|cfProject|notes|dependencies|evidence|assessment|contracts|sourcePath|attention)/i;
 const CREDENTIAL_VALUE =
   /(?:bearer\s+[a-z0-9._-]+|(?:api|access|secret)[_-]?key\s*[:=]|-----BEGIN [A-Z ]+PRIVATE KEY-----)/i;
 
@@ -76,6 +91,7 @@ export function buildPublicProducts(catalog) {
   const products = [];
   const pastProjects = [];
   const directory = [];
+  const archivedDirectory = [];
   const directoryMetadata = catalog.publicDirectory?.projects;
 
   if (!directoryMetadata || typeof directoryMetadata !== 'object') {
@@ -159,63 +175,191 @@ export function buildPublicProducts(catalog) {
   }
 
   for (const project of catalog.projects) {
-    if (project.lifecycle?.shareable !== true || project.public?.listing === 'hidden') continue;
     const metadata = directoryMetadata[project.id];
-    const repositoryUrl = publicRepositoryUrl(project);
-    const domains = project.domains ?? [];
-    const output = {
+    if (!['active', 'archived'].includes(project.portfolio?.status)) {
+      throw new Error(`${project.id}: portfolio.status must select current or archived roster`);
+    }
+    const roster = project.portfolio.status === 'archived' ? 'archived' : 'current';
+    const outputBase = {
       id: project.id,
       name: project.public?.name ?? project.name,
       description: metadata.description ?? project.public?.description,
-      makerNote: metadata.makerNote,
-      ...(metadata.logoUrl ? { logoUrl: metadata.logoUrl } : {}),
-      ...(metadata.purposeContract ? { purposeContract: metadata.purposeContract } : {}),
-      ...(project.footerArt === undefined
-        ? {}
-        : { footerArt: validateFooterArt(project.footerArt, project.id) }),
-      kind: project.portfolio.kind,
-      category: project.category,
       form: metadata.form,
       platforms: metadata.platforms,
       technologies: metadata.technologies,
+    };
+    if (!outputBase.platforms?.length) {
+      throw new Error(`${project.id}: directory platforms are required`);
+    }
+    if (!outputBase.technologies?.length) {
+      throw new Error(`${project.id}: directory technologies are required`);
+    }
+    if (!outputBase.description || !outputBase.form) {
+      throw new Error(`${project.id}: directory description and form are required`);
+    }
+
+    if (roster === 'archived') {
+      const archived = {
+        ...outputBase,
+        roster: 'archived',
+        availability: 'archived',
+        profileUrl: `https://sassmaker.com/p/${project.id}`,
+      };
+      assertShape(archived, ARCHIVED_DIRECTORY_FIELDS, [
+        'id',
+        'name',
+        'description',
+        'form',
+        'platforms',
+        'technologies',
+        'roster',
+        'availability',
+      ]);
+      archivedDirectory.push(archived);
+      continue;
+    }
+
+    const shareable = project.lifecycle?.shareable === true;
+    const listing = project.public?.listing ?? 'hidden';
+    const wasPubliclyListed = shareable && listing !== 'hidden';
+    const computedAvailability =
+      shareable && listing !== 'hidden'
+        ? 'public-link'
+        : shareable
+          ? 'no-public-link'
+          : 'not-publicly-available';
+    const availability = metadata.availabilityLabel ?? computedAvailability;
+    if (
+      ![
+        'public-link',
+        'no-public-link',
+        'not-publicly-available',
+        'internal-private',
+        'preview-not-qualified',
+        'unreleased-prototype',
+      ].includes(availability)
+    ) {
+      throw new Error(`${project.id}: unsupported directory availability label`);
+    }
+    const preservedPublicFields = wasPubliclyListed
+      ? (() => {
+          const domains = project.domains ?? [];
+          const repositoryUrl = publicRepositoryUrl(project);
+          const url =
+            domains[0] || listing === 'maintained' ? canonicalPublicUrl(project) : undefined;
+          return {
+            ...(metadata.logoUrl ? { logoUrl: metadata.logoUrl } : {}),
+            ...(metadata.purposeContract ? { purposeContract: metadata.purposeContract } : {}),
+            ...(project.footerArt === undefined
+              ? {}
+              : { footerArt: validateFooterArt(project.footerArt, project.id) }),
+            kind: project.portfolio.kind,
+            category: project.category,
+            group: directoryGroup(project),
+            lifecycle: lifecycleStatus(project),
+            shareable: true,
+            deployed: project.portfolio.deployed,
+            deploymentProviders: publicDeploymentProviders(
+              catalog.infrastructure.projects[project.id]?.deployments ?? []
+            ),
+            domains,
+            ...(url ? { url } : {}),
+            ...(repositoryUrl ? { repositoryUrl } : {}),
+            ...(listing === 'maintained' && project.public?.hasChangelog !== false && domains[0]
+              ? { changelogUrl: publicChangelogUrl(canonicalPublicUrl(project)) }
+              : {}),
+            ...(repositoryUrl ? { roadmapUrl: `${repositoryUrl}/issues` } : {}),
+            firstCommitAt: metadata.firstCommitAt,
+            latestCommitAt: metadata.latestCommitAt,
+          };
+        })()
+      : {};
+    const contract = metadata.purposeContract;
+    const safePurposeContract = contract
+      ? Object.fromEntries(
+          [
+            'purpose',
+            'audience',
+            'outcome',
+            'mechanism',
+            ...(wasPubliclyListed ? ['proof', 'nextAction'] : []),
+          ]
+            .filter((field) => typeof contract[field] === 'string' && contract[field].trim())
+            .map((field) => [field, contract[field]])
+        )
+      : undefined;
+    const destinationUrl =
+      metadata.publicDestinationUrl ??
+      (availability === 'public-link' ? preservedPublicFields.url : undefined);
+    if (destinationUrl && !/^https:\/\//.test(destinationUrl)) {
+      throw new Error(`${project.id}: public destination must use HTTPS`);
+    }
+    const destinationLabel =
+      metadata.publicDestinationLabel ??
+      (destinationUrl
+        ? destinationUrl.includes('github.com/')
+          ? 'View source repository'
+          : 'Visit website'
+        : undefined);
+    if (availability === 'public-link' && !destinationUrl) {
+      throw new Error(`${project.id}: public-link availability needs a public destination`);
+    }
+    if (
+      ['not-publicly-available', 'internal-private'].includes(availability) &&
+      (destinationUrl ||
+        preservedPublicFields.url ||
+        preservedPublicFields.repositoryUrl ||
+        preservedPublicFields.domains)
+    ) {
+      throw new Error(
+        `${project.id}: private availability cannot publish public destinations or operational URLs`
+      );
+    }
+    const output = {
+      ...outputBase,
       group: directoryGroup(project),
-      lifecycle: lifecycleStatus(project),
-      shareable: true,
-      deployed: project.portfolio.deployed,
-      deploymentProviders: publicDeploymentProviders(
-        catalog.infrastructure.projects[project.id]?.deployments ?? []
-      ),
-      domains,
-      ...(domains[0] || project.public?.listing === 'maintained'
-        ? { url: canonicalPublicUrl(project) }
+      makerNote: metadata.makerNote ?? outputBase.description,
+      ...(safePurposeContract && Object.keys(safePurposeContract).length === 4
+        ? { purposeContract: safePurposeContract }
         : {}),
-      ...(repositoryUrl ? { repositoryUrl } : {}),
-      ...(project.public?.listing === 'maintained' &&
-      project.public?.hasChangelog !== false &&
-      domains[0]
-        ? { changelogUrl: publicChangelogUrl(canonicalPublicUrl(project)) }
-        : {}),
-      ...(repositoryUrl ? { roadmapUrl: `${repositoryUrl}/issues` } : {}),
-      firstCommitAt: metadata.firstCommitAt,
-      latestCommitAt: metadata.latestCommitAt,
+      ...preservedPublicFields,
+      roster,
+      availability,
+      ...(destinationUrl ? { publicUrl: destinationUrl } : {}),
+      ...(destinationLabel ? { publicUrlLabel: destinationLabel } : {}),
     };
     assertShape(output, DIRECTORY_FIELDS, [
       'id',
       'name',
       'description',
       'makerNote',
-      'kind',
       'form',
       'platforms',
       'technologies',
-      'group',
-      'lifecycle',
+      'roster',
+      'availability',
     ]);
-    if (!Array.isArray(output.platforms) || output.platforms.length === 0) {
-      throw new Error(`${project.id}: directory platforms are required`);
+    if (!wasPubliclyListed && !output.purposeContract) {
+      throw new Error(`${project.id}: current profile needs a safe purpose contract`);
     }
-    if (!Array.isArray(output.technologies) || output.technologies.length === 0) {
-      throw new Error(`${project.id}: directory technologies are required`);
+    if (['internal-private', 'not-publicly-available'].includes(availability) && output.publicUrl) {
+      throw new Error(`${project.id}: private profile cannot publish a public destination`);
+    }
+    if (
+      availability === 'unreleased-prototype' &&
+      output.publicUrl &&
+      destinationLabel !== 'Landing page'
+    ) {
+      throw new Error(
+        `${project.id}: unreleased prototype destination must be identified as a landing page`
+      );
+    }
+    if (
+      availability === 'preview-not-qualified' &&
+      output.publicUrl &&
+      destinationLabel !== 'Preview site'
+    ) {
+      throw new Error(`${project.id}: preview destination must not imply a released product`);
     }
     directory.push(output);
   }
@@ -269,52 +413,6 @@ export function buildPublicProducts(catalog) {
     } else {
       throw new Error(`${id}: unsupported public listing ${publicMetadata.listing}`);
     }
-
-    const output = {
-      id,
-      name: publicMetadata.name,
-      description: directoryMetadata.description ?? publicMetadata.description,
-      makerNote: directoryMetadata.makerNote,
-      ...(directoryMetadata.logoUrl ? { logoUrl: directoryMetadata.logoUrl } : {}),
-      ...(directoryMetadata.purposeContract
-        ? { purposeContract: directoryMetadata.purposeContract }
-        : {}),
-      kind: standaloneKind(repository.futureForm),
-      category: repository.category,
-      form: directoryMetadata.form,
-      platforms: directoryMetadata.platforms,
-      technologies: directoryMetadata.technologies,
-      group: lifecycle === 'inactive' ? 'past' : 'current',
-      lifecycle,
-      shareable: true,
-      deployed: false,
-      deploymentProviders: [],
-      domains: [],
-      url: repositoryUrl,
-      repositoryUrl,
-      roadmapUrl: `${repositoryUrl}/issues`,
-      firstCommitAt: directoryMetadata.firstCommitAt,
-      latestCommitAt: directoryMetadata.latestCommitAt,
-    };
-    assertShape(output, DIRECTORY_FIELDS, [
-      'id',
-      'name',
-      'description',
-      'makerNote',
-      'kind',
-      'form',
-      'platforms',
-      'technologies',
-      'group',
-      'lifecycle',
-    ]);
-    if (!Array.isArray(output.platforms) || output.platforms.length === 0) {
-      throw new Error(`${id}: directory platforms are required`);
-    }
-    if (!Array.isArray(output.technologies) || output.technologies.length === 0) {
-      throw new Error(`${id}: directory technologies are required`);
-    }
-    directory.push(output);
   }
 
   assertUnique(products, 'maintained product');
@@ -323,7 +421,24 @@ export function buildPublicProducts(catalog) {
   if (new Set(allIds).size !== allIds.length) {
     throw new Error('public ids must be unique across maintained and past projects');
   }
-  assertUnique(directory, 'directory project');
+  assertUnique(directory, 'current directory project');
+  assertUnique(archivedDirectory, 'archived directory project');
+  const expectedCurrent = catalog.projects.filter(
+    (project) => project.portfolio?.status === 'active'
+  ).length;
+  const expectedArchived = catalog.projects.filter(
+    (project) => project.portfolio?.status === 'archived'
+  ).length;
+  if (directory.length !== expectedCurrent || archivedDirectory.length !== expectedArchived) {
+    throw new Error(
+      'current and archived directory projections must match canonical portfolio status'
+    );
+  }
+  if ([...directory, ...archivedDirectory].length !== catalog.projects.length) {
+    throw new Error(
+      'current and archived directory rosters must cover every canonical project once'
+    );
+  }
 
   products.sort(
     (left, right) =>
@@ -332,29 +447,16 @@ export function buildPublicProducts(catalog) {
   pastProjects.sort((left, right) => left.name.localeCompare(right.name));
 
   const projection = {
-    schemaVersion: 5,
+    schemaVersion: 6,
     generatedFrom: ['saas-maker/catalog/projects.json'],
     historySemantics: catalog.publicDirectory.historySemantics,
     directory,
+    archivedDirectory,
     products,
     pastProjects,
   };
   assertNoPrivateData(projection);
   return projection;
-}
-
-function directoryGroup(project) {
-  const status = lifecycleStatus(project);
-  if (status === 'primary') return 'featured';
-  if (status === 'inactive') return 'past';
-  return 'current';
-}
-
-function standaloneKind(futureForm) {
-  if (futureForm === 'active-product') return 'product';
-  if (futureForm?.includes('experiment')) return 'experiment';
-  if (futureForm === 'personal-tool') return 'utility';
-  return 'project';
 }
 
 function standaloneRepositoryUrl(repository) {
@@ -379,10 +481,16 @@ function publicRepositoryUrl(project) {
   return repositoryUrl;
 }
 
+function directoryGroup(project) {
+  const status = lifecycleStatus(project);
+  if (status === 'primary') return 'featured';
+  if (status === 'inactive') return 'past';
+  return 'current';
+}
+
 function publicDeploymentProviders(deployments) {
   const labels = new Set();
   for (const deployment of deployments) {
-    const key = `${deployment.provider}:${deployment.kind}`;
     const label = {
       'apple:app-store-connect': 'Apple App Store Connect',
       'cloudflare:email-worker': 'Cloudflare Email Workers',
@@ -390,7 +498,7 @@ function publicDeploymentProviders(deployments) {
       'cloudflare:worker': 'Cloudflare Workers',
       'github:actions': 'GitHub Actions',
       'local:macos-app': 'Local macOS',
-    }[key];
+    }[`${deployment.provider}:${deployment.kind}`];
     if (label) labels.add(label);
   }
   return [...labels];

@@ -723,6 +723,27 @@
       ]
     },
     {
+      "id": "motion",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "The existing public landing includes “Get Motion updates” and a full feedback form. This records form applicability only; delivery and feedback handling have not been requalified after reactivation.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "presentation.directory.publicDestinationUrl",
+          "value": "https://motion.significanthobbies.com"
+        },
+        {
+          "field": "presentation.directory.purposeContract.nextAction",
+          "value": "Test one grab/toss control loop on a physical iPhone while mirroring to a larger screen."
+        }
+      ],
+      "feedbackApplicability": "applicable"
+    },
+    {
       "id": "web-playables",
       "applicability": "newsletter",
       "confidence": "medium",

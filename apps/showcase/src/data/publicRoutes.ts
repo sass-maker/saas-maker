@@ -10,7 +10,14 @@ import { DOMAIN_RANKS, RANKS_UPDATED } from './domainRanks';
 import { LEARNINGS } from './learnings';
 import ideas from './ideas.json';
 import { CORE } from './projects';
-import { DIRECTORY_PROJECTS, type DirectoryProject } from './directory';
+import {
+  ARCHIVED_DIRECTORY_PROJECTS,
+  ARCHIVED_REPOSITORY_PROJECTS,
+  DIRECTORY_PROJECTS,
+  type ArchivedDirectoryProject,
+  type ArchivedRepositoryProject,
+  type DirectoryProject,
+} from './directory';
 import { STUDIO_PROFILE } from './studio';
 import { TOOLING_CAPABILITIES, TOOLING_GROUPS } from './tooling';
 
@@ -24,49 +31,62 @@ export type PublicRoute = {
 
 const SITE_URL = 'https://sassmaker.com';
 
-function productMarkdown(product: DirectoryProject): string {
+type PublicProductProfile = DirectoryProject | ArchivedDirectoryProject | ArchivedRepositoryProject;
+
+function productMarkdown(product: PublicProductProfile): string {
+  const archived = product.roster !== 'current';
+  const archivedRepository = product.roster === 'archived-repository';
+  const profile = product as DirectoryProject;
+  const describedProduct = product as DirectoryProject | ArchivedDirectoryProject;
+  const form = archivedRepository ? 'Standalone repository' : describedProduct.form;
+  const platforms = archivedRepository ? ['GitHub'] : describedProduct.platforms;
+  const technologies = archivedRepository ? [] : describedProduct.technologies;
   const lines = [
     `# ${product.name}`,
     '',
     product.description,
     '',
-    '## Why I made this',
-    '',
-    product.makerNote,
-    '',
-    ...(product.purposeContract
+    ...(archived
+      ? [
+          archivedRepository
+            ? 'Past standalone repository. This historical profile remains available with its public source link; it is not part of the current product roster.'
+            : 'Archived identity. This historical profile is retained for reference; no public destination is listed.',
+          '',
+        ]
+      : []),
+    ...(!archived ? ['## Why I made this', '', profile.makerNote, ''] : []),
+    ...(!archived && profile.purposeContract
       ? [
           '## Product contract',
           '',
-          product.purposeContract.purpose,
+          profile.purposeContract.purpose,
           '',
-          `- Audience: ${product.purposeContract.audience}`,
-          `- Outcome: ${product.purposeContract.outcome}`,
-          `- Mechanism: ${product.purposeContract.mechanism}`,
-          `- Proof: ${product.purposeContract.proof}`,
-          `- Next action: ${product.purposeContract.nextAction}`,
+          `- Audience: ${profile.purposeContract.audience}`,
+          `- Outcome: ${profile.purposeContract.outcome}`,
+          `- Mechanism: ${profile.purposeContract.mechanism}`,
           '',
         ]
       : []),
     '## Public anatomy',
     '',
-    `- Form: ${product.form}`,
-    `- Platforms: ${product.platforms.join(', ')}`,
-    `- Prominent tools: ${product.technologies.join(', ')}`,
-    `- Deployment: ${product.deployed ? 'deployed' : 'not deployed'}`,
-    ...(product.deploymentProviders.length > 0
-      ? [`- Providers: ${product.deploymentProviders.join(', ')}`]
-      : []),
-    `- First retained commit: ${product.firstCommitAt ?? 'not retained'}`,
-    `- Latest retained commit: ${product.latestCommitAt ?? 'not retained'}`,
+    `- Form: ${form}`,
+    `- Platforms: ${platforms.join(', ')}`,
+    ...(technologies.length > 0 ? [`- Prominent tools: ${technologies.join(', ')}`] : []),
+    ...(!archived ? [`- Availability: ${profile.availability}`] : []),
     '',
   ];
-  const links = [
-    ...product.domains.map((domain) => ({ title: domain, url: `https://${domain}` })),
-    ...(product.changelogUrl ? [{ title: 'Changelog', url: product.changelogUrl }] : []),
-    ...(product.roadmapUrl ? [{ title: 'Issues', url: product.roadmapUrl }] : []),
-    ...(product.repositoryUrl ? [{ title: 'Source', url: product.repositoryUrl }] : []),
-  ];
+  const links = archivedRepository
+    ? [{ title: 'Source', url: product.repositoryUrl }]
+    : archived
+      ? []
+      : [
+          ...(profile.publicUrl
+            ? [{ title: profile.publicUrlLabel ?? 'Product', url: profile.publicUrl }]
+            : []),
+          ...(profile.changelogUrl ? [{ title: 'Changelog', url: profile.changelogUrl }] : []),
+          ...(profile.roadmapUrl ? [{ title: 'Issues', url: profile.roadmapUrl }] : []),
+          ...(profile.repositoryUrl ? [{ title: 'Source', url: profile.repositoryUrl }] : []),
+        ];
 
   if (links.length > 0) {
     lines.push(
@@ -128,7 +148,7 @@ function homeMarkdown(): string {
     ...featuredProducts,
     '## Complete directory',
     '',
-    `Current, supporting, parked, and past work is enumerated once at ${SITE_URL}/projects.`,
+    `The current product roster is at ${SITE_URL}/projects; archived identities are listed separately at ${SITE_URL}/archive.json.`,
     '',
     `- Human directory: ${SITE_URL}/projects`,
     `- Agent-readable directory: ${SITE_URL}/projects.md`,
@@ -212,47 +232,60 @@ function studioMarkdown(): string {
 }
 
 function directoryMarkdown(): string {
-  const groups = [
-    ['current', 'Current work'],
-    ['supporting', 'Supporting and parked'],
-    ['past', 'Past projects'],
-  ] as const;
-  const entries = groups.flatMap(([group, label]) => [
-    `# ${label}`,
+  const entries = publicCatalog.directory.flatMap((project) => [
+    `## ${project.name}`,
     '',
-    ...publicCatalog.directory
-      .filter((project) => project.group === group)
-      .flatMap((project) => [
-        `## ${project.name}`,
-        '',
-        project.description,
-        '',
-        `> ${project.makerNote}`,
-        '',
-        `- Project note: ${SITE_URL}${project.id === 'saas-maker' ? '/' : `/p/${project.id}`}`,
-        `- Form: ${project.form}`,
-        `- Platforms: ${project.platforms.join(', ')}`,
-        `- Uses: ${project.technologies.join(', ')}`,
-        `- Deployment: ${project.deployed ? 'deployed' : 'not deployed'}`,
-        ...(project.deploymentProviders.length > 0
-          ? [`- Providers: ${project.deploymentProviders.join(', ')}`]
-          : []),
-        ...project.domains.map((domain) => `- Public destination: https://${domain}`),
-        ...(project.repositoryUrl ? [`- Public source: ${project.repositoryUrl}`] : []),
-        `- First retained commit: ${project.firstCommitAt ?? 'not retained'}`,
-        `- Latest retained commit: ${project.latestCommitAt ?? 'not retained'}`,
-        '',
-      ]),
+    project.description,
+    '',
+    `> ${project.makerNote}`,
+    '',
+    `- Project note: ${SITE_URL}${project.id === 'saas-maker' ? '/' : `/p/${project.id}`}`,
+    `- Form: ${project.form}`,
+    `- Platforms: ${project.platforms.join(', ')}`,
+    `- Uses: ${project.technologies.join(', ')}`,
+    `- Availability: ${project.availability}`,
+    ...(project.publicUrl ? [`- Public destination: ${project.publicUrl}`] : []),
+    ...(project.repositoryUrl ? [`- Public source: ${project.repositoryUrl}`] : []),
+    '',
+  ]);
+  const archive = publicCatalog.archivedDirectory.flatMap((project) => [
+    `## ${project.name}`,
+    '',
+    project.description,
+    '',
+    `- Historical profile: ${SITE_URL}/p/${project.id}`,
+    '- Status: archived identity; no public destination exposed',
+    '',
+  ]);
+  const pastRepositories = ARCHIVED_REPOSITORY_PROJECTS.flatMap((project) => [
+    `## ${project.name}`,
+    '',
+    project.description,
+    '',
+    `- Historical profile: ${SITE_URL}/p/${project.id}`,
+    `- Public source: ${project.repositoryUrl}`,
+    '- Status: past standalone repository; excluded from the current product roster',
+    '',
   ]);
 
   return [
-    '# SaaS Maker shareable projects',
+    '# SaaS Maker current product directory',
     '',
-    `${publicCatalog.directory.length} shareable projects and experiments. Paused entries have no active development commitment; inclusion does not mean a finished product.`,
+    `${publicCatalog.directory.length} current product profiles. Availability is labeled per profile; an included profile does not imply a public destination or completed product.`,
     '',
     publicCatalog.historySemantics,
     '',
     ...entries,
+    '# Archived identities',
+    '',
+    'These historical profiles are kept separately from the current product directory.',
+    '',
+    ...archive,
+    '# Past standalone repositories',
+    '',
+    'These public repository profiles remain available as historical routes and do not count as current or archived product identities.',
+    '',
+    ...pastRepositories,
   ].join('\n');
 }
 
@@ -578,15 +611,19 @@ const fundingDocRoutes: PublicRoute[] = FUNDING_DOCS.map((doc) => ({
   markdown: fundingDocMarkdown[doc.slug],
 }));
 
-const productRoutes: PublicRoute[] = DIRECTORY_PROJECTS.filter(
-  (product) => product.id !== 'saas-maker'
-).map((product) => ({
-  id: `product-${product.id}`,
-  path: `/p/${product.id}`,
-  description: product.description,
-  kind: 'profile',
-  markdown: productMarkdown(product),
-}));
+const productRoutes: PublicRoute[] = [
+  ...DIRECTORY_PROJECTS,
+  ...ARCHIVED_DIRECTORY_PROJECTS,
+  ...ARCHIVED_REPOSITORY_PROJECTS,
+]
+  .filter((product) => product.id !== 'saas-maker')
+  .map((product) => ({
+    id: `product-${product.id}`,
+    path: `/p/${product.id}`,
+    description: product.description,
+    kind: 'profile',
+    markdown: productMarkdown(product),
+  }));
 
 export const PUBLIC_ROUTES = [
   ...fixedRoutes,

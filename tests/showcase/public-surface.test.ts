@@ -95,8 +95,9 @@ describe('SaaS Maker public source boundary', () => {
     );
     expect(projectsSource).toMatch(/\['personal-website', 'saas-maker'\]\.includes\(product\.id\)/);
     expect(routesSource).toMatch(/CORE\.flatMap/);
-    expect(routesSource).toMatch(/DIRECTORY_PROJECTS\.filter/);
-    expect(routesSource).toMatch(/product\.makerNote/);
+    expect(routesSource).toMatch(/\.\.\.DIRECTORY_PROJECTS/);
+    expect(routesSource).toMatch(/\.\.\.ARCHIVED_REPOSITORY_PROJECTS/);
+    expect(routesSource).toMatch(/profile\.makerNote/);
     expect(navSource).toMatch(/GITHUB_REPO_URL/);
     expect(navSource).toMatch(/aria-label="GitHub repository"/);
     expect(navSource).toMatch(/<GitHubIcon/);
@@ -175,7 +176,7 @@ describe('SaaS Maker public source boundary', () => {
     expect(projects).not.toMatch(/ACTIVE_GROUPS|PAST_PROJECTS/);
   });
 
-  it('publishes one expanded profile and Markdown route for every non-directory identity', async () => {
+  it('publishes one expanded profile and Markdown route for current, archived, and past repository identities', async () => {
     const [detailPage, routesSource, catalogSource] = await Promise.all([
       readShowcase('src/pages/p/[id].astro'),
       readShowcase('src/data/publicRoutes.ts'),
@@ -183,16 +184,27 @@ describe('SaaS Maker public source boundary', () => {
     ]);
     const catalog = JSON.parse(catalogSource);
 
-    expect(catalog.directory.map((project: { id: string }) => project.id).sort()).toEqual(
-      [...catalog.products, ...catalog.pastProjects]
-        .map((project: { id: string }) => project.id)
-        .sort()
+    const currentIds = catalog.directory.map((project: { id: string }) => project.id);
+    const archivedIds = catalog.archivedDirectory.map((project: { id: string }) => project.id);
+    const pastRepositoryIds = catalog.pastProjects.map((project: { id: string }) => project.id);
+    expect(currentIds).toHaveLength(40);
+    expect(archivedIds).toHaveLength(38);
+    expect(currentIds).toEqual(
+      expect.arrayContaining(catalog.products.map((product: { id: string }) => product.id))
     );
-    expect(detailPage).toMatch(/DIRECTORY_PROJECTS\.filter/);
+    expect(new Set([...currentIds, ...archivedIds, ...pastRepositoryIds]).size).toBe(
+      currentIds.length + archivedIds.length + pastRepositoryIds.length
+    );
+    expect(detailPage).toMatch(/\.\.\.DIRECTORY_PROJECTS/);
+    expect(detailPage).toMatch(/\.\.\.ARCHIVED_DIRECTORY_PROJECTS/);
+    expect(detailPage).toMatch(/\.\.\.ARCHIVED_REPOSITORY_PROJECTS/);
     expect(detailPage).toMatch(/Why I made this\./);
     expect(detailPage).toMatch(/Public anatomy/);
-    expect(detailPage).toMatch(/product\.makerNote/);
-    expect(detailPage).toMatch(/product\.purposeContract/);
+    expect(detailPage).toMatch(/current\.makerNote/);
+    expect(detailPage).toMatch(/current\.purposeContract/);
+    expect(detailPage).toMatch(/formatDirectoryDate\(current\.firstCommitAt\)/);
+    expect(detailPage).toMatch(/formatDirectoryDate\(current\.latestCommitAt\)/);
+    expect(detailPage).toMatch(/'Not retained'/);
     expect(routesSource).toMatch(/Product contract/);
     expect(routesSource).toMatch(/path: `\/p\/\$\{product\.id\}`/);
     expect(routesSource).toMatch(/This profile is generated from reviewed public facts/);
@@ -218,6 +230,6 @@ describe('SaaS Maker public source boundary', () => {
       expect(icon.subarray(0, 8)).toEqual(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
     }
     expect(directoryPage).toMatch(/project\.logoUrl/);
-    expect(detailPage).toMatch(/product\.logoUrl/);
+    expect(detailPage).toMatch(/current\.logoUrl/);
   });
 });

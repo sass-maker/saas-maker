@@ -5,11 +5,9 @@ import {
   directoryFormFamilies,
 } from './directory';
 
-// The browsing view excludes archived work; retained profile routes and the
-// public catalog continue to use the complete, checked-in projection.
-export const PROJECTS_DIRECTORY = DIRECTORY_PROJECTS.filter(
-  (project) => project.lifecycle !== 'inactive'
-);
+// The current Products view is the canonical current roster. Historical
+// identities are projected and rendered separately as archivedDirectory.
+export const PROJECTS_DIRECTORY = DIRECTORY_PROJECTS;
 export const PROJECTS_DIRECTORY_GROUPS = DIRECTORY_GROUPS.map((group) => ({
   ...group,
   projects: PROJECTS_DIRECTORY.filter((project) => project.group === group.id),

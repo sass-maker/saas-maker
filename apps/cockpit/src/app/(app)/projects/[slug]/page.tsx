@@ -1,6 +1,6 @@
 import { ProjectContent } from './project-content';
 import { notFound } from 'next/navigation';
-import { getProjectBySlug, getServerToken } from '@/lib/api';
+import { getProjectBySlug, getServerToken } from '@/lib/server-api';
 import { getDashboardSession } from '@/lib/server-session';
 import { redirect } from 'next/navigation';
 

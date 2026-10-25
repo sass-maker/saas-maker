@@ -1,7 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { apiFetchClient, getClientToken } from '../../apps/cockpit/src/lib/api-client';
-import { getProjectBySlug } from '../../apps/cockpit/src/lib/api';
+import { getProjectBySlug } from '../../apps/cockpit/src/lib/server-api';
 import { API_FALLBACK_BASES } from '../../apps/cockpit/src/lib/api-base';
+
+vi.mock('server-only', () => ({}));
 
 afterEach(() => vi.unstubAllGlobals());
 

@@ -28,7 +28,7 @@ describe('canonical SaaS Maker studio identity', () => {
 
   it('selects proof only from the shareable public catalog', () => {
     const ids = STUDIO_PROFILE.representativeWork.map((project) => project.id);
-    expect(ids).toEqual(['codevetter', 'posttrainllm']);
+    expect(ids).toEqual(['codevetter', 'pace', 'posttrainllm', 'live']);
     expect(ids).not.toContain('high-signal');
     expect(ids).not.toContain('anchor');
     expect(new Set(ids).size).toBe(ids.length);
@@ -43,7 +43,7 @@ describe('canonical SaaS Maker studio identity', () => {
 
     expect(
       STUDIO_PROFILE.representativeWork.filter((project) => project.repositoryUrl)
-    ).toHaveLength(2);
+    ).toHaveLength(4);
   });
 
   it('projects the same studio facts into Markdown, llms.txt, and the agent catalog', async () => {

@@ -65,8 +65,12 @@ pnpm catalog:sync
 pnpm --dir ../site-health docs:projects
 ```
 
-- `generated/public.json`: allowlisted public export. Only explicitly shareable,
-  non-hidden projects appear; inactive shareable experiments may still appear.
+- `generated/public.json`: public projection. `products` and `pastProjects`
+  contain only explicitly shareable, non-hidden listings. `directory` and
+  `archivedDirectory` expose current and archived profiles with reviewed
+  presentation fields and explicit availability labels; private/internal
+  profiles omit operational domains and destination URLs. Past standalone
+  repositories remain separate from those roster counts.
 - `generated/repository-classifications.md`: complete 82-repository review table.
 - `generated/operations.json`: private, generated compatibility view for existing
   tools. Site Health's `apps/backend/config/projects.json` links here. Never edit

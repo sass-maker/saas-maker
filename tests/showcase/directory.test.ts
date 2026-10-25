@@ -240,7 +240,7 @@ describe('directory visible counts', () => {
 });
 
 describe('verified public Fleet directory', () => {
-  it('projects only shareable identities with privacy-safe anatomy', async () => {
+  it('projects the complete current roster with privacy-safe anatomy', async () => {
     const catalog = JSON.parse(await readRepository('catalog/generated/public.json'));
     const ids = catalog.directory.map((project: { id: string }) => project.id);
     expect(ids).not.toContain('on-record');
@@ -251,13 +251,21 @@ describe('verified public Fleet directory', () => {
       },
       {}
     );
-    const projectedIds = [...catalog.products, ...catalog.pastProjects].map(
-      (project: { id: string }) => project.id
-    );
-
-    expect(catalog.schemaVersion).toBe(5);
+    expect(catalog.schemaVersion).toBe(6);
+    expect(ids).toHaveLength(40);
     expect(new Set(ids).size).toBe(catalog.directory.length);
-    expect(ids.toSorted()).toEqual(projectedIds.toSorted());
+    const archivedIds = catalog.archivedDirectory.map((project: { id: string }) => project.id);
+    expect(archivedIds).toHaveLength(38);
+    expect(new Set([...ids, ...archivedIds]).size).toBe(ids.length + archivedIds.length);
+    expect(
+      catalog.directory.every((project: { roster: string }) => project.roster === 'current')
+    ).toBe(true);
+    expect(
+      catalog.archivedDirectory.every(
+        (project: { roster: string; availability: string }) =>
+          project.roster === 'archived' && project.availability === 'archived'
+      )
+    ).toBe(true);
     expect(Object.values(counts).reduce((total, count) => total + count, 0)).toBe(
       catalog.directory.length
     );
@@ -318,13 +326,47 @@ describe('verified public Fleet directory', () => {
       'reel-pipeline',
       'forecast-lab',
       'companion-robot',
-      'ai-game',
       'open-historia',
-      'motion',
       'truehire',
       'mobile-dev-cockpit',
     ]) {
       expect(ids).not.toContain(heldId);
+    }
+    expect(ids).toContain('motion');
+    expect(
+      catalog.directory.find((project: { id: string }) => project.id === 'motion')
+    ).toMatchObject({
+      availability: 'unreleased-prototype',
+      publicUrl: 'https://motion.significanthobbies.com',
+      publicUrlLabel: 'Landing page',
+      group: 'current',
+    });
+    for (const id of [
+      'site-health',
+      'chatgpt-connections',
+      'nutrition-formula-engine',
+      'agent-inbox',
+      'fleet-social',
+      'unified-portfolio',
+    ]) {
+      expect(catalog.directory.find((project: { id: string }) => project.id === id)).toMatchObject({
+        availability: 'internal-private',
+      });
+      expect(
+        catalog.directory.find((project: { id: string }) => project.id === id)
+      ).not.toHaveProperty('publicUrl');
+    }
+    for (const id of ['techdata', 'meme-lab', 'every-song-is-a-website']) {
+      expect(catalog.directory.find((project: { id: string }) => project.id === id)).toMatchObject({
+        availability: 'public-link',
+        publicUrlLabel: 'Visit website',
+      });
+    }
+    for (const id of ['reader', 'ai-game']) {
+      expect(catalog.directory.find((project: { id: string }) => project.id === id)).toMatchObject({
+        availability: 'preview-not-qualified',
+        publicUrlLabel: 'Preview site',
+      });
     }
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'chatgpt-memory-insights')
@@ -332,22 +374,22 @@ describe('verified public Fleet directory', () => {
     ).toContain('browser-local experiment');
 
     for (const project of catalog.directory) {
-      expect(project.shareable).toBe(true);
+      if (project.availability === 'public-link') expect(project.publicUrl).toMatch(/^https:\/\//);
       expect(project.name).toBeTruthy();
       expect(project.description).toBeTruthy();
       expect(project.makerNote.trim()).not.toBe('');
       expect(project.form).toBeTruthy();
       expect(project.platforms.length).toBeGreaterThan(0);
       expect(project.technologies.length).toBeGreaterThan(0);
-      if (project.id !== 'ios-landings') {
-        expect(Object.keys(project.purposeContract).sort()).toEqual([
-          'audience',
-          'mechanism',
-          'nextAction',
-          'outcome',
-          'proof',
-          'purpose',
-        ]);
+      if (project.purposeContract) {
+        expect(Object.keys(project.purposeContract)).toEqual(
+          expect.arrayContaining(['audience', 'mechanism', 'outcome', 'purpose'])
+        );
+        expect(
+          Object.keys(project.purposeContract).every((key: string) =>
+            ['purpose', 'audience', 'outcome', 'mechanism', 'proof', 'nextAction'].includes(key)
+          )
+        ).toBe(true);
       }
       expect(JSON.stringify(project)).not.toMatch(
         /(?:sourcePath|cfProject|credential|password|private repository|\/Users\/)/i
@@ -367,14 +409,14 @@ describe('verified public Fleet directory', () => {
     expect(page).toMatch(/data-directory-row/);
     expect(page).toMatch(/<details/);
     expect(page).toMatch(/<summary class="directory-summary" aria-label=/);
-    expect(page).toMatch(/Search name, purpose, stack, or domain/);
+    expect(page).toMatch(/Search name, purpose, or stack/);
     expect(page).toMatch(/First retained commit/);
     expect(page).toMatch(/Latest retained commit/);
     expect(page).toMatch(/Prominent tools/);
     expect(page).toMatch(/data-directory-filter-return/);
     expect(page).toContain('data-directory-section-count');
-    expect(page).toContain("total {DIRECTORY_COUNT === 1 ? 'project' : 'projects'}");
-    expect(page).toMatch(/Shareable does not mean finished/);
+    expect(page).toContain('of ${rows.length} total');
+    expect(page).toMatch(/A profile is not a public access promise/);
     expect(data).toMatch(/publicCatalog\.directory/);
     expect(nav).toMatch(/href="\/projects"/);
     expect(routes).toMatch(/path: '\/projects'/);

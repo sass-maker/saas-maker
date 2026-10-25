@@ -1,22 +1,19 @@
-import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { Activity } from 'lucide-react';
 import { SidebarNav } from '@/components/sidebar-nav';
 import { MobileNav } from '@/components/mobile-nav';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { getLocalDevSession, isLocalAuthBypassEnabled } from '@/lib/local-auth';
 import { UserMenu } from '@/components/user-menu';
 import { CockpitResources } from '@/components/cockpit-resources';
 import { SaaSMakerMark } from '@/components/saas-maker-mark';
+import { getDashboardSession } from '@/lib/server-session';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const requestHeaders = await headers();
   const scoreboardActive = requestHeaders.get('x-saasmaker-private-surface') === 'scoreboard';
-  const session = isLocalAuthBypassEnabled(requestHeaders.get('host'))
-    ? getLocalDevSession()
-    : await auth.api.getSession({ headers: requestHeaders });
+  const session = await getDashboardSession();
 
   return (
     <div className="min-h-screen flex bg-background text-foreground">

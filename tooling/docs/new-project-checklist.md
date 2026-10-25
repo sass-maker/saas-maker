@@ -143,6 +143,22 @@ The Fleet root is unversioned; the catalog in phase 2 is the project list.
       [content-coverage](../skills/content-coverage/SKILL.md) to identify useful
       gaps, weak coverage and overlap. Choose refresh, new page, investigation
       or leave alone; prioritize product fit before search volume
+- [ ] Qualify third-party brand-profile and distribution platforms by intended
+      audience fit, editorial quality, cost, submission terms, and privacy.
+      Keep product name, canonical URL, category, description, and claims accurate;
+      record the selected platform, resulting public URL, publication date, and
+      any submission or indexing receipt. A published profile or submitted URL
+      records effort only, not indexing, traffic, or ranking
+- [ ] Distribute original or meaningfully adapted material only where the
+      destination serves the audience. Keep an evidence-backed destination and
+      date for each contribution; avoid duplicate blasts, unsupported claims,
+      or treating publication volume as growth
+- [ ] Before every public post, run the Humanizer skill. If it is not listed
+      with advertised skills, check the managed install at
+      `~/.local/share/agent-config/skills/humanizer/SKILL.md`. Review the rewrite
+      against approved facts and preserve claims, links, and disclosures; retain
+      the final copy revision. If the skill cannot be loaded, hold that post and
+      report the missing step
 - [ ] Keep important pages accurate as the product and market change:
       capabilities, instructions, comparisons, examples, screenshots, pricing,
       links and sources. Refresh stale answers substantively; do not change a
@@ -158,6 +174,12 @@ The Fleet root is unversioned; the catalog in phase 2 is the project list.
 - [ ] Search Console property and sitemap are configured. Inspect discovery,
       crawl, indexing and Google-selected canonicals for important changed
       pages, not only the homepage. A submission is not proof of indexing
+- [ ] For changed owned URLs, record the first-observed index state, inspected
+      URL, selected canonical, and evidence time in Search Console. This is not
+      the exact index event time, and absence from a `site:` query alone does
+      not prove exclusion. For external profiles, use evidence available from
+      the relevant engine or destination. Recheck at a stated observation
+      window; no fixed 24-hour interval guarantees indexing
 - [ ] Review relevant query–page pairs: impressions, position, CTR, clicks,
       intent and downstream actions. Investigate declines and high-exposure,
       low-click pages before selecting a content, snippet or technical fix
@@ -165,6 +187,10 @@ The Fleet root is unversioned; the catalog in phase 2 is the project list.
       non-brand discovery, relevant and off-intent queries, and concentration
       in a few pages/products. Report qualified visits and useful conversions
       where available; do not equate more pages or impressions with growth
+- [ ] For a fixed query set, record unique owned URLs appearing in the top 20
+      results with engine, query, date, and position. Measure non-QA referral
+      visits that complete a useful conversion over a stated window; missing
+      attribution stays unknown
 
 ### GEO: earn accurate inclusion in AI answers
 
@@ -184,10 +210,29 @@ The Fleet root is unversioned; the catalog in phase 2 is the project list.
       our product is absent, misrepresented or unsupported. Identify the
       specific missing answer, proof, entity signal or access barrier before
       proposing owned-page changes or legitimate third-party contributions
+- [ ] Keep brand-controlled third-party profiles and contributed facts
+      consistent with verifiable owned evidence and known product limits.
+      Record profile and contribution URLs/dates as effort; measure citations
+      to brand-authored URLs as distribution results, separately from
+      independent editorial citations and accurate recommendations
 - [ ] Verify authorized changes live, then repeat comparable observations on
       the same prompt set and engine/surface. Review citation and mention
       changes separately from attributable referrals and useful actions;
       keep small samples, failed captures and missing attribution explicit
+- [ ] Separate effort (qualified profiles, useful published contributions,
+      versioned prompt runs, and retained submission/index receipts) from result
+      (first-observed index state/evidence time, unique owned top-20 URLs,
+      citations to brand-authored URLs, independent AI citations, accurate
+      recommendations, and non-QA referral conversions). Publishing, submission,
+      impressions, or screenshots can document activity or visibility but do not
+      establish qualified use or growth by themselves. None is guaranteed by a
+      publication or a 24-hour wait
+
+Public distribution is applicable only where the catalog records a public
+audience and the owner intends discovery. Internal, private, local, or otherwise
+non-public products may record Not applicable with the reason; do not expose
+their URLs or force a public profile. Missing evidence remains unknown rather
+than zero, and this checklist is guidance—not an auto-ticked readiness state.
 
 Use [evidence and exact-edit review](../skills/seo-research/references/opportunity-review.md)
 for both lanes. Google's guidance on
@@ -211,6 +256,7 @@ also applies; technical eligibility does not guarantee visibility or growth.
 
 - [ ] Compare promised core workflows with alternatives and category expectations. Record required capabilities, deliberate omissions and actual gaps; prioritize fit and complete useful tasks over feature counts. Do not claim parity from a feature list or mockup.
 - [ ] Verify the promised workflow end to end, including applicable signup/install, permissions, input, useful result, save/reopen/export and recovery. Check supported platforms and package/app versions; keep unavailable private/native checks explicit.
+- [ ] For applicable CLI/API/MCP and agent surfaces, document discovery, setup, auth scopes, errors and bounded/idempotent actions; test a supported agent through a real core workflow and recovery. Justify N/A where the product does not benefit from an interface. Presence or documentation alone is not end-to-end proof.
 - [ ] `test-quality`: a regression test on the core loop
 - [ ] Positioning/copy pass (`marketing` skill): claims match what shipped
 - [ ] `launch-campaign`: one owner-approved plan; directory runs use its
