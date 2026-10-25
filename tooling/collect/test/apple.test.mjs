@@ -73,6 +73,9 @@ test("Apple HTTP429 Retry-After is exposed unchanged and no internal retry spend
   const collector = createAppleCollector(options({ reserve() { reservations++; }, fetchImpl: async () => { requests++; return new Response("wait", { status: 429, headers: { "retry-after": "600" } }); } }));
   await assert.rejects(collector.search(input), e => e instanceof AppleCollectionError && e.status === 429 && e.retryAfter === 600 && e.code === "upstream_http"); assert.equal(requests, 1); assert.equal(reservations, 1);
 });
+test("upstream 503 preserves its real Retry-After header while mapping the safe status", async () => {
+  await assert.rejects(createAppleCollector(options({ fetchImpl: async () => new Response(null, { status: 503, headers: { "retry-after": "120" } }) })).search(input), e => e.status === 502 && e.retryAfter === 120 && e.code === "upstream_http");
+});
 test("missing or invalid Retry-After never fabricates provider guidance", async () => {
   for (const header of [null, "unknown", "x".repeat(101)]) {
     await assert.rejects(createAppleCollector(options({ fetchImpl: async () => new Response(null, { status: 429, headers: header === null ? {} : { "retry-after": header } }) })).search(input), e => e.retryAfter === null);

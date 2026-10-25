@@ -219,7 +219,9 @@ shared provider gate.
   may inject a shorter deadline, fetch implementation and clock. Abort signals
   cancel collection and reservation waiting without scheduling another call.
 - `AppleCollectionError` exposes `code`, safe `status` and nullable
-  `retryAfter` seconds. Apple HTTP 429 remains 429 with Apple’s Retry-After when present (otherwise null); network,
+  `retryAfter` seconds. Valid Retry-After headers are preserved on any upstream
+  HTTP error, including 503; absent or invalid headers yield null. Apple HTTP
+  429 remains 429; other upstream HTTP errors map to 502. Network,
   timeout, invalid query, platform mismatch and malformed/oversized response
   states remain distinct. No failure is returned as a successful empty capture.
 
