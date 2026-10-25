@@ -358,22 +358,6 @@
       }
     },
     {
-      "id": "field-track",
-      "state": "ready",
-      "event": {
-        "name": "manager_dashboard_opened",
-        "text": "Manager dashboard",
-        "href": "/admin"
-      },
-      "funnel": {
-        "name": "discover_to_manager_demo",
-        "steps": [
-          "page:/",
-          "event:manager_dashboard_opened"
-        ]
-      }
-    },
-    {
       "id": "anchor",
       "state": "ready",
       "event": {

@@ -448,16 +448,6 @@
       ]
     },
     {
-      "id": "ios-landings",
-      "name": "iOS landings",
-      "repo": "ui-library/archives/ios-landings",
-      "clarityId": "y6buu9qzrj",
-      "hostname": "journal.significanthobbies.com",
-      "wiredFiles": [],
-      "reason": "Factory identity has no standalone public page; per-product generated pages receive their product IDs instead.",
-      "browserSurfaces": []
-    },
-    {
       "id": "rolepatch",
       "name": "RolePatch",
       "repo": "rolepatch",
@@ -685,23 +675,6 @@
       "wiredFiles": [],
       "reason": "Intentionally unwired: product decommissioned 2026-09-26 (Cloudflare deployment removed, repository transferred to personal profile); Clarity identity retained for historical data only.",
       "browserSurfaces": []
-    },
-    {
-      "id": "field-track",
-      "name": "Field Track",
-      "repo": "field-track",
-      "clarityId": "y6bwivrpqg",
-      "hostname": "field-track.sassmaker.com",
-      "wiredFiles": [
-        "field-track/src/layouts/AppLayout.astro"
-      ],
-      "reason": "Clarity covers only the credential-free synthetic manager demo; the public Worker has no production D1 binding and the native employee application is excluded. Owner-retired on 2026-10-08; retain this Clarity identity and historical attribution only.",
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "field-track/src/layouts/AppLayout.astro"
-        }
-      ]
     },
     {
       "id": "verified-bases",
