@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Manage agent writer worktrees, pinned-pnpm installs and bounded commands.
-// Private state stays outside repositories; cleanup is dry-run and close is reversible.
+// Private state stays outside repositories; merged task checkouts are disposable.
 import { parseArgs } from 'node:util';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -14,16 +14,18 @@ const help = `fleet-workspace <command> [options]
   lockfile-only --id <id> [--package-dir <relative-child>]
                                    Update an existing pnpm lockfile without installing.
   run (--id <id> | --repo <path>) -- <command> [args...]
-  close --id <id> [--dry-run] [--landed <sha>]
-  close --all-landed [--dry-run] [--idle-minutes <n>] (default: 30)
-                                   Check source and open files; retire reversibly.
+  close --id <id> [--dry-run] [--landed <sha>] [--retain]
+  close --all-landed [--dry-run] [--idle-minutes <n>] [--retain] (default: 30)
+                                   Delete clean merged checkouts and recognized
+                                   generated output. --retain moves to retired.
                                    Squash-landed branches pass when their changed
                                    paths match the remote default branch, a merged
                                    GitHub PR contains HEAD, or --landed names the
                                    commit that landed them. Bulk close keeps busy,
                                    recently active, dirty and unlanded worktrees.
   reconcile [--dry-run]           Mark records whose folder is gone as missing.
-  gc --dry-run                    Review managed workspaces; never deletes.
+  gc (--dry-run | --apply)         Delete eligible previously retired worktrees.
+                                  Same merge, unknown-data and busy-work checks.
   inventory --path <path>          Read-only legacy checkout/store discovery.
   configure [--store-dir <path>] [--max-writers <n>] [--max-heavy-jobs <n>]
             [--workspace-gib <n>] [--total-gib <n>] [--min-free-gib <n>]
@@ -41,6 +43,7 @@ export async function main(argv = process.argv.slice(2)) {
     'max-writers': { type: 'string' }, 'max-heavy-jobs': { type: 'string' }, 'workspace-gib': { type: 'string' },
     'total-gib': { type: 'string' }, 'min-free-gib': { type: 'string' }, 'idle-minutes': { type: 'string' },
     'all-landed': { type: 'boolean' }, 'no-disk': { type: 'boolean' },
+    retain: { type: 'boolean' }, apply: { type: 'boolean' },
     offline: { type: 'boolean' }, 'dry-run': { type: 'boolean' }, help: { type: 'boolean', short: 'h' },
   } });
   if (opts.help || positionals.length === 0) { console.log(help); return; }
@@ -57,17 +60,17 @@ export async function main(argv = process.argv.slice(2)) {
     case 'close':
       if (opts['all-landed']) {
         if (opts.id || opts.landed !== undefined) throw new Error('--all-landed cannot be combined with --id or --landed.');
-        result = await manager.closeAllLanded({ dryRun: opts['dry-run'], idleMinutes: opts['idle-minutes'] === undefined ? 30 : Number(opts['idle-minutes']) });
+        result = await manager.closeAllLanded({ dryRun: opts['dry-run'], idleMinutes: opts['idle-minutes'] === undefined ? 30 : Number(opts['idle-minutes']), retain: opts.retain });
       } else {
         if (!opts.id) throw new Error('close requires --id or --all-landed.');
         if (opts['idle-minutes'] !== undefined) throw new Error('--idle-minutes requires --all-landed.');
-        result = await manager.close(opts.id, { dryRun: opts['dry-run'], landed: opts.landed });
+        result = await manager.close(opts.id, { dryRun: opts['dry-run'], landed: opts.landed, retain: opts.retain });
       }
       break;
     case 'reconcile': result = await manager.reconcile({ dryRun: opts['dry-run'] }); break;
     case 'gc':
-      if (!opts['dry-run']) throw new Error('Only gc --dry-run is supported; no automatic deletion.');
-      result = await manager.gc(); break;
+      if (Boolean(opts['dry-run']) === Boolean(opts.apply)) throw new Error('Choose exactly one of gc --dry-run or gc --apply.');
+      result = await manager.gc({ apply: opts.apply, idleMinutes: opts['idle-minutes'] === undefined ? 30 : Number(opts['idle-minutes']) }); break;
     case 'inventory':
       if (!opts.path) throw new Error('inventory requires --path.');
       result = inventory(opts.path); break;

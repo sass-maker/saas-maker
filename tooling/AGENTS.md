@@ -60,5 +60,7 @@ Use `scripts/fleet-workspace.mjs` (installed as `fleet-workspace`) for linked
 writer worktrees, frozen pinned-pnpm installs through the persistent shared
 store, and bounded heavy commands. Review-only agents reuse source. Keep owner,
 task and heartbeat metadata outside Git; respect concurrency and disk budgets.
-Run `close --dry-run` and `gc --dry-run` at completion. Never discard dirty,
-unpublished, active or unknown work. See [agent-workspaces.md](docs/agent-workspaces.md).
+Close completed merged tasks with `close --dry-run` then `close`; the default
+deletes the checkout and recognized generated output. Use `--retain` only for
+intentional recovery. Reclaim eligible old retained checkouts with `gc --dry-run`
+then `gc --apply`. Never discard dirty, unmerged, active or unknown work. See [agent-workspaces.md](docs/agent-workspaces.md).

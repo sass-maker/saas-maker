@@ -128,26 +128,67 @@ in `state.lock`; once the owner is confirmed dead, preserve the lock by renaming
 it outside the active path before retrying. A malformed manifest or unknown Git
 state fails closed. Failed creation remains recorded for review.
 
-## Retirement and existing temporary files
+## Completion and existing worktrees
 
-Closing checks the linked worktree/repository identity, current branch, all
-tracked/untracked changes, command leases, and open files visible to `lsof`.
-HEAD must be contained in a local remote-tracking ref or have landing evidence
-described below. A branch switch or detached HEAD is allowed only when the
-current HEAD is clean and landed; receipts record `branchNow` and a note.
-An unnecessary `--landed` flag is ignored with a note. Close skips disk scans.
-Open-file visibility follows current OS permissions; permission errors are
-blockers. Change directory out of a worktree
-before closing it. Locked trees and submodule worktrees remain protected by Git.
+Closing a completed task **deletes its clean, merged checkout by default** with
+`git worktree remove`, including recognized generated artifacts. It does not
+retain a source copy or add archival Git refs. The owning repository's normal
+merged history remains. Small private operation records track the outcome; the workspace manifest is
+removed, so completed tasks occupy no writer slots or per-worktree Git/disk scans.
+Lifetime task count therefore does not retain lifetime build environments.
+Storage still grows with genuinely new Git content, package versions, active
+builds, and any protected local data; 10,000 simultaneously populated checkouts
+cannot be promised zero storage.
 
-A safe close writes a recovery receipt and uses `git worktree move` to relocate
-the entire tree to `retired`. Source, branches, ignored output and unknown files
-are preserved. Receipts contain the exact recovery arguments. Relocation does
-not reclaim physical space, and retired trees still count toward the total
-budget so recovery storage cannot grow invisibly. `gc --dry-run` reports them
-for review; there is no apply/delete mode. Use the receipt's restore command if
-needed; the closed manifest remains historical evidence, so a restored checkout
-is treated as unmanaged until explicitly reconciled.
+Slow merge and open-file checks run outside the registry lock. Close rechecks
+the workspace under a short lock, then reserves filesystem removal with an
+ordinary command lease that older Fleet clients also understand. Other agents
+can continue working; no incompatible manifest states are introduced.
+
+Close verifies repository/worktree identity, all tracked and untracked changes,
+merge evidence, managed command leases, locks, submodules and open files visible
+to `lsof`. A pushed feature branch alone is **not** a completed merge. Deletion
+requires ancestry in the remote default branch, content-equivalent landed
+changes, qualifying merged-PR evidence, or the existing explicit `--landed`
+operator attestation. Fetch the owning repository before a cleanup sweep when
+remote refs may be stale. No fetch happens implicitly.
+
+Git also deletes ignored files without `--force`, so close separately inventories
+ignored paths. Established `node_modules` installs, SwiftPM `.build`, Cargo
+`target`, and recognized JavaScript build/cache directories require an owning
+package/build manifest. SwiftPM dependency checkouts with local edits or ignored
+files stay protected. Unknown ignored data (including local databases, env
+files, evidence and unproven directories) blocks deletion. No file contents from
+these unknown paths are read or published. Native build/dependency directories
+remain separate while tasks are active; do not share mutable build environments.
+
+A branch switch or detached HEAD is allowed only when the current HEAD is clean
+and landed. Close skips disk scans. Change directory out of the checkout first.
+Open-file visibility follows current OS permissions; access errors are blockers.
+Git's locked-tree and submodule protections are never forced. A pending operation
+record remains if deletion or subsequent state recording fails; inspect it and
+reconcile missing folders rather than repeating a forced deletion.
+
+```sh
+fleet-workspace close --id product-issue-123 --dry-run
+fleet-workspace close --id product-issue-123
+fleet-workspace gc --dry-run
+fleet-workspace gc --apply
+```
+
+`gc` checks previously retained **closed** worktrees with the same safety rules,
+without expensive disk scans. `--apply` deletes eligible trees; `--dry-run`
+changes nothing. Active, busy, dirty, unmerged and unknown-data cases stay put.
+The default idle threshold is 30 minutes (`--idle-minutes` can override it).
+A failure for one workspace does not discard others' evidence or stop the sweep.
+Neither close nor gc removes the shared package store or the primary checkout.
+
+Use `close --retain` only when a full recovery environment is deliberately
+needed. That explicit mode preserves the old behavior: it accepts clean work
+retained in remote refs, writes a restore receipt, and moves the entire checkout
+into `retired`. It reclaims no space and still counts toward the disk budget.
+Legacy retained receipts continue to work until the checkout is deleted by gc.
+Never retain repeated generated builds by default.
 
 ### Squash-landed branches and missing folders
 
@@ -171,7 +212,8 @@ measurement accepts a total whose only `du` diagnostics are vanished entries.
 `reconcile --dry-run` lists non-closed records whose folder is gone;
 `reconcile` marks them `missing` so they stop holding writer slots. It only
 changes manifests: no folder, branch or Git worktree metadata is deleted, and
-closed records with a missing retired folder are reported, not changed.
+closed records with a missing retired folder are reported, not changed. Deletion removes the workspace manifest; missing folders after an interrupted
+operation remain protected for reconciliation.
 
 ```sh
 fleet-workspace close --id product-issue-123 --dry-run --landed <squash-sha>
@@ -181,11 +223,11 @@ fleet-workspace reconcile
 
 `close --all-landed [--dry-run] [--idle-minutes N]` checks active workspaces
 individually using the same close rules and receipts. The default idle threshold
-is 30 minutes. Only clean, landed trees with no open files or live command lease
-and an older heartbeat move to `retired`; failures keep that tree and do not
-stop the others. JSON lists `closed`, `kept` (with blockers/reasons), and counts.
-Dry-run reports eligible trees as `would-retire` without moving or updating them.
-No force or deletion is used.
+is 30 minutes. Only clean, merged trees with no open files or live command lease
+and an older heartbeat are deleted; failures keep that tree and do not stop the
+others. JSON lists `closed`, `kept` (with blockers/reasons), and counts. Dry-run
+reports eligible trees as `would-delete` without changing anything. Add
+`--retain` only for intentional full-environment recovery. No force is used.
 
 ```sh
 fleet-workspace inventory --path /private/tmp
