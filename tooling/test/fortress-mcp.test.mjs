@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -80,4 +80,26 @@ test('Fortress launcher propagates runtime startup failure', () => {
     const result = spawnSync('/bin/bash', [launcher], { env: { PATH: `${dir}:/usr/bin:/bin` }, encoding: 'utf8' });
     assert.equal(result.status, 41);
   });
+});
+
+
+test('Fortress launcher forwards host termination to its MCP process', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'fortress-launcher-signal-'));
+  let runtimePid;
+  try {
+    const binary = join(dir, 'uvx');
+    writeFileSync(binary, `#!${process.execPath}\nprocess.on('SIGTERM', () => process.exit(0)); console.log(process.pid); setTimeout(() => process.exit(1), 2000);\n`);
+    chmodSync(binary, 0o755);
+    const child = spawn('/bin/bash', [launcher], { env: { PATH: `${dir}:/usr/bin:/bin` } });
+    const exited = new Promise((resolve) => child.once('exit', (code, signal) => resolve({ code, signal })));
+    const ready = await new Promise((resolve) => child.stdout.once('data', (data) => resolve(data.toString())));
+    runtimePid = Number(ready.trim());
+    child.kill('SIGTERM');
+    assert.deepEqual(await exited, { code: 0, signal: null });
+  } finally {
+    if (runtimePid) {
+      try { process.kill(runtimePid, 'SIGTERM'); } catch (error) { if (error.code !== 'ESRCH') throw error; }
+    }
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
