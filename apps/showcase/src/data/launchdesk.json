@@ -5570,6 +5570,36 @@
       ]
     },
     {
+      "name": "Awesome REA",
+      "domain": "awesomerea.com",
+      "website": "https://awesomerea.com/",
+      "submissionUrl": "https://github.com/kaixinbaba/awesome-rea/issues/new?template=1-project.yml",
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Directory / Open-source reimplementations and compatibility resources",
+      "pricing": "free",
+      "dr": null,
+      "link": "unknown",
+      "eligibility": "Narrow fit: open-source reverse-engineering projects, independent reimplementations, compatibility tools, and related source-backed resources. REA use is optional. Submissions are reviewed; an issue is not a listing and acceptance is not guaranteed.",
+      "flags": [],
+      "route": "source-reported",
+      "provider": null,
+      "sourceUrl": "https://github.com/kaixinbaba/awesome-rea",
+      "retrieved": "2026-10-25",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-25",
+          "pricing": "free",
+          "type": "Directory / Open-source reimplementations and compatibility resources",
+          "submissionUrl": "https://github.com/kaixinbaba/awesome-rea/issues/new?template=1-project.yml",
+          "note": "Official contribution guide says listing is free with no paid ranking; maintainers review submissions, and an issue does not automatically publish. Domain rating and outbound link attributes were not established."
+        }
+      ]
+    },
+    {
       "name": "Awesome Tools",
       "domain": "awesome.tools",
       "website": "https://awesome.tools/",
