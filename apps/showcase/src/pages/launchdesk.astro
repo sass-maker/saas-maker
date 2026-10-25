@@ -13,6 +13,7 @@ import CatalogActions from '../components/CatalogActions.astro';
 import Nav from '../components/Nav.astro';
 import coverageData from '../data/launch-coverage.json';
 import { DIRECTORY_PROJECTS } from '../data/directory';
+import { launchdeskEvent } from '../data/launchdesk-analytics';
 import launchdeskData from '../data/launchdesk.json';
 import Layout from '../layouts/Layout.astro';
 
@@ -292,7 +293,14 @@ const coverageRows = DIRECTORY_PROJECTS.map((project) => {
                     </summary>
                     <div class="ld-detail">
                       <p>
-                        <a href={row.website} target="_blank" rel="noopener noreferrer">{row.website}</a>
+                        <a
+                          href={row.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          data-app-health-event={launchdeskEvent(row.domain, 'resource')}
+                        >
+                          {row.website}
+                        </a>
                       </p>
                       {row.exampleUrl && (
                         <p>
@@ -303,7 +311,10 @@ const coverageRows = DIRECTORY_PROJECTS.map((project) => {
                       )}
                       {row.eligibility && <p>{row.eligibility}</p>}
                       <p>
-                        <a href={`/launchdesk/${row.domain}`}>
+                        <a
+                          href={`/launchdesk/${row.domain}`}
+                          data-app-health-event={launchdeskEvent(row.domain, 'playbook')}
+                        >
                           {playbookDomains.has(row.domain)
                             ? 'Submission playbook →'
                             : 'Catalog record →'}
@@ -345,7 +356,15 @@ const coverageRows = DIRECTORY_PROJECTS.map((project) => {
                 </td>
                 <td class="ld-route" data-label="Route">
                   {row.submissionUrl ? (
-                    <a href={row.submissionUrl} target="_blank" rel="noopener noreferrer" class="ld-route-link">Submit ↗</a>
+                    <a
+                      href={row.submissionUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="ld-route-link"
+                      data-app-health-event={launchdeskEvent(row.domain, 'submitIntent')}
+                    >
+                      Submit ↗
+                    </a>
                   ) : (
                     <span class="ld-blank">research needed</span>
                   )}
