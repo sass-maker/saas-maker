@@ -12,6 +12,7 @@ You are running a directory-submission campaign for the product described in
 - Run plan: `<path-to>/run-plan.json` (routes ranked by suitability)
 - Playbooks: `apps/showcase/src/data/launchdesk-playbooks/<domain>.json`
 - Tracker: `<path-to>/tracker.json` (schema `fleet.launchkit-tracker.v1`)
+- Browser fallback: `tooling/skills/launch-campaign/references/fortress-directory-fallback.md`
 
 **For each route in the plan, in rank order:**
 
@@ -23,6 +24,11 @@ You are running a directory-submission campaign for the product described in
    attest compliance you don't have.
 3. Prepare the submission from brief facts and approved claims only. Never
    invent testimonials, metrics, or founder identities.
+   Use the normal connected browser first. If automation detection blocks
+   the form before intake, follow the Fortress fallback reference once for
+   this route. Reconcile any uncertain prior submission before switching
+   browsers. Record the browser, observed engine version, blocker and outcome
+   in tracker `notes`; continue with the same approved fields and permissions.
 4. Pause for the human on: logins/signups, CAPTCHAs and human-verification
    challenges, ID or workplace verification, payment prompts, and any terms
    the brief forbids. Record `blocked` and continue to the next route — later

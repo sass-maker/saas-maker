@@ -15,6 +15,9 @@ per-platform playbooks (`apps/showcase/src/data/launchdesk-playbooks/`).
 3. **Run** — hand the agent `tooling/launchkit/prompts/run.prompt.md` plus
    the run plan and a copy of `tracker.template.json`. Work routes in rank
    order; obey each playbook's conditions and watch-fors.
+   If automation detection blocks the normal browser before intake, follow
+   the [Fortress fallback](fortress-directory-fallback.md) once for that route.
+   Reconcile uncertain intake before switching browsers.
 4. **Track** — every route carries a state in the tracker:
    `planned → prepared → submitted → scheduled → live`, or `rejected` /
    `blocked` / `skipped`. Drafts are `prepared`, not submitted; confirmed
