@@ -1,0 +1,62 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "awesomerea.com",
+  "name": "Awesome REA",
+  "grade": "researched",
+  "retrieved": "2026-10-25",
+  "sources": [
+    {
+      "url": "https://awesomerea.com/",
+      "title": "Official directory — stated scope, categories, source and limits policy"
+    },
+    {
+      "url": "https://github.com/kaixinbaba/awesome-rea/blob/main/README.md",
+      "title": "Official repository README — open-source reimplementations, compatibility alternatives, REA optional, source review caveat"
+    },
+    {
+      "url": "https://github.com/kaixinbaba/awesome-rea/blob/main/CONTRIBUTING.md",
+      "title": "Official contribution guide — inclusion criteria, evidence, license, free listing and review process"
+    },
+    {
+      "url": "https://github.com/kaixinbaba/awesome-rea/blob/main/.github/ISSUE_TEMPLATE/1-project.yml",
+      "title": "Official new project/resource issue template — required fields and pre-submit checks"
+    },
+    {
+      "url": "https://github.com/kaixinbaba/awesome-rea/blob/main/LICENSE",
+      "title": "Official repository MIT license"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "The directory's stated scope is open-source reverse-engineering work, independent reimplementations, compatibility projects, and related tools/resources; this is a narrow technical fit, not a general SaaS listing.",
+    "REA usage is optional. Any claim of REA involvement must be supported and limited to the evidence.",
+    "Contributions should include a canonical project/resource URL, a concise scope description, primary evidence, license and rights information where software is involved, current status and limitations, and the submitter's relationship.",
+    "The official guide says listing is free and there is no paid ranking. Maintainers review submissions and may decline them."
+  ],
+  "preparation": [
+    "Search the current directory and existing Issues for duplicates.",
+    "For a proposed software project, gather its public repository, direct primary evidence, applicable license and any separate asset or dependency terms.",
+    "Summarize what is analyzed, reimplemented, or made compatible; state unfinished work and any required original software, assets, hardware, credentials, or paid services.",
+    "Disclose the submitter's relationship and keep any REA claim within what the cited source proves."
+  ],
+  "workflow": [
+    "Open the official new project, integration, or resource issue template.",
+    "Provide the canonical URL and concise scope, primary evidence, license/rights, status/limitations, and relationship requested by the form.",
+    "Complete the duplicate, evidence, and authorized-content confirmations; do not include secrets, private binaries, or proprietary investigation data.",
+    "Treat the issue as a proposal only. A maintainer-reviewed contribution must be merged before it counts as listed; the repository says the website updates after its release workflow succeeds."
+  ],
+  "watchFor": [
+    "A link to another directory may help discovery but is not enough evidence for inclusion; use direct primary sources for each software claim.",
+    "A public repository is not by itself proof of an open-source license. Preserve original asset, third-party, commercial-service, and platform limits.",
+    "Do not call a listed project a full replacement unless the supported scope and usable build justify that claim.",
+    "The maintainers do not promise acceptance or a review time. A submitted issue, pull request, or open-source license does not mean a listing is live.",
+    "The directory's own MIT license applies to its repository material; linked projects retain their own licenses."
+  ],
+  "countsAsLive": "The proposed item is present in the maintained public directory after the contribution is merged, and the resulting website release succeeds. An open issue or unmerged pull request does not count.",
+  "unknowns": [
+    "No review-time or acceptance commitment is stated.",
+    "Outbound link attributes and domain-rating metrics were not researched; neither should be inferred.",
+    "No submission or placement was attempted for this LaunchDesk research."
+  ]
+}
