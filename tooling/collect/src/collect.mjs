@@ -4,10 +4,11 @@ import { randomUUID } from "node:crypto";
 import { rm } from "node:fs/promises";
 import { ConcurrencyGate } from "./gate.mjs";
 import { findChrome } from "./config.mjs";
-import { TargetRunner } from "./runner.mjs";
+import { CollectorClosedError, TargetRunner } from "./runner.mjs";
 import { validateUrlPolicy } from "./http.mjs";
 
 export { UpstreamBlockedError, UrlPolicyDeniedError } from "./http.mjs";
+export { CollectorClosedError } from "./runner.mjs";
 
 function integer(value, fallback, min, max, name) {
   const number = value ?? fallback;
@@ -48,7 +49,7 @@ export function createCollector(options = {}) {
   let closing;
   const admitted = new Set();
   async function runCollect(input) {
-    if (closed) throw new Error("Collector is closed");
+    if (closed) throw new CollectorClosedError();
     const url = new URL(input.url);
     if (!["http:", "https:"].includes(url.protocol) || url.username || url.password) {
       throw new TypeError("Collection requires an HTTP(S) URL without credentials");
@@ -56,7 +57,7 @@ export function createCollector(options = {}) {
     const extractor = input.extractor ?? "page";
     if (!["page", "jobs", "json", "text"].includes(extractor)) throw new TypeError("Unknown extractor");
     const httpOnly = ["json", "text"].includes(extractor);
-    const transport = input.transport ?? (options.browserFallback && !httpOnly ? "auto" : "http");
+    const transport = input.transport ?? (options.browserFallback && !httpOnly && !options.validateUrl ? "auto" : "http");
     if (!["http", "auto", "browser"].includes(transport)) throw new TypeError("Unknown transport");
     if (httpOnly && transport !== "http") throw new TypeError("JSON and text extractors require HTTP transport");
     if (options.validateUrl && transport !== "http") throw new TypeError("URL policy requires HTTP transport; browser navigation cannot enforce validateUrl");
@@ -71,11 +72,11 @@ export function createCollector(options = {}) {
     }
     await validateUrlPolicy(options.validateUrl, url.href);
     if (careersUrl && careersUrl.href !== url.href) await validateUrlPolicy(options.validateUrl, careersUrl.href);
-    if (closed) throw new Error("Collector is closed");
+    if (closed) throw new CollectorClosedError();
     started ??= runner.start();
     await started;
     return gate.run(() => {
-      if (closed) throw new Error("Collector is closed");
+      if (closed) throw new CollectorClosedError();
       return runner.run({
         ...input, url: url.href, name: input.name ?? url.hostname, extractor, transport,
         ...(careersUrl ? { careersUrl: careersUrl.href } : {}),

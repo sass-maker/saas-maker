@@ -32,11 +32,13 @@ not an endpoint for untrusted URL submissions.
 
 `validateUrl` checks the target and jobs careers URL before collection, then
 each HTTP request and redirect. A denial returns nonretryable `url_policy_denied`.
-Collectors with this policy require explicit HTTP transport when
-`browserFallback` is enabled; `auto` and `browser` cannot enforce this policy
+Collectors with this policy default to HTTP even when
+`browserFallback` is enabled; explicit `auto` and `browser` cannot enforce this policy
 and are refused. JSON and text always use HTTP and reject those transports.
 `close()` stops admission, rejects queued collections, and waits for active
-collections before saving cache and closing Chrome. SDK-generated temporary
+collections before saving cache and closing Chrome. Active HTTP work that later
+needs browser escalation is rejected with `collector_closed`, as is queued work;
+an already running browser collection may finish. SDK-generated temporary
 browser profiles are deleted on close; caller-supplied profiles are preserved.
 Each HTTP retry attempt has one timeout shared by all redirect hops.
 
@@ -44,7 +46,7 @@ Each HTTP retry attempt has one timeout shared by all redirect hops.
 tarball with the library, TypeScript declarations, README and MIT attribution.
 No profiles, logs, caches, collected data or runtime credentials are packaged.
 
-This is SaaS Maker shared collection tooling, formerly the standalone Slow SERP repo. Source history: sarthakagrawal927 / Significant-Hobbies/slow-serp @ `ae8662f`. It is not a hosted service or a CAPTCHA bypass. Google search availability is not established: upstream HTTP 429 was seen, and search needs authorized outbound IP capacity.
+This is SaaS Maker shared collection tooling, formerly the standalone Slow SERP repo. Source history: sarthakagrawal927 / Significant-Hobbies/slow-serp @ `ae8662f`. It is not a hosted service or a CAPTCHA bypass. Google search remains unavailable in the checked environment: standard automated Chrome reached Google's CAPTCHA on 2026-10-25. An approved SERP connection is needed before claiming working search.
 
 It provides a local scraping API and scheduled crawler. It uses bounded HTTP fetching first, then automatically falls back to the machine's installed **Google Chrome** only when rendering is required.
 
@@ -181,7 +183,7 @@ curl -sS http://127.0.0.1:8787/v1/search \
 | `SCRAPER_HTTP_RETRIES` | `2` | Transient HTTP/network retries |
 | `SCRAPER_HTTP_RETRY_BASE_MS` | `500` | Exponential backoff base delay |
 | `SCRAPER_MAX_RESPONSE_BYTES` | `5000000` | Maximum buffered HTML response size |
-| `SCRAPER_HTTP_CACHE_FILE` | `work/http-cache.json` | Conditional-request and content cache |
+| `SCRAPER_HTTP_CACHE_FILE` | `work/http-cache.json` | Conditional-request/content cache; same 128-entry/16 MB LRU cap as the SDK. Oversized files are discarded on load. |
 | `SCRAPER_USER_AGENT` | `slow-serp/0.2 (...)` | HTTP transport user agent |
 | `SCRAPER_TARGETS_FILE` | `targets/default.json` | General crawler registry |
 | `SCRAPER_OUTPUT_DIR` | `data/crawls` | General crawler output directory |

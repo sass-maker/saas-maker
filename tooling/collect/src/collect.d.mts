@@ -39,6 +39,10 @@ export declare class UpstreamBlockedError extends Error {
   status: number;
   constructor(status: number);
 }
+export declare class CollectorClosedError extends Error {
+  code: "collector_closed";
+  constructor();
+}
 export declare class UrlPolicyDeniedError extends Error {
   code: "url_policy_denied";
   constructor(cause: unknown);

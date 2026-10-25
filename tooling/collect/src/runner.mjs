@@ -3,6 +3,14 @@ import { HttpCache } from "./http-cache.mjs";
 import { BrowserFallbackError, HttpScraper } from "./http.mjs";
 import { Scraper } from "./scraper.mjs";
 
+export class CollectorClosedError extends Error {
+  constructor() {
+    super("Collector is closed");
+    this.name = "CollectorClosedError";
+    this.code = "collector_closed";
+  }
+}
+
 export class TargetRunner {
   constructor(config) {
     this.config = config;
@@ -18,7 +26,7 @@ export class TargetRunner {
   }
 
   async run(target) {
-    if (this.closed) throw new Error("Collector is closed");
+    if (this.closed) throw new CollectorClosedError();
     const startedAt = Date.now();
     let fallbackReason = null;
     if (target.transport !== "browser") {
@@ -31,7 +39,7 @@ export class TargetRunner {
     }
 
     const result = await this.browserGate.run(() => {
-      if (this.closed) throw new Error("Collector is closed");
+      if (this.closed) throw new CollectorClosedError();
       return target.extractor === "jobs" ? this.browser.scrapeJobs(target) : this.browser.scrapePage(target);
     });
     return {

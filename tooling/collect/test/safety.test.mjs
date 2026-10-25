@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { createCollector, UrlPolicyDeniedError } from "@saas-maker/collect";
 import { HttpCache } from "../src/http-cache.mjs";
-import { HttpScraper } from "../src/http.mjs";
+import { BrowserFallbackError, HttpScraper } from "../src/http.mjs";
 import { TargetRunner } from "../src/runner.mjs";
 import { Scraper } from "../src/scraper.mjs";
 
@@ -68,6 +68,20 @@ test("JSON and text default to HTTP even with browser fallback and refuse other 
     assert.equal(result.transport, "http");
     for (const transport of ["auto", "browser"]) await assert.rejects(collector.collect({ url: base, extractor, transport }), /require HTTP/);
   }
+});
+
+test("a URL policy keeps default page collection on HTTP when browser fallback is enabled", async (t) => {
+  let checked = 0;
+  const base = await serverFor(t, (req, res) => {
+    res.setHeader("content-type", "text/html");
+    res.end("<html><title>Public page</title><body><p>A useful public page with enough factual source text to collect without requesting a browser or rejecting the default transport.</p></body></html>");
+  });
+  const collector = createCollector({ browserFallback: true, chromeExecutable: "/unused", validateUrl() { checked++; } });
+  t.after(() => collector.close());
+  const result = await collector.collect({ url: base });
+  assert.equal(result.transport, "http");
+  assert.equal(result.data.title, "Public page");
+  assert.ok(checked > 0);
 });
 
 test("401, 403 and 429 stop after one request without browser fallback", async (t) => {
@@ -194,4 +208,28 @@ test("close prevents queued browser starts and deletes only SDK-generated profil
   const caller = createCollector({ profileDir: callerProfile });
   await caller.close();
   assert.equal(await readFile(join(callerProfile, "cookie"), "utf8"), "caller");
+});
+
+test("close reports collector_closed when active HTTP work later needs browser escalation", async (t) => {
+  let admitted;
+  const active = new Promise((resolve) => { admitted = resolve; });
+  let failHttp;
+  const completion = new Promise((resolve) => { failHttp = resolve; });
+  let browserStarts = 0;
+  t.mock.method(HttpScraper.prototype, "scrape", async () => {
+    admitted();
+    await completion;
+    throw new BrowserFallbackError("Rendering required");
+  });
+  t.mock.method(Scraper.prototype, "scrapePage", async () => { browserStarts++; });
+  const collector = createCollector({ browserFallback: true, chromeExecutable: "/unused" });
+  const work = collector.collectMany([{ url: "https://example.test" }]);
+  await active;
+  const closing = collector.close();
+  failHttp();
+  const [result] = await work;
+  await closing;
+  assert.equal(result.status, "error");
+  assert.equal(result.error.code, "collector_closed");
+  assert.equal(browserStarts, 0);
 });
