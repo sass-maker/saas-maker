@@ -245,6 +245,12 @@
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
+    },
+    {
+      "id": "app-store-research",
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable",
+      "serverRequests": "unknown"
     }
   ]
 }

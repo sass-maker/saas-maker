@@ -1128,6 +1128,18 @@
           "value": "live"
         }
       ]
+    },
+    {
+      "id": "app-store-research",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "The local pre-release research website has no subscription form or public offering. Browser-local research does not require newsletter or waitlist capture.",
+      "evidence": [
+        {
+          "field": "deployment.status",
+          "value": "local-only"
+        }
+      ]
     }
   ]
 }

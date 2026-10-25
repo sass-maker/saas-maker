@@ -1934,6 +1934,32 @@
       "availability": "public-link",
       "publicUrl": "https://data.highsignal.app",
       "publicUrlLabel": "Visit website"
+    },
+    {
+      "id": "app-store-research",
+      "name": "App Store Research",
+      "description": "Browser-based App Store keyword comparisons, competitor evidence and local listing drafts.",
+      "form": "Website",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "React",
+        "TypeScript",
+        "Cloudflare Workers",
+        "Durable Objects",
+        "IndexedDB"
+      ],
+      "group": "current",
+      "makerNote": "Country comparisons, source-backed observations and portable local drafts for independent app developers.",
+      "purposeContract": {
+        "purpose": "Compare public Apple search observations across countries and prepare App Store listing drafts.",
+        "audience": "Independent iOS and Mac developers investigating keywords and competing apps.",
+        "outcome": "Choose keyword hypotheses from inspectable evidence and keep recoverable listing drafts.",
+        "mechanism": "A browser-local workspace collects bounded public Apple captures through a shared provider gate and optionally requests AI proposals."
+      },
+      "roster": "current",
+      "availability": "unreleased-prototype"
     }
   ],
   "archivedDirectory": [
