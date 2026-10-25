@@ -8,8 +8,9 @@ use it for protected social channels or directories that prohibit automation.
 
 ## Start the optional MCP
 
-The launcher uses uv's isolated cache, with pinned framework and engine SDK
-versions, instead of adding a production dependency or a global package:
+The launcher uses uv's isolated cache, with exact top-level framework and
+engine SDK versions, instead of adding a production dependency or a global
+package. Transitive dependencies are resolved by uv and are not locked:
 
 ```bash
 bash tooling/skills/launch-campaign/scripts/fortress-mcp.sh
@@ -30,8 +31,9 @@ absolute path to this checkout. Keep it scoped to directory runs.
 }
 ```
 
-The launcher disables prewarming, hosted service credentials, proxies, paid
-CAPTCHA solvers, private-network targets and unrestricted output paths.
+The launcher clears inherited Tilion configuration except license-key
+variables, then disables prewarming, automatic recovery, hosted services,
+proxies, CAPTCHA providers, private-network targets and unrestricted output paths.
 Initializing the MCP does not launch a browser. The first browser tool may
 download the engine. Check the actual engine version and license status
 before relying on v3; a missing activation key can select the older engine.
@@ -55,8 +57,12 @@ applicable authorization.
    do not delegate an unattended submit/retry loop to `run_browser_task`.
 4. Re-check exact fields and permissions before the final submit. Interactive
    CAPTCHA, email/identity verification, unexpected cost or changed terms
-   remain human steps. If Fortress still cannot reach the form, stop after
-   this fallback attempt and record the remaining blocker.
+   end this headless route as `blocked`; record the challenge or unmet
+   condition, close the session, and move on. There is no interactive
+   handoff inside this invisible browser. Reconcile intake before any later
+   separately supervised attempt in the normal browser. If Fortress still
+   cannot reach the form, stop after this fallback attempt and record the
+   remaining blocker.
 5. Record `browser=fortress`, the observed engine version, initial blocker,
    outcome and any manual step in tracker `notes`. Keep intake confirmation
    in `evidence`; engine access or a completed click does not prove intake.
