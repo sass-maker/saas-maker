@@ -202,6 +202,9 @@ describe('SaaS Maker public source boundary', () => {
     expect(detailPage).toMatch(/Public anatomy/);
     expect(detailPage).toMatch(/current\.makerNote/);
     expect(detailPage).toMatch(/current\.purposeContract/);
+    expect(detailPage).toMatch(/formatDirectoryDate\(current\.firstCommitAt\)/);
+    expect(detailPage).toMatch(/formatDirectoryDate\(current\.latestCommitAt\)/);
+    expect(detailPage).toMatch(/'Not retained'/);
     expect(routesSource).toMatch(/Product contract/);
     expect(routesSource).toMatch(/path: `\/p\/\$\{product\.id\}`/);
     expect(routesSource).toMatch(/This profile is generated from reviewed public facts/);

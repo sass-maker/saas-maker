@@ -11,6 +11,7 @@ import {
   type ArchivedRepositoryProject,
   type DirectoryProject,
 } from '../../data/directory';
+import { formatDirectoryDate } from '../../data/format-directory-date';
 
 export function getStaticPaths() {
   return [
@@ -196,8 +197,34 @@ const productJsonLd = {
               <dd>{archivedRepository ? 'Past standalone repository' : archived ? deploymentLabel : current.deployed === undefined ? deploymentLabel : current.deployed ? 'Deployed' : 'Not deployed'}</dd>
               {!pastProfile && current.deploymentProviders?.length > 0 && <small>{current.deploymentProviders.join(' · ')}</small>}
             </div>
-            {!pastProfile && current.firstCommitAt && <div><dt>First retained commit</dt><dd>{current.firstCommitAt}</dd></div>}
-            {!pastProfile && current.latestCommitAt && <div><dt>Latest retained commit</dt><dd>{current.latestCommitAt}</dd></div>}
+            {!pastProfile && (
+              <div>
+                <dt>First retained commit</dt>
+                <dd>
+                  {current.firstCommitAt ? (
+                    <time datetime={current.firstCommitAt}>
+                      {formatDirectoryDate(current.firstCommitAt)}
+                    </time>
+                  ) : (
+                    'Not retained'
+                  )}
+                </dd>
+              </div>
+            )}
+            {!pastProfile && (
+              <div>
+                <dt>Latest retained commit</dt>
+                <dd>
+                  {current.latestCommitAt ? (
+                    <time datetime={current.latestCommitAt}>
+                      {formatDirectoryDate(current.latestCommitAt)}
+                    </time>
+                  ) : (
+                    'Not retained'
+                  )}
+                </dd>
+              </div>
+            )}
           </dl>
         </section>
 
