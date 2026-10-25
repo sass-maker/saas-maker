@@ -5,6 +5,19 @@ import { extractJobRecords } from "./jobs.mjs";
 
 const CACHE_VERSION = 3;
 
+export class UrlPolicyDeniedError extends Error {
+  constructor(cause) {
+    super(cause?.message || "URL policy denied the destination", { cause });
+    this.name = "UrlPolicyDeniedError";
+    this.code = "url_policy_denied";
+  }
+}
+
+export async function validateUrlPolicy(policy, url) {
+  try { await policy?.(url); }
+  catch (error) { throw new UrlPolicyDeniedError(error); }
+}
+
 export class UpstreamBlockedError extends Error {
   constructor(status) {
     super(`Upstream access unavailable (HTTP ${status}); no browser retry was attempted`);
@@ -37,7 +50,10 @@ function retryDelay(response, attempt, baseMs) {
 
 async function readLimitedBody(response, maxBytes) {
   const declared = Number(response.headers.get("content-length"));
-  if (declared && declared > maxBytes) throw new Error(`Response exceeds ${maxBytes} bytes`);
+  if (declared && declared > maxBytes) {
+    await response.body?.cancel();
+    throw new Error(`Response exceeds ${maxBytes} bytes`);
+  }
   const reader = response.body?.getReader();
   if (!reader) return { html: "", bytes: 0 };
   const chunks = [];
@@ -140,12 +156,13 @@ export class HttpScraper {
     const retries = this.config.httpRetries ?? 0;
     let lastError;
     for (let attempt = 0; attempt <= retries; attempt += 1) {
+      const signal = AbortSignal.timeout(this.config.httpTimeoutMs);
       try {
         const request = async (url, redirects = 0) => {
-          await this.config.validateUrl?.(url);
+          await validateUrlPolicy(this.config.validateUrl, url);
           const response = await fetch(url, {
           redirect: this.config.validateUrl ? "manual" : "follow",
-          signal: AbortSignal.timeout(this.config.httpTimeoutMs),
+          signal,
           headers: {
             accept: "text/html,application/xhtml+xml;q=0.9,*/*;q=0.1",
             "accept-language": this.config.locale,
@@ -167,6 +184,7 @@ export class HttpScraper {
         await response.body?.cancel();
         await sleep(retryDelay(response, attempt, this.config.httpRetryBaseMs ?? 500));
       } catch (error) {
+        if (error instanceof UrlPolicyDeniedError) throw error;
         lastError = error;
         if (attempt === retries) break;
         await sleep(retryDelay(null, attempt, this.config.httpRetryBaseMs ?? 500));

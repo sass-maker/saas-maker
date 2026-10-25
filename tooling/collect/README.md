@@ -2,7 +2,8 @@
 
 Reusable Node.js package for bounded public web extraction. Site Health owns
 brand monitoring, evidence and follow-ups; this package owns only collection.
-The CLI commands below remain compatible with the original Slow SERP tooling.
+The CLI commands retain their original entry points. HTTP 401, 403 and 429 now
+stop immediately in both the SDK and CLI, without retry or browser escalation.
 
 ```js
 import { createCollector } from "@saas-maker/collect";
@@ -21,10 +22,23 @@ opt into `browserFallback: true` to use installed Chrome for rendered pages.
 JSON and text sources use HTTP. `collectMany` accepts at most 100 targets and
 returns successful results alongside explicit per-target failures. HTTP 401,
 403 and 429 stop with `upstream_blocked` without browser escalation or retry.
-Cache is in memory unless the consumer supplies `cacheFile`. Persisted caches
+Cache is in memory unless the consumer supplies `cacheFile`. Both forms retain
+at most 128 entries and 16 MB of serialized entries, evicting least recently
+used entries. Larger individual entries are not cached; oversized persisted
+files are discarded without loading their contents. Persisted caches
 contain collected public content: keep them outside Git and private artifacts.
 The consumer chooses and authorizes source URLs; this is an operator library,
 not an endpoint for untrusted URL submissions.
+
+`validateUrl` checks the target and jobs careers URL before collection, then
+each HTTP request and redirect. A denial returns nonretryable `url_policy_denied`.
+Collectors with this policy require explicit HTTP transport when
+`browserFallback` is enabled; `auto` and `browser` cannot enforce this policy
+and are refused. JSON and text always use HTTP and reject those transports.
+`close()` stops admission, rejects queued collections, and waits for active
+collections before saving cache and closing Chrome. SDK-generated temporary
+browser profiles are deleted on close; caller-supplied profiles are preserved.
+Each HTTP retry attempt has one timeout shared by all redirect hops.
 
 `pnpm pack --pack-destination /private/local/packages` produces an installable
 tarball with the library, TypeScript declarations, README and MIT attribution.

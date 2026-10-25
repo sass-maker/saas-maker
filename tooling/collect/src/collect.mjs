@@ -1,11 +1,13 @@
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
+import { rm } from "node:fs/promises";
 import { ConcurrencyGate } from "./gate.mjs";
 import { findChrome } from "./config.mjs";
 import { TargetRunner } from "./runner.mjs";
+import { validateUrlPolicy } from "./http.mjs";
 
-export { UpstreamBlockedError } from "./http.mjs";
+export { UpstreamBlockedError, UrlPolicyDeniedError } from "./http.mjs";
 
 function integer(value, fallback, min, max, name) {
   const number = value ?? fallback;
@@ -18,9 +20,10 @@ function integer(value, fallback, min, max, name) {
 // Importing the package starts no service, reads no credentials and creates no
 // files. Cache persistence and browser rendering are explicit consumer choices.
 export function createCollector(options = {}) {
+  const ownedProfile = options.profileDir == null ? join(tmpdir(), `saas-collect-${randomUUID()}`) : null;
   const runner = new TargetRunner({
     chromeExecutable: options.chromeExecutable ?? findChrome(),
-    profileDir: options.profileDir ?? join(tmpdir(), `saas-collect-${randomUUID()}`),
+    profileDir: options.profileDir ?? ownedProfile,
     httpCacheFile: options.cacheFile ?? null,
     headless: true,
     blockResources: true,
@@ -42,7 +45,9 @@ export function createCollector(options = {}) {
   const gate = new ConcurrencyGate(runner.config.httpConcurrency);
   let started;
   let closed = false;
-  async function collect(input) {
+  let closing;
+  const admitted = new Set();
+  async function runCollect(input) {
     if (closed) throw new Error("Collector is closed");
     const url = new URL(input.url);
     if (!["http:", "https:"].includes(url.protocol) || url.username || url.password) {
@@ -50,16 +55,39 @@ export function createCollector(options = {}) {
     }
     const extractor = input.extractor ?? "page";
     if (!["page", "jobs", "json", "text"].includes(extractor)) throw new TypeError("Unknown extractor");
-    const transport = input.transport ?? (options.browserFallback ? "auto" : "http");
+    const httpOnly = ["json", "text"].includes(extractor);
+    const transport = input.transport ?? (options.browserFallback && !httpOnly ? "auto" : "http");
     if (!["http", "auto", "browser"].includes(transport)) throw new TypeError("Unknown transport");
+    if (httpOnly && transport !== "http") throw new TypeError("JSON and text extractors require HTTP transport");
+    if (options.validateUrl && transport !== "http") throw new TypeError("URL policy requires HTTP transport; browser navigation cannot enforce validateUrl");
     if (transport !== "http" && !options.browserFallback) throw new Error("Browser fallback is disabled");
     if (transport !== "http" && !runner.config.chromeExecutable) throw new Error("Google Chrome is required for browser fallback");
+    let careersUrl;
+    if (extractor === "jobs") {
+      careersUrl = new URL(input.careersUrl ?? url.href);
+      if (!["http:", "https:"].includes(careersUrl.protocol) || careersUrl.username || careersUrl.password) {
+        throw new TypeError("Collection requires an HTTP(S) careers URL without credentials");
+      }
+    }
+    await validateUrlPolicy(options.validateUrl, url.href);
+    if (careersUrl && careersUrl.href !== url.href) await validateUrlPolicy(options.validateUrl, careersUrl.href);
+    if (closed) throw new Error("Collector is closed");
     started ??= runner.start();
     await started;
-    return gate.run(() => runner.run({
-      ...input, url: url.href, name: input.name ?? url.hostname, extractor, transport,
-      ...(extractor === "jobs" ? { careersUrl: input.careersUrl ?? url.href } : {}),
-    }));
+    return gate.run(() => {
+      if (closed) throw new Error("Collector is closed");
+      return runner.run({
+        ...input, url: url.href, name: input.name ?? url.hostname, extractor, transport,
+        ...(careersUrl ? { careersUrl: careersUrl.href } : {}),
+      });
+    });
+  }
+  function collect(input) {
+    const task = runCollect(input);
+    admitted.add(task);
+    const remove = () => admitted.delete(task);
+    task.then(remove, remove);
+    return task;
   }
   return {
     collect,
@@ -72,9 +100,15 @@ export function createCollector(options = {}) {
         }
       }));
     },
-    async close() {
+    close() {
       closed = true;
-      if (started) await runner.close();
+      runner.stopAdmission();
+      closing ??= (async () => {
+        await Promise.allSettled([...admitted]);
+        try { if (started) { await started; await runner.close(); } }
+        finally { if (ownedProfile) await rm(ownedProfile, { recursive: true, force: true }); }
+      })();
+      return closing;
     },
   };
 }

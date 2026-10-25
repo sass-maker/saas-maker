@@ -18,6 +18,7 @@ export class TargetRunner {
   }
 
   async run(target) {
+    if (this.closed) throw new Error("Collector is closed");
     const startedAt = Date.now();
     let fallbackReason = null;
     if (target.transport !== "browser") {
@@ -29,9 +30,10 @@ export class TargetRunner {
       }
     }
 
-    const result = await this.browserGate.run(() => target.extractor === "jobs"
-      ? this.browser.scrapeJobs(target)
-      : this.browser.scrapePage(target));
+    const result = await this.browserGate.run(() => {
+      if (this.closed) throw new Error("Collector is closed");
+      return target.extractor === "jobs" ? this.browser.scrapeJobs(target) : this.browser.scrapePage(target);
+    });
     return {
       ...result,
       transport: "browser",
@@ -42,7 +44,12 @@ export class TargetRunner {
     };
   }
 
+  stopAdmission() {
+    this.closed = true;
+  }
+
   async close() {
+    this.stopAdmission();
     await Promise.all([this.cache.save(), this.browser.close()]);
   }
 }
