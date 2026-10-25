@@ -5,6 +5,15 @@ import { extractJobRecords } from "./jobs.mjs";
 
 const CACHE_VERSION = 3;
 
+export class UpstreamBlockedError extends Error {
+  constructor(status) {
+    super(`Upstream access unavailable (HTTP ${status}); no browser retry was attempted`);
+    this.name = "UpstreamBlockedError";
+    this.code = "upstream_blocked";
+    this.status = status;
+  }
+}
+
 export class BrowserFallbackError extends Error {
   constructor(reason) {
     super(reason);
@@ -132,8 +141,10 @@ export class HttpScraper {
     let lastError;
     for (let attempt = 0; attempt <= retries; attempt += 1) {
       try {
-        const response = await fetch(target.url, {
-          redirect: "follow",
+        const request = async (url, redirects = 0) => {
+          await this.config.validateUrl?.(url);
+          const response = await fetch(url, {
+          redirect: this.config.validateUrl ? "manual" : "follow",
           signal: AbortSignal.timeout(this.config.httpTimeoutMs),
           headers: {
             accept: "text/html,application/xhtml+xml;q=0.9,*/*;q=0.1",
@@ -141,8 +152,17 @@ export class HttpScraper {
             "user-agent": this.config.userAgent,
             ...this.cache.conditionalHeaders(cacheKey),
           },
-        });
-        const transient = [429, 502, 503, 504].includes(response.status);
+          });
+          if (this.config.validateUrl && [301, 302, 303, 307, 308].includes(response.status)) {
+            const location = response.headers.get("location");
+            await response.body?.cancel();
+            if (!location || redirects >= 5) throw new Error("Redirect limit exceeded");
+            return request(new URL(location, url).href, redirects + 1);
+          }
+          return response;
+        };
+        const response = await request(target.url);
+        const transient = [502, 503, 504].includes(response.status);
         if (!transient || attempt === retries) return response;
         await response.body?.cancel();
         await sleep(retryDelay(response, attempt, this.config.httpRetryBaseMs ?? 500));
@@ -171,7 +191,14 @@ export class HttpScraper {
         upstreamStatus: 304,
       };
     }
-    if (!response.ok) throw new BrowserFallbackError(`HTTP ${response.status}`);
+    if ([401, 403, 429].includes(response.status)) {
+      await response.body?.cancel();
+      throw new UpstreamBlockedError(response.status);
+    }
+    if (!response.ok) {
+      await response.body?.cancel();
+      throw new BrowserFallbackError(`HTTP ${response.status}`);
+    }
     const contentType = response.headers.get("content-type") || "";
     const expectsHtml = ["page", "jobs"].includes(target.extractor);
     if (expectsHtml && !contentType.includes("text/html") && !contentType.includes("application/xhtml+xml")) {

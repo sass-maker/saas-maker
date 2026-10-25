@@ -25,6 +25,18 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-10-25:** Packaged the retained Slow SERP engine as
+  \`@saas-maker/collect\` 0.3.0 under \`tooling/collect\`. Imports start no server
+  or browser; the Node API supports bounded page/JSON/text/jobs extraction,
+  optional installed-Chrome rendering, memory or explicit private caching,
+  partial batch failures, and a consumer URL policy checked across HTTP
+  redirects. HTTP 401/403/429 stop without browser escalation. CLI entry points
+  and source attribution remain intact. The installable tarball excludes local
+  data, profiles, caches and logs. All 26 package tests and tooling validation
+  pass. Brand interpretation, community workflows and AI calls belong to Site
+  Health, which consumes the package. Google search availability remains
+  unqualified; no outbound-IP infrastructure was provisioned.
+
 - **2026-10-23 — Integrated product-quality workspace.** The scoreboard now uses
   the same sidebar/mobile navigation, shared page headers, theme tokens and
   controls as feedback, subscribers and project keys. Removed its alternate

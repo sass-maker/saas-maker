@@ -9,6 +9,7 @@ export class HttpCache {
   }
 
   async load() {
+    if (!this.path) return this;
     try {
       const parsed = JSON.parse(await readFile(this.path, "utf8"));
       this.entries = new Map(Object.entries(parsed.entries || {}));
@@ -36,6 +37,7 @@ export class HttpCache {
   }
 
   async save() {
+    if (!this.path) return;
     if (!this.dirty) return;
     await mkdir(dirname(this.path), { recursive: true });
     const temporary = `${this.path}.${process.pid}.tmp`;

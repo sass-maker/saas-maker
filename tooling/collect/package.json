@@ -1,8 +1,7 @@
 {
-  "name": "slow-serp",
-  "version": "0.2.0",
-  "private": true,
-  "description": "An HTTP-first crawler with automatic persistent-Chrome fallback.",
+  "name": "@saas-maker/collect",
+  "version": "0.3.0",
+  "description": "Bounded HTTP-first web extraction with opt-in installed-Chrome rendering.",
   "type": "module",
   "packageManager": "pnpm@10.33.2",
   "engines": {
@@ -19,10 +18,33 @@
     "macos:validate": "node scripts/macos-launch-agent.mjs validate",
     "macos:uninstall": "node scripts/macos-launch-agent.mjs uninstall",
     "smoke": "node scripts/smoke.mjs",
-    "test": "node --test"
+    "test": "node --test",
+    "check": "pnpm test && pnpm pack --dry-run"
   },
   "dependencies": {
-    "cheerio": "^1.2.0",
-    "playwright-core": "^1.55.0"
+    "cheerio": "1.2.0",
+    "playwright-core": "1.63.0"
+  },
+  "license": "MIT",
+  "files": [
+    "src/*.mjs",
+    "src/*.d.mts",
+    "LICENSE",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/collect.d.mts",
+      "import": "./src/collect.mjs"
+    }
+  },
+  "types": "./src/collect.d.mts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sass-maker/saas-maker.git",
+    "directory": "tooling/collect"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
