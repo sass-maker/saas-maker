@@ -253,11 +253,12 @@ describe('daily PII-free capture receipts', () => {
     expect(result.feedbackApplicabilityByCatalogId['site-health']).toBe('applicable');
     expect(result.feedbackApplicabilityByCatalogId['agent-inbox']).toBe('not_applicable');
     expect(result.feedbackApplicabilityByCatalogId.techdata).toBe('not_applicable');
+    expect(result.feedbackApplicabilityByCatalogId.motion).toBe('applicable');
     expect(
       Object.entries(result.feedbackApplicabilityByCatalogId)
-        .filter(([id]) => !['site-health', 'agent-inbox', 'techdata'].includes(id))
+        .filter(([id]) => !['site-health', 'agent-inbox', 'techdata', 'motion'].includes(id))
         .map(([, applicability]) => applicability)
-    ).toEqual(Array.from({ length: reportProjects.length - 3 }, () => 'unknown'));
+    ).toEqual(Array.from({ length: reportProjects.length - 4 }, () => 'unknown'));
     expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(
       reportProjects.length
     );
@@ -288,7 +289,8 @@ describe('daily PII-free capture receipts', () => {
       Object.values(result.serverRequestsApplicabilityByCatalogId).filter(
         (value) => value === 'unknown'
       )
-    ).toHaveLength(0);
+    ).toHaveLength(1);
+    expect(result.serverRequestsApplicabilityByCatalogId.motion).toBe('unknown');
     expect(result.serverRequestsApplicabilityByCatalogId['ai-game']).toBe('not_applicable');
     expect(result.serverRequestsApplicabilityByCatalogId['swe-interview-prep']).toBe('applicable');
     expect(result.serverRequestsApplicabilityByCatalogId['every-song-is-a-website']).toBe(
@@ -300,12 +302,13 @@ describe('daily PII-free capture receipts', () => {
       Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
         (value) => value === 'applicable'
       )
-    ).toHaveLength(0);
+    ).toHaveLength(1);
+    expect(result.nativeSessionsApplicabilityByCatalogId.motion).toBe('applicable');
     expect(
       Object.values(result.nativeSessionsApplicabilityByCatalogId).filter(
         (value) => value === 'not_applicable'
       )
-    ).toHaveLength(reportProjects.length);
+    ).toHaveLength(reportProjects.length - 1);
     expect(nativeApplicability.products.map(({ id }) => id).sort()).toEqual([...catalogIds].sort());
     for (const {
       id,
@@ -337,7 +340,6 @@ describe('daily PII-free capture receipts', () => {
       'mentionpilot',
       'daddyrad',
       'email-manager',
-      'motion',
       'research-papers',
       'ph-catalog',
       'reddit-insights',
