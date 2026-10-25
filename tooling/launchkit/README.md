@@ -55,6 +55,16 @@ Everything here is public and credential-free. Registration, publication,
 and human gates stay with the operator unless the brief explicitly delegates
 them.
 
+## Optional Fortress browser fallback
+
+Normal browser automation remains the first choice. For directory forms
+blocked by automation detection before intake, the run prompt routes to the
+[Fortress fallback](../skills/launch-campaign/references/fortress-directory-fallback.md),
+including a lazy stdio MCP launcher with exact top-level package versions
+and per-route stopping rules.
+Publication permissions and the tracker states stay the same. An uncertain
+submission must be reconciled before switching browsers or retrying.
+
 ## Coverage tracking
 
 `/launchdesk` shows each public project's coverage percentage — destinations

@@ -5,7 +5,9 @@ Use the most semantic verified integration available:
 1. purpose-built connector, API, or official CLI;
 2. Postiz for social accounts that are mapped and pass its readiness gates;
 3. the connected in-app Browser or Chrome skill for normal visible UI work;
-4. manual/blocked receipt when safe automation is unavailable.
+4. for directory routes blocked by automation detection before intake, the
+   [Fortress fallback](fortress-directory-fallback.md);
+5. manual/blocked receipt when safe automation is unavailable.
 
 Before every item:
 
@@ -19,10 +21,11 @@ means a provider accepted a scheduled/draft item; it is not a live post.
 Ambiguous navigation or form text is `indeterminate` and must be reconciled
 before retry.
 
-Browser work uses the user's connected session and ordinary visible
-interaction. Stop on unexpected payment, changed fields/content, CAPTCHA,
-anti-bot controls, missing authentication, or unclear success. Never use hidden
-standalone browser automation, force-submit, automation-evasion, or blind retry.
+Normal browser work uses the user's connected session and ordinary visible
+interaction. Directory automation-detection blockers may use the Fortress
+fallback above. Stop on unexpected payment, changed fields/content,
+interactive CAPTCHA, missing authentication, or unclear success. Never
+force-submit, blindly retry, or use other standalone evasion automation.
 
 Treat blockers per item, not per campaign. After recording a blocked or manual
 receipt, continue every other independently authorized item. Return one
