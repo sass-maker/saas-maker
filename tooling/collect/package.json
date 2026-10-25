@@ -19,7 +19,8 @@
     "macos:uninstall": "node scripts/macos-launch-agent.mjs uninstall",
     "smoke": "node scripts/smoke.mjs",
     "test": "node --test",
-    "check": "pnpm test && pnpm pack --dry-run"
+    "check": "pnpm test && pnpm check:types && pnpm pack --dry-run",
+    "check:types": "tsc --project tsconfig.types.json"
   },
   "dependencies": {
     "cheerio": "1.2.0",
@@ -50,5 +51,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3"
   }
 }

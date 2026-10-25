@@ -6,7 +6,7 @@ export interface AppleApp {
   readonly id:string; readonly name:string; readonly developer:string; readonly url:string; readonly icon?:string;
   readonly description:string; readonly genre:string; readonly rating:number|null; readonly ratings:number|null; readonly price:string; readonly version:string;
 }
-interface AppleCaptureBase { readonly id:string; readonly fetchedAt:string; readonly sourceUrl:string; readonly apps:readonly AppleApp[]; }
+interface AppleCaptureBase { readonly id:string; readonly fetchedAt:string; readonly sourceUrl:string; readonly apps:readonly AppleApp[]; readonly notice?:string; }
 export interface AppleSearchCapture extends AppleCaptureBase { readonly kind:"search"; readonly key:Readonly<Required<AppleSearchInput>>; }
 export interface AppleLookupCapture extends AppleCaptureBase { readonly kind:"lookup"; readonly key:Readonly<Omit<AppleLookupInput,"id"> & {id:string}>; readonly match:"matched"|"not-found"|"platform-mismatch"; readonly notice?:string; }
 export type AppleCapture = AppleSearchCapture|AppleLookupCapture;

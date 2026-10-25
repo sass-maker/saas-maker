@@ -26,7 +26,7 @@ export function parseAppleAppId(value) {
   try {
     const url = new URL(value);
     if (url.protocol !== "https:" || url.hostname !== "apps.apple.com" || url.username || url.password || url.port) return null;
-    return url.pathname.match(/\/id([1-9]\d{0,14})(?:\/|$)/u)?.[1] ?? null;
+    return url.pathname.match(/^\/(?:[a-z]{2}\/)?app\/(?:[^/]+\/)?id([1-9]\d{0,14})\/?$/u)?.[1] ?? null;
   } catch { return null; }
 }
 export function normalizeAppleQuery(input) {
@@ -66,7 +66,7 @@ function metadataUrl(value, artwork = false) {
 }
 function appMetadata(value) {
   const fail = () => { throw new AppleCollectionError("provider_shape", "Apple returned unsupported app metadata"); };
-  if (!value || typeof value !== "object" || Array.isArray(value)) return fail();
+  if (!value || typeof value !== "object" || Array.isArray(value) || value.wrapperType !== "software") return fail();
   const id = parseAppleAppId(value.trackId);
   const url = metadataUrl(value.trackViewUrl);
   const text = (value, max = 500) => { if (value == null) return ""; if (!shortText(value, max)) return fail(); return value; };
@@ -96,9 +96,9 @@ async function within(promise, signal, callerSignal) {
 }
 function retryAfter(response, now) {
   const header = response.headers.get("retry-after");
-  if (!header || header.length > 100) return response.status === 429 ? 5 : null;
+  if (!header || header.length > 100) return null;
   const value = /^\d+$/u.test(header) ? Number(header) : Math.ceil((Date.parse(header) - now) / 1000);
-  return Number.isSafeInteger(value) && value >= 0 ? value : response.status === 429 ? 5 : null;
+  return Number.isSafeInteger(value) && value >= 0 ? value : null;
 }
 async function responseJson(response, signal, callerSignal) {
   const sizeError = () => new AppleCollectionError("response_too_large", "Apple response exceeds the 2 MB body limit");
@@ -150,18 +150,28 @@ export function createAppleCollector({ fetchImpl = globalThis.fetch, reserve, no
     }
     const payload = await responseJson(response, signal, callerSignal);
     if (!payload || !Array.isArray(payload.results) || !Number.isInteger(payload.resultCount) || payload.resultCount !== payload.results.length || payload.results.length > (query.kind === "search" ? query.limit : 200)) throw new AppleCollectionError("provider_shape", "Unexpected Apple response shape");
-    const expected = query.platform === "mac" ? "mac-software" : "software";
-    const mismatch = payload.results.some((item) => item?.kind !== expected);
+    // macSoftware search includes both native Mac and iPad-on-Mac software.
+    // Lookup ignores entity, so software kind alone cannot prove Mac availability.
+    const candidates = query.kind === "lookup"
+      ? payload.results.filter((item) => item?.wrapperType === "software" && parseAppleAppId(item.trackId) === query.id)
+      : payload.results;
+    if (candidates.some((item) => item?.wrapperType !== "software" || !["software", "mac-software"].includes(item.kind))) throw new AppleCollectionError("provider_shape", "Apple returned unsupported app records");
+    const mismatch = query.platform === "ios" && candidates.some((item) => item.kind === "mac-software");
     if (query.kind === "search" && mismatch) throw new AppleCollectionError("platform_mismatch", "Apple returned another platform; this result set cannot establish positions");
-    const matches = query.kind === "lookup" ? payload.results.filter((item) => item?.kind === expected) : payload.results;
+    const matches = mismatch ? [] : candidates;
     const apps = Object.freeze(matches.map(appMetadata));
-    if (new Set(apps.map((app) => app.id)).size !== apps.length || query.kind === "lookup" && apps.some((app) => app.id !== query.id)) throw new AppleCollectionError("provider_shape", "Apple returned inconsistent app identities");
+    if (new Set(apps.map((app) => app.id)).size !== apps.length) throw new AppleCollectionError("provider_shape", "Apple returned inconsistent app identities");
+    const notice = query.platform === "mac" && matches.some((item) => item.kind === "software")
+      ? query.kind === "lookup"
+        ? "Apple lookup does not establish Mac compatibility for this software app. Check its availability in Mac search or the App Store."
+        : "Apple Mac search includes iPad apps available on Mac as well as native Mac apps; positions preserve the returned API order."
+      : mismatch ? "This Apple ID is a native Mac app. Choose Mac." : undefined;
     const fetchedAt = now();
     if (typeof fetchedAt !== "string" || !Number.isFinite(Date.parse(fetchedAt))) throw new TypeError("Apple clock must return an ISO timestamp");
     const { kind, ...key } = query;
     return Object.freeze({ id: crypto.randomUUID(), kind, key: Object.freeze(key), sourceUrl, fetchedAt: new Date(fetchedAt).toISOString(), apps,
-      ...(kind === "lookup" ? { match: apps.length ? "matched" : mismatch ? "platform-mismatch" : "not-found",
-        ...(mismatch && !apps.length ? { notice: `This Apple ID belongs to another platform. Choose ${query.platform === "mac" ? "iPhone & iPad" : "Mac"}.` } : {}) } : {}) });
+      ...(notice ? { notice } : {}),
+      ...(kind === "lookup" ? { match: apps.length ? "matched" : mismatch ? "platform-mismatch" : "not-found" } : {}) });
   }
   return Object.freeze({
     async search(input, options) { fields(input, ["term", "country", "platform", "limit"]); return collect({ ...input, kind: "search" }, options); },

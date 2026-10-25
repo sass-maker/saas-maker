@@ -189,20 +189,25 @@ const capture = await apple.search({
 `reserve` is required and runs before every network dispatch. A rejected
 reservation propagates unchanged and makes no provider call. The consumer owns
 shared pacing, retries, cache and scheduling; this package has no hidden retry or
-per-instance cache that could bypass that authority. A Node/SQLite consumer such as Site Health can reserve at most18 uncached
+per-instance cache that could bypass that authority. A Node/SQLite consumer such as Site Health can reserve at most 18 uncached
 calls/minute across its processes. Every consumer must supply its own bounded
 shared provider gate.
 
 - `search({term,country,platform,limit?}, {signal?})` returns one frozen capture
   `{id,kind:"search",key,sourceUrl,fetchedAt,apps}`. `key` includes normalized
-  term, storefront, platform and coverage. Result limit defaults to50 and must
-  be20–200. Search order stays exactly as returned; an unexpected platform
-  rejects the whole capture rather than shifting positions.
+  term, storefront, platform and coverage. Result limit defaults to 50 and must
+  be 20–200. Search order stays exactly as returned. Mac search may include iPad apps
+  available on Mac; a capture notice explains this. An unexpected native Mac
+  result in an iOS search rejects the whole capture rather than shifting positions.
 - `lookup({id,country,platform}, {signal?})` accepts only a numeric Apple ID or
-  an HTTPS `apps.apple.com/.../id...` URL. It returns the same evidence fields
-  plus `match:"matched"|"not-found"|"platform-mismatch"` and a mismatch notice.
-  The requested source/time stays inspectable even when a cross-platform ID
-  cannot match. Unknown metadata stays null; actual zero ratings stay zero.
+  an HTTPS `apps.apple.com/.../app/.../id...` URL (developer URLs are rejected). It returns the same evidence fields
+  plus `match:"matched"|"not-found"|"platform-mismatch"` and an optional notice.
+  Apple lookup ignores the entity filter: native Mac apps cannot match iOS,
+  while software-kind app metadata can match a Mac lookup with a notice that
+  Mac compatibility is unconfirmed. A Mac search or App Store check is needed.
+  Numeric developer IDs return not-found rather than related apps. Unknown
+  rating metadata stays null; missing optional text is empty and actual zero
+  ratings stay zero. The requested source/time stays inspectable in every case.
 - `normalizeAppleQuery`, `appleSourceUrl` and `parseAppleAppId` are exported
   pure helpers. `APPLE_PROVIDER_VERSION` is available for consumer cache keys.
   Each capture stores the app list once; consumers cache that public capture
@@ -210,11 +215,11 @@ shared provider gate.
   separate field, never in `fetchedAt`.
 - Provider requests use only `https://itunes.apple.com/search` or `/lookup`.
   Mac uses `macSoftware`, iOS uses `software`. Redirects are refused, bodies
-  are limited to2MB, and the combined fetch/body deadline is10seconds. Tests
+  are limited to 2 MB, and the combined fetch/body deadline is 10 seconds. Tests
   may inject a shorter deadline, fetch implementation and clock. Abort signals
   cancel collection and reservation waiting without scheduling another call.
 - `AppleCollectionError` exposes `code`, safe `status` and nullable
-  `retryAfter` seconds. Apple HTTP429 remains429 with Retry-After; network,
+  `retryAfter` seconds. Apple HTTP 429 remains 429 with Apple’s Retry-After when present (otherwise null); network,
   timeout, invalid query, platform mismatch and malformed/oversized response
   states remain distinct. No failure is returned as a successful empty capture.
 

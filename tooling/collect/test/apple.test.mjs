@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { createAppleCollector, normalizeAppleQuery, appleSourceUrl, parseAppleAppId, AppleCollectionError } from "@saas-maker/collect/apple";
 const at = "2026-10-25T10:00:00.000Z";
 const input = { term: "Ｔａｓｋ   管理", country: "US", platform: "ios", limit: 20 };
-const app = { trackId: 123, trackName: "Task 管理", artistName: "Example", trackViewUrl: "https://apps.apple.com/us/app/example/id123", artworkUrl100: "https://is1-ssl.mzstatic.com/icon.png", description: "A task list", primaryGenreName: "Productivity", averageUserRating: 0, userRatingCount: 0, formattedPrice: "Free", version: "1", kind: "software" };
+const app = { trackId: 123, trackName: "Task 管理", artistName: "Example", trackViewUrl: "https://apps.apple.com/us/app/example/id123", artworkUrl100: "https://is1-ssl.mzstatic.com/icon.png", description: "A task list", primaryGenreName: "Productivity", averageUserRating: 0, userRatingCount: 0, formattedPrice: "Free", version: "1", kind: "software", wrapperType: "software" };
 const response = (results = [app]) => Response.json({ resultCount: results.length, results });
 const options = (extra = {}) => ({ reserve() {}, now: () => at, fetchImpl: async () => response(), ...extra });
 
@@ -27,12 +27,26 @@ test("Apple URL/ID lookup is allowlisted and query inputs cannot become SSRF des
   await assert.rejects(collector.lookup({ id: "https://evil.test/id123", country: "us", platform: "ios" }), /Lookup requires/);
   assert.equal(calls, 0); assert.throws(() => createAppleCollector(), /reservation callback/);
 });
-test("Mac entity is explicit and an iOS direct-ID mismatch retains its own source/time instead of wrong app", async () => {
+test("Mac lookup preserves metadata but does not infer Mac compatibility from ignored entity", async () => {
   const collector = createAppleCollector(options());
   const result = await collector.lookup({ id: "https://apps.apple.com/us/app/example/id123", country: "de", platform: "mac" });
-  assert.equal(result.match, "platform-mismatch"); assert.deepEqual(result.apps, []); assert.match(result.notice, /another platform/); assert.equal(result.fetchedAt, at); assert.equal(result.sourceUrl, "https://itunes.apple.com/lookup?id=123&country=de&entity=macSoftware");
-  const found = await collector.lookup({ id: 123, country: "us", platform: "ios" }); assert.equal(found.match, "matched"); assert.equal(found.apps[0].id, "123");
+  assert.equal(result.match, "matched"); assert.equal(result.apps[0].id, "123"); assert.match(result.notice, /does not establish Mac compatibility/); assert.equal(result.fetchedAt, at); assert.equal(result.sourceUrl, "https://itunes.apple.com/lookup?id=123&country=de&entity=macSoftware");
+  const found = await collector.lookup({ id: 123, country: "us", platform: "ios" }); assert.equal(found.match, "matched"); assert.equal(found.notice, undefined);
+  const nativeMac = await createAppleCollector(options({ fetchImpl: async () => response([{ ...app, kind: "mac-software" }]) })).lookup({ id: 123, country: "us", platform: "ios" });
+  assert.equal(nativeMac.match, "platform-mismatch"); assert.deepEqual(nativeMac.apps, []); assert.match(nativeMac.notice, /native Mac app/);
   const empty = await createAppleCollector(options({ fetchImpl: async () => response([]) })).lookup({ id: 123, country: "us", platform: "ios" }); assert.equal(empty.match, "not-found"); assert.equal(empty.notice, undefined);
+});
+test("Mac search keeps native Mac and iPad-on-Mac rows in exact provider order", async () => {
+  const capture = await createAppleCollector(options({ fetchImpl: async () => response([app, { ...app, trackId: 124, kind: "mac-software" }, { ...app, trackId: 125 }]) })).search({ ...input, platform: "mac" });
+  assert.deepEqual(capture.apps.map(app => app.id), ["123", "124", "125"]); assert.match(capture.notice, /iPad apps available on Mac/);
+});
+test("developer URLs are rejected and numeric artist IDs do not become platform mismatches", async () => {
+  assert.equal(parseAppleAppId("https://apps.apple.com/us/developer/example/id123"), null);
+  const artist = { wrapperType: "artist", artistId: 123, artistName: "Example" };
+  for (const rows of [[artist], [artist, { ...app, trackId: 124 }]]) {
+    const result = await createAppleCollector(options({ fetchImpl: async () => response(rows) })).lookup({ id: 123, country: "us", platform: "mac" });
+    assert.equal(result.match, "not-found"); assert.deepEqual(result.apps, []); assert.equal(result.notice, undefined);
+  }
 });
 test("mixed-platform search rejects a capture rather than shifting observed positions", async () => {
   await assert.rejects(createAppleCollector(options({ fetchImpl: async () => response([app, { ...app, trackId: 124, kind: "mac-software" }]) })).search(input), e => e.code === "platform_mismatch");
@@ -42,7 +56,7 @@ test("empty successful search stays an observed empty capture; invalid schemas n
   for (const payload of [{ resultCount: 2, results: [app] }, { resultCount: 1, results: [{ ...app, trackViewUrl: "javascript:alert(1)" }] }, { resultCount: 2, results: [app, app] }]) {
     await assert.rejects(createAppleCollector(options({ fetchImpl: async () => Response.json(payload) })).search(input), e => e.code === "provider_shape");
   }
-  await assert.rejects(createAppleCollector(options({ fetchImpl: async () => response([{ ...app, trackId: 456 }]) })).lookup({ id: 123, country: "us", platform: "ios" }), /inconsistent app identities/);
+  const unrelated = await createAppleCollector(options({ fetchImpl: async () => response([{ ...app, trackId: 456 }]) })).lookup({ id: 123, country: "us", platform: "ios" }); assert.equal(unrelated.match, "not-found");
 });
 test("unknown rating metadata stays null and unsafe artwork is omitted", async () => {
   const capture = await createAppleCollector(options({ fetchImpl: async () => response([{ ...app, averageUserRating: undefined, userRatingCount: -1, artworkUrl100: "https://evil.test/icon" }]) })).search(input);
@@ -58,6 +72,11 @@ test("Apple HTTP429 Retry-After is exposed unchanged and no internal retry spend
   let requests = 0, reservations = 0;
   const collector = createAppleCollector(options({ reserve() { reservations++; }, fetchImpl: async () => { requests++; return new Response("wait", { status: 429, headers: { "retry-after": "600" } }); } }));
   await assert.rejects(collector.search(input), e => e instanceof AppleCollectionError && e.status === 429 && e.retryAfter === 600 && e.code === "upstream_http"); assert.equal(requests, 1); assert.equal(reservations, 1);
+});
+test("missing or invalid Retry-After never fabricates provider guidance", async () => {
+  for (const header of [null, "unknown", "x".repeat(101)]) {
+    await assert.rejects(createAppleCollector(options({ fetchImpl: async () => new Response(null, { status: 429, headers: header === null ? {} : { "retry-after": header } }) })).search(input), e => e.retryAfter === null);
+  }
 });
 test("HTTP redirects are never followed to other hosts", async () => {
   let requests = 0;
