@@ -325,7 +325,16 @@ const GRADE_LABELS: Record<string, string> = {
         <ul class="playbook-sources">
           {playbook.sources.map((source) => (
             <li>
-              <a href={source.url} target="_blank" rel="noopener noreferrer">
+              <a
+                href={source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-app-health-event={
+                  source.url === 'https://awesomerea.com/'
+                    ? launchdeskEvent(playbook.domain, 'resource')
+                    : undefined
+                }
+              >
                 {source.title ?? source.url} ↗
               </a>
             </li>
