@@ -50,6 +50,10 @@ paid placement, missing authentication, unsupported accounts, CAPTCHA,
 anti-bot challenges, ambiguous policies, fake-review requests, and irrelevant
 destinations. A blocked item does not stop independent authorized items. Group
 the owner actions into one enablement queue and resume only the affected items.
+An already approved directory route blocked only by automation detection before
+intake may use the single [Fortress attempt](fortress-directory-fallback.md);
+all other challenge and platform-policy stops still apply. Preserve the
+manifest hash and never retry an indeterminate submission in another engine.
 
 One approval applies to the complete canonical JSON hash. Any material field
 change invalidates it.

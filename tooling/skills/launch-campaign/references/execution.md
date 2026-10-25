@@ -24,7 +24,8 @@ before retry.
 Normal browser work uses the user's connected session and ordinary visible
 interaction. Directory automation-detection blockers may use the Fortress
 fallback above. Stop on unexpected payment, changed fields/content,
-interactive CAPTCHA, missing authentication, or unclear success. Never
+CAPTCHA or anti-bot controls outside that bounded directory exception, missing
+authentication, or unclear success. Never
 force-submit, blindly retry, or use other standalone evasion automation.
 
 Treat blockers per item, not per campaign. After recording a blocked or manual

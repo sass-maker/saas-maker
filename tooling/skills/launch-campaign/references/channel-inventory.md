@@ -27,7 +27,10 @@ record across campaigns, so verification work is never repeated without reason.
   probe first, and the outcome recorded back into the state file.
 - **blocked** — a recorded blocker using one validated value: `captcha`,
   `signin`, `payment`, `anti-bot`, `moderation`, or `offline`. Enabling one is
-  an owner decision, never a bypass.
+  an owner decision. The existing approved directory route may make the single
+  [Fortress attempt](fortress-directory-fallback.md) for an `anti-bot` blocker
+  before intake; this does not accredit the destination or bypass a CAPTCHA,
+  platform prohibition, or another blocker.
 - **rejected** — excluded unless the owner explicitly overrides with a reason.
 - **untracked** — the channel is not in the state file yet; treat it as seed.
 

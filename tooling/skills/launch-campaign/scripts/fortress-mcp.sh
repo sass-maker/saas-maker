@@ -6,14 +6,20 @@ if ! command -v uvx >/dev/null 2>&1; then
   exit 1
 fi
 
-# Keep this optional directory tool local, lazy, and independent of paid services.
+# Keep this optional directory tool lazy and clear inherited service overrides.
 for setting in ${!TILION_@} ${!TILLION_@}; do
   case "$setting" in
-    TILION_LICENSE_KEY|TILLION_LICENSE_KEY) ;;
+    TILION_LICENSE_KEY) ;;
     *) unset "$setting" ;;
   esac
 done
 unset CAPTCHA_API_KEY CAPTCHA_PROVIDER TURING_ENDPOINT TURING_KEY
+unset FORTRESS_REPO FORTRESS_TAG FORTRESS_BROWSERS_PATH FORTRESS_DOWNLOAD_HOST
+unset HTTP_PROXY HTTPS_PROXY ALL_PROXY NO_PROXY http_proxy https_proxy all_proxy no_proxy
+export TILION_MCP_WRITE_DIR
+TILION_MCP_WRITE_DIR=$(mktemp -d "${TMPDIR:-/tmp}/fortress-directory.XXXXXXXX")
+# Remove the empty directory on normal exit; preserve unexpected files locally.
+trap 'rmdir "$TILION_MCP_WRITE_DIR" 2>/dev/null || true' EXIT
 export TILION_SELFHEAL=0
 export TILLION_SELFHEAL_ENABLED=0
 export TILLION_CAPTCHA_PROVIDER=none
@@ -26,5 +32,5 @@ export TILLION_ALLOW_PRIVATE_EGRESS=0
 export TILION_MCP_ALLOW_ANY_PATH=0
 export TILLION_MCP_ALLOW_ANY_PATH=0
 
-exec uvx --python 3.12 --from 'tilion[mcp]==0.1.16' \
+uvx --python 3.12 --from 'tilion[mcp]==0.1.16' \
   --with 'tilion-fortress==153.0.8010.36.post1' tilion-mcp
