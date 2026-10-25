@@ -75,6 +75,23 @@ version provenance; scores remain advisory. The
 limitations, options and JSON output. Agents can discover the runner as
 `script:slop-score` through `fleet-capabilities.mjs`.
 
+## Native interaction reports
+
+Native apps can provide a device-only `interaction-metrics-v1.json` sidecar
+containing dates, allowlisted counters and durations, with no journal contents
+or identifiers. Read only an explicitly selected sidecar into the existing
+private portfolio usage importer:
+
+```bash
+node scripts/native-usage-report.mjs --input /path/to/interaction-metrics-v1.json --project kith --output /path/to/new-report.json
+```
+
+Missing inputs fail without replacing earlier evidence. The report uses a
+partial, conservative rolling 30-day window and device activity proxies;
+it does not establish people, useful recall, comprehension or core use.
+Neither inputs nor reports belong in this public repository. `--help` lists
+the bounded CLI options.
+
 ## Public monitoring
 
 The repository also runs checks whose source and inputs are already public:
