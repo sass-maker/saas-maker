@@ -1,5 +1,13 @@
 import assert from 'node:assert/strict';
-import { cpSync, mkdtempSync, readFileSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import {
+  symlinkSync,
+  cpSync,
+  mkdtempSync,
+  readFileSync,
+  mkdirSync,
+  writeFileSync,
+  rmSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -147,6 +155,7 @@ test('worktree generation writes locally, preserves catalog order and checks dri
       mkdirSync(join(repo, path), { recursive: true });
     for (const name of [
       'sync-catalog-systems.mjs',
+      'catalog-paths.mjs',
       'design-policy-validation.mjs',
       'capture-policy-validation.mjs',
     ]) {
@@ -178,6 +187,7 @@ test('worktree generation writes locally, preserves catalog order and checks dri
     const run = (...args) =>
       spawnSync(process.execPath, [join(repo, 'scripts/sync-catalog-systems.mjs'), ...args], {
         encoding: 'utf8',
+        cwd: repo,
       });
     const generated = run();
     assert.equal(generated.status, 0, generated.stderr);
@@ -191,6 +201,18 @@ test('worktree generation writes locally, preserves catalog order and checks dri
       projects: [{ id: 'z', app: { library: true, version: 'v0.1.19' } }, { id: 'a' }],
     });
     assert.equal(run('--check').status, 0);
+    // A linked writer must skip even an existing sibling manifest directory.
+    const victim = join(directory, 'another-writer');
+    const sibling = join(victim, 'apps/backend/config');
+    mkdirSync(sibling, { recursive: true });
+    symlinkSync(victim, join(directory, 'site-health'));
+    const protectedOutput = join(sibling, 'footer-surfaces.json');
+    writeFileSync(protectedOutput, '{"otherWriter":true}');
+    writeFileSync(join(repo, '.git'), 'gitdir: /private/primary/.git/worktrees/writer');
+    const isolatedRun = run();
+    assert.equal(isolatedRun.status, 0);
+    assert.match(isolatedRun.stdout, /skipped sibling manifest from isolated worktree/);
+    assert.equal(readFileSync(protectedOutput, 'utf8'), '{"otherWriter":true}');
     writeFileSync(join(repo, 'tooling/config/ui-adoption.json'), '{}');
     assert.equal(run('--check').status, 1);
     source.projects[0].systems.ui.app.library = 'yes';

@@ -70,9 +70,12 @@ describe('server-seeded project pages', () => {
     expect(apiFetchAuthed).not.toHaveBeenCalled();
     expect(getProjectBySlug).not.toHaveBeenCalled();
   });
-  it('opens the private scoreboard without fetching feedback data', async () => {
+  it('opens export-only portfolio recovery without fetching feedback data', async () => {
     const page = await ProjectsPage({ searchParams: Promise.resolve({ view: 'scoreboard' }) });
     expect(page.props.accountId).toBe('fixture-account');
+    expect(render(page)).toContain('Portfolio readiness now lives in Site Health');
+    expect(render(page)).toContain('Export previous workspace');
+    expect(render(page)).not.toContain('Import review');
     expect(apiFetchAuthed).not.toHaveBeenCalled();
   });
   it('seeds the default feedback inbox in the first HTML with its exact resource key', async () => {

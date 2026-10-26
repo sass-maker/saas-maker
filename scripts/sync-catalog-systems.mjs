@@ -7,8 +7,14 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { validateFeedbackApplicability } from './capture-policy-validation.mjs';
 import { validateDesignPolicies } from './design-policy-validation.mjs';
 
-const catalogPath = new URL('../catalog/projects.json', import.meta.url);
+import { fileURLToPath } from 'node:url';
+import { catalogPaths } from './catalog-paths.mjs';
+
 const repoRoot = new URL('../', import.meta.url);
+const paths = catalogPaths(fileURLToPath(repoRoot));
+const catalogPath = paths.source;
+// Source ownership follows the primary catalog; writes stay beside this checkout.
+// An isolated writer must never mutate another repository's primary checkout.
 const fleetRoot = new URL('../../', import.meta.url);
 const check = process.argv.includes('--check');
 
@@ -404,13 +410,17 @@ const stale = [];
 let skipped = 0;
 for (const [relative, value] of outputs) {
   // Own outputs follow this checkout even when a worktree has another name.
-  // Missing sibling checkouts are reported, never created or redirected.
+  // Isolated writers skip sibling outputs; missing checkouts are never created.
   const local = relative.startsWith('saas-maker/');
   const target = local
     ? new URL(relative.slice('saas-maker/'.length), repoRoot)
     : new URL(relative, fleetRoot);
-  if (!local && !existsSync(new URL('./', target))) {
-    console.log(`skipped unavailable sibling manifest: ${relative}`);
+  if (!local && (paths.isolated || !existsSync(new URL('./', target)))) {
+    console.log(
+      paths.isolated
+        ? `skipped sibling manifest from isolated worktree: ${relative}`
+        : `skipped unavailable sibling manifest: ${relative}`
+    );
     skipped++;
     continue;
   }

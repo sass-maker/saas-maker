@@ -3,8 +3,12 @@ import { randomUUID } from 'node:crypto';
 import { isDeepStrictEqual } from 'node:util';
 import { compatibilityCatalog, structureCatalog } from './catalog-schema.mjs';
 
-const canonical = new URL('../catalog/projects.json', import.meta.url);
-const generated = new URL('../catalog/generated/operations.json', import.meta.url);
+import { fileURLToPath } from 'node:url';
+import { catalogPaths } from './catalog-paths.mjs';
+
+const paths = catalogPaths(fileURLToPath(new URL('../', import.meta.url)));
+const canonical = paths.source;
+const generated = paths.operations;
 
 // Existing maintenance commands may work against the old in-memory shape, but
 // must write back to the structured source. Refuse writes to a generated alias.
@@ -12,7 +16,7 @@ export async function saveCatalog(path, legacy, expectedRaw) {
   const resolved = await realpath(path);
   const generatedPath = await realpath(generated).catch(() => null);
   if (resolved === generatedPath)
-    throw new Error('Generated catalog is read-only; edit catalog/projects.json');
+    throw new Error('Generated catalog is read-only; edit Site Health catalog/projects.json');
   const current = await readFile(path, 'utf8');
   if (current !== expectedRaw)
     throw new Error('Catalog changed while editing; reload before saving');

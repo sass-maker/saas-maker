@@ -1,5 +1,14 @@
 # SaaS Maker Project Status
 
+- **2026-10-26 — Private portfolio ownership.** Site Health owns the canonical
+  owner-local catalog, readiness checklist, scores, evidence and history. Shared
+  generators resolve that source and SaaS Maker serves its public projection.
+  The previous authenticated scoreboard route exports old browser workspaces
+  for recovery; portfolio editing has moved to Site Health. Customer feedback,
+  subscriptions and authentication remain with this service.
+  Release order: merge and install Site Health readiness first, verify the
+  imported workspace survives reload/export, then release this recovery bridge.
+
 ## Why / What
 
 SaaS Maker is the public product directory, the small shared feedback layer

@@ -2,8 +2,12 @@ import { isDeepStrictEqual } from 'node:util';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { compatibilityCatalog, structureCatalog } from './catalog-schema.mjs';
 
-const sourcePath = new URL('../catalog/projects.json', import.meta.url);
-const outputPath = new URL('../catalog/generated/operations.json', import.meta.url);
+import { fileURLToPath } from 'node:url';
+import { catalogPaths } from './catalog-paths.mjs';
+
+const paths = catalogPaths(fileURLToPath(new URL('../', import.meta.url)));
+const sourcePath = paths.source;
+const outputPath = paths.operations;
 const source = JSON.parse(readFileSync(sourcePath, 'utf8'));
 if (source.catalogSchemaVersion !== 2) throw new Error('Expected structured catalog schema 2');
 const output = compatibilityCatalog(source);

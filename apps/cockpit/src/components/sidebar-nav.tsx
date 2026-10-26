@@ -1,12 +1,11 @@
 'use client';
 
-import { FolderKanban, MessageSquare, Users, ListChecks } from 'lucide-react';
+import { FolderKanban, MessageSquare, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { label: 'Product scoreboard', href: '/projects?view=scoreboard', icon: ListChecks },
   // Match specific routes before the broader project detail route.
   { label: 'Feedback inbox', href: '/projects/feedback', icon: MessageSquare },
   { label: 'Subscribers', href: '/projects/subscribers', icon: Users },

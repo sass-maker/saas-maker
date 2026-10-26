@@ -10,8 +10,8 @@ portfolio operations belong to Site Health; reusable automation and skills
 belong to SaaS Maker Tooling; App Health and CodeVetter remain independent
 products. Those surfaces must not be documented here.
 
-The owner-directed [product scoreboard](product-scoreboard.md) is a private,
-browser-local assessment and one-lever review view. It does not operate products.
+The previous [product scoreboard](product-scoreboard.md) is an export-only
+recovery bridge. Site Health owns the private portfolio assessment and cadence.
 
 Start with [the quickstart](getting-started/quickstart.md).
 
