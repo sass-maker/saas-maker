@@ -252,10 +252,12 @@ describe('verified public Fleet directory', () => {
       {}
     );
     expect(catalog.schemaVersion).toBe(6);
-    expect(ids).toHaveLength(40);
+    expect(ids).toHaveLength(39);
+    expect(ids).not.toContain('significanthobbies');
     expect(new Set(ids).size).toBe(catalog.directory.length);
     const archivedIds = catalog.archivedDirectory.map((project: { id: string }) => project.id);
-    expect(archivedIds).toHaveLength(38);
+    expect(archivedIds).toHaveLength(39);
+    expect(archivedIds).toContain('significanthobbies');
     expect(new Set([...ids, ...archivedIds]).size).toBe(ids.length + archivedIds.length);
     expect(
       catalog.directory.every((project: { roster: string }) => project.roster === 'current')

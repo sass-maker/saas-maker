@@ -596,64 +596,6 @@
       "publicUrlLabel": "Visit website"
     },
     {
-      "id": "significanthobbies",
-      "name": "Significant Hobbies",
-      "description": "The shared Hub for Live, Calorie, Setline, Kith, and Anchor, backed by one privacy-aware control plane.",
-      "form": "Personal-app Hub",
-      "platforms": [
-        "Web",
-        "API",
-        "Swift package"
-      ],
-      "technologies": [
-        "TypeScript",
-        "Cloudflare Workers",
-        "D1",
-        "Swift"
-      ],
-      "group": "current",
-      "makerNote": "I wanted one Hub for my maintained personal apps while letting every app keep ownership of its own data.",
-      "purposeContract": {
-        "purpose": "Significant Hobbies is the shared home and privacy-aware control plane for five independently owned personal applications.",
-        "audience": "One person using Live, Calorie, Setline, Kith, and Anchor as a connected personal system.",
-        "outcome": "See and act across the five apps without collapsing their data ownership or product identities.",
-        "mechanism": "A Hub, backend, and typed sync contracts exchange privacy-safe summaries and semantic actions while each app keeps its own source and data.",
-        "proof": "The canonical Hub lists five maintained apps. Journal is removed from the product lineup; Journal and Habits source/data compatibility history remains retained. Private cross-app use still needs hosted qualification.",
-        "nextAction": "Open the Hub to reach the five apps; current work focuses on unified authentication and safe cross-app summaries."
-      },
-      "footerArt": {
-        "src": "/footer-art/significanthobbies.webp",
-        "width": 2159,
-        "height": 728,
-        "alt": "Significant Hobbies: A shared courtyard centers a common path and table connecting five independent personal rooms. Each room retains a separate doorway and its own interior character; no room's contents flow into another.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Significant Hobbies",
-        "sha256": "793590b059e352e9a8a381f3d0074b5994b64e9596cfbc8dde0e1268fc161f3d"
-      },
-      "kind": "product",
-      "category": "utility",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Workers"
-      ],
-      "domains": [
-        "significanthobbies.com"
-      ],
-      "url": "https://significanthobbies.com",
-      "repositoryUrl": "https://github.com/Significant-Hobbies/significanthobbies",
-      "changelogUrl": "https://significanthobbies.com/changelog",
-      "roadmapUrl": "https://github.com/Significant-Hobbies/significanthobbies/issues",
-      "firstCommitAt": "2026-03-01",
-      "latestCommitAt": "2026-09-22",
-      "roster": "current",
-      "availability": "public-link",
-      "publicUrl": "https://significanthobbies.com",
-      "publicUrlLabel": "Visit website"
-    },
-    {
       "id": "anime-list",
       "name": "Anime List",
       "description": "Anime and manga discovery with multi-axis filtering and personal watchlists.",
@@ -2141,6 +2083,26 @@
       "profileUrl": "https://sassmaker.com/p/materia"
     },
     {
+      "id": "significanthobbies",
+      "name": "Significant Hobbies",
+      "description": "Retired cross-app Hub. Shared sync package and compatibility services are retained for the standalone apps.",
+      "form": "Personal-app Hub",
+      "platforms": [
+        "Web",
+        "API",
+        "Swift package"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Cloudflare Workers",
+        "D1",
+        "Swift"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/significanthobbies"
+    },
+    {
       "id": "india-standards",
       "name": "India Standards",
       "description": "A transparent India demographic standards calculator using aggregate PLFS data, explicit uncertainty ranges, and clear source limits.",
@@ -3426,41 +3388,6 @@
         "focalY": 50,
         "credit": "Original illustration for Setline",
         "sha256": "75f737ad788ed05fbfde4f0193096f358d959a07130fcab6025639f7fcb0bd64"
-      }
-    },
-    {
-      "id": "significanthobbies",
-      "name": "Significant Hobbies",
-      "description": "The shared Hub for Live, Calorie, Setline, Kith, and Anchor, backed by one privacy-aware control plane.",
-      "url": "https://significanthobbies.com",
-      "tier": "secondary",
-      "category": "utility",
-      "priority": "P2",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "public-ready",
-      "changelogUrl": "https://significanthobbies.com/changelog",
-      "repositoryUrl": "https://github.com/Significant-Hobbies/significanthobbies",
-      "roadmapUrl": "https://github.com/Significant-Hobbies/significanthobbies/issues",
-      "pillarId": "learn",
-      "purposeContract": {
-        "purpose": "Significant Hobbies is the shared home and privacy-aware control plane for five independently owned personal applications.",
-        "audience": "One person using Live, Calorie, Setline, Kith, and Anchor as a connected personal system.",
-        "outcome": "See and act across the five apps without collapsing their data ownership or product identities.",
-        "mechanism": "A Hub, backend, and typed sync contracts exchange privacy-safe summaries and semantic actions while each app keeps its own source and data.",
-        "proof": "The canonical Hub lists five maintained apps. Journal is removed from the product lineup; Journal and Habits source/data compatibility history remains retained. Private cross-app use still needs hosted qualification.",
-        "nextAction": "Open the Hub to reach the five apps; current work focuses on unified authentication and safe cross-app summaries."
-      },
-      "footerArt": {
-        "src": "/footer-art/significanthobbies.webp",
-        "width": 2159,
-        "height": 728,
-        "alt": "Significant Hobbies: A shared courtyard centers a common path and table connecting five independent personal rooms. Each room retains a separate doorway and its own interior character; no room's contents flow into another.",
-        "focalX": 50,
-        "focalY": 50,
-        "credit": "Original illustration for Significant Hobbies",
-        "sha256": "793590b059e352e9a8a381f3d0074b5994b64e9596cfbc8dde0e1268fc161f3d"
       }
     },
     {

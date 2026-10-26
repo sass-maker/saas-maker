@@ -2,7 +2,12 @@
   "$schema": "fleet.launch-coverage.v1",
   "updated": "2026-10-17",
   "note": "Public projection of the owner-local submission ledger. Agents mark destinations here as submissions are posted; private receipts stay in tooling/config/directory-submissions/.",
-  "coveredStates": ["submitted", "scheduled", "queued", "live"],
+  "coveredStates": [
+    "submitted",
+    "scheduled",
+    "queued",
+    "live"
+  ],
   "denominator": {
     "destinations": 817
   },
@@ -557,7 +562,7 @@
         "startupplug.com.ng": {
           "state": "skipped",
           "recordedAt": "2026-10-02T08:50:00Z",
-          "reason": "Typeform reports 'This typeform is now closed' — no intake possible"
+          "reason": "Typeform reports 'This typeform is now closed' \u2014 no intake possible"
         },
         "flowtools.co": {
           "state": "skipped",
@@ -647,7 +652,7 @@
         "whatsthebigdata.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:14:51.053637Z",
-          "reason": "Select Listing Package: Basic $599 / Featured $799 — 'Please select a listing package to continue'"
+          "reason": "Select Listing Package: Basic $599 / Featured $799 \u2014 'Please select a listing package to continue'"
         },
         "neeed.directory": {
           "state": "skipped",
@@ -657,7 +662,7 @@
         "submitaitools.org": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:14:51.053637Z",
-          "reason": "Redirected to /verify/submit/ — color-click human verification challenge"
+          "reason": "Redirected to /verify/submit/ \u2014 color-click human verification challenge"
         },
         "auraplusplus.com": {
           "state": "skipped",
@@ -797,7 +802,7 @@
         "submissionwebdirectory.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:37:36Z",
-          "reason": "submit.php requires image CAPTCHA (required field, captcha.php image) — cannot bypass"
+          "reason": "submit.php requires image CAPTCHA (required field, captcha.php image) \u2014 cannot bypass"
         },
         "blogarama.com": {
           "state": "skipped",
@@ -817,12 +822,12 @@
         "highrankdirectory.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:37:36Z",
-          "reason": "submit.php requires image CAPTCHA (required field, captcha.php image) — cannot bypass"
+          "reason": "submit.php requires image CAPTCHA (required field, captcha.php image) \u2014 cannot bypass"
         },
         "somuch.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:37:36Z",
-          "reason": "submit form gated by Google reCAPTCHA v2 (g-recaptcha sitekey 6LdIs4cU...) — cannot bypass"
+          "reason": "submit form gated by Google reCAPTCHA v2 (g-recaptcha sitekey 6LdIs4cU...) \u2014 cannot bypass"
         },
         "betterlaunch.co": {
           "state": "skipped",
@@ -847,7 +852,7 @@
         "acidtools.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:37:36Z",
-          "reason": "'Log in to Submit' wall — Google OAuth or account creation required"
+          "reason": "'Log in to Submit' wall \u2014 Google OAuth or account creation required"
         },
         "startupfa.st": {
           "state": "skipped",
@@ -857,12 +862,12 @@
         "best-ai.org": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:37:36Z",
-          "reason": "'Sign in for free submission' — account (Google/GitHub/email) required before the free review queue"
+          "reason": "'Sign in for free submission' \u2014 account (Google/GitHub/email) required before the free review queue"
         },
         "killerstartups.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:37:36Z",
-          "reason": "/submit-startup/ is live but has no listing form — page funnels to a beehiiv newsletter join ('join our community... the next form will allow you to submit'); no self-serve directo"
+          "reason": "/submit-startup/ is live but has no listing form \u2014 page funnels to a beehiiv newsletter join ('join our community... the next form will allow you to submit'); no self-serve directo"
         },
         "ontoplist.com": {
           "state": "skipped",
@@ -897,7 +902,7 @@
         "startuptrusted.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "Join StartupTrusted — Continue with Google OR Sign in with Email"
+          "reason": "Join StartupTrusted \u2014 Continue with Google OR Sign in with Email"
         },
         "verifiedtools.info": {
           "state": "skipped",
@@ -912,7 +917,7 @@
         "foundrlist.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "/submit redirects to /login?returnUrl=%2Fsubmit — Sign In / Continue with Google / Continue with GitHub / Create Account"
+          "reason": "/submit redirects to /login?returnUrl=%2Fsubmit \u2014 Sign In / Continue with Google / Continue with GitHub / Create Account"
         },
         "openalternative.co": {
           "state": "skipped",
@@ -922,27 +927,27 @@
         "shipybara.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "Welcome to Shipybara — Continue with Google Continue with GitHub"
+          "reason": "Welcome to Shipybara \u2014 Continue with Google Continue with GitHub"
         },
         "submitmysaas.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "Sign in to your account to continue — Login with Google Login with GitHub Or continue with Email"
+          "reason": "Sign in to your account to continue \u2014 Login with Google Login with GitHub Or continue with Email"
         },
         "mylaunchstash.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "Log in to Submit — Please sign in to submit your AI tool to our directory — Log in with Google"
+          "reason": "Log in to Submit \u2014 Please sign in to submit your AI tool to our directory \u2014 Log in with Google"
         },
         "poweruptools.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "Log in to Submit — Please sign in to submit your AI tool to our directory"
+          "reason": "Log in to Submit \u2014 Please sign in to submit your AI tool to our directory"
         },
         "trustiner.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "Log in to Submit — Please sign in to submit — Log in with Google — No account? Create an account"
+          "reason": "Log in to Submit \u2014 Please sign in to submit \u2014 Log in with Google \u2014 No account? Create an account"
         },
         "aijustbetter.com": {
           "state": "skipped",
@@ -952,7 +957,7 @@
         "feedough.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "Startup Discovery reviews are a paid premium service — 'this is a premium service and we charge for it'"
+          "reason": "Startup Discovery reviews are a paid premium service \u2014 'this is a premium service and we charge for it'"
         },
         "stork.ai": {
           "state": "skipped",
@@ -962,17 +967,17 @@
         "altern.ai": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "Sign in or sign up — Continue with a social account (GitHub/Google). Sign in to continue to /maker/submit/start"
+          "reason": "Sign in or sign up \u2014 Continue with a social account (GitHub/Google). Sign in to continue to /maker/submit/start"
         },
         "builders.to": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "net::ERR_NAME_NOT_RESOLVED — DNS does not resolve in curl or headless Chromium"
+          "reason": "net::ERR_NAME_NOT_RESOLVED \u2014 DNS does not resolve in curl or headless Chromium"
         },
         "huzzler.so": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "/products/create renders login form: 'Login to your account — Log in OR Login with Google'"
+          "reason": "/products/create renders login form: 'Login to your account \u2014 Log in OR Login with Google'"
         },
         "sitepromotiondirectory.com": {
           "state": "skipped",
@@ -982,7 +987,7 @@
         "trylaunch.ai": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "/submit redirects to /auth?mode=signup — 'Continue with Google / Continue with GitHub / email+password'"
+          "reason": "/submit redirects to /auth?mode=signup \u2014 'Continue with Google / Continue with GitHub / email+password'"
         },
         "startupbuffer.com": {
           "state": "skipped",
@@ -992,12 +997,12 @@
         "weekhack.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "Welcome back — Sign in to your WeekHack account — Continue with Google Continue with GitHub or email"
+          "reason": "Welcome back \u2014 Sign in to your WeekHack account \u2014 Continue with Google Continue with GitHub or email"
         },
         "prolaunch.net": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "Sign in to your account to continue — Login with Google Login with GitHub Or continue with Email; turnstile present"
+          "reason": "Sign in to your account to continue \u2014 Login with Google Login with GitHub Or continue with Email; turnstile present"
         },
         "justlaunched.fyi": {
           "state": "skipped",
@@ -1007,7 +1012,7 @@
         "startupbase.io": {
           "state": "skipped",
           "recordedAt": "2026-10-02T09:58:55.312Z",
-          "reason": "Sign in or create your account — Continue with Google (OAuth only; email codes work for existing accounts only)"
+          "reason": "Sign in or create your account \u2014 Continue with Google (OAuth only; email codes work for existing accounts only)"
         },
         "productfame.com": {
           "state": "skipped",
@@ -1017,7 +1022,7 @@
         "aitoolnet.com": {
           "state": "skipped",
           "recordedAt": "2026-10-02T10:36:53.361Z",
-          "reason": "corrected: latest agent record = blocked — POST https://www.aitoolnet.com/index.php?s=form&c=website&m=post -> 403"
+          "reason": "corrected: latest agent record = blocked \u2014 POST https://www.aitoolnet.com/index.php?s=form&c=website&m=post -> 403"
         },
         "ainav.cn": {
           "state": "submitted",
@@ -1984,55 +1989,6 @@
         }
       }
     },
-    "significanthobbies": {
-      "destinations": {
-        "activesearchresults.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "curated.design": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "directorywebpromotion.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "lachief.io": {
-          "state": "skipped",
-          "recordedAt": "2026-09-22T19:24:53Z",
-          "reason": "Required verified 540x540 square logo unavailable"
-        },
-        "pitchwall.co": {
-          "state": "skipped",
-          "recordedAt": "2026-09-22T19:24:53Z",
-          "reason": "authentication_required"
-        },
-        "qualityinternetdirectory.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupcollections.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupplug.com.ng": {
-          "state": "skipped",
-          "recordedAt": "2026-09-22T19:24:53Z",
-          "reason": "provider_closed"
-        },
-        "startupproject.org": {
-          "state": "skipped",
-          "recordedAt": "2026-09-22T19:24:53Z",
-          "reason": "backlink_required"
-        },
-        "viesearch.com": {
-          "state": "skipped",
-          "recordedAt": "2026-09-22T19:24:53Z",
-          "reason": "email_verification_serial_gate"
-        }
-      }
-    },
     "starboard": {
       "destinations": {
         "activesearchresults.com": {
@@ -2407,6 +2363,59 @@
           "startupcollections.com": {
             "state": "submitted",
             "recordedAt": "2026-09-22T19:24:53Z"
+          }
+        }
+      }
+    },
+    "significanthobbies": {
+      "retiredAt": "2026-10-26",
+      "reason": "Owner retired unused cross-app Hub; no further product growth/submission work. Shared app compatibility dependencies remain.",
+      "coverage": {
+        "destinations": {
+          "activesearchresults.com": {
+            "state": "submitted",
+            "recordedAt": "2026-09-22T19:24:53Z"
+          },
+          "curated.design": {
+            "state": "submitted",
+            "recordedAt": "2026-09-22T19:24:53Z"
+          },
+          "directorywebpromotion.com": {
+            "state": "submitted",
+            "recordedAt": "2026-09-22T19:24:53Z"
+          },
+          "lachief.io": {
+            "state": "skipped",
+            "recordedAt": "2026-09-22T19:24:53Z",
+            "reason": "Required verified 540x540 square logo unavailable"
+          },
+          "pitchwall.co": {
+            "state": "skipped",
+            "recordedAt": "2026-09-22T19:24:53Z",
+            "reason": "authentication_required"
+          },
+          "qualityinternetdirectory.com": {
+            "state": "submitted",
+            "recordedAt": "2026-09-22T19:24:53Z"
+          },
+          "startupcollections.com": {
+            "state": "submitted",
+            "recordedAt": "2026-09-22T19:24:53Z"
+          },
+          "startupplug.com.ng": {
+            "state": "skipped",
+            "recordedAt": "2026-09-22T19:24:53Z",
+            "reason": "provider_closed"
+          },
+          "startupproject.org": {
+            "state": "skipped",
+            "recordedAt": "2026-09-22T19:24:53Z",
+            "reason": "backlink_required"
+          },
+          "viesearch.com": {
+            "state": "skipped",
+            "recordedAt": "2026-09-22T19:24:53Z",
+            "reason": "email_verification_serial_gate"
           }
         }
       }
