@@ -147,6 +147,7 @@ test('worktree generation writes locally, preserves catalog order and checks dri
       mkdirSync(join(repo, path), { recursive: true });
     for (const name of [
       'sync-catalog-systems.mjs',
+      'catalog-paths.mjs',
       'design-policy-validation.mjs',
       'capture-policy-validation.mjs',
     ]) {
@@ -178,6 +179,7 @@ test('worktree generation writes locally, preserves catalog order and checks dri
     const run = (...args) =>
       spawnSync(process.execPath, [join(repo, 'scripts/sync-catalog-systems.mjs'), ...args], {
         encoding: 'utf8',
+        cwd: repo,
       });
     const generated = run();
     assert.equal(generated.status, 0, generated.stderr);

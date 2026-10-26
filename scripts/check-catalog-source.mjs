@@ -2,18 +2,19 @@ import { readFileSync, realpathSync, lstatSync } from 'node:fs';
 import { isDeepStrictEqual } from 'node:util';
 import { compatibilityCatalog, structureCatalog } from './catalog-schema.mjs';
 
-const source = new URL('../catalog/projects.json', import.meta.url);
-const generated = new URL('../catalog/generated/operations.json', import.meta.url);
-const compatibility = new URL(
-  '../../site-health/apps/backend/config/projects.json',
-  import.meta.url
-);
+import { fileURLToPath } from 'node:url';
+import { catalogPaths } from './catalog-paths.mjs';
+
+const paths = catalogPaths(fileURLToPath(new URL('../', import.meta.url)));
+const source = paths.source;
+const generated = paths.operations;
+const compatibility = paths.compatibility;
 if (
   !lstatSync(compatibility).isSymbolicLink() ||
   realpathSync(compatibility) !== realpathSync(generated)
 ) {
   throw new Error(
-    'Site Health must link to the generated operations view, never keep an editable catalog'
+    'Site Health backend must link to its generated operations view, never the editable source'
   );
 }
 const structured = JSON.parse(readFileSync(source, 'utf8'));

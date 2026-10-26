@@ -1,9 +1,11 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { compatibilityCatalog } from './catalog-schema.mjs';
+import { fileURLToPath } from 'node:url';
+import { catalogPaths } from './catalog-paths.mjs';
 
-const catalog = compatibilityCatalog(
-  JSON.parse(readFileSync(new URL('../catalog/projects.json', import.meta.url), 'utf8'))
-);
+const paths = catalogPaths(fileURLToPath(new URL('../', import.meta.url)));
+
+const catalog = compatibilityCatalog(JSON.parse(readFileSync(paths.source, 'utf8')));
 const projects = new Map(catalog.projects.map((project) => [project.id, project]));
 const review = catalog.repositoryReview;
 const categories = new Set([
@@ -49,7 +51,7 @@ const markdown = [
   '',
   review.scope,
   '',
-  'Generated from catalog/projects.json. Do not edit this table. Linked rows inherit project decisions. Classification alone does not establish shareability, deployment readiness, or active Fleet membership.',
+  'Generated from Site Health catalog/projects.json. Do not edit this table. Linked rows inherit project decisions. Classification alone does not establish shareability, deployment readiness, or active Fleet membership.',
   '',
   '| Category | Repository rows |',
   '| --- | ---: |',
@@ -78,7 +80,7 @@ const markdown = [
       ]
     : []),
 ].join('\n');
-const path = new URL('../catalog/generated/repository-classifications.md', import.meta.url);
+const path = paths.repositoryTable;
 if (process.argv.includes('--check')) {
   if (readFileSync(path, 'utf8') !== markdown)
     throw new Error('Generated repository table is stale');

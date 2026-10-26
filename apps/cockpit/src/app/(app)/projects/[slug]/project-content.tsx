@@ -1,8 +1,6 @@
 'use client';
 
 import { notFound, useParams } from 'next/navigation';
-import { ListChecks } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import type { ProjectDetails } from '@/lib/dashboard-projects';
 import { PageHeader } from '@/components/page-header';
 import { ProjectCredentials } from '@/components/project-credentials';
@@ -23,17 +21,7 @@ export function ProjectContent(options: ResourceSeed<ProjectDetails>) {
     <ResourceView resource={resource} skeleton={<ProjectDetailSkeleton />}>
       {(project) => (
         <div className="space-y-6">
-          <PageHeader
-            title={project.name}
-            description={`Feedback for ${project.slug}`}
-            action={
-              <Button variant="outline" asChild>
-                <a href={`/projects?view=scoreboard&q=${encodeURIComponent(project.name)}`}>
-                  <ListChecks /> Product quality
-                </a>
-              </Button>
-            }
-          />
+          <PageHeader title={project.name} description={`Feedback for ${project.slug}`} />
           <ProjectCredentials projectId={project.id} projectKey={project.api_key} />
           <InboxContent projectId={project.id} />
         </div>

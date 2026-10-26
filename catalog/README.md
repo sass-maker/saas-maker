@@ -1,11 +1,15 @@
 # Portfolio catalog
 
-**Edit only `catalog/projects.json`.** This private, owner-local file is the
-single source of classification and owner decisions. Its schema version is 2.
+**Edit only Site Health’s `catalog/projects.json`.** The private owner-local
+source is `/Users/sarthak/Desktop/fleet/site-health/catalog/projects.json`.
+SaaS Maker owns the public projection and shared generators. Its old source path
+may be a compatibility symlink to that single file; a second editable copy is
+rejected. See [ownership](https://github.com/sass-maker/site-health/blob/main/docs/ownership.md).
+The source schema version is 2.
 
 ## Project structure
 
-Each of the 72 product identities has these sections (optional fields stay absent):
+Each product identity has these sections (optional fields stay absent):
 
 | Section | Meaning |
 | --- | --- |
@@ -47,9 +51,9 @@ evidence stays separate and is not rewritten by this classification rule.
 previous schema; they do not override those authoritative decisions. This
 migration preserves differing values; it does not invent resolutions.
 
-Top-level `repositoryReview.repositories` retains all 82 original repository
-entries. Linked rows inherit their product classification; standalone rows retain
-their own classification. 82 repositories are not 82 distinct products.
+Top-level `repositoryReview.repositories` retains original repository entries.
+Linked rows inherit their product classification; standalone rows retain their
+own classification. Repository counts are not product counts.
 
 Top-level `infrastructure`, `geoIdentities`, `_meta` and all unknown fields are
 preserved. Infrastructure dependencies and evidence have not been removed.
@@ -71,9 +75,9 @@ pnpm --dir ../site-health docs:projects
   presentation fields and explicit availability labels; private/internal
   profiles omit operational domains and destination URLs. Past standalone
   repositories remain separate from those roster counts.
-- `generated/repository-classifications.md`: complete 82-repository review table.
-- `generated/operations.json`: private, generated compatibility view for existing
-  tools. Site Health's `apps/backend/config/projects.json` links here. Never edit
+- Site Health `catalog/generated/repository-classifications.md`: private repository review table.
+- Site Health `catalog/generated/operations.json`: private, generated compatibility
+  view for existing tools. Its `apps/backend/config/projects.json` links here. Never edit
   either path. It is a disposable output, not a classification source.
 - Per-system policy manifests are generated in place by `catalog:sync` from the
   `systems` sections: `tooling/config/{clarity-projects,clarity-journeys,
@@ -133,7 +137,7 @@ pnpm catalog:check-table
 ```
 
 The September 12 migration has a byte-for-byte pre-migration snapshot and SHA-256
-receipt under `.fleet-local/catalog-backups/`. Its inverse transformation matched
+receipt under Site Health’s `catalog/backups/`. Its inverse transformation matched
 every original value, and its public output matched the old output exactly.
 Backups are recovery snapshots, never consumer inputs. Keep this directory and
 the source in the owner's local backup.

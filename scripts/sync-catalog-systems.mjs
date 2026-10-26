@@ -7,9 +7,14 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { validateFeedbackApplicability } from './capture-policy-validation.mjs';
 import { validateDesignPolicies } from './design-policy-validation.mjs';
 
-const catalogPath = new URL('../catalog/projects.json', import.meta.url);
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { sep } from 'node:path';
+import { catalogPaths } from './catalog-paths.mjs';
+
 const repoRoot = new URL('../', import.meta.url);
-const fleetRoot = new URL('../../', import.meta.url);
+const paths = catalogPaths(fileURLToPath(repoRoot));
+const catalogPath = paths.source;
+const fleetRoot = pathToFileURL(paths.fleetRoot + sep);
 const check = process.argv.includes('--check');
 
 const source = JSON.parse(readFileSync(catalogPath, 'utf8'));

@@ -4,10 +4,9 @@
 
 SaaS Maker owns only:
 
-- the single owner-local portfolio catalog at `catalog/projects.json`, its
-  generated, filtered public exports, and every per-system policy manifest that
-  `catalog:sync` emits from its `systems` sections (tooling config files
-  included — they are generated outputs, never hand-edited);
+- the filtered public portfolio projection at `catalog/generated/public.json`
+  and reusable catalog generators; the private source and operational views
+  belong to Site Health, not this repository;
 - the public product directory;
 - the public scored ideas catalog under `/ideas`;
 - package documentation;
@@ -17,9 +16,8 @@ SaaS Maker owns only:
   and from any newsletter publishing or marketing queue;
 - @saas-maker/ai-chat-footer;
 - @saas-maker/portfolio-project-strip;
-- the owner-directed product scoreboard at `/projects?view=scoreboard`: a
-  browser-local imported assessment and one-lever cadence, with no hosted
-  private dataset or operational product controls;
+- an export-only recovery bridge at `/projects?view=scoreboard` for previous
+  account-scoped browser workspaces; all portfolio editing lives in Site Health;
 - the feedback and subscription APIs, image upload, project keys, narrow auth,
   and private inbox.
 - public, credential-free reusable workflows, Fleet-owned skills, operator
@@ -44,8 +42,9 @@ SaaS Maker owns only:
   `memory-pack-release.yml`.
 
 SaaS Maker Tooling owns shared schedules, skills, and host automation. Site
-Health owns portfolio operations and reads the SaaS Maker catalog through a
-generated compatibility view. Drank, PSI
+Health owns the private catalog, readiness checklist, scores, evidence, history
+and portfolio operations. Shared generators resolve its owner-local catalog;
+SaaS Maker pages consume only the checked-in public projection. Drank, PSI
 Swarm, Reel Pipeline, CodeVetter, App Health, and Mobile Dev Cockpit remain
 independent products or repositories.
 
@@ -71,14 +70,14 @@ pnpm check:docs
 ~~~
 
 Use PROJECT_STATUS.md for durable status. Edit classifications only in
-`catalog/projects.json`: product records and all 82 repository-review rows live
-there. The raw source is private, owner-local and gitignored. Public catalogue
+`../site-health/catalog/projects.json`: product records and repository-review
+rows live there. `catalog/projects.json` may remain a compatibility symlink. The raw source is private, owner-local and gitignored. Public catalogue
 data is projected into checked-in `catalog/generated/public.json`; public SaaS
 Maker pages never read private Fleet state at runtime. See `catalog/README.md`.
 
 The public directory labels each entry's curated `technologies` as “Prominent
 tools.” When a product's material stack changes, update the canonical
-`projects[<id>].presentation.directory.technologies` entry in `catalog/projects.json` and run
+`projects[<id>].presentation.directory.technologies` entry in `../site-health/catalog/projects.json` and run
 `pnpm catalog:sync-public` here in the same task. Never hand-edit the generated
 catalog or expand this field into a dependency inventory.
 
