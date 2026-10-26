@@ -142,7 +142,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "Analyst-driven MarketsandMarkets quadrant platform; no self-serve submission \u2014 contact info@360quadrants.com"
+          "note": "Analyst-driven MarketsandMarkets quadrant platform; no self-serve submission — contact info@360quadrants.com"
         }
       ]
     },
@@ -302,6 +302,16 @@
           "type": "AI Directory",
           "dr": 61,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://acidtools.com/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -3219,7 +3229,7 @@
           "source": "playbook-research",
           "retrieved": "2026-09-26",
           "type": "Directory / Marketplace",
-          "note": "extension marketplace \u2014 submit via @airtable/blocks-cli `block submit` + listing form; four-stage review; see airtable.com/developers/extensions/guides"
+          "note": "extension marketplace — submit via @airtable/blocks-cli `block submit` + listing form; four-stage review; see airtable.com/developers/extensions/guides"
         }
       ]
     },
@@ -3297,7 +3307,7 @@
       "dr": 25,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Research: holding page only \u2014 \"website update, coming soon\""],
+      "flags": ["Research: holding page only — \"website update, coming soon\""],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -4169,7 +4179,7 @@
       "pricing": "free",
       "dr": 60,
       "link": "nofollow",
-      "eligibility": "Free submission via /post-a-startup/ \u2014 Inno team reviews and publishes to city Inno Pages 'if applicable'; local-market structure.",
+      "eligibility": "Free submission via /post-a-startup/ — Inno team reviews and publishes to city Inno Pages 'if applicable'; local-market structure.",
       "flags": [
         "Submission path may be truncated",
         "Source path requires review",
@@ -4282,7 +4292,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "Live Android review blog; catalog submit path 404s \u2014 working route is the nav's Submit link; review cadence slowed"
+          "note": "Live Android review blog; catalog submit path 404s — working route is the nav's Submit link; review cadence slowed"
         }
       ]
     },
@@ -4396,11 +4406,11 @@
       "pricing": "free",
       "dr": 72,
       "link": "nofollow",
-      "eligibility": "Home-services businesses only \u2014 free profile via angi.com/app/join/registration; SaaS does not fit; paid lead-gen upgrades.",
+      "eligibility": "Home-services businesses only — free profile via angi.com/app/join/registration; SaaS does not fit; paid lead-gen upgrades.",
       "flags": [
         "Submission path may be truncated",
         "Source path requires review",
-        "Vertical mismatch for SaaS \u2014 home-services pros directory only"
+        "Vertical mismatch for SaaS — home-services pros directory only"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -5429,7 +5439,7 @@
           "retrieved": "2026-09-26",
           "submissionUrl": "https://marketplace.atlassian.com/manage/vendor/create",
           "type": "Directory / Marketplace",
-          "note": "partner account creation URL per Atlassian developer docs; requires a real Forge/Connect/DC app plus app review \u2014 not a listing-only directory"
+          "note": "partner account creation URL per Atlassian developer docs; requires a real Forge/Connect/DC app plus app review — not a listing-only directory"
         }
       ]
     },
@@ -5476,6 +5486,16 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://auraplusplus.com/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -5930,7 +5950,7 @@
           "retrieved": "2026-09-26",
           "type": "Profile / Portfolio",
           "pricing": "free",
-          "note": "free per Behance Helpcenter; publishing is in-app via 'Share Your Work' > Project \u2014 no standalone submit URL"
+          "note": "free per Behance Helpcenter; publishing is in-app via 'Share Your Work' > Project — no standalone submit URL"
         }
       ]
     },
@@ -6053,7 +6073,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "Kids-apps review blog; catalog submit URL now shows an article \u2014 submission route unverified"
+          "note": "Kids-apps review blog; catalog submit URL now shows an article — submission route unverified"
         }
       ]
     },
@@ -6126,7 +6146,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "HTTP 200 but fully JS-gated \u2014 content and submission flow unverified"
+          "note": "HTTP 200 but fully JS-gated — content and submission flow unverified"
         }
       ]
     },
@@ -6382,7 +6402,7 @@
       "pricing": "paid",
       "dr": 55,
       "link": "nofollow",
-      "eligibility": "Paid beta-testing service \u2014 recruits ID-verified testers; produces no public listing or backlink.",
+      "eligibility": "Paid beta-testing service — recruits ID-verified testers; produces no public listing or backlink.",
       "flags": ["Purpose mismatch: paid testing service, not a launch destination"],
       "route": "needs-research",
       "provider": "Ahrefs (source-reported)",
@@ -6701,7 +6721,7 @@
           "source": "playbook-research",
           "retrieved": "2026-09-26",
           "quarantined": true,
-          "note": "homepage now shows a 'Coming Soon (probably)' placeholder \u2014 the founder community is gone"
+          "note": "homepage now shows a 'Coming Soon (probably)' placeholder — the founder community is gone"
         }
       ]
     },
@@ -6741,6 +6761,16 @@
           "type": "Startup Directory",
           "dr": 9,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://bowora.com/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -6954,7 +6984,7 @@
       "dr": 50,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -6967,6 +6997,16 @@
           "dr": 50,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public",
+          "dr": 55,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://buildhop.io/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements."
         }
       ]
     },
@@ -7007,6 +7047,17 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://buildvoyage.com/products/launch-panda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://buildvoyage.com/products/launch-panda"
         }
       ]
     },
@@ -7168,7 +7219,7 @@
       "dr": 38,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable","DR sources disagree"],
+      "flags": ["Domain unreachable", "DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -7206,7 +7257,7 @@
       "pricing": "free",
       "dr": 68,
       "link": "nofollow",
-      "eligibility": "Contributor model \u2014 vetted expert writers; apply via Contact Us; no self-serve listing.",
+      "eligibility": "Contributor model — vetted expert writers; apply via Contact Us; no self-serve listing.",
       "flags": ["Submission path may be truncated", "Source path requires review"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -7392,7 +7443,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "no submission route \u2014 dedicated news division closed 2023; domain serves syndicated BuzzFeed/HuffPost-style content; treat buzzfeed.com as the live property"
+          "note": "no submission route — dedicated news division closed 2023; domain serves syndicated BuzzFeed/HuffPost-style content; treat buzzfeed.com as the live property"
         }
       ]
     },
@@ -7618,7 +7669,7 @@
           "submissionUrl": "https://changelog.com/news/submit",
           "type": "Community / Press",
           "pricing": "free",
-          "note": "dev news submission (sign-in required); commercial content rejected \u2014 sponsorship $200-$3000/wk via adam@changelog.com"
+          "note": "dev news submission (sign-in required); commercial content rejected — sponsorship $200-$3000/wk via adam@changelog.com"
         }
       ]
     },
@@ -7990,7 +8041,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "earned editorial only; press inquiries to press@cnet.com per About page; /contact resolves to About \u2014 no public submission form"
+          "note": "earned editorial only; press inquiries to press@cnet.com per About page; /contact resolves to About — no public submission form"
         }
       ]
     },
@@ -8309,7 +8360,7 @@
           "source": "playbook-research",
           "retrieved": "2026-09-26",
           "quarantined": true,
-          "note": "homepage repurposed \u2014 only message is 'sign up for The Nestomir's substack to follow the Collaborizm story'; community defunct"
+          "note": "homepage repurposed — only message is 'sign up for The Nestomir's substack to follow the Collaborizm story'; community defunct"
         }
       ]
     },
@@ -9033,6 +9084,16 @@
           "type": "Directory / Startup",
           "pricing": "freemium",
           "note": "3 tiers: Free $0 w/ required backlink (up to 4wk review), Basic $49 (4-day), Pro $30+$19/mo (2-day); NSFW track at /pricing?content=adult"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://dang.ai/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -9061,6 +9122,16 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://daniellaunches.com/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -9254,6 +9325,16 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://deeplaunch.io/login"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://deeplaunch.io/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -9432,7 +9513,7 @@
       "pricing": "free",
       "dr": 78,
       "link": "unknown",
-      "eligibility": "Free account; content is 'saves' (images/links) \u2014 visual bookmarking community, weak fit for SaaS.",
+      "eligibility": "Free account; content is 'saves' (images/links) — visual bookmarking community, weak fit for SaaS.",
       "flags": [],
       "route": "needs-research",
       "provider": "Ahrefs (source-reported)",
@@ -9747,7 +9828,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "relaunched Digg is a curated aggregator of 'credible tech voices' on X \u2014 no submission form; coverage is a byproduct of traction in the watched network"
+          "note": "relaunched Digg is a curated aggregator of 'credible tech voices' on X — no submission form; coverage is a byproduct of traction in the watched network"
         }
       ]
     },
@@ -9943,7 +10024,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "Live software directory (3,100 tools) on www subdomain only \u2014 apex domain times out; 'Become a vendor' route"
+          "note": "Live software directory (3,100 tools) on www subdomain only — apex domain times out; 'Become a vendor' route"
         }
       ]
     },
@@ -10028,6 +10109,16 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://dododirectory.com/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -10098,6 +10189,16 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://dofollow.tools"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://dofollow.tools/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -10472,7 +10573,7 @@
           "source": "playbook-research",
           "retrieved": "2026-09-26",
           "website": "https://www.engadget.com/about/contact/",
-          "note": "owned by Static Media since 2026; no submission form \u2014 pitch named editors from the masthead; no tips inbox published"
+          "note": "owned by Static Media since 2026; no submission form — pitch named editors from the masthead; no tips inbox published"
         }
       ]
     },
@@ -11376,6 +11477,17 @@
           "dr": 81,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://findly.tools/launch-panda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://findly.tools/launch-panda"
         }
       ]
     },
@@ -11898,6 +12010,17 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://www.foundrlist.com"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://www.foundrlist.com/product/launchpanda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://www.foundrlist.com/product/launchpanda"
         }
       ]
     },
@@ -12147,7 +12270,7 @@
       "dr": 69,
       "link": "nofollow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree","Submission routes disagree"],
+      "flags": ["DR sources disagree", "Submission routes disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -12677,7 +12800,7 @@
           "source": "playbook-research",
           "retrieved": "2026-10-02",
           "quarantined": true,
-          "note": "HTTP 402 \u2014 hosting lapsed"
+          "note": "HTTP 402 — hosting lapsed"
         },
         {
           "source": "rankinpublic-public",
@@ -12751,6 +12874,17 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://goodaitools.com/ai/launch-panda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://goodaitools.com/ai/launch-panda"
         }
       ]
     },
@@ -13711,6 +13845,16 @@
           "dr": 64,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public",
+          "dr": 51,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://huzzler.so/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements."
         }
       ]
     },
@@ -13904,7 +14048,7 @@
           "submissionUrl": "https://seller.indiamart.com/",
           "type": "Directory / Marketplace",
           "pricing": "freemium",
-          "note": "free seller account per IndiaMART help center; B2B goods marketplace \u2014 poor fit for pure SaaS; paid 'Paid Services' tiers exist"
+          "note": "free seller account per IndiaMART help center; B2B goods marketplace — poor fit for pure SaaS; paid 'Paid Services' tiers exist"
         }
       ]
     },
@@ -14599,7 +14743,7 @@
       "pricing": "free",
       "dr": 60,
       "link": "nofollow",
-      "eligibility": "Integrations catalog \u2014 listing requires an 'Integrate Your Own SaaS' partnership, i.e., a real integration; not a generic listing.",
+      "eligibility": "Integrations catalog — listing requires an 'Integrate Your Own SaaS' partnership, i.e., a real integration; not a generic listing.",
       "flags": [],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -14668,7 +14812,7 @@
       "pricing": "free",
       "dr": 62,
       "link": "nofollow",
-      "eligibility": "Now serves PeerSpot (rebrand); enterprise-B2B products only; product page needs verified peer reviews \u2014 vendor programs accelerate.",
+      "eligibility": "Now serves PeerSpot (rebrand); enterprise-B2B products only; product page needs verified peer reviews — vendor programs accelerate.",
       "flags": ["Domain redirects elsewhere"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -15142,7 +15286,7 @@
       "dr": 23,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable","DR sources disagree"],
+      "flags": ["Domain unreachable", "DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -15318,7 +15462,7 @@
       "pricing": "free",
       "dr": 55,
       "link": "nofollow",
-      "eligibility": "No public submit form \u2014 companies enter via Latka's data ops or CEO interviews (metrics published publicly).",
+      "eligibility": "No public submit form — companies enter via Latka's data ops or CEO interviews (metrics published publicly).",
       "flags": [],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -15485,6 +15629,17 @@
           "type": "Launchpad",
           "dr": 41,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://launch-list.org/product/launch-panda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://launch-list.org/product/launch-panda"
         }
       ]
     },
@@ -15500,7 +15655,10 @@
       "dr": 1,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Research: dormant — \"taking a break, rebuilding\", not accepting submissions","DR sources disagree"],
+      "flags": [
+        "Research: dormant — \"taking a break, rebuilding\", not accepting submissions",
+        "DR sources disagree"
+      ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -15684,6 +15842,17 @@
           "dr": 74,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://launchigniter.com/product/launch-panda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://launchigniter.com/product/launch-panda"
         }
       ]
     },
@@ -16203,7 +16372,7 @@
       "link": "nofollow",
       "eligibility": "Invitation-only; new users (<70 days) cannot submit links to unseen domains or use show/announce tags; self-promo capped at ~25% of activity; computing-only topicality.",
       "flags": [
-        "Effectively unusable as a launch channel \u2014 invite-gated with 70-day new-user submission restrictions and strict anti-self-promo rules"
+        "Effectively unusable as a launch channel — invite-gated with 70-day new-user submission restrictions and strict anti-self-promo rules"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -16463,7 +16632,7 @@
       "dr": 30,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable","DR sources disagree"],
+      "flags": ["Domain unreachable", "DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -16729,7 +16898,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "stored path is the paid-writer application, not a product submission \u2014 'we do not accept any guest posts'; coverage via /contact/ news tip"
+          "note": "stored path is the paid-writer application, not a product submission — 'we do not accept any guest posts'; coverage via /contact/ news tip"
         }
       ]
     },
@@ -16764,6 +16933,16 @@
           "dr": 57,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://marketingdb.live/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -16833,7 +17012,7 @@
           "source": "playbook-research",
           "retrieved": "2026-09-26",
           "website": "https://in.mashable.com/website-information/479/advertise",
-          "note": "site live and publishing daily; India edition run by Fork Media \u2014 advertising contact teammashable.india@forkmediagroup.com; editorial tips route via global mashable.com contact page news inbox"
+          "note": "site live and publishing daily; India edition run by Fork Media — advertising contact teammashable.india@forkmediagroup.com; editorial tips route via global mashable.com contact page news inbox"
         }
       ]
     },
@@ -16876,7 +17055,7 @@
       "pricing": "free",
       "dr": 72,
       "link": "nofollow",
-      "eligibility": "Earned editorial reviews of SMB software (POS, payments, payroll); no public submission form \u2014 contact via site.",
+      "eligibility": "Earned editorial reviews of SMB software (POS, payments, payroll); no public submission form — contact via site.",
       "flags": [],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -16915,7 +17094,7 @@
       "flags": [
         "Submission path may be truncated",
         "Source path requires review",
-        "Vertical mismatch for SaaS \u2014 US local-business directory"
+        "Vertical mismatch for SaaS — US local-business directory"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -16990,7 +17169,7 @@
       "pricing": "free",
       "dr": 62,
       "link": "nofollow",
-      "eligibility": "Rebranded to Acquire.com \u2014 marketplace to SELL a startup (M&A), not a launch channel; listing flow on acquire.com.",
+      "eligibility": "Rebranded to Acquire.com — marketplace to SELL a startup (M&A), not a launch channel; listing flow on acquire.com.",
       "flags": [
         "Purpose mismatch: M&A marketplace, not launch; domain is now a rebrand landing page for acquire.com"
       ],
@@ -17217,7 +17396,7 @@
       "pricing": "free",
       "dr": 76,
       "link": "nofollow",
-      "eligibility": "No listing product \u2014 earned coverage via hello@morningbrew.com/contact form; advertising via partnership request form (paid, quote-based).",
+      "eligibility": "No listing product — earned coverage via hello@morningbrew.com/contact form; advertising via partnership request form (paid, quote-based).",
       "flags": [],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -17610,6 +17789,17 @@
           "dr": 73,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://neeed.directory/products/launch-panda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://neeed.directory/products/launch-panda"
         }
       ]
     },
@@ -17849,7 +18039,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "Paid launch platform \u2014 Lite $39 / Pro $79 one-time via Stripe; published within 24h"
+          "note": "Paid launch platform — Lite $39 / Pro $79 one-time via Stripe; published within 24h"
         }
       ]
     },
@@ -17893,7 +18083,7 @@
       "dr": 56,
       "link": "follow",
       "eligibility": null,
-      "flags": ["DR sources disagree","Submission route broken"],
+      "flags": ["DR sources disagree", "Submission route broken"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -17966,7 +18156,7 @@
       "dr": 75,
       "link": "unknown",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -17979,6 +18169,28 @@
           "dr": 75,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public",
+          "dr": 76,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://nicklaunches.com/submit",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements.",
+          "submissionUrl": "https://nicklaunches.com/submit"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://nicklaunches.com/products/launch-panda/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://nicklaunches.com/products/launch-panda/"
         }
       ]
     },
@@ -18572,7 +18784,7 @@
       "dr": 70,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree","Submission routes disagree"],
+      "flags": ["DR sources disagree", "Submission routes disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -18622,6 +18834,16 @@
           "type": "Launchpad",
           "dr": 50,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://openhunts.com/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -18858,7 +19080,7 @@
       "link": "nofollow",
       "eligibility": "Editorial/media prospect, not a guaranteed submission form. Find a relevant angle and the current pitch policy.",
       "flags": [
-        "Domain repurposed: pando.com now hosts Pando HR (performance-management SaaS, acquired by Lattice) \u2014 the PandoDaily publication is gone"
+        "Domain repurposed: pando.com now hosts Pando HR (performance-management SaaS, acquired by Lattice) — the PandoDaily publication is gone"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -18893,7 +19115,7 @@
       "link": "nofollow",
       "eligibility": "Editorial/media prospect, not a guaranteed submission form. Find a relevant angle and the current pitch policy.",
       "flags": [
-        "Site dead: in.pcmag.com returns HTTP 410 Gone (checked 2026-09-26); India edition (Times Internet JV) appears discontinued \u2014 no playbook written"
+        "Site dead: in.pcmag.com returns HTTP 410 Gone (checked 2026-09-26); India edition (Times Internet JV) appears discontinued — no playbook written"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -18967,7 +19189,7 @@
       "dr": 73,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree","Domain redirects elsewhere"],
+      "flags": ["DR sources disagree", "Domain redirects elsewhere"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -19625,7 +19847,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "Paid PR agency/database \u2014 no free listing; Campaign plan $279/yr includes written feature"
+          "note": "Paid PR agency/database — no free listing; Campaign plan $279/yr includes written feature"
         }
       ]
     },
@@ -20213,7 +20435,7 @@
       "dr": 34,
       "link": "nofollow",
       "eligibility": null,
-      "flags": ["Source path requires review","DR sources disagree"],
+      "flags": ["Source path requires review", "DR sources disagree"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -21433,6 +21655,16 @@
           "dr": null,
           "link": "unknown",
           "pricing": "free"
+        },
+        {
+          "source": "launchpanda-public-subreddit",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/subreddit-roadmap",
+          "retrieved": "2026-10-26",
+          "website": "https://www.reddit.com/r/SaaSSolopreneurs/",
+          "note": "Visible without signing in. Source suggests this community for launches; current moderator rules and account requirements must be checked before posting."
         }
       ]
     },
@@ -21573,6 +21805,16 @@
           "dr": null,
           "link": "unknown",
           "pricing": "free"
+        },
+        {
+          "source": "launchpanda-public-subreddit",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/subreddit-roadmap",
+          "retrieved": "2026-10-26",
+          "website": "https://www.reddit.com/r/ShowYourApp/",
+          "note": "Visible without signing in. Source suggests this community for launches; current moderator rules and account requirements must be checked before posting."
         }
       ]
     },
@@ -22082,7 +22324,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "Legacy gadget blog; contact page 404s \u2014 treat as effectively dormant"
+          "note": "Legacy gadget blog; contact page 404s — treat as effectively dormant"
         }
       ]
     },
@@ -22119,7 +22361,7 @@
           "type": "Forum / Community",
           "pricing": "free",
           "eligibility": "free posting into a chosen subreddit; per-community karma/age/flair gates apply",
-          "note": "no single listing form \u2014 submission is a post inside a subreddit; help center documents the Create flow"
+          "note": "no single listing form — submission is a post inside a subreddit; help center documents the Create flow"
         }
       ]
     },
@@ -22715,6 +22957,16 @@
           "type": "Software Directory",
           "dr": 19,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://saasbison.com/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -22799,6 +23051,17 @@
           "dr": 70,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://saasfame.com/item/launch-panda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://saasfame.com/item/launch-panda"
         }
       ]
     },
@@ -22855,6 +23118,16 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://saasgrow.app/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -22870,7 +23143,12 @@
       "dr": 76,
       "link": "nofollow",
       "eligibility": null,
-      "flags": ["DR sources disagree","Link sources disagree","Submission routes disagree","Example link observed nofollow"],
+      "flags": [
+        "DR sources disagree",
+        "Link sources disagree",
+        "Submission routes disagree",
+        "Example link observed nofollow"
+      ],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -23292,9 +23570,9 @@
       "pricing": "free",
       "dr": 80,
       "link": "nofollow",
-      "eligibility": "No submission flow \u2014 trust-score pages are auto-generated when a domain is checked; score derives from external signals (SSL, domain age, Tranco).",
+      "eligibility": "No submission flow — trust-score pages are auto-generated when a domain is checked; score derives from external signals (SSL, domain age, Tranco).",
       "flags": [
-        "Questionable launch fit \u2014 auto-generated trust-score database, not a directory; new domains score poorly by default"
+        "Questionable launch fit — auto-generated trust-score database, not a directory; new domains score poorly by default"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -23656,6 +23934,16 @@
           "dr": 50,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://shipboost.io/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -23941,7 +24229,7 @@
       "dr": 70,
       "link": "nofollow",
       "eligibility": "Requires a suitable app, integration, extension, deal, or seller account for this platform; not a generic backlink submission.",
-      "flags": ["DR sources disagree","Link sources disagree","Submission routes disagree"],
+      "flags": ["DR sources disagree", "Link sources disagree", "Submission routes disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -23985,6 +24273,16 @@
           "type": "Software Directory",
           "dr": 70,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public",
+          "dr": 69,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://www.sideprojectors.com/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements."
         }
       ]
     },
@@ -24219,7 +24517,7 @@
       "dr": 66,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree","Link sources disagree"],
+      "flags": ["DR sources disagree", "Link sources disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -24417,7 +24715,7 @@
           "submissionUrl": "https://slashdot.org/submission",
           "type": "Community / Profile",
           "pricing": "free",
-          "note": "two surfaces: news submit form (account + editorial selection) and slashdot.org/software 'Add Your Software' \u2192 SourceForge vendor flow"
+          "note": "two surfaces: news submit form (account + editorial selection) and slashdot.org/software 'Add Your Software' → SourceForge vendor flow"
         }
       ]
     },
@@ -24452,7 +24750,7 @@
           "retrieved": "2026-09-26",
           "submissionUrl": "https://slate.com/pitch",
           "pricing": "free",
-          "note": "documented pitch path \u2014 pitch the section editor by email (business/tech: tony.tran@slate.com); freelance articles only, not a listing"
+          "note": "documented pitch path — pitch the section editor by email (business/tech: tony.tran@slate.com); freelance articles only, not a listing"
         }
       ]
     },
@@ -25048,7 +25346,7 @@
       "pricing": "free",
       "dr": 82,
       "link": "nofollow",
-      "eligibility": "Free community account; vendor participation requires verified vendor status \u2014 full vendor pages are tied to paid partnership.",
+      "eligibility": "Free community account; vendor participation requires verified vendor status — full vendor pages are tied to paid partnership.",
       "flags": [],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -25565,7 +25863,7 @@
       "dr": 22,
       "link": "nofollow",
       "eligibility": null,
-      "flags": ["DR sources disagree","Link sources disagree"],
+      "flags": ["DR sources disagree", "Link sources disagree"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -25597,6 +25895,16 @@
           "type": "Software Directory",
           "dr": 54,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://startupbenchmarks.com/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -25654,7 +25962,7 @@
       "dr": 22,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain redirects elsewhere", "Research: parked \u2014 Atom for-sale lander"],
+      "flags": ["Domain redirects elsewhere", "Research: parked — Atom for-sale lander"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -25849,6 +26157,17 @@
           "dr": 83,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://startupfa.me/s/launchpanda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://startupfa.me/s/launchpanda"
         }
       ]
     },
@@ -25891,6 +26210,16 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://www.startupfa.st/dashboard/startups/new"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://startupfa.st/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -26544,7 +26873,7 @@
       "dr": 39,
       "link": "follow",
       "eligibility": null,
-      "flags": ["DR sources disagree"],
+      "flags": ["DR sources disagree", "Link sources disagree"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -26563,6 +26892,16 @@
           "dr": 73,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public",
+          "dr": 39,
+          "link": "nofollow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://startupbase.io/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements."
         }
       ]
     },
@@ -26760,7 +27099,7 @@
       "eligibility": null,
       "flags": [
         "Domain redirects elsewhere",
-        "quarantined: returns 404 via Bubble domain_not_supported \u2014 decommissioned"
+        "quarantined: returns 404 via Bubble domain_not_supported — decommissioned"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -26779,7 +27118,7 @@
           "source": "playbook-research",
           "retrieved": "2026-10-02",
           "quarantined": true,
-          "note": "returns 404 via Bubble domain_not_supported \u2014 decommissioned"
+          "note": "returns 404 via Bubble domain_not_supported — decommissioned"
         }
       ]
     },
@@ -27006,7 +27345,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "Paid-only directory \u2014 $49 one-off, listed in 48h"
+          "note": "Paid-only directory — $49 one-off, listed in 48h"
         }
       ]
     },
@@ -27221,7 +27560,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "CNMV-authorized Spanish equity-crowdfunding platform \u2014 fundraising application, not a directory listing"
+          "note": "CNMV-authorized Spanish equity-crowdfunding platform — fundraising application, not a directory listing"
         }
       ]
     },
@@ -27289,6 +27628,17 @@
           "type": "Launchpad",
           "dr": 12,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://startuups.com//projects/launch-panda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://startuups.com//projects/launch-panda"
         }
       ]
     },
@@ -27530,7 +27880,7 @@
           "retrieved": "2026-09-26",
           "submissionUrl": "https://dashboard.stripe.com/apps",
           "type": "Directory / Marketplace",
-          "note": "publish flow documented at docs.stripe.com/stripe-apps/publish-app \u2014 requires building a real Stripe App; review ~4 business days"
+          "note": "publish flow documented at docs.stripe.com/stripe-apps/publish-app — requires building a real Stripe App; review ~4 business days"
         }
       ]
     },
@@ -27819,6 +28169,16 @@
           "dr": 7,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://sumodir.com/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -27836,7 +28196,8 @@
       "eligibility": null,
       "flags": [
         "DR sources disagree",
-        "link corrected follow->nofollow: free-plan outbound link is nofollow regardless of wait time"
+        "link corrected follow->nofollow: free-plan outbound link is nofollow regardless of wait time",
+        "Link sources disagree"
       ],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -27862,6 +28223,17 @@
           "retrieved": "2026-10-02",
           "link": "nofollow",
           "note": "free-plan outbound link is nofollow regardless of wait time"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://www.superlaun.ch/products/2192",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://www.superlaun.ch/products/2192"
         }
       ]
     },
@@ -27961,7 +28333,7 @@
       "dr": 18,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Source path requires review","DR sources disagree"],
+      "flags": ["Source path requires review", "DR sources disagree"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -29796,6 +30168,17 @@
           "dr": 71,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://www.tinystartups.com/startup/launch-panda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://www.tinystartups.com/startup/launch-panda"
         }
       ]
     },
@@ -29811,7 +30194,7 @@
       "dr": 73,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree","Domain unreachable"],
+      "flags": ["DR sources disagree", "Domain unreachable"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -29918,7 +30301,7 @@
       "dr": 35,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable","DR sources disagree"],
+      "flags": ["Domain unreachable", "DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -30180,6 +30563,17 @@
           "dr": 75,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://toolfame.com/item/launch-panda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://toolfame.com/item/launch-panda"
         }
       ]
     },
@@ -30229,7 +30623,7 @@
       "dr": 45,
       "link": "follow",
       "eligibility": null,
-      "flags": ["DR sources disagree","Domain unreachable"],
+      "flags": ["DR sources disagree", "Domain unreachable"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -30267,6 +30661,16 @@
           "type": "Software Directory",
           "dr": 46,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://toolfio.com/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -31056,7 +31460,7 @@
       "dr": 15,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable","DR sources disagree"],
+      "flags": ["Domain unreachable", "DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -31340,7 +31744,8 @@
       "flags": [
         "DR sources disagree",
         "Submission routes disagree",
-        "Example link verified follow"
+        "Example link verified follow",
+        "Link sources disagree"
       ],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
@@ -31374,6 +31779,16 @@
           "pricing": "free",
           "type": "Directory / Startup",
           "submissionUrl": "https://trustmrr.com/login"
+        },
+        {
+          "source": "launchpanda-public",
+          "dr": 70,
+          "link": "nofollow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://trustmrr.com/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements. Verified startup revenue listings; eligibility must be checked."
         }
       ]
     },
@@ -31504,6 +31919,17 @@
           "dr": 80,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://turbo0.com/item/launch-panda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://turbo0.com/item/launch-panda"
         }
       ]
     },
@@ -31538,6 +31964,16 @@
           "dr": 82,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://twelve.tools/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -31609,7 +32045,7 @@
       "dr": 75,
       "link": "nofollow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree", "Example link observed nofollow"],
+      "flags": ["DR sources disagree", "Example link observed nofollow", "Link sources disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -31642,6 +32078,16 @@
           "pricing": "free",
           "type": "Directory / Launch",
           "submissionUrl": "https://www.uneed.best/submit-a-tool"
+        },
+        {
+          "source": "launchpanda-public",
+          "dr": 52,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://www.uneed.best/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements."
         }
       ]
     },
@@ -31752,6 +32198,16 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://uno.directory/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -31769,7 +32225,7 @@
       "eligibility": null,
       "flags": [
         "Domain redirects elsewhere",
-        "Domain repurposed: uplabs.com now hosts 'Vantora', an enterprise-AI venture builder \u2014 the design marketplace no longer exists"
+        "Domain repurposed: uplabs.com now hosts 'Vantora', an enterprise-AI venture builder — the design marketplace no longer exists"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -31787,7 +32243,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "quarantined: uplabs.com resolves to Vantora (venture studio); original design marketplace is gone \u2014 no submission surface"
+          "note": "quarantined: uplabs.com resolves to Vantora (venture studio); original design marketplace is gone — no submission surface"
         }
       ]
     },
@@ -31804,7 +32260,7 @@
       "link": "nofollow",
       "eligibility": null,
       "flags": [
-        "Domain repurposed: valuer.ai is now an AI-engineering consultancy \u2014 the startup-discovery platform no longer exists"
+        "Domain repurposed: valuer.ai is now an AI-engineering consultancy — the startup-discovery platform no longer exists"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -31868,7 +32324,7 @@
       "eligibility": null,
       "flags": [
         "Domain redirects elsewhere",
-        "Domain repurposed: vator.tv now hosts 'Vator's Substack' personal newsletter \u2014 the Vator startup community/network is gone"
+        "Domain repurposed: vator.tv now hosts 'Vator's Substack' personal newsletter — the Vator startup community/network is gone"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -32059,7 +32515,7 @@
       "dr": null,
       "link": "unknown",
       "eligibility": "Listed in the LaunchRepo directory catalog (observed 2026-09-25); acceptance, pricing, and current requirements need checking.",
-      "flags": ["quarantined: redirects to a LinkedIn post \u2014 no listing surface exists"],
+      "flags": ["quarantined: redirects to a LinkedIn post — no listing surface exists"],
       "route": "needs-research",
       "provider": "Not supplied by source",
       "sourceUrl": "https://launchrepo.dev/directories/",
@@ -32077,7 +32533,7 @@
           "source": "playbook-research",
           "retrieved": "2026-10-02",
           "quarantined": true,
-          "note": "redirects to a LinkedIn post \u2014 no listing surface exists"
+          "note": "redirects to a LinkedIn post — no listing surface exists"
         }
       ]
     },
@@ -32874,7 +33330,7 @@
       "dr": 71,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": ["DR sources disagree","Submission routes disagree"],
+      "flags": ["DR sources disagree", "Submission routes disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -33027,6 +33483,16 @@
           "dr": 78,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://wired.business/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -33059,7 +33525,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "Indian government Women Entrepreneurship Platform \u2014 registration is free but produces no public listing; weak launch fit"
+          "note": "Indian government Women Entrepreneurship Platform — registration is free but produces no public listing; weak launch fit"
         }
       ]
     },
@@ -33136,10 +33602,8 @@
       "pricing": "free",
       "dr": 80,
       "link": "nofollow",
-      "eligibility": "Free YC course + co-founder matching; no public listing surface \u2014 community is login-gated.",
-      "flags": [
-        "Questionable launch fit \u2014 education/community product, not a listing destination"
-      ],
+      "eligibility": "Free YC course + co-founder matching; no public listing surface — community is login-gated.",
+      "flags": ["Questionable launch fit — education/community product, not a listing destination"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -33275,7 +33739,7 @@
         {
           "source": "playbook-research",
           "retrieved": "2026-09-26",
-          "note": "Repurposed into competition-management platform; startups apply to hosted programs via apply.younoodle.com \u2014 no product listing"
+          "note": "Repurposed into competition-management platform; startups apply to hosted programs via apply.younoodle.com — no product listing"
         }
       ]
     },
@@ -33309,7 +33773,7 @@
           "source": "playbook-research",
           "retrieved": "2026-09-26",
           "quarantined": true,
-          "note": "site displays 'YourStack is offline at the moment' with \u00a9 2022 footer \u2014 closed"
+          "note": "site displays 'YourStack is offline at the moment' with © 2022 footer — closed"
         }
       ]
     },
@@ -33390,7 +33854,7 @@
       "link": "nofollow",
       "eligibility": "Editorial/media prospect, not a guaranteed submission form. Find a relevant angle and the current pitch policy.",
       "flags": [
-        "Source path corrected: stored URL '/blog' was stale; zdnet.com/contact resolves to an old article \u2014 pitch individual writers from the team page"
+        "Source path corrected: stored URL '/blog' was stale; zdnet.com/contact resolves to an old article — pitch individual writers from the team page"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -34047,6 +34511,17 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://newtool.site/submit"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://newtool.site/item/launch-panda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://newtool.site/item/launch-panda"
         }
       ]
     },
@@ -34295,6 +34770,16 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://starterbest.com/submit"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://starterbest.com/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -34694,7 +35179,7 @@
       "dr": 49,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable","DR sources disagree"],
+      "flags": ["Domain unreachable", "DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://dofollowback.link/",
@@ -36630,6 +37115,16 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://similarlabs.com/submit"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://similarlabs.com/",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
         }
       ]
     },
@@ -37454,9 +37949,7 @@
       "dr": 27,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37489,9 +37982,7 @@
       "dr": 23,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37524,9 +38015,7 @@
       "dr": 3.5,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37559,9 +38048,7 @@
       "dr": 2.2,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37594,9 +38081,7 @@
       "dr": 13,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37629,9 +38114,7 @@
       "dr": 47,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37664,9 +38147,7 @@
       "dr": 8,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37699,9 +38180,7 @@
       "dr": 15,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37734,9 +38213,7 @@
       "dr": 36,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37769,9 +38246,7 @@
       "dr": 45,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37804,9 +38279,7 @@
       "dr": 44,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37839,9 +38312,7 @@
       "dr": 59,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37874,9 +38345,7 @@
       "dr": 0,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37909,9 +38378,7 @@
       "dr": 3.2,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37944,9 +38411,7 @@
       "dr": 25,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -37979,9 +38444,7 @@
       "dr": 0.2,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38014,9 +38477,7 @@
       "dr": 0,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38049,9 +38510,7 @@
       "dr": 33,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38084,9 +38543,7 @@
       "dr": 39,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38119,9 +38576,7 @@
       "dr": 0.8,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38154,9 +38609,7 @@
       "dr": 26,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38189,9 +38642,7 @@
       "dr": 3.3,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38224,9 +38675,7 @@
       "dr": 21,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38259,9 +38708,7 @@
       "dr": 25,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38294,9 +38741,7 @@
       "dr": 41,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38329,9 +38774,7 @@
       "dr": 42,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38364,9 +38807,7 @@
       "dr": 44,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38399,9 +38840,7 @@
       "dr": 0.2,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38434,9 +38873,7 @@
       "dr": 47,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38469,9 +38906,7 @@
       "dr": 24,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38504,9 +38939,7 @@
       "dr": 16,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38539,9 +38972,7 @@
       "dr": 25,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38574,9 +39005,7 @@
       "dr": 29,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38609,9 +39038,7 @@
       "dr": 35,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38644,9 +39071,7 @@
       "dr": 44,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38679,9 +39104,7 @@
       "dr": 2.1,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38714,9 +39137,7 @@
       "dr": 35,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38749,9 +39170,7 @@
       "dr": 8,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38784,9 +39203,7 @@
       "dr": 0.2,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38819,9 +39236,7 @@
       "dr": 17,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38854,9 +39269,7 @@
       "dr": 35,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38889,9 +39302,7 @@
       "dr": 5,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38924,9 +39335,7 @@
       "dr": 17,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38959,9 +39368,7 @@
       "dr": 44,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -38994,9 +39401,7 @@
       "dr": 30,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39029,9 +39434,7 @@
       "dr": 0.3,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39064,9 +39467,7 @@
       "dr": 16,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39099,9 +39500,7 @@
       "dr": 12,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39134,9 +39533,7 @@
       "dr": 57,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39169,9 +39566,7 @@
       "dr": 46,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39204,9 +39599,7 @@
       "dr": 43,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39239,9 +39632,7 @@
       "dr": 42,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39274,9 +39665,7 @@
       "dr": 47,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39309,9 +39698,7 @@
       "dr": 4,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39344,10 +39731,7 @@
       "dr": 45,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified",
-        "Source uses HTTP"
-      ],
+      "flags": ["Submission route unverified", "Source uses HTTP"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39380,9 +39764,7 @@
       "dr": 11,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39415,9 +39797,7 @@
       "dr": 48,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39450,9 +39830,7 @@
       "dr": 44,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39485,9 +39863,7 @@
       "dr": 46,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39520,9 +39896,7 @@
       "dr": 6,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39555,9 +39929,7 @@
       "dr": 43,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39590,9 +39962,7 @@
       "dr": 41,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39625,9 +39995,7 @@
       "dr": 43,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39660,9 +40028,7 @@
       "dr": 12,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39695,9 +40061,7 @@
       "dr": 41,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39730,9 +40094,7 @@
       "dr": 41,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39765,9 +40127,7 @@
       "dr": 5,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39800,9 +40160,7 @@
       "dr": 42,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39835,9 +40193,7 @@
       "dr": 47,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39870,9 +40226,7 @@
       "dr": 42,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39905,9 +40259,7 @@
       "dr": 1.5,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39940,9 +40292,7 @@
       "dr": 38,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -39975,9 +40325,7 @@
       "dr": 41,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -40010,9 +40358,7 @@
       "dr": 42,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -40045,9 +40391,7 @@
       "dr": 44,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -40080,9 +40424,7 @@
       "dr": 5,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -40115,9 +40457,7 @@
       "dr": 40,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified", "DR sources disagree"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -40135,6 +40475,16 @@
           "type": "Software Directory",
           "dr": 40,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public",
+          "dr": 43,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://verifieddr.com/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements."
         }
       ]
     },
@@ -40150,9 +40500,7 @@
       "dr": 19,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -40185,9 +40533,7 @@
       "dr": 33,
       "link": "unknown",
       "eligibility": null,
-      "flags": [
-        "Submission route unverified"
-      ],
+      "flags": ["Submission route unverified"],
       "route": "needs-research",
       "provider": "RankInPublic (source-reported; underlying provider unspecified)",
       "sourceUrl": "https://rankinpublic.xyz/directory-submission-service",
@@ -40205,6 +40551,633 @@
           "type": "Software Directory",
           "dr": 33,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        }
+      ]
+    },
+    {
+      "name": "LaunchPanda",
+      "domain": "launchpanda.dev",
+      "website": "https://www.launchpanda.dev/",
+      "submissionUrl": "https://www.launchpanda.dev/",
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launch platform / directory",
+      "pricing": "free",
+      "dr": 62,
+      "link": "follow",
+      "eligibility": "Source reports a free dofollow listing with a website badge. Account and badge setup required; paid launch services are separate.",
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public",
+          "dr": 62,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://www.launchpanda.dev/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements. Badge required for claimed free dofollow listing."
+        }
+      ]
+    },
+    {
+      "name": "Launch Streak",
+      "domain": "launchstreak.dev",
+      "website": "https://launchstreak.dev/",
+      "submissionUrl": "https://launchstreak.dev/onboarding",
+      "exampleUrl": "https://launchstreak.dev/dev-tools/launchpanda",
+      "category": "Launch",
+      "type": "Launch platform / directory",
+      "pricing": "free",
+      "dr": 54,
+      "link": "follow",
+      "eligibility": "",
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public",
+          "dr": 54,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://launchstreak.dev/onboarding",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements.",
+          "submissionUrl": "https://launchstreak.dev/onboarding"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://launchstreak.dev/dev-tools/launchpanda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://launchstreak.dev/dev-tools/launchpanda"
+        }
+      ]
+    },
+    {
+      "name": "Vibe Coding List",
+      "domain": "vibecodinglist.com",
+      "website": "https://vibecodinglist.com/",
+      "submissionUrl": "https://vibecodinglist.com/submit",
+      "exampleUrl": null,
+      "category": "Developer",
+      "type": "Developer feedback community",
+      "pricing": "free",
+      "dr": 54,
+      "link": "follow",
+      "eligibility": "For vibe-coded and AI-built tools.",
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public",
+          "dr": 54,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://vibecodinglist.com/submit",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements. For vibe-coded and AI-built tools.",
+          "submissionUrl": "https://vibecodinglist.com/submit"
+        }
+      ]
+    },
+    {
+      "name": "EasyLaunch",
+      "domain": "easylaunch.dev",
+      "website": "https://www.easylaunch.dev/",
+      "submissionUrl": "https://www.easylaunch.dev/",
+      "exampleUrl": "https://easylaunch.dev/marketing/launchpanda",
+      "category": "Launch",
+      "type": "Launch platform / directory",
+      "pricing": "free",
+      "dr": 62,
+      "link": "follow",
+      "eligibility": "Source reports a free dofollow listing. Check current submission conditions.",
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public",
+          "dr": 62,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://easylaunch.dev/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements."
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://easylaunch.dev/marketing/launchpanda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://easylaunch.dev/marketing/launchpanda"
+        }
+      ]
+    },
+    {
+      "name": "EasyDoFollow",
+      "domain": "easydofollow.dev",
+      "website": "https://www.easydofollow.dev/",
+      "submissionUrl": "https://www.easydofollow.dev/",
+      "exampleUrl": "https://easydofollow.dev/dev-tools/launchpanda",
+      "category": "Directory",
+      "type": "Launch platform / directory",
+      "pricing": "free",
+      "dr": 62,
+      "link": "follow",
+      "eligibility": "Source reports a free dofollow listing conditional on displaying its badge.",
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public",
+          "dr": 62,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://www.easydofollow.dev/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements. Badge required for claimed free dofollow listing."
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://easydofollow.dev/dev-tools/launchpanda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://easydofollow.dev/dev-tools/launchpanda"
+        }
+      ]
+    },
+    {
+      "name": "IndieAppCircle",
+      "domain": "indieappcircle.com",
+      "website": "https://www.indieappcircle.com/",
+      "submissionUrl": "https://www.indieappcircle.com/sign-up",
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "App testing community",
+      "pricing": "free",
+      "dr": 33,
+      "link": "follow",
+      "eligibility": "Official site offers free publication after testing two other apps, or an optional €19 fast track. Account required. Check the current testing requirements.",
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public",
+          "dr": 33,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://www.indieappcircle.com/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements. Community for indie app builders."
+        }
+      ]
+    },
+    {
+      "name": "Brick Launch",
+      "domain": "bricklaun.ch",
+      "website": "https://bricklaun.ch/",
+      "submissionUrl": "https://bricklaun.ch/submit",
+      "exampleUrl": "https://bricklaun.ch/dev-tools/launchpanda",
+      "category": "Launch",
+      "type": "Launch platform / directory",
+      "pricing": "free",
+      "dr": 41,
+      "link": "follow",
+      "eligibility": "Official homepage offers a free listing with its badge or a $9 badgeless option. Account required; dofollow status is source-reported.",
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public",
+          "dr": 41,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://bricklaun.ch/submit",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements. Badge required for claimed free dofollow listing.",
+          "submissionUrl": "https://bricklaun.ch/submit"
+        },
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://bricklaun.ch/dev-tools/launchpanda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://bricklaun.ch/dev-tools/launchpanda"
+        }
+      ]
+    },
+    {
+      "name": "Wall of Tools",
+      "domain": "wallof.tools",
+      "website": "https://wallof.tools/",
+      "submissionUrl": "https://wallof.tools/",
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Launch platform / directory",
+      "pricing": "free",
+      "dr": 40,
+      "link": "follow",
+      "eligibility": "Source reports free dofollow listings without a badge requirement.",
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public",
+          "dr": 40,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://wallof.tools/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements. Source claims no badge required."
+        }
+      ]
+    },
+    {
+      "name": "Sky Launch",
+      "domain": "skylaun.ch",
+      "website": "https://skylaun.ch/",
+      "submissionUrl": "https://skylaun.ch/",
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launch platform / directory",
+      "pricing": "free",
+      "dr": 36,
+      "link": "follow",
+      "eligibility": "Source reports that a website badge is required for the free dofollow link.",
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public",
+          "dr": 36,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://skylaun.ch/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements. Badge required for claimed free dofollow listing."
+        }
+      ]
+    },
+    {
+      "name": "FreeScan",
+      "domain": "freescan.app",
+      "website": "https://www.freescan.app/",
+      "submissionUrl": "https://www.freescan.app/",
+      "exampleUrl": null,
+      "category": "Developer",
+      "type": "Website audit / public reports",
+      "pricing": "free",
+      "dr": 28,
+      "link": "follow",
+      "eligibility": "Website audit tool with public audit-report pages, rather than a conventional launch directory. Free audit and optional paid monitoring. Check what becomes public before running an audit.",
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public",
+          "dr": 28,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://www.freescan.app/",
+          "note": "Rendered public card; rating and link type are source claims, not independent measurements. Website audit tool; public listing benefit needs verification."
+        }
+      ]
+    },
+    {
+      "name": "List Bulb",
+      "domain": "listbulb.com",
+      "website": "https://www.listbulb.com/",
+      "submissionUrl": "https://www.listbulb.com/submit",
+      "exampleUrl": "https://www.listbulb.com/tools/launchpanda",
+      "category": "Directory",
+      "type": "Launch platform / directory",
+      "pricing": "unknown",
+      "dr": null,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "Not supplied by source",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://www.listbulb.com/tools/launchpanda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://www.listbulb.com/tools/launchpanda"
+        }
+      ]
+    },
+    {
+      "name": "LemonLaunch",
+      "domain": "lemonlaunch.dev",
+      "website": "https://lemonlaunch.dev/",
+      "submissionUrl": "https://lemonlaunch.dev/",
+      "exampleUrl": "https://lemonlaunch.dev/dev-tools/launchpanda",
+      "category": "Launch",
+      "type": "Launch platform / directory",
+      "pricing": "unknown",
+      "dr": null,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "Not supplied by source",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://lemonlaunch.dev/dev-tools/launchpanda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://lemonlaunch.dev/dev-tools/launchpanda"
+        }
+      ]
+    },
+    {
+      "name": "Fast Launch",
+      "domain": "fastlaunch.dev",
+      "website": "https://fastlaunch.dev/",
+      "submissionUrl": "https://fastlaunch.dev/",
+      "exampleUrl": "https://fastlaunch.dev/marketing/launchpanda",
+      "category": "Launch",
+      "type": "Launch platform / directory",
+      "pricing": "unknown",
+      "dr": null,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "Not supplied by source",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://fastlaunch.dev/marketing/launchpanda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://fastlaunch.dev/marketing/launchpanda"
+        }
+      ]
+    },
+    {
+      "name": "Launchit",
+      "domain": "launchit.site",
+      "website": "https://www.launchit.site/",
+      "submissionUrl": "https://www.launchit.site/",
+      "exampleUrl": "https://www.launchit.site/launches/launchpanda",
+      "category": "Launch",
+      "type": "Launch platform / directory",
+      "pricing": "unknown",
+      "dr": null,
+      "link": "unknown",
+      "eligibility": null,
+      "flags": ["Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "Not supplied by source",
+      "sourceUrl": "https://www.launchpanda.dev/",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public-badge",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/",
+          "retrieved": "2026-10-26",
+          "website": "https://www.launchit.site/launches/launchpanda",
+          "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
+          "exampleUrl": "https://www.launchit.site/launches/launchpanda"
+        }
+      ]
+    },
+    {
+      "name": "r/LaunchPanda",
+      "domain": "reddit.com",
+      "website": "https://www.reddit.com/r/LaunchPanda/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Subreddit",
+      "pricing": "unknown",
+      "dr": null,
+      "link": "unknown",
+      "eligibility": "Source suggests this community for product launches. Check current moderator rules, account requirements and self-promotion restrictions before posting; this listing is not permission to advertise.",
+      "flags": ["Community rules unverified"],
+      "route": "needs-research",
+      "provider": "Not supplied by source",
+      "sourceUrl": "https://www.launchpanda.dev/subreddit-roadmap",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public-subreddit",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/subreddit-roadmap",
+          "retrieved": "2026-10-26",
+          "website": "https://www.reddit.com/r/LaunchPanda/",
+          "note": "Visible without signing in. Source suggests this community for launches; current moderator rules and account requirements must be checked before posting."
+        }
+      ]
+    },
+    {
+      "name": "r/vibecodingcommunity",
+      "domain": "reddit.com",
+      "website": "https://www.reddit.com/r/vibecodingcommunity/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Subreddit",
+      "pricing": "unknown",
+      "dr": null,
+      "link": "unknown",
+      "eligibility": "Source suggests this community for product launches. Check current moderator rules, account requirements and self-promotion restrictions before posting; this listing is not permission to advertise.",
+      "flags": ["Community rules unverified"],
+      "route": "needs-research",
+      "provider": "Not supplied by source",
+      "sourceUrl": "https://www.launchpanda.dev/subreddit-roadmap",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public-subreddit",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/subreddit-roadmap",
+          "retrieved": "2026-10-26",
+          "website": "https://www.reddit.com/r/vibecodingcommunity/",
+          "note": "Visible without signing in. Source suggests this community for launches; current moderator rules and account requirements must be checked before posting."
+        }
+      ]
+    },
+    {
+      "name": "r/VibeCodeCamp",
+      "domain": "reddit.com",
+      "website": "https://www.reddit.com/r/VibeCodeCamp/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Subreddit",
+      "pricing": "unknown",
+      "dr": null,
+      "link": "unknown",
+      "eligibility": "Source suggests this community for product launches. Check current moderator rules, account requirements and self-promotion restrictions before posting; this listing is not permission to advertise.",
+      "flags": ["Community rules unverified"],
+      "route": "needs-research",
+      "provider": "Not supplied by source",
+      "sourceUrl": "https://www.launchpanda.dev/subreddit-roadmap",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public-subreddit",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/subreddit-roadmap",
+          "retrieved": "2026-10-26",
+          "website": "https://www.reddit.com/r/VibeCodeCamp/",
+          "note": "Visible without signing in. Source suggests this community for launches; current moderator rules and account requirements must be checked before posting."
+        }
+      ]
+    },
+    {
+      "name": "r/indiebiz",
+      "domain": "reddit.com",
+      "website": "https://www.reddit.com/r/indiebiz/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Subreddit",
+      "pricing": "unknown",
+      "dr": null,
+      "link": "unknown",
+      "eligibility": "Source suggests this community for product launches. Check current moderator rules, account requirements and self-promotion restrictions before posting; this listing is not permission to advertise.",
+      "flags": ["Community rules unverified"],
+      "route": "needs-research",
+      "provider": "Not supplied by source",
+      "sourceUrl": "https://www.launchpanda.dev/subreddit-roadmap",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public-subreddit",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/subreddit-roadmap",
+          "retrieved": "2026-10-26",
+          "website": "https://www.reddit.com/r/indiebiz/",
+          "note": "Visible without signing in. Source suggests this community for launches; current moderator rules and account requirements must be checked before posting."
         }
       ]
     }
