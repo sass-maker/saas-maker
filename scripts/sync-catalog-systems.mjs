@@ -415,7 +415,7 @@ for (const [relative, value] of outputs) {
   const target = local
     ? new URL(relative.slice('saas-maker/'.length), repoRoot)
     : new URL(relative, fleetRoot);
-  if (!local && !existsSync(new URL('./', target))) {
+  if (!local && (paths.isolated || !existsSync(new URL('./', target)))) {
     console.log(`skipped unavailable sibling manifest: ${relative}`);
     skipped++;
     continue;

@@ -21,7 +21,7 @@ export function ScoreboardRecovery({ accountId }: { accountId: string }) {
         setMessage(
           available
             ? 'No previous portfolio workspace was found in this browser and account.'
-            : 'History storage is unavailable. Close older scoreboard tabs and retry; this does not mean your workspace is missing.'
+            : 'History storage could not be read. Retry in this browser with storage enabled; this does not mean your workspace is missing.'
         );
         return;
       }
@@ -29,7 +29,7 @@ export function ScoreboardRecovery({ accountId }: { accountId: string }) {
       const warnings = [];
       if (!available)
         warnings.push(
-          'History storage is unavailable; this legacy copy may be older. Retry after closing older tabs.'
+          'History storage could not be read; this legacy copy may be older. Keep it and retry with browser storage enabled.'
         );
       else if (source === 'legacy') warnings.push('Exported the original legacy copy.');
       try {

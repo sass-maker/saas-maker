@@ -1,5 +1,13 @@
 import assert from 'node:assert/strict';
-import { cpSync, mkdtempSync, readFileSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import {
+  symlinkSync,
+  cpSync,
+  mkdtempSync,
+  readFileSync,
+  mkdirSync,
+  writeFileSync,
+  rmSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -193,6 +201,16 @@ test('worktree generation writes locally, preserves catalog order and checks dri
       projects: [{ id: 'z', app: { library: true, version: 'v0.1.19' } }, { id: 'a' }],
     });
     assert.equal(run('--check').status, 0);
+    // A linked writer must skip even an existing sibling manifest directory.
+    const victim = join(directory, 'another-writer');
+    const sibling = join(victim, 'apps/backend/config');
+    mkdirSync(sibling, { recursive: true });
+    symlinkSync(victim, join(directory, 'site-health'));
+    const protectedOutput = join(sibling, 'footer-surfaces.json');
+    writeFileSync(protectedOutput, '{"otherWriter":true}');
+    writeFileSync(join(repo, '.git'), 'gitdir: /private/primary/.git/worktrees/writer');
+    assert.equal(run().status, 0);
+    assert.equal(readFileSync(protectedOutput, 'utf8'), '{"otherWriter":true}');
     writeFileSync(join(repo, 'tooling/config/ui-adoption.json'), '{}');
     assert.equal(run('--check').status, 1);
     source.projects[0].systems.ui.app.library = 'yes';

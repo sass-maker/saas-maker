@@ -1,4 +1,4 @@
-import { existsSync, realpathSync } from 'node:fs';
+import { existsSync, realpathSync, lstatSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { dirname, join, resolve } from 'node:path';
 
@@ -33,6 +33,7 @@ export function catalogPaths(repoRoot, { fleetRoot = primaryFleetRoot(repoRoot) 
   const catalogRoot = dirname(source);
   return {
     fleetRoot,
+    isolated: existsSync(join(repoRoot, '.git')) && lstatSync(join(repoRoot, '.git')).isFile(),
     siteHealthRoot,
     source,
     operations: join(catalogRoot, 'generated/operations.json'),
