@@ -9,7 +9,7 @@
     "repository": "https://github.com/sass-maker/ui-library",
     "visibility": "public",
     "npmPublish": false,
-    "currentTag": "v0.1.31",
+    "currentTag": "v0.1.32",
     "web": {
       "installMethod": "Set tagged GitHub subdirectory specs with pnpm pkg set, then pnpm install.",
       "packages": [
@@ -40,7 +40,7 @@
         "Do not use pnpm add for these GitHub specs: pnpm 10.33 drops the tag and subdirectory when saving them.",
         "React templates need React, React DOM and the Astro React integration in Astro consumers; follow the library consumer guide.",
         "Share tokens, variants and templates rather than making per-product forks.",
-        "Component explorer (2026-10-25): https://sass-maker.github.io/ui-library/ — atoms, molecules, organisms and templates; 126 UI modules, 211 stories and 41 compiling standalone source examples. Real product artwork, reusable poster-first video backgrounds, responsive carousels, working forms, overlays, keyboard/touch interactions and theme/style extension slots. Typography includes ten self-hosted OFL families and four curated pairings. Web release v0.1.31 has 322 reviewed Linux visual baselines across 390/820/1440 paper/light and ink/dark, cross-engine interaction coverage and independent Claude source review. The Pages deployment is verified against its successful main artifact. Physical-device frame pacing, whole-catalog numeric ranking and consumer adoption remain separately qualified. Swift sources are unchanged; native install guidance remains 0.1.27. Pages shared steward: saas-maker."
+        "Component explorer (2026-10-26): https://sass-maker.github.io/ui-library/ — atoms, molecules, organisms and templates; 126 UI modules, 212 stories and 41 compiling standalone source examples. Real product artwork, reusable poster-first video backgrounds, responsive carousels, working forms, overlays, keyboard/touch interactions and theme/style extension slots. Typography includes ten self-hosted OFL families and four curated pairings. Web release v0.1.32 has 322 reviewed Linux visual baselines across 390/820/1440 paper/light and ink/dark, cross-engine interaction coverage and independent Claude source review. The Pages deployment is verified against its successful main artifact. Physical-device frame pacing, whole-catalog numeric ranking and consumer adoption remain separately qualified. Swift sources are unchanged; native install guidance remains 0.1.27. Pages shared steward: saas-maker."
       ]
     },
     "native": {
