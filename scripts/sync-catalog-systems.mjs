@@ -410,13 +410,17 @@ const stale = [];
 let skipped = 0;
 for (const [relative, value] of outputs) {
   // Own outputs follow this checkout even when a worktree has another name.
-  // Missing sibling checkouts are reported, never created or redirected.
+  // Isolated writers skip sibling outputs; missing checkouts are never created.
   const local = relative.startsWith('saas-maker/');
   const target = local
     ? new URL(relative.slice('saas-maker/'.length), repoRoot)
     : new URL(relative, fleetRoot);
   if (!local && (paths.isolated || !existsSync(new URL('./', target)))) {
-    console.log(`skipped unavailable sibling manifest: ${relative}`);
+    console.log(
+      paths.isolated
+        ? `skipped sibling manifest from isolated worktree: ${relative}`
+        : `skipped unavailable sibling manifest: ${relative}`
+    );
     skipped++;
     continue;
   }

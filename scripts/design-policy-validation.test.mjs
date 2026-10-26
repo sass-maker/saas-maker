@@ -209,7 +209,9 @@ test('worktree generation writes locally, preserves catalog order and checks dri
     const protectedOutput = join(sibling, 'footer-surfaces.json');
     writeFileSync(protectedOutput, '{"otherWriter":true}');
     writeFileSync(join(repo, '.git'), 'gitdir: /private/primary/.git/worktrees/writer');
-    assert.equal(run().status, 0);
+    const isolatedRun = run();
+    assert.equal(isolatedRun.status, 0);
+    assert.match(isolatedRun.stdout, /skipped sibling manifest from isolated worktree/);
     assert.equal(readFileSync(protectedOutput, 'utf8'), '{"otherWriter":true}');
     writeFileSync(join(repo, 'tooling/config/ui-adoption.json'), '{}');
     assert.equal(run('--check').status, 1);
