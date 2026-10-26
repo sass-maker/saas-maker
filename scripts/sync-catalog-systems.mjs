@@ -7,14 +7,15 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { validateFeedbackApplicability } from './capture-policy-validation.mjs';
 import { validateDesignPolicies } from './design-policy-validation.mjs';
 
-import { fileURLToPath, pathToFileURL } from 'node:url';
-import { sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { catalogPaths } from './catalog-paths.mjs';
 
 const repoRoot = new URL('../', import.meta.url);
 const paths = catalogPaths(fileURLToPath(repoRoot));
 const catalogPath = paths.source;
-const fleetRoot = pathToFileURL(paths.fleetRoot + sep);
+// Source ownership follows the primary catalog; writes stay beside this checkout.
+// An isolated writer must never mutate another repository's primary checkout.
+const fleetRoot = new URL('../../', import.meta.url);
 const check = process.argv.includes('--check');
 
 const source = JSON.parse(readFileSync(catalogPath, 'utf8'));

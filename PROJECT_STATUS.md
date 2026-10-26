@@ -6,6 +6,8 @@
   The previous authenticated scoreboard route exports old browser workspaces
   for recovery; portfolio editing has moved to Site Health. Customer feedback,
   subscriptions and authentication remain with this service.
+  Release order: merge and install Site Health readiness first, verify the
+  imported workspace survives reload/export, then release this recovery bridge.
 
 ## Why / What
 

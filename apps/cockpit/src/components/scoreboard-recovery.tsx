@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { readWorkspaceStore } from '@/lib/scoreboard-storage';
+import { readWorkspaceRecovery } from '@/lib/scoreboard-storage';
 import { parseWorkspace } from '@/lib/scoreboard';
 
 /** Export-only bridge. Portfolio editing is owned by the local Site Health app. */
@@ -14,20 +14,43 @@ export function ScoreboardRecovery({ accountId }: { accountId: string }) {
     setExporting(true);
     setMessage('');
     try {
-      const { raw } = await readWorkspaceStore(`saasmaker.scoreboard.v1:${accountId}`);
+      const { raw, available, source } = await readWorkspaceRecovery(
+        `saasmaker.scoreboard.v1:${accountId}`
+      );
       if (!raw) {
-        setMessage('No previous portfolio workspace was found in this browser and account.');
+        setMessage(
+          available
+            ? 'No previous portfolio workspace was found in this browser and account.'
+            : 'History storage is unavailable. Close older scoreboard tabs and retry; this does not mean your workspace is missing.'
+        );
         return;
       }
-      // Validate without rewriting the stored backup or losing any original fields.
-      parseWorkspace(raw);
+      // Recovery must remain possible even if the stored document is invalid.
+      const warnings = [];
+      if (!available)
+        warnings.push(
+          'History storage is unavailable; this legacy copy may be older. Retry after closing older tabs.'
+        );
+      else if (source === 'legacy') warnings.push('Exported the original legacy copy.');
+      try {
+        parseWorkspace(raw);
+      } catch (error) {
+        warnings.push(
+          `Site Health may reject this backup: ${error instanceof Error ? error.message : 'validation failed'}`
+        );
+      }
       const url = URL.createObjectURL(new Blob([raw], { type: 'application/json' }));
       const link = document.createElement('a');
       link.href = url;
       link.download = `saasmaker-portfolio-recovery-${new Date().toISOString().slice(0, 10)}.json`;
       link.click();
       setTimeout(() => URL.revokeObjectURL(url), 1_000);
-      setMessage('Backup exported. Import it in Site Health → Readiness, then verify its history.');
+      setMessage(
+        [
+          'Backup exported. Import it in Site Health → Readiness, then verify its history.',
+          ...warnings,
+        ].join(' ')
+      );
     } catch (error) {
       setMessage(
         error instanceof Error ? error.message : 'The previous workspace could not be exported.'
