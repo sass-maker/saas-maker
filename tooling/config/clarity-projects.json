@@ -268,29 +268,6 @@
       ]
     },
     {
-      "id": "significanthobbies",
-      "name": "Significant Hobbies",
-      "repo": "significanthobbies",
-      "clarityId": "y6btx9iks3",
-      "hostname": "significanthobbies.com",
-      "tag": "significanthobbies",
-      "wiredFiles": [
-        "significanthobbies/services/hub-backend/src/hub.ts",
-        "significanthobbies/services/hub-backend/src/landing.generated.ts"
-      ],
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "significanthobbies/services/hub-backend/src/hub.ts"
-        },
-        {
-          "kind": "combined",
-          "file": "significanthobbies/services/hub-backend/src/landing.generated.ts"
-        }
-      ],
-      "reason": "Clarity covers the apex hub landing served by the personal-platform worker."
-    },
-    {
       "id": "india-standards",
       "name": "India Standards",
       "repo": "india-standards",

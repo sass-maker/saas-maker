@@ -79,12 +79,6 @@
       "serverRequests": "applicable"
     },
     {
-      "id": "significanthobbies",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
-    },
-    {
       "id": "anime-list",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",

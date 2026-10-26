@@ -117,22 +117,6 @@
       }
     },
     {
-      "id": "significanthobbies",
-      "state": "ready",
-      "event": {
-        "name": "private_hub_opened",
-        "text": "Open private Hub",
-        "href": "/hub"
-      },
-      "funnel": {
-        "name": "discover_to_hub",
-        "steps": [
-          "page:/",
-          "event:private_hub_opened"
-        ]
-      }
-    },
-    {
       "id": "anime-list",
       "state": "ready",
       "event": {

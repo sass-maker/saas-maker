@@ -324,42 +324,6 @@
       ]
     },
     {
-      "id": "significanthobbies",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "public"
-        },
-        {
-          "field": "presentation.directory.platforms",
-          "value": [
-            "Web",
-            "API",
-            "Swift package"
-          ]
-        },
-        {
-          "field": "presentation.directory.purposeContract.purpose",
-          "value": "Significant Hobbies is the shared home and privacy-aware control plane for five independently owned personal applications."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "The existing Google OAuth client now includes the Live callback while preserving existing callbacks. Personal Google login returns to the private Hub and its authenticated five-app summaries; Anchor shows 35 existing records. Public directory includes exactly Live, Calorie, Setline, Kith and Anchor without Journal. Hub navigation and owner summary core passed. This does not certify fresh cross-device writes for every native app. Receipt: docs/qualification/live-hub-owner-core-2026-09-11.json. Sharing remains limited to the personal Hub; broader native sync claims are not certified by this check."
-        },
-        {
-          "field": "deployment.status",
-          "value": "live"
-        }
-      ]
-    },
-    {
       "id": "anime-list",
       "applicability": "newsletter",
       "confidence": "medium",
