@@ -2117,6 +2117,20 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://aitools.inc/submit"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 70,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://aitools.inc/",
+          "submissionUrl": "https://aitools.inc/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -2824,6 +2838,20 @@
           "retrieved": "2026-10-02",
           "pricing": "paid",
           "note": "submit form offers only paid tiers ($19.9 one-time and up)"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 65,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://aiwith.me/",
+          "submissionUrl": "https://aiwith.me/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -4085,6 +4113,20 @@
           "dr": 75,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 74,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://alternative.me/",
+          "submissionUrl": "https://alternative.me/",
+          "approvalWindow": "1–7 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -4131,7 +4173,8 @@
       "flags": [
         "DR sources disagree",
         "Submission routes disagree",
-        "link corrected follow->nofollow: most outbound links are nofollow per third-party crawl analysis"
+        "link corrected follow->nofollow: most outbound links are nofollow per third-party crawl analysis",
+        "Link sources disagree"
       ],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -4165,6 +4208,20 @@
           "retrieved": "2026-10-02",
           "link": "nofollow",
           "note": "most outbound links are nofollow per third-party crawl analysis"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 85,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://alternativeto.net/",
+          "submissionUrl": "https://alternativeto.net/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -5496,6 +5553,20 @@
           "retrieved": "2026-10-26",
           "website": "https://auraplusplus.com/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 66,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://auraplusplus.com/",
+          "submissionUrl": "https://auraplusplus.com/",
+          "approvalWindow": "6+ months",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -6360,6 +6431,20 @@
           "pricing": "free",
           "type": "Directory / Launch",
           "submissionUrl": "https://betalist.com/submit"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 68,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://betalist.com/",
+          "submissionUrl": "https://betalist.com/",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -7007,6 +7092,35 @@
           "retrieved": "2026-10-26",
           "website": "https://buildhop.io/",
           "note": "Rendered public card; rating and link type are source claims, not independent measurements."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 38,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/first-10-backlinks-plan",
+          "published": "2026-04-15",
+          "retrieved": "2026-10-26",
+          "website": "https://buildhop.io/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "updated": "2026-07-20"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/which-startup-directories-actually-sent-me-users",
+          "published": "2026-07-15",
+          "retrieved": "2026-10-26",
+          "website": "https://buildhop.io/",
+          "sourceExperience": {
+            "subject": "LaunchPanda",
+            "period": "Last 12 months, as described by source",
+            "reportedVisitors": 3,
+            "reportedSignupsInSummary": 4
+          },
+          "note": "Self-reported case study. Last-click analytics and signup answers measure different things; the article contains attribution differences. These are not our measurements or expected results for another product."
         }
       ]
     },
@@ -7630,6 +7744,20 @@
           "retrieved": "2026-10-02",
           "submissionUrl": "https://app.g2digitalmarkets.com/",
           "note": "catalog submit URL corrected; previous was 'https://app.g2digitalmarkets.com/get-listed/start'"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 91,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.capterra.com/",
+          "submissionUrl": "https://www.capterra.com/",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -8840,6 +8968,20 @@
           "dr": 74,
           "link": "nofollow",
           "pricing": "free"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 68,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://crozdesk.com/vendors",
+          "submissionUrl": "https://crozdesk.com/vendors",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -8879,6 +9021,20 @@
           "type": "Startup Directory",
           "dr": 90,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 92,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.crunchbase.com/register",
+          "submissionUrl": "https://www.crunchbase.com/register",
+          "approvalWindow": "Instant (edits reviewed)",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -9094,6 +9250,20 @@
           "retrieved": "2026-10-26",
           "website": "https://dang.ai/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 80,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://dang.ai/submit",
+          "submissionUrl": "https://dang.ai/submit",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": true,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -10162,7 +10332,7 @@
       "dr": null,
       "link": "unknown",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Not supplied by source",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -10199,6 +10369,32 @@
           "retrieved": "2026-10-26",
           "website": "https://dofollow.tools/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 72,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://dofollow.tools/",
+          "submissionUrl": "https://dofollow.tools/",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": true,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 72,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/first-10-backlinks-plan",
+          "published": "2026-04-15",
+          "retrieved": "2026-10-26",
+          "website": "https://dofollow.tools/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "updated": "2026-07-20"
         }
       ]
     },
@@ -10855,6 +11051,20 @@
           "dr": 83,
           "link": "follow",
           "pricing": "free"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 82,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.f6s.com/",
+          "submissionUrl": "https://www.f6s.com/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -11488,6 +11698,20 @@
           "website": "https://findly.tools/launch-panda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://findly.tools/launch-panda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 77,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://findly.tools/",
+          "submissionUrl": "https://findly.tools/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": true,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -12021,6 +12245,20 @@
           "website": "https://www.foundrlist.com/product/launchpanda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://www.foundrlist.com/product/launchpanda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 63,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://foundrlist.com/",
+          "submissionUrl": "https://foundrlist.com/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -12320,6 +12558,20 @@
           "type": "AI Directory",
           "dr": 69,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 69,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.futuretools.io/",
+          "submissionUrl": "https://www.futuretools.io/",
+          "approvalWindow": "1–7 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -12360,6 +12612,20 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 75,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.futurepedia.io/",
+          "submissionUrl": "https://www.futurepedia.io/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -12456,6 +12722,20 @@
           "dr": 91,
           "link": "nofollow",
           "pricing": "free"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 92,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.g2.com/",
+          "submissionUrl": "https://www.g2.com/",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -12885,6 +13165,20 @@
           "website": "https://goodaitools.com/ai/launch-panda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://goodaitools.com/ai/launch-panda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 73,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://goodaitools.com/submit",
+          "submissionUrl": "https://goodaitools.com/submit",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": true,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -13316,7 +13610,7 @@
       "dr": 91,
       "link": "nofollow",
       "eligibility": null,
-      "flags": ["Link sources disagree"],
+      "flags": ["Link sources disagree", "DR sources disagree"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -13343,6 +13637,31 @@
           "pricing": "free",
           "type": "Community / Launch",
           "submissionUrl": "https://news.ycombinator.com/submit"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 90,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://news.ycombinator.com/",
+          "submissionUrl": "https://news.ycombinator.com/",
+          "approvalWindow": "Instant",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 90,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/product-hunt-alternatives",
+          "published": "2026-04-04",
+          "retrieved": "2026-10-26",
+          "website": "https://news.ycombinator.com/",
+          "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
         }
       ]
     },
@@ -13855,6 +14174,30 @@
           "retrieved": "2026-10-26",
           "website": "https://huzzler.so/",
           "note": "Rendered public card; rating and link type are source claims, not independent measurements."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 51,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/best-free-backlink-directories-2026",
+          "published": "2026-05-27",
+          "retrieved": "2026-10-26",
+          "website": "https://huzzler.so/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "approvalWindow": "1 to 3 days",
+          "updated": "2026-08-28"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/product-hunt-alternatives",
+          "published": "2026-04-04",
+          "retrieved": "2026-10-26",
+          "website": "https://huzzler.so/",
+          "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
         }
       ]
     },
@@ -14185,6 +14528,20 @@
           "dr": 81,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 72,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.indiehackers.com/",
+          "submissionUrl": "https://www.indiehackers.com/",
+          "approvalWindow": "Instant",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -15853,6 +16210,20 @@
           "website": "https://launchigniter.com/product/launch-panda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://launchigniter.com/product/launch-panda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 74,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://launchigniter.com/",
+          "submissionUrl": "https://launchigniter.com/",
+          "approvalWindow": "6+ months",
+          "badgeRequired": true,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -16561,6 +16932,20 @@
           "dr": 72,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 72,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://magicbox.tools/",
+          "submissionUrl": "https://magicbox.tools/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -17770,7 +18155,7 @@
       "dr": 73,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -17800,6 +18185,20 @@
           "website": "https://neeed.directory/products/launch-panda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://neeed.directory/products/launch-panda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 71,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://neeed.directory/",
+          "submissionUrl": "https://neeed.directory/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": true,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -18191,6 +18590,18 @@
           "website": "https://nicklaunches.com/products/launch-panda/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://nicklaunches.com/products/launch-panda/"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 65,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/first-10-backlinks-plan",
+          "published": "2026-04-15",
+          "retrieved": "2026-10-26",
+          "website": "https://nicklaunches.com/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "updated": "2026-07-20"
         }
       ]
     },
@@ -18611,6 +19022,20 @@
           "dr": 72,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 66,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://open-launch.com/",
+          "submissionUrl": "https://open-launch.com/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -19174,6 +19599,17 @@
           "dr": 77,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 58,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/product-hunt-alternatives",
+          "published": "2026-04-04",
+          "retrieved": "2026-10-26",
+          "website": "https://peerlist.io/",
+          "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
         }
       ]
     },
@@ -19225,6 +19661,20 @@
           "type": "Launchpad",
           "dr": 72,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 72,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://peerpush.net/",
+          "submissionUrl": "https://peerpush.net/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -19944,6 +20394,20 @@
           "dr": 91,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 91,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.producthunt.com/",
+          "submissionUrl": "https://www.producthunt.com/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -20719,6 +21183,17 @@
           "dr": null,
           "link": "unknown",
           "pricing": "free"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/which-subreddits-actually-send-startups-traffic",
+          "published": "2026-07-17",
+          "retrieved": "2026-10-26",
+          "website": "https://www.reddit.com/r/alphaandbetausers/",
+          "note": "Source recommends this community in its own case study. Check current sidebar rules, self-promotion restrictions, account requirements and designated threads before posting."
         }
       ]
     },
@@ -20859,6 +21334,17 @@
           "dr": null,
           "link": "unknown",
           "pricing": "free"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/which-subreddits-actually-send-startups-traffic",
+          "published": "2026-07-17",
+          "retrieved": "2026-10-26",
+          "website": "https://www.reddit.com/r/buildinpublic/",
+          "note": "Source recommends this community in its own case study. Check current sidebar rules, self-promotion restrictions, account requirements and designated threads before posting."
         }
       ]
     },
@@ -21139,6 +21625,17 @@
           "dr": null,
           "link": "unknown",
           "pricing": "free"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/which-subreddits-actually-send-startups-traffic",
+          "published": "2026-07-17",
+          "retrieved": "2026-10-26",
+          "website": "https://www.reddit.com/r/indiehackers/",
+          "note": "Source recommends this community in its own case study. Check current sidebar rules, self-promotion restrictions, account requirements and designated threads before posting."
         }
       ]
     },
@@ -21843,6 +22340,17 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/which-subreddits-actually-send-startups-traffic",
+          "published": "2026-07-17",
+          "retrieved": "2026-10-26",
+          "website": "https://www.reddit.com/r/SideProject/",
+          "note": "Source recommends this community in its own case study. Check current sidebar rules, self-promotion restrictions, account requirements and designated threads before posting."
         }
       ]
     },
@@ -23186,6 +23694,20 @@
           "type": "Software Directory",
           "dr": 76,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 80,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.saashub.com/",
+          "submissionUrl": "https://www.saashub.com/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -23528,6 +24050,20 @@
           "pricing": "free",
           "type": "Directory / Review",
           "submissionUrl": "https://www.saasworthy.com/addproduct"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 76,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.saasworthy.com/product-listing",
+          "submissionUrl": "https://www.saasworthy.com/product-listing",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -23668,6 +24204,17 @@
           "retrieved": "2026-10-02",
           "link": "nofollow",
           "note": "feed/archive links are nofollow on every tier; only the product page is dofollow"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/product-hunt-alternatives",
+          "published": "2026-04-04",
+          "retrieved": "2026-10-26",
+          "website": "https://scrolllaunch.com/",
+          "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
         }
       ]
     },
@@ -23839,6 +24386,20 @@
           "dr": 67,
           "link": "follow",
           "pricing": "free"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 66,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.serchen.com/get-listed/",
+          "submissionUrl": "https://www.serchen.com/get-listed/",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -24055,7 +24616,7 @@
       "dr": 76,
       "link": "unknown",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -24074,6 +24635,20 @@
           "dr": 76,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 75,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://showmebest.ai/",
+          "submissionUrl": "https://showmebest.ai/",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": true,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -24283,6 +24858,20 @@
           "retrieved": "2026-10-26",
           "website": "https://www.sideprojectors.com/",
           "note": "Rendered public card; rating and link type are source claims, not independent measurements."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 69,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.sideprojectors.com/",
+          "submissionUrl": "https://www.sideprojectors.com/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -25139,6 +25728,20 @@
           "dr": 73,
           "link": "follow",
           "pricing": "free"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 73,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.softwareworld.co/",
+          "submissionUrl": "https://www.softwareworld.co/",
+          "approvalWindow": "1–7 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -25248,6 +25851,20 @@
           "pricing": "free",
           "type": "Directory / Software",
           "submissionUrl": "https://sourceforge.net/software/vendors/new"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 92,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://sourceforge.net/software/vendors/new/",
+          "submissionUrl": "https://sourceforge.net/software/vendors/new/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -25697,6 +26314,20 @@
           "type": "Directory / Profile",
           "pricing": "free",
           "note": "~148k-tool catalog; claim-or-list flow behind free account; company stacks give social proof"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 80,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://stackshare.io/",
+          "submissionUrl": "https://stackshare.io/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -26168,6 +26799,37 @@
           "website": "https://startupfa.me/s/launchpanda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://startupfa.me/s/launchpanda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 83,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://startupfa.me/",
+          "submissionUrl": "https://startupfa.me/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": true,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/which-startup-directories-actually-sent-me-users",
+          "published": "2026-07-15",
+          "retrieved": "2026-10-26",
+          "website": "https://startupfa.me/",
+          "sourceExperience": {
+            "subject": "LaunchPanda",
+            "period": "Last 12 months, as described by source",
+            "reportedVisitors": 6,
+            "reportedSignupsInSummary": 1
+          },
+          "note": "Self-reported case study. Last-click analytics and signup answers measure different things; the article contains attribution differences. These are not our measurements or expected results for another product."
         }
       ]
     },
@@ -26220,6 +26882,20 @@
           "retrieved": "2026-10-26",
           "website": "https://startupfa.st/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 70,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://startupfa.st/submit",
+          "submissionUrl": "https://startupfa.st/submit",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": true,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -26650,6 +27326,20 @@
           "pricing": "free",
           "type": "Directory / Startup",
           "submissionUrl": "https://startupstash.com/submit-your-startup/"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 65,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://startupstash.com/",
+          "submissionUrl": "https://startupstash.com/",
+          "approvalWindow": "1–7 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -28016,7 +28706,7 @@
       "dr": 73,
       "link": "nofollow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -28035,6 +28725,20 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 74,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://submitaitools.org/",
+          "submissionUrl": "https://submitaitools.org/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -30053,7 +30757,7 @@
       "dr": 77,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["Domain unreachable"],
+      "flags": ["Domain unreachable", "DR sources disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -30078,6 +30782,20 @@
           "dr": 77,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 78,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://theresanaiforthat.com/",
+          "submissionUrl": "https://theresanaiforthat.com/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -30179,6 +30897,23 @@
           "website": "https://www.tinystartups.com/startup/launch-panda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://www.tinystartups.com/startup/launch-panda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/which-startup-directories-actually-sent-me-users",
+          "published": "2026-07-15",
+          "retrieved": "2026-10-26",
+          "website": "https://tinystartups.com/",
+          "sourceExperience": {
+            "subject": "LaunchPanda",
+            "period": "Last 12 months, as described by source",
+            "reportedVisitors": 9,
+            "reportedSignupsInSummary": 0
+          },
+          "note": "Self-reported case study. Last-click analytics and signup answers measure different things; the article contains attribution differences. These are not our measurements or expected results for another product."
         }
       ]
     },
@@ -30245,7 +30980,7 @@
       "dr": 52,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable"],
+      "flags": ["Domain unreachable", "DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -30258,6 +30993,20 @@
           "dr": 52,
           "link": "follow",
           "pricing": "freemium"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 71,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://tinylaun.ch/",
+          "submissionUrl": "https://tinylaun.ch/",
+          "approvalWindow": "1 month",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -30550,7 +31299,7 @@
       "dr": 75,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": ["Domain unreachable"],
+      "flags": ["Domain unreachable", "DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -30574,6 +31323,20 @@
           "website": "https://toolfame.com/item/launch-panda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://toolfame.com/item/launch-panda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 73,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://toolfame.com/submit",
+          "submissionUrl": "https://toolfame.com/submit",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": true,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -30801,6 +31564,20 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 70,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.toolify.ai/submit",
+          "submissionUrl": "https://www.toolify.ai/submit",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -30943,6 +31720,20 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 77,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.toolpilot.ai/",
+          "submissionUrl": "https://www.toolpilot.ai/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -31157,6 +31948,20 @@
           "dr": 63,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 67,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://toolsfine.com/",
+          "submissionUrl": "https://toolsfine.com/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -31789,6 +32594,34 @@
           "retrieved": "2026-10-26",
           "website": "https://trustmrr.com/",
           "note": "Rendered public card; rating and link type are source claims, not independent measurements. Verified startup revenue listings; eligibility must be checked."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/product-hunt-alternatives",
+          "published": "2026-04-04",
+          "retrieved": "2026-10-26",
+          "website": "https://trustmrr.com/",
+          "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/which-startup-directories-actually-sent-me-users",
+          "published": "2026-07-15",
+          "retrieved": "2026-10-26",
+          "website": "https://trustmrr.com/",
+          "sourceExperience": {
+            "subject": "LaunchPanda",
+            "period": "Last 12 months, as described by source",
+            "reportedVisitors": 82,
+            "reportedSignupsInSummary": 1
+          },
+          "note": "Self-reported case study. Last-click analytics and signup answers measure different things; the article contains attribution differences. These are not our measurements or expected results for another product."
         }
       ]
     },
@@ -31857,6 +32690,20 @@
           "dr": 84,
           "link": "follow",
           "pricing": "free"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 82,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.trustradius.com/vendors",
+          "submissionUrl": "https://www.trustradius.com/vendors",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -31930,6 +32777,20 @@
           "website": "https://turbo0.com/item/launch-panda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://turbo0.com/item/launch-panda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 79,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://turbo0.com/",
+          "submissionUrl": "https://turbo0.com/",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": true,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -32088,6 +32949,29 @@
           "retrieved": "2026-10-26",
           "website": "https://www.uneed.best/",
           "note": "Rendered public card; rating and link type are source claims, not independent measurements."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 52,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/first-10-backlinks-plan",
+          "published": "2026-04-15",
+          "retrieved": "2026-10-26",
+          "website": "https://www.uneed.best/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "updated": "2026-07-20"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/product-hunt-alternatives",
+          "published": "2026-04-04",
+          "retrieved": "2026-10-26",
+          "website": "https://www.uneed.best/",
+          "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
         }
       ]
     },
@@ -32173,7 +33057,7 @@
       "dr": 66,
       "link": "unknown",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -32208,6 +33092,31 @@
           "retrieved": "2026-10-26",
           "website": "https://uno.directory/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 67,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/best-free-backlink-directories-2026",
+          "published": "2026-05-27",
+          "retrieved": "2026-10-26",
+          "website": "https://uno.directory/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "approvalWindow": "1 to 2 weeks",
+          "updated": "2026-08-28"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 57,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/first-10-backlinks-plan",
+          "published": "2026-04-15",
+          "retrieved": "2026-10-26",
+          "website": "https://uno.directory/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "updated": "2026-07-20"
         }
       ]
     },
@@ -33470,7 +34379,7 @@
       "dr": 78,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -33493,6 +34402,20 @@
           "retrieved": "2026-10-26",
           "website": "https://wired.business/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 75,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://wired.business/",
+          "submissionUrl": "https://wired.business/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": true,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -37100,7 +38023,7 @@
       "dr": 66,
       "link": "unknown",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://dofollowback.link/",
@@ -37125,6 +38048,20 @@
           "retrieved": "2026-10-26",
           "website": "https://similarlabs.com/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 65,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://similarlabs.com/",
+          "submissionUrl": "https://similarlabs.com/",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": true,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
         }
       ]
     },
@@ -40485,6 +41422,30 @@
           "retrieved": "2026-10-26",
           "website": "https://verifieddr.com/",
           "note": "Rendered public card; rating and link type are source claims, not independent measurements."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 68,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/best-free-backlink-directories-2026",
+          "published": "2026-05-27",
+          "retrieved": "2026-10-26",
+          "website": "https://verifieddr.com/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "approvalWindow": "1 to 3 days",
+          "updated": "2026-08-28"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/product-hunt-alternatives",
+          "published": "2026-04-04",
+          "retrieved": "2026-10-26",
+          "website": "https://verifieddr.com/",
+          "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
         }
       ]
     },
@@ -40566,7 +41527,7 @@
       "dr": 62,
       "link": "follow",
       "eligibility": "Source reports a free dofollow listing with a website badge. Account and badge setup required; paid launch services are separate.",
-      "flags": ["Submission workflow unverified"],
+      "flags": ["Submission workflow unverified", "DR sources disagree"],
       "route": "source-reported",
       "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
       "sourceUrl": "https://www.launchpanda.dev/",
@@ -40583,6 +41544,42 @@
           "retrieved": "2026-10-26",
           "website": "https://www.launchpanda.dev/",
           "note": "Rendered public card; rating and link type are source claims, not independent measurements. Badge required for claimed free dofollow listing."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 60,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/best-free-backlink-directories-2026",
+          "published": "2026-05-27",
+          "retrieved": "2026-10-26",
+          "website": "https://launchpanda.dev/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "badgeRequired": true,
+          "updated": "2026-08-28"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 48,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/first-10-backlinks-plan",
+          "published": "2026-04-15",
+          "retrieved": "2026-10-26",
+          "website": "https://launchpanda.dev/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "updated": "2026-07-20"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 48,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/product-hunt-alternatives",
+          "published": "2026-04-04",
+          "retrieved": "2026-10-26",
+          "website": "https://launchpanda.dev/",
+          "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
         }
       ]
     },
@@ -40598,7 +41595,7 @@
       "dr": 54,
       "link": "follow",
       "eligibility": "",
-      "flags": ["Submission workflow unverified"],
+      "flags": ["Submission workflow unverified", "DR sources disagree"],
       "route": "source-reported",
       "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
       "sourceUrl": "https://www.launchpanda.dev/",
@@ -40627,6 +41624,19 @@
           "website": "https://launchstreak.dev/dev-tools/launchpanda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://launchstreak.dev/dev-tools/launchpanda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 47,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/best-free-backlink-directories-2026",
+          "published": "2026-05-27",
+          "retrieved": "2026-10-26",
+          "website": "https://launchstreak.dev/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "approvalWindow": "Instant listing (source claim)",
+          "updated": "2026-08-28"
         }
       ]
     },
@@ -40642,7 +41652,7 @@
       "dr": 54,
       "link": "follow",
       "eligibility": "For vibe-coded and AI-built tools.",
-      "flags": ["Submission workflow unverified"],
+      "flags": ["Submission workflow unverified", "DR sources disagree"],
       "route": "source-reported",
       "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
       "sourceUrl": "https://www.launchpanda.dev/",
@@ -40660,6 +41670,29 @@
           "website": "https://vibecodinglist.com/submit",
           "note": "Rendered public card; rating and link type are source claims, not independent measurements. For vibe-coded and AI-built tools.",
           "submissionUrl": "https://vibecodinglist.com/submit"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 29,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/first-10-backlinks-plan",
+          "published": "2026-04-15",
+          "retrieved": "2026-10-26",
+          "website": "https://vibecodinglist.com/submit",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "updated": "2026-07-20"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/product-hunt-alternatives",
+          "published": "2026-04-04",
+          "retrieved": "2026-10-26",
+          "website": "https://vibecodinglist.com/submit",
+          "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
         }
       ]
     },
@@ -40675,7 +41708,7 @@
       "dr": 62,
       "link": "follow",
       "eligibility": "Source reports a free dofollow listing. Check current submission conditions.",
-      "flags": ["Submission workflow unverified"],
+      "flags": ["Submission workflow unverified", "DR sources disagree"],
       "route": "source-reported",
       "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
       "sourceUrl": "https://www.launchpanda.dev/",
@@ -40703,6 +41736,59 @@
           "website": "https://easylaunch.dev/marketing/launchpanda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://easylaunch.dev/marketing/launchpanda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 57,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/best-free-backlink-directories-2026",
+          "published": "2026-05-27",
+          "retrieved": "2026-10-26",
+          "website": "https://www.easylaunch.dev/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "badgeRequired": false,
+          "updated": "2026-08-28"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 41,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/first-10-backlinks-plan",
+          "published": "2026-04-15",
+          "retrieved": "2026-10-26",
+          "website": "https://www.easylaunch.dev/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "updated": "2026-07-20"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/product-hunt-alternatives",
+          "published": "2026-04-04",
+          "retrieved": "2026-10-26",
+          "website": "https://www.easylaunch.dev/",
+          "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/which-startup-directories-actually-sent-me-users",
+          "published": "2026-07-15",
+          "retrieved": "2026-10-26",
+          "website": "https://www.easylaunch.dev/",
+          "sourceExperience": {
+            "subject": "LaunchPanda",
+            "period": "Last 12 months, as described by source",
+            "reportedVisitors": 4,
+            "reportedSignupsInSummary": 1
+          },
+          "note": "Self-reported case study. Last-click analytics and signup answers measure different things; the article contains attribution differences. These are not our measurements or expected results for another product."
         }
       ]
     },
@@ -40718,7 +41804,7 @@
       "dr": 62,
       "link": "follow",
       "eligibility": "Source reports a free dofollow listing conditional on displaying its badge.",
-      "flags": ["Submission workflow unverified"],
+      "flags": ["Submission workflow unverified", "DR sources disagree"],
       "route": "source-reported",
       "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
       "sourceUrl": "https://www.launchpanda.dev/",
@@ -40746,6 +41832,42 @@
           "website": "https://easydofollow.dev/dev-tools/launchpanda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://easydofollow.dev/dev-tools/launchpanda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 56,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/best-free-backlink-directories-2026",
+          "published": "2026-05-27",
+          "retrieved": "2026-10-26",
+          "website": "https://www.easydofollow.dev/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "badgeRequired": true,
+          "updated": "2026-08-28"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 42,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/first-10-backlinks-plan",
+          "published": "2026-04-15",
+          "retrieved": "2026-10-26",
+          "website": "https://www.easydofollow.dev/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "updated": "2026-07-20"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/product-hunt-alternatives",
+          "published": "2026-04-04",
+          "retrieved": "2026-10-26",
+          "website": "https://www.easydofollow.dev/",
+          "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
         }
       ]
     },
@@ -40778,6 +41900,17 @@
           "retrieved": "2026-10-26",
           "website": "https://www.indieappcircle.com/",
           "note": "Rendered public card; rating and link type are source claims, not independent measurements. Community for indie app builders."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/product-hunt-alternatives",
+          "published": "2026-04-04",
+          "retrieved": "2026-10-26",
+          "website": "https://www.indieappcircle.com/",
+          "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
         }
       ]
     },
@@ -40793,7 +41926,7 @@
       "dr": 41,
       "link": "follow",
       "eligibility": "Official homepage offers a free listing with its badge or a $9 badgeless option. Account required; dofollow status is source-reported.",
-      "flags": ["Submission workflow unverified"],
+      "flags": ["Submission workflow unverified", "DR sources disagree"],
       "route": "source-reported",
       "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
       "sourceUrl": "https://www.launchpanda.dev/",
@@ -40822,6 +41955,19 @@
           "website": "https://bricklaun.ch/dev-tools/launchpanda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://bricklaun.ch/dev-tools/launchpanda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 12,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/best-free-backlink-directories-2026",
+          "published": "2026-05-27",
+          "retrieved": "2026-10-26",
+          "website": "https://bricklaun.ch/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "badgeRequired": true,
+          "updated": "2026-08-28"
         }
       ]
     },
@@ -40854,6 +42000,19 @@
           "retrieved": "2026-10-26",
           "website": "https://wallof.tools/",
           "note": "Rendered public card; rating and link type are source claims, not independent measurements. Source claims no badge required."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/best-free-backlink-directories-2026",
+          "published": "2026-05-27",
+          "retrieved": "2026-10-26",
+          "website": "https://wallof.tools/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "badgeRequired": false,
+          "updated": "2026-08-28"
         }
       ]
     },
@@ -40966,7 +42125,7 @@
       "dr": null,
       "link": "unknown",
       "eligibility": null,
-      "flags": ["Submission workflow unverified"],
+      "flags": ["Submission workflow unverified", "DR sources disagree"],
       "route": "source-reported",
       "provider": "Not supplied by source",
       "sourceUrl": "https://www.launchpanda.dev/",
@@ -40984,6 +42143,42 @@
           "website": "https://lemonlaunch.dev/dev-tools/launchpanda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://lemonlaunch.dev/dev-tools/launchpanda"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 49,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/best-free-backlink-directories-2026",
+          "published": "2026-05-27",
+          "retrieved": "2026-10-26",
+          "website": "https://lemonlaunch.dev/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "badgeRequired": true,
+          "updated": "2026-08-28"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 36,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/first-10-backlinks-plan",
+          "published": "2026-04-15",
+          "retrieved": "2026-10-26",
+          "website": "https://lemonlaunch.dev/",
+          "note": "Dated public guide claim; source-reported rating and free dofollow terms may differ from newer evidence.",
+          "updated": "2026-07-20"
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://www.launchpanda.dev/blog/product-hunt-alternatives",
+          "published": "2026-04-04",
+          "retrieved": "2026-10-26",
+          "website": "https://lemonlaunch.dev/",
+          "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
         }
       ]
     },
@@ -41082,6 +42277,17 @@
           "retrieved": "2026-10-26",
           "website": "https://www.reddit.com/r/LaunchPanda/",
           "note": "Visible without signing in. Source suggests this community for launches; current moderator rules and account requirements must be checked before posting."
+        },
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/which-subreddits-actually-send-startups-traffic",
+          "published": "2026-07-17",
+          "retrieved": "2026-10-26",
+          "website": "https://www.reddit.com/r/LaunchPanda/",
+          "note": "Source recommends this community in its own case study. Check current sidebar rules, self-promotion restrictions, account requirements and designated threads before posting."
         }
       ]
     },
@@ -41178,6 +42384,144 @@
           "retrieved": "2026-10-26",
           "website": "https://www.reddit.com/r/indiebiz/",
           "note": "Visible without signing in. Source suggests this community for launches; current moderator rules and account requirements must be checked before posting."
+        }
+      ]
+    },
+    {
+      "name": "Manta",
+      "domain": "manta.com",
+      "website": "https://www.manta.com/",
+      "submissionUrl": "https://www.manta.com/business-listings/free-business-listing",
+      "exampleUrl": null,
+      "category": "Local business",
+      "type": "Business directory",
+      "pricing": "unknown",
+      "dr": 81,
+      "link": "unknown",
+      "eligibility": "Eligibility and pricing are unverified; the official page returned HTTP 403 during this check.",
+      "flags": ["Official page verification blocked (HTTP 403)", "Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
+      "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 81,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://www.manta.com/business-listings/free-business-listing",
+          "submissionUrl": "https://www.manta.com/business-listings/free-business-listing",
+          "approvalWindow": "1–2 weeks",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        }
+      ]
+    },
+    {
+      "name": "SaaS Adviser",
+      "domain": "saasadviser.co",
+      "website": "https://saasadviser.co/",
+      "submissionUrl": "https://saasadviser.co/",
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "SaaS directory",
+      "pricing": "unknown",
+      "dr": 72,
+      "link": "unknown",
+      "eligibility": "Eligibility and pricing are unverified; the official page returned HTTP 403 during this check.",
+      "flags": ["Official page verification blocked (HTTP 403)", "Submission workflow unverified"],
+      "route": "source-reported",
+      "provider": "LaunchPanda (source-reported; underlying rating not independently verified)",
+      "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public-guide",
+          "dr": 72,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/startup-directories-to-launch-on",
+          "published": "2026-09-06",
+          "retrieved": "2026-10-26",
+          "website": "https://saasadviser.co/",
+          "submissionUrl": "https://saasadviser.co/",
+          "approvalWindow": "1–3 days",
+          "badgeRequired": false,
+          "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        }
+      ]
+    },
+    {
+      "name": "r/roastmystartup",
+      "domain": "reddit.com",
+      "website": "https://www.reddit.com/r/roastmystartup/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Subreddit",
+      "pricing": "unknown",
+      "dr": null,
+      "link": "unknown",
+      "eligibility": "Check current community rules and self-promotion restrictions; a source recommendation is not permission to advertise.",
+      "flags": ["Community rules unverified"],
+      "route": "needs-research",
+      "provider": "Not supplied by source",
+      "sourceUrl": "https://www.launchpanda.dev/blog/which-subreddits-actually-send-startups-traffic",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/which-subreddits-actually-send-startups-traffic",
+          "published": "2026-07-17",
+          "retrieved": "2026-10-26",
+          "website": "https://www.reddit.com/r/roastmystartup/",
+          "note": "Source recommends this community in its own case study. Check current sidebar rules, self-promotion restrictions, account requirements and designated threads before posting."
+        }
+      ]
+    },
+    {
+      "name": "r/EntrepreneurRideAlong",
+      "domain": "reddit.com",
+      "website": "https://www.reddit.com/r/EntrepreneurRideAlong/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Subreddit",
+      "pricing": "unknown",
+      "dr": null,
+      "link": "unknown",
+      "eligibility": "Check current community rules and self-promotion restrictions; a source recommendation is not permission to advertise.",
+      "flags": ["Community rules unverified"],
+      "route": "needs-research",
+      "provider": "Not supplied by source",
+      "sourceUrl": "https://www.launchpanda.dev/blog/which-subreddits-actually-send-startups-traffic",
+      "retrieved": "2026-10-26",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "launchpanda-public-guide",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchpanda.dev/blog/which-subreddits-actually-send-startups-traffic",
+          "published": "2026-07-17",
+          "retrieved": "2026-10-26",
+          "website": "https://www.reddit.com/r/EntrepreneurRideAlong/",
+          "note": "Source recommends this community in its own case study. Check current sidebar rules, self-promotion restrictions, account requirements and designated threads before posting."
         }
       ]
     }
