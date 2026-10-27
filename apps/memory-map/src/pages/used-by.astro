@@ -1,44 +1,15 @@
 ---
+import { publicPages } from "../data/public-identity";
+import { surfaces } from "../data/public-content";
 import "../styles/global.css";
 import "../styles/about.css";
 import PublicClarity from "../components/public-clarity.astro";
 import StudioFooter from "../components/studio-footer.astro";
 
-const title = "Where Memory Map shows up";
-const description =
-  "The Fleet surfaces that list, link, or monitor Memory Map — the browser-local ChatGPT export explorer.";
+const { title, description } = publicPages["used-by"];
 const canonical = "https://chatgpt.significanthobbies.com/used-by/";
 
-const surfaces = [
-  {
-    name: "SaaS Maker directory",
-    url: "https://sassmaker.com",
-    kind: "Public",
-    detail:
-      "Memory Map is listed in the public product directory at sassmaker.com, alongside the other Fleet products.",
-  },
-  {
-    name: "Portfolio Project Strip",
-    url: "https://sassmaker.com",
-    kind: "Public",
-    detail:
-      "The shared @saas-maker/portfolio-project-strip footer includes Memory Map in its generated project catalog, so sites that embed the strip link back here.",
-  },
-  {
-    name: "Site Health",
-    url: null,
-    kind: "Internal",
-    detail:
-      "The private portfolio dashboard monitors this domain — availability, performance, and AI-visibility signals tracked on a schedule.",
-  },
-  {
-    name: "Significant Hobbies",
-    url: "https://significanthobbies.com",
-    kind: "Home",
-    detail:
-      "Memory Map lives at chatgpt.significanthobbies.com — part of the Significant Hobbies family of personal tools.",
-  },
-];
+
 ---
 
 <!doctype html>
@@ -47,6 +18,8 @@ const surfaces = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    <meta name="ai-summary" content={description} />
+    <link rel="alternate" type="text/markdown" href="https://chatgpt.significanthobbies.com/used-by.md" />
     <meta name="theme-color" content="#f3f5f2" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="canonical" href={canonical} />

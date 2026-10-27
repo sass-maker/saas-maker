@@ -1,3 +1,4 @@
+import { GET as getLlms } from '../../apps/showcase/src/pages/llms.txt';
 import { readFile } from 'node:fs/promises';
 import { describe, expect, it } from 'vitest';
 
@@ -26,7 +27,7 @@ describe('integrated ideas catalog', () => {
       readRepository('apps/showcase/src/pages/ideas.json.ts'),
       readRepository('apps/showcase/src/components/Nav.astro'),
       readRepository('apps/showcase/src/data/publicRoutes.ts'),
-      readRepository('apps/showcase/src/pages/llms.txt.ts'),
+      getLlms().then((response) => response!.text()),
       readRepository('apps/showcase/src/data/ideas.ts'),
     ]);
 

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/check-ai-readable.mjs",
     "format:check": "node scripts/check-code-health.mjs format",
     "lint": "ultracite check .",
     "preview": "astro preview",

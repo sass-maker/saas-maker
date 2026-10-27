@@ -30,6 +30,18 @@ function context(
     if (new URL(input.url).pathname === '/public-cache-generation.txt') {
       return Promise.resolve(new Response(generation));
     }
+    if (new URL(input.url).pathname === '/api/md/_identity') {
+      return Promise.resolve(
+        Response.json({ name: 'SaaS Maker', url: site, summary: 'Public studio' })
+      );
+    }
+    if (new URL(input.url).pathname === '/api/md/_catalog') {
+      return Promise.resolve(
+        new Response(JSON.stringify([{ path: '/', title: 'Home' }]), {
+          headers: { 'content-type': 'application/json' },
+        })
+      );
+    }
     const markdown = new URL(input.url).pathname.endsWith('.md');
     if (markdown && markdownFailure === 'throw') {
       return Promise.reject(new Error('Markdown asset unavailable'));
@@ -123,17 +135,19 @@ describe('public home representation cache', () => {
       for (const [index, accept] of [...order, ...order].entries()) {
         const response = await respond(accept);
         expect(response.status).toBe(200);
-        expect(response.headers.get('x-edge-cache')).toBe(index < 2 ? 'MISS' : 'HIT');
+        if (accept === 'text/html')
+          expect(response.headers.get('x-edge-cache')).toBe(index < 2 ? 'MISS' : 'HIT');
         expect(response.headers.get('content-type')).toContain(accept);
         expect(response.headers.get('vary')).toContain('Accept');
-        expect(response.headers.get('cache-control')).toContain('no-store');
+        if (accept === 'text/html')
+          expect(response.headers.get('cache-control')).toContain('no-store');
         expect(response.headers.get('cloudflare-cdn-cache-control')).toBe('no-store');
         expect(await response.text()).toContain(accept === 'text/html' ? '<html>' : '# public');
       }
-      expect(cache.entries.size).toBe(2);
+      expect(cache.entries.size).toBe(1);
       expect(cache.keys.every((key) => !key.headers.has('accept'))).toBe(true);
-      // warm requests do not touch the asset server
-      expect(calls).toBe(6);
+      // Only HTML enters the URL cache; Markdown uses registered public assets.
+      expect(cache.keys.every((key) => !key.url.endsWith('.md'))).toBe(true);
     });
   }
   it('resolves cold HEAD as GET, warms full bodies and strips warm HEAD bodies', async () => {
@@ -149,7 +163,7 @@ describe('public home representation cache', () => {
       expect(warmHead.body).toBeNull();
       expect(warmHead.status).toBe(get.status);
     }
-    expect(cache.entries.size).toBe(2);
+    expect(cache.entries.size).toBe(1);
   });
   it('isolates deployment generations and bypasses an absent identity', async () => {
     const cache = new UrlCache();

@@ -1,3 +1,16 @@
+import { wantsMarkdown } from '../../../tooling/lib/agent-surfaces/http.mjs';
+import {
+  createStaticAssetHandler,
+  advertiseMarkdown,
+} from '../../../tooling/lib/agent-surfaces/adapters/static-assets.mjs';
+import preservedMarkdownPaths from '../src/data/preservedMarkdown.json';
+
+const handleMarkdown = createStaticAssetHandler({
+  origin: 'https://sassmaker.com',
+  prebuiltFullPath: '/llms-full.txt',
+  preserveMarkdownPaths: preservedMarkdownPaths,
+});
+
 // Cloudflare ignores Vary: Accept in its ordinary URL cache. Use a private,
 // representation-specific cache lookup URL, and forbid downstream URL caching.
 // A deployment identity is mandatory: never reuse a shell naming old chunks.
@@ -256,13 +269,6 @@ const OPENAPI_SPEC = {
   },
 };
 
-function wantsMarkdown(request: Request): boolean {
-  const accept = (request.headers.get('accept') || '').toLowerCase();
-  if (!accept.includes('text/markdown')) return false;
-  if (!accept.includes('text/html')) return true;
-  return accept.indexOf('text/markdown') < accept.indexOf('text/html');
-}
-
 function normalizePath(pathname: string): string {
   if (!pathname || pathname === '/') return '/';
   const withSlash = pathname.startsWith('/') ? pathname : `/${pathname}`;
@@ -294,19 +300,6 @@ function markdown404(pathname: string): Response {
     headers: {
       'content-type': 'text/markdown; charset=utf-8',
       'cache-control': 'no-store',
-      'x-content-type-options': 'nosniff',
-    },
-  });
-}
-
-function homeMarkdownUnavailable(): Response {
-  return new Response('# Markdown temporarily unavailable\n', {
-    status: 503,
-    headers: {
-      'content-type': 'text/markdown; charset=utf-8',
-      'cache-control': 'no-store',
-      'cdn-cache-control': 'no-store',
-      vary: 'Accept, Accept-Encoding',
       'x-content-type-options': 'nosniff',
     },
   });
@@ -386,43 +379,6 @@ async function handleGet(
     (pathname.includes('.') && !pathname.endsWith('.md'))
   ) {
     return context.next(request);
-  }
-
-  // Accept: text/markdown negotiation for HTML pages that have a .md alternate.
-  if (wantsMarkdown(request) && !pathname.endsWith('.md')) {
-    const mdPath = pathname === '/' ? '/index.md' : `${pathname.replace(/\/$/, '')}.md`;
-    if (context.env.ASSETS) {
-      const mdUrl = new URL(url);
-      mdUrl.pathname = mdPath;
-      if (pathname === '/') mdUrl.search = '';
-      let mdResponse: Response;
-      try {
-        // The root Markdown mirror is public static content. Do not forward a
-        // visitor's session or Authorization headers into its asset lookup.
-        const mdRequest =
-          pathname === '/' ? new Request(mdUrl.toString()) : new Request(mdUrl.toString(), request);
-        mdResponse = await context.env.ASSETS.fetch(mdRequest);
-      } catch (error) {
-        if (pathname === '/') return homeMarkdownUnavailable();
-        throw error;
-      }
-      // Only serve as markdown if the asset actually exists (not a soft-404 HTML page).
-      // Cloudflare Pages may serve index.html with 200 for unknown .md paths.
-      if (mdResponse.status === 200) {
-        const mdContentType = mdResponse.headers.get('content-type') ?? '';
-        if (mdContentType.includes('text/markdown') && !mdContentType.includes('text/html')) {
-          const headers = new Headers(mdResponse.headers);
-          headers.set('content-type', 'text/markdown; charset=utf-8');
-          headers.set('vary', 'Accept, Accept-Encoding');
-          headers.set('x-content-type-options', 'nosniff');
-          return new Response(mdResponse.body, {
-            status: 200,
-            headers,
-          });
-        }
-      }
-    }
-    if (pathname === '/') return homeMarkdownUnavailable();
   }
 
   const response = await context.next(request);
@@ -514,7 +470,9 @@ export const onRequest: PagesFunction = async (context) => {
     request.method === 'HEAD'
       ? new Request(request.url, { method: 'GET', headers: request.headers })
       : request;
-  return publicHomeCache(
+  const agent = await handleMarkdown(request, context.env.ASSETS);
+  if (agent) return agent;
+  const response = await publicHomeCache(
     request,
     context.env as { ASSETS?: { fetch: (request: Request) => Promise<Response> } },
     () =>
@@ -526,4 +484,5 @@ export const onRequest: PagesFunction = async (context) => {
         })
       )
   );
+  return advertiseMarkdown(response, SITE_URL);
 };

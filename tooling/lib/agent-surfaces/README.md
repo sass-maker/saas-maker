@@ -51,3 +51,13 @@ const handler = createAgentSurfaceHandler({ manifest });
 ```bash
 node skills/agent-ready/scripts/agent-index-audit.mjs --all
 ```
+
+
+Markdown negotiation compares media-type quality values. HTML wins a tie,
+including `Accept: text/markdown, text/html`; clients that require Markdown can
+send `Accept: text/markdown` alone or use the explicit Markdown URL. This avoids
+changing ordinary wildcard browser requests into Markdown responses.
+
+The static emitter adds Markdown, discovery, the full export and machine
+catalog files. The HTML host retains ownership of its canonical sitemap and
+any configured external product or documentation destinations.

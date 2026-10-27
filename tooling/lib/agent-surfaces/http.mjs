@@ -2,6 +2,7 @@
 const AGENT_PATHS = new Set([
   '/llms.txt',
   '/llms-full.txt',
+  '/ai.txt',
   '/api/ai',
   '/skill.md',
   '/agents.md',
@@ -60,17 +61,25 @@ export function wantsMarkdown(request) {
       ? headers.get('accept') || ''
       : headers?.accept || headers?.Accept || '';
   if (!accept) return false;
-  const lower = accept.toLowerCase();
-  if (!lower.includes('text/markdown') && !lower.includes('text/x-markdown')) {
-    return false;
-  }
-  // Explicit markdown preference without html, or markdown listed first.
-  if (!lower.includes('text/html')) return true;
-  const mdIdx = indexOfMedia(lower, 'text/markdown');
-  const htmlIdx = indexOfMedia(lower, 'text/html');
-  if (mdIdx === -1) return false;
-  if (htmlIdx === -1) return true;
-  return mdIdx < htmlIdx;
+  const ranges = accept.toLowerCase().split(',').map((part) => {
+    const [type, ...parameters] = part.trim().split(';');
+    const weights = parameters.map((value) => value.trim()).filter((value) => /^q\s*=/.test(value));
+    const raw = weights[0]?.split('=')[1]?.trim();
+    const q = weights.length > 1 || (raw !== undefined && !/^(?:0(?:\.\d{0,3})?|1(?:\.0{0,3})?)$/.test(raw))
+      ? 0 : raw === undefined ? 1 : Number(raw);
+    return { type: type.trim(), q };
+  });
+  // Wildcards never opt into Markdown. Specific media ranges override them.
+  const markdown = ranges.filter(({ type }) => type === 'text/markdown');
+  if (!markdown.length) return false;
+  const quality = (types) => {
+    for (const type of types) {
+      const matches = ranges.filter((range) => range.type === type);
+      if (matches.length) return Math.min(...matches.map((range) => range.q));
+    }
+    return 0;
+  };
+  return quality(['text/markdown']) > quality(['text/html', 'text/*', '*/*']);
 }
 
 /**
@@ -129,9 +138,19 @@ export function jsonResponse(data, extraHeaders = {}) {
  * @param {Record<string, string>} [extraHeaders]
  */
 export function markdownResponse(body, request, extraHeaders = {}) {
-  const preferMd = request ? wantsMarkdown(request) : true;
-  const type = preferMd ? 'text/markdown; charset=utf-8' : 'text/plain; charset=utf-8';
-  return textResponse(body, type, { Vary: 'Accept', ...extraHeaders });
+  return new Response(request?.method === 'HEAD' ? null : body, {
+    headers: {
+      'Content-Type': 'text/markdown; charset=utf-8',
+      'X-Markdown-Tokens': String(Math.ceil(body.length / 4)),
+      'X-Robots-Tag': 'noindex, follow',
+      'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+      'X-Content-Type-Options': 'nosniff',
+      Vary: 'Accept',
+      ...extraHeaders,
+    },
+  });
 }
 
 /**
@@ -155,14 +174,6 @@ function normalizePath(pathname) {
   if (!path.startsWith('/')) path = `/${path}`;
   if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
   return path || '/';
-}
-
-function indexOfMedia(acceptLower, media) {
-  const parts = acceptLower.split(',').map((p) => p.trim());
-  for (let i = 0; i < parts.length; i++) {
-    if (parts[i].startsWith(media)) return i;
-  }
-  return -1;
 }
 
 function bodyToPreview(body) {
