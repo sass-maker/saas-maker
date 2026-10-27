@@ -17,6 +17,7 @@ function fixture(t, { blockPublication = false } = {}) {
   const root = join(base, 'state');
   const callers = [];
   t.after(async () => {
+    if (blockPublication) writeFileSync(publicationGo, 'go');
     for (const caller of callers) {
       if (caller.child.exitCode === null && caller.child.signalCode === null) caller.child.kill('SIGKILL');
       await caller.result;
@@ -56,7 +57,6 @@ if (path.includes('/retired/tree-')) {
   const publicationReady = join(base, 'publication-ready');
   const publicationGo = join(base, 'publication-go');
   const preload = join(base, 'worker-preload.mjs');
-  t.after(() => { if (blockPublication) writeFileSync(publicationGo, 'go'); });
   if (blockPublication) writeFileSync(preload, `
     import { writeFileSync, existsSync } from 'node:fs';
     import { AgentWorkspaces } from ${JSON.stringify(library)};
@@ -258,7 +258,6 @@ test('different ancestor aliases of the same canonical state root share a genera
   for (const result of await Promise.all([first.result, second.result])) assert.equal(result.code, 0, result.stderr);
   assert.equal(f.events().filter((event) => event.event === 'start').length, 8);
 });
-
 
 test('a caller after retirement waits for an older active scan and measures the moved bytes afresh', async (t) => {
   const f = fixture(t, { blockPublication: true });

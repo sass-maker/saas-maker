@@ -262,12 +262,17 @@ overcount hardlinks shared between retired entries. A top-level retired-director
 change during a scan triggers at most two complete retries; continuous churn
 fails closed. Overlapping default retired scans in separate CLI processes share one
 complete measurement generation with at most four `du` children. A detached,
-bounded worker owns that generation, so losing one caller does not cancel other
-callers' evidence. Only callers that joined while the generation was active can
-consume its result. A later invocation starts a new complete scan, including new
-file growth; completed totals are never reused. A dead worker's surviving process
-group remains protected until it is confirmed gone, then a later call recovers
-automatically. Unknown ownership and failed measurements still fail closed.
+bounded worker owns that generation, so losing one caller after scanning starts
+does not cancel other callers' evidence. Only callers that joined while the
+generation was active and its retired-directory identity still matched can
+consume its result. A caller that sees a changed retired directory waits for the
+older pool to close, then starts or joins a fresh generation. A later invocation
+starts a new complete scan, including new file growth; completed totals are
+never reused. A dead worker's surviving process group remains protected until it
+is confirmed gone, then a later call recovers
+automatically. Terminal holder metadata expires after twice the caller's
+200-second deadline, so PID reuse cannot exhaust generation slots. Unknown
+ownership and failed measurements still fail closed.
 Scan coordination adds no approval prompts or configuration requirements.
 Retired worktrees remain included. Admission rechecks the current policy, free
 space reserve, material workspace identities, and heavy-job limits under the
