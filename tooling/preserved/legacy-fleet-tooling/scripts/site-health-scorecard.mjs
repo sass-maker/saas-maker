@@ -117,6 +117,7 @@ function main() {
 
   const rows = [];
   const problems = [];
+  const partialCoverage = [];
   for (const p of products) {
     if (!idsInScope.has(p.id)) continue;
     const a = auditByName.get(p.name || p.id) || { tier: '?', score: 0, checks: {} };
@@ -133,6 +134,10 @@ function main() {
     );
     const w = worstProblem(a);
     if (w) problems.push(`- **${p.id}** — ${w}`);
+    const partial = Object.entries(a.checks || {})
+      .filter(([, check]) => check.status === 'partial')
+      .map(([key, check]) => `${key}: ${check.detail}`);
+    if (partial.length) partialCoverage.push(`- **${p.id}** — ${partial.join('; ')}`);
     if (c?.blocked > 0) problems.push(`- **${p.id} content** — ${c.blocked} blocked coverage action(s) need evidence or owner input`);
     else if ((c?.create ?? 0) + (c?.update ?? 0) > 0) {
       problems.push(`- **${p.id} content** — ${c.create ?? 0} create and ${c.update ?? 0} update action(s) remain`);
@@ -156,6 +161,10 @@ ${rows.join('\n')}
 ## Problems (worst first per product)
 
 ${problems.length ? problems.join('\n') : '_No failing GEO checks._'}
+
+## Partial coverage
+
+${partialCoverage.length ? partialCoverage.join('\n') : '_No partial GEO checks._'}
 `;
   writeFileSync(OUT, doc, 'utf8');
   console.log(`Scorecard → ${OUT}`);

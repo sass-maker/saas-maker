@@ -380,7 +380,11 @@ function createItem({ type, filePath, sourceRoot, opsRoot, content }) {
     ? metadata.description || firstParagraph(content) || `Fleet skill: ${name}.`
     : type === 'script'
       ? firstScriptComment(content) || `Fleet operator script: ${name}.`
-      : firstParagraph(content) || `Fleet ${type}: ${name}.`;
+      : type === 'template'
+        ? extname(filePath).toLowerCase() === '.md'
+          ? firstParagraph(content) || `Fleet template: ${name}.`
+          : `Template source file: ${path}.`
+        : firstParagraph(content) || `Fleet ${type}: ${name}.`;
   const identifierSlug = type === 'skill' ? slug(skillName) : pathSlug;
   const item = {
     id: `${type}:${identifierSlug}`,

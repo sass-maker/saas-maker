@@ -49,6 +49,8 @@ import {
   loadCanonicalIdentities,
 } from '../../../lib/entity-name-agreement.mjs';
 import { gradeHeadParity } from '../../../lib/head-parity.mjs';
+import { summarizeCatalogIntegrity } from '../../../lib/catalog-integrity.mjs';
+import { summarizeReadiness } from '../../../lib/agent-readiness.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // scripts → agent-ready → skills → tooling → saas-maker → fleet root
@@ -193,6 +195,9 @@ function summarizeResult(result) {
     ...(result.error ? { error: result.error } : {}),
     tier: result.tier,
     score: result.score,
+    pass: result.pass,
+    fail: result.fail,
+    partial: result.partial,
     checks: Object.fromEntries(
       Object.entries(result.checks || {}).map(([id, check]) => [
         id,
@@ -403,23 +408,16 @@ async function auditOrigin(target, { indexNowKey, identities } = {}) {
   const applicable = [...REQUIRED_CHECKS];
   if (checks.llms_full.status !== 'skip') applicable.push('llms_full');
 
-  const passCount = applicable.filter((k) => checks[k]?.status === 'pass').length;
-  const failCount = applicable.filter((k) => checks[k]?.status === 'fail').length;
-  const score = Math.round((passCount / applicable.length) * 100);
   // A surface publishing a name that exists in no fleet record is not partially
   // agent-ready: an agent that reads it resolves to a different product, so the
   // rest of the surface being perfect does not help. That floors the tier rather
   // than costing one check (sass-maker/saas-maker#94).
   const identityConflict = checks.name_agreement?.data?.identityConflict === true;
-  const tier = identityConflict
-    ? 'C'
-    : failCount === 0
-      ? 'S'
-      : passCount >= 5
-        ? 'A'
-        : passCount >= 3
-          ? 'B'
-          : 'C';
+  const { tier, score, pass, fail, partial } = summarizeReadiness(
+    checks,
+    applicable,
+    identityConflict,
+  );
 
   return {
     name,
@@ -427,8 +425,9 @@ async function auditOrigin(target, { indexNowKey, identities } = {}) {
     ...(id ? { id } : {}),
     tier,
     score,
-    pass: passCount,
-    fail: failCount,
+    pass,
+    fail,
+    partial,
     checks,
   };
 }
@@ -934,20 +933,12 @@ async function gradeCatalogIntegrity(
     }
     return { id, valid: true };
   });
-  const valid = results.filter((result) => result.valid).length;
-  const integrityPercent = percentage(valid, configured);
   const truncated = configured > bounded.length;
-  const failures = results
-    .filter((result) => !result.valid)
-    .slice(0, 20)
-    .map(({ id, reason }) => ({ id, reason }));
-  return {
-    status: valid === configured && !truncated ? 'pass' : 'fail',
-    detail:
-      `${valid}/${configured} catalog surfaces valid (${integrityPercent}%)` +
-      (truncated ? `; capped at ${MAX_CATALOG_SURFACES}` : ''),
-    data: { valid, configured, integrityPercent, failures },
-  };
+  const summary = summarizeCatalogIntegrity(results, configured);
+  if (truncated) {
+    summary.detail += `; capped at ${MAX_CATALOG_SURFACES}`;
+  }
+  return summary;
 }
 
 function resolveCatalogSurfaceTargets(origin, surface, sitemapUrls) {
@@ -1319,6 +1310,7 @@ function printScoreboard(results) {
       const s = r.checks[k]?.status;
       if (s === 'pass') return '✓';
       if (s === 'skip') return '·';
+      if (s === 'partial') return '◐';
       return '✗';
     };
     console.log(
@@ -1346,6 +1338,19 @@ function printScoreboard(results) {
     if (fails.length) {
       console.log(`${r.name} (${r.origin}) — ${r.tier}`);
       console.log(fails.join('\n'));
+      console.log();
+    }
+  }
+
+  console.log('\n--- Partial coverage (not failures) ---\n');
+  for (const r of sorted) {
+    if (r.error) continue;
+    const partial = Object.entries(r.checks)
+      .filter(([, c]) => c.status === 'partial')
+      .map(([k, c]) => `    ${k}: ${c.detail}`);
+    if (partial.length) {
+      console.log(`${r.name} (${r.origin}) — ${r.tier}`);
+      console.log(partial.join('\n'));
       console.log();
     }
   }

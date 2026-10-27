@@ -42,7 +42,7 @@ node skills/agent-ready/scripts/agent-index-audit.mjs --all --json
 | `robots` | Exists with User-agent |
 | `sitemap` | `sitemap.xml` or `sitemap-index.xml` |
 | `route_markdown` | Public sitemap routes resolve as Markdown; large corpora use a deterministic 250-route sample |
-| `catalog_integrity` | Every bounded `/api/ai` surface has a same-origin, readable Markdown target listed in the sitemap |
+| `catalog_integrity` | Every checked `/api/ai` surface has a same-origin, readable Markdown target listed in the sitemap. When the catalog exceeds the probe cap, the check is `partial` with checked and unchecked counts; observed invalid surfaces remain failures. |
 | `name_agreement` | `/llms.txt`, `/api/ai` and JSON-LD all declare the canonical product name |
 | `head_parity` | HEAD returns the same status class as GET on the agent endpoints and a 10-route sample |
 
