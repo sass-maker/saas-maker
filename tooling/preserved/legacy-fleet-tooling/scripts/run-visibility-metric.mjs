@@ -89,16 +89,21 @@ function runAgentAudit() {
   const readableCoverage = Number(readableRoutes.coveragePercent ?? 0);
   const validSurfaces = Number(catalogSurfaces.valid ?? 0);
   const configuredSurfaces = Number(catalogSurfaces.configured ?? 0);
+  const checkedSurfaces = Number(catalogSurfaces.checked ?? configuredSurfaces);
+  const uncheckedSurfaces = Number(catalogSurfaces.unchecked ?? 0);
   const surfaceIntegrity = Number(catalogSurfaces.integrityPercent ?? 0);
+  const partialChecks = Number(audit.partial ?? 0);
 
   return {
     agent: {
-      status: audit.fail > 0 ? 'needs-work' : 'ready',
+      status: audit.fail > 0 ? 'needs-work' : partialChecks > 0 ? 'partial' : 'ready',
       summary:
         `${audit.tier}-tier · ${audit.pass} passed · ${audit.fail} failed · ` +
+        `${partialChecks} partial · ` +
         `${readable}/${checkedRoutes} checked routes readable · ` +
         `${publicRoutes} public routes · ` +
-        `${validSurfaces}/${configuredSurfaces} catalog surfaces valid`,
+        `${validSurfaces}/${configuredSurfaces} catalog surfaces valid · ` +
+        `${checkedSurfaces} checked · ${uncheckedSurfaces} unchecked`,
       metrics: [
         {
           label: 'Agent readiness',
@@ -117,6 +122,12 @@ function runAgentAudit() {
           value: audit.fail,
           unit: 'checks',
           direction: 'lower-is-better',
+        },
+        {
+          label: 'Agent checks partial',
+          value: partialChecks,
+          unit: 'checks',
+          direction: 'neutral',
         },
         {
           label: 'Agent-readable coverage',

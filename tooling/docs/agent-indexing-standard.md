@@ -114,8 +114,12 @@ Audit: `skills/agent-ready/scripts/agent-index-audit.mjs`.
 
 The audit retains route coverage as percentage, readable/checked counts, and
 the total public sitemap count. It separately retains `/api/ai` surface
-integrity as valid/configured counts and percentage. A sampled large-corpus
-percentage must never be shown without its checked and total denominators.
+integrity as valid/configured counts and percentage, plus checked and unchecked
+counts. A sampled large-corpus check is `partial` when all inspected surfaces
+are valid and some remain unchecked; observed invalid surfaces stay `fail`.
+Partial required checks cannot earn S-tier and remain distinct from failures.
+A sampled percentage must never be shown without its checked and total
+denominators.
 
 ## Auto modes
 

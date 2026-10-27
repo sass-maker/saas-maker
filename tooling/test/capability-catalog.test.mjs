@@ -21,6 +21,16 @@ test('standalone capability catalog has valid roots and execution profiles', () 
   assert.equal(catalog.generatedFrom, 'sass-maker/saas-maker/tooling');
 
   const skills = catalog.items.filter((item) => item.type === 'skill');
+  const siteLayout = catalog.items.find((item) =>
+    item.path.endsWith('templates/web-landing/src/layouts/SiteLayout.astro'));
+  assert.ok(siteLayout, 'web-landing SiteLayout Astro source is cataloged');
+  assert.match(siteLayout.summary, /^Template source file:/);
+  assert.doesNotMatch(siteLayout.summary, /<!doctype|<html/i);
+  const webLandingReadme = catalog.items.find((item) =>
+    item.path === 'templates/web-landing/README.md');
+  assert.ok(webLandingReadme, 'web-landing README is cataloged');
+  assert.doesNotMatch(webLandingReadme.summary, /^Fleet template:/);
+  assert.ok(webLandingReadme.summary.length > 20);
   assert.equal(skills.length, 44);
   assert.equal(skills.filter((skill) => skill.path === 'skills/marketing/SKILL.md').length, 1);
   assert.equal(skills.filter((skill) => skill.path === 'skills/agentic-seo/SKILL.md').length, 1);
