@@ -1334,6 +1334,61 @@ a {
   border-top: 1px solid var(--line);
 }
 
+.generated-body .learning-results-table {
+  position: relative;
+  left: 50%;
+  width: min(70rem, calc(100vw - 3rem));
+  margin: 1.5rem 0;
+  transform: translateX(-50%);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.learning-results-table table {
+  width: 100%;
+  min-width: 56rem;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+}
+
+.learning-results-table th,
+.learning-results-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.learning-results-table th {
+  color: var(--ink);
+  background: var(--surface);
+  font-weight: 600;
+}
+
+.learning-results-table td:first-child {
+  min-width: 13rem;
+}
+
+.learning-results-table--summary table,
+.learning-results-table--summary td:first-child {
+  min-width: 0;
+}
+
+.learning-results-table--timings :is(th, td):nth-child(n + 2):nth-child(-n + 4) {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
+.learning-results-table small {
+  display: inline-block;
+  margin-top: 0.35rem;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+
 @media (max-width: 760px) {
   .nav,
   .hero,
