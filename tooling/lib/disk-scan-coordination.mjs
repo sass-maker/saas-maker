@@ -49,12 +49,12 @@ function retiredIdentity(path) {
   return [entry.dev, entry.ino, entry.mtimeNs, entry.ctimeNs].join(':');
 }
 
-async function waitForScan(manager, root, token, deadline) {
+async function waitForScan(manager, root, token, deadline, timeoutMessage = `Retired disk scan ownership remains active or unknown after ${callerTimeoutMs}ms.`) {
   let nextRecovery = Date.now() + 1_000;
   while (true) {
     const row = read(root).find((item) => item.token === token);
     if (!row || row.state !== 'active') return row;
-    if (Date.now() > deadline) throw new Error(`Retired disk scan ownership remains active or unknown after ${callerTimeoutMs}ms.`);
+    if (Date.now() > deadline) throw new Error(timeoutMessage);
     if (Date.now() >= nextRecovery) {
       await manager.locked(() => save(root, recover(read(root))));
       nextRecovery = Date.now() + 1_000;
@@ -70,12 +70,15 @@ export async function coordinatedRetiredBytes(manager, target) {
   const path = join(root, 'retired');
   const entry = lstatSync(target);
   if (!entry.isDirectory() || entry.isSymbolicLink() || realpathSync(target) !== path) throw new Error(`Unsafe retired directory: ${target}`);
-  const holder = { token: randomUUID(), pid: process.pid, startedAt: new Date().toISOString() };
-  const deadline = Date.now() + callerTimeoutMs;
+  const holder = { token: randomUUID(), pid: process.pid };
+  const waitingDeadline = Date.now() + callerTimeoutMs;
+  const waitingTimeout = `Timed out waiting for an older retired disk scan after ${callerTimeoutMs}ms.`;
+  let deadline;
   let worker;
   let token;
   while (!token) {
     const claim = await manager.locked(() => {
+      if (Date.now() > waitingDeadline) throw new Error(waitingTimeout);
       const rows = recover(read(root));
       const identity = retiredIdentity(path);
       let row = rows.find((item) => item.path === path && item.state === 'active');
@@ -97,12 +100,15 @@ export async function coordinatedRetiredBytes(manager, target) {
         rows.push(row);
       }
       if (row.holders.length >= 1024) throw new Error('Too many callers waiting for a retired disk scan.');
+      const joinedAt = Date.now();
+      holder.startedAt = new Date(joinedAt).toISOString();
+      deadline = joinedAt + callerTimeoutMs;
       row.holders.push(holder);
       save(root, rows);
       return { token: row.token, joined: true };
     });
     if (claim.joined) token = claim.token;
-    else await waitForScan(manager, root, claim.token, deadline);
+    else await waitForScan(manager, root, claim.token, waitingDeadline, waitingTimeout);
   }
   if (worker) {
     // The durable owner record precedes GO. A crash before GO leaves a worker

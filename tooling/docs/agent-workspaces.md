@@ -266,12 +266,13 @@ bounded worker owns that generation, so losing one caller after scanning starts
 does not cancel other callers' evidence. Only callers that joined while the
 generation was active and its retired-directory identity still matched can
 consume its result. A caller that sees a changed retired directory waits for the
-older pool to close, then starts or joins a fresh generation. A later invocation
+older pool to close within a bounded 200-second wait, then starts or joins a fresh
+generation with its own 200-second deadline beginning at the join. A later invocation
 starts a new complete scan, including new file growth; completed totals are
 never reused. A dead worker's surviving process group remains protected until it
 is confirmed gone, then a later call recovers
-automatically. Terminal holder metadata expires after twice the caller's
-200-second deadline, so PID reuse cannot exhaust generation slots. Unknown
+automatically. Terminal holder metadata expires 400 seconds after that holder
+joined its generation, so PID reuse cannot exhaust generation slots. Unknown
 ownership and failed measurements still fail closed.
 Scan coordination adds no approval prompts or configuration requirements.
 Retired worktrees remain included. Admission rechecks the current policy, free
