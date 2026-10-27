@@ -260,8 +260,16 @@ for the whole retired scan and each process. Timed-out processes are killed and
 reaped. The retired sum includes its directory inode and can conservatively
 overcount hardlinks shared between retired entries. A top-level retired-directory
 change during a scan triggers at most two complete retries; continuous churn
-fails closed. Unknown or failed measurements still fail closed; no totals are
-cached and retired worktrees remain included. Admission rechecks the current policy, free
+fails closed. Overlapping default retired scans in separate CLI processes share one
+complete measurement generation with at most four `du` children. A detached,
+bounded worker owns that generation, so losing one caller does not cancel other
+callers' evidence. Only callers that joined while the generation was active can
+consume its result. A later invocation starts a new complete scan, including new
+file growth; completed totals are never reused. A dead worker's surviving process
+group remains protected until it is confirmed gone, then a later call recovers
+automatically. Unknown ownership and failed measurements still fail closed.
+Scan coordination adds no approval prompts or configuration requirements.
+Retired worktrees remain included. Admission rechecks the current policy, free
 space reserve, material workspace identities, and heavy-job limits under the
 registry lock before registering its lease. Identity changes during a create or
 managed run scan trigger at most two retries (three complete fresh measurement attempts) before

@@ -7,6 +7,7 @@ import { dirname, isAbsolute, join, resolve, sep } from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { coordinatedRetiredBytes } from './disk-scan-coordination.mjs';
 
 export class StaleWorkspaceSnapshotError extends Error {
   constructor() {
@@ -489,7 +490,7 @@ export class AgentWorkspaces {
       const started = Date.now();
       try {
         const bytes = await (this.measure === diskBytes
-          ? role === 'retired-worktrees' ? retiredBytesAsync(target) : diskBytesAsync(target)
+          ? role === 'retired-worktrees' ? coordinatedRetiredBytes(this, target) : diskBytesAsync(target)
           : this.measure(target));
         if (!Number.isSafeInteger(bytes) || bytes < 0) throw new Error('Invalid disk measurement');
         return bytes;
