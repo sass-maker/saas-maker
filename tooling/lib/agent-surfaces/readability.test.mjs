@@ -324,3 +324,12 @@ test('static emitter completes machine documents without replacing the host site
   assert.equal(JSON.parse(files.get('/output/api/md/_catalog')).length, 2);
   assert.match(files.get('/output/ai.txt'), /public-machine-endpoints: \/api\/ai, \/api\/md\/\*/);
 });
+
+for (const path of ['/api/md//evil.example/x', '//evil.example/x.md']) test(`unknown canonical stays public: ${path}`, async () => {
+  const response = await handler(req(path));
+  assert.equal(response.status, 404);
+  assert.equal(new URL(response.headers.get('Content-Location')).origin, manifest.origin);
+  assert.equal(response.headers.get('Cache-Control'), 'no-store');
+  assert.match(response.headers.get('X-Robots-Tag'), /noindex/);
+  assert.match(response.headers.get('Link'), /describedby/);
+});

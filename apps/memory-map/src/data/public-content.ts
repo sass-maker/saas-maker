@@ -745,3 +745,5 @@ export const chatgptExportSteps: { text: string; strong?: boolean }[][] = [
   [{ text: "Under " }, { text: indexCopy[5].text, strong: true }, { text: ", choose " }, { text: indexCopy[6].text, strong: true }, { text: ", then " }, { text: indexCopy[7].text, strong: true }, { text: "." }],
 ];
 export const aboutFacts = ["question domains", "memory states", "model profiles", "archive uploads"].map((label, index) => ({ value: aboutCopy[index + 3].text, label }));
+
+export const privacyContract = 'No archive upload endpoint, account, or default archive persistence. Model files download from Hugging Face; your conversation text is not sent with that request. Site-level page-view and performance telemetry is separate and receives no archive text or derived content.';

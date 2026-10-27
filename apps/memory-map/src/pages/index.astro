@@ -1,6 +1,6 @@
 ---
 import { publicPages } from "../data/public-identity";
-import { indexCopy as publicCopy, chatgptExportSteps } from "../data/public-content";
+import { indexCopy as publicCopy, chatgptExportSteps, privacyContract } from "../data/public-content";
 import "../styles/global.css";
 import StudioFooter from "../components/studio-footer.astro";
 
@@ -280,12 +280,7 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
 
           <div class="privacy-contract">
             <strong>{publicCopy[30].text}</strong>
-            <span>
-              No archive upload endpoint, account, or default archive persistence. Model files
-              download from Hugging Face; your conversation text is not sent with that request.
-              Site-level page-view and performance telemetry is separate and receives no archive
-              text or derived content.
-            </span>
+            <span>{privacyContract}</span>
           </div>
         </section>
 

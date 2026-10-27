@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { handleMarkdown, markdownPages, markdownRoutes } from '../data/markdown-registry';
-import { capabilityRoutes, releases, surfaces, chatgptExportSteps, aboutFacts } from '../data/public-content';
+import { capabilityRoutes, releases, surfaces, chatgptExportSteps, aboutFacts, privacyContract } from '../data/public-content';
 
 describe('public source-only Markdown', () => {
   it('retains complete export instructions, visible counts and private-workflow guidance', async () => {
+    expect(markdownPages['/']).toContain(privacyContract);
+    expect(markdownPages['/']).toContain('receives no archive text or derived content');
     for (const parts of chatgptExportSteps) expect(markdownPages['/']).toContain(parts.map((part) => part.text).join(''));
     for (const fact of aboutFacts) expect(markdownPages['/about/']).toContain(`${fact.value} ${fact.label}`);
     const response = await handleMarkdown(new Request('https://chatgpt.significanthobbies.com/llms.txt'));
