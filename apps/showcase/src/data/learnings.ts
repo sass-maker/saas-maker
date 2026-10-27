@@ -20,7 +20,7 @@ export const LEARNINGS = [
       'What a completed web and iOS experiment found about saved tests, adaptive agents and website-to-MCP tools, with independent verification and retained evidence.',
     publishedAt: '2026-10-27',
     publishedLabel: 'October 27, 2026',
-    readingTime: '8 min read',
+    readingTime: '18 min read',
     author: 'Sarthak Agrawal',
     href: '/learnings/browser-agent-testing',
     markdown: browserAgentTestingMarkdown,

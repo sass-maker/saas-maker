@@ -34,6 +34,10 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-10-28:** Restored the Browser Agent Testing article's full numeric
+  record inline: 26 journey arms, seven measured probes, ten experiment records
+  and all observed version pins, with scrollable tables for narrow screens.
+
 - **2026-10-27:** Brought the retained Browser Agent Testing write-up into
   `/learnings/browser-agent-testing`, with the full public tool, experiment and
   version snapshots. Pomerado is source-reviewed only; historical benchmark
