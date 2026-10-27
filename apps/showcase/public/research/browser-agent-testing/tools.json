@@ -1,0 +1,860 @@
+{
+  "title": "Map of Browser Agent Testing tool catalogue",
+  "status": "completed-experiment",
+  "catalogue_reviewed": "2026-09-20",
+  "catalogue_updated": "2026-10-27",
+  "last_experiment": "2026-09-20",
+  "scope": "Maintained and materially relevant tools for local browser-agent and iOS-agent testing, grouped by job. Each entry has dated execution evidence or an explicit applicability boundary.",
+  "evidence_states": {
+    "benchmarked": "Repeated locally against the shared Vaultwealth journeys or faults.",
+    "screened": "A bounded local probe was completed, but the tool was not fully qualified.",
+    "setup-blocked": "A dated setup or run was attempted, but a named prerequisite or bounded failure prevented a fair result.",
+    "researched-only": "Official sources were reviewed and a concrete fit boundary was recorded; no runtime ranking is claimed."
+  },
+  "category_boundaries": {
+    "Saved web automation": "Alternative deterministic executor",
+    "Adaptive browser agents": "Model or agent orchestration layer",
+    "Agent evaluation suites": "Benchmark environment, not product runner",
+    "Remote browser infrastructure": "Remote infrastructure outside local-only scope",
+    "Visual verification": "Visual oracle or diff layer",
+    "iOS and mobile": "Native interaction or simulator layer",
+    "Local model helpers": "Model runtime, not UI executor"
+  },
+  "tools": [
+    {
+      "id": "playwright",
+      "name": "Playwright",
+      "category": "Saved web automation",
+      "evidence": "benchmarked",
+      "cost": "Free / local",
+      "version": "1.62.1",
+      "url": "https://playwright.dev/",
+      "note": "Qualified web baseline; fixed assertions and visual comparisons."
+    },
+    {
+      "id": "agent-browser",
+      "name": "agent-browser",
+      "category": "Saved web automation",
+      "evidence": "benchmarked",
+      "cost": "Free / local",
+      "version": "0.38.1",
+      "url": "https://github.com/vercel-labs/agent-browser",
+      "note": "Batch reduced its own login overhead; batch edit failed 0/5."
+    },
+    {
+      "id": "playwright-cli",
+      "name": "Playwright CLI",
+      "category": "Saved web automation",
+      "evidence": "screened",
+      "cost": "Free / local",
+      "version": "0.1.21",
+      "url": "https://github.com/microsoft/playwright-cli",
+      "note": "Login and edit passed 5/5 but were slower than the saved baseline."
+    },
+    {
+      "id": "puppeteer",
+      "name": "Puppeteer Core",
+      "category": "Saved web automation",
+      "evidence": "benchmarked",
+      "cost": "Free / local",
+      "version": "24.43.1",
+      "url": "https://pptr.dev/",
+      "note": "Search passed 5/5 at 2.081 s workflow median and detected stale search; fastest added screen, but not a 2x win."
+    },
+    {
+      "id": "selenium",
+      "name": "Selenium WebDriver",
+      "category": "Saved web automation",
+      "evidence": "benchmarked",
+      "cost": "Free / local",
+      "version": "4.49.0 / ChromeDriver 151.0.5",
+      "url": "https://www.selenium.dev/",
+      "note": "Search passed 5/5 at 3.633 s workflow median and detected stale search."
+    },
+    {
+      "id": "cypress",
+      "name": "Cypress",
+      "category": "Saved web automation",
+      "evidence": "setup-blocked",
+      "cost": "Free core / paid cloud",
+      "version": "16.1.0 package",
+      "url": "https://docs.cypress.io/",
+      "note": "Package pinned; the isolated experiment had no Cypress application binary. No tool-quality claim."
+    },
+    {
+      "id": "webdriverio",
+      "name": "WebdriverIO",
+      "category": "Saved web automation",
+      "evidence": "benchmarked",
+      "cost": "Free / local",
+      "version": "9.31.9",
+      "url": "https://webdriver.io/",
+      "note": "Search passed 5/5 at 2.958 s workflow median and detected stale search."
+    },
+    {
+      "id": "nightwatch",
+      "name": "Nightwatch",
+      "category": "Saved web automation",
+      "evidence": "benchmarked",
+      "cost": "Free / local",
+      "version": "3.16.0",
+      "url": "https://nightwatchjs.org/",
+      "note": "Search passed 5/5 at 5.425 s workflow median and detected stale search."
+    },
+    {
+      "id": "testcafe",
+      "name": "TestCafe",
+      "category": "Saved web automation",
+      "evidence": "setup-blocked",
+      "cost": "Free / local",
+      "version": "3.7.6",
+      "url": "https://testcafe.io/",
+      "note": "Proxy run did not return a test result before the bounded 60 second timeout on this service-worker fixture."
+    },
+    {
+      "id": "taiko",
+      "name": "Taiko",
+      "category": "Saved web automation",
+      "evidence": "benchmarked",
+      "cost": "Free / local",
+      "version": "1.5.0",
+      "url": "https://github.com/getgauge/taiko",
+      "note": "Search passed 5/5 at 23.850 s workflow median and detected stale search; isolated launches were required."
+    },
+    {
+      "id": "codeceptjs",
+      "name": "CodeceptJS",
+      "category": "Saved web automation",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": "4.1.0 package inspected",
+      "disposition": "Runner abstraction",
+      "url": "https://codecept.io/",
+      "note": "Installed and pinned, but it delegates to Playwright/WebDriver/Puppeteer; no separate driver speed claim after those engines were measured directly."
+    },
+    {
+      "id": "testplane",
+      "name": "Testplane",
+      "category": "Saved web automation",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "disposition": "WebDriver runner alternative",
+      "url": "https://github.com/gemini-testing/testplane",
+      "note": "Applicable WebDriver test runner, but it does not change the underlying driver result measured with Selenium and WebdriverIO."
+    },
+
+    {
+      "id": "jev",
+      "name": "Jev Ultrafast",
+      "category": "Adaptive browser agents",
+      "evidence": "benchmarked",
+      "cost": "Cheap paid selector + local text model",
+      "version": "0.1.0 @ 1231850a0bf1a0c0341fe408ef1668dbbfdfac46",
+      "url": "https://github.com/browser-use/jev-ultrafast",
+      "note": "Authenticated search passed 5/5; password fields are excluded upstream."
+    },
+    {
+      "id": "stagehand",
+      "name": "Stagehand",
+      "category": "Adaptive browser agents",
+      "evidence": "screened",
+      "cost": "Free code / model-dependent",
+      "version": "3.4.0",
+      "url": "https://github.com/browserbase/stagehand",
+      "note": "Cached replay reached 2.201 s median, 4/4; authoring took 25.544 s."
+    },
+    {
+      "id": "pomerado",
+      "name": "Pomerado",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "MIT core / paid model for authoring",
+      "version": null,
+      "disposition": "Website-to-MCP integration authoring",
+      "reviewed": "2026-10-27",
+      "url": "https://github.com/Pomerado/pomerado",
+      "note": "Generates source-code integrations from website tasks and serves them through MCP. Authoring uses OpenAI models; generated integrations run without model calls. Relevant to reusable workflow execution, but not an independent correctness oracle. No local runtime or speed result; review input coverage, persisted outcomes and site-change failures separately."
+    },
+    {
+      "id": "browser-use",
+      "name": "Browser Use",
+      "category": "Adaptive browser agents",
+      "evidence": "screened",
+      "cost": "Free code / model-dependent",
+      "version": "0.13.10",
+      "url": "https://github.com/browser-use/browser-use",
+      "note": "Worked with local Bonsai but passed 4/5 at 90.730 s among successes."
+    },
+    {
+      "id": "chrome-devtools-mcp",
+      "name": "Chrome DevTools MCP",
+      "category": "Adaptive browser agents",
+      "evidence": "screened",
+      "cost": "Free / local",
+      "version": "1.9.0",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+      "note": "Fast diagnostic companion; not a journey executor."
+    },
+    {
+      "id": "playwright-mcp",
+      "name": "Playwright MCP",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": "0.0.82 package inspected",
+      "url": "https://github.com/microsoft/playwright-mcp",
+      "note": "Pinned locally; an agent transport over Playwright, not a saved-executor speed replacement."
+    },
+    {
+      "id": "codex",
+      "name": "Codex coding agent",
+      "category": "Adaptive browser agents",
+      "evidence": "benchmarked",
+      "cost": "Subscription usage",
+      "version": "0.155.1 / gpt-6-astra",
+      "url": "https://developers.openai.com/codex/",
+      "note": "Stepwise login passed 5/5; the batched instruction arm qualified 0/5."
+    },
+    {
+      "id": "skyvern",
+      "name": "Skyvern",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Open source / model-dependent",
+      "version": null,
+      "url": "https://github.com/Skyvern-AI/skyvern",
+      "note": "Computer-vision and LLM browser workflow platform."
+    },
+    {
+      "id": "lavague",
+      "name": "LaVague",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Open source / model-dependent",
+      "version": null,
+      "url": "https://github.com/lavague-ai/LaVague",
+      "note": "Web-agent framework with browser actions and retrieval."
+    },
+    {
+      "id": "agentql",
+      "name": "AgentQL",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Free tier / paid service",
+      "version": null,
+      "url": "https://docs.agentql.com/",
+      "note": "Natural-language element and page-data queries."
+    },
+    {
+      "id": "magnitude",
+      "name": "Magnitude",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Open source / vision-model dependent",
+      "version": null,
+      "url": "https://github.com/magnitudedev/browser-agent",
+      "note": "Vision-first browser agent; text-only Bonsai is not a fair model."
+    },
+    {
+      "id": "browsergym",
+      "name": "BrowserGym",
+      "category": "Agent evaluation suites",
+      "evidence": "researched-only",
+      "cost": "Free / model-dependent",
+      "version": null,
+      "disposition": "Evaluation suite, not driver",
+      "url": "https://github.com/ServiceNow/BrowserGym",
+      "note": "Unifies reproducible web-agent environments; it evaluates agents rather than replacing product test execution."
+    },
+    {
+      "id": "browser-mcp",
+      "name": "Browser MCP",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Free / local browser",
+      "version": null,
+      "disposition": "Personal-profile boundary",
+      "url": "https://browsermcp.io/",
+      "note": "Controls an existing browser through an extension; excluded because the experiment forbids personal browser profiles."
+    },
+    {
+      "id": "openai-computer-use",
+      "name": "OpenAI computer use",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Paid API",
+      "version": null,
+      "url": "https://platform.openai.com/docs/guides/tools-computer-use",
+      "note": "General screenshot-and-action computer-use model, not a test oracle."
+    },
+    {
+      "id": "anthropic-computer-use",
+      "name": "Anthropic computer use",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Paid API",
+      "version": null,
+      "url": "https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/computer-use-tool",
+      "note": "General computer-use tool requiring an external execution environment."
+    },
+    {
+      "id": "browserable",
+      "name": "Browserable",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Open source / provider-dependent",
+      "version": null,
+      "disposition": "Agent framework",
+      "url": "https://github.com/browserable/browserable",
+      "note": "Self-hostable agent framework; model/orchestration choice rather than a fixed local driver benchmark."
+    },
+    {
+      "id": "drisp-browser-mcp",
+      "name": "Drisp Browser MCP",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "disposition": "MCP interaction layer",
+      "url": "https://github.com/drisplabs/browser-mcp",
+      "note": "Local browser-control MCP with snapshots and actions; use as an agent interface, not a correctness oracle."
+    },
+    {
+      "id": "midscene",
+      "name": "Midscene.js",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Open source / model-dependent",
+      "version": null,
+      "disposition": "Vision model required",
+      "url": "https://github.com/web-infra-dev/midscene",
+      "note": "AI-driven web and Android automation; the selected Bonsai text model is not a fair vision backend."
+    },
+    {
+      "id": "hercules",
+      "name": "TestZeus Hercules",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Open source / model-dependent",
+      "version": null,
+      "disposition": "Agent framework",
+      "url": "https://github.com/test-zeus-ai/testzeus-hercules",
+      "note": "Agentic browser testing framework; requires model configuration and independent outcome verification."
+    },
+    {
+      "id": "shortest",
+      "name": "Shortest",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Open source / model-dependent",
+      "version": null,
+      "disposition": "Model-dependent test runner",
+      "url": "https://github.com/anti-work/shortest",
+      "note": "Natural-language Playwright tests; model reasoning remains the dominant variable for a fair comparison."
+    },
+    {
+      "id": "ui-tars",
+      "name": "UI-TARS Desktop",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Open source / local or hosted model",
+      "version": null,
+      "disposition": "Desktop GUI agent",
+      "url": "https://github.com/bytedance/UI-TARS-desktop",
+      "note": "General desktop GUI agent with browser control; broader than the local web-driver question and still needs an external oracle."
+    },
+    {
+      "id": "agent-tars",
+      "name": "Agent TARS",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Open source / model-dependent",
+      "version": null,
+      "disposition": "General multimodal agent",
+      "url": "https://github.com/bytedance/agent-tars",
+      "note": "General multimodal agent framework, not a deterministic test executor."
+    },
+    {
+      "id": "harness-agent",
+      "name": "Harness",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Free / model-dependent",
+      "version": null,
+      "disposition": "Experimental agent harness",
+      "url": "https://github.com/awizemann/harness",
+      "note": "Experimental browser and mobile agent harness; useful for exploration research, without a qualified Vaultwealth run."
+    },
+    {
+      "id": "playwright-test-agents",
+      "name": "Playwright Test Agents",
+      "category": "Adaptive browser agents",
+      "evidence": "researched-only",
+      "cost": "Free code / model-dependent",
+      "version": null,
+      "disposition": "Authoring and healing layer",
+      "url": "https://playwright.dev/docs/test-agents",
+      "note": "Planner, generator and healer agents author Playwright tests; repeat execution remains Playwright."
+    },
+
+    {
+      "id": "browserbase",
+      "name": "Browserbase",
+      "category": "Remote browser infrastructure",
+      "evidence": "researched-only",
+      "cost": "Paid service",
+      "version": null,
+      "url": "https://www.browserbase.com/",
+      "note": "Managed remote browsers; Stagehand integration is first-party."
+    },
+    {
+      "id": "browserless",
+      "name": "Browserless",
+      "category": "Remote browser infrastructure",
+      "evidence": "researched-only",
+      "cost": "Self-hosted or paid",
+      "version": null,
+      "url": "https://www.browserless.io/",
+      "note": "Remote Playwright/Puppeteer browser infrastructure."
+    },
+    {
+      "id": "steel",
+      "name": "Steel",
+      "category": "Remote browser infrastructure",
+      "evidence": "researched-only",
+      "cost": "Open source or paid",
+      "version": null,
+      "url": "https://github.com/steel-dev/steel-browser",
+      "note": "Open-source browser API for agents and apps."
+    },
+    {
+      "id": "hyperbrowser",
+      "name": "Hyperbrowser",
+      "category": "Remote browser infrastructure",
+      "evidence": "researched-only",
+      "cost": "Paid service",
+      "version": null,
+      "url": "https://www.hyperbrowser.ai/",
+      "note": "Managed browsers and agent infrastructure."
+    },
+    {
+      "id": "anchor-browser",
+      "name": "Anchor Browser",
+      "category": "Remote browser infrastructure",
+      "evidence": "researched-only",
+      "cost": "Paid service",
+      "version": null,
+      "url": "https://anchorbrowser.io/",
+      "note": "Cloud browsers for agents and automation."
+    },
+
+    {
+      "id": "agentlab",
+      "name": "AgentLab",
+      "category": "Agent evaluation suites",
+      "evidence": "researched-only",
+      "cost": "Free / model-dependent",
+      "version": null,
+      "disposition": "Research harness",
+      "url": "https://github.com/ServiceNow/AgentLab",
+      "note": "Reproducible web-agent experimentation on BrowserGym; not an application regression runner."
+    },
+    {
+      "id": "webarena",
+      "name": "WebArena",
+      "category": "Agent evaluation suites",
+      "evidence": "researched-only",
+      "cost": "Free / local infrastructure",
+      "version": null,
+      "disposition": "Benchmark environment",
+      "url": "https://github.com/web-arena-x/webarena",
+      "note": "Self-hosted realistic web tasks for agent research; not a substitute for product-specific assertions."
+    },
+    {
+      "id": "visualwebarena",
+      "name": "VisualWebArena",
+      "category": "Agent evaluation suites",
+      "evidence": "researched-only",
+      "cost": "Free / local infrastructure",
+      "version": null,
+      "disposition": "Multimodal benchmark",
+      "url": "https://github.com/web-arena-x/visualwebarena",
+      "note": "Visual web-agent benchmark; measures general capability rather than Vaultwealth defect detection."
+    },
+    {
+      "id": "workarena",
+      "name": "WorkArena",
+      "category": "Agent evaluation suites",
+      "evidence": "researched-only",
+      "cost": "Free code / ServiceNow instance",
+      "version": null,
+      "disposition": "Enterprise benchmark",
+      "url": "https://github.com/ServiceNow/WorkArena",
+      "note": "ServiceNow task benchmark with an application-specific infrastructure prerequisite."
+    },
+
+    {
+      "id": "vitest-browser-visual",
+      "name": "Vitest browser visual assertions",
+      "category": "Visual verification",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "url": "https://vitest.dev/guide/browser/visual-regression-testing",
+      "note": "Screenshot matching inside Vitest browser mode."
+    },
+    {
+      "id": "percy",
+      "name": "Percy",
+      "category": "Visual verification",
+      "evidence": "researched-only",
+      "cost": "Paid service",
+      "version": null,
+      "url": "https://www.browserstack.com/percy",
+      "note": "Managed cross-browser visual review."
+    },
+    {
+      "id": "applitools",
+      "name": "Applitools Eyes",
+      "category": "Visual verification",
+      "evidence": "researched-only",
+      "cost": "Paid service",
+      "version": null,
+      "url": "https://applitools.com/platform/eyes/",
+      "note": "Managed visual-AI comparison and review."
+    },
+    {
+      "id": "chromatic",
+      "name": "Chromatic",
+      "category": "Visual verification",
+      "evidence": "researched-only",
+      "cost": "Free tier / paid service",
+      "version": null,
+      "url": "https://www.chromatic.com/docs/",
+      "note": "Storybook-oriented component visual testing."
+    },
+    {
+      "id": "argos",
+      "name": "Argos",
+      "category": "Visual verification",
+      "evidence": "researched-only",
+      "cost": "Open source / paid service",
+      "version": null,
+      "url": "https://argos-ci.com/",
+      "note": "Visual and accessibility-tree diffs for pull requests."
+    },
+    {
+      "id": "lost-pixel",
+      "name": "Lost Pixel",
+      "category": "Visual verification",
+      "evidence": "researched-only",
+      "cost": "Open source",
+      "version": null,
+      "url": "https://github.com/lost-pixel/lost-pixel",
+      "note": "Sunsetting; useful comparison history, not a fresh adoption recommendation."
+    },
+    {
+      "id": "backstopjs",
+      "name": "BackstopJS",
+      "category": "Visual verification",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "url": "https://github.com/garris/BackstopJS",
+      "note": "Self-hosted browser screenshot regression testing."
+    },
+    {
+      "id": "loki",
+      "name": "Loki",
+      "category": "Visual verification",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "url": "https://github.com/oblador/loki",
+      "note": "Storybook screenshot regression testing; verify maintenance before adopting."
+    },
+    {
+      "id": "reg-suit",
+      "name": "reg-suit",
+      "category": "Visual verification",
+      "evidence": "researched-only",
+      "cost": "Free / local or object storage",
+      "version": null,
+      "disposition": "Screenshot diff pipeline",
+      "url": "https://github.com/reg-viz/reg-suit",
+      "note": "Screenshot regression workflow; requires a capture source and does not explore the application."
+    },
+    {
+      "id": "testivai",
+      "name": "TestivAI OSS",
+      "category": "Visual verification",
+      "evidence": "researched-only",
+      "cost": "Open source / model-dependent",
+      "version": null,
+      "disposition": "AI visual test framework",
+      "url": "https://github.com/testivai/testivai-oss",
+      "note": "Open-source visual testing framework; model and review configuration are additional variables."
+    },
+    {
+      "id": "odiff",
+      "name": "Odiff",
+      "category": "Visual verification",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "disposition": "Image diff primitive",
+      "url": "https://github.com/dmtrKovalenko/odiff",
+      "note": "Fast image comparison primitive, not a journey runner or visual-understanding agent."
+    },
+
+    {
+      "id": "maestro",
+      "name": "Maestro",
+      "category": "iOS and mobile",
+      "evidence": "benchmarked",
+      "cost": "Free CLI / optional cloud",
+      "version": "2.6.1 / Java 21",
+      "url": "https://github.com/mobile-dev-inc/Maestro",
+      "note": "Retained iOS saved-flow baseline."
+    },
+    {
+      "id": "axe",
+      "name": "AXe",
+      "category": "iOS and mobile",
+      "evidence": "benchmarked",
+      "cost": "Free / local",
+      "version": "1.8.0",
+      "url": "https://www.axe-cli.com/docs",
+      "note": "Fast warm runs, but cold accessibility and text-entry reliability blocked adoption."
+    },
+    {
+      "id": "xcodebuildmcp",
+      "name": "XcodeBuildMCP",
+      "category": "iOS and mobile",
+      "evidence": "screened",
+      "cost": "Free / local",
+      "version": "2.7.0",
+      "url": "https://github.com/dsmithnh3/xcodebuildmcp",
+      "note": "Useful installed-app probe; full save/relaunch journey was not qualified."
+    },
+    {
+      "id": "xcuitest",
+      "name": "XCUITest",
+      "category": "iOS and mobile",
+      "evidence": "setup-blocked",
+      "cost": "Included with Xcode",
+      "version": null,
+      "url": "https://developer.apple.com/documentation/XCUIAutomation",
+      "note": "Vaultwealth checkout lacked an app-owned Xcode UI-test target."
+    },
+    {
+      "id": "detox",
+      "name": "Detox",
+      "category": "iOS and mobile",
+      "evidence": "setup-blocked",
+      "cost": "Free / local",
+      "version": null,
+      "url": "https://wix.github.io/Detox/",
+      "note": "Vaultwealth checkout lacked Detox configuration and an app-owned target."
+    },
+    {
+      "id": "appium",
+      "name": "Appium",
+      "category": "iOS and mobile",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "url": "https://appium.io/",
+      "note": "Cross-platform W3C WebDriver automation; iOS uses the XCUITest driver."
+    },
+    {
+      "id": "appium-mcp",
+      "name": "Appium MCP",
+      "category": "iOS and mobile",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "url": "https://github.com/appium/appium-mcp",
+      "note": "Official MCP layer for Appium mobile automation."
+    },
+    {
+      "id": "patrol",
+      "name": "Patrol",
+      "category": "iOS and mobile",
+      "evidence": "researched-only",
+      "cost": "Free core / optional cloud",
+      "version": null,
+      "url": "https://patrol.leancode.co/",
+      "note": "Flutter-focused native integration testing."
+    },
+    {
+      "id": "earlgrey",
+      "name": "EarlGrey 2",
+      "category": "iOS and mobile",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "url": "https://github.com/google/EarlGrey",
+      "note": "Google iOS UI automation integrated with XCUITest."
+    },
+    {
+      "id": "idb",
+      "name": "idb",
+      "category": "iOS and mobile",
+      "evidence": "screened",
+      "cost": "Free / local",
+      "version": "fb-idb 1.1.7",
+      "url": "https://github.com/facebook/idb",
+      "note": "Isolated runtime found the simulator and returned its accessibility tree through ios-simulator-mcp; the broken user-level install was not modified."
+    },
+    {
+      "id": "idb-mcp",
+      "name": "idb-mcp",
+      "category": "iOS and mobile",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "url": "https://github.com/askui/idb-mcp",
+      "note": "MCP wrapper around idb for iOS Simulator control."
+    },
+    {
+      "id": "applesimutils",
+      "name": "AppleSimulatorUtils",
+      "category": "iOS and mobile",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "disposition": "Simulator utility, not journey runner",
+      "url": "https://github.com/wix/AppleSimulatorUtils",
+      "note": "Simulator state and permission utility; upstream deprecates overlapping operations in favor of simctl."
+    },
+    {
+      "id": "simpilot",
+      "name": "SimPilot",
+      "category": "iOS and mobile",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "disposition": "macOS simulator agent",
+      "url": "https://github.com/ygrec-app/SimPilot",
+      "note": "Agent-oriented iOS Simulator automation; requires a separate product-state verifier for defect claims."
+    },
+    {
+      "id": "wand",
+      "name": "Wand",
+      "category": "iOS and mobile",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "disposition": "Private-framework risk",
+      "url": "https://github.com/hanfann/wand",
+      "note": "Fast simulator automation built around private Apple frameworks; unsuitable as the default long-lived baseline without accepting that maintenance risk."
+    },
+    {
+      "id": "ios-simulator-mcp",
+      "name": "ios-simulator-mcp",
+      "category": "iOS and mobile",
+      "evidence": "screened",
+      "cost": "Free / local",
+      "version": "2.1.0",
+      "url": "https://github.com/joshuayoes/ios-simulator-mcp",
+      "note": "Started with 17 tools, found the dedicated simulator and returned a 6,940-character accessibility description using isolated idb."
+    },
+    {
+      "id": "ios-simulator-mcp-yaelg",
+      "name": "ios-simulator-mcp by Yael Gilboa",
+      "category": "iOS and mobile",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "disposition": "Alternative MCP fork",
+      "url": "https://github.com/Tahul/ios-simulator-mcp",
+      "note": "Alternative simulator MCP focused on screenshots, taps and accessibility; overlaps XcodeBuildMCP and AXe."
+    },
+    {
+      "id": "iosef",
+      "name": "iosef",
+      "category": "iOS and mobile",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "disposition": "Accessibility automation CLI",
+      "url": "https://github.com/riwsky/iosef",
+      "note": "Accessibility-first iOS Simulator control; a candidate for a future native screen, but no claim is made beyond interface fit."
+    },
+    {
+      "id": "mobile-mcp",
+      "name": "Mobile MCP",
+      "category": "iOS and mobile",
+      "evidence": "screened",
+      "cost": "Free / local",
+      "version": "1.0.4 / device agent 0.0.26",
+      "url": "https://github.com/mobile-next/mobile-mcp",
+      "note": "Started with 32 tools, found the simulator and listed 27 elements; its temporary device agent was removed after the probe."
+    },
+    {
+      "id": "auto-mobile",
+      "name": "AutoMobile",
+      "category": "iOS and mobile",
+      "evidence": "researched-only",
+      "cost": "Free / model-dependent",
+      "version": null,
+      "disposition": "Mobile exploration agent",
+      "url": "https://github.com/kaeawc/auto-mobile",
+      "note": "Agentic mobile exploration project; model cost and nondeterminism require separate accounting."
+    },
+    {
+      "id": "mobilewright",
+      "name": "Mobilewright",
+      "category": "iOS and mobile",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": "0.0.57 package inspected",
+      "disposition": "Early mobile automation project",
+      "url": "https://github.com/mobile-next/mobilewright",
+      "note": "Installed transitively with Mobile MCP; early project, so baseline maturity and API stability remain boundaries."
+    },
+
+    {
+      "id": "bonsai-27b",
+      "name": "Ternary Bonsai 2 27B PTQ1_0",
+      "category": "Local model helpers",
+      "evidence": "screened",
+      "cost": "Free / local",
+      "version": "revision 6ed5e12bf84b7a63069882c91dd9e9218647d17b",
+      "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2-27B-gguf",
+      "note": "Text helper passed 25/25; no-thinking median 1.082 s at 7.305 GB sampled peak RSS."
+    },
+    {
+      "id": "prism-llamacpp",
+      "name": "Prism llama.cpp",
+      "category": "Local model helpers",
+      "evidence": "screened",
+      "cost": "Free / local",
+      "version": "0.2.0-dev build 10709 @ 9a9394a895b96003ca842a6041cb28ac49a108f7",
+      "url": "https://github.com/PrismML-Eng/llama.cpp",
+      "note": "Pinned runtime used to serve Bonsai locally."
+    },
+    {
+      "id": "ollama",
+      "name": "Ollama",
+      "category": "Local model helpers",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "url": "https://github.com/ollama/ollama",
+      "note": "Convenient local model runtime; not benchmarked in this experiment."
+    },
+    {
+      "id": "mlx-lm",
+      "name": "MLX LM",
+      "category": "Local model helpers",
+      "evidence": "researched-only",
+      "cost": "Free / local",
+      "version": null,
+      "url": "https://github.com/ml-explore/mlx-lm",
+      "note": "Apple-silicon local model runtime; not benchmarked here."
+    }
+  ]
+}

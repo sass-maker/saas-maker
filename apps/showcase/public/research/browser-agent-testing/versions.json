@@ -1,0 +1,74 @@
+{
+  "last_experiment": "2026-09-20",
+  "machine": "Apple M5 Pro, 48 GiB RAM, Darwin 27.0.0",
+  "browser": "Dedicated Chromium at 1280x800",
+  "simulator": "iPhone 16 Pro, iOS 26.5",
+  "pins": [
+    { "name": "Playwright", "version": "1.62.1", "source": "experiment package lock" },
+    { "name": "agent-browser", "version": "0.38.1", "source": "experiment package lock" },
+    { "name": "@playwright/cli", "version": "0.1.21", "source": "experiment package lock" },
+    { "name": "Puppeteer Core", "version": "24.43.1", "source": "expanded screen package lock" },
+    { "name": "Selenium WebDriver", "version": "4.49.0", "source": "expanded screen package lock" },
+    {
+      "name": "ChromeDriver",
+      "version": "151.0.5 / 151.0.7922.77",
+      "source": "expanded screen package lock and binary"
+    },
+    { "name": "WebdriverIO", "version": "9.31.9", "source": "expanded screen package lock" },
+    { "name": "Nightwatch", "version": "3.16.0", "source": "expanded screen package lock" },
+    { "name": "Taiko", "version": "1.5.0", "source": "expanded screen package lock" },
+    { "name": "TestCafe", "version": "3.7.6", "source": "bounded setup attempt" },
+    {
+      "name": "Cypress",
+      "version": "16.1.0 package; application binary absent",
+      "source": "bounded setup probe"
+    },
+    { "name": "Stagehand", "version": "3.4.0", "source": "experiment package lock" },
+    { "name": "Browser Use", "version": "0.13.10", "source": "isolated Python environment" },
+    { "name": "chrome-devtools-mcp", "version": "1.9.0", "source": "experiment package lock" },
+    {
+      "name": "Jev Ultrafast",
+      "version": "0.1.0 @ 1231850a0bf1a0c0341fe408ef1668dbbfdfac46",
+      "source": "isolated source checkout"
+    },
+    { "name": "AXe", "version": "1.8.0", "source": "pinned release archive" },
+    { "name": "Maestro", "version": "2.6.1, Java 21", "source": "installed CLI" },
+    { "name": "XcodeBuildMCP", "version": "2.7.0", "source": "installed CLI" },
+    {
+      "name": "ios-simulator-mcp",
+      "version": "2.1.0",
+      "source": "expanded native readiness screen"
+    },
+    {
+      "name": "Mobile MCP",
+      "version": "1.0.4; device agent 0.0.26",
+      "source": "expanded native readiness screen"
+    },
+    { "name": "fb-idb", "version": "1.1.7", "source": "isolated experiment virtual environment" },
+    { "name": "Chromium", "version": "151.0.7922.34", "source": "dedicated experiment browser" },
+    {
+      "name": "Codex",
+      "version": "0.155.1, gpt-6-astra, medium reasoning",
+      "source": "agent run metadata"
+    },
+    {
+      "name": "Ternary Bonsai 2 27B PTQ1_0",
+      "version": "revision 6ed5e12bf84b7a63069882c91dd9e9218647d17b, SHA-256 53107f530aa52eb00912263ab1ee29bd199261c87cd7b4ad4ca1318c1fe33ee3",
+      "source": "pinned model artifact"
+    },
+    {
+      "name": "Prism llama.cpp",
+      "version": "0.2.0-dev build 10709 @ 9a9394a895b96003ca842a6041cb28ac49a108f7, archive SHA-256 f9cdf245fb7b832f1996dd776b321d4ae1f23b6d88c380100f636742c3a980ff",
+      "source": "pinned runtime artifact"
+    },
+    { "name": "Node.js app/build", "version": "24.21.0", "source": "experiment environment" },
+    { "name": "npm", "version": "11.19.1", "source": "experiment environment" },
+    {
+      "name": "Node.js controller",
+      "version": "26.9.0",
+      "source": "initial measurement controller"
+    },
+    { "name": "zod", "version": "3.25.76", "source": "experiment package lock" },
+    { "name": "Wrangler", "version": "4.135.0", "source": "site package lock" }
+  ]
+}

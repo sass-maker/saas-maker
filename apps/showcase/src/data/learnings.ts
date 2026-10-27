@@ -1,3 +1,4 @@
+import browserAgentTestingMarkdown from './articles/browser-agent-testing.md?raw';
 import launchSpreadsheetMarkdown from './articles/a-structured-alternative-to-a-product-launch-spreadsheet.md?raw';
 import dataQualityChecksMarkdown from './articles/data-quality-checks-for-a-launch-directory-catalog.md?raw';
 import freeVsPaidDirectoriesMarkdown from './articles/free-vs-paid-product-directories-how-to-decide.md?raw';
@@ -12,6 +13,18 @@ import submissionSpamMarkdown from './articles/why-launch-tracking-should-not-be
 import capabilitiesLearningMarkdown from './articles/skills-should-declare-capabilities-not-model-names.md?raw';
 
 export const LEARNINGS = [
+  {
+    slug: 'browser-agent-testing',
+    title: 'Browser agent testing: measure verified feedback, not fast clicks',
+    description:
+      'What a completed web and iOS experiment found about saved tests, adaptive agents and website-to-MCP tools, with independent verification and retained evidence.',
+    publishedAt: '2026-10-27',
+    publishedLabel: 'October 27, 2026',
+    readingTime: '8 min read',
+    author: 'Sarthak Agrawal',
+    href: '/learnings/browser-agent-testing',
+    markdown: browserAgentTestingMarkdown,
+  },
   {
     slug: 'a-structured-alternative-to-a-product-launch-spreadsheet',
     title: 'A structured alternative to a product-launch spreadsheet',
