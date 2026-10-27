@@ -36,20 +36,6 @@
       "md": "https://chatgpt.significanthobbies.com/changelog.md",
       "kind": "static",
       "description": "Verified product releases"
-    },
-    {
-      "id": "agent-guidance",
-      "url": "https://chatgpt.significanthobbies.com/agents.md",
-      "md": "https://chatgpt.significanthobbies.com/agents.md",
-      "kind": "static",
-      "description": "When to use Memory Map without crossing its browser-local privacy boundary"
-    },
-    {
-      "id": "commercial-state",
-      "url": "https://chatgpt.significanthobbies.com/pricing.md",
-      "md": "https://chatgpt.significanthobbies.com/pricing.md",
-      "kind": "static",
-      "description": "Current account, checkout, and pricing boundary"
     }
   ],
   "auth": {

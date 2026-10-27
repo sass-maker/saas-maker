@@ -49,6 +49,7 @@ import {
   loadCanonicalIdentities,
 } from '../../../lib/entity-name-agreement.mjs';
 import { gradeHeadParity } from '../../../lib/head-parity.mjs';
+import { summarizeCatalogIntegrity } from '../../../lib/catalog-integrity.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // scripts → agent-ready → skills → tooling → saas-maker → fleet root
@@ -934,20 +935,12 @@ async function gradeCatalogIntegrity(
     }
     return { id, valid: true };
   });
-  const valid = results.filter((result) => result.valid).length;
-  const integrityPercent = percentage(valid, configured);
   const truncated = configured > bounded.length;
-  const failures = results
-    .filter((result) => !result.valid)
-    .slice(0, 20)
-    .map(({ id, reason }) => ({ id, reason }));
-  return {
-    status: valid === configured && !truncated ? 'pass' : 'fail',
-    detail:
-      `${valid}/${configured} catalog surfaces valid (${integrityPercent}%)` +
-      (truncated ? `; capped at ${MAX_CATALOG_SURFACES}` : ''),
-    data: { valid, configured, integrityPercent, failures },
-  };
+  const summary = summarizeCatalogIntegrity(results, configured);
+  if (truncated) {
+    summary.detail += `; capped at ${MAX_CATALOG_SURFACES}`;
+  }
+  return summary;
 }
 
 function resolveCatalogSurfaceTargets(origin, surface, sitemapUrls) {

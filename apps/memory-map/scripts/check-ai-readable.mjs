@@ -1,5 +1,5 @@
 import { test } from "node:test";
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import assert from "node:assert/strict";
 import { fileURLToPath } from "node:url";
@@ -55,6 +55,18 @@ test("built public HTML and Markdown stay in sync", () => {
     paths,
     "Sitemap/registry mismatch"
   );
+  const sitemapPaths = new Set(urls.map((url) => new URL(url).pathname));
+  const apiAi = JSON.parse(readFileSync(join(root, "api-ai.json"), "utf8"));
+  for (const surface of apiAi.surfaces) {
+    const path = new URL(surface.url).pathname;
+    assert.ok(sitemapPaths.has(path), `Catalog surface missing from sitemap: ${path}`);
+  }
+  for (const key of ["agentGuidance", "commercialState"]) {
+    const advertised = apiAi[key];
+    assert.equal(typeof advertised, "string", `Missing api-ai ${key}`);
+    const path = new URL(advertised).pathname.slice(1);
+    assert.ok(existsSync(join(root, path)), `Missing advertised file: ${path}`);
+  }
   const full = readFileSync(join(root, "llms-full.txt"), "utf8");
   assert.ok(full.length < 500000, "Full export exceeds budget");
   assert.match(full, /<!-- source: https:\/\/chatgpt.significanthobbies.com\//);
