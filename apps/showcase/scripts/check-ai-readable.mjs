@@ -11,16 +11,25 @@ test('built public HTML and Markdown stay in sync', () => {
   const catalog = JSON.parse(readFileSync(join(root, 'api/md/_catalog'), 'utf8'));
   const paths = new Set(catalog.map((route) => route.path));
   const sourcePublic = fileURLToPath(new URL('../public/', import.meta.url));
-  const preserved = new Set(JSON.parse(readFileSync(new URL('../src/data/preservedMarkdown.json', import.meta.url), 'utf8')));
+  const preserved = new Set(
+    JSON.parse(readFileSync(new URL('../src/data/preservedMarkdown.json', import.meta.url), 'utf8'))
+  );
   const registeredMarkdown = new Set(catalog.map((route) => new URL(route.md).pathname));
   function checkAuthoredMarkdown(dir) {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
       const file = join(dir, entry.name);
-      if (entry.isDirectory()) { checkAuthoredMarkdown(file); continue; }
+      if (entry.isDirectory()) {
+        checkAuthoredMarkdown(file);
+        continue;
+      }
       if (!entry.name.endsWith('.md')) continue;
       const path = '/' + relative(sourcePublic, file).replaceAll('\\', '/');
-      const nativeDocument = /^\/(?:auth|skill|SKILL|agents|AGENTS)\.md$/.test(path) || path.startsWith('/.well-known/');
-      assert.ok(nativeDocument || preserved.has(path) || registeredMarkdown.has(path), `Authored Markdown needs registration or preservation: ${path}`);
+      const nativeDocument =
+        /^\/(?:auth|skill|SKILL|agents|AGENTS)\.md$/.test(path) || path.startsWith('/.well-known/');
+      assert.ok(
+        nativeDocument || preserved.has(path) || registeredMarkdown.has(path),
+        `Authored Markdown needs registration or preservation: ${path}`
+      );
     }
   }
   checkAuthoredMarkdown(sourcePublic);

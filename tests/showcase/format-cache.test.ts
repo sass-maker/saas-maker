@@ -31,7 +31,9 @@ function context(
       return Promise.resolve(new Response(generation));
     }
     if (new URL(input.url).pathname === '/api/md/_identity') {
-      return Promise.resolve(Response.json({ name: 'SaaS Maker', url: site, summary: 'Public studio' }));
+      return Promise.resolve(
+        Response.json({ name: 'SaaS Maker', url: site, summary: 'Public studio' })
+      );
     }
     if (new URL(input.url).pathname === '/api/md/_catalog') {
       return Promise.resolve(
