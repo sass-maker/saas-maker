@@ -6,7 +6,7 @@ import { join, dirname } from 'node:path';
 import { spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { AgentWorkspaces } from '../lib/agent-workspaces.mjs';
+import { AgentWorkspaces, diskBytes } from '../lib/agent-workspaces.mjs';
 import { coordinatedRetiredBytes } from '../lib/disk-scan-coordination.mjs';
 
 const pause = (ms) => new Promise((done) => setTimeout(done, ms));
@@ -71,9 +71,14 @@ if (path.includes('/retired/tree-')) {
   `);
   const env = { ...process.env, ...(blockPublication ? { NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ''} --import=${preload}` } : {}), PATH: `${bin}:${process.env.PATH}`, SCAN_LEDGER: ledger, SCAN_FAILURE: join(base, 'failure') };
   const events = () => existsSync(ledger) ? readFileSync(ledger, 'utf8').trim().split('\n').filter(Boolean).map(JSON.parse) : [];
-  function caller({ stateRoot = root, sameProcess = false, lockedMarker, validate = false } = {}) {
+  function caller({ stateRoot = root, sameProcess = false, lockedMarker, clockOffset, validate = false } = {}) {
     const child = spawn(process.execPath, ['--input-type=module', '-e', `
       import { AgentWorkspaces } from ${JSON.stringify(library)};
+      ${clockOffset ? `
+        const { readFileSync } = await import('node:fs');
+        const now = Date.now.bind(Date);
+        Date.now = () => now() + Number(readFileSync(${JSON.stringify(clockOffset)}, 'utf8'));
+      ` : ''}
       const manager = new AgentWorkspaces({ root: ${JSON.stringify(stateRoot)} });
       ${lockedMarker ? `
         const locked = manager.locked.bind(manager);
@@ -292,6 +297,36 @@ test('a caller after retirement waits for an older active scan and measures the 
   let active = 0; let peak = 0;
   for (const event of f.events()) { active += event.event === 'start' ? 1 : -1; peak = Math.max(peak, active); }
   assert.ok(peak <= 4, `replacement pool cannot overlap the original pool; observed ${peak}`);
+});
+
+test('waiting for an older generation leaves a full timeout budget for the fresh scan', async (t) => {
+  const f = fixture(t, { blockPublication: true });
+  const first = f.caller();
+  await until(() => existsSync(f.publicationReady));
+  const oldToken = f.state()[0].token;
+  const added = join(f.root, 'retired', 'tree-queued'); mkdirSync(added);
+  writeFileSync(join(added, 'data'), Buffer.alloc(1024 * 1024));
+  const expectedBytes = diskBytes(join(f.root, 'worktrees')) + diskBytes(join(f.root, 'retired'));
+  const lockedMarker = join(f.root, 'queued-caller-locked');
+  const clockOffset = join(f.root, 'caller-clock-offset'); writeFileSync(clockOffset, '0');
+  const late = f.caller({ lockedMarker, clockOffset, validate: true });
+  await until(() => existsSync(lockedMarker));
+  const earliestJoin = Date.now() + 150_000;
+  writeFileSync(clockOffset, '150000');
+  writeFileSync(f.publicationGo, 'go');
+  await until(() => f.state().some((row) => row.token !== oldToken && row.state === 'active'));
+  const freshHolder = f.state().find((row) => row.token !== oldToken).holders[0];
+  writeFileSync(clockOffset, '210000');
+  const result = await late.result;
+  assert.equal(result.code, 0, result.stderr);
+  assert.ok(Date.parse(freshHolder.startedAt) >= earliestJoin, 'terminal holder expiry starts when the caller joins its fresh generation');
+  assert.equal(JSON.parse(result.stdout).total, expectedBytes, 'fresh generation measures every retired tree after the queued wait');
+  assert.equal((await first.result).code, 0);
+  assert.equal(f.events().filter((event) => event.event === 'start').length, 17, 'queued caller starts exactly one fresh complete traversal');
+  let active = 0; let peak = 0;
+  for (const event of f.events()) { active += event.event === 'start' ? 1 : -1; peak = Math.max(peak, active); }
+  assert.ok(peak <= 4, `queued and fresh pools never overlap; observed ${peak}`);
+  assert.deepEqual(f.state(), [], 'both callers release all generation metadata');
 });
 
 test('expired terminal holders cannot exhaust generation slots through reused live PIDs', async (t) => {
