@@ -1,10 +1,10 @@
 ---
 import { publicPages } from "../data/public-identity";
-import { indexCopy as publicCopy, chatgptExportSteps, privacyContract } from "../data/public-content";
+import { indexCopy, chatgptExportSteps, privacyContract } from "../data/public-content";
 import "../styles/global.css";
 import StudioFooter from "../components/studio-footer.astro";
 
-const { title, description } = publicPages["index"];
+const { title, description } = publicPages.index;
 const siteUrl = "https://chatgpt.significanthobbies.com/";
 const socialImage =
   "https://raw.githubusercontent.com/Significant-Hobbies/chatgpt-memory-insights/main/artifacts/design/after-1440.png";
@@ -122,9 +122,9 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
       <main id="main">
         <section id="import-view" class="import-view" aria-labelledby="import-heading">
           <div class="import-copy">
-            <p class="map-key">{publicCopy[0].text}</p>
-            <h1 id="import-heading">{publicCopy[1].text}</h1>
-            <p class="lede">{publicCopy[2].text}</p>
+            <p class="map-key">{indexCopy[0].text}</p>
+            <h1 id="import-heading">{indexCopy[1].text}</h1>
+            <p class="lede">{indexCopy[2].text}</p>
             <a class="product-tour-link" href="/about/" data-app-health-event="capabilities_opened"
               >See all 51 things Memory Map can find →</a
             >
@@ -133,18 +133,18 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
           <details class="export-guide">
             <summary>
               <span>Need the ZIP?</span>
-              <strong>{publicCopy[3].text}</strong>
+              <strong>{indexCopy[3].text}</strong>
             </summary>
             <div class="export-guide-body">
               <ol>
                 {chatgptExportSteps.map((parts) => (
                   <li>{parts.map((part) => part.strong ? <strong>{part.text}</strong> : part.text)}</li>
                 ))}
-                <li>{publicCopy[8].text}</li>
+                <li>{indexCopy[8].text}</li>
               </ol>
               <div class="export-guide-notes">
-                <p>{publicCopy[9].text}</p>
-                <p>{publicCopy[10].text}</p>
+                <p>{indexCopy[9].text}</p>
+                <p>{indexCopy[10].text}</p>
               </div>
               <nav class="export-guide-links" aria-label="ChatGPT export resources">
                 <a href="https://chatgpt.com/" target="_blank" rel="noreferrer">Open ChatGPT ↗</a>
@@ -163,7 +163,7 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
           <details class="export-guide">
             <summary>
               <span>Use Claude Code or Codex?</span>
-              <strong>{publicCopy[11].text}</strong>
+              <strong>{indexCopy[11].text}</strong>
             </summary>
             <div class="export-guide-body">
               <ol>
@@ -185,8 +185,8 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
                 </li>
               </ol>
               <div class="export-guide-notes">
-                <p>{publicCopy[12].text}</p>
-                <p>{publicCopy[13].text}</p>
+                <p>{indexCopy[12].text}</p>
+                <p>{indexCopy[13].text}</p>
                 <p>
                   The installer downloads one small binary and checks it against a published
                   checksum. memory-pack itself then runs entirely on your machine, makes no
@@ -219,21 +219,21 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
             <div class="model-profile-options">
               <label>
                 <input type="radio" name="model-profile" value="auto" checked />
-                <span><strong>{publicCopy[14].text}</strong><small>{publicCopy[15].text}</small></span>
+                <span><strong>{indexCopy[14].text}</strong><small>{indexCopy[15].text}</small></span>
               </label>
               <label>
                 <input type="radio" name="model-profile" value="compact" />
-                <span><strong>{publicCopy[16].text}</strong><small>{publicCopy[17].text}</small></span>
+                <span><strong>{indexCopy[16].text}</strong><small>{indexCopy[17].text}</small></span>
               </label>
               <label>
                 <input type="radio" name="model-profile" value="multilingual" />
-                <span><strong>{publicCopy[18].text}</strong><small>{publicCopy[19].text}</small></span>
+                <span><strong>{indexCopy[18].text}</strong><small>{indexCopy[19].text}</small></span>
               </label>
             </div>
             <div class="confidence-control">
               <div>
-                <strong>{publicCopy[20].text}</strong>
-                <small>{publicCopy[21].text}</small>
+                <strong>{indexCopy[20].text}</strong>
+                <small>{indexCopy[21].text}</small>
               </div>
               <div class="confidence-presets" aria-label="Evidence confidence presets">
                 <button type="button" data-confidence="45">Exploratory</button>
@@ -257,29 +257,29 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
                 data-app-health-event="archive_import_started"
               />
               <span class="file-mark" aria-hidden="true">.ZIP</span>
-              <strong>{publicCopy[22].text}</strong>
+              <strong>{indexCopy[22].text}</strong>
               <span>or drop a ChatGPT export or memory-pack ZIP here</span>
-              <small>{publicCopy[23].text}</small>
+              <small>{indexCopy[23].text}</small>
             </label>
 
             <ol class="route-explainer" aria-label="Analysis stages">
               <li>
                 <span>1</span>
-                <div><strong>{publicCopy[24].text}</strong><small>{publicCopy[25].text}</small></div>
+                <div><strong>{indexCopy[24].text}</strong><small>{indexCopy[25].text}</small></div>
               </li>
               <li>
                 <span>2</span>
-                <div><strong>{publicCopy[26].text}</strong><small>{publicCopy[27].text}</small></div>
+                <div><strong>{indexCopy[26].text}</strong><small>{indexCopy[27].text}</small></div>
               </li>
               <li>
                 <span>3</span>
-                <div><strong>{publicCopy[28].text}</strong><small>{publicCopy[29].text}</small></div>
+                <div><strong>{indexCopy[28].text}</strong><small>{indexCopy[29].text}</small></div>
               </li>
             </ol>
           </div>
 
           <div class="privacy-contract">
-            <strong>{publicCopy[30].text}</strong>
+            <strong>{indexCopy[30].text}</strong>
             <span>{privacyContract}</span>
           </div>
         </section>

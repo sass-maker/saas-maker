@@ -1,13 +1,13 @@
 ---
 import { publicPages } from "../data/public-identity";
-import { aboutCopy as publicCopy, aboutFacts } from "../data/public-content";
+import { aboutCopy, aboutFacts } from "../data/public-content";
 import { capabilityRoutes } from "../data/public-content";
 import "../styles/global.css";
 import "../styles/about.css";
 import PublicClarity from "../components/public-clarity.astro";
 import StudioFooter from "../components/studio-footer.astro";
 
-const { title, description } = publicPages["about"];
+const { title, description } = publicPages.about;
 const canonical = "https://chatgpt.significanthobbies.com/about/";
 const socialImage =
   "https://raw.githubusercontent.com/Significant-Hobbies/chatgpt-memory-insights/main/artifacts/design/after-1440.png";
@@ -97,9 +97,9 @@ const totalCapabilities = capabilityRoutes.reduce((sum, route) => sum + route.st
       -->
       <section class="about-hero" aria-labelledby="about-heading">
         <div class="about-hero-copy">
-          <p class="map-key">{publicCopy[0].text}</p>
-          <h1 id="about-heading">{publicCopy[1].text}</h1>
-          <p class="about-lede">{publicCopy[2].text}</p>
+          <p class="map-key">{aboutCopy[0].text}</p>
+          <h1 id="about-heading">{aboutCopy[1].text}</h1>
+          <p class="about-lede">{aboutCopy[2].text}</p>
           <a class="about-primary-action" href="/">Analyze my ChatGPT ZIP</a>
           <p class="about-hero-proof">
             <strong>{aboutFacts[0].value}</strong> {aboutFacts[0].label} <span aria-hidden="true">·</span>
@@ -112,7 +112,7 @@ const totalCapabilities = capabilityRoutes.reduce((sum, route) => sum + route.st
         <figure class="about-map-preview">
           <figcaption>
             <span>Illustrative preview</span>
-            <strong>{publicCopy[7].text}</strong>
+            <strong>{aboutCopy[7].text}</strong>
           </figcaption>
           <svg viewBox="0 0 760 570" aria-hidden="true">
             <g class="preview-grid">
@@ -141,20 +141,20 @@ const totalCapabilities = capabilityRoutes.reduce((sum, route) => sum + route.st
             </g>
           </svg>
           <div class="preview-label label-question">
-            <span>Repeated question</span><strong>{publicCopy[8].text}</strong>
+            <span>Repeated question</span><strong>{aboutCopy[8].text}</strong>
           </div>
           <div class="preview-label label-topic">
-            <span>Connected topic</span><strong>{publicCopy[9].text}</strong>
+            <span>Connected topic</span><strong>{aboutCopy[9].text}</strong>
           </div>
           <div class="preview-label label-memory">
-            <span>Memory updated</span><strong>{publicCopy[10].text}</strong>
+            <span>Memory updated</span><strong>{aboutCopy[10].text}</strong>
           </div>
           <div class="preview-label label-search">
-            <span>Search destination</span><strong>{publicCopy[11].text}</strong>
+            <span>Search destination</span><strong>{aboutCopy[11].text}</strong>
           </div>
           <div class="preview-interchange-label">
             <span>Evidence interchange</span>
-            <strong>{publicCopy[12].text}</strong>
+            <strong>{aboutCopy[12].text}</strong>
           </div>
         </figure>
 
@@ -172,12 +172,12 @@ const totalCapabilities = capabilityRoutes.reduce((sum, route) => sum + route.st
       </section>
 
       <section class="about-problem" aria-labelledby="problem-heading">
-        <p class="map-key">{publicCopy[13].text}</p>
+        <p class="map-key">{aboutCopy[13].text}</p>
         <div>
-          <h2 id="problem-heading">{publicCopy[14].text}</h2>
+          <h2 id="problem-heading">{aboutCopy[14].text}</h2>
           <div class="about-problem-copy">
-            <p>{publicCopy[15].text}</p>
-            <p>{publicCopy[16].text}</p>
+            <p>{aboutCopy[15].text}</p>
+            <p>{aboutCopy[16].text}</p>
           </div>
         </div>
       </section>
@@ -185,8 +185,8 @@ const totalCapabilities = capabilityRoutes.reduce((sum, route) => sum + route.st
       <section id="capabilities" class="capability-atlas" aria-labelledby="capability-heading">
         <header class="about-section-heading">
           <div>
-            <p class="map-key">{publicCopy[17].text}</p>
-            <h2 id="capability-heading">{publicCopy[18].text}</h2>
+            <p class="map-key">{aboutCopy[17].text}</p>
+            <h2 id="capability-heading">{aboutCopy[18].text}</h2>
           </div>
           <p>
             {totalCapabilities} shipped capabilities across five routes. These are current product
@@ -226,79 +226,79 @@ const totalCapabilities = capabilityRoutes.reduce((sum, route) => sum + route.st
       <section id="privacy" class="privacy-architecture" aria-labelledby="privacy-heading">
         <header class="about-section-heading">
           <div>
-            <p class="map-key">{publicCopy[19].text}</p>
-            <h2 id="privacy-heading">{publicCopy[20].text}</h2>
+            <p class="map-key">{aboutCopy[19].text}</p>
+            <h2 id="privacy-heading">{aboutCopy[20].text}</h2>
           </div>
-          <p>{publicCopy[21].text}</p>
+          <p>{aboutCopy[21].text}</p>
         </header>
 
         <ol class="privacy-route">
           <li>
             <span>1</span>
-            <strong>{publicCopy[22].text}</strong>
-            <p>{publicCopy[23].text}</p>
+            <strong>{aboutCopy[22].text}</strong>
+            <p>{aboutCopy[23].text}</p>
           </li>
           <li>
             <span>2</span>
-            <strong>{publicCopy[24].text}</strong>
-            <p>{publicCopy[25].text}</p>
+            <strong>{aboutCopy[24].text}</strong>
+            <p>{aboutCopy[25].text}</p>
           </li>
           <li>
             <span>3</span>
-            <strong>{publicCopy[26].text}</strong>
-            <p>{publicCopy[27].text}</p>
+            <strong>{aboutCopy[26].text}</strong>
+            <p>{aboutCopy[27].text}</p>
           </li>
           <li>
             <span>4</span>
-            <strong>{publicCopy[28].text}</strong>
-            <p>{publicCopy[29].text}</p>
+            <strong>{aboutCopy[28].text}</strong>
+            <p>{aboutCopy[29].text}</p>
           </li>
         </ol>
 
         <div class="privacy-boundaries">
           <div>
             <span class="boundary-yes">Stays here</span>
-            <p>{publicCopy[30].text}</p>
+            <p>{aboutCopy[30].text}</p>
           </div>
           <div>
             <span class="boundary-out">Comes in</span>
-            <p>{publicCopy[31].text}</p>
+            <p>{aboutCopy[31].text}</p>
           </div>
           <div>
             <span class="boundary-no">Does not exist</span>
-            <p>{publicCopy[32].text}</p>
+            <p>{aboutCopy[32].text}</p>
           </div>
           <div>
             <span class="boundary-out">Public page analytics</span>
-            <p>{publicCopy[33].text}</p>
+            <p>{aboutCopy[33].text}</p>
           </div>
         </div>
       </section>
 
       <section class="fit-board" aria-labelledby="fit-heading">
         <header>
-          <p class="map-key">{publicCopy[34].text}</p>
-          <h2 id="fit-heading">{publicCopy[35].text}</h2>
+          <p class="map-key">{aboutCopy[34].text}</p>
+          <h2 id="fit-heading">{aboutCopy[35].text}</h2>
         </header>
         <div class="fit-columns">
           <div>
-            <h3>{publicCopy[36].text}</h3>
+            <h3>{aboutCopy[36].text}</h3>
             <ul>
-              <li>{publicCopy[37].text}</li>
-              <li>{publicCopy[38].text}</li>
-              <li>{publicCopy[39].text}</li>
-              <li>{publicCopy[40].text}</li>
-              <li>{publicCopy[41].text}</li>
+              <li>{aboutCopy[37].text}</li>
+              <li>{aboutCopy[38].text}</li>
+              <li>{aboutCopy[39].text}</li>
+              <li>{aboutCopy[40].text}</li>
+              <li>{aboutCopy[41].text}</li>
             </ul>
           </div>
           <div>
-            <h3>{publicCopy[42].text}</h3>
+            <h3>{aboutCopy[42].text}</h3>
             <ul>
-              <li>{publicCopy[43].text}</li>
-              <li>{publicCopy[44].text}</li>
-              <li>{publicCopy[45].text}</li>
-              <li>{publicCopy[46].text}</li>
-              <li>{publicCopy[47].text}</li>
+              <li>{aboutCopy[43].text}</li>
+              <li>{aboutCopy[44].text}</li>
+              <li>{aboutCopy[45].text}</li>
+              <li>{aboutCopy[46].text}</li>
+              <li>{aboutCopy[47].text}</li>
             </ul>
           </div>
         </div>
@@ -306,32 +306,32 @@ const totalCapabilities = capabilityRoutes.reduce((sum, route) => sum + route.st
 
       <section id="export" class="about-export" aria-labelledby="export-heading">
         <div class="about-export-intro">
-          <p class="map-key">{publicCopy[48].text}</p>
-          <h2 id="export-heading">{publicCopy[49].text}</h2>
-          <p>{publicCopy[50].text}</p>
+          <p class="map-key">{aboutCopy[48].text}</p>
+          <h2 id="export-heading">{aboutCopy[49].text}</h2>
+          <p>{aboutCopy[50].text}</p>
         </div>
         <ol>
           <li>
             <span>1</span>
             <p>
               Sign in to ChatGPT, open your profile menu, and choose{" "}
-              <strong>{publicCopy[51].text}</strong>.
+              <strong>{aboutCopy[51].text}</strong>.
             </p>
           </li>
           <li>
             <span>2</span>
             <p>
-              Under <strong>{publicCopy[52].text}</strong>, choose <strong>{publicCopy[53].text}</strong>, then{" "}
-              <strong>{publicCopy[54].text}</strong>.
+              Under <strong>{aboutCopy[52].text}</strong>, choose <strong>{aboutCopy[53].text}</strong>, then{" "}
+              <strong>{aboutCopy[54].text}</strong>.
             </p>
           </li>
           <li>
             <span>3</span>
-            <p>{publicCopy[55].text}</p>
+            <p>{aboutCopy[55].text}</p>
           </li>
         </ol>
         <aside>
-          <p>{publicCopy[56].text}</p>
+          <p>{aboutCopy[56].text}</p>
           <nav aria-label="ChatGPT export resources">
             <a
               href="https://help.openai.com/en/articles/7260999-how-do-i-export-my-chatgpt-history-and-data"
@@ -347,11 +347,11 @@ const totalCapabilities = capabilityRoutes.reduce((sum, route) => sum + route.st
 
       <section class="about-final" aria-labelledby="final-heading">
         <div>
-          <p class="map-key">{publicCopy[57].text}</p>
-          <h2 id="final-heading">{publicCopy[58].text}</h2>
+          <p class="map-key">{aboutCopy[57].text}</p>
+          <h2 id="final-heading">{aboutCopy[58].text}</h2>
         </div>
         <a class="about-primary-action" href="/" data-app-health-event="analysis_opened">Analyze my ChatGPT ZIP</a>
-        <p>{publicCopy[59].text}</p>
+        <p>{aboutCopy[59].text}</p>
       </section>
     </main>
 

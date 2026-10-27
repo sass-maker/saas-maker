@@ -1,6 +1,6 @@
-import { handleMarkdown } from '../src/data/markdown-registry';
-import { wantsMarkdown } from '../../../tooling/lib/agent-surfaces/http.mjs';
-import { advertiseMarkdown } from '../../../tooling/lib/agent-surfaces/adapters/static-assets.mjs';
+import { handleMarkdown } from "../src/data/markdown-registry";
+import { wantsMarkdown } from "../../../tooling/lib/agent-surfaces/http.mjs";
+import { advertiseMarkdown } from "../../../tooling/lib/agent-surfaces/adapters/static-assets.mjs";
 /**
  * Cloudflare Pages middleware — agent-friendly surfaces for Memory Map.
  * Handles /openapi.json, JSON error responses for unknown /api/* paths,
@@ -154,18 +154,27 @@ export async function onRequest(context: {
   ) {
     const headers = new Headers(response.headers);
     const markdownPath =
-      path === "/" ? "/index.md" : path === "/about/" ? "/about.md" : path === "/used-by/" ? "/used-by.md" : "/changelog.md";
+      path === "/"
+        ? "/index.md"
+        : path === "/about/"
+          ? "/about.md"
+          : path === "/used-by/"
+            ? "/used-by.md"
+            : "/changelog.md";
     const existingVary = headers.get("vary");
     headers.set(
       "vary",
       existingVary ? `${existingVary}, Accept, Accept-Encoding` : "Accept, Accept-Encoding"
     );
     headers.set("link", discoveryLinks(markdownPath));
-    return advertiseMarkdown(new Response(response.body, {
-      status: response.status,
-      statusText: response.statusText,
-      headers,
-    }), ORIGIN);
+    return advertiseMarkdown(
+      new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers,
+      }),
+      ORIGIN
+    );
   }
 
   // Agent-friendly 404 for markdown-accepting clients.

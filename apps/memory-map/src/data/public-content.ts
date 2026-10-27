@@ -13,8 +13,7 @@ export const capabilityRoutes = [
       },
       {
         title: "Conversation depth",
-        detail:
-          "Median message depth plus short, medium, and deep conversation groups.",
+        detail: "Median message depth plus short, medium, and deep conversation groups.",
       },
       {
         title: "Activity rhythms",
@@ -23,8 +22,7 @@ export const capabilityRoutes = [
       },
       {
         title: "Recurring terms",
-        detail:
-          "Frequently used meaningful terms that can surface themes worth revisiting.",
+        detail: "Frequently used meaningful terms that can surface themes worth revisiting.",
       },
       {
         title: "Exact repeated questions",
@@ -116,8 +114,7 @@ export const capabilityRoutes = [
     stops: [
       {
         title: "Topic evolution",
-        detail:
-          "Monthly histories and local trend labels for semantic topic clusters.",
+        detail: "Monthly histories and local trend labels for semantic topic clusters.",
       },
       {
         title: "Question-domain evolution",
@@ -249,8 +246,7 @@ export const capabilityRoutes = [
       },
       {
         title: "Attachments stay unread",
-        detail:
-          "Binary attachments, chat.html, and unrelated export files are ignored.",
+        detail: "Binary attachments, chat.html, and unrelated export files are ignored.",
       },
       {
         title: "No archive upload",
@@ -367,383 +363,398 @@ export const surfaces = [
   },
 ];
 
-
 export const indexCopy = [
   {
-    "tag": "p",
-    "text": "Your history, made navigable"
+    tag: "p",
+    text: "Your history, made navigable",
   },
   {
-    "tag": "h1",
-    "text": "Find the questions, facts, and ideas you keep returning to."
+    tag: "h1",
+    text: "Find the questions, facts, and ideas you keep returning to.",
   },
   {
-    "tag": "p",
-    "text": "Choose your ChatGPT export. Memory Map reads its conversation files in this tab, then builds a searchable semantic graph with a browser-loaded embedding model."
+    tag: "p",
+    text: "Choose your ChatGPT export. Memory Map reads its conversation files in this tab, then builds a searchable semantic graph with a browser-loaded embedding model.",
   },
   {
-    "tag": "strong",
-    "text": "How to export your ChatGPT data"
+    tag: "strong",
+    text: "How to export your ChatGPT data",
   },
   {
-    "tag": "strong",
-    "text": "Settings → Data controls"
+    tag: "strong",
+    text: "Settings → Data controls",
   },
   {
-    "tag": "strong",
-    "text": "Export data"
+    tag: "strong",
+    text: "Export data",
   },
   {
-    "tag": "strong",
-    "text": "Export"
+    tag: "strong",
+    text: "Export",
   },
   {
-    "tag": "strong",
-    "text": "Confirm export"
+    tag: "strong",
+    text: "Confirm export",
   },
   {
-    "tag": "li",
-    "text": "Open the email or SMS from OpenAI, download the ZIP, and bring it here without unzipping it."
+    tag: "li",
+    text: "Open the email or SMS from OpenAI, download the ZIP, and bring it here without unzipping it.",
   },
   {
-    "tag": "p",
-    "text": "Exports can take up to 7 days. The download link expires 24 hours after it arrives."
+    tag: "p",
+    text: "Exports can take up to 7 days. The download link expires 24 hours after it arrives.",
   },
   {
-    "tag": "p",
-    "text": "Settings exports require a signed-in eligible account and are not available for ChatGPT Business or Enterprise workspaces."
+    tag: "p",
+    text: "Settings exports require a signed-in eligible account and are not available for ChatGPT Business or Enterprise workspaces.",
   },
   {
-    "tag": "strong",
-    "text": "How to pack your agent sessions"
+    tag: "strong",
+    text: "How to pack your agent sessions",
   },
   {
-    "tag": "p",
-    "text": "Your prompts and the assistant’s replies are packed. Tool calls, tool output, reasoning traces, and file contents are left behind, which is why an archive stays small enough to analyse in a browser tab."
+    tag: "p",
+    text: "Your prompts and the assistant’s replies are packed. Tool calls, tool output, reasoning traces, and file contents are left behind, which is why an archive stays small enough to analyse in a browser tab.",
   },
   {
-    "tag": "p",
-    "text": "Both CLIs prune old sessions, so memory-pack also reads the prompt history they keep outside their transcripts. Sessions they have already deleted are rebuilt from the prompts that survive."
+    tag: "p",
+    text: "Both CLIs prune old sessions, so memory-pack also reads the prompt history they keep outside their transcripts. Sessions they have already deleted are rebuilt from the prompts that survive.",
   },
   {
-    "tag": "strong",
-    "text": "Automatic"
+    tag: "strong",
+    text: "Automatic",
   },
   {
-    "tag": "small",
-    "text": "Selects from the writing systems used in your prompts."
+    tag: "small",
+    text: "Selects from the writing systems used in your prompts.",
   },
   {
-    "tag": "strong",
-    "text": "Compact English"
+    tag: "strong",
+    text: "Compact English",
   },
   {
-    "tag": "small",
-    "text": "Smaller download for English-first histories."
+    tag: "small",
+    text: "Smaller download for English-first histories.",
   },
   {
-    "tag": "strong",
-    "text": "Multilingual"
+    tag: "strong",
+    text: "Multilingual",
   },
   {
-    "tag": "small",
-    "text": "≈135 MB · meaning across many languages."
+    tag: "small",
+    text: "≈135 MB · meaning across many languages.",
   },
   {
-    "tag": "strong",
-    "text": "Evidence confidence"
+    tag: "strong",
+    text: "Evidence confidence",
   },
   {
-    "tag": "small",
-    "text": "Higher confidence shows fewer, stronger inferred connections."
+    tag: "small",
+    text: "Higher confidence shows fewer, stronger inferred connections.",
   },
   {
-    "tag": "strong",
-    "text": "Choose your ChatGPT export"
+    tag: "strong",
+    text: "Choose your ChatGPT export",
   },
   {
-    "tag": "small",
-    "text": "Conversation JSON is read. Attachments and chat.html are ignored."
+    tag: "small",
+    text: "Conversation JSON is read. Attachments and chat.html are ignored.",
   },
   {
-    "tag": "strong",
-    "text": "Parse"
+    tag: "strong",
+    text: "Parse",
   },
   {
-    "tag": "small",
-    "text": "Read split conversation files one at a time."
+    tag: "small",
+    text: "Read split conversation files one at a time.",
   },
   {
-    "tag": "strong",
-    "text": "Map"
+    tag: "strong",
+    text: "Map",
   },
   {
-    "tag": "small",
-    "text": "Embed bounded prompts and fact candidates."
+    tag: "small",
+    text: "Embed bounded prompts and fact candidates.",
   },
   {
-    "tag": "strong",
-    "text": "Explore"
+    tag: "strong",
+    text: "Explore",
   },
   {
-    "tag": "small",
-    "text": "Search, inspect repeats, and trace every result."
+    tag: "small",
+    text: "Search, inspect repeats, and trace every result.",
   },
   {
-    "tag": "strong",
-    "text": "Private by construction."
-  }
+    tag: "strong",
+    text: "Private by construction.",
+  },
 ];
-
 
 export const aboutCopy = [
   {
-    "tag": "p",
-    "text": "A private atlas of your ChatGPT history"
+    tag: "p",
+    text: "A private atlas of your ChatGPT history",
   },
   {
-    "tag": "h1",
-    "text": "Turn your ChatGPT history into usable memory."
+    tag: "h1",
+    text: "Turn your ChatGPT history into usable memory.",
   },
   {
-    "tag": "p",
-    "text": "Find the questions you repeat, facts you changed, themes you left behind, and ideas that connect across years of conversations. Your export is analyzed in this browser, then becomes a searchable map with evidence behind every suggestion."
+    tag: "p",
+    text: "Find the questions you repeat, facts you changed, themes you left behind, and ideas that connect across years of conversations. Your export is analyzed in this browser, then becomes a searchable map with evidence behind every suggestion.",
   },
   {
-    "tag": "strong",
-    "text": "10"
+    tag: "strong",
+    text: "10",
   },
   {
-    "tag": "strong",
-    "text": "4"
+    tag: "strong",
+    text: "4",
   },
   {
-    "tag": "strong",
-    "text": "2"
+    tag: "strong",
+    text: "2",
   },
   {
-    "tag": "strong",
-    "text": "0"
+    tag: "strong",
+    text: "0",
   },
   {
-    "tag": "strong",
-    "text": "One history. Several connected routes."
+    tag: "strong",
+    text: "One history. Several connected routes.",
   },
   {
-    "tag": "strong",
-    "text": "“How should I prioritize this?” × 7"
+    tag: "strong",
+    text: "“How should I prioritize this?” × 7",
   },
   {
-    "tag": "strong",
-    "text": "Product · planning"
+    tag: "strong",
+    text: "Product · planning",
   },
   {
-    "tag": "strong",
-    "text": "“I now prefer…”"
+    tag: "strong",
+    text: "“I now prefer…”",
   },
   {
-    "tag": "strong",
-    "text": "Decisions I postponed"
+    tag: "strong",
+    text: "Decisions I postponed",
   },
   {
-    "tag": "strong",
-    "text": "12 source conversations"
+    tag: "strong",
+    text: "12 source conversations",
   },
   {
-    "tag": "p",
-    "text": "Why this exists"
+    tag: "p",
+    text: "Why this exists",
   },
   {
-    "tag": "h2",
-    "text": "Your archive remembers more than any single chat can."
+    tag: "h2",
+    text: "Your archive remembers more than any single chat can.",
   },
   {
-    "tag": "p",
-    "text": "A long ChatGPT history contains decisions revisited under different wording, personal facts that later stopped being true, projects scattered across unrelated chats, and patterns that are almost impossible to see one conversation at a time."
+    tag: "p",
+    text: "A long ChatGPT history contains decisions revisited under different wording, personal facts that later stopped being true, projects scattered across unrelated chats, and patterns that are almost impossible to see one conversation at a time.",
   },
   {
-    "tag": "p",
-    "text": "Memory Map treats those conversations as evidence. It counts what can be counted exactly, uses local embeddings where meaning matters, and always keeps a route back to the sources."
+    tag: "p",
+    text: "Memory Map treats those conversations as evidence. It counts what can be counted exactly, uses local embeddings where meaning matters, and always keeps a route back to the sources.",
   },
   {
-    "tag": "p",
-    "text": "Complete capability atlas"
+    tag: "p",
+    text: "Complete capability atlas",
   },
   {
-    "tag": "h2",
-    "text": "Everything the map can show you."
+    tag: "h2",
+    text: "Everything the map can show you.",
   },
   {
-    "tag": "p",
-    "text": "The privacy architecture"
+    tag: "p",
+    text: "The privacy architecture",
   },
   {
-    "tag": "h2",
-    "text": "Your conversations never need an application server."
+    tag: "h2",
+    text: "Your conversations never need an application server.",
   },
   {
-    "tag": "p",
-    "text": "The website is static. The analysis pipeline lives in your tab and its Web Worker."
+    tag: "p",
+    text: "The website is static. The analysis pipeline lives in your tab and its Web Worker.",
   },
   {
-    "tag": "strong",
-    "text": "Your original ZIP"
+    tag: "strong",
+    text: "Your original ZIP",
   },
   {
-    "tag": "p",
-    "text": "You choose it from your device. It is not submitted through a web form."
+    tag: "p",
+    text: "You choose it from your device. It is not submitted through a web form.",
   },
   {
-    "tag": "strong",
-    "text": "Incremental browser parsing"
+    tag: "strong",
+    text: "Incremental browser parsing",
   },
   {
-    "tag": "p",
-    "text": "Conversation JSON chunks are read one at a time; attachments remain ignored."
+    tag: "p",
+    text: "Conversation JSON chunks are read one at a time; attachments remain ignored.",
   },
   {
-    "tag": "strong",
-    "text": "Local rules + embeddings"
+    tag: "strong",
+    text: "Local rules + embeddings",
   },
   {
-    "tag": "p",
-    "text": "Statistics run first. A pinned Hugging Face model file downloads separately, then embeds bounded text on your device."
+    tag: "p",
+    text: "Statistics run first. A pinned Hugging Face model file downloads separately, then embeds bounded text on your device.",
   },
   {
-    "tag": "strong",
-    "text": "Your report and search index"
+    tag: "strong",
+    text: "Your report and search index",
   },
   {
-    "tag": "p",
-    "text": "Nothing persists unless you explicitly save the derived memory to this browser."
+    tag: "p",
+    text: "Nothing persists unless you explicitly save the derived memory to this browser.",
   },
   {
-    "tag": "p",
-    "text": "Archive text, parsed prompts, fact candidates, embeddings, report, and search index."
+    tag: "p",
+    text: "Archive text, parsed prompts, fact candidates, embeddings, report, and search index.",
   },
   {
-    "tag": "p",
-    "text": "Pinned embedding-model files from Hugging Face. Your prompt text is not part of that request."
+    tag: "p",
+    text: "Pinned embedding-model files from Hugging Face. Your prompt text is not part of that request.",
   },
   {
-    "tag": "p",
-    "text": "Archive upload endpoint, Memory Map account, cross-device sync, or server-side analysis."
+    tag: "p",
+    text: "Archive upload endpoint, Memory Map account, cross-device sync, or server-side analysis.",
   },
   {
-    "tag": "p",
-    "text": "PostHog and Microsoft Clarity measure the public `/about` and `/changelog` pages. The private analysis route does not load Clarity, so archive text, reports, and search activity are excluded from session replay."
+    tag: "p",
+    text: "PostHog and Microsoft Clarity measure the public `/about` and `/changelog` pages. The private analysis route does not load Clarity, so archive text, reports, and search activity are excluded from session replay.",
   },
   {
-    "tag": "p",
-    "text": "Know before you import"
+    tag: "p",
+    text: "Know before you import",
   },
   {
-    "tag": "h2",
-    "text": "Built for reflection. Not diagnosis."
+    tag: "h2",
+    text: "Built for reflection. Not diagnosis.",
   },
   {
-    "tag": "h3",
-    "text": "Memory Map is a good fit if you want to…"
+    tag: "h3",
+    text: "Memory Map is a good fit if you want to…",
   },
   {
-    "tag": "li",
-    "text": "Find recurring questions and decisions across many chats."
+    tag: "li",
+    text: "Find recurring questions and decisions across many chats.",
   },
   {
-    "tag": "li",
-    "text": "Build a searchable index of your own prompts, topics, facts, and strands."
+    tag: "li",
+    text: "Build a searchable index of your own prompts, topics, facts, and strands.",
   },
   {
-    "tag": "li",
-    "text": "Review what you explicitly updated, rejected, or may have contradicted."
+    tag: "li",
+    text: "Review what you explicitly updated, rejected, or may have contradicted.",
   },
   {
-    "tag": "li",
-    "text": "See how interests and wording signals changed over time."
+    tag: "li",
+    text: "See how interests and wording signals changed over time.",
   },
   {
-    "tag": "li",
-    "text": "Keep the archive on your device and inspect the evidence behind suggestions."
+    tag: "li",
+    text: "Keep the archive on your device and inspect the evidence behind suggestions.",
   },
   {
-    "tag": "h3",
-    "text": "It is not currently the right tool if you need…"
+    tag: "h3",
+    text: "It is not currently the right tool if you need…",
   },
   {
-    "tag": "li",
-    "text": "Attachment, image, audio, or exported-memory-file analysis."
+    tag: "li",
+    text: "Attachment, image, audio, or exported-memory-file analysis.",
   },
   {
-    "tag": "li",
-    "text": "A generative biography, automatic life summary, or personality profile."
+    tag: "li",
+    text: "A generative biography, automatic life summary, or personality profile.",
   },
   {
-    "tag": "li",
-    "text": "Medical, mental-health, or emotional diagnosis."
+    tag: "li",
+    text: "Medical, mental-health, or emotional diagnosis.",
   },
   {
-    "tag": "li",
-    "text": "Verified truth—the fact ledger contains candidates from your wording."
+    tag: "li",
+    text: "Verified truth—the fact ledger contains candidates from your wording.",
   },
   {
-    "tag": "li",
-    "text": "Accounts, team collaboration, cross-device sync, or server backups."
+    tag: "li",
+    text: "Accounts, team collaboration, cross-device sync, or server backups.",
   },
   {
-    "tag": "p",
-    "text": "Your ticket in"
+    tag: "p",
+    text: "Your ticket in",
   },
   {
-    "tag": "h2",
-    "text": "Download the ZIP directly from ChatGPT."
+    tag: "h2",
+    text: "Download the ZIP directly from ChatGPT.",
   },
   {
-    "tag": "p",
-    "text": "Keep it zipped. Memory Map knows how to find split conversation files and ignores the binary attachments."
+    tag: "p",
+    text: "Keep it zipped. Memory Map knows how to find split conversation files and ignores the binary attachments.",
   },
   {
-    "tag": "strong",
-    "text": "Settings → Data controls"
+    tag: "strong",
+    text: "Settings → Data controls",
   },
   {
-    "tag": "strong",
-    "text": "Export data"
+    tag: "strong",
+    text: "Export data",
   },
   {
-    "tag": "strong",
-    "text": "Export"
+    tag: "strong",
+    text: "Export",
   },
   {
-    "tag": "strong",
-    "text": "Confirm export"
+    tag: "strong",
+    text: "Confirm export",
   },
   {
-    "tag": "p",
-    "text": "Open the email or SMS from OpenAI, download the ZIP, and return here without unzipping it."
+    tag: "p",
+    text: "Open the email or SMS from OpenAI, download the ZIP, and return here without unzipping it.",
   },
   {
-    "tag": "p",
-    "text": "OpenAI says an export can take up to 7 days, and the download link expires 24 hours after it arrives. Settings export requires an eligible signed-in account and is not available for Business or Enterprise workspaces."
+    tag: "p",
+    text: "OpenAI says an export can take up to 7 days, and the download link expires 24 hours after it arrives. Settings export requires an eligible signed-in account and is not available for Business or Enterprise workspaces.",
   },
   {
-    "tag": "p",
-    "text": "Next stop"
+    tag: "p",
+    text: "Next stop",
   },
   {
-    "tag": "h2",
-    "text": "Your history is already there. Make it navigable."
+    tag: "h2",
+    text: "Your history is already there. Make it navigable.",
   },
   {
-    "tag": "p",
-    "text": "No account. No archive upload. Nothing saved unless you ask."
-  }
+    tag: "p",
+    text: "No account. No archive upload. Nothing saved unless you ask.",
+  },
 ];
-
 
 export const chatgptExportSteps: { text: string; strong?: boolean }[][] = [
-  [{ text: "Sign in to ChatGPT, open your profile menu, then choose " }, { text: indexCopy[4].text, strong: true }, { text: "." }],
-  [{ text: "Under " }, { text: indexCopy[5].text, strong: true }, { text: ", choose " }, { text: indexCopy[6].text, strong: true }, { text: ", then " }, { text: indexCopy[7].text, strong: true }, { text: "." }],
+  [
+    { text: "Sign in to ChatGPT, open your profile menu, then choose " },
+    { text: indexCopy[4].text, strong: true },
+    { text: "." },
+  ],
+  [
+    { text: "Under " },
+    { text: indexCopy[5].text, strong: true },
+    { text: ", choose " },
+    { text: indexCopy[6].text, strong: true },
+    { text: ", then " },
+    { text: indexCopy[7].text, strong: true },
+    { text: "." },
+  ],
 ];
-export const aboutFacts = ["question domains", "memory states", "model profiles", "archive uploads"].map((label, index) => ({ value: aboutCopy[index + 3].text, label }));
+export const aboutFacts = [
+  "question domains",
+  "memory states",
+  "model profiles",
+  "archive uploads",
+].map((label, index) => ({ value: aboutCopy[index + 3].text, label }));
 
-export const privacyContract = 'No archive upload endpoint, account, or default archive persistence. Model files download from Hugging Face; your conversation text is not sent with that request. Site-level page-view and performance telemetry is separate and receives no archive text or derived content.';
+export const privacyContract =
+  "No archive upload endpoint, account, or default archive persistence. Model files download from Hugging Face; your conversation text is not sent with that request. Site-level page-view and performance telemetry is separate and receives no archive text or derived content.";
