@@ -1,10 +1,10 @@
 ---
+import { publicPages } from "../data/public-identity";
+import { indexCopy as publicCopy } from "../data/public-content";
 import "../styles/global.css";
 import StudioFooter from "../components/studio-footer.astro";
 
-const title = "Memory Map — Explore your ChatGPT history";
-const description =
-  "Turn a ChatGPT export ZIP into a private topic graph, searchable memory, repeated-question report, and fact history in your browser.";
+const { title, description } = publicPages["index"];
 const siteUrl = "https://chatgpt.significanthobbies.com/";
 const socialImage =
   "https://raw.githubusercontent.com/Significant-Hobbies/chatgpt-memory-insights/main/artifacts/design/after-1440.png";
@@ -49,6 +49,8 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    <meta name="ai-summary" content={description} />
+    <link rel="alternate" type="text/markdown" href="https://chatgpt.significanthobbies.com/index.md" />
     <meta name="theme-color" content="#f3f5f2" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="canonical" href={siteUrl} />
@@ -120,12 +122,9 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
       <main id="main">
         <section id="import-view" class="import-view" aria-labelledby="import-heading">
           <div class="import-copy">
-            <p class="map-key">Your history, made navigable</p>
-            <h1 id="import-heading">Find the questions, facts, and ideas you keep returning to.</h1>
-            <p class="lede">
-              Choose your ChatGPT export. Memory Map reads its conversation files in this tab,
-              then builds a searchable semantic graph with a browser-loaded embedding model.
-            </p>
+            <p class="map-key">{publicCopy[0].text}</p>
+            <h1 id="import-heading">{publicCopy[1].text}</h1>
+            <p class="lede">{publicCopy[2].text}</p>
             <a class="product-tour-link" href="/about/" data-app-health-event="capabilities_opened"
               >See all 51 things Memory Map can find →</a
             >
@@ -134,32 +133,23 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
           <details class="export-guide">
             <summary>
               <span>Need the ZIP?</span>
-              <strong>How to export your ChatGPT data</strong>
+              <strong>{publicCopy[3].text}</strong>
             </summary>
             <div class="export-guide-body">
               <ol>
                 <li>
                   Sign in to ChatGPT, open your profile menu, then choose{" "}
-                  <strong>Settings → Data controls</strong>.
+                  <strong>{publicCopy[4].text}</strong>.
                 </li>
                 <li>
-                  Under <strong>Export data</strong>, choose <strong>Export</strong>, then{" "}
-                  <strong>Confirm export</strong>.
+                  Under <strong>{publicCopy[5].text}</strong>, choose <strong>{publicCopy[6].text}</strong>, then{" "}
+                  <strong>{publicCopy[7].text}</strong>.
                 </li>
-                <li>
-                  Open the email or SMS from OpenAI, download the ZIP, and bring it here without
-                  unzipping it.
-                </li>
+                <li>{publicCopy[8].text}</li>
               </ol>
               <div class="export-guide-notes">
-                <p>
-                  Exports can take up to 7 days. The download link expires 24 hours after it
-                  arrives.
-                </p>
-                <p>
-                  Settings exports require a signed-in eligible account and are not available for
-                  ChatGPT Business or Enterprise workspaces.
-                </p>
+                <p>{publicCopy[9].text}</p>
+                <p>{publicCopy[10].text}</p>
               </div>
               <nav class="export-guide-links" aria-label="ChatGPT export resources">
                 <a href="https://chatgpt.com/" target="_blank" rel="noreferrer">Open ChatGPT ↗</a>
@@ -178,7 +168,7 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
           <details class="export-guide">
             <summary>
               <span>Use Claude Code or Codex?</span>
-              <strong>How to pack your agent sessions</strong>
+              <strong>{publicCopy[11].text}</strong>
             </summary>
             <div class="export-guide-body">
               <ol>
@@ -200,16 +190,8 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
                 </li>
               </ol>
               <div class="export-guide-notes">
-                <p>
-                  Your prompts and the assistant&rsquo;s replies are packed. Tool calls, tool
-                  output, reasoning traces, and file contents are left behind, which is why an
-                  archive stays small enough to analyse in a browser tab.
-                </p>
-                <p>
-                  Both CLIs prune old sessions, so memory-pack also reads the prompt history
-                  they keep outside their transcripts. Sessions they have already deleted are
-                  rebuilt from the prompts that survive.
-                </p>
+                <p>{publicCopy[12].text}</p>
+                <p>{publicCopy[13].text}</p>
                 <p>
                   The installer downloads one small binary and checks it against a published
                   checksum. memory-pack itself then runs entirely on your machine, makes no
@@ -242,21 +224,21 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
             <div class="model-profile-options">
               <label>
                 <input type="radio" name="model-profile" value="auto" checked />
-                <span><strong>Automatic</strong><small>Selects from the writing systems used in your prompts.</small></span>
+                <span><strong>{publicCopy[14].text}</strong><small>{publicCopy[15].text}</small></span>
               </label>
               <label>
                 <input type="radio" name="model-profile" value="compact" />
-                <span><strong>Compact English</strong><small>Smaller download for English-first histories.</small></span>
+                <span><strong>{publicCopy[16].text}</strong><small>{publicCopy[17].text}</small></span>
               </label>
               <label>
                 <input type="radio" name="model-profile" value="multilingual" />
-                <span><strong>Multilingual</strong><small>≈135 MB · meaning across many languages.</small></span>
+                <span><strong>{publicCopy[18].text}</strong><small>{publicCopy[19].text}</small></span>
               </label>
             </div>
             <div class="confidence-control">
               <div>
-                <strong>Evidence confidence</strong>
-                <small>Higher confidence shows fewer, stronger inferred connections.</small>
+                <strong>{publicCopy[20].text}</strong>
+                <small>{publicCopy[21].text}</small>
               </div>
               <div class="confidence-presets" aria-label="Evidence confidence presets">
                 <button type="button" data-confidence="45">Exploratory</button>
@@ -280,29 +262,29 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
                 data-app-health-event="archive_import_started"
               />
               <span class="file-mark" aria-hidden="true">.ZIP</span>
-              <strong>Choose your ChatGPT export</strong>
+              <strong>{publicCopy[22].text}</strong>
               <span>or drop a ChatGPT export or memory-pack ZIP here</span>
-              <small>Conversation JSON is read. Attachments and chat.html are ignored.</small>
+              <small>{publicCopy[23].text}</small>
             </label>
 
             <ol class="route-explainer" aria-label="Analysis stages">
               <li>
                 <span>1</span>
-                <div><strong>Parse</strong><small>Read split conversation files one at a time.</small></div>
+                <div><strong>{publicCopy[24].text}</strong><small>{publicCopy[25].text}</small></div>
               </li>
               <li>
                 <span>2</span>
-                <div><strong>Map</strong><small>Embed bounded prompts and fact candidates.</small></div>
+                <div><strong>{publicCopy[26].text}</strong><small>{publicCopy[27].text}</small></div>
               </li>
               <li>
                 <span>3</span>
-                <div><strong>Explore</strong><small>Search, inspect repeats, and trace every result.</small></div>
+                <div><strong>{publicCopy[28].text}</strong><small>{publicCopy[29].text}</small></div>
               </li>
             </ol>
           </div>
 
           <div class="privacy-contract">
-            <strong>Private by construction.</strong>
+            <strong>{publicCopy[30].text}</strong>
             <span>
               No archive upload endpoint, account, or default archive persistence. Model files
               download from Hugging Face; your conversation text is not sent with that request.

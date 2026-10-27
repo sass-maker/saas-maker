@@ -49,7 +49,7 @@ describe('canonical SaaS Maker studio identity', () => {
   it('projects the same studio facts into Markdown, llms.txt, and the agent catalog', async () => {
     const studioRoute = PUBLIC_ROUTES.find((route) => route.path === '/studio');
     const [llms, home, agentCatalog] = await Promise.all([
-      getLlms().text(),
+      getLlms().then((response) => response!.text()),
       getHomeMarkdown().text(),
       getAgentCatalog().json(),
     ]);

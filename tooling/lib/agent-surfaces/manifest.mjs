@@ -1,4 +1,5 @@
 import { buildLlmsTxt } from './llms.mjs';
+import { listMarkdownRoutes, buildMarkdownIndex } from './documents.mjs';
 import { buildApiAiCatalog } from './catalog.mjs';
 import { markdownPathFor } from './http.mjs';
 
@@ -13,6 +14,11 @@ import { markdownPathFor } from './http.mjs';
  *   name: string,
  *   url: string,
  *   summary: string,
+ *   contact?: string,
+ *   openapi?: string,
+ *   updatedAt?: string,
+ *   trainingAllowed?: boolean,
+ *   excludedPaths?: string[],
  *   mode?: 'static' | 'collection' | 'dynamic' | 'spa',
  *   product?: import('./llms.mjs').LlmsLink[],
  *   docs?: import('./llms.mjs').LlmsLink[],
@@ -53,7 +59,7 @@ export function createAgentSurfaceManifest(config) {
   const catalog = buildApiAiCatalog({
     name: config.name,
     url: origin,
-    llmsFull: config.llmsFull ?? null,
+    llmsFull: `${origin}/llms-full.txt`,
     sitemap: config.sitemap,
     markdown: { suffix: '.md', negotiation: config.negotiation ?? true },
     surfaces,
@@ -71,9 +77,16 @@ export function createAgentSurfaceManifest(config) {
     notes: config.notes,
   });
 
-  return {
+  const manifest = {
     origin,
     name: config.name,
+    summary: config.summary,
+    contact: config.contact,
+    openapi: config.openapi,
+    notes: config.notes,
+    updatedAt: config.updatedAt,
+    trainingAllowed: config.trainingAllowed ?? false,
+    excludedPaths: config.excludedPaths,
     mode: config.mode || 'static',
     llmsTxt,
     llmsFull: config.llmsFull ?? null,
@@ -81,6 +94,8 @@ export function createAgentSurfaceManifest(config) {
     pages,
     negotiation: config.negotiation ?? true,
   };
+  if (Object.keys(pages).length) manifest.llmsTxt = buildMarkdownIndex(manifest, listMarkdownRoutes(manifest));
+  return manifest;
 }
 
 /**

@@ -1,3 +1,4 @@
+import { PUBLIC_ROUTE_DETAILS } from './publicRouteDetails';
 import publicCatalog from '../../../../catalog/generated/public.json';
 import tokenWorld from './tokenWorld.json';
 import { CHANGELOG } from './changelog';
@@ -22,6 +23,7 @@ import { STUDIO_PROFILE } from './studio';
 import { TOOLING_CAPABILITIES, TOOLING_GROUPS } from './tooling';
 
 export type PublicRoute = {
+  title?: string;
   id: string;
   path: string;
   description: string;
@@ -605,6 +607,7 @@ const fundingDocMarkdown: Record<string, string> = {
 
 const fundingDocRoutes: PublicRoute[] = FUNDING_DOCS.map((doc) => ({
   id: `funding-doc-${doc.slug}`,
+  title: doc.title,
   path: `/funding/docs/${doc.slug}`,
   description: doc.description,
   kind: 'article',
@@ -630,6 +633,7 @@ export const PUBLIC_ROUTES = [
   ...fundingDocRoutes,
   ...learningRoutes,
   ...productRoutes,
+  ...PUBLIC_ROUTE_DETAILS,
 ];
 
 export function publicRouteUrl(route: PublicRoute): string {

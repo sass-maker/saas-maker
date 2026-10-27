@@ -21,3 +21,7 @@ export { buildApiAiCatalog } from './catalog.mjs';
 export { createAgentSurfaceHandler } from './handler.mjs';
 
 export { createAgentSurfaceManifest } from './manifest.mjs';
+
+export { listMarkdownRoutes, buildMarkdownIndex, buildFullMarkdown, buildAiTxt } from './documents.mjs';
+
+export { absoluteMarkdownLinks } from './format.mjs';

@@ -1,3 +1,4 @@
+import { GET as getLlms } from '../../apps/showcase/src/pages/llms.txt';
 import { readFile } from 'node:fs/promises';
 import { describe, expect, it } from 'vitest';
 import { GET as getAIChatFooterScript } from '../../apps/showcase/src/pages/ai-chat-footer.js';
@@ -133,7 +134,7 @@ describe('SaaS Maker public source boundary', () => {
       readShowcase('src/data/tooling.ts'),
       readShowcase('src/components/Nav.astro'),
       readShowcase('src/pages/api/ai.ts'),
-      readShowcase('src/pages/llms.txt.ts'),
+      getLlms().then((response) => response!.text()),
     ]);
 
     expect(page).toMatch(/Tools that survived reuse/);
@@ -142,7 +143,7 @@ describe('SaaS Maker public source boundary', () => {
     expect(nav).toMatch(/href="\/tools"/);
     expect(agentCatalog).toMatch(/TOOLING_CAPABILITIES/);
     expect(agentCatalog).toMatch(/sass-maker\/saas-maker\/tooling/);
-    expect(llms).toMatch(/Reusable tooling/);
+    expect(llms).toContain('https://sassmaker.com/tools.md');
   });
 
   it('keeps the homepage curated and reserves full enumeration for /projects', async () => {

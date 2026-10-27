@@ -1,5 +1,6 @@
 ---
 import '../styles/globals.css';
+import { PUBLIC_ROUTES } from '../data/publicRoutes';
 import { STUDIO_JSON_LD, STUDIO_PROFILE } from '../data/studio';
 
 interface Props {
@@ -24,6 +25,8 @@ const {
 const pathname =
   Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '') || '/';
 const canonical = new URL(pathname, Astro.site).href;
+const hasMarkdown = PUBLIC_ROUTES.some((route) => route.path === pathname);
+const markdownUrl = new URL(pathname === '/' ? '/index.md' : `${pathname}.md`, Astro.site).href;
 
 // Social preview image served from the static public asset set.
 const OG_IMAGE = `${SITE_URL}/og-image.svg`;
@@ -40,6 +43,8 @@ const OG_IMAGE = `${SITE_URL}/og-image.svg`;
 
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="ai-summary" content={description} />
+    {hasMarkdown && <link rel="alternate" type="text/markdown" href={markdownUrl} />}
     <link rel="canonical" href={canonical} />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

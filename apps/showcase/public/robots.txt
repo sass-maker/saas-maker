@@ -1,21 +1,133 @@
+# Keep in sync with /llms.txt and /ai.txt.
+
 User-agent: *
 Allow: /
-# Agent indexing
-Allow: /.well-known/ai-catalog.json
-Allow: /llms.txt
-Allow: /index.md
-Allow: /api/ai
-Allow: /llms-full.txt
-Sitemap: https://sassmaker.com/sitemap.xml
-
-User-agent: GPTBot
-Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /unsubscribe
+Allow: /api/ai$
+Allow: /api/md/
 
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /unsubscribe
+Allow: /api/ai$
+Allow: /api/md/
 
-User-agent: ClaudeBot
+User-agent: ChatGPT-User
 Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /unsubscribe
+Allow: /api/ai$
+Allow: /api/md/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /unsubscribe
+Allow: /api/ai$
+Allow: /api/md/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /unsubscribe
+Allow: /api/ai$
+Allow: /api/md/
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /unsubscribe
+Allow: /api/ai$
+Allow: /api/md/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /unsubscribe
+Allow: /api/ai$
+Allow: /api/md/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /unsubscribe
+Allow: /api/ai$
+Allow: /api/md/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /unsubscribe
+Allow: /api/ai$
+Allow: /api/md/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /unsubscribe
+Allow: /api/ai$
+Allow: /api/md/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /unsubscribe
+Allow: /api/ai$
+Allow: /api/md/
+
+User-agent: CCBot
+Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /unsubscribe
+Allow: /api/ai$
+Allow: /api/md/
+
+User-agent: Bytespider
+Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /unsubscribe
+Allow: /api/ai$
+Allow: /api/md/
+
+Sitemap: https://sassmaker.com/sitemap.xml

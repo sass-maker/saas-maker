@@ -17,7 +17,7 @@ export function GET() {
         llms: 'https://sassmaker.com/llms.txt',
         llmsFull: 'https://sassmaker.com/llms-full.txt',
         sitemap: 'https://sassmaker.com/sitemap.xml',
-        markdown: { suffix: '.md', negotiation: false },
+        markdown: { suffix: '.md', negotiation: true },
         canonical: 'https://sassmaker.com',
         sourceOfTruth: 'SaaS Maker privacy-checked public product catalog',
         studio: {

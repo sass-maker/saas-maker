@@ -1,12 +1,13 @@
 ---
+import { publicPages } from "../data/public-identity";
+import { releases } from "../data/public-content";
 import "../styles/global.css";
 import "../styles/about.css";
 import PublicClarity from "../components/public-clarity.astro";
 import StudioFooter from "../components/studio-footer.astro";
 
 const repository = "https://github.com/Significant-Hobbies/chatgpt-memory-insights";
-const title = "Changelog · Memory Map";
-const description = "Meaningful improvements to Memory Map’s private ChatGPT-history analysis.";
+const { title, description } = publicPages["changelog"];
 const canonical = "https://chatgpt.significanthobbies.com/changelog/";
 const socialImage =
   "https://raw.githubusercontent.com/Significant-Hobbies/chatgpt-memory-insights/main/artifacts/design/after-1440.png";
@@ -22,40 +23,7 @@ const structuredData = {
     url: "https://chatgpt.significanthobbies.com/",
   },
 };
-const releases = [
-  {
-    date: "2026-07-28",
-    title: "Memory Map launched",
-    outcomes: [
-      "ChatGPT export ZIPs can be analyzed entirely in the browser without uploading conversation history to an application server.",
-      "The first report connected recurring questions, themes, activity, language signals, and source evidence.",
-    ],
-  },
-  {
-    date: "2026-07-28",
-    title: "A visual atlas and seven-slide story",
-    outcomes: [
-      "Six period-aware charts make activity, question mix, language, repeats, topic movement, and conversation shape explorable.",
-      "Story mode turns the report into a keyboard-, touch-, and swipe-friendly guided view with evidence detours.",
-    ],
-  },
-  {
-    date: "2026-07-28",
-    title: "Graph-routed, local Memory Chat",
-    outcomes: [
-      "An opt-in local model can answer through a visible question-to-topic-to-evidence route.",
-      "Bounded evidence packs and citation validation withhold unsupported drafts rather than presenting them as grounded.",
-    ],
-  },
-  {
-    date: "2026-07-28",
-    title: "Faster analysis with clearer timing",
-    outcomes: [
-      "WebGPU acceleration and an order-preserving WebAssembly fallback reduce semantic analysis time across supported devices.",
-      "The progress view now separates stages, elapsed time, estimated wait, and the final execution receipt.",
-    ],
-  },
-];
+
 ---
 
 <!doctype html>
@@ -64,6 +32,8 @@ const releases = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    <meta name="ai-summary" content={description} />
+    <link rel="alternate" type="text/markdown" href="https://chatgpt.significanthobbies.com/changelog.md" />
     <meta name="theme-color" content="#f3f5f2" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
