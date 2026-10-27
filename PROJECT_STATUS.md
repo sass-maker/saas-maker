@@ -34,6 +34,11 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-10-27:** Brought the retained Browser Agent Testing write-up into
+  `/learnings/browser-agent-testing`, with the full public tool, experiment and
+  version snapshots. Pomerado is source-reviewed only; historical benchmark
+  results retain their September dates. The standalone product remains retired.
+
 - **2026-10-25:** Packaged the retained Slow SERP engine as
   \`@saas-maker/collect\` 0.3.1 under \`tooling/collect\`. Imports start no server
   or browser; the Node API supports bounded page/JSON/text/jobs extraction,

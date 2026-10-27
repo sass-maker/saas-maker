@@ -1,0 +1,530 @@
+{
+  "last_experiment": "2026-09-20",
+  "status": "completed-experiment",
+  "application": "Vaultwealth web and iOS Simulator against seeded, non-production fixtures",
+  "decision": "Keep Playwright and Maestro as regression baselines. Use adaptive tools for exploration with an independent verifier.",
+  "coverage": {
+    "catalogue_tools": 80,
+    "executed_tools": 21,
+    "repeated_benchmarks": 11,
+    "bounded_screens": 10,
+    "setup_blocked": 4,
+    "source_reviewed": 55,
+    "experiment_records": 10,
+    "verified_journey_passes": 118,
+    "journey_attempts": 129,
+    "seeded_defect_types": 5,
+    "estimated_paid_api_spend_usd": 0.00479976
+  },
+  "journey_comparisons": [
+    {
+      "platform": "Web",
+      "journey": "Login",
+      "mode": "Playwright saved",
+      "median_seconds": 1.178,
+      "observed_p95_seconds": 1.4,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "clipped control detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Login",
+      "mode": "agent-browser direct",
+      "median_seconds": 2.714,
+      "observed_p95_seconds": 3.846,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "clipped control detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Login",
+      "mode": "agent-browser batch",
+      "median_seconds": 1.323,
+      "observed_p95_seconds": 1.734,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "clipped control detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Edit + reload",
+      "mode": "Playwright saved",
+      "median_seconds": 1.898,
+      "observed_p95_seconds": 1.95,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "3/3 write faults detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Edit + reload",
+      "mode": "agent-browser direct",
+      "median_seconds": 1.762,
+      "observed_p95_seconds": 1.795,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "3/3 write faults detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Edit + reload",
+      "mode": "agent-browser batch",
+      "median_seconds": null,
+      "observed_p95_seconds": null,
+      "verified_passes": 0,
+      "attempts": 5,
+      "timing_basis": "no verified completion",
+      "model_use": "0 calls · $0",
+      "fault_result": "not eligible after clean failure"
+    },
+    {
+      "platform": "Web",
+      "journey": "Search",
+      "mode": "Playwright saved",
+      "median_seconds": 2.768,
+      "observed_p95_seconds": 2.796,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "stale result detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Search",
+      "mode": "agent-browser direct",
+      "median_seconds": 2.826,
+      "observed_p95_seconds": 2.833,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "stale result detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Search",
+      "mode": "agent-browser batch",
+      "median_seconds": 2.649,
+      "observed_p95_seconds": 2.836,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "stale result detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Search",
+      "mode": "Puppeteer Core",
+      "median_seconds": 2.081,
+      "observed_p95_seconds": 2.146,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "stale result detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Search",
+      "mode": "WebdriverIO",
+      "median_seconds": 2.958,
+      "observed_p95_seconds": 3.087,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "stale result detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Search",
+      "mode": "Selenium WebDriver",
+      "median_seconds": 3.633,
+      "observed_p95_seconds": 3.651,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "stale result detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Search",
+      "mode": "Nightwatch",
+      "median_seconds": 5.425,
+      "observed_p95_seconds": 5.7,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "stale result detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Search",
+      "mode": "Taiko",
+      "median_seconds": 23.85,
+      "observed_p95_seconds": 23.921,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "stale result detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Search",
+      "mode": "Stagehand cached",
+      "median_seconds": 2.201,
+      "observed_p95_seconds": 2.233,
+      "verified_passes": 4,
+      "attempts": 4,
+      "timing_basis": "verified replays",
+      "model_use": "0 replay calls · $0",
+      "fault_result": "stale result detected",
+      "authoring_seconds": 25.544
+    },
+    {
+      "platform": "Web",
+      "journey": "Search",
+      "mode": "Stagehand uncached",
+      "median_seconds": 26.951,
+      "observed_p95_seconds": 31.401,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "3 local calls · $0",
+      "fault_result": "stale result detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Search",
+      "mode": "Jev + Bonsai",
+      "median_seconds": 11.101,
+      "observed_p95_seconds": 11.391,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "7 paid selector + 3 local calls · ~$0.00063/run",
+      "fault_result": "stale result detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Search",
+      "mode": "Browser Use + Bonsai",
+      "median_seconds": 90.73,
+      "observed_p95_seconds": 93.623,
+      "verified_passes": 4,
+      "attempts": 5,
+      "timing_basis": "successful verified passes",
+      "model_use": "8 local calls on successes · $0",
+      "fault_result": "stale result detected"
+    },
+    {
+      "platform": "Web",
+      "journey": "Login",
+      "mode": "Playwright CLI",
+      "median_seconds": 3.235,
+      "observed_p95_seconds": null,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes; p95 unavailable",
+      "model_use": "0 calls · $0",
+      "fault_result": "no fault sample"
+    },
+    {
+      "platform": "Web",
+      "journey": "Edit + reload",
+      "mode": "Playwright CLI",
+      "median_seconds": 3.076,
+      "observed_p95_seconds": null,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes; p95 unavailable",
+      "model_use": "0 calls · $0",
+      "fault_result": "no fault sample"
+    },
+    {
+      "platform": "Web",
+      "journey": "Adaptive login",
+      "mode": "Codex stepwise",
+      "median_seconds": 155.971,
+      "observed_p95_seconds": 225.686,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified passes",
+      "model_use": "918,042 median input tokens",
+      "fault_result": "clipped control detected separately"
+    },
+    {
+      "platform": "Web",
+      "journey": "Adaptive login",
+      "mode": "Codex batched",
+      "median_seconds": 123.684,
+      "observed_p95_seconds": 139.657,
+      "verified_passes": 0,
+      "attempts": 5,
+      "timing_basis": "all attempts; 2/5 functional",
+      "model_use": "398,585 median input tokens",
+      "fault_result": "clipped calibration noticed; unqualified"
+    },
+    {
+      "platform": "iOS",
+      "journey": "Login",
+      "mode": "Maestro saved flow",
+      "median_seconds": 32.964,
+      "observed_p95_seconds": 34.775,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified warm passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "clipped control detected"
+    },
+    {
+      "platform": "iOS",
+      "journey": "Login",
+      "mode": "AXe batch",
+      "median_seconds": 12.612,
+      "observed_p95_seconds": 12.892,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified warm passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "clipped control detected"
+    },
+    {
+      "platform": "iOS",
+      "journey": "Search",
+      "mode": "Maestro saved flow",
+      "median_seconds": 34.673,
+      "observed_p95_seconds": 41.146,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified warm passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "no fault sample"
+    },
+    {
+      "platform": "iOS",
+      "journey": "Search",
+      "mode": "AXe batch, one-char typing",
+      "median_seconds": 15.279,
+      "observed_p95_seconds": 15.317,
+      "verified_passes": 5,
+      "attempts": 5,
+      "timing_basis": "verified warm passes",
+      "model_use": "0 calls · $0",
+      "fault_result": "no fault sample"
+    }
+  ],
+  "probe_comparisons": [
+    {
+      "probe": "Bonsai text helper · budget-only",
+      "median_seconds": 4.907,
+      "observed_p95_seconds": 8.943,
+      "passes": "25/25",
+      "numeric_detail": "9.252 GB sampled RSS · 4,760 prompt / 2,525 output tokens",
+      "boundary": "Synthetic text-helper requests"
+    },
+    {
+      "probe": "Bonsai text helper · no-thinking",
+      "median_seconds": 1.082,
+      "observed_p95_seconds": 1.193,
+      "passes": "25/25",
+      "numeric_detail": "7.305 GB sampled RSS · 3,860 prompt / 215 output tokens",
+      "boundary": "Synthetic text-helper requests"
+    },
+    {
+      "probe": "Chrome DevTools MCP diagnostic bundle",
+      "median_seconds": 0.826,
+      "observed_p95_seconds": null,
+      "passes": "5/5",
+      "numeric_detail": "Lighthouse snapshot 1.243 s",
+      "boundary": "Diagnostic collection, not a journey"
+    },
+    {
+      "probe": "XcodeBuildMCP cash-field action",
+      "median_seconds": 3.834,
+      "observed_p95_seconds": null,
+      "passes": "5/5",
+      "numeric_detail": "1.343 s semantic observation median · ~35 s setup",
+      "boundary": "No save/relaunch qualification"
+    },
+    {
+      "probe": "AXe app-process relaunch readiness",
+      "median_seconds": null,
+      "observed_p95_seconds": null,
+      "passes": "0/3 standalone",
+      "numeric_detail": "Launch 1.52–1.64 s · Maestro-assisted tree 6.12–6.23 s",
+      "boundary": "Startup diagnostic, not cold journey"
+    },
+    {
+      "probe": "ios-simulator-mcp readiness",
+      "median_seconds": null,
+      "observed_p95_seconds": null,
+      "passes": "passed",
+      "numeric_detail": "17 tools · 6,940-character accessibility description",
+      "boundary": "Readiness only"
+    },
+    {
+      "probe": "Mobile MCP readiness",
+      "median_seconds": null,
+      "observed_p95_seconds": null,
+      "passes": "passed",
+      "numeric_detail": "32 tools · 27 elements listed",
+      "boundary": "Readiness only; temporary agent removed"
+    }
+  ],
+  "experiments": [
+    {
+      "id": "web-saved-workflows",
+      "title": "Saved web workflows",
+      "status": "complete screening",
+      "arms": ["Playwright", "agent-browser direct", "agent-browser batch"],
+      "result": "Playwright remained the baseline. agent-browser batching improved its own login time, but no candidate met the 2x adoption threshold.",
+      "measurements": [
+        "Login: Playwright 1.178 s; direct 2.714 s; batch 1.323 s medians; all 5/5.",
+        "Edit: Playwright 1.898 s and direct 1.762 s medians; batch failed 0/5.",
+        "Search: Playwright 2.768 s; direct 2.826 s; batch 2.649 s medians; all 5/5."
+      ],
+      "evidence": "adapters/vaultwealth/runtime/REPORT.md#web-saved-workflows-no-ai"
+    },
+    {
+      "id": "seeded-web-defects",
+      "title": "Seeded web defects",
+      "status": "complete screening",
+      "arms": ["Playwright oracle", "agent-browser direct", "agent-browser batch where viable"],
+      "result": "The viable Playwright and direct arms detected all five seeded fault types with no clean-run false failure in the selected trials.",
+      "measurements": [
+        "Detected save failure, wrong persisted value, duplicate write, stale search and clipped control.",
+        "The visual oracle detected 53.14% changed control pixels against a 2% limit.",
+        "This validates fixed oracles; it is not a blinded AI discovery rate."
+      ],
+      "evidence": "adapters/vaultwealth/runtime/REPORT.md#seeded-web-defects"
+    },
+    {
+      "id": "agent-stepwise-vs-batched",
+      "title": "Coding-agent stepwise versus batched interaction",
+      "status": "complete screening",
+      "arms": ["Stepwise Codex", "Batched Codex"],
+      "result": "Stepwise passed 5/5. Batched qualified 0/5 and reduced total reported input mostly through cache, not uncached reasoning.",
+      "measurements": [
+        "Stepwise verified median 155.971 s; 5/5.",
+        "Batched median attempt 123.684 s; only 2/5 functional completions and 0/5 within the recovery gate.",
+        "Total input fell 56.6%, while uncached input fell 8.6%."
+      ],
+      "evidence": "adapters/vaultwealth/runtime/REPORT.md#agent-interaction-strategies"
+    },
+    {
+      "id": "jev-specialist",
+      "title": "Jev specialist with local Bonsai text helper",
+      "status": "complete screening",
+      "arms": ["Jev + TypeSafe selection + Bonsai text", "Fixed Playwright/backend oracle"],
+      "result": "Authenticated search passed 5/5 and found the hidden stale-search fault. Login is unsupported because Jev excludes password inputs.",
+      "measurements": [
+        "Clean search median 11.101 s; observed p95 11.391 s.",
+        "Seven TypeSafe calls plus three local Bonsai calls per run.",
+        "Estimated TypeSafe spend $0.00313047 across five clean runs; about $0.00063 per run."
+      ],
+      "evidence": "adapters/vaultwealth/runtime/REPORT.md#optional-jev-specialist-with-local-bonsai"
+    },
+    {
+      "id": "ios-maestro-vs-axe",
+      "title": "iOS saved flows: Maestro versus AXe",
+      "status": "screening incomplete",
+      "arms": ["Maestro saved flow", "AXe batch"],
+      "result": "AXe was much faster on warm login and search, but cold accessibility readiness and inconsistent text entry prevented replacement.",
+      "measurements": [
+        "Login: Maestro 32.964 s versus AXe 12.612 s medians; both 5/5.",
+        "Search: Maestro 34.673 s versus AXe 15.279 s medians; both 5/5 with journey-specific AXe typing configuration.",
+        "Three app-process relaunch probes returned an empty AXe tree until a Maestro hierarchy request."
+      ],
+      "evidence": "adapters/vaultwealth/runtime/REPORT.md#native-saved-workflows-and-startup-diagnostic"
+    },
+    {
+      "id": "bonsai-helper",
+      "title": "Local Bonsai 27B text-helper compatibility",
+      "status": "complete synthetic screening",
+      "arms": ["Reasoning budget only", "Explicit no-thinking template"],
+      "result": "Both profiles passed 25/25 exact responses. Explicit no-thinking was 4.54x faster and used less sampled memory.",
+      "measurements": [
+        "Budget-only median 4.907 s; observed p95 8.943 s; sampled peak RSS 9.252 GB.",
+        "No-thinking median 1.082 s; observed p95 1.193 s; sampled peak RSS 7.305 GB.",
+        "This was a text-helper probe, not a browser-agent or defect-detection result."
+      ],
+      "evidence": "adapters/vaultwealth/runtime/BONSAI.md"
+    },
+    {
+      "id": "round-two-browser-tools",
+      "title": "Round-two local browser tools",
+      "status": "complete screening",
+      "arms": [
+        "Stagehand uncached",
+        "Stagehand cached",
+        "Browser Use",
+        "Playwright CLI",
+        "Chrome DevTools MCP"
+      ],
+      "result": "Stagehand cache was the most promising replay result, but missed the 2x gate. Browser Use was slow and 4/5. Chrome DevTools MCP was useful for diagnostics only.",
+      "measurements": [
+        "Stagehand uncached 26.951 s median; 5/5. Cached 2.201 s median; 4/4 after 25.544 s authoring.",
+        "Browser Use 90.730 s median among successes; 4/5.",
+        "Chrome DevTools MCP diagnostic bundle 0.826 s median; Lighthouse snapshot 1.243 s."
+      ],
+      "evidence": "adapters/vaultwealth/runtime/ROUND2.md"
+    },
+    {
+      "id": "xcodebuildmcp-and-blocked-native",
+      "title": "Additional native candidates",
+      "status": "bounded probe",
+      "arms": ["XcodeBuildMCP", "XCUITest feasibility", "Detox feasibility"],
+      "result": "XcodeBuildMCP replaced the formatted cash field in 5/5 probes but no save/relaunch journey was qualified. XCUITest and Detox were setup-blocked by checkout structure.",
+      "measurements": [
+        "XcodeBuildMCP action median 3.834 s; semantic observation median 1.343 s.",
+        "Maestro/debug setup still took about 35 s.",
+        "No claim is made that XCUITest or Detox failed as tools."
+      ],
+      "evidence": "adapters/vaultwealth/runtime/ROUND2.md#other-round-two-findings"
+    },
+    {
+      "id": "expanded-saved-web-drivers",
+      "title": "Expanded saved-web driver screen",
+      "status": "complete screening",
+      "arms": ["Puppeteer Core", "Selenium WebDriver", "WebdriverIO", "Nightwatch", "Taiko"],
+      "result": "All five candidates completed five independently verified clean searches and detected the stale-search fault. Puppeteer was fastest, but did not meet the 2x adoption gate against Playwright.",
+      "measurements": [
+        "Workflow medians: Puppeteer 2.081 s; WebdriverIO 2.958 s; Selenium 3.633 s; Nightwatch 5.425 s; Taiko 23.850 s.",
+        "Every candidate passed 5/5 clean runs and detected the stale-search mismatch through the backend/UI oracle.",
+        "TestCafe 3.7.6 hit the bounded 60 s setup timeout; Cypress 16.1.0 had no isolated application binary. Neither is counted as a tool failure."
+      ],
+      "evidence": "adapters/vaultwealth/runtime/EXPANDED_WEB.md"
+    },
+    {
+      "id": "expanded-native-readiness",
+      "title": "Expanded native agent-tool readiness",
+      "status": "complete bounded screen",
+      "arms": ["ios-simulator-mcp", "Mobile MCP", "fb-idb"],
+      "result": "Both MCP servers started and found the dedicated simulator. ios-simulator-mcp returned the accessibility tree through isolated idb; Mobile MCP listed 27 elements and its temporary device agent was removed afterward.",
+      "measurements": [
+        "ios-simulator-mcp 2.1.0 exposed 17 tools and returned a 6,940-character accessibility description.",
+        "Mobile MCP 1.0.4 exposed 32 tools and listed 27 elements with device agent 0.0.26.",
+        "These are readiness probes, not saved-flow latency or defect-detection results."
+      ],
+      "evidence": "adapters/vaultwealth/runtime/EXPANDED_NATIVE.md"
+    }
+  ]
+}
