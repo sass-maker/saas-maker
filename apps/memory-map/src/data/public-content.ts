@@ -738,3 +738,10 @@ export const aboutCopy = [
     "text": "No account. No archive upload. Nothing saved unless you ask."
   }
 ];
+
+
+export const chatgptExportSteps: { text: string; strong?: boolean }[][] = [
+  [{ text: "Sign in to ChatGPT, open your profile menu, then choose " }, { text: indexCopy[4].text, strong: true }, { text: "." }],
+  [{ text: "Under " }, { text: indexCopy[5].text, strong: true }, { text: ", choose " }, { text: indexCopy[6].text, strong: true }, { text: ", then " }, { text: indexCopy[7].text, strong: true }, { text: "." }],
+];
+export const aboutFacts = ["question domains", "memory states", "model profiles", "archive uploads"].map((label, index) => ({ value: aboutCopy[index + 3].text, label }));

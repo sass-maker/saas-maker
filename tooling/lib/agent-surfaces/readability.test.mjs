@@ -294,3 +294,33 @@ test('prebuilt export fails closed for missing, HTML, invalid MIME, oversize and
   }
   assert.throws(() => createStaticAssetHandler({ prebuiltFullPath: '//other.example/full.txt' }), /Invalid prebuilt/);
 });
+
+
+test('curated discovery sections survive automatic page indexing', async () => {
+  const curated = createAgentSurfaceManifest({ name: 'Curated', url: 'https://curated.example', summary: 'Public source.', pages: { '/': '# Home' }, docs: [{ title: 'Privacy boundary', url: 'https://curated.example/agents.md' }], product: [{ title: 'Product home', url: 'https://product.example' }] });
+  const response = await createAgentSurfaceHandler({ manifest: curated })(new Request('https://curated.example/llms.txt'));
+  const body = await response.text();
+  assert.match(body, /\[Privacy boundary\]\(https:\/\/curated.example\/agents.md\)/);
+  assert.match(body, /\[Product home\]\(https:\/\/product.example\)/);
+  assert.match(body, /\[Home\]\(https:\/\/curated.example\/index.md\)/);
+});
+
+test('static emitter completes machine documents without replacing the host sitemap', async () => {
+  const { emitAgentSurfaces } = await import('./adapters/astro-build.mjs');
+  const { buildStaticFullMarkdown, listMarkdownRoutes } = await import('./documents.mjs');
+  // The HTML host owns its canonical sitemap; this adapter adds machine documents.
+  const files = new Map([['/output/sitemap.xml', '<host-owned-sitemap/>']]);
+  const staticManifest = createAgentSurfaceManifest({ name: 'Static', url: 'https://static.example', summary: 'Public pages.', pages: { '/': '# Home\n\nHello.', '/about': '# About\n\nSource.' } });
+  const emitted = emitAgentSurfaces(staticManifest, '/output', { mkdirSync() {}, writeFileSync(path, body) { files.set(path, body); } });
+  assert.equal(emitted.llms, '/output/llms.txt');
+  assert.equal(files.get('/output/sitemap.xml'), '<host-owned-sitemap/>');
+  for (const link of files.get('/output/llms.txt').matchAll(/\]\((https:\/\/static\.example[^)]*)\)/g)) {
+    assert.ok(files.has('/output' + new URL(link[1]).pathname), `Unemitted discovery link: ${link[1]}`);
+  }
+  const routes = listMarkdownRoutes(staticManifest);
+  const runtimeFull = await buildFullMarkdown(staticManifest, routes, (path) => staticManifest.pages[path]);
+  assert.equal(files.get('/output/llms-full.txt'), runtimeFull);
+  assert.equal(buildStaticFullMarkdown(staticManifest, routes, { maxPages: 1 }), await buildFullMarkdown(staticManifest, routes, (path) => staticManifest.pages[path], { maxPages: 1 }));
+  assert.equal(JSON.parse(files.get('/output/api/md/_catalog')).length, 2);
+  assert.match(files.get('/output/ai.txt'), /public-machine-endpoints: \/api\/ai, \/api\/md\/\*/);
+});

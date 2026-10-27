@@ -89,6 +89,7 @@ export function createAgentSurfaceManifest(config) {
     excludedPaths: config.excludedPaths,
     mode: config.mode || 'static',
     llmsTxt,
+    curatedIndex: buildLlmsTxt({ ...config, url: undefined }),
     llmsFull: config.llmsFull ?? null,
     catalog,
     pages,

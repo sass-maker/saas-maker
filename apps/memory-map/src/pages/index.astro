@@ -1,6 +1,6 @@
 ---
 import { publicPages } from "../data/public-identity";
-import { indexCopy as publicCopy } from "../data/public-content";
+import { indexCopy as publicCopy, chatgptExportSteps } from "../data/public-content";
 import "../styles/global.css";
 import StudioFooter from "../components/studio-footer.astro";
 
@@ -137,14 +137,9 @@ FORM: Graph-first memory workbench; selected delegated probe; direction seed 100
             </summary>
             <div class="export-guide-body">
               <ol>
-                <li>
-                  Sign in to ChatGPT, open your profile menu, then choose{" "}
-                  <strong>{publicCopy[4].text}</strong>.
-                </li>
-                <li>
-                  Under <strong>{publicCopy[5].text}</strong>, choose <strong>{publicCopy[6].text}</strong>, then{" "}
-                  <strong>{publicCopy[7].text}</strong>.
-                </li>
+                {chatgptExportSteps.map((parts) => (
+                  <li>{parts.map((part) => part.strong ? <strong>{part.text}</strong> : part.text)}</li>
+                ))}
                 <li>{publicCopy[8].text}</li>
               </ol>
               <div class="export-guide-notes">

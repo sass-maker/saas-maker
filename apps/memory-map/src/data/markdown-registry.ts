@@ -2,10 +2,10 @@ import { createAgentSurfaceManifest } from '../../../../tooling/lib/agent-surfac
 import { createAgentSurfaceHandler } from '../../../../tooling/lib/agent-surfaces/handler.mjs';
 import { listMarkdownRoutes } from '../../../../tooling/lib/agent-surfaces/documents.mjs';
 import { publicIdentity, publicPages } from './public-identity';
-import { indexCopy, aboutCopy, capabilityRoutes, releases, surfaces } from './public-content';
+import { indexCopy, aboutCopy, capabilityRoutes, releases, surfaces, chatgptExportSteps, aboutFacts } from './public-content';
 
 function copyMarkdown(copy: {tag: string; text: string}[]) {
-  return copy.filter(({text}) => !/^\d+$/.test(text)).map(({tag, text}) => {
+  return copy.map(({tag, text}) => {
     const level = /^h[1-6]$/.test(tag) ? Math.max(2, Number(tag[1])) : tag === 'strong' ? 3 : 0;
     const prefix = level ? `${'#'.repeat(level)} ` : tag === 'li' ? '- ' : '';
     const labels: Record<string, string> = {
@@ -18,8 +18,12 @@ function copyMarkdown(copy: {tag: string; text: string}[]) {
 }
 
 const capabilities = capabilityRoutes.map((route) => `### ${route.title}\n\n${route.summary}\n\n${route.stops.map((stop) => `#### ${stop.title}\n\n${stop.detail}`).join('\n\n')}`).join('\n\n');
-const about = copyMarkdown(aboutCopy).replace('## Everything the map can show you.', `## Everything the map can show you.\n\n${capabilityRoutes.reduce((total, route) => total + route.stops.length, 0)} shipped capabilities across five routes. These are current product behaviors, not a roadmap.\n\n${capabilities}`);
-const home = `${copyMarkdown(indexCopy)}\n\n## Agent session archives\n\nInstall on macOS or Linux:\n\n\`\`\`sh\ncurl -fsSL https://chatgpt.significanthobbies.com/install.sh | sh\nmemory-pack --dry-run --list\nmemory-pack\n\`\`\`\n\nDrop the named memory-pack ZIP here without unzipping it. Narrow with \`--since 2026-01-01\`, or use \`--no-history\` for sessions whose full transcript survives.\n\n[Release binaries and checksums](https://github.com/Significant-Hobbies/chatgpt-memory-insights/releases)\n\n[How it works](https://github.com/sass-maker/saas-maker/tree/main/apps/memory-map/packer)\n\n[All capabilities](${publicIdentity.url}/about/)`;
+const about = copyMarkdown(aboutCopy.map((item, index) => index >= 3 && index <= 6 ? { tag: 'p', text: `${aboutFacts[index - 3].value} ${aboutFacts[index - 3].label}` } : item)).replace('## Everything the map can show you.', `## Everything the map can show you.\n\n${capabilityRoutes.reduce((total, route) => total + route.stops.length, 0)} shipped capabilities across five routes. These are current product behaviors, not a roadmap.\n\n${capabilities}`);
+const homeCopy = indexCopy.flatMap((item, index) => {
+  if (index === 4 || index === 5) return [{ tag: 'li', text: chatgptExportSteps[index - 4].map((part) => part.text).join('') }];
+  return index === 6 || index === 7 ? [] : [item];
+});
+const home = `${copyMarkdown(homeCopy)}\n\n## Agent session archives\n\nInstall on macOS or Linux:\n\n\`\`\`sh\ncurl -fsSL https://chatgpt.significanthobbies.com/install.sh | sh\nmemory-pack --dry-run --list\nmemory-pack\n\`\`\`\n\nDrop the named memory-pack ZIP here without unzipping it. Narrow with \`--since 2026-01-01\`, or use \`--no-history\` for sessions whose full transcript survives.\n\n[Release binaries and checksums](https://github.com/Significant-Hobbies/chatgpt-memory-insights/releases)\n\n[How it works](https://github.com/sass-maker/saas-maker/tree/main/apps/memory-map/packer)\n\n[All capabilities](${publicIdentity.url}/about/)`;
 const bodies = {
   index: home,
   about,

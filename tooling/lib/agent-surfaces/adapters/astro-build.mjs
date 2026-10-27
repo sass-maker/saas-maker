@@ -1,3 +1,5 @@
+import { listMarkdownRoutes, buildAiTxt, buildStaticFullMarkdown } from '../documents.mjs';
+
 /**
  * Astro / static build helper — write agent surface files into an out dir.
  *
@@ -37,9 +39,12 @@ export function emitAgentSurfaces(manifest, outDir, fs) {
     'utf8'
   );
 
-  if (manifest.llmsFull) {
-    writeFileSync(join(outDir, 'llms-full.txt'), manifest.llmsFull, 'utf8');
-  }
+  const routes = listMarkdownRoutes(manifest);
+  writeFileSync(join(outDir, 'llms-full.txt'), manifest.llmsFull ?? buildStaticFullMarkdown(manifest, routes), 'utf8');
+  writeFileSync(join(outDir, 'ai.txt'), buildAiTxt(manifest, routes), 'utf8');
+  mkdirSync(join(outDir, 'api/md'), { recursive: true });
+  writeFileSync(join(outDir, 'api/ai'), `${JSON.stringify(manifest.catalog, null, 2)}\n`, 'utf8');
+  writeFileSync(join(outDir, 'api/md/_catalog'), `${JSON.stringify(routes, null, 2)}\n`, 'utf8');
 
   for (const [key, body] of Object.entries(manifest.pages || {})) {
     if (body == null) continue;

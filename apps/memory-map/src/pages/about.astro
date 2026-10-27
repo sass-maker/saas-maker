@@ -1,6 +1,6 @@
 ---
 import { publicPages } from "../data/public-identity";
-import { aboutCopy as publicCopy } from "../data/public-content";
+import { aboutCopy as publicCopy, aboutFacts } from "../data/public-content";
 import { capabilityRoutes } from "../data/public-content";
 import "../styles/global.css";
 import "../styles/about.css";
@@ -102,10 +102,10 @@ const totalCapabilities = capabilityRoutes.reduce((sum, route) => sum + route.st
           <p class="about-lede">{publicCopy[2].text}</p>
           <a class="about-primary-action" href="/">Analyze my ChatGPT ZIP</a>
           <p class="about-hero-proof">
-            <strong>{publicCopy[3].text}</strong> question domains <span aria-hidden="true">·</span>
-            <strong>{publicCopy[4].text}</strong> memory states <span aria-hidden="true">·</span>
-            <strong>{publicCopy[5].text}</strong> model profiles <span aria-hidden="true">·</span>
-            <strong>{publicCopy[6].text}</strong> archive uploads
+            <strong>{aboutFacts[0].value}</strong> {aboutFacts[0].label} <span aria-hidden="true">·</span>
+            <strong>{aboutFacts[1].value}</strong> {aboutFacts[1].label} <span aria-hidden="true">·</span>
+            <strong>{aboutFacts[2].value}</strong> {aboutFacts[2].label} <span aria-hidden="true">·</span>
+            <strong>{aboutFacts[3].value}</strong> {aboutFacts[3].label}
           </p>
         </div>
 

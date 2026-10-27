@@ -19,8 +19,7 @@ export function listMarkdownRoutes(manifest) {
 }
 
 export function buildMarkdownIndex(manifest, routes) {
-  const lines = [`# ${manifest.name}`, '', `> ${manifest.summary}`, '',
-    ...(manifest.notes || []), '',
+  const lines = [manifest.curatedIndex || [`# ${manifest.name}`, '', `> ${manifest.summary}`, '', ...(manifest.notes || [])].join('\n'), '',
     '<!-- Keep in sync with robots.txt and ai.txt. -->', '', '## Public pages', ''];
   for (const route of routes.slice(0, 50)) {
     lines.push(`- [${escapeLabel(route.title)}](${route.md}): ${route.description || route.title}`);
@@ -49,31 +48,54 @@ export function buildAiTxt(manifest, routes) {
     '[attribution]', `cite: ${manifest.name} and the canonical HTML URL`, '',
     '[scope]', `included: public routes listed at ${manifest.origin}/api/md/_catalog`,
     `public-route-count: ${routes.length}`,
-    `excluded: ${(manifest.excludedPaths || ['/admin', '/api', '/dashboard', '/auth']).join(', ')}`, '',
+    `excluded: ${(manifest.excludedPaths || ['/admin', '/api', '/dashboard', '/auth']).join(', ')}`,
+    'public-machine-endpoints: /api/ai, /api/md/*', '',
     ...(contact ? ['[contact]', `contact: ${contact}`, ''] : []),
     ...(manifest.updatedAt ? [`Last updated: ${manifest.updatedAt}`, ''] : []),
   ].join('\n');
 }
 
-export async function buildFullMarkdown(manifest, routes, render, { maxChars = 500000, maxPages = 50 } = {}) {
+export async function buildFullMarkdown(manifest, routes, render, limits = {}) {
+  const document = fullDocument(manifest, routes, limits);
+  for (const route of routes) {
+    if (route.full === false) continue;
+    if (!document.hasRoom() || !document.append(route, await render(route.path))) break;
+  }
+  return document.finish();
+}
+
+/** Synchronous build adapters use the same bounds and formatting as runtime. */
+export function buildStaticFullMarkdown(manifest, routes, limits = {}) {
+  const document = fullDocument(manifest, routes, limits);
+  for (const route of routes) {
+    if (route.full === false) continue;
+    if (!document.hasRoom()) break;
+    const body = manifest.pages[route.path] ?? manifest.pages[new URL(route.md).pathname];
+    if (!document.append(route, body)) break;
+  }
+  return document.finish();
+}
+
+function fullDocument(manifest, routes, { maxChars = 500000, maxPages = 50 } = {}) {
   const header = `# ${manifest.name} - full content\n\n> ${manifest.summary}\n\nGenerated: ${new Date().toISOString().slice(0, 10)}\n\n`;
   const footer = `\nFull catalog: ${manifest.origin}/api/md/_catalog\n`;
   let body = header;
   let included = 0;
-  for (const route of routes) {
-    if (route.full === false) continue;
-    if (included >= maxPages) break;
-    const markdown = await render(route.path);
-    if (markdown == null) continue;
-    const section = `---\n<!-- source: ${route.url} -->\n${markdown}\n\n`;
-    if (body.length + section.length + footer.length + 150 > maxChars) {
-      console.warn(`Full Markdown export reached its ${maxChars}-character limit after ${included} pages.`);
-      break;
-    }
-    body += section;
-    included++;
-  }
-  return `${body}Included ${included} of ${routes.length} registered public pages (limit ${maxPages} pages / ${maxChars} characters).\n${footer}`;
+  return {
+    hasRoom: () => included < maxPages,
+    append(route, markdown) {
+      if (markdown == null) return true;
+      const section = `---\n<!-- source: ${route.url} -->\n${markdown}\n\n`;
+      if (body.length + section.length + footer.length + 150 > maxChars) {
+        console.warn(`Full Markdown export reached its ${maxChars}-character limit after ${included} pages.`);
+        return false;
+      }
+      body += section;
+      included++;
+      return true;
+    },
+    finish: () => `${body}Included ${included} of ${routes.length} registered public pages (limit ${maxPages} pages / ${maxChars} characters).\n${footer}`,
+  };
 }
 
 function escapeLabel(value) {

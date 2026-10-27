@@ -1,8 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { handleMarkdown, markdownPages, markdownRoutes } from '../data/markdown-registry';
-import { capabilityRoutes, releases, surfaces } from '../data/public-content';
+import { capabilityRoutes, releases, surfaces, chatgptExportSteps, aboutFacts } from '../data/public-content';
 
 describe('public source-only Markdown', () => {
+  it('retains complete export instructions, visible counts and private-workflow guidance', async () => {
+    for (const parts of chatgptExportSteps) expect(markdownPages['/']).toContain(parts.map((part) => part.text).join(''));
+    for (const fact of aboutFacts) expect(markdownPages['/about/']).toContain(`${fact.value} ${fact.label}`);
+    const response = await handleMarkdown(new Request('https://chatgpt.significanthobbies.com/llms.txt'));
+    const body = await response!.text();
+    for (const path of ['/agents.md', '/.well-known/agent-skills/explore-memory-map/SKILL.md', '/pricing.md']) expect(body).toContain('https://chatgpt.significanthobbies.com' + path);
+  });
+
   it('covers the four public pages and preserves complete capability and release data', () => {
     expect(markdownRoutes.map((route) => route.path)).toEqual(['/', '/about/', '/changelog/', '/used-by/']);
     for (const route of capabilityRoutes) for (const stop of route.stops) {

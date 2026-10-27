@@ -3,12 +3,12 @@ import {
   createStaticAssetHandler,
   advertiseMarkdown,
 } from '../../../tooling/lib/agent-surfaces/adapters/static-assets.mjs';
-import { AGENT_IDENTITY } from '../src/data/agentIdentity';
+import preservedMarkdownPaths from '../src/data/preservedMarkdown.json';
 
 const handleMarkdown = createStaticAssetHandler({
-  origin: AGENT_IDENTITY.url,
-  identity: AGENT_IDENTITY,
-  preserveMarkdownPaths: ['/evidence/feature-verification-anime-list-2026-10-02.md'],
+  origin: 'https://sassmaker.com',
+  prebuiltFullPath: '/llms-full.txt',
+  preserveMarkdownPaths: preservedMarkdownPaths,
 });
 
 // Cloudflare ignores Vary: Accept in its ordinary URL cache. Use a private,
@@ -484,5 +484,5 @@ export const onRequest: PagesFunction = async (context) => {
         })
       )
   );
-  return advertiseMarkdown(response, AGENT_IDENTITY.url);
+  return advertiseMarkdown(response, SITE_URL);
 };

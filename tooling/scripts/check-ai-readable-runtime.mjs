@@ -3,6 +3,7 @@ import test from 'node:test';
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:net';
 import { resolve, basename } from 'node:path';
+import { readFileSync } from 'node:fs';
 const app = resolve(process.argv[2] || '.');
 const date = process.argv[3] || '2026-05-01';
 
@@ -75,6 +76,23 @@ for (const product of [basename(app)]) {
       }
       const full = await (await fetch(origin + '/llms-full.txt')).text();
       assert.ok(full.length < 500000);
+      const indexText = await (await fetch(origin + '/llms.txt')).text();
+      if (product === 'showcase') {
+        const preserved = await fetch(origin + '/fonts/fleet-footer-precise-v1/README.md');
+        assert.equal(preserved.status, 200);
+        assert.equal(await preserved.text(), readFileSync(resolve(app, 'dist/fonts/fleet-footer-precise-v1/README.md'), 'utf8'));
+        assert.equal(full, readFileSync(resolve(app, 'dist/llms-full.txt'), 'utf8'));
+        assert.ok(indexText.includes('NOT a task runner'));
+        assert.ok(indexText.includes('Current products and public destinations'));
+      } else if (product === 'memory-map') {
+        for (const path of ['/agents.md', '/.well-known/agent-skills/explore-memory-map/SKILL.md', '/pricing.md']) assert.ok(indexText.includes(path));
+        const home = await (await fetch(origin + '/index.md')).text();
+        assert.ok(home.includes('Sign in to ChatGPT, open your profile menu, then choose Settings → Data controls.'));
+        assert.ok(home.includes('Under Export data, choose Export, then Confirm export.'));
+        const about = await (await fetch(origin + '/about.md')).text();
+        for (const fact of ['10 question domains', '4 memory states', '2 model profiles', '0 archive uploads']) assert.ok(about.includes(fact));
+      }
+
       const policy = await (await fetch(origin + '/ai.txt')).text();
       assert.ok(policy.includes('training: allowed on public pages only'));
       const robots = await (await fetch(origin + '/robots.txt')).text();
