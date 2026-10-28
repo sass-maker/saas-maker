@@ -347,7 +347,6 @@ describe('verified public Fleet directory', () => {
       'site-health',
       'chatgpt-connections',
       'nutrition-formula-engine',
-      'agent-inbox',
       'fleet-social',
       'unified-portfolio',
     ]) {
@@ -364,7 +363,7 @@ describe('verified public Fleet directory', () => {
         publicUrlLabel: 'Visit website',
       });
     }
-    for (const id of ['reader', 'ai-game']) {
+    for (const id of ['reader', 'ai-game', 'agent-inbox']) {
       expect(catalog.directory.find((project: { id: string }) => project.id === id)).toMatchObject({
         availability: 'preview-not-qualified',
         publicUrlLabel: 'Preview site',
