@@ -60,3 +60,28 @@ imported `renderStudioFooterHtml` call is separate block evidence; its
 `studio-footer` wrapper is counted once. Links remain outside the standard-control
 denominator. Preserve v1 observations as the old recognition baseline, not as
 proof of a product improvement when v2 discovers additional source.
+
+Method `shared-control-call-sites.v3` includes production `src/scripts/` files,
+while excluding operational scripts, generated sources and `design-review/`
+preview routes. Earlier observations used a different denominator; a changed
+percentage is not evidence of adoption progress by itself.
+
+In ordinary `.js`, `.ts`, `.mjs`, `.cjs`, `.mts` and `.cts` files, literal
+`element('button')` and `document.createElement('input')` calls are bespoke
+control evidence. A directly imported `createUiControl` from
+`@saas-maker/ui/lib/dom-controls` (including aliases and namespaces) is shared
+evidence. Recognized roots are button, input, textarea, select, details, dialog,
+progress and table. Summary is a disclosure child part and earns no extra
+control count. Conditional tag expressions qualify only when every branch is a
+supported literal. Calls retain their source line, `syntax: "dom-call"` and
+possible `tags`. Comments, quoted examples and regex bodies earn no call credit.
+This bounded lexical inspection does not resolve indirect calls, computed tags,
+lexical shadowing, JSX imperative calls or template interpolation calls.
+
+Direct JSX/markup usage of `NativeSelect`, `NativeDisclosure`, `NativeDialog`,
+`NativeProgress` and `NativeInput` imported from
+`@saas-maker/ui/components/native-controls` earns shared root credit; unused
+imports and `NativeSummary` earn none. Generic local wrappers have no inferred
+ownership. Native controls nested inside a shared Card or AppShell retain their
+own bespoke classification. The output schema and strict input manifest remain
+unchanged; optional DOM call evidence is additive.

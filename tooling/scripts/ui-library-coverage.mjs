@@ -8,13 +8,17 @@ import { pathToFileURL } from 'node:url';
 
 const WEB = /\.(?:tsx|jsx|astro|html|vue|svelte)$/;
 const SERVER = /\.[cm]?[jt]s$/;
-const SKIP = /(?:^|\/)(?:node_modules|vendor|dist|build|\.build|\.next|\.astro|archives?|docs?|tests?|__tests__|fixtures?|examples?|tooling|scripts|storybook|preserved)(?:\/|$)|(?:^|\/)artifacts\/design\/|\.(?:test|spec|stories)\./i;
+const SKIP = /(?:^|\/)(?:node_modules|vendor|dist|build|\.build|\.next|\.astro|archives?|docs?|tests?|__tests__|fixtures?|examples?|tooling|storybook|preserved|generated|design-review|design-mockups|mockups)(?:\/|$)|(?:^|\/)artifacts\/design\/|\.(?:test|spec|stories)\./i;
 const ROOT_NAMES = 'Button|Input|Textarea|Checkbox|RadioGroup|Switch|Select|Combobox|Slider|Calendar|DatePicker|Dialog|AlertDialog|Sheet|Drawer|Popover|Tooltip|DropdownMenu|ContextMenu|Tabs|Accordion|Card|Table|DataTable|Badge|Avatar|Skeleton|EmptyState|ErrorState|Alert|Progress|Separator|NavigationMenu|Sidebar|StatCard|MetricCard'.split('|');
 const ROOTS = new RegExp(`^(?:${ROOT_NAMES.join('|')})$`);
 const BLOCKS = new Set(['AppShell', 'PageHeader', 'StudioFooter', 'GalleryPage', 'WorkbenchPage', 'ConsolePage', 'SMAppShell', 'SMPage', 'SMPageHeader', 'SMFooter', 'SMGallery']);
 const LOCAL_CONTROL = new RegExp(`^(?:${ROOT_NAMES.join('|')}|Modal|Dropdown|Menu)$`);
 const CHILD_PART = /^(?:Card|Dialog|AlertDialog|Sheet|Drawer|Popover|Select|DropdownMenu|ContextMenu|Tabs|Accordion|Table|NavigationMenu)(?:Header|Footer|Title|Description|Content|Trigger|Close|Item|List|Value|Group|Label|Separator|Row|Cell|Head|Body|Caption)$/;
 const HTML_CONTROLS = new Set(['button', 'input', 'textarea', 'select', 'table', 'dialog', 'details', 'progress', 'meter']);
+const DOM_CONTROLS = new Set(['button', 'input', 'textarea', 'select', 'details', 'dialog', 'progress', 'table']);
+const NATIVE_ROOTS = new Set(['NativeSelect', 'NativeDisclosure', 'NativeDialog', 'NativeProgress', 'NativeInput']);
+const NATIVE_PATH = '@saas-maker/ui/components/native-controls';
+const DOM_PATH = '@saas-maker/ui/lib/dom-controls';
 const SWIFT_CONTROLS = new Set(['Button', 'TextField', 'SecureField', 'TextEditor', 'Toggle', 'Slider', 'Picker', 'DatePicker', 'ProgressView', 'Table', 'Menu']);
 const SWIFT_SHARED = new Set(['SMCard', 'SMSectionHeader', 'SMStatusPill', 'SMSkeletonRow', 'SMSkeletonCard', 'SMEmptyState', 'SMErrorState', 'SMLoadable', 'SMSparkline', 'SMAreaChart', 'SMStatCard', 'SMUptimeStrip', 'SMAppShell', 'SMPageHeader', 'SMPage', 'SMFooter', 'SMGallery']);
 
@@ -99,6 +103,90 @@ function serverDocuments(source) {
   return { code: code.join(''), markup: markup.join(''), documents };
 }
 
+// Bounded lexical evidence, not a JS parser. Calls in ordinary JS/TS are
+// supported; JSX, template interpolations, computed/indirect calls and dynamic
+// tag expressions remain outside this recognition method.
+function callTokens(source) {
+  const tokens = []; let i = 0;
+  while (i < source.length) {
+    if (/\s/.test(source[i])) { i++; continue; }
+    if (source.startsWith('//', i)) { const end = source.indexOf('\n', i); i = end < 0 ? source.length : end; continue; }
+    if (source.startsWith('/*', i)) { const end = source.indexOf('*/', i + 2); i = end < 0 ? source.length : end + 2; continue; }
+    const start = i, c = source[i];
+    if (/["'`]/.test(c)) {
+      i++; let escaped = false;
+      while (i < source.length) { if (source[i] === '\\') { escaped = true; i += 2; } else if (source[i++] === c) break; }
+      tokens.push({ value: source.slice(start + 1, i - 1), literal: c !== '`' && !escaped && source[i - 1] === c, index: start }); continue;
+    }
+    // Skip regex bodies where a new expression can start. Never interpret their
+    // example text as function calls. Division is retained as punctuation.
+    if (c === '/' && (!tokens.length || /^(?:[=(:,;!{?]|return|throw|case|=>)$/.test(tokens.at(-1).value))) {
+      i++; let bracket = false;
+      while (i < source.length && source[i] !== '\n') { const next = source[i++]; if (next === '\\') i++; else if (next === '[') bracket = true; else if (next === ']') bracket = false; else if (next === '/' && !bracket) break; }
+      while (/[a-z]/i.test(source[i] ?? '')) i++;
+      tokens.push({ value: 'regex', index: start }); continue;
+    }
+    if (/[A-Za-z_$]/.test(c)) { i++; while (/[\w$]/.test(source[i] ?? '')) i++; }
+    else if (source.startsWith('=>', i)) i += 2;
+    else i++;
+    tokens.push({ value: source.slice(start, i), index: start });
+  }
+  return tokens;
+}
+
+function literalTags(tokens) {
+  // Strip only parentheses that enclose the complete expression.
+  while (tokens[0]?.value === '(') {
+    let depth = 0, end = -1;
+    for (let i = 0; i < tokens.length; i++) { if (tokens[i].value === '(') depth++; else if (tokens[i].value === ')' && --depth === 0) { end = i; break; } }
+    if (end !== tokens.length - 1) break;
+    tokens = tokens.slice(1, -1);
+  }
+  if (tokens.length === 1 && tokens[0].literal && (DOM_CONTROLS.has(tokens[0].value) || tokens[0].value === 'summary')) return [tokens[0].value];
+  let depth = 0, question = -1, nested = 0;
+  for (let i = 0; i < tokens.length; i++) {
+    const value = tokens[i].value;
+    if (['(', '[', '{'].includes(value)) depth++;
+    else if ([')', ']', '}'].includes(value)) depth--;
+    else if (!depth && value === '?') { if (question < 0) question = i; else nested++; }
+    else if (!depth && value === ':' && question >= 0) {
+      if (nested) { nested--; continue; }
+      if (!question) return null;
+      const yes = literalTags(tokens.slice(question + 1, i)), no = literalTags(tokens.slice(i + 1));
+      return yes && no ? [...new Set([...yes, ...no])] : null;
+    }
+  }
+  return null;
+}
+
+function inspectDomCalls(source, code, imports, namespaces, shared, bespoke) {
+  const tokens = callTokens(source);
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i]; if (!/^[A-Za-z_$][\w$]*$/.test(token.value) || code.slice(token.index, token.index + token.value.length) !== token.value || tokens[i - 1]?.value === '.') continue;
+    let open = i + 1, owned = imports.get(token.value)?.name === 'createUiControl' && imports.get(token.value)?.path === DOM_PATH;
+    let constructor = token.value === 'element';
+    if (tokens[i + 1]?.value === '.' && tokens[i + 3]?.value === '(') {
+      open = i + 3;
+      constructor = token.value === 'document' && tokens[i + 2].value === 'createElement';
+      owned = namespaces.get(token.value) === DOM_PATH && tokens[i + 2].value === 'createUiControl';
+    }
+    if ((!constructor && !owned) || tokens[open]?.value !== '(') continue;
+    let end = open + 1, depth = 0;
+    for (; end < tokens.length; end++) {
+      const value = tokens[end].value;
+      if (!depth && (value === ',' || value === ')')) break;
+      if (['(', '[', '{'].includes(value)) depth++;
+      else if ([')', ']', '}'].includes(value)) depth--;
+    }
+    if (end === tokens.length) continue;
+    const tags = literalTags(tokens.slice(open + 1, end));
+    // Summary is a disclosure child part, not an independent eligible root.
+    if (!tags || tags.includes('summary')) continue;
+    const name = owned ? tokens.slice(i, open).map(token => token.value).join('') : tags.length === 1 ? tags[0] : 'element';
+    (owned ? shared : bespoke).push({ name, line: source.slice(0, token.index).split('\n').length, syntax: 'dom-call', tags });
+  }
+}
+
 export function inspectSource(source, filename) {
   const shared = [], bespoke = [], blocks = [];
   if (filename.endsWith('.swift')) {
@@ -115,30 +203,33 @@ export function inspectSource(source, filename) {
     for (let n = 0; n < styled; n++) { const index = bespoke.findIndex(x => x.name === 'Button'); if (index < 0) break; shared.push({ ...bespoke.splice(index, 1)[0], name: 'Button + SMButtonStyle' }); }
     return { shared, bespoke, blocks, tokens: imported && /\bSM(?:Palette|Theme|Typography|Font|Color|Motion)\b/.test(code), supported: true };
   }
-  const imports = new Map(), namespaces = new Set();
-  const clean = source.replace(/\/\*[\s\S]*?\*\/|<!--[^]*?-->/g, '');
+  const imports = new Map(), namespaces = new Map();
+  const clean = source.replace(/\/\*[\s\S]*?\*\/|<!--[^]*?-->/g, text => text.replace(/[^\n]/g, ' '));
+  const importCode = serverDocuments(clean).code;
   for (const match of clean.matchAll(/(?:^|\n)\s*import\s+((?:(?!\bimport\b|\bfrom\s*['"])[^;])+?)\s+from\s*['"]([^'"]+)['"]/g)) {
+    if (!/^\s*import\b/.test(importCode.slice(match.index, match.index + match[0].indexOf('import') + 6))) continue;
     if (!/^@saas-maker\/(?:ui|templates)(?:\/|$)/.test(match[2])) continue;
-    const clause = match[1].replace(/\/\/[^\n]*/g, ' '); const namespace = clause.match(/\*\s+as\s+(\w+)/)?.[1]; if (namespace) namespaces.add(namespace);
+    const clause = match[1].replace(/\/\/[^\n]*/g, ' '); const namespace = clause.match(/\*\s+as\s+(\w+)/)?.[1]; if (namespace) namespaces.set(namespace, match[2]);
     const named = clause.match(/\{([^}]+)\}/)?.[1] ?? '';
-    for (const part of named.split(',')) { const [name, alias = name] = part.trim().split(/\s+as\s+/); if (name && !name.startsWith('type ')) imports.set(alias, name); }
-    const defaultName = clause.match(/^\s*(\w+)\s*(?:,|$)/)?.[1]; if (defaultName) imports.set(defaultName, defaultName);
+    for (const part of named.split(',')) { const [name, alias = name] = part.trim().split(/\s+as\s+/); if (name && !name.startsWith('type ')) imports.set(alias, { name, path: match[2] }); }
+    const defaultName = clause.match(/^\s*(\w+)\s*(?:,|$)/)?.[1]; if (defaultName) imports.set(defaultName, { name: defaultName, path: match[2] });
   }
   const server = SERVER.test(filename) ? serverDocuments(source) : null;
   const html = !!server || /\.(?:html|astro|vue|svelte)$/.test(filename);
   const blank = text => text.replace(/[^\n]/g, ' ');
   const markup = server ? server.markup.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, blank) : html ? source.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, blank).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, blank) : source;
   for (const tag of sourceTags(markup, { html })) {
-    const [namespace, member] = tag.name.split('.'); const original = imports.get(tag.name) ?? (namespaces.has(namespace) ? member : null);
+    const [namespace, member] = tag.name.split('.'); const binding = imports.get(tag.name) ?? (namespaces.has(namespace) ? { name: member, path: namespaces.get(namespace) } : null); const original = binding?.name;
     if (original && BLOCKS.has(original)) blocks.push(tag);
-    else if (original && ROOTS.test(original)) shared.push(tag);
+    else if (original && (ROOTS.test(original) || (binding.path === NATIVE_PATH && NATIVE_ROOTS.has(original)))) shared.push(tag);
     else if (HTML_CONTROLS.has(tag.name) || (!original && !CHILD_PART.test(tag.name) && !/^Sidebar(?:Menu.*|Group.*|Header|Footer|Content|Input)$/.test(tag.name) && LOCAL_CONTROL.test(tag.name))) bespoke.push(tag);
     else if (tag.name === 'studio-footer' && /(?:@saas-maker\/ui|sassmaker\.com\/.*footer)/.test(source)) blocks.push(tag);
   }
-  if (server && !blocks.some(block => block.name === 'studio-footer')) for (const [alias, original] of imports) {
+  if (server && !blocks.some(block => block.name === 'studio-footer')) for (const [alias, { name: original }] of imports) {
     if (original !== 'renderStudioFooterHtml') continue;
     for (const match of server.code.matchAll(new RegExp(`\\b${alias}\\s*\\(`, 'g'))) blocks.push({ name: original, line: source.slice(0, match.index).split('\n').length });
   }
+  if (server) inspectDomCalls(source, server.code, imports, namespaces, shared, bespoke);
   return { shared, bespoke, blocks, documents: server?.documents ?? 0, tokens: /@saas-maker\/(?:ui\/(?:theme|styles|source-[\w-]+)\.css|tokens)/.test(clean), supported: true };
 }
 
@@ -152,7 +243,7 @@ export function scanRepository(root, { prefix = '', excludePrefixes = [] } = {})
   const revision = git(root, ['rev-parse', sourceRef]).trim();
   const tracked = git(root, ['ls-tree', '-r', '--name-only', '-z', revision]).split('\0').filter(Boolean);
   if (prefix && !tracked.some(f => f.startsWith(`${prefix}/`))) throw Object.assign(Error('Prefix not found'), { code: 'INVALID_SOURCE_PREFIX' });
-  const files = tracked.filter(f => !/[\n\r]/.test(f) && (!prefix || f.startsWith(`${prefix}/`)) && !excludePrefixes.some(p => f === p || f.startsWith(`${p}/`)) && !SKIP.test(f) && (WEB.test(f) || SERVER.test(f) || f.endsWith('.swift')));
+  const files = tracked.filter(f => !/[\n\r]/.test(f) && (!prefix || f.startsWith(`${prefix}/`)) && !excludePrefixes.some(p => f === p || f.startsWith(`${p}/`)) && !SKIP.test(f) && !/(?:^|\/)scripts(?:\/|$)/i.test(f.replace(/(?:^|\/)src\/scripts\//i, '/')) && (WEB.test(f) || SERVER.test(f) || f.endsWith('.swift')));
   const dirty = false;
   const surfaces = new Map(); let omitted = 0, documents = 0;
   const contents = new Map();
@@ -175,13 +266,13 @@ export function scanRepository(root, { prefix = '', excludePrefixes = [] } = {})
   }
   const rows = [...surfaces.values()].map(s => ({ ...s, eligible: s.shared + s.bespoke, percent: s.shared + s.bespoke ? Math.round(1000 * s.shared / (s.shared + s.bespoke)) / 10 : null }));
   const shared = rows.reduce((n, r) => n + r.shared, 0), eligible = rows.reduce((n, r) => n + r.eligible, 0);
-  return { revision, sourceRef, dirty, scannedFiles: files.length, omittedFiles: omitted, shared, eligible, percent: eligible ? Math.round(1000 * shared / eligible) / 10 : null, surfaces: rows, status: eligible ? 'source-estimate' : documents ? 'no-eligible-controls' : 'not-measured', gap: eligible ? 'Committed source call sites only. Indirect wrappers, constructed HTML fragments, unrecognised custom controls and runtime frequency/area are not measured; native style association is file-level. Tokens, footers and shared shells are reported separately without control credit.' : documents ? 'Complete inline HTML documents were inspected; no eligible standard controls were identified. Links and informational content are outside this denominator, so no percentage is assigned. Shared footer blocks are reported separately. Constructed fragments and runtime visibility remain unverified.' : 'No supported reusable control call sites identified. CLI-only, template-only, dynamic-rendered and missing UI sources require scoped review; this is not zero adoption.' };
+  return { revision, sourceRef, dirty, scannedFiles: files.length, omittedFiles: omitted, shared, eligible, percent: eligible ? Math.round(1000 * shared / eligible) / 10 : null, surfaces: rows, status: eligible ? 'source-estimate' : documents ? 'no-eligible-controls' : 'not-measured', gap: eligible ? 'Committed source call sites only. Indirect wrappers, JSX imperative calls, template interpolations, dynamic tag expressions, constructed HTML fragments, unrecognised custom controls and runtime frequency/area are not measured; native style association is file-level. Tokens, footers and shared shells are reported separately without control credit.' : documents ? 'Complete inline HTML documents were inspected; no eligible standard controls were identified. Links and informational content are outside this denominator, so no percentage is assigned. Shared footer blocks are reported separately. Constructed fragments and runtime visibility remain unverified.' : 'No supported reusable control call sites identified. CLI-only, template-only, dynamic-rendered and missing UI sources require scoped review; this is not zero adoption.' };
 }
 
 export function collectCoverage(manifest) {
   if (!manifest || Object.keys(manifest).some(k => !['schemaVersion', 'projects'].includes(k)) || manifest.schemaVersion !== 1 || !Array.isArray(manifest.projects)) throw Error('Invalid UI coverage manifest');
   const seen = new Set();
-  return { schemaVersion: 'ui-library-source-coverage.v1', observedAt: new Date().toISOString(), method: 'shared-control-call-sites.v2', records: Object.fromEntries(manifest.projects.map(p => {
+  return { schemaVersion: 'ui-library-source-coverage.v1', observedAt: new Date().toISOString(), method: 'shared-control-call-sites.v3', records: Object.fromEntries(manifest.projects.map(p => {
     if (!p || Object.keys(p).some(k => !['id', 'root', 'prefix', 'excludePrefixes'].includes(k)) || !/^[a-z0-9-]+$/.test(p.id) || seen.has(p.id) || !isAbsolute(p.root) || (p.prefix !== undefined && (typeof p.prefix !== 'string' || isAbsolute(p.prefix) || p.prefix.split('/').includes('..'))) || (p.excludePrefixes !== undefined && (!Array.isArray(p.excludePrefixes) || p.excludePrefixes.some(x => typeof x !== 'string' || isAbsolute(x) || x.split('/').includes('..'))))) throw Error('Invalid UI coverage project');
     seen.add(p.id); let record; try { record = scanRepository(p.root, p); } catch (error) { const missing = error.code === 'ENOENT' || Number.isInteger(error.status); record = { status: missing ? 'unavailable' : 'scan-failed', revision: null, dirty: null, shared: 0, eligible: 0, percent: null, surfaces: [], gap: missing ? 'Source checkout or Git revision unavailable; no percentage inferred.' : `Source scan failed (${String(error.code).replace(/[^A-Z0-9_]/g, '').slice(0, 60)}); no percentage inferred.` }; }
     return [p.id, record];

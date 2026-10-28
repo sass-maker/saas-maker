@@ -46,6 +46,7 @@ test('unrecognised custom control names remain outside the identified-control me
 });
 test('missing checkout remains unknown and malformed manifests fail closed', () => {
   const result = collectCoverage({ schemaVersion: 1, projects: [{ id: 'demo', root: '/nonexistent/ui-coverage-fixture' }] });
+  assert.equal(result.method, 'shared-control-call-sites.v3'); assert.equal(result.schemaVersion, 'ui-library-source-coverage.v1');
   assert.equal(result.records.demo.percent, null); assert.equal(result.records.demo.status, 'unavailable');
   assert.throws(() => collectCoverage({ schemaVersion: 1, projects: [{ id: 'demo', root: '/tmp', prefix: '../private' }] }), /Invalid/);
   assert.throws(() => collectCoverage({ schemaVersion: 1, projects: [], unexpected: true }), /Invalid/);
@@ -145,4 +146,83 @@ test('server HTML documents retain lines, exclude scripts and interpolations, an
 test('footer renderer and its custom-element wrapper count as one block', () => {
   const source = "import { renderStudioFooterHtml } from '@saas-maker/ui/footer-html';\nconst footer=renderStudioFooterHtml({});\nconst html=`<html><body><studio-footer>${footer}</studio-footer></body></html>`;";
   const result=inspectSource(source,'worker.ts'); assert.equal(result.blocks.length,1); assert.equal(result.blocks[0].name,'studio-footer');
+});
+
+
+test('imperative control calls retain source lines and prove library constructor ownership', () => {
+  const source = [
+    "import { createUiControl as control } from '@saas-maker/ui/lib/dom-controls';",
+    "const unused = 'element(\"input\")'; // control('input')",
+    "const example = `document.createElement('textarea')`;",
+    "element('button', { label: 'Save' });",
+    "document.createElement('input');",
+    "control('select', {}, []);",
+    "control(flag ? 'button' : 'textarea');",
+    "control(flag ? 'button' : tag);",
+    "control('div');",
+    "other.element('button');",
+  ].join('\n');
+  const found = inspectSource(source, 'apps/web/src/scripts/dashboard-client.ts');
+  assert.deepEqual(found.bespoke.map(x => [x.name, x.line]), [['button', 4], ['input', 5]]);
+  assert.deepEqual(found.shared.map(x => [x.name, x.line]), [['control', 6], ['control', 7]]);
+  assert.deepEqual(found.shared[1].tags, ['button', 'textarea']);
+  assert.equal(inspectSource("import { createUiControl } from './local'; createUiControl('button')", 'client.ts').shared.length, 0);
+});
+
+test('native wrappers require actual imported usage and summary is a child part', () => {
+  const source = `import { NativeSelect as Choice, NativeDisclosure, NativeDialog, NativeProgress, NativeInput, NativeSummary } from '@saas-maker/ui/components/native-controls';
+export default <><Choice/><NativeDisclosure><NativeSummary>Info</NativeSummary><button/></NativeDisclosure><NativeDialog/><NativeProgress/><NativeInput/></>`;
+  const found = inspectSource(source, 'P.tsx');
+  assert.equal(found.shared.length, 5); assert.deepEqual(found.bespoke.map(x => x.name), ['button']);
+  assert.equal(inspectSource(source.split('\n')[0], 'P.tsx').shared.length, 0);
+  assert.equal(inspectSource(source.replace('@saas-maker/ui/components/native-controls', './native-controls'), 'P.tsx').shared.length, 0);
+});
+
+test('production src/scripts are scanned but tooling, mockups and preview routes stay excluded', () => {
+  const root = mkdtempSync(join(tmpdir(), 'ui-coverage-scripts-'));
+  const git = (...args) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  git('init', '-b', 'main');
+  for (const path of ['apps/web/src/scripts/dashboard-client.ts', 'scripts/task.ts', 'tooling/scripts/probe.ts', 'apps/web/src/pages/design-review/index.astro', 'artifacts/design/probe.html', 'apps/web/src/generated/render.ts']) {
+    mkdirSync(join(root, path, '..'), { recursive: true }); writeFileSync(join(root, path), path.endsWith('.astro') || path.endsWith('.html') ? '<button/>' : "element('button');");
+  }
+  git('add', '.'); git('-c', 'user.name=Coverage Test', '-c', 'user.email=test@example.invalid', 'commit', '-m', 'fixture');
+  const found = scanRepository(root);
+  assert.equal(found.scannedFiles, 1); assert.equal(found.eligible, 1);
+  assert.equal(found.surfaces[0].files[0].path, 'apps/web/src/scripts/dashboard-client.ts');
+});
+
+
+test('ordinary TS types, quoted calls, regex examples and fake imports never produce controls', () => {
+  const source = [
+    'const typed = <Button>value;',
+    'const other: Array<Input> = [];',
+    'const regex = /element(\\\'button\\\')/;',
+    'const regexArrow = () => /element(\\\'button\\\')/;',
+    "const sample = `import { createUiControl } from '@saas-maker/ui/lib/dom-controls';`",
+    "createUiControl('button');",
+    '`element`(\"input\");',
+    "// document.createElement('select')",
+  ].join('\n');
+  const found = inspectSource(source, 'client.ts');
+  assert.deepEqual(found.shared, []); assert.deepEqual(found.bespoke, []);
+});
+
+test('conditional control recognition requires every branch and excludes summary child parts', () => {
+  const source = `import * as UI from '@saas-maker/ui/lib/dom-controls';
+UI.createUiControl(flag ? (other ? 'button' : 'input') : 'textarea');
+UI.createUiControl(flag ? 'button' : dynamic);
+UI.createUiControl(flag ? 'button' : 'div');
+UI.createUiControl('summary');
+element(flag ? 'input' : 'select');
+unknown('button');`;
+  const found = inspectSource(source, 'client.ts');
+  assert.equal(found.shared.length, 1); assert.equal(found.bespoke.length, 1);
+  assert.deepEqual(found.shared[0].tags, ['button', 'input', 'textarea']);
+});
+
+test('shared blocks do not transfer ownership to nested native controls', () => {
+  const found = inspectSource("import { Card, AppShell } from '@saas-maker/ui'; export default <AppShell><Card><select/><input/><details><summary>More</summary><button/></details></Card></AppShell>", 'P.tsx');
+  assert.deepEqual(found.shared.map(x => x.name), ['Card']);
+  assert.deepEqual(found.bespoke.map(x => x.name), ['select', 'input', 'details', 'button']);
+  assert.deepEqual(found.blocks.map(x => x.name), ['AppShell']);
 });
