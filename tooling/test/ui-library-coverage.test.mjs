@@ -80,10 +80,12 @@ test('scans committed main rather than dirty source and normalizes prefixes; inv
   const git = (...args) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   git('init', '-b', 'main'); mkdirSync(join(root, 'ui')); writeFileSync(join(root, 'ui/Page.tsx'), `import { Button } from '@saas-maker/ui/components/button';\nexport const P=()=> <Button/>;`);
   mkdirSync(join(root, 'server')); writeFileSync(join(root, 'server/worker.ts'), 'const html=`<!doctype html><html><body><a href="/">Read</a></body></html>`;');
-  git('add', 'ui/Page.tsx', 'server/worker.ts'); git('-c', 'user.name=Coverage Test', '-c', 'user.email=test@example.invalid', 'commit', '-m', 'fixture'); git('update-ref', 'refs/remotes/origin/main', 'HEAD');
+  mkdirSync(join(root,'artifacts/design'),{recursive:true}); writeFileSync(join(root,'artifacts/design/probe.html'),'<button>Design option</button>');
+  git('add', 'ui/Page.tsx', 'server/worker.ts', 'artifacts/design/probe.html'); git('-c', 'user.name=Coverage Test', '-c', 'user.email=test@example.invalid', 'commit', '-m', 'fixture'); git('update-ref', 'refs/remotes/origin/main', 'HEAD');
   writeFileSync(join(root, 'ui/Page.tsx'), 'export const P=()=> <input/>;');
   const result = scanRepository(root, { prefix: 'ui/' }); assert.equal(result.shared, 1); assert.equal(result.eligible, 1); assert.equal(result.dirty, false); assert.equal(result.sourceRef, 'origin/main');
   assert.equal(scanRepository(root, { prefix: './ui' }).shared, 1);
+  assert.equal(scanRepository(root).eligible,1);
   const informational=scanRepository(root,{prefix:'server'}); assert.equal(informational.status,'no-eligible-controls'); assert.equal(informational.percent,null); assert.equal(informational.surfaces[0].files[0].documents,1);
   assert.throws(() => scanRepository(root, { prefix: 'missing' }), /Prefix not found/);
   assert.throws(() => scanRepository(join(root, 'ui')), /repository root/);

@@ -28,7 +28,7 @@ recognition covers selected shared/native control types and applied shared
 button styles. Tokens, content text, generic layout containers, icons, models
 and product-specific canvases/gameplay do not enter the control denominator.
 Tests, fixtures, documentation, vendored/generated build output and archives
-are excluded. A factory shared by products requires an explicitly scoped input;
+and `artifacts/design/` mockups are excluded. A factory shared by products requires an explicitly scoped input;
 scanning a whole factory must not credit every product with all of its UI.
 
 This is deliberately a **source estimate**, not a percentage of pixels, actual

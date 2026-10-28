@@ -8,7 +8,7 @@ import { pathToFileURL } from 'node:url';
 
 const WEB = /\.(?:tsx|jsx|astro|html|vue|svelte)$/;
 const SERVER = /\.[cm]?[jt]s$/;
-const SKIP = /(?:^|\/)(?:node_modules|vendor|dist|build|\.build|\.next|\.astro|archives?|docs?|tests?|__tests__|fixtures?|examples?|tooling|scripts|storybook|preserved)(?:\/|$)|\.(?:test|spec|stories)\./i;
+const SKIP = /(?:^|\/)(?:node_modules|vendor|dist|build|\.build|\.next|\.astro|archives?|docs?|tests?|__tests__|fixtures?|examples?|tooling|scripts|storybook|preserved)(?:\/|$)|(?:^|\/)artifacts\/design\/|\.(?:test|spec|stories)\./i;
 const ROOT_NAMES = 'Button|Input|Textarea|Checkbox|RadioGroup|Switch|Select|Combobox|Slider|Calendar|DatePicker|Dialog|AlertDialog|Sheet|Drawer|Popover|Tooltip|DropdownMenu|ContextMenu|Tabs|Accordion|Card|Table|DataTable|Badge|Avatar|Skeleton|EmptyState|ErrorState|Alert|Progress|Separator|NavigationMenu|Sidebar|StatCard|MetricCard'.split('|');
 const ROOTS = new RegExp(`^(?:${ROOT_NAMES.join('|')})$`);
 const BLOCKS = new Set(['AppShell', 'PageHeader', 'StudioFooter', 'GalleryPage', 'WorkbenchPage', 'ConsolePage', 'SMAppShell', 'SMPage', 'SMPageHeader', 'SMFooter', 'SMGallery']);
