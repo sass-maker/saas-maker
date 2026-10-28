@@ -44,6 +44,7 @@ const activeScripts = new Set([
   'reporting-loop-preflight.mjs',
   'slop-score.mjs',
   'sync-agent-readability.mjs',
+  'ui-library-coverage.mjs',
   'unlink-project-agent-assets.sh',
   'validate-tooling.mjs',
   'verify-local.mjs',
