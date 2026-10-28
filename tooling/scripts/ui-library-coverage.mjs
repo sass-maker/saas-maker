@@ -7,6 +7,7 @@ import { isAbsolute, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const WEB = /\.(?:tsx|jsx|astro|html|vue|svelte)$/;
+const SERVER = /\.[cm]?[jt]s$/;
 const SKIP = /(?:^|\/)(?:node_modules|vendor|dist|build|\.build|\.next|\.astro|archives?|docs?|tests?|__tests__|fixtures?|examples?|tooling|scripts|storybook|preserved)(?:\/|$)|\.(?:test|spec|stories)\./i;
 const ROOT_NAMES = 'Button|Input|Textarea|Checkbox|RadioGroup|Switch|Select|Combobox|Slider|Calendar|DatePicker|Dialog|AlertDialog|Sheet|Drawer|Popover|Tooltip|DropdownMenu|ContextMenu|Tabs|Accordion|Card|Table|DataTable|Badge|Avatar|Skeleton|EmptyState|ErrorState|Alert|Progress|Separator|NavigationMenu|Sidebar|StatCard|MetricCard'.split('|');
 const ROOTS = new RegExp(`^(?:${ROOT_NAMES.join('|')})$`);
@@ -54,6 +55,50 @@ function codeOnly(source) {
   return source.replace(/\/\*[\s\S]*?\*\/|\/\/[^\n]*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g, text => text.replace(/[^\n]/g, ' '));
 }
 
+// Only complete, untagged HTML document literals are supported in server code.
+// Blank code/interpolations at their original offsets; never interpret JS types
+// or example strings as markup. Fragments and constructed documents stay a gap.
+function serverDocuments(source) {
+  const code = source.split(''), markup = source.replace(/[^\n]/g, ' ').split(''); let documents = 0;
+  const blank = (start, end) => { for (let k = start; k < end; k++) if (code[k] !== '\n') code[k] = ' '; };
+  function quoted(start) {
+    const quote = source[start]; let i = start + 1;
+    while (i < source.length) { if (source[i] === '\\') i += 2; else if (source[i++] === quote) break; }
+    blank(start, i); return i;
+  }
+  function walk(start, interpolation = false) {
+    let i = start, depth = 1;
+    while (i < source.length) {
+      if (source.startsWith('//', i)) { const end = source.indexOf('\n', i); const next = end < 0 ? source.length : end; blank(i, next); i = next; }
+      else if (source.startsWith('/*', i)) { const end = source.indexOf('*/', i + 2); const next = end < 0 ? source.length : end + 2; blank(i, next); i = next; }
+      else if (source[i] === '"' || source[i] === "'") i = quoted(i);
+      else if (source[i] === '`') i = template(i);
+      else if (interpolation && source[i] === '{') { depth++; i++; }
+      else if (interpolation && source[i] === '}') { if (--depth === 0) return i + 1; i++; }
+      else i++;
+    }
+    return i;
+  }
+  function template(start) {
+    const before = source.slice(0, start).trimEnd().at(-1) ?? '';
+    const document = !/[\w$.)\]]/.test(before) && /^\s*(?:<!doctype\s+html\b|<html\b)/i.test(source.slice(start + 1));
+    let i = start + 1; const ranges = []; let chunk = i;
+    while (i < source.length) {
+      if (source[i] === '\\') { i += 2; continue; }
+      if (source.startsWith('${', i)) { ranges.push([chunk, i]); i = walk(i + 2, true); chunk = i; continue; }
+      if (source[i] === '`') { ranges.push([chunk, i]); break; }
+      i++;
+    }
+    // Require a closing literal and document end, not a partial example.
+    if (document && source[i] === '`' && ranges.some(([a, b]) => /<\/html\s*>/i.test(source.slice(a, b)))) {
+      documents++; for (const [a, b] of ranges) for (let k = a; k < b; k++) markup[k] = source[k];
+    }
+    const end = Math.min(i + 1, source.length); blank(start, end); return end;
+  }
+  walk(0);
+  return { code: code.join(''), markup: markup.join(''), documents };
+}
+
 export function inspectSource(source, filename) {
   const shared = [], bespoke = [], blocks = [];
   if (filename.endsWith('.swift')) {
@@ -79,9 +124,10 @@ export function inspectSource(source, filename) {
     for (const part of named.split(',')) { const [name, alias = name] = part.trim().split(/\s+as\s+/); if (name && !name.startsWith('type ')) imports.set(alias, name); }
     const defaultName = clause.match(/^\s*(\w+)\s*(?:,|$)/)?.[1]; if (defaultName) imports.set(defaultName, defaultName);
   }
-  const html = /\.(?:html|astro|vue|svelte)$/.test(filename);
+  const server = SERVER.test(filename) ? serverDocuments(source) : null;
+  const html = !!server || /\.(?:html|astro|vue|svelte)$/.test(filename);
   const blank = text => text.replace(/[^\n]/g, ' ');
-  const markup = html ? source.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, blank).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, blank) : source;
+  const markup = server ? server.markup.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, blank) : html ? source.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, blank).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, blank) : source;
   for (const tag of sourceTags(markup, { html })) {
     const [namespace, member] = tag.name.split('.'); const original = imports.get(tag.name) ?? (namespaces.has(namespace) ? member : null);
     if (original && BLOCKS.has(original)) blocks.push(tag);
@@ -89,7 +135,11 @@ export function inspectSource(source, filename) {
     else if (HTML_CONTROLS.has(tag.name) || (!original && !CHILD_PART.test(tag.name) && !/^Sidebar(?:Menu.*|Group.*|Header|Footer|Content|Input)$/.test(tag.name) && LOCAL_CONTROL.test(tag.name))) bespoke.push(tag);
     else if (tag.name === 'studio-footer' && /(?:@saas-maker\/ui|sassmaker\.com\/.*footer)/.test(source)) blocks.push(tag);
   }
-  return { shared, bespoke, blocks, tokens: /@saas-maker\/(?:ui\/(?:theme|styles|source-[\w-]+)\.css|tokens)/.test(clean), supported: true };
+  if (server && !blocks.some(block => block.name === 'studio-footer')) for (const [alias, original] of imports) {
+    if (original !== 'renderStudioFooterHtml') continue;
+    for (const match of server.code.matchAll(new RegExp(`\\b${alias}\\s*\\(`, 'g'))) blocks.push({ name: original, line: source.slice(0, match.index).split('\n').length });
+  }
+  return { shared, bespoke, blocks, documents: server?.documents ?? 0, tokens: /@saas-maker\/(?:ui\/(?:theme|styles|source-[\w-]+)\.css|tokens)/.test(clean), supported: true };
 }
 
 function git(root, args) { return execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 15_000, maxBuffer: 8 * 1024 * 1024 }); }
@@ -102,9 +152,9 @@ export function scanRepository(root, { prefix = '', excludePrefixes = [] } = {})
   const revision = git(root, ['rev-parse', sourceRef]).trim();
   const tracked = git(root, ['ls-tree', '-r', '--name-only', '-z', revision]).split('\0').filter(Boolean);
   if (prefix && !tracked.some(f => f.startsWith(`${prefix}/`))) throw Object.assign(Error('Prefix not found'), { code: 'INVALID_SOURCE_PREFIX' });
-  const files = tracked.filter(f => !/[\n\r]/.test(f) && (!prefix || f.startsWith(`${prefix}/`)) && !excludePrefixes.some(p => f === p || f.startsWith(`${p}/`)) && !SKIP.test(f) && (WEB.test(f) || f.endsWith('.swift')));
+  const files = tracked.filter(f => !/[\n\r]/.test(f) && (!prefix || f.startsWith(`${prefix}/`)) && !excludePrefixes.some(p => f === p || f.startsWith(`${p}/`)) && !SKIP.test(f) && (WEB.test(f) || SERVER.test(f) || f.endsWith('.swift')));
   const dirty = false;
-  const surfaces = new Map(); let omitted = 0;
+  const surfaces = new Map(); let omitted = 0, documents = 0;
   const contents = new Map();
   const sizes = gitBatchSizes(root, revision, files);
   const readable = files.filter(file => { const size = sizes.get(file); if (size == null || size > 1024 * 1024) { omitted++; return false; } return true; });
@@ -116,22 +166,22 @@ export function scanRepository(root, { prefix = '', excludePrefixes = [] } = {})
   }
   for (const [file, text] of contents) {
     if (Buffer.byteLength(text) > 1024 * 1024) { omitted++; continue; }
-    const found = inspectSource(text, file); if (!found.shared.length && !found.bespoke.length && !found.blocks.length && !found.tokens) continue;
+    const found = inspectSource(text, file); documents += found.documents ?? 0; if (!found.documents && !found.shared.length && !found.bespoke.length && !found.blocks.length && !found.tokens) continue;
     const kind = file.endsWith('.swift') ? 'native' : /(?:^|\/)(?:landing(?:-page)?(?:-astro)?|website|showcase|site)(?:\/|$)/.test(file) ? 'landing' : 'web';
     const surface = surfaces.get(kind) ?? { kind, shared: 0, bespoke: 0, files: [], tokenFiles: 0, sharedBlocks: 0 };
     surface.sharedBlocks += found.blocks.length;
     surface.shared += found.shared.length; surface.bespoke += found.bespoke.length; if (found.tokens) surface.tokenFiles++;
-    surface.files.push({ path: file, sha256: createHash('sha256').update(text).digest('hex'), shared: found.shared, bespoke: found.bespoke, blocks: found.blocks, tokens: found.tokens }); surfaces.set(kind, surface);
+    surface.files.push({ path: file, sha256: createHash('sha256').update(text).digest('hex'), shared: found.shared, bespoke: found.bespoke, blocks: found.blocks, tokens: found.tokens, documents: found.documents ?? 0 }); surfaces.set(kind, surface);
   }
   const rows = [...surfaces.values()].map(s => ({ ...s, eligible: s.shared + s.bespoke, percent: s.shared + s.bespoke ? Math.round(1000 * s.shared / (s.shared + s.bespoke)) / 10 : null }));
   const shared = rows.reduce((n, r) => n + r.shared, 0), eligible = rows.reduce((n, r) => n + r.eligible, 0);
-  return { revision, sourceRef, dirty, scannedFiles: files.length, omittedFiles: omitted, shared, eligible, percent: eligible ? Math.round(1000 * shared / eligible) / 10 : null, surfaces: rows, status: eligible ? 'source-estimate' : 'not-measured', gap: eligible ? 'Committed source call sites only. Indirect wrappers, render strings, unrecognised custom controls and runtime frequency/area are not measured; native style association is file-level. Tokens, footers and shared shells are reported separately without control credit.' : 'No supported reusable control call sites identified. CLI-only, template-only, dynamic-rendered and missing UI sources require scoped review; this is not zero adoption.' };
+  return { revision, sourceRef, dirty, scannedFiles: files.length, omittedFiles: omitted, shared, eligible, percent: eligible ? Math.round(1000 * shared / eligible) / 10 : null, surfaces: rows, status: eligible ? 'source-estimate' : documents ? 'no-eligible-controls' : 'not-measured', gap: eligible ? 'Committed source call sites only. Indirect wrappers, constructed HTML fragments, unrecognised custom controls and runtime frequency/area are not measured; native style association is file-level. Tokens, footers and shared shells are reported separately without control credit.' : documents ? 'Complete inline HTML documents were inspected; no eligible standard controls were identified. Links and informational content are outside this denominator, so no percentage is assigned. Shared footer blocks are reported separately. Constructed fragments and runtime visibility remain unverified.' : 'No supported reusable control call sites identified. CLI-only, template-only, dynamic-rendered and missing UI sources require scoped review; this is not zero adoption.' };
 }
 
 export function collectCoverage(manifest) {
   if (!manifest || Object.keys(manifest).some(k => !['schemaVersion', 'projects'].includes(k)) || manifest.schemaVersion !== 1 || !Array.isArray(manifest.projects)) throw Error('Invalid UI coverage manifest');
   const seen = new Set();
-  return { schemaVersion: 'ui-library-source-coverage.v1', observedAt: new Date().toISOString(), method: 'shared-control-call-sites.v1', records: Object.fromEntries(manifest.projects.map(p => {
+  return { schemaVersion: 'ui-library-source-coverage.v1', observedAt: new Date().toISOString(), method: 'shared-control-call-sites.v2', records: Object.fromEntries(manifest.projects.map(p => {
     if (!p || Object.keys(p).some(k => !['id', 'root', 'prefix', 'excludePrefixes'].includes(k)) || !/^[a-z0-9-]+$/.test(p.id) || seen.has(p.id) || !isAbsolute(p.root) || (p.prefix !== undefined && (typeof p.prefix !== 'string' || isAbsolute(p.prefix) || p.prefix.split('/').includes('..'))) || (p.excludePrefixes !== undefined && (!Array.isArray(p.excludePrefixes) || p.excludePrefixes.some(x => typeof x !== 'string' || isAbsolute(x) || x.split('/').includes('..'))))) throw Error('Invalid UI coverage project');
     seen.add(p.id); let record; try { record = scanRepository(p.root, p); } catch (error) { const missing = error.code === 'ENOENT' || Number.isInteger(error.status); record = { status: missing ? 'unavailable' : 'scan-failed', revision: null, dirty: null, shared: 0, eligible: 0, percent: null, surfaces: [], gap: missing ? 'Source checkout or Git revision unavailable; no percentage inferred.' : `Source scan failed (${String(error.code).replace(/[^A-Z0-9_]/g, '').slice(0, 60)}); no percentage inferred.` }; }
     return [p.id, record];
