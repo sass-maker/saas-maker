@@ -28,16 +28,18 @@ recognition covers selected shared/native control types and applied shared
 button styles. Tokens, content text, generic layout containers, icons, models
 and product-specific canvases/gameplay do not enter the control denominator.
 Tests, fixtures, documentation, vendored/generated build output and archives
-are excluded. A factory shared by products requires an explicitly scoped input;
+and `artifacts/design/` mockups are excluded. A factory shared by products requires an explicitly scoped input;
 scanning a whole factory must not credit every product with all of its UI.
 
 This is deliberately a **source estimate**, not a percentage of pixels, actual
 rendered instances, all reusable UI or design quality. Indirect wrappers and
-re-exports, dynamically constructed HTML, copied library components,
+re-exports, dynamically constructed HTML fragments, copied library components,
 unrecognised custom controls and live visibility are not resolved. Native style
 association is file-level. A zero means no direct shared control calls among
 the identified controls, not no library use. No identified controls remains
-unmeasured; template-only and CLI products are not assigned an invented zero.
+unmeasured unless a complete inline HTML document was inspected; that case is
+labelled `no-eligible-controls`, without an invented percentage. Template-only
+and CLI products without supported source remain unmeasured.
 
 Use the per-file evidence to review the largest bespoke clusters and classify
 genuine library gaps before choosing a migration. Do not raise design scores
@@ -49,3 +51,12 @@ Site Health owns the private portfolio manifest, observations and display. Its
 the owner catalog and writes the latest private observation. Refresh it after
 relevant component work and during the existing weekly review; keep actual
 source dates and previous evidence. This command installs no scheduler.
+
+Method `shared-control-call-sites.v2` also inspects complete, untagged HTML
+document template literals in JavaScript/TypeScript server sources. Original
+source lines are retained; scripts, comments and interpolation expressions are
+excluded from static markup. Fragment strings are not reconstructed. A directly
+imported `renderStudioFooterHtml` call is separate block evidence; its
+`studio-footer` wrapper is counted once. Links remain outside the standard-control
+denominator. Preserve v1 observations as the old recognition baseline, not as
+proof of a product improvement when v2 discovers additional source.

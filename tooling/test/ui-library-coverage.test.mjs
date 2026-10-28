@@ -79,10 +79,14 @@ test('scans committed main rather than dirty source and normalizes prefixes; inv
   const root = mkdtempSync(join(tmpdir(), 'ui-coverage-test-'));
   const git = (...args) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   git('init', '-b', 'main'); mkdirSync(join(root, 'ui')); writeFileSync(join(root, 'ui/Page.tsx'), `import { Button } from '@saas-maker/ui/components/button';\nexport const P=()=> <Button/>;`);
-  git('add', 'ui/Page.tsx'); git('-c', 'user.name=Coverage Test', '-c', 'user.email=test@example.invalid', 'commit', '-m', 'fixture'); git('update-ref', 'refs/remotes/origin/main', 'HEAD');
+  mkdirSync(join(root, 'server')); writeFileSync(join(root, 'server/worker.ts'), 'const html=`<!doctype html><html><body><a href="/">Read</a></body></html>`;');
+  mkdirSync(join(root,'artifacts/design'),{recursive:true}); writeFileSync(join(root,'artifacts/design/probe.html'),'<button>Design option</button>');
+  git('add', 'ui/Page.tsx', 'server/worker.ts', 'artifacts/design/probe.html'); git('-c', 'user.name=Coverage Test', '-c', 'user.email=test@example.invalid', 'commit', '-m', 'fixture'); git('update-ref', 'refs/remotes/origin/main', 'HEAD');
   writeFileSync(join(root, 'ui/Page.tsx'), 'export const P=()=> <input/>;');
   const result = scanRepository(root, { prefix: 'ui/' }); assert.equal(result.shared, 1); assert.equal(result.eligible, 1); assert.equal(result.dirty, false); assert.equal(result.sourceRef, 'origin/main');
   assert.equal(scanRepository(root, { prefix: './ui' }).shared, 1);
+  assert.equal(scanRepository(root).eligible,1);
+  const informational=scanRepository(root,{prefix:'server'}); assert.equal(informational.status,'no-eligible-controls'); assert.equal(informational.percent,null); assert.equal(informational.surfaces[0].files[0].documents,1);
   assert.throws(() => scanRepository(root, { prefix: 'missing' }), /Prefix not found/);
   assert.throws(() => scanRepository(join(root, 'ui')), /repository root/);
   const invalid = collectCoverage({ schemaVersion: 1, projects: [{ id: 'nested', root: join(root, 'ui') }] }); assert.equal(invalid.records.nested.status, 'scan-failed');
@@ -114,4 +118,31 @@ test('root-suffixed parts, primitive internals and nested generic types do not m
   assert.equal(generic.bespoke.length, 0);
   const copy = inspectSource("import { Card } from '@saas-maker/ui';\nexport const P=()=>{if(x) return <p>Don't</p>; return (\n // it's the primary panel\n <Card/>);}", 'P.tsx');
   assert.equal(copy.shared.length, 1);
+});
+
+
+test('server HTML documents retain lines, exclude scripts and interpolations, and separate footer calls', () => {
+  const source = [
+    "import { renderStudioFooterHtml as footer } from '@saas-maker/ui/footer-html';",
+    'const sample = "<button>fake</button>";',
+    'const ignored = `<button>fragment outside supported documents</button>`;',
+    'const html = `<!doctype html><html><body>',
+    '<button>Actual</button>${condition ? "<input/>" : `${nested}`}',
+    '<script>const sample="<textarea/>";</script>',
+    '${footer({ product: "Example" })}</body></html>`;',
+    'const sharedFooter = footer({ product: "Example" });',
+  ].join('\n');
+  const result = inspectSource(source, 'src/worker.ts');
+  assert.equal(result.documents, 1); assert.deepEqual(result.bespoke, [{ name: 'button', line: 5 }]);
+  // The standalone renderer is a block; interpolated code is excluded from static markup.
+  assert.deepEqual(result.blocks, [{ name: 'renderStudioFooterHtml', line: 8 }]);
+  const plain = inspectSource('const s = `<!doctype html><html><body><a href="/">Read</a></body></html>`;', 'server.js');
+  assert.equal(plain.documents, 1); assert.equal(plain.bespoke.length, 0);
+  assert.equal(inspectSource('const s = tag`<html><button/></html>`;', 'server.ts').documents, 0);
+  assert.equal(inspectSource('// `<!doctype html><html><button/></html>`', 'server.ts').documents, 0);
+});
+
+test('footer renderer and its custom-element wrapper count as one block', () => {
+  const source = "import { renderStudioFooterHtml } from '@saas-maker/ui/footer-html';\nconst footer=renderStudioFooterHtml({});\nconst html=`<html><body><studio-footer>${footer}</studio-footer></body></html>`;";
+  const result=inspectSource(source,'worker.ts'); assert.equal(result.blocks.length,1); assert.equal(result.blocks[0].name,'studio-footer');
 });
