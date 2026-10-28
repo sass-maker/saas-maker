@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Source evidence, not a rendered-area or design-quality score. No dependencies.
-import { readFileSync } from 'node:fs';
+import { readFileSync, realpathSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { isAbsolute, resolve } from 'node:path';
@@ -10,9 +10,10 @@ const WEB = /\.(?:tsx|jsx|astro|html|vue|svelte)$/;
 const SKIP = /(?:^|\/)(?:node_modules|vendor|dist|build|\.build|\.next|\.astro|archives?|docs?|tests?|__tests__|fixtures?|examples?|tooling|scripts|storybook|preserved)(?:\/|$)|\.(?:test|spec|stories)\./i;
 const ROOTS = /^(?:Button|Input|Textarea|Checkbox|RadioGroup|Switch|Select|Combobox|Slider|Calendar|DatePicker|Dialog|AlertDialog|Sheet|Drawer|Popover|Tooltip|DropdownMenu|ContextMenu|Tabs|Accordion|Card|Table|DataTable|Badge|Avatar|Skeleton|EmptyState|ErrorState|Alert|Progress|Separator|NavigationMenu|Sidebar|StatCard|MetricCard)$/;
 const BLOCKS = new Set(['AppShell', 'PageHeader', 'StudioFooter', 'GalleryPage', 'WorkbenchPage', 'ConsolePage', 'SMAppShell', 'SMPage', 'SMPageHeader', 'SMFooter', 'SMGallery']);
-const LOCAL_CONTROL = /(?:Button|Input|Textarea|Checkbox|Switch|Select|Combobox|Slider|DatePicker|Dialog|Modal|Sheet|Drawer|Popover|Tooltip|Dropdown|Menu|Tabs|Accordion|Card|DataTable|Table|Badge|Avatar|Skeleton|EmptyState|ErrorState|Progress|AppShell|PageHeader|Footer)$/;
+const LOCAL_CONTROL = /(?:Button|Input|Textarea|Checkbox|Switch|Select|Combobox|Slider|DatePicker|Dialog|Modal|Sheet|Drawer|Popover|Tooltip|Dropdown|Menu|Tabs|Accordion|Card|DataTable|Table|Badge|Avatar|Skeleton|EmptyState|ErrorState|Progress)$/;
+const CHILD_PART = /^(?:Card|Dialog|AlertDialog|Sheet|Drawer|Popover|Select|DropdownMenu|ContextMenu|Tabs|Accordion|Table|NavigationMenu)(?:Header|Footer|Title|Description|Content|Trigger|Close|Item|List|Value|Group|Label|Separator|Row|Cell|Head|Body|Caption)$/;
 const HTML_CONTROLS = new Set(['button', 'input', 'textarea', 'select', 'table', 'dialog', 'details', 'progress', 'meter']);
-const SWIFT_CONTROLS = new Set(['Button', 'TextField', 'SecureField', 'TextEditor', 'Toggle', 'Slider', 'Picker', 'DatePicker', 'ProgressView', 'Table', 'Menu', 'Label']);
+const SWIFT_CONTROLS = new Set(['Button', 'TextField', 'SecureField', 'TextEditor', 'Toggle', 'Slider', 'Picker', 'DatePicker', 'ProgressView', 'Table', 'Menu']);
 const SWIFT_SHARED = new Set(['SMCard', 'SMSectionHeader', 'SMStatusPill', 'SMSkeletonRow', 'SMSkeletonCard', 'SMEmptyState', 'SMErrorState', 'SMLoadable', 'SMSparkline', 'SMAreaChart', 'SMStatCard', 'SMUptimeStrip', 'SMAppShell', 'SMPageHeader', 'SMPage', 'SMFooter', 'SMGallery']);
 
 // Preserve newlines and offsets; ignore comments and ordinary JS/Swift strings.
@@ -30,6 +31,11 @@ export function sourceTags(source, { html = false } = {}) {
     if (source.startsWith('</', i)) { const end = source.indexOf('>', i); i = end < 0 ? source.length : end + 1; depth = Math.max(0, depth - 1); continue; }
     if (source.startsWith('<>', i)) { depth++; i += 2; continue; }
     if (source[i] !== '<' || !/[A-Za-z]/.test(source[i + 1] ?? '')) { i++; continue; }
+    if (!html && depth === 0) {
+      const before = source.slice(0, i).trimEnd();
+      if (/[\w$.)\]]$/.test(before) && !/\b(?:return|yield)$/.test(before)) { i++; continue; }
+      if (!/^<[\w.:-]+(?:\s|\/?>)/.test(source.slice(i))) { i++; continue; }
+    }
     const start = i; let quote = null, braces = 0; i++;
     while (i < source.length) { const c = source[i++]; if (quote) { if (c === '\\') i++; else if (c === quote) quote = null; } else if (c === '"' || c === "'") quote = c; else if (c === '{') braces++; else if (c === '}') braces = Math.max(0, braces - 1); else if (c === '>' && braces === 0) break; }
     const text = source.slice(start, i); const name = text.match(/^<([\w.:-]+)/)?.[1];
@@ -61,19 +67,21 @@ export function inspectSource(source, filename) {
   }
   const imports = new Map(), namespaces = new Set();
   const clean = source.replace(/\/\*[\s\S]*?\*\/|<!--[^]*?-->/g, '');
-  for (const match of clean.matchAll(/(?:^|\n)\s*import\s+([^;]+?)\s+from\s*['"](@saas-maker\/(?:ui|templates)(?:\/[^'"]*)?)['"]/g)) {
+  for (const match of clean.matchAll(/(?:^|\n)\s*import\s+((?:(?!\bimport\b|\bfrom\s*['"])[^;])+?)\s+from\s*['"]([^'"]+)['"]/g)) {
+    if (!/^@saas-maker\/(?:ui|templates)(?:\/|$)/.test(match[2])) continue;
     const clause = match[1]; const namespace = clause.match(/\*\s+as\s+(\w+)/)?.[1]; if (namespace) namespaces.add(namespace);
     const named = clause.match(/\{([^}]+)\}/)?.[1] ?? '';
     for (const part of named.split(',')) { const [name, alias = name] = part.trim().split(/\s+as\s+/); if (name && !name.startsWith('type ')) imports.set(alias, name); }
     const defaultName = clause.match(/^\s*(\w+)\s*(?:,|$)/)?.[1]; if (defaultName) imports.set(defaultName, defaultName);
   }
   const html = /\.(?:html|astro|vue|svelte)$/.test(filename);
-  const markup = html ? source.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '').replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '') : source;
+  const blank = text => text.replace(/[^\n]/g, ' ');
+  const markup = html ? source.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, blank).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, blank) : source;
   for (const tag of sourceTags(markup, { html })) {
     const [namespace, member] = tag.name.split('.'); const original = imports.get(tag.name) ?? (namespaces.has(namespace) ? member : null);
     if (original && BLOCKS.has(original)) blocks.push(tag);
     else if (original && ROOTS.test(original)) shared.push(tag);
-    else if (HTML_CONTROLS.has(tag.name) || (!original && LOCAL_CONTROL.test(tag.name))) bespoke.push(tag);
+    else if (HTML_CONTROLS.has(tag.name) || (!original && !CHILD_PART.test(tag.name) && LOCAL_CONTROL.test(tag.name))) bespoke.push(tag);
     else if (tag.name === 'studio-footer' && /(?:@saas-maker\/ui|sassmaker\.com\/.*footer)/.test(source)) blocks.push(tag);
   }
   return { shared, bespoke, blocks, tokens: /@saas-maker\/(?:ui\/(?:theme|styles|source-[\w-]+)\.css|tokens)/.test(clean), supported: true };
@@ -81,6 +89,9 @@ export function inspectSource(source, filename) {
 
 function git(root, args) { return execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 15_000, maxBuffer: 8 * 1024 * 1024 }); }
 export function scanRepository(root, { prefix = '', excludePrefixes = [] } = {}) {
+  const top = git(root, ['rev-parse', '--show-toplevel']).trim();
+  if (realpathSync(top) !== realpathSync(root)) throw Object.assign(Error('Root must be a repository root'), { code: 'INVALID_SOURCE_ROOT' });
+  prefix = prefix.replace(/\/+$/, ''); excludePrefixes = excludePrefixes.map(p => p.replace(/\/+$/, ''));
   let sourceRef = 'origin/main';
   try { git(root, ['rev-parse', '--verify', sourceRef]); } catch { sourceRef = 'HEAD'; }
   const revision = git(root, ['rev-parse', sourceRef]).trim();
@@ -88,8 +99,10 @@ export function scanRepository(root, { prefix = '', excludePrefixes = [] } = {})
   const dirty = false;
   const surfaces = new Map(); let omitted = 0;
   const contents = new Map();
-  for (let start = 0; start < files.length; start += 24) {
-    const chunk = files.slice(start, start + 24);
+  const sizes = gitBatchSizes(root, revision, files);
+  const readable = files.filter(file => { const size = sizes.get(file); if (size == null || size > 1024 * 1024) { omitted++; return false; } return true; });
+  for (let start = 0; start < readable.length; start += 24) {
+    const chunk = readable.slice(start, start + 24);
     const result = execFileSync('git', ['-C', root, 'cat-file', '--batch'], { input: chunk.map(f => `${revision}:${f}`).join('\n') + '\n', stdio: ['pipe', 'pipe', 'pipe'], timeout: 20_000, maxBuffer: 32 * 1024 * 1024 });
     let offset = 0;
     for (const file of chunk) { const end = result.indexOf(10, offset); const header = result.subarray(offset, end).toString(); offset = end + 1; const match = header.match(/^[a-f0-9]+ blob (\d+)$/); if (!match) { omitted++; continue; } const size = Number(match[1]); if (size <= 1024 * 1024) contents.set(file, result.subarray(offset, offset + size).toString('utf8')); else omitted++; offset += size + 1; }
@@ -113,9 +126,14 @@ export function collectCoverage(manifest) {
   const seen = new Set();
   return { schemaVersion: 'ui-library-source-coverage.v1', observedAt: new Date().toISOString(), method: 'shared-control-call-sites.v1', records: Object.fromEntries(manifest.projects.map(p => {
     if (!p || Object.keys(p).some(k => !['id', 'root', 'prefix', 'excludePrefixes'].includes(k)) || !/^[a-z0-9-]+$/.test(p.id) || seen.has(p.id) || !isAbsolute(p.root) || (p.prefix && (isAbsolute(p.prefix) || p.prefix.split('/').includes('..'))) || (p.excludePrefixes && (!Array.isArray(p.excludePrefixes) || p.excludePrefixes.some(x => typeof x !== 'string' || isAbsolute(x) || x.split('/').includes('..'))))) throw Error('Invalid UI coverage project');
-    seen.add(p.id); let record; try { record = scanRepository(p.root, p); } catch { record = { status: 'unavailable', revision: null, dirty: null, shared: 0, eligible: 0, percent: null, surfaces: [], gap: 'Source checkout unavailable; no percentage inferred.' }; }
+    seen.add(p.id); let record; try { record = scanRepository(p.root, p); } catch (error) { const missing = !error.code || error.code === 'ENOENT'; record = { status: missing ? 'unavailable' : 'scan-failed', revision: null, dirty: null, shared: 0, eligible: 0, percent: null, surfaces: [], gap: missing ? 'Source checkout or Git revision unavailable; no percentage inferred.' : `Source scan failed (${String(error.code).replace(/[^A-Z0-9_]/g, '').slice(0, 60)}); no percentage inferred.` }; }
     return [p.id, record];
   })) };
+}
+function gitBatchSizes(root, revision, files) {
+  if (!files.length) return new Map();
+  const result = execFileSync('git', ['-C', root, 'cat-file', '--batch-check'], { input: files.map(f => `${revision}:${f}`).join('\n') + '\n', encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], timeout: 20_000, maxBuffer: 8 * 1024 * 1024 });
+  return new Map(result.trimEnd().split('\n').map((line, i) => [files[i], /^[a-f0-9]+ blob \d+$/.test(line) ? Number(line.split(' ')[2]) : null]));
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   if (process.argv.length !== 3) throw Error('Usage: node ui-library-coverage.mjs <private-manifest.json> > <private-output.json>');
