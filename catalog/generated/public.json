@@ -1847,7 +1847,9 @@
         "mechanism": "A local inbox, floating pill and bounded lifecycle metadata connect observed agents to verified conversation transports or host-app handoff."
       },
       "roster": "current",
-      "availability": "internal-private"
+      "availability": "preview-not-qualified",
+      "publicUrl": "https://agent-inbox-site.sarthakagrawal927.workers.dev/",
+      "publicUrlLabel": "Preview site"
     },
     {
       "id": "techdata",
