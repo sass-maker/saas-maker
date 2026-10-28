@@ -82,6 +82,27 @@ test('scans committed main rather than dirty source and normalizes prefixes; inv
   git('add', 'ui/Page.tsx'); git('-c', 'user.name=Coverage Test', '-c', 'user.email=test@example.invalid', 'commit', '-m', 'fixture'); git('update-ref', 'refs/remotes/origin/main', 'HEAD');
   writeFileSync(join(root, 'ui/Page.tsx'), 'export const P=()=> <input/>;');
   const result = scanRepository(root, { prefix: 'ui/' }); assert.equal(result.shared, 1); assert.equal(result.eligible, 1); assert.equal(result.dirty, false); assert.equal(result.sourceRef, 'origin/main');
+  assert.equal(scanRepository(root, { prefix: './ui' }).shared, 1);
+  assert.throws(() => scanRepository(root, { prefix: 'missing' }), /Prefix not found/);
   assert.throws(() => scanRepository(join(root, 'ui')), /repository root/);
   const invalid = collectCoverage({ schemaVersion: 1, projects: [{ id: 'nested', root: join(root, 'ui') }] }); assert.equal(invalid.records.nested.status, 'scan-failed');
+});
+test('the same supported root families and child parts have symmetric denominators', () => {
+  const names = ['Calendar', 'Alert', 'Separator', 'RadioGroup', 'Sidebar'];
+  const jsx = '<><Calendar/><Alert/><Separator/><RadioGroup/><Sidebar><SidebarMenu><SidebarMenuButton/></SidebarMenu></Sidebar></>';
+  const shared = inspectSource(`import { ${names.join(', ')}, SidebarMenu, SidebarMenuButton } from '@saas-maker/ui';\nexport default ${jsx}`, 'P.tsx');
+  const local = inspectSource(`import { ${names.join(', ')}, SidebarMenu, SidebarMenuButton } from './ui';\nexport default ${jsx}`, 'P.tsx');
+  assert.equal(shared.shared.length, 5); assert.equal(local.bespoke.length, 5);
+});
+test('generic arrows do not corrupt later strings and comments do not hide real JSX roots', () => {
+  const generic = inspectSource('const f = <T extends unknown>(x:T)=>x;\nconst s="<button>fake</button>";', 'P.tsx');
+  assert.equal(generic.bespoke.length, 0);
+  const jsx = inspectSource("import { Card } from '@saas-maker/ui';\nexport const P=()=> { return (\n // primary panel\n <Card/>\n); }", 'P.tsx');
+  assert.equal(jsx.shared.length, 1);
+});
+test('comments inside named import lists cannot invert component attribution', () => {
+  const result = inspectSource("import {\n Button, // primary\n Card,\n} from '@saas-maker/ui';\nexport default <Card><Button/></Card>", 'P.tsx');
+  assert.equal(result.shared.length, 2); assert.equal(result.bespoke.length, 0);
+  assert.throws(() => collectCoverage({ schemaVersion: 1, projects: [{ id: 'a', root: '/tmp', prefix: null }] }), /Invalid/);
+  assert.throws(() => collectCoverage({ schemaVersion: 1, projects: [{ id: 'a', root: '/tmp', excludePrefixes: null }] }), /Invalid/);
 });

@@ -8,9 +8,10 @@ import { pathToFileURL } from 'node:url';
 
 const WEB = /\.(?:tsx|jsx|astro|html|vue|svelte)$/;
 const SKIP = /(?:^|\/)(?:node_modules|vendor|dist|build|\.build|\.next|\.astro|archives?|docs?|tests?|__tests__|fixtures?|examples?|tooling|scripts|storybook|preserved)(?:\/|$)|\.(?:test|spec|stories)\./i;
-const ROOTS = /^(?:Button|Input|Textarea|Checkbox|RadioGroup|Switch|Select|Combobox|Slider|Calendar|DatePicker|Dialog|AlertDialog|Sheet|Drawer|Popover|Tooltip|DropdownMenu|ContextMenu|Tabs|Accordion|Card|Table|DataTable|Badge|Avatar|Skeleton|EmptyState|ErrorState|Alert|Progress|Separator|NavigationMenu|Sidebar|StatCard|MetricCard)$/;
+const ROOT_NAMES = 'Button|Input|Textarea|Checkbox|RadioGroup|Switch|Select|Combobox|Slider|Calendar|DatePicker|Dialog|AlertDialog|Sheet|Drawer|Popover|Tooltip|DropdownMenu|ContextMenu|Tabs|Accordion|Card|Table|DataTable|Badge|Avatar|Skeleton|EmptyState|ErrorState|Alert|Progress|Separator|NavigationMenu|Sidebar|StatCard|MetricCard'.split('|');
+const ROOTS = new RegExp(`^(?:${ROOT_NAMES.join('|')})$`);
 const BLOCKS = new Set(['AppShell', 'PageHeader', 'StudioFooter', 'GalleryPage', 'WorkbenchPage', 'ConsolePage', 'SMAppShell', 'SMPage', 'SMPageHeader', 'SMFooter', 'SMGallery']);
-const LOCAL_CONTROL = /(?:Button|Input|Textarea|Checkbox|Switch|Select|Combobox|Slider|DatePicker|Dialog|Modal|Sheet|Drawer|Popover|Tooltip|Dropdown|Menu|Tabs|Accordion|Card|DataTable|Table|Badge|Avatar|Skeleton|EmptyState|ErrorState|Progress)$/;
+const LOCAL_CONTROL = new RegExp(`(?:${ROOT_NAMES.join('|')}|Modal|Dropdown|Menu)$`);
 const CHILD_PART = /^(?:Card|Dialog|AlertDialog|Sheet|Drawer|Popover|Select|DropdownMenu|ContextMenu|Tabs|Accordion|Table|NavigationMenu)(?:Header|Footer|Title|Description|Content|Trigger|Close|Item|List|Value|Group|Label|Separator|Row|Cell|Head|Body|Caption)$/;
 const HTML_CONTROLS = new Set(['button', 'input', 'textarea', 'select', 'table', 'dialog', 'details', 'progress', 'meter']);
 const SWIFT_CONTROLS = new Set(['Button', 'TextField', 'SecureField', 'TextEditor', 'Toggle', 'Slider', 'Picker', 'DatePicker', 'ProgressView', 'Table', 'Menu']);
@@ -32,8 +33,9 @@ export function sourceTags(source, { html = false } = {}) {
     if (source.startsWith('<>', i)) { depth++; i += 2; continue; }
     if (source[i] !== '<' || !/[A-Za-z]/.test(source[i + 1] ?? '')) { i++; continue; }
     if (!html && depth === 0) {
-      const before = source.slice(0, i).trimEnd();
-      if (/[\w$.)\]]$/.test(before) && !/\b(?:return|yield)$/.test(before)) { i++; continue; }
+      const before = codeOnly(source.slice(0, i)).trimEnd();
+      if (/[\w$.)\]]$/.test(before) && !/\b(?:return|yield|default|await|else|case|throw|void)$/.test(before)) { i++; continue; }
+      if (/^<[A-Za-z_$]\w*\s+extends\b[^>]*>\s*\(/.test(source.slice(i))) { i++; continue; }
       if (!/^<[\w.:-]+(?:\s|\/?>)/.test(source.slice(i))) { i++; continue; }
     }
     const start = i; let quote = null, braces = 0; i++;
@@ -69,7 +71,7 @@ export function inspectSource(source, filename) {
   const clean = source.replace(/\/\*[\s\S]*?\*\/|<!--[^]*?-->/g, '');
   for (const match of clean.matchAll(/(?:^|\n)\s*import\s+((?:(?!\bimport\b|\bfrom\s*['"])[^;])+?)\s+from\s*['"]([^'"]+)['"]/g)) {
     if (!/^@saas-maker\/(?:ui|templates)(?:\/|$)/.test(match[2])) continue;
-    const clause = match[1]; const namespace = clause.match(/\*\s+as\s+(\w+)/)?.[1]; if (namespace) namespaces.add(namespace);
+    const clause = match[1].replace(/\/\/[^\n]*/g, ' '); const namespace = clause.match(/\*\s+as\s+(\w+)/)?.[1]; if (namespace) namespaces.add(namespace);
     const named = clause.match(/\{([^}]+)\}/)?.[1] ?? '';
     for (const part of named.split(',')) { const [name, alias = name] = part.trim().split(/\s+as\s+/); if (name && !name.startsWith('type ')) imports.set(alias, name); }
     const defaultName = clause.match(/^\s*(\w+)\s*(?:,|$)/)?.[1]; if (defaultName) imports.set(defaultName, defaultName);
@@ -81,7 +83,7 @@ export function inspectSource(source, filename) {
     const [namespace, member] = tag.name.split('.'); const original = imports.get(tag.name) ?? (namespaces.has(namespace) ? member : null);
     if (original && BLOCKS.has(original)) blocks.push(tag);
     else if (original && ROOTS.test(original)) shared.push(tag);
-    else if (HTML_CONTROLS.has(tag.name) || (!original && !CHILD_PART.test(tag.name) && LOCAL_CONTROL.test(tag.name))) bespoke.push(tag);
+    else if (HTML_CONTROLS.has(tag.name) || (!original && !CHILD_PART.test(tag.name) && !/^Sidebar(?:Menu.*|Group.*|Header|Footer|Content|Input)$/.test(tag.name) && LOCAL_CONTROL.test(tag.name))) bespoke.push(tag);
     else if (tag.name === 'studio-footer' && /(?:@saas-maker\/ui|sassmaker\.com\/.*footer)/.test(source)) blocks.push(tag);
   }
   return { shared, bespoke, blocks, tokens: /@saas-maker\/(?:ui\/(?:theme|styles|source-[\w-]+)\.css|tokens)/.test(clean), supported: true };
@@ -91,11 +93,13 @@ function git(root, args) { return execFileSync('git', ['-C', root, ...args], { e
 export function scanRepository(root, { prefix = '', excludePrefixes = [] } = {}) {
   const top = git(root, ['rev-parse', '--show-toplevel']).trim();
   if (realpathSync(top) !== realpathSync(root)) throw Object.assign(Error('Root must be a repository root'), { code: 'INVALID_SOURCE_ROOT' });
-  prefix = prefix.replace(/\/+$/, ''); excludePrefixes = excludePrefixes.map(p => p.replace(/\/+$/, ''));
+  prefix = prefix.replace(/^\.\//, '').replace(/\/+$/, ''); excludePrefixes = excludePrefixes.map(p => p.replace(/^\.\//, '').replace(/\/+$/, ''));
   let sourceRef = 'origin/main';
   try { git(root, ['rev-parse', '--verify', sourceRef]); } catch { sourceRef = 'HEAD'; }
   const revision = git(root, ['rev-parse', sourceRef]).trim();
-  const files = git(root, ['ls-tree', '-r', '--name-only', '-z', revision]).split('\0').filter(Boolean).filter(f => !/[\n\r]/.test(f) && (!prefix || f.startsWith(`${prefix}/`)) && !excludePrefixes.some(p => f === p || f.startsWith(`${p}/`)) && !SKIP.test(f) && (WEB.test(f) || f.endsWith('.swift')));
+  const tracked = git(root, ['ls-tree', '-r', '--name-only', '-z', revision]).split('\0').filter(Boolean);
+  if (prefix && !tracked.some(f => f.startsWith(`${prefix}/`))) throw Object.assign(Error('Prefix not found'), { code: 'INVALID_SOURCE_PREFIX' });
+  const files = tracked.filter(f => !/[\n\r]/.test(f) && (!prefix || f.startsWith(`${prefix}/`)) && !excludePrefixes.some(p => f === p || f.startsWith(`${p}/`)) && !SKIP.test(f) && (WEB.test(f) || f.endsWith('.swift')));
   const dirty = false;
   const surfaces = new Map(); let omitted = 0;
   const contents = new Map();
@@ -125,8 +129,8 @@ export function collectCoverage(manifest) {
   if (!manifest || Object.keys(manifest).some(k => !['schemaVersion', 'projects'].includes(k)) || manifest.schemaVersion !== 1 || !Array.isArray(manifest.projects)) throw Error('Invalid UI coverage manifest');
   const seen = new Set();
   return { schemaVersion: 'ui-library-source-coverage.v1', observedAt: new Date().toISOString(), method: 'shared-control-call-sites.v1', records: Object.fromEntries(manifest.projects.map(p => {
-    if (!p || Object.keys(p).some(k => !['id', 'root', 'prefix', 'excludePrefixes'].includes(k)) || !/^[a-z0-9-]+$/.test(p.id) || seen.has(p.id) || !isAbsolute(p.root) || (p.prefix && (isAbsolute(p.prefix) || p.prefix.split('/').includes('..'))) || (p.excludePrefixes && (!Array.isArray(p.excludePrefixes) || p.excludePrefixes.some(x => typeof x !== 'string' || isAbsolute(x) || x.split('/').includes('..'))))) throw Error('Invalid UI coverage project');
-    seen.add(p.id); let record; try { record = scanRepository(p.root, p); } catch (error) { const missing = !error.code || error.code === 'ENOENT'; record = { status: missing ? 'unavailable' : 'scan-failed', revision: null, dirty: null, shared: 0, eligible: 0, percent: null, surfaces: [], gap: missing ? 'Source checkout or Git revision unavailable; no percentage inferred.' : `Source scan failed (${String(error.code).replace(/[^A-Z0-9_]/g, '').slice(0, 60)}); no percentage inferred.` }; }
+    if (!p || Object.keys(p).some(k => !['id', 'root', 'prefix', 'excludePrefixes'].includes(k)) || !/^[a-z0-9-]+$/.test(p.id) || seen.has(p.id) || !isAbsolute(p.root) || (p.prefix !== undefined && (typeof p.prefix !== 'string' || isAbsolute(p.prefix) || p.prefix.split('/').includes('..'))) || (p.excludePrefixes !== undefined && (!Array.isArray(p.excludePrefixes) || p.excludePrefixes.some(x => typeof x !== 'string' || isAbsolute(x) || x.split('/').includes('..'))))) throw Error('Invalid UI coverage project');
+    seen.add(p.id); let record; try { record = scanRepository(p.root, p); } catch (error) { const missing = error.code === 'ENOENT' || Number.isInteger(error.status); record = { status: missing ? 'unavailable' : 'scan-failed', revision: null, dirty: null, shared: 0, eligible: 0, percent: null, surfaces: [], gap: missing ? 'Source checkout or Git revision unavailable; no percentage inferred.' : `Source scan failed (${String(error.code).replace(/[^A-Z0-9_]/g, '').slice(0, 60)}); no percentage inferred.` }; }
     return [p.id, record];
   })) };
 }
