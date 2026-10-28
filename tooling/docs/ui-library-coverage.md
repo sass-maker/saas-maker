@@ -23,7 +23,7 @@ production matches it. Web and SwiftUI estimates are broken out; landing paths
 are a source-path heuristic, not a verified route inventory.
 
 Web recognition covers direct library imports, aliases and namespace calls,
-standard form/table/disclosure controls and named custom equivalents. SwiftUI
+standard form/table/disclosure controls and exact named component families. SwiftUI
 recognition covers selected shared/native control types and applied shared
 button styles. Tokens, content text, generic layout containers, icons, models
 and product-specific canvases/gameplay do not enter the control denominator.

@@ -40,9 +40,9 @@ TextField("Name", text: $name)
   assert.equal(result.shared.length, 2); assert.equal(result.bespoke.length, 1);
   assert.equal(inspectSource('import SaaSMakerUI', 'View.swift').shared.length, 0);
 });
-test('unknown local custom controls enter the denominator without shared credit', () => {
+test('unrecognised custom control names remain outside the identified-control metric', () => {
   const result = inspectSource('export const Page=()=> <><PrimaryButton/><ChartCanvas/><CustomCard/></>;', 'Page.tsx');
-  assert.equal(result.shared.length, 0); assert.equal(result.bespoke.length, 2);
+  assert.equal(result.shared.length, 0); assert.equal(result.bespoke.length, 0);
 });
 test('missing checkout remains unknown and malformed manifests fail closed', () => {
   const result = collectCoverage({ schemaVersion: 1, projects: [{ id: 'demo', root: '/nonexistent/ui-coverage-fixture' }] });
@@ -105,4 +105,13 @@ test('comments inside named import lists cannot invert component attribution', (
   assert.equal(result.shared.length, 2); assert.equal(result.bespoke.length, 0);
   assert.throws(() => collectCoverage({ schemaVersion: 1, projects: [{ id: 'a', root: '/tmp', prefix: null }] }), /Invalid/);
   assert.throws(() => collectCoverage({ schemaVersion: 1, projects: [{ id: 'a', root: '/tmp', excludePrefixes: null }] }), /Invalid/);
+});
+
+test('root-suffixed parts, primitive internals and nested generic types do not manufacture control calls', () => {
+  const parts = inspectSource('export default <><BreadcrumbSeparator/><SidebarSeparator/><CalendarDayButton/><SelectPrimitive.Separator/></>', 'P.tsx');
+  assert.equal(parts.bespoke.length, 0);
+  const generic = inspectSource('const f = <T extends Record<string, unknown>>(x:T)=>x;\nconst s="<button>fake</button>";', 'P.tsx');
+  assert.equal(generic.bespoke.length, 0);
+  const copy = inspectSource("import { Card } from '@saas-maker/ui';\nexport const P=()=>{if(x) return <p>Don't</p>; return (\n // it's the primary panel\n <Card/>);}", 'P.tsx');
+  assert.equal(copy.shared.length, 1);
 });

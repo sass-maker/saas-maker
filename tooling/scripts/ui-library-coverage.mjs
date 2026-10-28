@@ -11,7 +11,7 @@ const SKIP = /(?:^|\/)(?:node_modules|vendor|dist|build|\.build|\.next|\.astro|a
 const ROOT_NAMES = 'Button|Input|Textarea|Checkbox|RadioGroup|Switch|Select|Combobox|Slider|Calendar|DatePicker|Dialog|AlertDialog|Sheet|Drawer|Popover|Tooltip|DropdownMenu|ContextMenu|Tabs|Accordion|Card|Table|DataTable|Badge|Avatar|Skeleton|EmptyState|ErrorState|Alert|Progress|Separator|NavigationMenu|Sidebar|StatCard|MetricCard'.split('|');
 const ROOTS = new RegExp(`^(?:${ROOT_NAMES.join('|')})$`);
 const BLOCKS = new Set(['AppShell', 'PageHeader', 'StudioFooter', 'GalleryPage', 'WorkbenchPage', 'ConsolePage', 'SMAppShell', 'SMPage', 'SMPageHeader', 'SMFooter', 'SMGallery']);
-const LOCAL_CONTROL = new RegExp(`(?:${ROOT_NAMES.join('|')}|Modal|Dropdown|Menu)$`);
+const LOCAL_CONTROL = new RegExp(`^(?:${ROOT_NAMES.join('|')}|Modal|Dropdown|Menu)$`);
 const CHILD_PART = /^(?:Card|Dialog|AlertDialog|Sheet|Drawer|Popover|Select|DropdownMenu|ContextMenu|Tabs|Accordion|Table|NavigationMenu)(?:Header|Footer|Title|Description|Content|Trigger|Close|Item|List|Value|Group|Label|Separator|Row|Cell|Head|Body|Caption)$/;
 const HTML_CONTROLS = new Set(['button', 'input', 'textarea', 'select', 'table', 'dialog', 'details', 'progress', 'meter']);
 const SWIFT_CONTROLS = new Set(['Button', 'TextField', 'SecureField', 'TextEditor', 'Toggle', 'Slider', 'Picker', 'DatePicker', 'ProgressView', 'Table', 'Menu']);
@@ -20,29 +20,32 @@ const SWIFT_SHARED = new Set(['SMCard', 'SMSectionHeader', 'SMStatusPill', 'SMSk
 // Preserve newlines and offsets; ignore comments and ordinary JS/Swift strings.
 // HTML/JSX start tags are consumed as a unit, so quoted attributes are retained.
 export function sourceTags(source, { html = false } = {}) {
-  const tags = []; let i = 0, depth = 0; const expressions = [];
+  const tags = []; let i = 0, depth = 0, lastCode = ''; const expressions = [];
   while (i < source.length) {
     if (source.startsWith('<!--', i)) { const end = source.indexOf('-->', i + 4); i = end < 0 ? source.length : end + 3; continue; }
-    if (!html && source.startsWith('//', i)) { const end = source.indexOf('\n', i); i = end < 0 ? source.length : end; continue; }
-    if (!html && source.startsWith('/*', i)) { const end = source.indexOf('*/', i + 2); i = end < 0 ? source.length : end + 2; continue; }
-    if (!html && depth > 0 && source[i] === '{') { expressions.push({ depth, braces: 1 }); depth = 0; i++; continue; }
+    if (!html && depth === 0 && source.startsWith('//', i)) { const end = source.indexOf('\n', i); i = end < 0 ? source.length : end; continue; }
+    if (!html && depth === 0 && source.startsWith('/*', i)) { const end = source.indexOf('*/', i + 2); i = end < 0 ? source.length : end + 2; continue; }
+    if (!html && depth > 0 && source[i] === '{') { expressions.push({ depth, braces: 1 }); depth = 0; lastCode = '{'; i++; continue; }
     if (!html && expressions.length && depth === 0 && source[i] === '{') { expressions.at(-1).braces++; i++; continue; }
     if (!html && expressions.length && depth === 0 && source[i] === '}') { const frame = expressions.at(-1); if (--frame.braces === 0) { depth = frame.depth; expressions.pop(); } i++; continue; }
-    if (!html && depth === 0 && /["'`]/.test(source[i])) { const quote = source[i++]; while (i < source.length) { if (source[i] === '\\') { i += 2; continue; } if (source[i++] === quote) break; } continue; }
-    if (source.startsWith('</', i)) { const end = source.indexOf('>', i); i = end < 0 ? source.length : end + 1; depth = Math.max(0, depth - 1); continue; }
+    if (!html && depth === 0 && /["'`]/.test(source[i])) { const quote = source[i++]; while (i < source.length) { if (source[i] === '\\') { i += 2; continue; } if (source[i++] === quote) break; } lastCode = 'value'; continue; }
+    if (source.startsWith('</', i)) { const end = source.indexOf('>', i); i = end < 0 ? source.length : end + 1; depth = Math.max(0, depth - 1); if (depth === 0) lastCode = 'value'; continue; }
     if (source.startsWith('<>', i)) { depth++; i += 2; continue; }
-    if (source[i] !== '<' || !/[A-Za-z]/.test(source[i + 1] ?? '')) { i++; continue; }
+    if (source[i] !== '<' || !/[A-Za-z]/.test(source[i + 1] ?? '')) {
+      if (!html && depth === 0 && /[A-Za-z_$]/.test(source[i])) { const start = i++; while (/[\w$]/.test(source[i] ?? '')) i++; lastCode = source.slice(start, i); continue; }
+      if (!html && depth === 0 && !/\s/.test(source[i])) lastCode = source[i];
+      i++; continue;
+    }
     if (!html && depth === 0) {
-      const before = codeOnly(source.slice(0, i)).trimEnd();
-      if (/[\w$.)\]]$/.test(before) && !/\b(?:return|yield|default|await|else|case|throw|void)$/.test(before)) { i++; continue; }
-      if (/^<[A-Za-z_$]\w*\s+extends\b[^>]*>\s*\(/.test(source.slice(i))) { i++; continue; }
+      if (/[\w$.)\]]$/.test(lastCode) && !/^(?:return|yield|default|await|else|case|throw|void)$/.test(lastCode)) { i++; continue; }
+      if (/^<[A-Za-z_$]\w*\s*(?:extends\b|=)/.test(source.slice(i))) { i++; continue; }
       if (!/^<[\w.:-]+(?:\s|\/?>)/.test(source.slice(i))) { i++; continue; }
     }
     const start = i; let quote = null, braces = 0; i++;
     while (i < source.length) { const c = source[i++]; if (quote) { if (c === '\\') i++; else if (c === quote) quote = null; } else if (c === '"' || c === "'") quote = c; else if (c === '{') braces++; else if (c === '}') braces = Math.max(0, braces - 1); else if (c === '>' && braces === 0) break; }
     const text = source.slice(start, i); const name = text.match(/^<([\w.:-]+)/)?.[1];
     if (name) tags.push({ name, line: source.slice(0, start).split('\n').length });
-    if (!html && !text.endsWith('/>')) depth++;
+    if (!html && !text.endsWith('/>')) depth++; else if (!html && depth === 0) lastCode = 'value';
   }
   return tags;
 }
