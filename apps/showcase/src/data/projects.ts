@@ -14,7 +14,7 @@ interface PublicProduct {
   url: string;
   tier: string;
   category: string;
-  priority: string;
+  priority: string | null;
   spotlight: boolean;
   maturity: string;
   pillarId: string;
