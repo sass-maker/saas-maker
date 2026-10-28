@@ -259,9 +259,9 @@
     },
     {
       "id": "chatgpt-connections",
-      "name": "ChatGPT Connections",
-      "description": "A read-only MCP gateway that exposes selected public Fleet data to ChatGPT connections.",
-      "form": "MCP service",
+      "name": "MCP Connections",
+      "description": "Shared MCP connections across Fleet products, with separate product endpoints and access scopes.",
+      "form": "Shared MCP gateway",
       "platforms": [
         "API",
         "ChatGPT"
@@ -272,12 +272,12 @@
         "MCP"
       ],
       "group": "current",
-      "makerNote": "I had many projects but no solid way to connect them to ChatGPT, so I built a selective gateway for that.",
+      "makerNote": "I want one shared home for MCP connections across my products; Reader is one connection within it.",
       "purposeContract": {
-        "purpose": "ChatGPT Connections lets ChatGPT read selected Fleet product data through one bounded gateway.",
-        "audience": "The Fleet owner and approved ChatGPT conversations that need specific project context.",
+        "purpose": "MCP Connections houses shared MCP connections across Fleet products.",
+        "audience": "The Fleet owner and approved AI clients needing specific product context.",
         "outcome": "Ask useful cross-project questions without exposing the private portfolio catalog or granting write access.",
-        "mechanism": "A read-only MCP gateway publishes explicit, privacy-filtered resources for named consumers."
+        "mechanism": "One gateway routes explicit per-product MCP connections within their existing read-only and authentication boundaries."
       },
       "roster": "current",
       "availability": "internal-private"
