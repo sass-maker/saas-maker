@@ -226,3 +226,19 @@ test('shared blocks do not transfer ownership to nested native controls', () => 
   assert.deepEqual(found.bespoke.map(x => x.name), ['select', 'input', 'details', 'button']);
   assert.deepEqual(found.blocks.map(x => x.name), ['AppShell']);
 });
+
+
+test('operational .fleet report tables are excluded while product inline documents stay eligible', () => {
+  const root = mkdtempSync(join(tmpdir(), 'ui-coverage-operational-'));
+  const git = (...args) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  git('init', '-b', 'main');
+  mkdirSync(join(root, '.fleet/evidence/landing-audit'), { recursive: true });
+  writeFileSync(join(root, '.fleet/evidence/landing-audit/performance.html'), '<html><body><table/><table/><table/><table/></body></html>');
+  mkdirSync(join(root, 'apps/web/src'), { recursive: true });
+  writeFileSync(join(root, 'apps/web/src/report.ts'), 'const page = `<html><body><table/></body></html>`;');
+  git('add', '.'); git('-c', 'user.name=Coverage Test', '-c', 'user.email=test@example.invalid', 'commit', '-m', 'fixture');
+  const found = scanRepository(root);
+  assert.equal(found.scannedFiles, 1); assert.equal(found.eligible, 1);
+  assert.deepEqual(found.surfaces[0].files.map(file => file.path), ['apps/web/src/report.ts']);
+  assert.deepEqual(found.surfaces[0].files[0].bespoke, [{ name: 'table', line: 1 }]);
+});
