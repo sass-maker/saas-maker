@@ -252,12 +252,32 @@ describe('verified public Fleet directory', () => {
       {}
     );
     expect(catalog.schemaVersion).toBe(6);
-    expect(ids).toHaveLength(39);
+    expect(ids).toHaveLength(38);
     expect(ids).not.toContain('significanthobbies');
     expect(new Set(ids).size).toBe(catalog.directory.length);
     const archivedIds = catalog.archivedDirectory.map((project: { id: string }) => project.id);
-    expect(archivedIds).toHaveLength(39);
-    expect(archivedIds).toContain('significanthobbies');
+    expect(archivedIds).toHaveLength(41);
+    expect(archivedIds).toEqual(
+      expect.arrayContaining(['significanthobbies', 'chatgpt-connections', 'unified-portfolio'])
+    );
+    expect(ids).toContain('domain-inbox');
+    for (const id of ['chatgpt-connections', 'unified-portfolio']) {
+      expect(ids).not.toContain(id);
+      const archived = catalog.archivedDirectory.find(
+        (project: { id: string }) => project.id === id
+      );
+      expect(archived).toMatchObject({ roster: 'archived', availability: 'archived' });
+      expect(archived).not.toHaveProperty('publicUrl');
+    }
+    const saasMaker = catalog.directory.find(
+      (project: { id: string }) => project.id === 'saas-maker'
+    );
+    expect(saasMaker.technologies).toContain('MCP');
+    expect(saasMaker.purposeContract.mechanism).toContain('Shared read-only MCP connections');
+    expect(saasMaker.purposeContract.proof).toContain('apps/mcp');
+    expect(
+      catalog.directory.find((project: { id: string }) => project.id === 'domain-inbox')
+    ).toMatchObject({ name: 'Fleet Mail', roster: 'current', availability: 'internal-private' });
     expect(new Set([...ids, ...archivedIds]).size).toBe(ids.length + archivedIds.length);
     expect(
       catalog.directory.every((project: { roster: string }) => project.roster === 'current')
@@ -343,13 +363,7 @@ describe('verified public Fleet directory', () => {
       publicUrlLabel: 'Landing page',
       group: 'current',
     });
-    for (const id of [
-      'site-health',
-      'chatgpt-connections',
-      'nutrition-formula-engine',
-      'fleet-social',
-      'unified-portfolio',
-    ]) {
+    for (const id of ['site-health', 'domain-inbox', 'nutrition-formula-engine', 'fleet-social']) {
       expect(catalog.directory.find((project: { id: string }) => project.id === id)).toMatchObject({
         availability: 'internal-private',
       });
