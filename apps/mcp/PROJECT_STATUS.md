@@ -1,0 +1,124 @@
+# ChatGPT Connections
+
+## Why / What
+
+ChatGPT Connections is Fleet's shared read-only MCP gateway for existing
+cloud-backed product data. Public product routes remain anonymous; Reader,
+Calorie, and Anime List use user-scoped federated OAuth that is verified by
+both the gateway and the owning product. CodeVetter and other device-local
+sources remain outside this gateway.
+
+Multi-user account linking, mutations, device-only data upload, private
+Significant Hobbies records, and the full local Research Papers corpus are out
+of scope.
+
+## Public discovery (source, not deployed)
+
+The anonymous landing directory now has `/index.md`, negotiated Markdown,
+`/api/md/`, `/api/md/_catalog`, `/llms.txt`, `/llms-full.txt`, `/ai.txt`,
+`/api/ai`, `robots.txt` and `sitemap.xml` on each hosted hostname. Only `/` is
+registered for page export; personal MCP data and authentication routes remain
+excluded. Endpoint rows and shared copy come from the HTML source data, with
+parity tests covering the remaining authored narrative.
+
+Allowing GPTBot, ClaudeBot, Google-Extended, Applebot-Extended, CCBot and
+Bytespider on public pages is an explicit owner decision. These source changes
+do not establish production deployment or successful AI indexing.
+
+## Dependencies
+
+- Cloudflare Workers for the Streamable HTTP OAuth resource server.
+- Auth0 free plan for owner identity, consent, CIMD client
+  registration, access/refresh tokens, and revocation.
+- `jose` for audience-bound Auth0 JWT and JWKS verification.
+- Existing read-only product APIs and public exports for upstream data.
+- ChatGPT web developer mode for hosted MCP registration.
+
+## Timeline
+
+- 2026-09-11 — Called all seven installed consumer connections directly.
+  High Signal, Research Papers, Significant Hobbies and Starboard returned
+  successful read-only responses. Reader, Calorie and Anime List returned
+  `UNAUTHORIZED` with `oauth_token_invalid_grant`, requiring reauthentication
+  of their saved app grants before owner-data reads can be verified. This is
+  a fresh consumer-session result, not evidence of an upstream product failure.
+  High Signal's successful connection still returns an empty current Brief;
+  useful publication remains owned by High Signal. No private record bodies
+  were retained and no product data was changed.
+
+- 2026-09-10 — Public upstream reads now send a truthful gateway User-Agent
+  so Starboard can identify the client. Anonymous requests still send no
+  credentials; all 108 tests and type checks pass locally.
+
+- 2026-09-07 — Restored the four installed High Signal methods alongside the
+  newer daily/evidence tools at runtime release `4a050690`. Exact-revision CI
+  and 107 tests passed; all four methods were called successfully through the
+  installed ChatGPT connector. The production monitor now calls the installed
+  brief method and passed 47 checks with one expected empty-dataset pagination
+  skip. High Signal owns publication-date and ingestion recovery separately.
+
+- 2026-08-30 — Deployed the user-scoped SWE Interview Prep connection at `learn-mcp.significanthobbies.com`. Its two private tools read the product-owned daily priority and progress projections through the exact `swe-interview-prep.read` Auth0 audience; five curriculum tools remain read-only. Product and gateway CI, Worker deployment, protected-resource metadata, host isolation, and unauthenticated fail-closed smokes pass. ChatGPT plugin creation and the authenticated owner smoke remain the final client gate.
+- 2026-08-22 — Made the repository public after a full 27-commit credential
+  scan found only one deterministic test fixture and no tracked secret files or
+  credential-shaped issue/PR content. Public visibility restored GitHub Actions;
+  the Personal Apps read-only route passed CI, merged, and deployed at exact SHA
+  `b296e05910ca808ce436f47bc0c1ecb1844f04c0` with 100% traffic. The route
+  remains fail-closed pending owner OAuth activation.
+- 2026-08-21 — Extracted the complete Worker, auth boundary, monitoring,
+  listing packages, tests, and history into the standalone
+  `sass-maker/chatgpt-connections` repository. CI and the SHA-tagged manual
+  deploy guard are now repository-local. No deployment or provider mutation
+  occurred.
+- 2026-08-12 — Added a redacted 32-case live submission preflight for the four
+  anonymous plugins and fail-closed tracking for remaining browser/OAuth gates.
+- 2026-08-11 — Added the fixed-route Worker implementation, OAuth isolation,
+  public/private security schemes, tests, path-scoped CI, and guarded manual
+  deployment path.
+- 2026-08-11 — Replaced the custom Cloudflare Access OAuth bridge and KV token
+  state with an Auth0 resource-server boundary, CIMD, and no-card cost guard.
+- 2026-08-11 — Configured the free Auth0 tenant, verified the Google owner,
+  enabled CIMD/resource compatibility, and created four exact one-hour API
+  audiences with default third-party user grants.
+- 2026-08-11 — Released the SHA-tagged gateway, verified all OAuth/resource
+  metadata, initialized all eight routes, and completed representative public
+  tool calls without retaining record bodies.
+- 2026-08-11 — Released Reader, Calorie, and Anime List federated verifiers;
+  attached seven independent branded custom domains; published seven complete
+  OpenAI listing packages; and passed branded OAuth plus live read-only,
+  host-isolation, and mutation-absence checks.
+
+## Products
+
+- `fleet-chatgpt-connections` — Live SHA-tagged Cloudflare Worker at the
+  compatibility `workers.dev` origin and seven independent branded domains.
+- Private Personal Apps route at `/personal-apps/mcp`, deployed in prepared
+  state with the exact `personal-apps.read` OAuth scope.
+- Seven public plugin endpoints: Reader, Calorie, Anime List, Starboard, High
+  Signal, Significant Hobbies, and Research Papers.
+- Setline remains a fail-closed compatibility route and is not published.
+
+## Features (shipped)
+
+- Fixed per-product Streamable HTTP MCP routes with explicit read-only tools.
+- Anonymous public routes that reject credentials.
+- Auth0 subject, exact route audience, lifetime, and product-read permission
+  checks for federated personal routes, repeated by the owning product API.
+- Bounded requests, responses, upstream timeouts, safe CORS, no-store private
+  responses, and secret-safe logging.
+- Exact per-tool OAuth or no-auth security declarations.
+- Path-scoped CI and a clean-main, green-CI, SHA-tagged manual deploy gate.
+- Free Auth0 tenant activation with CIMD, PKCE/refresh metadata, exact
+  resource audiences, one-hour RS256 tokens, owner allowlisting, and
+  third-party user grants; DCR, custom domains, and paid features stay off.
+- Production metadata/JWKS verification and status-only public/private smoke
+  receipts. Setline remains fail-closed until its first owner token exists.
+- Seven unique branded hosts with isolated OpenAI plaintext-challenge bindings;
+  absent challenge secrets fail closed until the portal creates each draft.
+- Seven portal-ready listing packages with branded icons, legal/support links,
+  starter prompts, release notes, and positive/negative review tests.
+- Reproducible public listing evaluations with no retained prompts, arguments,
+  source records, upstream errors, or credentials.
+
+## Work queue
+
+[ChatGPT Connections GitHub Issues](https://github.com/sass-maker/chatgpt-connections/issues)
