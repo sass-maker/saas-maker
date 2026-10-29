@@ -46,6 +46,9 @@ absorbed from `chatgpt-connections`. It keeps its own pnpm lock and workspace
 boundary. Its existing Worker, branded endpoints, OAuth scopes and read-only
 contract remain unchanged. Follow its nested `AGENTS.md`; use `pnpm check:mcp`
 for focused checks and `pnpm deploy:mcp` for the guarded manual release.
+For the initial cutover, verify exact-main MCP CI, then retire the legacy deploy
+path and workflows before the first SaaS Maker deployment. See the package's
+`PROJECT_STATUS.md` for the order.
 
 SaaS Maker Tooling owns shared schedules, skills, and host automation. Site
 Health owns the private catalog, readiness checklist, scores, evidence, history

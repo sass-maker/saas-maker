@@ -27,13 +27,16 @@ do not establish production deployment or successful AI indexing.
 
 ## Migration cutover remains pending
 
-Before the first release from SaaS Maker, retire the standalone repository's
-local deployment entry point and disable its CI and production-monitor
-workflows. Both source trees currently name the same Worker, so the old release
-path must not remain available to replace a SaaS Maker release with stale source.
-Record the source tombstone and workflow retirement evidence here at cutover.
-Migration is incomplete until these steps and the SaaS Maker release checks
-are verified. No retirement or production release is claimed by this source move.
+First merge the SaaS Maker source and verify successful `mcp-ci.yml` at the exact
+main revision. Before the first `pnpm deploy:mcp`, land the legacy repository's
+fail-closed publisher and source tombstone, move its active Wrangler configuration
+to `docs/archive` so direct deployment cannot discover it, and disable its CI and
+production-monitor workflows. Verify these retirements before deploying from
+SaaS Maker. Both source trees target the same Worker, so the old release path
+must not remain available to replace a SaaS Maker release with stale source.
+Migration is incomplete until the legacy release path is retired and the SaaS
+Maker release checks pass. No retirement or production release is claimed by this
+source move. Final cutover evidence stays private.
 
 ## Dependencies
 

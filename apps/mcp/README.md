@@ -1,7 +1,7 @@
 # SaaS Maker MCP Connections
 
-ChatGPT Connections is the standalone read-only MCP gateway for selected
-products. It routes data according to each product's existing storage boundary:
+ChatGPT Connections is the shared read-only MCP gateway in SaaS Maker for
+selected products. It routes data according to each product's existing storage boundary:
 
 - CodeVetter stays local and is available only to Codex through its installed
   repository-scoped STDIO sidecar.
