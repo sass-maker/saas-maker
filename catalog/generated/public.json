@@ -1517,14 +1517,14 @@
         "storage.daddyrad.com",
         "storagedaddy.significanthobbies.com"
       ],
-      "url": "https://storage.daddyrad.com/",
+      "url": "https://daddyrad.com/storage/",
       "repositoryUrl": "https://github.com/Significant-Hobbies/storagedaddy",
       "roadmapUrl": "https://github.com/Significant-Hobbies/storagedaddy/issues",
       "firstCommitAt": "2026-09-13",
       "latestCommitAt": "2026-09-20",
       "roster": "current",
       "availability": "public-link",
-      "publicUrl": "https://storage.daddyrad.com/",
+      "publicUrl": "https://daddyrad.com/storage/",
       "publicUrlLabel": "Visit website"
     },
     {
@@ -1576,14 +1576,14 @@
         "browser.daddyrad.com",
         "browserdaddy.significanthobbies.com"
       ],
-      "url": "https://browser.daddyrad.com/",
+      "url": "https://daddyrad.com/browser/",
       "repositoryUrl": "https://github.com/Significant-Hobbies/browserdaddy",
       "roadmapUrl": "https://github.com/Significant-Hobbies/browserdaddy/issues",
       "firstCommitAt": "2026-09-19",
       "latestCommitAt": "2026-09-22",
       "roster": "current",
       "availability": "public-link",
-      "publicUrl": "https://browser.daddyrad.com/",
+      "publicUrl": "https://daddyrad.com/browser/",
       "publicUrlLabel": "Visit website"
     },
     {
@@ -1635,14 +1635,14 @@
         "performance.daddyrad.com",
         "performancedaddy.significanthobbies.com"
       ],
-      "url": "https://performance.daddyrad.com/",
+      "url": "https://daddyrad.com/performance/",
       "repositoryUrl": "https://github.com/Significant-Hobbies/performancedaddy",
       "roadmapUrl": "https://github.com/Significant-Hobbies/performancedaddy/issues",
       "firstCommitAt": "2026-09-20",
       "latestCommitAt": "2026-09-23",
       "roster": "current",
       "availability": "public-link",
-      "publicUrl": "https://performance.daddyrad.com/",
+      "publicUrl": "https://daddyrad.com/performance/",
       "publicUrlLabel": "Visit website"
     },
     {
@@ -1773,14 +1773,14 @@
       "domains": [
         "context.daddyrad.com"
       ],
-      "url": "https://context.daddyrad.com/",
+      "url": "https://daddyrad.com/context/",
       "repositoryUrl": "https://github.com/Significant-Hobbies/contextdaddy",
       "roadmapUrl": "https://github.com/Significant-Hobbies/contextdaddy/issues",
       "firstCommitAt": "2026-09-13",
       "latestCommitAt": "2026-09-26",
       "roster": "current",
       "availability": "public-link",
-      "publicUrl": "https://context.daddyrad.com/",
+      "publicUrl": "https://daddyrad.com/context/",
       "publicUrlLabel": "Visit website"
     },
     {
@@ -2811,7 +2811,7 @@
       "id": "browserdaddy",
       "name": "BrowserDaddy",
       "description": "A local-first Mac browsing intelligence app for a unified history archive and real attention tracking.",
-      "url": "https://browser.daddyrad.com/",
+      "url": "https://daddyrad.com/browser/",
       "tier": "active",
       "category": "utility",
       "priority": null,
@@ -2878,7 +2878,7 @@
       "id": "contextdaddy",
       "name": "ContextDaddy",
       "description": "A local Mac desk for agent context, skills, usage, and observed telemetry.",
-      "url": "https://context.daddyrad.com/",
+      "url": "https://daddyrad.com/context/",
       "tier": "active",
       "category": "utility",
       "priority": null,
@@ -3260,7 +3260,7 @@
       "id": "performancedaddy",
       "name": "PerformanceDaddy",
       "description": "A local Mac performance investigator for background apps, helpers and developer workloads, with measured evidence and reviewed actions.",
-      "url": "https://performance.daddyrad.com/",
+      "url": "https://daddyrad.com/performance/",
       "tier": "active",
       "category": "utility",
       "priority": null,
@@ -3467,7 +3467,7 @@
       "id": "storagedaddy",
       "name": "storagedaddy",
       "description": "An open-source native Mac storage analyzer for developer caches, builds, dependencies and AI session archives, with reviewed cleanup. Free during early access.",
-      "url": "https://storage.daddyrad.com/",
+      "url": "https://daddyrad.com/storage/",
       "tier": "active",
       "category": "utility",
       "priority": null,
