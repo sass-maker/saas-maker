@@ -116,6 +116,27 @@ function collectionCatalog() {
 }
 
 describe('non-product brand collections', () => {
+  it('retains independent GitHub, App Store and documentation destinations for domained products', () => {
+    for (const destination of [
+      'https://github.com/owner/tool',
+      'https://apps.apple.com/app/id123',
+      'https://docs.example/quickstart',
+    ]) {
+      const input = catalog();
+      Object.assign(input.projects[0].public, {
+        url: 'https://primary.example/product/?ref=original#details',
+      });
+      Object.assign(input.publicDirectory.projects.primary, { publicDestinationUrl: destination });
+      const output = buildPublicProducts(input);
+      const product = output.products.find((p) => p.id === 'primary')!;
+      const profile = output.directory.find((p) => p.id === 'primary')!;
+      expect(product.url).toBe('https://primary.example/product/?ref=original#details');
+      expect(profile.url).toBe(product.url);
+      expect(profile.publicUrl).toBe(destination);
+      expect(product.changelogUrl).toBe('https://primary.example/product/changelog');
+      expect(() => validateProjection(output, 'fixture')).not.toThrow();
+    }
+  });
   it('projects only public collection fields without changing product or archive membership', () => {
     const input = collectionCatalog();
     const before = structuredClone(input);
@@ -186,13 +207,26 @@ describe('non-product brand collections', () => {
     expect(() => validateProjection(output, 'fixture')).not.toThrow();
   });
 
-  it('does not authorize unrelated, credentialed or nonstandard-port marketing destinations', () => {
+  it('adopts a destination on the same native host without changing deployment hosts', () => {
+    const input = catalog();
+    Object.assign(input.publicDirectory.projects.primary, {
+      publicDestinationUrl: 'https://primary.example/new/?from=directory#download',
+    });
+    const output = buildPublicProducts(input);
+    expect(output.products.find((project) => project.id === 'primary')?.url).toBe(
+      'https://primary.example/new/?from=directory#download'
+    );
+    expect(output.directory.find((project) => project.id === 'primary')).toMatchObject({
+      publicUrl: 'https://primary.example/new/?from=directory#download',
+      domains: ['primary.example'],
+    });
+  });
+
+  it('rejects unsafe adopted collection destinations and keeps non-members independent', () => {
     for (const destination of [
-      'https://other.example/storage/',
       'https://user:pass@family.example/storage/',
       'https://family.example:444/storage/',
       'https://family.example:443/storage/',
-      'https://family.example/storage/?key=value',
     ]) {
       const input = collectionCatalog();
       Object.assign(input.publicDirectory.projects.primary, { publicDestinationUrl: destination });
@@ -202,7 +236,13 @@ describe('non-product brand collections', () => {
     Object.assign(input.publicDirectory.projects.inactive, {
       publicDestinationUrl: 'https://family.example/unrelated/',
     });
-    expect(() => buildPublicProducts(input)).toThrow();
+    const output = buildPublicProducts(input);
+    expect(output.products.find((project) => project.id === 'inactive')?.url).toBe(
+      'https://inactive.example'
+    );
+    expect(output.directory.find((project) => project.id === 'inactive')?.publicUrl).toBe(
+      'https://family.example/unrelated/'
+    );
   });
 
   it('keeps explicit no-homepage profiles without synthesizing a shared website', () => {

@@ -156,8 +156,9 @@ const projectProfilePath = (project: DirectoryProject) =>
             </div>
 
             <div class="directory-rows">
-              {directoryCollectionBlocks(group.projects, DIRECTORY_COLLECTIONS).map((block) => (<>
-                {block.collection && <header class="directory-collection-head" data-directory-collection={block.collection.id}>
+              {directoryCollectionBlocks(group.projects, DIRECTORY_COLLECTIONS).map((block) => (
+                <div class:list={['directory-block', { 'directory-collection': Boolean(block.collection) }]} data-directory-collection={block.collection?.id}>
+                {block.collection && <header class="directory-collection-head">
                   <div><p class="directory-kicker">App collection · <span data-collection-count>{block.projects.length} apps</span></p><h3>{block.collection.name}</h3><p>{block.collection.description}</p></div>
                   <a href={block.collection.websiteUrl} target="_blank" rel="noopener noreferrer">Visit {block.collection.name} <span aria-hidden="true">↗</span></a>
                 </header>}
@@ -321,7 +322,7 @@ const projectProfilePath = (project: DirectoryProject) =>
                   </div>
                 </details>
               ))}
-              </>))}
+              </div>))}
             </div>
           </section>
         ))}
@@ -805,6 +806,15 @@ const projectProfilePath = (project: DirectoryProject) =>
     background: var(--directory-pane);
   }
 
+  .directory-block { display: contents; }
+  .directory-collection {
+    display: grid;
+    gap: 1px;
+    border: 2px solid var(--line);
+    border-bottom-width: 6px;
+  }
+  .directory-collection[hidden] { display: none; }
+
   .directory-collection-head {
     display: flex;
     flex-wrap: wrap;
@@ -815,7 +825,6 @@ const projectProfilePath = (project: DirectoryProject) =>
     background: var(--directory-pane);
   }
 
-  .directory-collection-head[hidden] { display: none; }
   .directory-collection-head h3 { margin-block: 0.5rem; font-size: 1.65rem; }
   .directory-collection-head p:not(.directory-kicker) { max-width: 64ch; color: var(--ink-muted); }
   .directory-collection-head > a { min-height: 2.75rem; display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 700; }

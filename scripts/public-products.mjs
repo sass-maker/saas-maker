@@ -293,7 +293,7 @@ export function buildPublicProducts(catalog) {
       : undefined;
     const destinationUrl = Object.hasOwn(metadata, 'publicDestinationUrl')
       ? availability === 'public-link' &&
-        typeof metadata.publicDestinationUrl === 'string' &&
+        canonicalDirectoryDestination(project, catalog) &&
         preservedPublicFields.url
         ? preservedPublicFields.url
         : metadata.publicDestinationUrl
@@ -559,6 +559,29 @@ export function assertNoPrivateData(value, trail = 'projection') {
   }
 }
 
+function canonicalDirectoryDestination(project, catalog) {
+  const directory = catalog.publicDirectory?.projects?.[project.id];
+  if (['preview-not-qualified', 'unreleased-prototype'].includes(directory?.availabilityLabel))
+    return null;
+  const source = directory?.publicDestinationUrl;
+  if (typeof source !== 'string') return null;
+  let url;
+  try {
+    url = new URL(source);
+  } catch {
+    return null;
+  }
+  const collectionDestination = (catalog.systems?.rootBrands?.brands ?? []).some(
+    (brand) =>
+      brand.rootDomain === url.hostname &&
+      brand.collection?.projectIds?.includes(project.id) &&
+      brand.collection.websiteUrl === `https://${url.hostname}/`
+  );
+  return url.hostname === project.domains?.[0]?.toLowerCase() || collectionDestination
+    ? { source, url }
+    : null;
+}
+
 function canonicalPublicUrl(project, catalog) {
   const domain = project.domains?.[0];
   if (!domain) {
@@ -571,13 +594,8 @@ function canonicalPublicUrl(project, catalog) {
     }
     throw new Error(`${project.id}: maintained public listing requires a canonical domain`);
   }
-  const directory = catalog.publicDirectory?.projects?.[project.id];
-  const destination = ['preview-not-qualified', 'unreleased-prototype'].includes(
-    directory?.availabilityLabel
-  )
-    ? undefined
-    : directory?.publicDestinationUrl;
-  const override = typeof destination === 'string' ? destination : project.public?.url;
+  const destination = canonicalDirectoryDestination(project, catalog);
+  const override = destination?.source ?? project.public?.url;
   if (override == null) return `https://${domain}`;
 
   let parsed;
@@ -588,24 +606,13 @@ function canonicalPublicUrl(project, catalog) {
       `${project.id}: public.url must be an absolute HTTPS URL on the canonical domain`
     );
   }
-  const collectionDestination =
-    typeof destination === 'string' &&
-    (catalog.systems?.rootBrands?.brands ?? []).some(
-      (brand) =>
-        brand.rootDomain === parsed.hostname &&
-        brand.collection?.projectIds?.includes(project.id) &&
-        brand.collection.websiteUrl === `${parsed.origin}/`
-    );
   if (
     parsed.protocol !== 'https:' ||
-    (parsed.hostname.toLowerCase() !== domain.toLowerCase() && !collectionDestination) ||
+    (parsed.hostname.toLowerCase() !== domain.toLowerCase() && !destination) ||
     parsed.port ||
     parsed.username ||
     parsed.password ||
-    parsed.search ||
-    parsed.hash ||
-    (typeof destination === 'string' &&
-      /^https:\/\/([^/?#]+)/.exec(destination)?.[1] !== parsed.hostname)
+    (destination && /^https:\/\/([^/?#]+)/.exec(destination.source)?.[1] !== parsed.hostname)
   ) {
     throw new Error(
       `${project.id}: public.url must be an absolute HTTPS URL on the canonical domain`
