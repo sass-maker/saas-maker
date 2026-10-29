@@ -253,12 +253,16 @@ describe('daily PII-free capture receipts', () => {
     expect(result.feedbackApplicabilityByCatalogId['site-health']).toBe('applicable');
     expect(result.feedbackApplicabilityByCatalogId['agent-inbox']).toBe('not_applicable');
     expect(result.feedbackApplicabilityByCatalogId.techdata).toBe('not_applicable');
+    expect(result.feedbackApplicabilityByCatalogId['domain-inbox']).toBe('not_applicable');
     expect(result.feedbackApplicabilityByCatalogId.motion).toBe('applicable');
     expect(
       Object.entries(result.feedbackApplicabilityByCatalogId)
-        .filter(([id]) => !['site-health', 'agent-inbox', 'techdata', 'motion'].includes(id))
+        .filter(
+          ([id]) =>
+            !['site-health', 'agent-inbox', 'techdata', 'motion', 'domain-inbox'].includes(id)
+        )
         .map(([, applicability]) => applicability)
-    ).toEqual(Array.from({ length: reportProjects.length - 4 }, () => 'unknown'));
+    ).toEqual(Array.from({ length: reportProjects.length - 5 }, () => 'unknown'));
     expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(
       reportProjects.length
     );
@@ -331,6 +335,8 @@ describe('daily PII-free capture receipts', () => {
       expect(result.feedbackApplicabilityByCatalogId[id]).toBe(feedbackApplicability ?? 'unknown');
     }
     for (const id of [
+      'chatgpt-connections',
+      'unified-portfolio',
       'slow-serp',
       'agent-testing',
       'gitstat',
@@ -348,7 +354,9 @@ describe('daily PII-free capture receipts', () => {
     ]) {
       expect(catalogIds).not.toContain(id);
       expect(result.applicabilityByCatalogId[id]).toBeUndefined();
+      expect(result.feedbackApplicabilityByCatalogId[id]).toBeUndefined();
       expect(result.nativeSessionsApplicabilityByCatalogId[id]).toBeUndefined();
+      expect(result.browserVisitorsApplicabilityByCatalogId[id]).toBeUndefined();
     }
     const nativeProducts = [
       'codevetter',
@@ -370,7 +378,8 @@ describe('daily PII-free capture receipts', () => {
       .filter(([, applicability]) => applicability === 'not_applicable')
       .map(([id]) => id)
       .sort();
-    expect(browserNotApplicable).toEqual(['agent-inbox', 'fleet-social', 'site-health']);
+    expect(browserNotApplicable).toEqual(['domain-inbox', 'fleet-social', 'site-health']);
+    expect(result.browserVisitorsApplicabilityByCatalogId['agent-inbox']).toBe('applicable');
     for (const id of ['fleet-social', 'site-health']) {
       const policy = nativeApplicability.products.find((product) => product.id === id);
       expect(policy?.browserVisitors).toBe('not-applicable');
@@ -380,10 +389,15 @@ describe('daily PII-free capture receipts', () => {
       );
       expect(result.browserVisitorsApplicabilityByCatalogId[id]).toBe('not_applicable');
     }
-    expect(result.browserVisitorsApplicabilityByCatalogId['chatgpt-connections']).toBe(
-      'applicable'
+    const fleetMailPolicy = nativeApplicability.products.find(
+      (product) => product.id === 'domain-inbox'
     );
-    expect(result.browserVisitorsApplicabilityByCatalogId['unified-portfolio']).toBe('applicable');
+    expect(fleetMailPolicy?.browserVisitorsReason).toContain(
+      'email content and browsing are not sent to hosted analytics'
+    );
+    expect(fleetMailPolicy?.browserVisitorsSourceIssue).toBe(
+      'https://github.com/sass-maker/fleet-mail/issues/1'
+    );
     expect(
       Object.fromEntries(
         ['pace', 'free-ai', 'knowledge-base'].map((id) => [id, result.applicabilityByCatalogId[id]])
@@ -405,6 +419,7 @@ describe('daily PII-free capture receipts', () => {
       'app-health',
       'free-ai',
       'knowledge-base',
+      'looptv',
       'nutrition-formula-engine',
     ]);
 
@@ -414,27 +429,28 @@ describe('daily PII-free capture receipts', () => {
       .sort();
     expect(notApplicable).toEqual([
       'agent-inbox',
-      'chatgpt-connections',
+      'domain-inbox',
       'fleet-social',
       'site-health',
       'techdata',
-      'unified-portfolio',
     ]);
     expect(Object.values(result.applicabilityByCatalogId)).not.toContain('waitlist');
     expect(Object.values(result.applicabilityByCatalogId)).not.toContain('undetermined');
   });
 
   it('maps only requested feedback policies, defaults missing decisions to unknown, and keeps counts separate', async () => {
-    const requested = ['site-health', 'agent-inbox', 'war-chest', 'unclassified'];
+    const requested = ['site-health', 'agent-inbox', 'domain-inbox', 'war-chest', 'unclassified'];
     const mapping = mapFeedbackApplicabilityByCatalogId(requested, [
       { id: 'site-health', feedbackApplicability: 'applicable' },
       { id: 'agent-inbox', feedbackApplicability: 'not_applicable' },
+      { id: 'domain-inbox', feedbackApplicability: 'not_applicable' },
       { id: 'war-chest', feedbackApplicability: 'not_applicable' },
       { id: 'outside-request', feedbackApplicability: 'applicable' },
     ]);
     expect(mapping).toEqual({
       'site-health': 'applicable',
       'agent-inbox': 'not_applicable',
+      'domain-inbox': 'not_applicable',
       'war-chest': 'not_applicable',
       unclassified: 'unknown',
     });
