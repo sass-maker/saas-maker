@@ -93,7 +93,7 @@ export async function handlePublicDocument(request: Request): Promise<Response |
   if (!handler) {
     const manifest = createAgentSurfaceManifest({
       name: publicCopy.name, url: origin, summary: publicCopy.summary,
-      contact: 'https://github.com/sass-maker/chatgpt-connections/issues',
+      contact: 'https://github.com/sass-maker/saas-maker/issues',
       updatedAt: '2026-10-26', trainingAllowed: true, excludedPaths,
       sitemap: `${origin}/sitemap.xml`, pages: { '/': homepageMarkdown(origin) },
     });

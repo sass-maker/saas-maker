@@ -79,7 +79,7 @@ test("public reads identify the gateway without sending credentials", async () =
         assert.equal(headers.get("authorization"), null);
         const userAgent = headers.get("user-agent") ?? "";
         if (!userAgent) return new Response("Automated clients are not permitted", { status: 403 });
-        assert.match(userAgent, /^Fleet-ChatGPT-Connections\/1\.0 /);
+        assert.equal(userAgent, "Fleet-ChatGPT-Connections/1.0 (+https://github.com/sass-maker/saas-maker/tree/main/apps/mcp)");
         return Response.json({ repo: { id: 123 } });
       },
     },

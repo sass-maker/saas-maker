@@ -25,6 +25,16 @@ Allowing GPTBot, ClaudeBot, Google-Extended, Applebot-Extended, CCBot and
 Bytespider on public pages is an explicit owner decision. These source changes
 do not establish production deployment or successful AI indexing.
 
+## Migration cutover remains pending
+
+Before the first release from SaaS Maker, retire the standalone repository's
+local deployment entry point and disable its CI and production-monitor
+workflows. Both source trees currently name the same Worker, so the old release
+path must not remain available to replace a SaaS Maker release with stale source.
+Record the source tombstone and workflow retirement evidence here at cutover.
+Migration is incomplete until these steps and the SaaS Maker release checks
+are verified. No retirement or production release is claimed by this source move.
+
 ## Dependencies
 
 - Cloudflare Workers for the Streamable HTTP OAuth resource server.
@@ -37,11 +47,14 @@ do not establish production deployment or successful AI indexing.
 ## Timeline
 
 - 2026-10-29 — Source and full history absorbed into SaaS Maker at `apps/mcp`
-  from `f56529540ac553b47bd0ccc1e0008fc2db8fb9d4`. Runtime source, OAuth scopes,
+  from `f56529540ac553b47bd0ccc1e0008fc2db8fb9d4`. OAuth scopes, route behavior,
   Worker configuration, dependency lock and published endpoint identities are
+  unchanged. The only intentional runtime differences are the public discovery
+  contact URL and outbound User-Agent source URL, which now identify SaaS Maker.
+  Gateway listing support links also use SaaS Maker; product-owned contacts stay
   unchanged. The package retains an independent lock boundary. Root workflows
-  own exact-revision CI and production monitoring. This source move alone is
-  not deployment or authenticated-owner acceptance evidence.
+  provide exact-revision CI and production monitoring. This source move alone
+  is not deployment or authenticated-owner acceptance evidence.
 
 - 2026-09-11 — Called all seven installed consumer connections directly.
   High Signal, Research Papers, Significant Hobbies and Starboard returned

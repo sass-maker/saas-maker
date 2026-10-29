@@ -95,7 +95,7 @@ export class ReadClient<Operations extends Record<string, ReadOperation<Record<s
         const headers = new Headers({
           Accept: "application/json",
           // Identify the read-only gateway honestly to upstream bot guards.
-          "User-Agent": "Fleet-ChatGPT-Connections/1.0 (+https://github.com/sass-maker/chatgpt-connections)",
+          "User-Agent": "Fleet-ChatGPT-Connections/1.0 (+https://github.com/sass-maker/saas-maker/tree/main/apps/mcp)",
         });
         if (operation.auth && this.#token) headers.set("Authorization", `Bearer ${this.#token}`);
         const response = await this.#fetch(url, {

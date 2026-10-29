@@ -68,3 +68,22 @@ test("all eleven listing packages are complete and independently verifiable", as
     if (route.audience === "personal") assert.ok(listing.reviewFixture?.trim());
   }
 });
+
+
+test("listing support follows the owning product and shared gateway", async () => {
+  const path = new URL("../../docs/listings/plugins.json", import.meta.url);
+  const manifest = JSON.parse(await readFile(path, "utf8")) as { plugins: Listing[] };
+  assert.deepEqual(Object.fromEntries(manifest.plugins.map(({ id, support }) => [id, support])), {
+    reader: "https://github.com/Significant-Hobbies/reader/issues",
+    calorie: "https://github.com/Significant-Hobbies/calorie/issues",
+    "anime-list": "https://github.com/Significant-Hobbies/anime-list/issues",
+    "anime-list-public": "https://github.com/Significant-Hobbies/anime-list/issues",
+    starboard: "https://github.com/Codevetter/starboard/issues",
+    "high-signal": "https://github.com/High-Signal-App/high-signal/issues",
+    "significant-hobbies": "https://github.com/Significant-Hobbies/significanthobbies/issues",
+    "research-papers": "https://github.com/High-Signal-App/research-papers/issues",
+    "swe-interview-prep": "https://github.com/Significant-Hobbies/swe-interview-prep/issues",
+    "saas-maker": "https://github.com/sass-maker/saas-maker/issues",
+    drank: "https://github.com/sass-maker/saas-maker/issues",
+  });
+});

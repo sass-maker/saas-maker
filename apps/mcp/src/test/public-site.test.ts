@@ -78,3 +78,12 @@ test("authored landing narrative stays present in Markdown", async () => {
     assert.ok(normalizedMarkdown.includes(words(authored)), `Markdown omitted authored copy: ${authored}`);
   }
 });
+
+
+test("public discovery sends gateway support to SaaS Maker", async () => {
+  const response = await request("/ai.txt");
+  assert.equal(response.status, 200);
+  const document = await response.text();
+  assert.ok(document.includes("contact: https://github.com/sass-maker/saas-maker/issues"));
+  assert.ok(!document.includes("github.com/sass-maker/chatgpt-connections"));
+});
