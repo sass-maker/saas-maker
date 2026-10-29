@@ -1,5 +1,6 @@
 import { compatibilityCatalog } from './catalog-schema.mjs';
 import { validateFooterArt } from '../packages/fleet-footer/src/artwork.mjs';
+import { buildPublicCollections } from './project-collections.mjs';
 
 const PRODUCT_FIELDS = new Set([
   'id',
@@ -107,7 +108,7 @@ export function buildPublicProducts(catalog) {
     const footerArt = validateFooterArt(project.footerArt, project.id);
 
     if (metadata.listing === 'maintained') {
-      const url = canonicalPublicUrl(project);
+      const url = canonicalPublicUrl(project, catalog);
       const output = {
         id: metadata.id ?? project.id,
         name: metadata.name ?? project.name,
@@ -246,7 +247,9 @@ export function buildPublicProducts(catalog) {
           const domains = project.domains ?? [];
           const repositoryUrl = publicRepositoryUrl(project);
           const url =
-            domains[0] || listing === 'maintained' ? canonicalPublicUrl(project) : undefined;
+            domains[0] || listing === 'maintained'
+              ? canonicalPublicUrl(project, catalog)
+              : undefined;
           return {
             ...(metadata.logoUrl ? { logoUrl: metadata.logoUrl } : {}),
             ...(metadata.purposeContract ? { purposeContract: metadata.purposeContract } : {}),
@@ -266,7 +269,7 @@ export function buildPublicProducts(catalog) {
             ...(url ? { url } : {}),
             ...(repositoryUrl ? { repositoryUrl } : {}),
             ...(listing === 'maintained' && project.public?.hasChangelog !== false && domains[0]
-              ? { changelogUrl: publicChangelogUrl(canonicalPublicUrl(project)) }
+              ? { changelogUrl: publicChangelogUrl(canonicalPublicUrl(project, catalog)) }
               : {}),
             ...(repositoryUrl ? { roadmapUrl: `${repositoryUrl}/issues` } : {}),
             firstCommitAt: metadata.firstCommitAt,
@@ -288,9 +291,15 @@ export function buildPublicProducts(catalog) {
             .map((field) => [field, contract[field]])
         )
       : undefined;
-    const destinationUrl =
-      metadata.publicDestinationUrl ??
-      (availability === 'public-link' ? preservedPublicFields.url : undefined);
+    const destinationUrl = Object.hasOwn(metadata, 'publicDestinationUrl')
+      ? availability === 'public-link' &&
+        typeof metadata.publicDestinationUrl === 'string' &&
+        preservedPublicFields.url
+        ? preservedPublicFields.url
+        : metadata.publicDestinationUrl
+      : availability === 'public-link'
+        ? preservedPublicFields.url
+        : undefined;
     if (destinationUrl && !/^https:\/\//.test(destinationUrl)) {
       throw new Error(`${project.id}: public destination must use HTTPS`);
     }
@@ -452,6 +461,7 @@ export function buildPublicProducts(catalog) {
     historySemantics: catalog.publicDirectory.historySemantics,
     directory,
     archivedDirectory,
+    collections: buildPublicCollections(catalog, directory),
     products,
     pastProjects,
   };
@@ -549,7 +559,7 @@ export function assertNoPrivateData(value, trail = 'projection') {
   }
 }
 
-function canonicalPublicUrl(project) {
+function canonicalPublicUrl(project, catalog) {
   const domain = project.domains?.[0];
   if (!domain) {
     if (
@@ -561,7 +571,13 @@ function canonicalPublicUrl(project) {
     }
     throw new Error(`${project.id}: maintained public listing requires a canonical domain`);
   }
-  const override = project.public?.url;
+  const directory = catalog.publicDirectory?.projects?.[project.id];
+  const destination = ['preview-not-qualified', 'unreleased-prototype'].includes(
+    directory?.availabilityLabel
+  )
+    ? undefined
+    : directory?.publicDestinationUrl;
+  const override = typeof destination === 'string' ? destination : project.public?.url;
   if (override == null) return `https://${domain}`;
 
   let parsed;
@@ -572,12 +588,24 @@ function canonicalPublicUrl(project) {
       `${project.id}: public.url must be an absolute HTTPS URL on the canonical domain`
     );
   }
+  const collectionDestination =
+    typeof destination === 'string' &&
+    (catalog.systems?.rootBrands?.brands ?? []).some(
+      (brand) =>
+        brand.rootDomain === parsed.hostname &&
+        brand.collection?.projectIds?.includes(project.id) &&
+        brand.collection.websiteUrl === `${parsed.origin}/`
+    );
   if (
     parsed.protocol !== 'https:' ||
-    parsed.hostname.toLowerCase() !== domain.toLowerCase() ||
+    (parsed.hostname.toLowerCase() !== domain.toLowerCase() && !collectionDestination) ||
     parsed.port ||
     parsed.username ||
-    parsed.password
+    parsed.password ||
+    parsed.search ||
+    parsed.hash ||
+    (typeof destination === 'string' &&
+      /^https:\/\/([^/?#]+)/.exec(destination)?.[1] !== parsed.hostname)
   ) {
     throw new Error(
       `${project.id}: public.url must be an absolute HTTPS URL on the canonical domain`

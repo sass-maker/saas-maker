@@ -90,6 +90,133 @@ function standaloneRepository(overrides: Record<string, unknown> = {}) {
   };
 }
 
+function collectionCatalog() {
+  const input = catalog();
+  return {
+    ...input,
+    systems: {
+      rootBrands: {
+        brands: [
+          {
+            rootDomain: 'family.example',
+            canonicalName: 'Family',
+            priority: 'P1',
+            priorityDecision: { reason: 'Private investment rationale.' },
+            collection: {
+              id: 'family',
+              description: 'Two useful Mac utilities.',
+              websiteUrl: 'https://family.example/',
+              projectIds: ['primary', 'active'],
+            },
+          },
+        ],
+      },
+    },
+  };
+}
+
+describe('non-product brand collections', () => {
+  it('projects only public collection fields without changing product or archive membership', () => {
+    const input = collectionCatalog();
+    const before = structuredClone(input);
+    const output = buildPublicProducts(input);
+    expect(output.collections).toEqual([
+      {
+        id: 'family',
+        name: 'Family',
+        description: 'Two useful Mac utilities.',
+        websiteUrl: 'https://family.example/',
+        projectIds: ['primary', 'active'],
+      },
+    ]);
+    expect(output.directory.map((p) => p.id)).toEqual(
+      buildPublicProducts(catalog()).directory.map((p) => p.id)
+    );
+    expect(output.archivedDirectory).toEqual(buildPublicProducts(catalog()).archivedDirectory);
+    expect(output.products.some((p) => p.id === 'family')).toBe(false);
+    expect(JSON.stringify(output.collections)).not.toMatch(/priority|Private investment|reason/);
+    expect(() => validateProjection(output, 'fixture')).not.toThrow();
+    expect(input).toEqual(before);
+  });
+
+  it('rejects invalid or archived membership, repeated children and unsafe websites', () => {
+    for (const invalid of [
+      { projectIds: ['primary', 'missing'] },
+      { projectIds: ['primary', 'unverified'] },
+      { projectIds: ['primary', 'primary'] },
+      { projectIds: ['primary'] },
+      { websiteUrl: 'http://family.example/' },
+      { websiteUrl: 'https://other.example/' },
+      { websiteUrl: 'https://user:pass@family.example/' },
+      { websiteUrl: 'https://family.example:444/' },
+      { websiteUrl: 'https://family.example:443/' },
+      { websiteUrl: 'https://family.example/?key=value' },
+      { notes: 'Private rationale.' },
+    ]) {
+      const input = collectionCatalog();
+      Object.assign(input.systems.rootBrands.brands[0].collection, invalid);
+      expect(() => buildPublicProducts(input)).toThrow();
+    }
+    const output = buildPublicProducts(collectionCatalog());
+    Object.assign(output.collections[0], { priority: 'P1' });
+    expect(() => validateProjection(output, 'fixture')).toThrow(
+      'unsupported public collection field'
+    );
+    const repeated = buildPublicProducts(collectionCatalog());
+    repeated.collections.push({ ...repeated.collections[0], id: 'another-family' });
+    expect(() => validateProjection(repeated, 'fixture')).toThrow(
+      'unique current public project ids'
+    );
+  });
+
+  it('uses one approved collection destination for product and directory URLs while retaining native hosts', () => {
+    const input = collectionCatalog();
+    Object.assign(input.projects[0].public, { url: 'https://primary.example/old/' });
+    Object.assign(input.publicDirectory.projects.primary, {
+      publicDestinationUrl: 'https://family.example/storage/',
+    });
+    const output = buildPublicProducts(input);
+    const product = output.products.find((p) => p.id === 'primary')!;
+    const directory = output.directory.find((p) => p.id === 'primary')!;
+    expect(product.url).toBe('https://family.example/storage/');
+    expect(directory.publicUrl).toBe(product.url);
+    expect(directory.url).toBe(product.url);
+    expect(directory.domains).toEqual(['primary.example']);
+    expect(product.changelogUrl).toBe('https://family.example/storage/changelog');
+    expect(() => validateProjection(output, 'fixture')).not.toThrow();
+  });
+
+  it('does not authorize unrelated, credentialed or nonstandard-port marketing destinations', () => {
+    for (const destination of [
+      'https://other.example/storage/',
+      'https://user:pass@family.example/storage/',
+      'https://family.example:444/storage/',
+      'https://family.example:443/storage/',
+      'https://family.example/storage/?key=value',
+    ]) {
+      const input = collectionCatalog();
+      Object.assign(input.publicDirectory.projects.primary, { publicDestinationUrl: destination });
+      expect(() => buildPublicProducts(input)).toThrow();
+    }
+    const input = collectionCatalog();
+    Object.assign(input.publicDirectory.projects.inactive, {
+      publicDestinationUrl: 'https://family.example/unrelated/',
+    });
+    expect(() => buildPublicProducts(input)).toThrow();
+  });
+
+  it('keeps explicit no-homepage profiles without synthesizing a shared website', () => {
+    const input = catalog();
+    input.projects[1].public.listing = 'hidden';
+    Object.assign(input.publicDirectory.projects.active, { publicDestinationUrl: null });
+    const output = buildPublicProducts(input);
+    const profile = output.directory.find((p) => p.id === 'active')!;
+    expect(profile).not.toHaveProperty('publicUrl');
+    expect(profile).not.toHaveProperty('url');
+    expect(output.products.some((p) => p.id === 'active')).toBe(false);
+  });
+});
+
 describe('shareability projection boundary', () => {
   it('retains the established public profile evidence while keeping it off internal profiles', () => {
     const input = catalog();

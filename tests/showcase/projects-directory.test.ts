@@ -12,9 +12,44 @@ import {
   PROJECTS_DIRECTORY_FORMS,
   PROJECTS_DIRECTORY_GROUPS,
   PROJECTS_DIRECTORY_PLATFORMS,
+  PROJECTS_DIRECTORY_COLLECTIONS,
+  directoryCollectionBlocks,
 } from '../../apps/showcase/src/data/projects-directory';
 
 describe('current projects browsing boundary', () => {
+  it('shows the DaddyRad family and each existing app once without counting another product', () => {
+    const family = PROJECTS_DIRECTORY_COLLECTIONS.find(
+      (collection) => collection.id === 'daddyrad'
+    )!;
+    expect(family.projectIds).toEqual([
+      'storagedaddy',
+      'performancedaddy',
+      'browserdaddy',
+      'contextdaddy',
+    ]);
+    const blocks = PROJECTS_DIRECTORY_GROUPS.flatMap((group) =>
+      directoryCollectionBlocks(group.projects, PROJECTS_DIRECTORY_COLLECTIONS)
+    );
+    const rows = blocks.flatMap((block) => block.projects);
+    expect(rows).toHaveLength(PROJECTS_DIRECTORY_COUNT);
+    expect(new Set(rows.map((project) => project.id)).size).toBe(PROJECTS_DIRECTORY_COUNT);
+    expect(rows.some((project) => project.id === 'daddyrad')).toBe(false);
+    expect(blocks.filter((block) => block.collection?.id === 'daddyrad')).toHaveLength(1);
+    expect(
+      blocks
+        .find((block) => block.collection?.id === 'daddyrad')
+        ?.projects.map((project) => project.id)
+    ).toEqual(family.projectIds);
+    expect(ARCHIVED_DIRECTORY_PROJECTS.some((project) => project.id === 'daddyrad')).toBe(true);
+    const filtered = directoryCollectionBlocks(
+      PROJECTS_DIRECTORY.filter((project) => project.id === 'storagedaddy'),
+      [family]
+    );
+    expect(filtered[0].projects.map((project) => project.id)).toEqual(['storagedaddy']);
+    expect(
+      directoryCollectionBlocks([], [family]).filter((block) => block.collection)
+    ).toHaveLength(0);
+  });
   it('browses the complete current roster and keeps archived identities separate', () => {
     expect(PROJECTS_DIRECTORY_COUNT).toBe(DIRECTORY_PROJECTS.length);
     expect(DIRECTORY_PROJECTS.every((project) => project.roster === 'current')).toBe(true);

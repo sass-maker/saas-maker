@@ -2619,6 +2619,20 @@
       "profileUrl": "https://sassmaker.com/p/human-v2"
     }
   ],
+  "collections": [
+    {
+      "id": "daddyrad",
+      "name": "DaddyRad",
+      "description": "Native Mac utilities for storage, performance, browsing and coding-agent context.",
+      "websiteUrl": "https://daddyrad.com/",
+      "projectIds": [
+        "storagedaddy",
+        "performancedaddy",
+        "browserdaddy",
+        "contextdaddy"
+      ]
+    }
+  ],
   "products": [
     {
       "id": "codevetter",

@@ -7,6 +7,7 @@ import { pathToFileURL } from 'node:url';
 import { buildPublicProducts } from './public-products.mjs';
 import { catalogPaths } from './catalog-paths.mjs';
 import { validateFooterArt } from '../packages/fleet-footer/src/artwork.mjs';
+import { validatePublicCollections } from './project-collections.mjs';
 
 const repoRoot = path.resolve(import.meta.dirname, '..');
 const fleetCatalog = path.resolve(
@@ -287,6 +288,8 @@ export function validateProjection(parsed, sourcePath) {
   for (const project of parsed.pastProjects ?? []) {
     validateFooterArt(project.footerArt, project.id);
   }
+  if (parsed.collections !== undefined)
+    validatePublicCollections(parsed.collections, parsed.directory ?? []);
   assertNoPrivateData(parsed);
 }
 
