@@ -10,7 +10,10 @@ async function readRepository(relativePath: string) {
 }
 
 // Execute the page's real client script against a small synthetic directory.
-async function directoryHarness(groups = ['current', 'current', 'current', 'past']) {
+async function directoryHarness(
+  groups = ['current', 'current', 'current', 'past'],
+  collectionIndexes: number[] = []
+) {
   class Element {
     hidden = false;
     value = '';
@@ -42,7 +45,9 @@ async function directoryHarness(groups = ['current', 'current', 'current', 'past
       return this.children;
     }
     querySelector(selector: string) {
-      return selector === '[data-directory-section-count]' ? this.count : null;
+      return ['[data-directory-section-count]', '[data-collection-count]'].includes(selector)
+        ? this.count
+        : null;
     }
     fire(event: string) {
       this.listeners[event]?.();
@@ -84,6 +89,10 @@ async function directoryHarness(groups = ['current', 'current', 'current', 'past
       platforms: index === 2 ? 'macOS' : 'Web|Local',
       search: index === 3 ? 'beta archive' : 'alpha experiment',
     };
+    if (collectionIndexes.includes(index)) {
+      row.dataset.collection = 'daddyrad';
+      row.dataset.search += ' daddyrad native mac utilities';
+    }
     return row;
   });
   const sections = [...new Set(groups)].map((group) => {
@@ -98,6 +107,12 @@ async function directoryHarness(groups = ['current', 'current', 'current', 'past
     button.dataset.groupFilter = group;
     return button;
   });
+  const collections = collectionIndexes.length ? [new Element()] : [];
+  if (collections[0]) {
+    collections[0].dataset.directoryCollection = 'daddyrad';
+    collections[0].count = new Element();
+    collections[0].count.textContent = `${collectionIndexes.length} apps`;
+  }
   const page = await readRepository('apps/showcase/src/pages/projects.astro');
   const script = page.match(/<script>([\s\S]*?)<\/script>/)?.[1];
   expect(script).toBeTruthy();
@@ -111,6 +126,7 @@ async function directoryHarness(groups = ['current', 'current', 'current', 'past
             '[data-directory-row]': rows,
             '[data-directory-section]': sections,
             '[data-group-filter]': buttons,
+            '[data-directory-collection]': collections,
           })[selector],
       },
       window,
@@ -121,12 +137,33 @@ async function directoryHarness(groups = ['current', 'current', 'current', 'past
     rows,
     sections,
     buttons,
+    collections,
     window,
     fireWindow: (event: string) => windowListeners[event]?.(),
   };
 }
 
 describe('directory visible counts', () => {
+  it('filters family members without counting the collection heading and hides an empty family', async () => {
+    const { elements, rows, collections } = await directoryHarness(undefined, [0, 2]);
+    elements['#directory-search'].value = 'DaddyRad';
+    elements['#directory-search'].fire('input');
+    expect(rows.map((row) => row.hidden)).toEqual([false, true, false, true]);
+    expect(elements['#directory-result-count'].textContent).toBe('Showing 2 projects of 4 total');
+    expect(collections[0].count?.textContent).toBe('2 apps');
+    elements['#directory-platform'].value = 'macOS';
+    elements['#directory-platform'].fire('change');
+    expect(collections[0].hidden).toBe(false);
+    expect(collections[0].count?.textContent).toBe('1 of 2 apps');
+    expect(elements['#directory-result-count'].textContent).toBe('Showing 1 project of 4 total');
+    elements['#directory-search'].value = 'missing';
+    elements['#directory-search'].fire('input');
+    expect(collections[0].hidden).toBe(true);
+    elements['#directory-reset'].fire('click');
+    expect(collections[0].hidden).toBe(false);
+    expect(collections[0].count?.textContent).toBe('2 apps');
+    expect(elements['#directory-result-count'].textContent).toBe('Showing all 4 projects');
+  });
   it('keeps Filters useful through the list and clears the footer on scroll, resize and filtering', async () => {
     const { elements, window, fireWindow } = await directoryHarness();
     const controls = elements['[data-directory-controls]'];
@@ -309,8 +346,9 @@ describe('verified public Fleet directory', () => {
       category: 'utility',
       group: 'current',
       form: 'macOS app',
-      url: 'https://storage.daddyrad.com/',
     });
+    expect(storagedaddy.url).toBe(storagedaddy.publicUrl);
+    expect(storagedaddy.domains[0]).toBe('storage.daddyrad.com');
     // StorageDaddy is intentionally MIT open-source: its public repository
     // link is shareable anatomy, not private state.
     expect(storagedaddy).toMatchObject({

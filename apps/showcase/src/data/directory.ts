@@ -50,6 +50,14 @@ export interface DirectoryProject {
 }
 
 export const DIRECTORY_PROJECTS = publicCatalog.directory as DirectoryProject[];
+export interface DirectoryCollection {
+  id: string;
+  name: string;
+  description: string;
+  websiteUrl: string;
+  projectIds: string[];
+}
+export const DIRECTORY_COLLECTIONS = publicCatalog.collections as DirectoryCollection[];
 export interface ArchivedDirectoryProject {
   id: string;
   name: string;

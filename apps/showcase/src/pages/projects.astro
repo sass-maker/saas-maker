@@ -14,6 +14,8 @@ import {
   PROJECTS_DIRECTORY_FORMS as DIRECTORY_FORMS,
   PROJECTS_DIRECTORY_GROUPS as DIRECTORY_GROUPS,
   PROJECTS_DIRECTORY_PLATFORMS as DIRECTORY_PLATFORMS,
+  PROJECTS_DIRECTORY_COLLECTIONS as DIRECTORY_COLLECTIONS,
+  directoryCollectionBlocks,
 } from '../data/projects-directory';
 import Layout from '../layouts/Layout.astro';
 const availabilityLabel = (availability: DirectoryProject['availability']) => ({
@@ -42,6 +44,8 @@ const searchableText = (project: DirectoryProject) =>
     ...project.platforms,
     ...project.technologies,
     ...(project.domains ?? []),
+    ...DIRECTORY_COLLECTIONS.filter(collection => collection.projectIds.includes(project.id))
+      .flatMap(collection => [collection.name, collection.description, collection.websiteUrl]),
   ]
     .join(' ')
     .toLocaleLowerCase();
@@ -152,10 +156,17 @@ const projectProfilePath = (project: DirectoryProject) =>
             </div>
 
             <div class="directory-rows">
-              {group.projects.map((project) => (
+              {directoryCollectionBlocks(group.projects, DIRECTORY_COLLECTIONS).map((block) => (
+                <div class:list={['directory-block', { 'directory-collection': Boolean(block.collection) }]} data-directory-collection={block.collection?.id}>
+                {block.collection && <header class="directory-collection-head">
+                  <div><p class="directory-kicker">App collection · <span data-collection-count>{block.projects.length} apps</span></p><h3>{block.collection.name}</h3><p>{block.collection.description}</p></div>
+                  <a href={block.collection.websiteUrl} target="_blank" rel="noopener noreferrer">Visit {block.collection.name} <span aria-hidden="true">↗</span></a>
+                </header>}
+              {block.projects.map((project) => (
                 <details
                   class="directory-row"
                   data-directory-row
+                  data-collection={block.collection?.id}
                   data-group={project.group}
                   data-form={directoryFormFamilies(project).join('|')}
                   data-platforms={project.platforms.join('|')}
@@ -311,6 +322,7 @@ const projectProfilePath = (project: DirectoryProject) =>
                   </div>
                 </details>
               ))}
+              </div>))}
             </div>
           </section>
         ))}
@@ -406,6 +418,7 @@ const projectProfilePath = (project: DirectoryProject) =>
   const empty = document.querySelector<HTMLElement>('[data-directory-empty]');
   const rows = [...document.querySelectorAll<HTMLElement>('[data-directory-row]')];
   const sections = [...document.querySelectorAll<HTMLElement>('[data-directory-section]')];
+  const collections = [...document.querySelectorAll<HTMLElement>('[data-directory-collection]')];
   const groupButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-group-filter]')];
   let activeGroup = 'all';
 
@@ -439,6 +452,14 @@ const projectProfilePath = (project: DirectoryProject) =>
         (!query || (row.dataset.search ?? '').includes(query));
       row.hidden = !matches;
       if (matches) visible += 1;
+    }
+
+    for (const collection of collections) {
+      const members = rows.filter(row => row.dataset.collection === collection.dataset.directoryCollection);
+      const matches = members.filter(row => !row.hidden).length;
+      collection.hidden = matches === 0;
+      const count = collection.querySelector<HTMLElement>('[data-collection-count]');
+      if (count) count.textContent = matches === members.length ? `${matches} apps` : `${matches} of ${members.length} apps`;
     }
 
     for (const section of sections) {
@@ -784,6 +805,29 @@ const projectProfilePath = (project: DirectoryProject) =>
   .directory-row {
     background: var(--directory-pane);
   }
+
+  .directory-block { display: contents; }
+  .directory-collection {
+    display: grid;
+    gap: 1px;
+    border: 2px solid var(--line);
+    border-bottom-width: 6px;
+  }
+  .directory-collection[hidden] { display: none; }
+
+  .directory-collection-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: clamp(1.25rem, 2.4vw, 2rem);
+    background: var(--directory-pane);
+  }
+
+  .directory-collection-head h3 { margin-block: 0.5rem; font-size: 1.65rem; }
+  .directory-collection-head p:not(.directory-kicker) { max-width: 64ch; color: var(--ink-muted); }
+  .directory-collection-head > a { min-height: 2.75rem; display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 700; }
 
   .directory-summary {
     display: grid;
