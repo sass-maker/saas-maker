@@ -222,11 +222,28 @@ describe('non-product brand collections', () => {
     });
   });
 
+  it('normalizes mixed-case native and collection destination hosts', () => {
+    for (const [destination, expected] of [
+      ['https://Primary.example/new/', 'https://primary.example/new/'],
+      ['https://Family.example/storage/', 'https://family.example/storage/'],
+    ]) {
+      const input = collectionCatalog();
+      Object.assign(input.publicDirectory.projects.primary, { publicDestinationUrl: destination });
+      const output = buildPublicProducts(input);
+      expect(output.products.find((project) => project.id === 'primary')?.url).toBe(expected);
+      expect(output.directory.find((project) => project.id === 'primary')?.publicUrl).toBe(
+        expected
+      );
+    }
+  });
+
   it('rejects unsafe adopted collection destinations and keeps non-members independent', () => {
     for (const destination of [
       'https://user:pass@family.example/storage/',
       'https://family.example:444/storage/',
       'https://family.example:443/storage/',
+      'https://Pr%69mary.example/new/',
+      'https://Fam%69ly.example/storage/',
     ]) {
       const input = collectionCatalog();
       Object.assign(input.publicDirectory.projects.primary, { publicDestinationUrl: destination });

@@ -612,7 +612,8 @@ function canonicalPublicUrl(project, catalog) {
     parsed.port ||
     parsed.username ||
     parsed.password ||
-    (destination && /^https:\/\/([^/?#]+)/.exec(destination.source)?.[1] !== parsed.hostname)
+    (destination &&
+      /^https:\/\/([^/?#]+)/.exec(destination.source)?.[1]?.toLowerCase() !== parsed.hostname)
   ) {
     throw new Error(
       `${project.id}: public.url must be an absolute HTTPS URL on the canonical domain`
