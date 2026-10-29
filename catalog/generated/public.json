@@ -258,34 +258,9 @@
       "publicUrlLabel": "Visit website"
     },
     {
-      "id": "chatgpt-connections",
-      "name": "MCP Connections",
-      "description": "Shared MCP connections across Fleet products, with separate product endpoints and access scopes.",
-      "form": "Shared MCP gateway",
-      "platforms": [
-        "API",
-        "ChatGPT"
-      ],
-      "technologies": [
-        "TypeScript",
-        "Cloudflare Workers",
-        "MCP"
-      ],
-      "group": "current",
-      "makerNote": "I want one shared home for MCP connections across my products; Reader is one connection within it.",
-      "purposeContract": {
-        "purpose": "MCP Connections houses shared MCP connections across Fleet products.",
-        "audience": "The Fleet owner and approved AI clients needing specific product context.",
-        "outcome": "Ask useful cross-project questions without exposing the private portfolio catalog or granting write access.",
-        "mechanism": "One gateway routes explicit per-product MCP connections within their existing read-only and authentication boundaries."
-      },
-      "roster": "current",
-      "availability": "internal-private"
-    },
-    {
       "id": "saas-maker",
       "name": "SaaS Maker",
-      "description": "A public directory of working experiments, launch destinations, reference projects and reusable tooling.",
+      "description": "The public Fleet product studio, reusable tooling workshop and common home for per-product MCP connections.",
       "form": "Web directory and service",
       "platforms": [
         "Web",
@@ -295,7 +270,8 @@
         "Astro",
         "Cloudflare",
         "D1",
-        "IssuePages"
+        "IssuePages",
+        "MCP"
       ],
       "group": "current",
       "makerNote": "I use SaaS Maker as the public home for Fleet and as a workshop for launch research, reusable feedback, workflow, and automation tools.",
@@ -303,8 +279,8 @@
         "purpose": "SaaS Maker is the public product studio and reusable tooling workshop for the Fleet portfolio.",
         "audience": "Visitors exploring Sarthak’s products and builders consuming the studio’s public packages, workflows, and evidence.",
         "outcome": "Understand the body of work, research source-attributed launch destinations, and reuse the tools that have earned a stable place across its products.",
-        "mechanism": "A generated public directory and native launch-destination catalog sit beside shared feedback, UI, workflow, skill, and automation tooling maintained through real Fleet use.",
-        "proof": "It publishes the canonical privacy-safe project directory, serves the provenance-bearing /launchdesk catalog, and houses packages and tooling used by multiple independent repositories.",
+        "mechanism": "A generated public directory and native launch-destination catalog sit beside shared feedback, UI, workflow, skill, and automation tooling maintained through real Fleet use. Shared read-only MCP connections keep product-specific endpoints and access scopes.",
+        "proof": "It publishes the canonical privacy-safe project directory, serves the provenance-bearing /launchdesk catalog, and houses packages and tooling used by multiple independent repositories. The shared MCP gateway is maintained at apps/mcp with its existing endpoint hosts retained.",
         "nextAction": "Explore the complete directory or open the public tooling catalogue; product-specific work continues in each owning repository."
       },
       "footerArt": {
@@ -327,7 +303,15 @@
         "Cloudflare Workers"
       ],
       "domains": [
-        "sassmaker.com"
+        "sassmaker.com",
+        "reader-mcp.significanthobbies.com",
+        "calorie-mcp.significanthobbies.com",
+        "anime-mcp.significanthobbies.com",
+        "hobbies-mcp.significanthobbies.com",
+        "learn-mcp.significanthobbies.com",
+        "mcp.highsignal.app",
+        "papers-mcp.highsignal.app",
+        "starboard-mcp.codevetter.com"
       ],
       "url": "https://sassmaker.com",
       "repositoryUrl": "https://github.com/sass-maker/saas-maker",
@@ -1662,31 +1646,6 @@
       "publicUrlLabel": "Visit website"
     },
     {
-      "id": "unified-portfolio",
-      "name": "Unified Portfolio",
-      "description": "Private read-only investment observability.",
-      "form": "Web app with private user workspaces",
-      "platforms": [
-        "Web"
-      ],
-      "technologies": [
-        "Cloudflare Workers",
-        "D1",
-        "Next.js / vinext",
-        "MCP"
-      ],
-      "group": "current",
-      "makerNote": "my private normalized view of personal investments across brokers.",
-      "purposeContract": {
-        "purpose": "Unified Portfolio helps people understand their own investments through an isolated read-only portfolio.",
-        "audience": "People signed in with Google, each accessing only their own investments.",
-        "outcome": "Understand holdings, allocation, portfolio history and connection freshness without trading.",
-        "mechanism": "Official broker adapters and an INDmoney MCP client feed immutable normalized snapshots shared by the web dashboard and read-only MCP tools."
-      },
-      "roster": "current",
-      "availability": "internal-private"
-    },
-    {
       "id": "meme-lab",
       "name": "Meme Lab",
       "description": "A public tool that ranks 3,000 reaction memes for a comment; its Anna review candidate also creates personal photo memes with private saves and PNG downloads.",
@@ -1878,9 +1837,53 @@
       "availability": "public-link",
       "publicUrl": "https://data.highsignal.app",
       "publicUrlLabel": "Visit website"
+    },
+    {
+      "id": "domain-inbox",
+      "name": "Fleet Mail",
+      "description": "A private catch-all inbox with domain filters and replies using the exact receiving address.",
+      "form": "Private web inbox",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "SvelteKit",
+        "Cloudflare Workers",
+        "D1",
+        "R2",
+        "Cloudflare Email Service"
+      ],
+      "group": "current",
+      "makerNote": "I want to read and reply to mail across my domains without using my personal email address.",
+      "purposeContract": {
+        "purpose": "Read and reply to new email across the owner's domains.",
+        "audience": "One owner with 11 catch-all domains.",
+        "outcome": "Filter new mail by domain, then reply from the exact receiving address.",
+        "mechanism": "Stock Quickinbox stores catch-all domain mail in D1/R2 and replies with Cloudflare Email Sending, behind owner-only Cloudflare Access."
+      },
+      "roster": "current",
+      "availability": "internal-private"
     }
   ],
   "archivedDirectory": [
+    {
+      "id": "chatgpt-connections",
+      "name": "MCP Connections",
+      "description": "Historical MCP gateway identity, absorbed into SaaS Maker. Existing product endpoints continue under SaaS Maker ownership.",
+      "form": "Shared MCP gateway",
+      "platforms": [
+        "API",
+        "ChatGPT"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Cloudflare Workers",
+        "MCP"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/chatgpt-connections"
+    },
     {
       "id": "gitstat",
       "name": "GitStat",
@@ -2455,6 +2458,24 @@
       "profileUrl": "https://sassmaker.com/p/slow-serp"
     },
     {
+      "id": "unified-portfolio",
+      "name": "Unified Portfolio",
+      "description": "Private read-only investment observability.",
+      "form": "Web app with private user workspaces",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Cloudflare Workers",
+        "D1",
+        "Next.js / vinext",
+        "MCP"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/unified-portfolio"
+    },
+    {
       "id": "shoulders",
       "name": "Shoulders",
       "description": "An editorial exploration of software foundations. Cancelled local prototype.",
@@ -2846,6 +2867,7 @@
       "url": "https://context.daddyrad.com/",
       "tier": "active",
       "category": "utility",
+      "priority": null,
       "spotlight": false,
       "lifecycle": "active",
       "shareable": true,
@@ -2868,8 +2890,7 @@
         "focalY": 50,
         "credit": "Original illustration for ContextDaddy",
         "sha256": "81de7c1273d8b842a1456495296807b5310b3998d0f0be16d4a7616596365301"
-      },
-      "priority": null
+      }
     },
     {
       "id": "free-ai",
@@ -3308,8 +3329,8 @@
         "purpose": "SaaS Maker is the public product studio and reusable tooling workshop for the Fleet portfolio.",
         "audience": "Visitors exploring Sarthak’s products and builders consuming the studio’s public packages, workflows, and evidence.",
         "outcome": "Understand the body of work, research source-attributed launch destinations, and reuse the tools that have earned a stable place across its products.",
-        "mechanism": "A generated public directory and native launch-destination catalog sit beside shared feedback, UI, workflow, skill, and automation tooling maintained through real Fleet use.",
-        "proof": "It publishes the canonical privacy-safe project directory, serves the provenance-bearing /launchdesk catalog, and houses packages and tooling used by multiple independent repositories.",
+        "mechanism": "A generated public directory and native launch-destination catalog sit beside shared feedback, UI, workflow, skill, and automation tooling maintained through real Fleet use. Shared read-only MCP connections keep product-specific endpoints and access scopes.",
+        "proof": "It publishes the canonical privacy-safe project directory, serves the provenance-bearing /launchdesk catalog, and houses packages and tooling used by multiple independent repositories. The shared MCP gateway is maintained at apps/mcp with its existing endpoint hosts retained.",
         "nextAction": "Explore the complete directory or open the public tooling catalogue; product-specific work continues in each owning repository."
       },
       "footerArt": {

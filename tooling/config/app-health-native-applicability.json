@@ -35,12 +35,6 @@
       "serverRequests": "applicable"
     },
     {
-      "id": "chatgpt-connections",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
-    },
-    {
       "id": "saas-maker",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
@@ -199,12 +193,6 @@
       "serverRequests": "not-applicable"
     },
     {
-      "id": "unified-portfolio",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "applicable"
-    },
-    {
       "id": "meme-lab",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
@@ -231,13 +219,21 @@
     {
       "id": "agent-inbox",
       "nativeSessions": "not-applicable",
-      "browserVisitors": "not-applicable",
+      "browserVisitors": "applicable",
       "serverRequests": "not-applicable"
     },
     {
       "id": "techdata",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
+      "serverRequests": "not-applicable"
+    },
+    {
+      "id": "domain-inbox",
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "not-applicable",
+      "browserVisitorsReason": "Private owner email inbox; email content and browsing are not sent to hosted analytics. First-party usage qualification remains pending.",
+      "browserVisitorsSourceIssue": "https://github.com/sass-maker/fleet-mail/issues/1",
       "serverRequests": "not-applicable"
     }
   ]

@@ -140,26 +140,6 @@
       ]
     },
     {
-      "id": "chatgpt-connections",
-      "applicability": "not-applicable",
-      "confidence": "high",
-      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "internal"
-        },
-        {
-          "field": "classification.kind",
-          "value": "platform"
-        }
-      ]
-    },
-    {
       "id": "saas-maker",
       "applicability": "newsletter",
       "confidence": "medium",
@@ -362,7 +342,7 @@
       "id": "looptv",
       "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "rationale": "Existing newsletter capture policy retained. Owner classified LoopTV as internal on 2026-10-29 with no portfolio investment priority; this decision does not request removing the existing public site or form.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -370,7 +350,7 @@
         },
         {
           "field": "purpose.audience",
-          "value": "public"
+          "value": "internal"
         },
         {
           "field": "presentation.directory.platforms",
@@ -910,26 +890,6 @@
       ]
     },
     {
-      "id": "unified-portfolio",
-      "applicability": "not-applicable",
-      "confidence": "high",
-      "rationale": "The owner catalog identifies the audience as internal, so public newsletter or launch-waitlist capture has no supported audience.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "internal"
-        },
-        {
-          "field": "classification.kind",
-          "value": "product"
-        }
-      ]
-    },
-    {
       "id": "meme-lab",
       "applicability": "newsletter",
       "confidence": "medium",
@@ -1067,7 +1027,7 @@
       "id": "agent-inbox",
       "applicability": "not-applicable",
       "confidence": "high",
-      "rationale": "Internal local-only development app; no public landing, newsletter or waitlist.",
+      "rationale": "Informational preview website for an internal local app; directs visitors to the existing preview and source. No newsletter or waitlist requested.",
       "feedbackApplicability": "not_applicable",
       "evidence": [
         {
@@ -1075,8 +1035,8 @@
           "value": "internal"
         },
         {
-          "field": "deployment.status",
-          "value": "local-only"
+          "field": "presentation.directory.availabilityLabel",
+          "value": "preview-not-qualified"
         }
       ]
     },
@@ -1090,6 +1050,23 @@
         {
           "field": "deployment.status",
           "value": "live"
+        }
+      ]
+    },
+    {
+      "id": "domain-inbox",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "Single-owner private email reader, with no public landing, newsletter or waitlist.",
+      "feedbackApplicability": "not_applicable",
+      "evidence": [
+        {
+          "field": "purpose.audience",
+          "value": "internal"
+        },
+        {
+          "field": "deployment.authModel",
+          "value": "private-authenticated"
         }
       ]
     }
