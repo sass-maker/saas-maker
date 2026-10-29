@@ -1,0 +1,46 @@
+{
+  "name": "@sass-maker/chatgpt-connections",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.2",
+  "type": "module",
+  "description": "Read-only MCP adapters for selected Fleet applications",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "pnpm run types:check && pnpm run build && pnpm run test && pnpm run test:deploy",
+    "types:worker": "wrangler types --include-runtime false",
+    "types:check": "wrangler types --include-runtime false --check",
+    "dev:worker": "wrangler dev",
+    "deploy": "node scripts/deploy.mjs",
+    "doctor": "pnpm run build && node dist/doctor.js",
+    "monitor:production": "pnpm run build && node dist/run-monitor.js",
+    "eval:submission:public": "pnpm run build && node dist/run-submission-evals.js",
+    "verify:activation": "pnpm run build && node dist/verify-activation.js",
+    "start:reader": "node dist/entrypoints/reader.js",
+    "start:starboard": "node dist/entrypoints/starboard.js",
+    "start:high-signal": "node dist/entrypoints/high-signal.js",
+    "start:calorie": "node dist/entrypoints/calorie.js",
+    "start:significant-hobbies": "node dist/entrypoints/significant-hobbies.js",
+    "start:research-papers": "node dist/entrypoints/research-papers.js",
+    "start:setline": "node dist/entrypoints/setline.js",
+    "test": "node --test dist/test/*.test.js",
+    "test:deploy": "node --test scripts/deploy.test.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "@saas-maker/app-health": "https://github.com/sass-maker/app-health/releases/download/node-v0.4.0/saas-maker-app-health-0.4.0.tgz",
+    "@saas-maker/ui": "github:sass-maker/ui-library#v0.1.15&path:/packages/ui",
+    "jose": "6.2.8",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20260811.1",
+    "@types/node": "25.6.0",
+    "typescript": "6.0.3",
+    "wrangler": "4.120.1"
+  },
+  "license": "UNLICENSED"
+}

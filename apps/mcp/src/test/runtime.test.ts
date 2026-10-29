@@ -1,0 +1,560 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+
+import { APP_DEFINITIONS, type AppId, normalizeToolResult } from "../apps.js";
+import { ConnectionError } from "../errors.js";
+import { ReadClient } from "../http.js";
+import { sanitize, sanitizationTruncated } from "../sanitize.js";
+import { buildServer } from "../server.js";
+
+test("all shared connections expose only fixed relative GET operations", () => {
+  for (const app of Object.values(APP_DEFINITIONS)) {
+    for (const [name, operation] of Object.entries(app.operations)) {
+      const path = operation.path({
+        id: "safe-id",
+        slug: "safe-slug",
+        q: "query",
+        url: "https://github.com/openai/openai-node",
+        start: "2026-08-01",
+        end: "2026-08-07",
+        limit: 10,
+        offset: 0,
+      });
+      assert.match(path, /^\/(?!\/)/, `${app.id}:${name}`);
+      assert.equal(path.includes("Authorization"), false);
+      assert.equal(path.includes("cookie"), false);
+    }
+  }
+});
+
+test("Starboard repository reads cannot populate the application cache", () => {
+  const path = APP_DEFINITIONS.starboard.operations.repository!.path({ id: 123 });
+  assert.equal(path, "/api/repos/123?catalogOnly=1");
+});
+
+test("Starboard repository search filters unmatched upstream fallbacks locally", () => {
+  assert.equal(APP_DEFINITIONS.starboard.tools.search_repositories?.localQuery, true);
+});
+
+test("Calorie nutrition history rejects ranges wider than 366 inclusive days", () => {
+  const historyPath = APP_DEFINITIONS.calorie.operations.history!.path;
+  assert.equal(
+    historyPath({ start: "2025-01-01", end: "2026-01-01", timezone: "UTC", limit: 30, offset: 0 }),
+    "/api/mcp/history?start=2025-01-01&end=2026-01-01&timezone=UTC&limit=30&offset=0",
+  );
+  assert.throws(
+    () => historyPath({ start: "2025-01-01", end: "2026-01-02", timezone: "UTC" }),
+    (error: unknown) => error instanceof ConnectionError && error.code === "invalid_input",
+  );
+});
+
+test("read client rejects arbitrary origins and non-HTTPS remote bases", async () => {
+  assert.throws(
+    () =>
+      new ReadClient(
+        { unsafe: { path: () => "/ok" } },
+        { baseUrl: "http://example.com" },
+      ),
+    ConnectionError,
+  );
+
+  const client = new ReadClient(
+    { unsafe: { path: () => "//evil.example/data" } },
+    { baseUrl: "https://example.com" },
+  );
+  await assert.rejects(() => client.call("unsafe", {}), /invalid fixed path/i);
+});
+
+test("public reads identify the gateway without sending credentials", async () => {
+  const client = new ReadClient(
+    { detail: { path: () => "/api/repos/123?catalogOnly=1" } },
+    {
+      baseUrl: "https://starboard.codevetter.com",
+      fetchImpl: async (_input, init) => {
+        const headers = new Headers(init?.headers);
+        assert.equal(init?.method, "GET");
+        assert.equal(headers.get("authorization"), null);
+        const userAgent = headers.get("user-agent") ?? "";
+        if (!userAgent) return new Response("Automated clients are not permitted", { status: 403 });
+        assert.equal(userAgent, "Fleet-ChatGPT-Connections/1.0 (+https://github.com/sass-maker/saas-maker/tree/main/apps/mcp)");
+        return Response.json({ repo: { id: 123 } });
+      },
+    },
+  );
+  assert.deepEqual(await client.call("detail", {}), { repo: { id: 123 } });
+});
+
+test("read client uses GET, applies bounded retry, and never exposes its token", async () => {
+  const calls: Array<{ method: string | undefined; authorization: string | null; redirect: RequestRedirect | undefined }> = [];
+  const fetchImpl: typeof fetch = async (_input, init) => {
+    calls.push({
+      method: init?.method,
+      authorization: new Headers(init?.headers).get("authorization"),
+      redirect: init?.redirect,
+    });
+    if (calls.length === 1) return Response.json({ error: "temporary" }, { status: 503 });
+    return Response.json({ items: [{ id: "one", title: "Safe" }] });
+  };
+  const client = new ReadClient(
+    { list: { auth: true, path: () => "/api/items" } },
+    {
+      baseUrl: "https://example.com",
+      token: "rdr_example-token",
+      tokenPrefix: "rdr_",
+      fetchImpl,
+    },
+  );
+
+  const payload = await client.call("list", {});
+  assert.deepEqual(payload, { items: [{ id: "one", title: "Safe" }] });
+  assert.equal(calls.length, 2);
+  assert.deepEqual(calls.map((call) => call.method), ["GET", "GET"]);
+  assert.equal(calls.every((call) => call.redirect === "manual"), true);
+  assert.equal(calls.every((call) => call.authorization === "Bearer rdr_example-token"), true);
+  assert.equal(JSON.stringify(payload).includes("rdr_example-token"), false);
+});
+
+test("read client stops an unbounded chunked response before buffering it", async () => {
+  let cancelled = false;
+  const stream = new ReadableStream<Uint8Array>({
+    pull(controller) {
+      controller.enqueue(new Uint8Array(600_000));
+    },
+    cancel() {
+      cancelled = true;
+    },
+  });
+  const client = new ReadClient(
+    { list: { path: () => "/api/items" } },
+    {
+      baseUrl: "https://example.com",
+      fetchImpl: async () => new Response(stream),
+    },
+  );
+
+  await assert.rejects(() => client.call("list", {}), /exceeded the read bound/i);
+  assert.equal(cancelled, true);
+});
+
+test("retryable local failures use only an approved static fallback", async () => {
+  const urls: string[] = [];
+  const client = new ReadClient(
+    {
+      hot: {
+        path: () => "/hot",
+        fallback: {
+          baseUrl: "https://papers.example",
+          path: () => "/data/hot.json",
+          mode: "public-static-fallback",
+        },
+      },
+    },
+    {
+      baseUrl: "http://127.0.0.1:8000",
+      fetchImpl: async (input) => {
+        const url = String(input);
+        urls.push(url);
+        return url.startsWith("http://127.0.0.1")
+          ? Response.json({ error: "offline" }, { status: 503 })
+          : Response.json([{ id: "fallback-paper" }], {
+              headers: { "Last-Modified": "Mon, 10 Aug 2026 12:00:00 GMT" },
+            });
+      },
+    },
+  );
+  const response = await client.callWithMetadata("hot", {});
+  assert.deepEqual(response.payload, [{ id: "fallback-paper" }]);
+  assert.equal(response.retrievalMode, "public-static-fallback");
+  assert.equal(response.sourceUrl, "https://papers.example/data/hot.json");
+  assert.equal(response.freshness, "Mon, 10 Aug 2026 12:00:00 GMT");
+  assert.deepEqual(urls, [
+    "http://127.0.0.1:8000/hot",
+    "http://127.0.0.1:8000/hot",
+    "https://papers.example/data/hot.json",
+  ]);
+});
+
+test("sanitizer removes credential-shaped fields and bounds nested values", () => {
+  const result = sanitize({
+    title: "Visible",
+    authorization: "Bearer secret",
+    nested: { apiKey: "secret", note: "safe" },
+  });
+  assert.deepEqual(result, { title: "Visible", nested: { note: "safe" } });
+  assert.equal(sanitizationTruncated({ items: Array.from({ length: 51 }, () => 1) }), true);
+  assert.equal(sanitizationTruncated({ title: "Visible", authorization: "removed" }), false);
+});
+
+test("normalization returns bounded pages and stable continuation state", () => {
+  const app = APP_DEFINITIONS.starboard;
+  const tool = app.tools.search_repositories!;
+  const result = normalizeToolResult({
+    app,
+    toolName: "search_repositories",
+    tool,
+    payload: { repos: [{ id: 1 }, { id: 2 }, { id: 3 }] },
+    args: { limit: 2, offset: 0 },
+    sourceUrl: "https://starboard.codevetter.com/api/discover?limit=2",
+  });
+  assert.equal(result.items?.length, 2);
+  assert.equal(result.total, 3);
+  assert.equal(result.nextOffset, 2);
+  assert.equal(result.hasMore, true);
+  assert.equal(result.truncated, true);
+});
+
+test("normalization respects app-owned nested pagination without slicing twice", () => {
+  const app = APP_DEFINITIONS.setline;
+  const tool = app.tools.list_workout_history!;
+  const result = normalizeToolResult({
+    app,
+    toolName: "list_workout_history",
+    tool,
+    payload: { items: [{ id: "page-two" }], page: { limit: 1, offset: 1, total: 3 } },
+    args: { limit: 1, offset: 1 },
+    sourceUrl: "https://setline.significanthobbies.com/api/mcp/history?limit=1&offset=1",
+  });
+  assert.equal(result.items?.[0]?.id, "page-two");
+  assert.equal(result.total, 3);
+  assert.equal(result.nextOffset, 2);
+  assert.equal(result.truncated, true);
+});
+
+test("normalization preserves continuation when an upstream page omits an exact total", () => {
+  const app = APP_DEFINITIONS["research-papers"];
+  const tool = app.tools.search_research_papers!;
+  const result = normalizeToolResult({
+    app,
+    toolName: "search_research_papers",
+    tool,
+    payload: {
+      results: [{ paper_id: "arxiv:one" }],
+      count: 1,
+      page: { limit: 1, offset: 2, nextOffset: 3 },
+    },
+    args: { q: "agent", limit: 1, offset: 2 },
+    sourceUrl: "http://127.0.0.1:8000/search?q=agent&limit=1&offset=2",
+  });
+  assert.equal(result.items?.[0]?.paper_id, "arxiv:one");
+  assert.equal(result.total, undefined);
+  assert.equal(result.nextOffset, 3);
+  assert.equal(result.hasMore, true);
+});
+
+test("Research Papers static fallback preserves source filtering and local pagination", () => {
+  const app = APP_DEFINITIONS["research-papers"];
+  const tool = app.tools.list_hot_papers!;
+  const result = normalizeToolResult({
+    app,
+    toolName: "list_hot_papers",
+    tool,
+    payload: [
+      { paper_id: "arxiv:one", source: "arxiv" },
+      { paper_id: "openreview:two", source: "openreview" },
+      { paper_id: "arxiv:three", source: "arxiv" },
+    ],
+    args: { source: "arxiv", limit: 1, offset: 1 },
+    sourceUrl: "https://papers.highsignal.app/data/hot.json",
+    retrievalMode: "public-static-fallback",
+  });
+  assert.equal(result.items?.[0]?.paper_id, "arxiv:three");
+  assert.equal(result.total, 2);
+  assert.equal(result.nextOffset, null);
+  assert.equal(result.retrievalMode, "public-static-fallback");
+});
+
+test("tool schemas cannot accept arbitrary transport instructions", () => {
+  const forbiddenInputs = new Set(["method", "headers", "body", "sql", "path", "origin"]);
+  const forbiddenRoutes = /\/(?:rag|admin|ingest|enrich|sync|delete|write|refresh)(?:\/|\?|$)/i;
+  for (const app of Object.values(APP_DEFINITIONS)) {
+    for (const tool of Object.values(app.tools)) {
+      for (const input of Object.keys(tool.inputSchema)) {
+        assert.equal(forbiddenInputs.has(input), false, `${app.id}:${tool.operation}:${input}`);
+      }
+    }
+    for (const operation of Object.values(app.operations)) {
+      const path = operation.path({
+        id: "safe",
+        slug: "safe",
+        start: "2026-08-01",
+        end: "2026-08-07",
+        limit: 10,
+        offset: 0,
+      });
+      assert.doesNotMatch(path, forbiddenRoutes, `${app.id}:${path}`);
+    }
+  }
+});
+
+test("detail selection uses an exact configured identifier", () => {
+  const app = APP_DEFINITIONS["research-papers"];
+  const tool = app.tools.get_reading_path!;
+  const result = normalizeToolResult({
+    app,
+    toolName: "get_reading_path",
+    tool,
+    payload: { items: [{ slug: "right", title: "Exact" }, { slug: "right-now" }] },
+    args: { slug: "right" },
+    sourceUrl: "https://papers.highsignal.app/paths.json",
+  });
+  assert.equal(result.item?.title, "Exact");
+  assert.throws(
+    () =>
+      normalizeToolResult({
+        app,
+        toolName: "get_reading_path",
+        tool,
+        payload: { items: [{ slug: "right-now" }] },
+        args: { slug: "right" },
+        sourceUrl: "https://papers.highsignal.app/paths.json",
+      }),
+    /not found/i,
+  );
+});
+
+test("operation routes stay on their verified surfaces", () => {
+  const daily = APP_DEFINITIONS["high-signal"].operations.daily!;
+  const evidence = APP_DEFINITIONS["high-signal"].operations.evidence!;
+  assert.equal(daily.baseUrl, "https://api.highsignal.app");
+  assert.equal(evidence.baseUrl, "https://api.highsignal.app");
+  assert.equal(
+    daily.path({ date: "2026-08-24" }),
+    "/data/daily?date=2026-08-24",
+  );
+  assert.equal(evidence.path({ slug: "daily-signal" }), "/signals/daily-signal/evidence");
+  const readerSearch = APP_DEFINITIONS.reader.operations.search!.path({
+    q: "paper",
+    projectId: "owner_default",
+    limit: 10,
+    offset: 0,
+  });
+  assert.equal(new URL(readerSearch, "https://reader.example").searchParams.get("projectId"), "owner_default");
+  assert.equal(APP_DEFINITIONS["swe-interview-prep"].operations.curriculum!.path({}), "/curriculum/catalog.json");
+  assert.equal(APP_DEFINITIONS["swe-interview-prep"].operations.daily!.path({}), "/api/mcp/daily");
+  assert.equal(APP_DEFINITIONS["swe-interview-prep"].operations.daily!.auth, true);
+  assert.equal(APP_DEFINITIONS["swe-interview-prep"].operations.progress!.path({}), "/api/mcp/progress");
+  assert.equal(APP_DEFINITIONS["swe-interview-prep"].operations.progress!.auth, true);
+  assert.equal(APP_DEFINITIONS["swe-interview-prep"].operations.verification!.path({}), "/api/mcp/verification");
+  assert.equal(APP_DEFINITIONS["swe-interview-prep"].operations.verification!.auth, true);
+  assert.equal(APP_DEFINITIONS["saas-maker"].operations.catalog!.path({}), "/api/ai");
+  const normalizedDomain = APP_DEFINITIONS.drank.tools.get_domain_rating!.inputSchema.domain!.parse("https://Example.com/path");
+  assert.equal(APP_DEFINITIONS.drank.operations.rating!.path({ domain: normalizedDomain }), "/api/dr?target=example.com");
+  assert.throws(() => APP_DEFINITIONS.drank.tools.get_domain_rating!.inputSchema.domain!.parse("127.0.0.1"));
+  assert.throws(() => APP_DEFINITIONS.drank.tools.get_domain_rating!.inputSchema.domain!.parse("http://example.com"));
+  assert.throws(() => APP_DEFINITIONS.drank.tools.get_domain_rating!.inputSchema.domain!.parse("[::1]"));
+});
+
+test("High Signal preserves installed tool names alongside the daily and evidence tools", () => {
+  const app = APP_DEFINITIONS["high-signal"];
+  assert.deepEqual(Object.keys(app.tools), ["get_daily_brief", "search_signals", "get_signal", "get_track_record", "get_daily_signals", "get_signal_evidence"]);
+});
+
+test("High Signal daily tool normalizes one API-owned daily dump", () => {
+  const app = APP_DEFINITIONS["high-signal"];
+  const tool = app.tools.get_daily_signals!;
+  const result = normalizeToolResult({
+    app,
+    toolName: "get_daily_signals",
+    tool,
+    payload: {
+      schemaVersion: "1",
+      date: "2026-08-24",
+      signals: [
+        { slug: "one", confidence: "high" },
+        { slug: "two", confidence: "medium" },
+      ],
+      evidenceEvents: [{ signalSlug: "one", url: "https://example.com/evidence" }],
+    },
+    args: { date: "2026-08-24", limit: 1, offset: 0 },
+    sourceUrl: "https://api.highsignal.app/data/daily?date=2026-08-24",
+  });
+  assert.equal(result.items?.[0]?.slug, "one");
+  assert.equal(result.items?.[0]?.confidence, "high");
+  assert.equal(result.total, 2);
+  assert.equal(result.nextOffset, 1);
+  assert.equal(result.hasMore, true);
+});
+
+test("High Signal daily tool fails closed when the signals collection is absent", () => {
+  const app = APP_DEFINITIONS["high-signal"];
+  assert.throws(
+    () =>
+      normalizeToolResult({
+        app,
+        toolName: "get_daily_signals",
+        tool: app.tools.get_daily_signals!,
+        payload: { schemaVersion: "1", date: "2026-08-24" },
+        args: { limit: 10, offset: 0 },
+        sourceUrl: "https://api.highsignal.app/data/daily",
+      }),
+    /missing its public collection/i,
+  );
+});
+
+test("High Signal evidence tool preserves one signal's bounded proof trail", () => {
+  const app = APP_DEFINITIONS["high-signal"];
+  const result = normalizeToolResult({
+    app,
+    toolName: "get_signal_evidence",
+    tool: app.tools.get_signal_evidence!,
+    payload: {
+      schemaVersion: "1",
+      signal: { slug: "daily-signal", confidence: "high" },
+      evidenceEventCount: 2,
+      evidenceEvents: [
+        { sourceType: "scmp", url: "https://www.scmp.com/example" },
+        { sourceType: "hackernews", url: "https://news.ycombinator.com/item?id=1" },
+      ],
+    },
+    args: { slug: "daily-signal" },
+    sourceUrl: "https://api.highsignal.app/signals/daily-signal/evidence",
+  });
+  assert.equal(result.item?.evidenceEventCount, 2);
+  assert.equal(Array.isArray(result.item?.evidenceEvents), true);
+});
+
+test("new public catalogs normalize only their approved collections", () => {
+  const curriculum = normalizeToolResult({
+    app: APP_DEFINITIONS["swe-interview-prep"],
+    toolName: "search_curriculum",
+    tool: APP_DEFINITIONS["swe-interview-prep"].tools.search_curriculum!,
+    payload: { concepts: [{ id: "load-balancing" }], tracks: [{ id: "backend" }], roadmaps: [] },
+    args: { kind: "concept", limit: 10, offset: 0 },
+    sourceUrl: "https://learn.significanthobbies.com/curriculum/catalog.json",
+  });
+  assert.deepEqual(curriculum.items?.map(({ id }) => id), ["load-balancing"]);
+
+});
+
+test("SWE Interview Prep preserves the product-owned daily, progress, and verification projections", () => {
+  const app = APP_DEFINITIONS["swe-interview-prep"];
+  const dailyPayload = {
+    priority: { kind: "retention", concept: { id: "load-balancing" } },
+    trackingPolicy: { readOnly: true, masterySource: "product-evidence" },
+  };
+  const progressPayload = {
+    progress: { concepts: { mastered: 3, learning: 4, untouched: 5 } },
+    trackingPolicy: { readOnly: true, masterySource: "product-evidence" },
+  };
+  const verificationPayload = {
+    state: "verification-required",
+    concept: { id: "load-balancing" },
+    questions: [
+      {
+        id: "check-load-balancing-mechanism",
+        category: "mechanism",
+        prompt: "Explain the mechanism.",
+      },
+    ],
+    completionPolicy: "Product evidence only.",
+  };
+  const daily = normalizeToolResult({
+    app,
+    toolName: "get_daily_learning_priority",
+    tool: app.tools.get_daily_learning_priority!,
+    payload: dailyPayload,
+    args: {},
+    sourceUrl: "https://learn.significanthobbies.com/api/mcp/daily",
+  });
+  const progress = normalizeToolResult({
+    app,
+    toolName: "get_learning_progress",
+    tool: app.tools.get_learning_progress!,
+    payload: progressPayload,
+    args: {},
+    sourceUrl: "https://learn.significanthobbies.com/api/mcp/progress",
+  });
+  const verification = normalizeToolResult({
+    app,
+    toolName: "get_current_learning_check",
+    tool: app.tools.get_current_learning_check!,
+    payload: verificationPayload,
+    args: {},
+    sourceUrl: "https://learn.significanthobbies.com/api/mcp/verification",
+  });
+  assert.deepEqual(daily.item, dailyPayload);
+  assert.deepEqual(progress.item, progressPayload);
+  assert.deepEqual(verification.item, verificationPayload);
+  assert.equal(JSON.stringify(verification.item).includes('"answer"'), false);
+});
+
+test("new public catalog tools fail closed when their required collection disappears", () => {
+  assert.throws(
+    () => normalizeToolResult({
+      app: APP_DEFINITIONS["swe-interview-prep"],
+      toolName: "search_curriculum",
+      tool: APP_DEFINITIONS["swe-interview-prep"].tools.search_curriculum!,
+      payload: { unexpected: [] },
+      args: {},
+      sourceUrl: "https://learn.significanthobbies.com/curriculum/catalog.json",
+    }),
+    /missing its public collection/i,
+  );
+});
+
+for (const appId of Object.keys(APP_DEFINITIONS) as AppId[]) {
+  test(`${appId} advertises explicit read-only tools`, async () => {
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    const server = buildServer(appId, async () => Response.json({ items: [] }));
+    const client = new Client({ name: "contract-test", version: "1.0.0" });
+    await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+    try {
+      const catalog = await client.listTools();
+      assert.equal(catalog.tools.length, Object.keys(APP_DEFINITIONS[appId].tools).length);
+      for (const tool of catalog.tools) {
+        assert.equal(tool.annotations?.readOnlyHint, true);
+        assert.equal(tool.annotations?.destructiveHint, false);
+        assert.equal(tool.annotations?.idempotentHint, true);
+        assert.ok(tool.inputSchema);
+        assert.ok(tool.outputSchema);
+      }
+    } finally {
+      await client.close();
+      await server.close();
+    }
+  });
+}
+
+
+test("High Signal installed methods retain their original response semantics", () => {
+  const app = APP_DEFINITIONS["high-signal"];
+  const normalize = (toolName: string, payload: unknown, args: Record<string, unknown> = {}) =>
+    normalizeToolResult({ app, toolName, tool: app.tools[toolName]!, payload, args,
+      sourceUrl: "https://highsignal.app/signals.json" });
+  const brief = { editionDate: "2026-09-07", publishStatus: "pending", stocks: [] };
+  assert.equal(normalize("get_daily_brief", brief).item?.publishStatus, "pending");
+  const signals = [{ slug: "alpha", title: "Alpha" }, { slug: "beta", title: "Beta" }];
+  assert.deepEqual(normalize("search_signals", { signals }, { q: "beta" }).items?.map(x => x.slug), ["beta"]);
+  assert.equal(normalize("get_signal", { signals }, { slug: "alpha" }).item?.slug, "alpha");
+  assert.throws(() => normalize("get_signal", { signals }, { slug: "missing" }), /not found/i);
+  assert.equal(normalize("get_track_record", { buckets: [{ hit: 2, miss: 1 }] }).items?.[0]?.hit, 2);
+  assert.equal(app.operations.trackRecord!.path({}), "/track-record?cohort=live");
+});
+
+
+test("installed High Signal connector methods execute through MCP transport", async () => {
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  const fetchImpl: typeof fetch = async (input) => {
+    const url = new URL(String(input));
+    if (url.pathname === "/brief/daily") return Response.json({ editionDate: "2026-09-07", stocks: [], publishStatus: "pending" });
+    if (url.pathname === "/signals.json") return Response.json({ signals: [{ slug: "alpha", title: "Alpha" }] });
+    if (url.pathname === "/track-record") return Response.json({ buckets: [{ hit: 2, miss: 1 }] });
+    return Response.json({ error: "unexpected_path" }, { status: 404 });
+  };
+  const server = buildServer("high-signal", fetchImpl);
+  const client = new Client({ name: "installed-connector-test", version: "1.0.0" });
+  await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+  try {
+    for (const [name, args] of [
+      ["get_daily_brief", {}], ["search_signals", { q: "alpha" }],
+      ["get_signal", { slug: "alpha" }], ["get_track_record", { limit: 3 }],
+    ] as const) {
+      const result = await client.callTool({ name, arguments: args });
+      assert.notEqual(result.isError, true, name);
+      assert.equal((result.structuredContent as { ok?: boolean } | undefined)?.ok, true, name);
+    }
+  } finally { await client.close(); await server.close(); }
+});
