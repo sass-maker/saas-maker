@@ -2,7 +2,7 @@ import { PortfolioProjectStrip } from '../src';
 
 export const Example = () => (
   <PortfolioProjectStrip
-    projects={[{ id: 'one', name: 'One', url: 'https://example.com' }]}
+    projects={[{ id: 'one', name: 'One', url: 'https://example.com', priority: 'P0' }]}
     currentProjectId="one"
     theme="dark"
     speed={60}
