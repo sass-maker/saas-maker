@@ -34,6 +34,12 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-10-29:** Absorbed the read-only MCP gateway and complete source history
+  into `apps/mcp` from `chatgpt-connections` revision `f5652954`. The package
+  retains its dependency lock, Worker identity, endpoints and OAuth scopes.
+  Dedicated root CI and monitoring own the package. The source move alone does
+  not establish a production release or authenticated-owner acceptance.
+
 - **2026-10-28:** Restored the Browser Agent Testing article's full numeric
   record inline: 26 journey arms, seven measured probes, ten experiment records
   and all observed version pins, with scrollable tables for narrow screens.

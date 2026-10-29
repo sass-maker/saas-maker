@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "check": "pnpm run types:check && pnpm run build && pnpm run test",
+    "check": "pnpm run types:check && pnpm run build && pnpm run test && pnpm run test:deploy",
     "types:worker": "wrangler types --include-runtime false",
     "types:check": "wrangler types --include-runtime false --check",
     "dev:worker": "wrangler dev",
@@ -26,7 +26,8 @@
     "start:significant-hobbies": "node dist/entrypoints/significant-hobbies.js",
     "start:research-papers": "node dist/entrypoints/research-papers.js",
     "start:setline": "node dist/entrypoints/setline.js",
-    "test": "node --test dist/test/*.test.js"
+    "test": "node --test dist/test/*.test.js",
+    "test:deploy": "node --test scripts/deploy.test.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.29.0",

@@ -1,4 +1,4 @@
-# ChatGPT Connections
+# SaaS Maker MCP Connections
 
 ChatGPT Connections is the standalone read-only MCP gateway for selected
 products. It routes data according to each product's existing storage boundary:
@@ -188,7 +188,7 @@ revocation. Those remain manual or live-token activation evidence; a passing
 metadata receipt is not full OAuth acceptance.
 
 Production deployment is intentionally available only as `pnpm run deploy`. That
-command requires a clean, synced `main`, a successful `ci.yml` run at the exact
+command requires a clean, synced `main`, a successful SaaS Maker `mcp-ci.yml` run at the exact
 current revision, and an exact 40-character Git SHA tag on the uploaded Worker
 version.
 

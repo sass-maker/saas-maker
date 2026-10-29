@@ -29,6 +29,8 @@ private Fleet state at runtime. Reusable public automation is canonical under
 - `app.sassmaker.com` — authenticated Feedback inbox and subscription service.
   Portfolio readiness lives in Site Health; the previous [scoreboard route](docs/product-scoreboard.md)
   retains export-only recovery for existing browser workspaces.
+- [MCP Connections](apps/mcp/README.md) — shared read-only product connections,
+  with the existing Worker endpoints and product-specific OAuth boundaries.
 
 Package and service documentation stays in [`docs/`](docs/README.md) and the
 individual package READMEs.
@@ -44,6 +46,10 @@ pnpm build:widget
 pnpm build:showcase
 pnpm build:cockpit
 ```
+
+MCP Connections keeps its own lockfile and workspace boundary at `apps/mcp`.
+Install it separately with `pnpm --dir apps/mcp install --frozen-lockfile`, then
+run `pnpm check:mcp`. Its guarded manual release command is `pnpm deploy:mcp`.
 
 Production deployment and npm publication remain separate manual actions.
 The [2026-09-07 hosted release receipt](docs/releases/2026-09-07-public-directory/README.md)

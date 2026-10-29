@@ -41,6 +41,12 @@ SaaS Maker owns only:
   `apps/memory-map/packer` with `memory-pack-ci.yml` and the tag-driven
   `memory-pack-release.yml`.
 
+MCP Connections at `apps/mcp` is the owner-approved shared read-only gateway
+absorbed from `chatgpt-connections`. It keeps its own pnpm lock and workspace
+boundary. Its existing Worker, branded endpoints, OAuth scopes and read-only
+contract remain unchanged. Follow its nested `AGENTS.md`; use `pnpm check:mcp`
+for focused checks and `pnpm deploy:mcp` for the guarded manual release.
+
 SaaS Maker Tooling owns shared schedules, skills, and host automation. Site
 Health owns the private catalog, readiness checklist, scores, evidence, history
 and portfolio operations. Shared generators resolve its owner-local catalog;

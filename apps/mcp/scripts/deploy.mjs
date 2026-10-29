@@ -62,7 +62,7 @@ function verifyCi(slug, sha) {
       '-R',
       slug,
       '--workflow',
-      'ci.yml',
+      'mcp-ci.yml',
       '--branch',
       'main',
       '--limit',
@@ -71,13 +71,13 @@ function verifyCi(slug, sha) {
       'status,conclusion,headSha,url',
     ]));
   } catch {
-    fail('could not read ci.yml runs from GitHub');
+    fail('could not read mcp-ci.yml runs from GitHub');
   }
   const successful = runs.find((candidate) =>
     candidate.status === 'completed'
     && candidate.conclusion === 'success'
     && candidate.headSha === sha);
-  if (!successful) fail(`no successful ci.yml run found for ${sha}`);
+  if (!successful) fail(`no successful mcp-ci.yml run found for ${sha}`);
 }
 
 verifyGitState();

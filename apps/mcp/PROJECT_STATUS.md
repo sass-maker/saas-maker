@@ -1,4 +1,4 @@
-# ChatGPT Connections
+# SaaS Maker MCP Connections
 
 ## Why / What
 
@@ -35,6 +35,13 @@ do not establish production deployment or successful AI indexing.
 - ChatGPT web developer mode for hosted MCP registration.
 
 ## Timeline
+
+- 2026-10-29 — Source and full history absorbed into SaaS Maker at `apps/mcp`
+  from `f56529540ac553b47bd0ccc1e0008fc2db8fb9d4`. Runtime source, OAuth scopes,
+  Worker configuration, dependency lock and published endpoint identities are
+  unchanged. The package retains an independent lock boundary. Root workflows
+  own exact-revision CI and production monitoring. This source move alone is
+  not deployment or authenticated-owner acceptance evidence.
 
 - 2026-09-11 — Called all seven installed consumer connections directly.
   High Signal, Research Papers, Significant Hobbies and Starboard returned
@@ -106,7 +113,7 @@ do not establish production deployment or successful AI indexing.
 - Bounded requests, responses, upstream timeouts, safe CORS, no-store private
   responses, and secret-safe logging.
 - Exact per-tool OAuth or no-auth security declarations.
-- Path-scoped CI and a clean-main, green-CI, SHA-tagged manual deploy gate.
+- Exact-revision SaaS Maker MCP CI and a clean-main, green-CI, SHA-tagged manual deploy gate.
 - Free Auth0 tenant activation with CIMD, PKCE/refresh metadata, exact
   resource audiences, one-hour RS256 tokens, owner allowlisting, and
   third-party user grants; DCR, custom domains, and paid features stay off.
@@ -121,4 +128,4 @@ do not establish production deployment or successful AI indexing.
 
 ## Work queue
 
-[ChatGPT Connections GitHub Issues](https://github.com/sass-maker/chatgpt-connections/issues)
+[SaaS Maker GitHub Issues](https://github.com/sass-maker/saas-maker/issues)

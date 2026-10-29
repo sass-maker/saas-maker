@@ -1,4 +1,4 @@
-# ChatGPT Connections agent instructions
+# SaaS Maker MCP Connections agent instructions
 
 - Preserve the read-only MCP boundary. Do not add mutations, administrative
   tools, private-field exposure, or shared application credentials.
@@ -9,5 +9,8 @@
 - Keep public routes anonymous and private routes audience-bound, user-scoped,
   and independently verified by the owning product.
 - Run `pnpm check` after source, auth, route, listing, or monitoring changes.
-- Track operational work in this repository's GitHub Issues and keep
+- This independent package lives at `apps/mcp` in `sass-maker/saas-maker`.
+  Run `pnpm check` and `pnpm run deploy` from this directory. Deployments require
+  the repository's `mcp-ci.yml` workflow at the exact source revision.
+- Track operational work in SaaS Maker's GitHub Issues and keep
   `PROJECT_STATUS.md` current when durable product truth changes.

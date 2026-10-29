@@ -1,4 +1,4 @@
-name: ChatGPT Connections CI
+name: SaaS Maker MCP CI
 
 on:
   push:
@@ -18,6 +18,9 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: apps/mcp
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -27,6 +30,6 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
+          cache-dependency-path: apps/mcp/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm check

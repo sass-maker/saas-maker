@@ -1,4 +1,4 @@
-name: ChatGPT Connections Production Monitor
+name: SaaS Maker MCP Production Monitor
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: chatgpt-connections-production-monitor
+  group: saas-maker-mcp-production-monitor
   cancel-in-progress: false
 
 permissions:
@@ -16,6 +16,9 @@ jobs:
   monitor:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: apps/mcp
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -25,13 +28,13 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
+          cache-dependency-path: apps/mcp/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm monitor:production -- --output production-monitor-receipt.json
       - if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
           name: production-monitor-receipt
-          path: production-monitor-receipt.json
+          path: apps/mcp/production-monitor-receipt.json
           if-no-files-found: error
           retention-days: 30

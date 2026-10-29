@@ -34,6 +34,7 @@
       "!services/reel-pipeline",
       "!tools/psi-swarm",
       "!apps/memory-map",
+      "!apps/mcp",
       "!**/*.css",
       "!**/*.astro"
     ]
