@@ -142,11 +142,6 @@
       "probePath": "/"
     },
     {
-      "id": "unified-portfolio",
-      "url": "https://money.significanthobbies.com",
-      "probePath": "/"
-    },
-    {
       "id": "meme-lab",
       "url": "https://memes.significanthobbies.com",
       "probePath": "/"
@@ -164,6 +159,11 @@
     {
       "id": "contextdaddy",
       "url": "https://context.daddyrad.com",
+      "probePath": "/"
+    },
+    {
+      "id": "agent-inbox",
+      "url": "https://agentinbox.significanthobbies.com/",
       "probePath": "/"
     },
     {

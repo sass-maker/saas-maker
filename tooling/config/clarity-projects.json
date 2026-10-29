@@ -113,16 +113,6 @@
       ]
     },
     {
-      "id": "chatgpt-connections",
-      "name": "ChatGPT Connections",
-      "repo": "chatgpt-connections",
-      "clarityId": "y6brqwtobx",
-      "hostname": "github.com",
-      "wiredFiles": [],
-      "reason": "The catalog records a Worker but no visual page; do not invent a browser surface solely for analytics.",
-      "browserSurfaces": []
-    },
-    {
       "id": "saas-maker",
       "name": "SaaS Maker",
       "repo": "saas-maker",
@@ -744,7 +734,7 @@
       "clarityId": "ymdttwlchs",
       "hostname": "money.significanthobbies.com",
       "wiredFiles": [],
-      "reason": "Private finance application with provider and portfolio data; its dedicated Clarity identity is intentionally unwired to preserve the product privacy boundary.",
+      "reason": "Owner retired Unified Portfolio on 2026-10-27 because the received data and provider-access restrictions do not justify continuing the product. Historical identity retained; no analytics collection.",
       "browserSurfaces": []
     },
     {

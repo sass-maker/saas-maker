@@ -6438,50 +6438,14 @@
     {
       "id": "agent-inbox",
       "landing": {
-        "state": "not-applicable",
-        "mode": null,
-        "notes": "The canonical presentation and footer policy do not declare a browser surface; no browser surface is assumed.",
-        "checkedAt": "2026-10-14",
+        "state": "unknown",
+        "mode": "dark",
+        "notes": "Selected direction B rendered at desktop, tablet and phone widths with no horizontal overflow. Plain HTML/CSS; shared UI Library adoption is not measured or claimed.",
+        "checkedAt": "2026-10-28",
         "evidence": [
-          "agentbox/package.json",
-          "agentbox/renderer/index.html",
-          "agentbox/renderer/src/main.tsx",
-          "agentbox/renderer/src/theme.ts",
-          "agentbox/renderer/src/find-in-page.ts",
-          "agentbox/renderer/src/team/TeamPage.tsx",
-          "agentbox/renderer/src/artifact-layout.ts",
-          "agentbox/renderer/src/team/SignInPage.tsx"
-        ],
-        "libraryVersion": {
-          "state": "not-applicable",
-          "notes": "No catalogued browser surface.",
-          "checkedAt": "2026-10-14",
-          "evidence": [
-            "agentbox/package.json",
-            "agentbox/renderer/index.html",
-            "agentbox/renderer/src/main.tsx",
-            "agentbox/renderer/src/theme.ts",
-            "agentbox/renderer/src/find-in-page.ts",
-            "agentbox/renderer/src/team/TeamPage.tsx",
-            "agentbox/renderer/src/artifact-layout.ts",
-            "agentbox/renderer/src/team/SignInPage.tsx"
-          ]
-        },
-        "loading": {
-          "state": "not-applicable",
-          "notes": "No catalogued browser surface.",
-          "checkedAt": "2026-10-14",
-          "evidence": [
-            "agentbox/package.json",
-            "agentbox/renderer/index.html",
-            "agentbox/renderer/src/main.tsx",
-            "agentbox/renderer/src/theme.ts",
-            "agentbox/renderer/src/find-in-page.ts",
-            "agentbox/renderer/src/team/TeamPage.tsx",
-            "agentbox/renderer/src/artifact-layout.ts",
-            "agentbox/renderer/src/team/SignInPage.tsx"
-          ]
-        }
+          "agentbox/website/public/index.html",
+          "agentbox/website/public/style.css"
+        ]
       },
       "app": {
         "state": "not-applicable",
@@ -6532,7 +6496,7 @@
       "continuity": {
         "state": "not-applicable",
         "score": null,
-        "notes": "No catalogued browser surface to compare.",
+        "notes": "Public introduction follows the native app neutral dark direction; full native app-to-website continuity is not newly qualified.",
         "checkedAt": "2026-10-14",
         "evidence": [
           "agentbox/package.json",
