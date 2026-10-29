@@ -5,7 +5,7 @@ interface PublicProject {
   name: string;
   description: string;
   url: string;
-  priority: 'P1' | 'P2' | 'P3' | 'P4' | null;
+  priority: 'P0' | 'P1' | 'P2' | 'P3' | 'P4' | null;
   category: string;
   pillarId: string;
   spotlight: boolean;
