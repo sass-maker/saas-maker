@@ -95,7 +95,7 @@
       "name": "Live",
       "repo": "live",
       "clarityId": "ybcglnzl4t",
-      "hostname": "live.significanthobbies.com",
+      "hostname": "significanthobbies.com",
       "tag": "live",
       "wiredFiles": [
         "live/src/app/layout.tsx",

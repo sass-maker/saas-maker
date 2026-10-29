@@ -130,10 +130,6 @@
           "value": "Live helps a person turn passive wanting into a life they can deliberately imagine, plan, and experience."
         },
         {
-          "field": "sharing.evidence.reason",
-          "value": "Production guest onboarding, bucket-list add/complete and local reload persistence passed. Existing Google OAuth callback is repaired; owner login and Hub return pass. Exact dc0ad9b5 is deployed at 100%, with quality, full browser CI and deployment smokes green. Owner bucket-list opens without DOB onboarding; a synthetic item was imported, completed, reloaded, reopened, reloaded, deleted and confirmed absent after reload. Original owner records were preserved. Receipts: docs/qualification/live-guest-core-2026-09-11.json and docs/qualification/live-bucket-owner-core-2026-09-11.json."
-        },
-        {
           "field": "deployment.status",
           "value": "live"
         }

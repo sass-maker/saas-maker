@@ -297,62 +297,6 @@
       }
     },
     {
-      "id": "significanthobbies",
-      "label": "Significant Hobbies",
-      "domain": "significanthobbies.com",
-      "repoPath": "significanthobbies",
-      "$comment": "CAUTION: the 'docs' channel below reads repo source, and for this one surface repo source is NOT a proxy for the deployed site. origin/main's layout.tsx declares a WebSite node at @id .../#app carrying Live's one-liner; the deployed apex declares @id .../#website with the correct hub description, and neither the title nor the meta description match either. Verified 2026-09-05. So a category-drift finding on this surface's `docs` value is a finding about the repo, not about what the public sees — the canonical record's authorityOrder puts the deployed surface first. Tracked in Significant-Hobbies/significanthobbies#148 along with the two apex machine channels (/api/ai 308s to Live's catalog, /llms.txt is Live's file) that ARE wrong in public.",
-      "claim": {
-        "$comment": "This surface is a hub, so it legitimately names the products it hosts. Without the allowlist the foreign-entity check would fire six times on a description that is correct.",
-        "anchors": [
-          "hub",
-          "control plane"
-        ],
-        "mentions": [
-          "Live",
-          "Journal",
-          "Calorie",
-          "Setline",
-          "Kith",
-          "Anchor"
-        ]
-      },
-      "docs": {
-        "name": {
-          "files": [
-            "src/app/layout.tsx"
-          ],
-          "patterns": [
-            "\"@type\":\"WebSite\",\"@id\":\"[^\"]*\",\"name\":\"([^\"]+)\""
-          ]
-        },
-        "description": {
-          "files": [
-            "src/app/layout.tsx"
-          ],
-          "patterns": [
-            "\"@type\":\"WebSite\"[\\s\\S]{0,600}?\"description\":\"([^\"]+)\""
-          ]
-        },
-        "canonicalUrl": {
-          "files": [
-            "src/app/layout.tsx"
-          ],
-          "patterns": [
-            "\"@type\":\"WebSite\"[\\s\\S]{0,300}?\"url\":\"([^\"]+)\""
-          ]
-        },
-        "repoUrl": {
-          "files": [
-            "src/app/layout.tsx"
-          ],
-          "patterns": [
-            "\"sameAs\":\\[\"(https://github\\.com/[^\"/]+/[^\"]+)\"\\]"
-          ]
-        }
-      }
-    },
-    {
       "id": "what-it-takes-to-win",
       "label": "Look Sideways",
       "domain": "paths.significanthobbies.com",
@@ -385,6 +329,53 @@
           ],
           "patterns": [
             "site: \"([^\"]+)\""
+          ]
+        }
+      }
+    },
+    {
+      "id": "live",
+      "label": "Live",
+      "domain": "significanthobbies.com",
+      "repoPath": "live",
+      "claim": {
+        "anchors": [
+          "bucket",
+          "hobbies",
+          "experiences"
+        ]
+      },
+      "docs": {
+        "name": {
+          "files": [
+            "landing-astro/src/content/live.json"
+          ],
+          "patterns": [
+            "\"product\":\\s*\"([^\"]+)\""
+          ]
+        },
+        "description": {
+          "files": [
+            "landing-astro/src/content/live.json"
+          ],
+          "patterns": [
+            "\"description\":\\s*\"([^\"]+)\""
+          ]
+        },
+        "canonicalUrl": {
+          "files": [
+            "landing-astro/src/content/live.json"
+          ],
+          "patterns": [
+            "\"canonical\":\\s*\"([^\"]+)\""
+          ]
+        },
+        "repoUrl": {
+          "files": [
+            "src/lib/public-identity.ts"
+          ],
+          "patterns": [
+            "(https://github\\.com/Significant-Hobbies/live)"
           ]
         }
       }
