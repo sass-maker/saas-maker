@@ -2984,7 +2984,7 @@
       "url": "https://highsignal.app",
       "tier": "active",
       "category": "media",
-      "priority": "P0",
+      "priority": "P1",
       "spotlight": false,
       "lifecycle": "active",
       "shareable": true,
