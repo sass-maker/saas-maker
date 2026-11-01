@@ -1,6 +1,7 @@
 import publicCatalog from '../../../../catalog/generated/public.json';
 
 export interface CoreProject {
+  id: string;
   name: string;
   tag: string;
   desc: string;
@@ -26,6 +27,7 @@ const products = (publicCatalog.products as PublicProduct[]).filter(
 
 function toCore(product: PublicProduct): CoreProject {
   return {
+    id: product.id,
     name: product.name,
     tag: new URL(product.url).hostname.replace(/^www\./, ''),
     desc: product.description,
