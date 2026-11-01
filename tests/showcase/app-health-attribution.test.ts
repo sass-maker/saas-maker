@@ -1,6 +1,10 @@
 import { readFile } from 'node:fs/promises';
-import { describe, expect, it } from 'vitest';
-import { appHealthEventProperties } from '../../apps/showcase/src/data/app-health-attribution';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  appHealthEventProperties,
+  handoffAppHealthNavigation,
+  shouldInterceptAppHealthNavigationClick,
+} from '../../apps/showcase/src/data/app-health-attribution';
 
 async function readShowcase(relativePath: string) {
   return readFile(new URL(`../../apps/showcase/${relativePath}`, import.meta.url), 'utf8');
@@ -48,9 +52,8 @@ describe('bounded App Health CTA attribution', () => {
     ]);
 
     expect(layout).toMatch(/appHealth\.track\(\s*name,\s*appHealthEventProperties/);
-    expect(layout).toContain('flushForNavigation?: () => Promise<boolean>');
-    expect(layout).toContain('if (accepted) navigate();');
-    expect(layout).toContain('window.setTimeout(navigate, 800);');
+    expect(layout).toContain('handoffAppHealthNavigation(');
+    expect(layout).toContain('shouldInterceptAppHealthNavigationClick(');
     expect(layout).toContain('data-app-health-project-ids={appHealthProjectIds}');
     expect(layout).toContain("CORE.map(({ id }) => id).join(',')");
     expect(hero).toContain('data-app-health-destination="project_directory"');
@@ -59,5 +62,126 @@ describe('bounded App Health CTA attribution', () => {
 
     const helper = await readShowcase('src/data/app-health-attribution.ts');
     expect(helper).not.toContain("from './projects'");
+    expect(helper).toContain('scheduleTimeout(navigateOnce, 800)');
+  });
+});
+
+describe('App Health navigation handoff', () => {
+  const ordinaryClick = {
+    isAnchor: true,
+    button: 0,
+    metaKey: false,
+    ctrlKey: false,
+    shiftKey: false,
+    altKey: false,
+    target: '',
+    download: false,
+  };
+
+  it('intercepts only ordinary same-tab anchor clicks', () => {
+    expect(shouldInterceptAppHealthNavigationClick(ordinaryClick)).toBe(true);
+    for (const update of [
+      { isAnchor: false },
+      { button: 1 },
+      { metaKey: true },
+      { ctrlKey: true },
+      { shiftKey: true },
+      { altKey: true },
+      { target: '_blank' },
+      { download: true },
+    ]) {
+      expect(shouldInterceptAppHealthNavigationClick({ ...ordinaryClick, ...update })).toBe(false);
+    }
+  });
+
+  function scheduler() {
+    const timers = new Map<number, () => void>();
+    const cleared: number[] = [];
+    let nextTimer = 1;
+    return {
+      schedule: (callback: () => void, delayMs: number) => {
+        expect(delayMs).toBe(800);
+        const timer = nextTimer++;
+        timers.set(timer, callback);
+        return timer;
+      },
+      clear: (timer: number) => {
+        cleared.push(timer);
+        timers.delete(timer);
+      },
+      fire: (timer: number) => {
+        const callback = timers.get(timer);
+        timers.delete(timer);
+        callback?.();
+      },
+      cleared,
+      timers,
+    };
+  }
+
+  it('navigates after an accepted handoff and clears the cap timer', async () => {
+    const time = scheduler();
+    const navigate = vi.fn();
+    const tracker = {
+      marker: 'receiver',
+      flushForNavigation(this: { marker: string }) {
+        expect(this.marker).toBe('receiver');
+        return Promise.resolve(true);
+      },
+    };
+
+    handoffAppHealthNavigation(tracker, navigate, time.schedule, time.clear);
+    await Promise.resolve();
+
+    expect(navigate).toHaveBeenCalledOnce();
+    expect(time.cleared).toEqual([1]);
+  });
+
+  it.each([
+    ['legacy tracker', undefined],
+    ['declined handoff', () => Promise.resolve(false)],
+    ['rejected handoff', () => Promise.reject(new Error('synthetic'))],
+    [
+      'throwing handoff',
+      () => {
+        throw new Error('synthetic');
+      },
+    ],
+  ])('uses the bounded legacy flush for a %s', async (_label, flushForNavigation) => {
+    const time = scheduler();
+    const navigate = vi.fn();
+    const flush = vi.fn().mockResolvedValue(undefined);
+
+    handoffAppHealthNavigation({ flush, flushForNavigation }, navigate, time.schedule, time.clear);
+    await Promise.resolve();
+    await Promise.resolve();
+    await vi.waitFor(() => expect(navigate).toHaveBeenCalledOnce());
+
+    expect(flush).toHaveBeenCalledOnce();
+    expect(time.cleared).toEqual([1]);
+  });
+
+  it('navigates at the 800 ms cap once when the handoff remains pending', async () => {
+    const time = scheduler();
+    const navigate = vi.fn();
+    let acceptHandoff!: (accepted: boolean) => void;
+
+    handoffAppHealthNavigation(
+      {
+        flushForNavigation: () =>
+          new Promise((resolve) => {
+            acceptHandoff = resolve;
+          }),
+      },
+      navigate,
+      time.schedule,
+      time.clear
+    );
+    time.fire(1);
+    acceptHandoff(true);
+    await Promise.resolve();
+
+    expect(navigate).toHaveBeenCalledOnce();
+    expect(time.cleared).toEqual([1]);
   });
 });

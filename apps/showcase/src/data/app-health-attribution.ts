@@ -1,5 +1,72 @@
 export type AppHealthTrafficClass = 'qa' | 'internal' | 'unknown';
 
+export interface AppHealthNavigationTracker {
+  flush?: () => Promise<unknown>;
+  flushForNavigation?: () => Promise<boolean>;
+}
+
+export interface AppHealthNavigationClick {
+  isAnchor: boolean;
+  button: number;
+  metaKey: boolean;
+  ctrlKey: boolean;
+  shiftKey: boolean;
+  altKey: boolean;
+  target: string;
+  download: boolean;
+}
+
+export function shouldInterceptAppHealthNavigationClick(click: AppHealthNavigationClick) {
+  return (
+    click.isAnchor &&
+    click.button === 0 &&
+    !click.metaKey &&
+    !click.ctrlKey &&
+    !click.shiftKey &&
+    !click.altKey &&
+    click.target !== '_blank' &&
+    !click.download
+  );
+}
+
+export function handoffAppHealthNavigation(
+  appHealth: AppHealthNavigationTracker,
+  navigate: () => void,
+  scheduleTimeout: (callback: () => void, delayMs: number) => number,
+  clearTimeout: (timer: number) => void
+) {
+  let navigated = false;
+  let navigationTimeout: number | undefined;
+  const navigateOnce = () => {
+    if (navigated) return;
+    navigated = true;
+    if (navigationTimeout !== undefined) clearTimeout(navigationTimeout);
+    navigate();
+  };
+  const flushWithTimeout = () => {
+    if (navigated) return;
+    Promise.resolve(appHealth.flush?.())
+      .catch(() => {})
+      .finally(navigateOnce);
+  };
+
+  navigationTimeout = scheduleTimeout(navigateOnce, 800);
+  try {
+    const handoff = appHealth.flushForNavigation?.();
+    if (!handoff) {
+      flushWithTimeout();
+      return;
+    }
+    void Promise.resolve(handoff).then((accepted) => {
+      if (navigated) return;
+      if (accepted) navigateOnce();
+      else flushWithTimeout();
+    }, flushWithTimeout);
+  } catch {
+    flushWithTimeout();
+  }
+}
+
 const fixedDestinations = new Set(['project_directory', 'feedback_docs']);
 
 function declaredMarker(search: string, key: 'fleet_qa' | 'fleet_internal') {

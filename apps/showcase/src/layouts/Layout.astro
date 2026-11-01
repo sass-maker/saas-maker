@@ -168,12 +168,15 @@ const appHealthProjectIds = CORE.map(({ id }) => id).join(',');
       </script>
     </studio-footer>
     <script>
-      import { appHealthEventProperties } from '../data/app-health-attribution';
+      import {
+        appHealthEventProperties,
+        handoffAppHealthNavigation,
+        shouldInterceptAppHealthNavigationClick,
+        type AppHealthNavigationTracker,
+      } from '../data/app-health-attribution';
 
-      type AppHealthTracker = {
+      type AppHealthTracker = AppHealthNavigationTracker & {
         track: (name: string, properties: Record<string, string>) => void;
-        flush?: () => Promise<unknown>;
-        flushForNavigation?: () => Promise<boolean>;
       };
 
       document.addEventListener('click', (event) => {
@@ -192,48 +195,23 @@ const appHealthProjectIds = CORE.map(({ id }) => id).join(',');
           ),
         );
 
-        if (
-          !(link instanceof HTMLAnchorElement) ||
-          event.button !== 0 ||
-          event.metaKey ||
-          event.ctrlKey ||
-          event.shiftKey ||
-          event.altKey ||
-          link.target === '_blank' ||
-          link.hasAttribute('download')
-        ) return;
+        if (!link || !shouldInterceptAppHealthNavigationClick({
+          isAnchor: link instanceof HTMLAnchorElement,
+          button: event.button,
+          metaKey: event.metaKey,
+          ctrlKey: event.ctrlKey,
+          shiftKey: event.shiftKey,
+          altKey: event.altKey,
+          target: link instanceof HTMLAnchorElement ? link.target : '',
+          download: link.hasAttribute('download'),
+        })) return;
         event.preventDefault();
-        let navigated = false;
-        let navigationTimeout: number | undefined;
-        const navigate = () => {
-          if (navigated) return;
-          navigated = true;
-          if (navigationTimeout !== undefined) window.clearTimeout(navigationTimeout);
-          window.location.assign(link.href);
-        };
-        const flushWithTimeout = () => {
-          if (navigated) return;
-          Promise.resolve(appHealth.flush?.()).catch(() => {}).finally(navigate);
-        };
-
-        navigationTimeout = window.setTimeout(navigate, 800);
-        try {
-          const handoff = appHealth.flushForNavigation?.();
-          if (!handoff) {
-            flushWithTimeout();
-            return;
-          }
-          void Promise.resolve(handoff).then(
-            (accepted) => {
-              if (navigated) return;
-              if (accepted) navigate();
-              else flushWithTimeout();
-            },
-            flushWithTimeout,
-          );
-        } catch {
-          flushWithTimeout();
-        }
+        handoffAppHealthNavigation(
+          appHealth,
+          () => window.location.assign(link.href),
+          (callback, delayMs) => window.setTimeout(callback, delayMs),
+          (timer) => window.clearTimeout(timer),
+        );
       });
     </script>
   </body>
