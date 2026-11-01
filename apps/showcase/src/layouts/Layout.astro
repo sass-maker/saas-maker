@@ -1,6 +1,7 @@
 ---
 import '../styles/globals.css';
 import { PUBLIC_ROUTES } from '../data/publicRoutes';
+import { CORE } from '../data/projects';
 import { STUDIO_JSON_LD, STUDIO_PROFILE } from '../data/studio';
 
 interface Props {
@@ -30,6 +31,7 @@ const markdownUrl = new URL(pathname === '/' ? '/index.md' : `${pathname}.md`, A
 
 // Social preview image served from the static public asset set.
 const OG_IMAGE = `${SITE_URL}/og-image.svg`;
+const appHealthProjectIds = CORE.map(({ id }) => id).join(',');
 ---
 
 <!doctype html>
@@ -97,7 +99,7 @@ const OG_IMAGE = `${SITE_URL}/og-image.svg`;
       data-vitals
     ></script>
   </head>
-  <body>
+  <body data-app-health-project-ids={appHealthProjectIds}>
     <a class="skip-link" href="#main-content">Skip to content</a>
     {/* Directory contacts are already public in JSON. Preserve their text and
         mailto links instead of injecting crawler-visible email-protection 404s. */}
@@ -165,14 +167,30 @@ const OG_IMAGE = `${SITE_URL}/og-image.svg`;
         }
       </script>
     </studio-footer>
-    <script is:inline>
+    <script>
+      import { appHealthEventProperties } from '../data/app-health-attribution';
+
+      type AppHealthTracker = {
+        track: (name: string, properties: Record<string, string>) => void;
+        flush?: () => Promise<unknown>;
+        flushForNavigation?: () => Promise<boolean>;
+      };
+
       document.addEventListener('click', (event) => {
         const target = event.target;
         if (!(target instanceof Element)) return;
         const link = target.closest('[data-app-health-event]');
         const name = link?.getAttribute('data-app-health-event');
-        if (!name || !window.appHealth || typeof window.appHealth.track !== 'function') return;
-        window.appHealth.track(name);
+        const appHealth = (window as Window & { appHealth?: AppHealthTracker }).appHealth;
+        if (!name || !appHealth || typeof appHealth.track !== 'function') return;
+        appHealth.track(
+          name,
+          appHealthEventProperties(
+            window.location.search,
+            link?.getAttribute('data-app-health-destination'),
+            document.body.dataset.appHealthProjectIds?.split(',').filter(Boolean) ?? [],
+          ),
+        );
 
         if (
           !(link instanceof HTMLAnchorElement) ||
@@ -184,16 +202,38 @@ const OG_IMAGE = `${SITE_URL}/og-image.svg`;
           link.target === '_blank' ||
           link.hasAttribute('download')
         ) return;
-
         event.preventDefault();
         let navigated = false;
+        let navigationTimeout: number | undefined;
         const navigate = () => {
           if (navigated) return;
           navigated = true;
+          if (navigationTimeout !== undefined) window.clearTimeout(navigationTimeout);
           window.location.assign(link.href);
         };
-        window.setTimeout(navigate, 800);
-        Promise.resolve(window.appHealth.flush?.()).catch(() => {}).finally(navigate);
+        const flushWithTimeout = () => {
+          if (navigated) return;
+          Promise.resolve(appHealth.flush?.()).catch(() => {}).finally(navigate);
+        };
+
+        navigationTimeout = window.setTimeout(navigate, 800);
+        try {
+          const handoff = appHealth.flushForNavigation?.();
+          if (!handoff) {
+            flushWithTimeout();
+            return;
+          }
+          void Promise.resolve(handoff).then(
+            (accepted) => {
+              if (navigated) return;
+              if (accepted) navigate();
+              else flushWithTimeout();
+            },
+            flushWithTimeout,
+          );
+        } catch {
+          flushWithTimeout();
+        }
       });
     </script>
   </body>
