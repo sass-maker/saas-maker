@@ -17,10 +17,10 @@ export const LEARNINGS = [
     slug: 'browser-agent-testing',
     title: 'Browser agent testing: measure verified feedback, not fast clicks',
     description:
-      'What a completed web and iOS experiment found about saved tests, adaptive agents and website-to-MCP tools, with independent verification and retained evidence.',
+      'What a completed web and iOS experiment found about saved tests and adaptive agents, with source-reviewed desktop, computer-use and website-to-MCP tools.',
     publishedAt: '2026-10-27',
     publishedLabel: 'October 27, 2026',
-    readingTime: '18 min read',
+    readingTime: '20 min read',
     author: 'Sarthak Agrawal',
     href: '/learnings/browser-agent-testing',
     markdown: browserAgentTestingMarkdown,

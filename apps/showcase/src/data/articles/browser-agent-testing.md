@@ -2,8 +2,8 @@
 
 - Published: 2026-10-27
 - Author: Sarthak Agrawal
-- Updated: 2026-10-28
-- Reading time: 18 min read
+- Updated: 2026-11-03
+- Reading time: 20 min read
 - Canonical HTML: https://sassmaker.com/learnings/browser-agent-testing
 
 This experiment compared UI-testing drivers and agent strategies
@@ -16,9 +16,9 @@ application tests. It gives those tools one measurement and evidence contract.
 
 The measurements below were last run on **20 September 2026**. They cover seeded local web and iOS Simulator journeys on one Mac, not production traffic or a universal ranking. This article brings the completed experiment into SaaS Maker; the standalone site is retired.
 
-The retained evidence contains **26 measured journey arms**, **118 verified completions across 129 attempts**, **seven additional probes** and **five seeded defect types**. Eleven tools were repeatedly benchmarked, ten received bounded screens, and four encountered dated setup blockers. The current map contains 80 tools, including 55 source-reviewed entries without runtime rankings. The Pomerado source review was added on **27 October 2026**; the historical measurements were not rerun.
+The retained evidence contains **26 measured journey arms**, **118 verified completions across 129 attempts**, **seven additional probes** and **five seeded defect types**. Eleven tools were repeatedly benchmarked, ten received bounded screens, and four encountered dated setup blockers. The current map contains 84 tools, including 59 source-reviewed entries without runtime rankings. The Pomerado source review was added on **27 October 2026**; desktop and computer-use coverage was expanded on **3 November 2026**. The historical measurements were not rerun.
 
-Jump to the [journey timings](#journey-timings-verified-results-and-model-usage), [other probes](#other-measured-probes), [experiment records](#what-each-experiment-established), [version pins](#exact-observed-versions-and-environment), or [Pomerado discussion](#when-the-agent-builds-a-reusable-tool).
+Jump to the [journey timings](#journey-timings-verified-results-and-model-usage), [other probes](#other-measured-probes), [experiment records](#what-each-experiment-established), [version pins](#exact-observed-versions-and-environment), [Pomerado discussion](#when-the-agent-builds-a-reusable-tool), or [desktop and computer-use tools](#desktop-and-computer-use-tools).
 
 ## Current benchmark snapshot
 
@@ -50,12 +50,12 @@ On a phone or narrow window, scroll each table horizontally to read every column
 
 | Measure | Recorded value |
 | --- | --- |
-| Catalogue tools | 80 |
+| Catalogue tools | 84 |
 | Executed tools | 21 |
 | Repeatedly benchmarked tools | 11 |
 | Bounded tool screens | 10 |
 | Setup-blocked tools | 4 |
-| Source-reviewed tools | 55 |
+| Source-reviewed tools | 59 |
 | Measured journey arms | 26 |
 | Verified journey completions / attempts | 118/129 |
 | Additional measured probes | 7 |
@@ -346,6 +346,28 @@ For this kind of tool, measure the first successful build separately from repeat
 
 Pomerado is **source-reviewed only** here. It has no local execution, speed, reliability or defect-detection result in this experiment. Its upstream claims are not benchmark findings. Stagehand's measured cached replay is a related example of separating authoring from repeat execution; its results do not establish Pomerado's performance.
 
+## Desktop and computer-use tools
+
+Browser automation is only part of UI testing. Native windows, system dialogs and interfaces without useful DOM selectors need other interaction and observation paths. These five tools belong in that comparison, but they contribute different layers. All five are **source-reviewed only** in this publication, reviewed on **3 November 2026**. None has a local execution, latency, reliability or defect-detection result here. UI-TARS was already in the catalogue; the other four are new entries.
+
+<div class="learning-results-table" role="region" aria-label="Desktop and computer-use tool comparison" tabindex="0">
+
+| Tool and official source | Role | Contribution to testing | Boundary to measure |
+| --- | --- | --- | --- |
+| [agent-desktop](https://github.com/vercel-labs/agent-desktop) | Accessibility interaction tool | Reads native OS accessibility trees and acts on snapshot-scoped element references on macOS, Windows and Linux. The surrounding agent supplies the reasoning loop. | Accessibility coverage, stale-reference handling and action delivery; compare equivalent native journeys rather than assuming parity with an iOS Simulator driver. |
+| [Open Interpreter](https://github.com/openinterpreter/openinterpreter) | Agent orchestration | Its current QA skill uses agent-browser for web interfaces and trycua for native apps. | Pin the model, QA skill and underlying driver; separate orchestration overhead and model usage from driver execution. |
+| [UI-TARS Desktop](https://github.com/bytedance/UI-TARS-desktop) | Vision-driven GUI agent | Uses screenshots and a vision-language model to operate desktop and browser interfaces with mouse and keyboard actions. | Pin the model and local or remote operator; measure inference, retries and recovery as well as action time. |
+| [Cua](https://github.com/trycua/cua) | Computer-use infrastructure and evaluation | Provides computer-use drivers, sandbox tooling and Cua Bench tasks with evaluators. | Record the specific component, OS, image, model and task evaluator. Sandbox startup and task execution need separate timings. |
+| [OmniParser](https://github.com/microsoft/OmniParser) | Screenshot perception | Turns UI screenshots into structured elements for action grounding. The separate OmniTool integration combines it with a model and a Windows VM. | Measure element localization and parsing latency separately from the model, action executor and end-to-end task result. |
+
+</div>
+
+An accessibility reference or correctly localized button establishes where an action can go. It does not establish that the application saved the right value. A benchmark evaluator also needs inspection: its success condition must match the product outcome being tested. Keep the independent verifier for displayed values, persisted state and visual defects across every stack.
+
+A useful future screen would give each applicable stack the same disposable native or browser task: edit a seeded value, save, relaunch or reload, then verify persistence independently. Repeat with a silently dropped write and a clipped control. Record setup, cold startup, observation, model inference, actions, retries and human intervention separately. Desktop support alone does not establish iOS Simulator support; qualify the target explicitly.
+
+For OmniParser, hold the model and executor constant while comparing perception paths. For Open Interpreter, hold the underlying driver constant when measuring orchestration. For Cua Bench, inspect and adapt the evaluator before comparing rewards with product-specific verified passes. These are proposed comparisons, not new results or reasons to replace the retained Playwright and Maestro baselines.
+
 ## Clone and prove the runner works
 
 The core has no package dependencies. It needs Node.js 22 or newer.
@@ -456,11 +478,11 @@ experiment patch into the application merely to run the benchmark.
 
 The full datasets now live alongside this article in SaaS Maker:
 
-- [80-tool catalogue](/research/browser-agent-testing/tools.json): source links, evidence labels, costs, version pins or concrete applicability boundaries, across seven categories.
+- [84-tool catalogue](/research/browser-agent-testing/tools.json): source links, evidence labels, costs, version pins or concrete applicability boundaries, across eight categories.
 - [Experiment records](/research/browser-agent-testing/experiments.json): all 26 measured journey arms, verified pass denominators, median and observed p95, model usage, fault outcomes, seven probes and ten experiment write-ups.
 - [Observed version pins](/research/browser-agent-testing/versions.json): the exact tool and environment versions recorded for the historical runs.
 
-The categories separate saved web automation, adaptive browser agents, agent evaluation suites, remote browser infrastructure, visual verification, iOS and mobile tools, and local model helpers. Remote infrastructure and source-reviewed alternatives have fit boundaries, not invented local scores.
+The categories separate saved web automation, adaptive browser agents, desktop and computer use, agent evaluation suites, remote browser infrastructure, visual verification, iOS and mobile tools, and local model helpers. The desktop category distinguishes interaction, orchestration, infrastructure and perception through each entry's role and applicability boundary. Remote infrastructure and source-reviewed alternatives have fit boundaries, not invented local scores.
 
 “Benchmarked” means repeated local execution. “Screened” means a bounded local probe. “Setup-blocked” records a named prerequisite or bounded failure without judging tool quality. “Source-reviewed” records official-source research without a runtime ranking.
 

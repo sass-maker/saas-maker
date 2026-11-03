@@ -34,6 +34,12 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-11-03:** Expanded the Browser Agent Testing article with agent-desktop,
+  Open Interpreter, UI-TARS Desktop, Cua and OmniParser, distinguishing their
+  interaction, orchestration, infrastructure and perception roles. The retained
+  catalogue now has 84 tools, including 59 source-reviewed entries. These five
+  have source reviews only; the September runtime evidence remains unchanged.
+
 - **2026-10-29:** Absorbed the read-only MCP gateway and complete source history
   into `apps/mcp` from `chatgpt-connections` revision `f5652954`. The package
   retains its dependency lock, Worker identity, endpoints and OAuth scopes.
