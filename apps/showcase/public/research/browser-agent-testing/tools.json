@@ -2,9 +2,9 @@
   "title": "Map of Browser Agent Testing tool catalogue",
   "status": "completed-experiment",
   "catalogue_reviewed": "2026-09-20",
-  "catalogue_updated": "2026-10-27",
+  "catalogue_updated": "2026-11-03",
   "last_experiment": "2026-09-20",
-  "scope": "Maintained and materially relevant tools for local browser-agent and iOS-agent testing, grouped by job. Each entry has dated execution evidence or an explicit applicability boundary.",
+  "scope": "Maintained and materially relevant tools for browser-agent, desktop computer-use and iOS-agent testing, grouped by job. Each entry has dated execution evidence or an explicit applicability boundary.",
   "evidence_states": {
     "benchmarked": "Repeated locally against the shared Vaultwealth journeys or faults.",
     "screened": "A bounded local probe was completed, but the tool was not fully qualified.",
@@ -18,7 +18,8 @@
     "Remote browser infrastructure": "Remote infrastructure outside local-only scope",
     "Visual verification": "Visual oracle or diff layer",
     "iOS and mobile": "Native interaction or simulator layer",
-    "Local model helpers": "Model runtime, not UI executor"
+    "Local model helpers": "Model runtime, not UI executor",
+    "Desktop and computer use": "Desktop interaction, agent orchestration, sandbox and perception layers; roles are distinguished per entry, not equivalent test runners"
   },
   "tools": [
     {
@@ -354,17 +355,6 @@
       "note": "Natural-language Playwright tests; model reasoning remains the dominant variable for a fair comparison."
     },
     {
-      "id": "ui-tars",
-      "name": "UI-TARS Desktop",
-      "category": "Adaptive browser agents",
-      "evidence": "researched-only",
-      "cost": "Open source / local or hosted model",
-      "version": null,
-      "disposition": "Desktop GUI agent",
-      "url": "https://github.com/bytedance/UI-TARS-desktop",
-      "note": "General desktop GUI agent with browser control; broader than the local web-driver question and still needs an external oracle."
-    },
-    {
       "id": "agent-tars",
       "name": "Agent TARS",
       "category": "Adaptive browser agents",
@@ -396,6 +386,67 @@
       "disposition": "Authoring and healing layer",
       "url": "https://playwright.dev/docs/test-agents",
       "note": "Planner, generator and healer agents author Playwright tests; repeat execution remains Playwright."
+    },
+
+    {
+      "id": "agent-desktop",
+      "name": "agent-desktop",
+      "category": "Desktop and computer use",
+      "evidence": "researched-only",
+      "cost": "Open source / local; agent model separate",
+      "version": null,
+      "disposition": "Accessibility interaction tool",
+      "reviewed": "2026-11-03",
+      "url": "https://github.com/vercel-labs/agent-desktop",
+      "note": "Reads native OS accessibility trees and acts on snapshot-scoped references on macOS, Windows and Linux. The surrounding agent supplies reasoning. Qualify accessibility coverage, stale refs and action delivery on the target app; not an iOS Simulator qualification or independent correctness oracle. No local runtime result."
+    },
+    {
+      "id": "open-interpreter",
+      "name": "Open Interpreter",
+      "category": "Desktop and computer use",
+      "evidence": "researched-only",
+      "cost": "Open source / model-dependent",
+      "version": null,
+      "disposition": "Agent orchestration and QA skill",
+      "reviewed": "2026-11-03",
+      "url": "https://github.com/openinterpreter/openinterpreter",
+      "note": "The current QA skill drives web interfaces with agent-browser and native apps with trycua. Pin the model, skill and underlying driver; distinguish orchestration overhead from driver execution and model usage. Still requires independent product-state verification. No local runtime or defect-detection result."
+    },
+    {
+      "id": "ui-tars",
+      "name": "UI-TARS Desktop",
+      "category": "Desktop and computer use",
+      "evidence": "researched-only",
+      "cost": "Open source / local or hosted model",
+      "version": null,
+      "disposition": "Desktop GUI agent",
+      "reviewed": "2026-11-03",
+      "url": "https://github.com/bytedance/UI-TARS-desktop",
+      "note": "Screenshot-driven GUI agent using a vision-language model with desktop and browser operators. Pin the model and local or remote operator; measure inference, retries and recovery separately. Desktop support does not establish iOS Simulator support. No local runtime or defect-detection result; needs an independent product-state verifier."
+    },
+    {
+      "id": "cua",
+      "name": "Cua",
+      "category": "Desktop and computer use",
+      "evidence": "researched-only",
+      "cost": "Open-source components / hosted and model costs vary",
+      "version": null,
+      "disposition": "Computer-use infrastructure and evaluation",
+      "reviewed": "2026-11-03",
+      "url": "https://github.com/trycua/cua",
+      "note": "Computer-use drivers, sandbox tooling and Cua Bench tasks with evaluators. Specify the component, OS, image, model and evaluator; separate sandbox startup from execution. Inspect task success conditions before treating a reward as product correctness. Component licensing varies. No local runtime or defect-detection result."
+    },
+    {
+      "id": "omniparser",
+      "name": "OmniParser",
+      "category": "Desktop and computer use",
+      "evidence": "researched-only",
+      "cost": "Local inference / model and executor costs separate",
+      "version": null,
+      "disposition": "Screenshot perception, not test oracle",
+      "reviewed": "2026-11-03",
+      "url": "https://github.com/microsoft/OmniParser",
+      "note": "Parses UI screenshots into structured elements for action grounding. The separate OmniTool integration combines it with a model and a Windows VM. Measure localization and parsing latency separately from actions and verified outcomes; it does not independently verify persisted state. Check code and model licenses separately. No local runtime result."
     },
 
     {
