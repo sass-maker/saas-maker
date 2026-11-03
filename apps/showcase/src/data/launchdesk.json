@@ -312,6 +312,23 @@
           "retrieved": "2026-10-26",
           "website": "https://acidtools.com/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 70,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://acidtools.com/",
+          "submissionUrl": "https://acidtools.com/submit",
+          "description": "AI tools directory for automation, writing, design and productivity",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -1891,6 +1908,23 @@
           "type": "AI Directory",
           "dr": 51,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 55,
+          "link": "nofollow",
+          "pricing": "free",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://aitechviral.com/",
+          "submissionUrl": "https://aitechviral.com/submit",
+          "description": "Directory of trending AI tools and new releases",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Nofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -2029,6 +2063,23 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://aitooltrek.com/submit"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 63,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://aitooltrek.com/",
+          "submissionUrl": "https://aitooltrek.com/submit",
+          "description": "AI tools directory with an overview and usage stats for each tool",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -2131,6 +2182,23 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 68,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://aitools.inc/",
+          "submissionUrl": "https://aitools.inc/submit",
+          "description": "Directory of AI tools for automating everyday work",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -2385,7 +2453,8 @@
       "link": "follow",
       "eligibility": null,
       "flags": [
-        "pricing corrected unknown->paid: submit routes through a Tally form with a required $37 fee"
+        "pricing corrected unknown->paid: submit routes through a Tally form with a required $37 fee",
+        "DR sources disagree"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -2405,6 +2474,23 @@
           "retrieved": "2026-10-02",
           "pricing": "paid",
           "note": "submit routes through a Tally form with a required $37 fee"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 43,
+          "link": "unknown",
+          "pricing": "paid",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://aitools.fyi/",
+          "submissionUrl": "https://aitools.fyi/submit",
+          "description": "Curated AI tools directory for builders and makers",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Paid",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -2852,6 +2938,23 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 58,
+          "link": "follow",
+          "pricing": "paid",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://aiwith.me/",
+          "submissionUrl": "https://aiwith.me/submit/",
+          "description": "AI tools directory sorted by category and use case",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Paid",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -3475,7 +3578,7 @@
       "dr": 54,
       "link": "nofollow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -3506,6 +3609,23 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 57,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://aitoptools.com/",
+          "submissionUrl": "https://aitoptools.com/claim-your-tool/",
+          "description": "AI tools directory updated daily, with user reviews",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -3615,6 +3735,23 @@
           "dr": 56,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 57,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://aixploria.com/",
+          "submissionUrl": "https://www.aixploria.com/en/add-ai/",
+          "description": "AI tools directory with top 10 rankings in each category",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -4127,6 +4264,23 @@
           "approvalWindow": "1–7 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 76,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://alternative.me/",
+          "submissionUrl": "https://alternative.me/how-to/submit-software/",
+          "description": "Software alternatives directory with user reviews and comments",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -4222,6 +4376,23 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 81,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://alternativeto.net/",
+          "submissionUrl": "https://alternativeto.net/software/new/",
+          "description": "Crowd-sourced site where people suggest and vote on alternatives to software",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -4709,6 +4880,23 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://appalist.com/submit"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 56,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://appalist.com/",
+          "submissionUrl": "https://appalist.com/submit",
+          "description": "Directory of AI apps for writing, design, marketing and productivity",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -5512,7 +5700,7 @@
       "dr": 72,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree"],
+      "flags": ["DR sources disagree", "ProductsFarm reports conditional dofollow"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -5567,6 +5755,24 @@
           "approvalWindow": "6+ months",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 73,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://auraplusplus.com/",
+          "submissionUrl": "https://auraplusplus.com/projects/submit",
+          "description": "Launch platform that adds badges, a launch blog post and social posts",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow if you qualify",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows.",
+          "linkCondition": "ProductsFarm reports a conditional dofollow offer; qualifying conditions must be checked on the destination."
         }
       ]
     },
@@ -5702,7 +5908,7 @@
       "dr": 41,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -5715,6 +5921,23 @@
           "dr": 41,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 53,
+          "link": "nofollow",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://awesome.tools/",
+          "submissionUrl": "https://awesome.tools/submit",
+          "description": "Software directory with reviews, prices and limits for each app",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Nofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -6445,6 +6668,23 @@
           "approvalWindow": "1–2 weeks",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 77,
+          "link": "follow",
+          "pricing": "paid",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://betalist.com/",
+          "submissionUrl": "https://betalist.com/submissions/new",
+          "description": "Early-stage startups looking for their first users and beta testers",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Paid",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -7172,6 +7412,23 @@
           "website": "https://buildvoyage.com/products/launch-panda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://buildvoyage.com/products/launch-panda"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 43,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://buildvoyage.com/",
+          "submissionUrl": "https://buildvoyage.com/submit",
+          "description": "Curated micro-SaaS directory showing each product's stack and milestones",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -7249,7 +7506,7 @@
       "dr": 33,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -7262,6 +7519,23 @@
           "dr": 33,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 39,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://builtbyindies.com/",
+          "submissionUrl": "https://builtbyindies.com/submit",
+          "description": "Weekly launch platform for indie hackers, with permanent listings",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -8676,6 +8950,23 @@
           "dr": 45,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 49,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://confettisaas.com/",
+          "submissionUrl": "https://confettisaas.com/submit",
+          "description": "SaaS directory to browse startups by category and pricing",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -9069,6 +9360,23 @@
           "dr": 50,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 52,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://ctrlalt.cc/",
+          "submissionUrl": "https://ctrlalt.cc",
+          "description": "Curated directory of tools for startup tasks, with a launch section",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -9264,6 +9572,23 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": true,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 83,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://dang.ai/",
+          "submissionUrl": "https://dang.ai/pricing?plan=free#plan-free",
+          "description": "AI tools directory with 5,000+ tools in categories like writing, images and video",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -9904,6 +10229,23 @@
           "dr": 63,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 68,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://devhunt.org/",
+          "submissionUrl": "https://devhunt.org/account/tools/new",
+          "description": "Weekly launch platform for developer tools, built in the open by developers",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -10513,19 +10855,48 @@
       "dr": 63,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": ["Domain unreachable"],
+      "flags": ["DR sources disagree", "Submission workflow unverified"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
       "retrieved": "2026-09-18",
       "measured": "2026-09-22",
-      "quarantined": true,
+      "quarantined": false,
       "claims": [
         {
           "source": "launchdb",
           "dr": 63,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 66,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://earlyhunt.com/",
+          "submissionUrl": "https://earlyhunt.com/submit",
+          "description": "Weekly launches for early AI products, voted on by early adopters",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-homepage-availability",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://earlyhunt.com/",
+          "retrieved": "2026-11-04",
+          "note": "Public homepage returned HTTP 200 and identifies the expected launch or tools directory; removed the stale Domain unreachable hold. Submission workflow and historical listing claims remain unverified.",
+          "httpStatus": 200,
+          "finalUrl": "https://earlyhunt.com/",
+          "pageTitle": "EarlyHunt — AI Hunt Platform for Weekly Launches & Early Adopters | EarlyHunt"
         }
       ]
     },
@@ -11268,6 +11639,23 @@
           "dr": 83,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 84,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://fazier.com/",
+          "submissionUrl": "https://fazier.com/submit",
+          "description": "Daily launch board where makers post tech products and collect upvotes",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -11712,6 +12100,23 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": true,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 82,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://findly.tools/",
+          "submissionUrl": "https://findly.tools/submit",
+          "description": "Curated catalog of AI, productivity and SaaS tools for developers and creators",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -11819,6 +12224,23 @@
           "type": "Software Directory",
           "dr": 31,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 45,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://findyoursaas.com/",
+          "submissionUrl": "https://findyoursaas.com",
+          "description": "SaaS directory where you can browse, compare and list software",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -11948,6 +12370,23 @@
           "type": "Launchpad",
           "dr": 57,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 57,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://firsto.co/",
+          "submissionUrl": "https://firsto.co/projects/submit",
+          "description": "Launch platform that caps daily launches so each one gets seen",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -12259,6 +12698,23 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 73,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://foundrlist.com/",
+          "submissionUrl": "https://www.foundrlist.com/submit",
+          "description": "Weekly launch cohorts plus a SaaS directory for founders",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -12572,6 +13028,23 @@
           "approvalWindow": "1–7 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 70,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://futuretools.io/",
+          "submissionUrl": "https://futuretools.io/submit-a-tool",
+          "description": "Matt Wolfe's AI news site and curated AI tool directory",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -12626,6 +13099,23 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 73,
+          "link": "follow",
+          "pricing": "paid",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://futurepedia.io/",
+          "submissionUrl": "https://www.futurepedia.io",
+          "description": "Large AI tools directory with a newsletter, updated daily",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Paid",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -13179,6 +13669,23 @@
           "approvalWindow": "1–2 weeks",
           "badgeRequired": true,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 75,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://goodaitools.com/",
+          "submissionUrl": "https://goodaitools.com/submit",
+          "description": "AI tools directory for productivity and workflow software",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -14198,6 +14705,23 @@
           "retrieved": "2026-10-26",
           "website": "https://huzzler.so/",
           "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 69,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://huzzler.so/",
+          "submissionUrl": "https://huzzler.so/submit-product",
+          "description": "SaaS directory with indexed product pages next to reviews and comparisons",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -14241,7 +14765,7 @@
       "dr": 56,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -14265,6 +14789,23 @@
           "type": "Launchpad",
           "dr": 56,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 51,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://ideakiln.com/",
+          "submissionUrl": "https://ideakiln.com/dashboard/submit-idea",
+          "description": "Build-in-public site to post ideas and MVPs, collect upvotes and track progress",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -14729,7 +15270,7 @@
       "dr": 63,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -14742,6 +15283,23 @@
           "dr": 63,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 66,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://indiehunt.io/",
+          "submissionUrl": "https://indiehunt.io/submit",
+          "description": "Weekly launch competition for AI products and indie SaaS",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -15883,6 +16441,23 @@
           "retrieved": "2026-10-02",
           "pricing": "freemium",
           "note": "free queue exists but guaranteed dofollow link is paid-only"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 56,
+          "link": "follow",
+          "pricing": "free",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://trylaunch.ai/",
+          "submissionUrl": "https://trylaunch.ai",
+          "description": "Daily launches for AI and vibe-coded products, voted on by the community",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -15898,7 +16473,7 @@
       "dr": 72,
       "link": "unknown",
       "eligibility": "Free directory submission via /submit (rolling review); paid Featured membership and Instant Launch add-on; 7+ upvotes + thumbnail unlock full product page.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -15919,6 +16494,23 @@
           "type": "Directory / Startup",
           "pricing": "freemium",
           "note": "young indie AI-tools directory; REST API/MCP for agents; reach claims unverified"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 74,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://tools.launchllama.co/",
+          "submissionUrl": "https://tools.launchllama.co/submit",
+          "description": "Launch board and startup directory from the Launch Llama newsletter",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -16180,13 +16772,13 @@
       "dr": 74,
       "link": "nofollow",
       "eligibility": null,
-      "flags": ["Domain unreachable"],
+      "flags": ["DR sources disagree", "Submission workflow unverified"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
       "retrieved": "2026-09-18",
       "measured": "2026-09-22",
-      "quarantined": true,
+      "quarantined": false,
       "claims": [
         {
           "source": "brandfactory",
@@ -16224,6 +16816,35 @@
           "approvalWindow": "6+ months",
           "badgeRequired": true,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 75,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://launchigniter.com/",
+          "submissionUrl": "https://launchigniter.com/submit",
+          "description": "Launch platform where makers post products and early adopters upvote and review",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-homepage-availability",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://launchigniter.com/",
+          "retrieved": "2026-11-04",
+          "note": "Public homepage returned HTTP 200 and identifies the expected launch or tools directory; removed the stale Domain unreachable hold. Submission workflow and historical listing claims remain unverified.",
+          "httpStatus": 200,
+          "finalUrl": "https://launchigniter.com/",
+          "pageTitle": "LaunchIgniter - Discover and Launch Amazing Products"
         }
       ]
     },
@@ -16239,13 +16860,13 @@
       "dr": 50,
       "link": "follow",
       "eligibility": null,
-      "flags": ["DR sources disagree", "Domain unreachable"],
+      "flags": ["DR sources disagree", "Submission workflow unverified"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
       "retrieved": "2026-09-18",
       "measured": "2026-09-22",
-      "quarantined": true,
+      "quarantined": false,
       "claims": [
         {
           "source": "brandfactory",
@@ -16258,6 +16879,35 @@
           "dr": 53,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 55,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Startup directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://launchingnext.com/",
+          "submissionUrl": "https://www.launchingnext.com/submit/",
+          "description": "Long-running showcase of new startups, with submissions reviewed daily",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-homepage-availability",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.launchingnext.com/",
+          "retrieved": "2026-11-04",
+          "note": "Public homepage returned HTTP 200 and identifies the expected launch or tools directory; removed the stale Domain unreachable hold. Submission workflow and historical listing claims remain unverified.",
+          "httpStatus": 200,
+          "finalUrl": "https://www.launchingnext.com/",
+          "pageTitle": "Launching Next | New startups, startup ideas, great business ideas"
         }
       ]
     },
@@ -16919,13 +17569,13 @@
       "dr": 72,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable"],
+      "flags": ["DR sources disagree", "Submission workflow unverified"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
       "retrieved": "2026-09-18",
       "measured": "2026-09-22",
-      "quarantined": true,
+      "quarantined": false,
       "claims": [
         {
           "source": "brandfactory",
@@ -16946,6 +17596,35 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 67,
+          "link": "follow",
+          "pricing": "paid",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://magicbox.tools/",
+          "submissionUrl": "https://magicbox.tools/submit",
+          "description": "AI tool directory with more than 20,000 tools, updated daily",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Paid",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-homepage-availability",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://magicbox.tools/",
+          "retrieved": "2026-11-04",
+          "note": "Public homepage returned HTTP 200 and identifies the expected launch or tools directory; removed the stale Domain unreachable hold. Submission workflow and historical listing claims remain unverified.",
+          "httpStatus": 200,
+          "finalUrl": "https://magicbox.tools/",
+          "pageTitle": "MagicBox.tools | Discover the best AI tools in 2026GitHubX (Twitter)Bluesky"
         }
       ]
     },
@@ -17540,6 +18219,23 @@
           "dr": 49,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 49,
+          "link": "nofollow",
+          "pricing": "paid",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://microsaasexamples.com/",
+          "submissionUrl": "https://www.microsaasexamples.com/submit",
+          "description": "Catalog of micro SaaS products, each listed with the problem it solves",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Paid",
+          "linkText": "Nofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -17648,6 +18344,23 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://tally.so/r/mYaR6N"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 64,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://microlaunch.net/",
+          "submissionUrl": "https://microlaunch.net/submit",
+          "description": "Launch platform for makers who want early feedback and first sales",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -18155,7 +18868,7 @@
       "dr": 73,
       "link": "follow",
       "eligibility": null,
-      "flags": ["DR sources disagree"],
+      "flags": ["DR sources disagree", "ProductsFarm reports conditional dofollow"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -18199,6 +18912,24 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": true,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 74,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://neeed.directory/",
+          "submissionUrl": "https://neeed.directory/submit",
+          "description": "Curated directory of developer tools, design resources and SaaS products",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow if you qualify",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows.",
+          "linkCondition": "ProductsFarm reports a conditional dofollow offer; qualifying conditions must be checked on the destination."
         }
       ]
     },
@@ -18512,6 +19243,23 @@
           "type": "Launchpad",
           "dr": 57,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 70,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://nxgntools.com/",
+          "submissionUrl": "https://www.nxgntools.com/launching",
+          "description": "AI and SaaS launch platform with a weekly Tool of the Week contest",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -19036,6 +19784,23 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 71,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://open-launch.com/",
+          "submissionUrl": "https://open-launch.com/projects/submit",
+          "description": "Open source launch platform with daily launches and upvotes",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -19154,6 +19919,23 @@
           "dr": 52,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 61,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://openalternative.co/",
+          "submissionUrl": "https://openalternative.co/submit",
+          "description": "Directory of open source alternatives to popular SaaS products",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -19209,7 +19991,11 @@
       "dr": 70,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree", "Submission routes disagree"],
+      "flags": [
+        "DR sources disagree",
+        "Submission routes disagree",
+        "ProductsFarm reports conditional dofollow"
+      ],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -19269,6 +20055,24 @@
           "retrieved": "2026-10-26",
           "website": "https://openhunts.com/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 73,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://openhunts.com/",
+          "submissionUrl": "https://openhunts.com/projects/submit",
+          "description": "Launch platform for tiny startups, with weekly launches and upvotes",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow if you qualify",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows.",
+          "linkCondition": "ProductsFarm reports a conditional dofollow offer; qualifying conditions must be checked on the destination."
         }
       ]
     },
@@ -19346,7 +20150,7 @@
       "dr": 69,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -19371,6 +20175,23 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 68,
+          "link": "unknown",
+          "pricing": "paid",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://opentools.ai/",
+          "submissionUrl": "https://opentools.ai/friends/launch-tool",
+          "description": "Directory of AI tools, models and MCP servers with practical guides",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Paid",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -19610,6 +20431,23 @@
           "retrieved": "2026-10-26",
           "website": "https://peerlist.io/",
           "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 78,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://peerlist.io/",
+          "submissionUrl": "https://peerlist.io/launchpad",
+          "description": "Weekly launch board inside Peerlist, a professional network for builders",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -19881,6 +20719,23 @@
           "pricing": "free",
           "type": "Directory / Launch",
           "submissionUrl": "https://pitchwall.co/signup"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 72,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://pitchwall.co/",
+          "submissionUrl": "https://pitchwall.co/submit",
+          "description": "Daily showcase of new AI products; the old BetaPage site now redirects here",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -20408,6 +21263,23 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 91,
+          "link": "nofollow",
+          "pricing": "free",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://producthunt.com/",
+          "submissionUrl": "https://www.producthunt.com/posts/new",
+          "description": "The best-known daily launch board, where tech products compete for upvotes",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Nofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -20563,7 +21435,7 @@
       "dr": 38,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -20576,6 +21448,23 @@
           "dr": 38,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 47,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://productfame.com/",
+          "submissionUrl": "https://productfame.com/products/submit",
+          "description": "Product launch platform for founders who want visibility and feedback",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -22618,7 +23507,7 @@
       "dr": 35,
       "link": "nofollow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -22636,6 +23525,23 @@
           "source": "playbook-research",
           "retrieved": "2026-09-26",
           "note": "Live launch-tournament platform; free launch + listing; paid directory-submission service separate"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 52,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://rankinpublic.xyz/",
+          "submissionUrl": "https://rankinpublic.xyz/launch",
+          "description": "Weekly launch tournaments where SaaS products compete for votes",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -23086,7 +23992,7 @@
       "dr": 53,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -23105,6 +24011,23 @@
           "dr": 53,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 54,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://saasaitools.com/",
+          "submissionUrl": "https://saasaitools.com/submit",
+          "description": "Directory of generative AI tools grouped by category",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -23475,6 +24398,23 @@
           "retrieved": "2026-10-26",
           "website": "https://saasbison.com/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 59,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://saasbison.com/",
+          "submissionUrl": "https://saasbison.com/submit",
+          "description": "Software directory that gives each listing a permanent page",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -23518,7 +24458,7 @@
       "dr": 64,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -23531,6 +24471,23 @@
           "dr": 64,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 70,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://saascity.io/",
+          "submissionUrl": "https://saascity.io/saascity?submit=1",
+          "description": "SaaS directory drawn as a city map, where listed products appear as buildings",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -23546,7 +24503,7 @@
       "dr": 70,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree", "ProductsFarm reports conditional dofollow"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -23570,6 +24527,24 @@
           "website": "https://saasfame.com/item/launch-panda",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://saasfame.com/item/launch-panda"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 72,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://saasfame.com/",
+          "submissionUrl": "https://saasfame.com/submit",
+          "description": "Curated directory of SaaS products where founders showcase their software",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow if you qualify",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows.",
+          "linkCondition": "ProductsFarm reports a conditional dofollow offer; qualifying conditions must be checked on the destination."
         }
       ]
     },
@@ -23708,6 +24683,23 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 80,
+          "link": "follow",
+          "pricing": "free",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://saashub.com/",
+          "submissionUrl": "https://www.saashub.com/submit",
+          "description": "Software alternatives site that compares products and lists new startups",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -23752,6 +24744,23 @@
           "type": "Launchpad",
           "dr": 49,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 63,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://saashunt.best/",
+          "submissionUrl": "https://saashunt.best/projects/submit",
+          "description": "Daily launches of startups, SaaS and AI tools with community upvotes",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -23853,6 +24862,23 @@
           "type": "Launchpad",
           "dr": 37,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 43,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://saaspa.ge/",
+          "submissionUrl": "https://www.saaspa.ge/submit",
+          "description": "Weekly launch board where SaaS products climb by user votes",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -24184,7 +25210,8 @@
       "link": "nofollow",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
       "flags": [
-        "link corrected unknown->nofollow: feed/archive links are nofollow on every tier; only the product page is dofollow"
+        "link corrected unknown->nofollow: feed/archive links are nofollow on every tier; only the product page is dofollow",
+        "DR sources disagree"
       ],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
@@ -24215,6 +25242,23 @@
           "retrieved": "2026-10-26",
           "website": "https://scrolllaunch.com/",
           "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 73,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://scrolllaunch.com/",
+          "submissionUrl": "https://www.scrolllaunch.com/dashboard/products/new",
+          "description": "Weekly launches for indie makers, with a permanent product page for each",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -24439,6 +25483,23 @@
           "type": "Launchpad",
           "dr": 35,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 59,
+          "link": "follow",
+          "pricing": "free",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://shinylaunch.com/",
+          "submissionUrl": "https://shinylaunch.com/submit",
+          "description": "Weekly launch board with winners and category browsing",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -24482,7 +25543,7 @@
       "dr": 50,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -24505,6 +25566,23 @@
           "retrieved": "2026-10-26",
           "website": "https://shipboost.io/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 52,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://shipboost.io/",
+          "submissionUrl": "https://shipboost.io/submit",
+          "description": "Weekly launch boards and public listings for bootstrapped SaaS",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -24548,7 +25626,7 @@
       "dr": 51,
       "link": "follow",
       "eligibility": null,
-      "flags": ["DR sources disagree"],
+      "flags": ["DR sources disagree", "ProductsFarm reports conditional dofollow"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -24567,6 +25645,24 @@
           "dr": 54,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 53,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://shipybara.com/",
+          "submissionUrl": "https://shipybara.com/projects/submit",
+          "description": "Daily launch board where people upvote new tech products",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow if you qualify",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows.",
+          "linkCondition": "ProductsFarm reports a conditional dofollow offer; qualifying conditions must be checked on the destination."
         }
       ]
     },
@@ -24685,6 +25781,23 @@
           "retrieved": "2026-10-02",
           "link": "nofollow",
           "note": "free listing stays nofollow until a reciprocal link/badge is detected"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 71,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://showmysites.com/",
+          "submissionUrl": "https://www.showmysites.com/submit/",
+          "description": "Website and product directory with a launch page for each listing",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -25415,7 +26528,7 @@
       "dr": 74,
       "link": "unknown",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -25428,6 +26541,23 @@
           "dr": 74,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 76,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://smollaunch.com/",
+          "submissionUrl": "https://smollaunch.com/dashboard/products/new",
+          "description": "Weekly launch platform for indie makers, with votes and maker feedback",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -25796,7 +26926,7 @@
       "dr": 46,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -25809,6 +26939,23 @@
           "dr": 46,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 41,
+          "link": "unknown",
+          "pricing": "paid",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://solopush.com/",
+          "submissionUrl": "https://solopush.com",
+          "description": "Launch platform for indie makers and solo founders",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Paid",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -25865,6 +27012,23 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 93,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://sourceforge.net/",
+          "submissionUrl": "https://sourceforge.net/software/vendors/",
+          "description": "Large software catalog for open source projects and business software listings",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -26328,6 +27492,23 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 78,
+          "link": "follow",
+          "pricing": "free",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://stackshare.io/",
+          "submissionUrl": "https://stackshare.io/tools/new",
+          "description": "Developer site where companies share their tech stacks and compare tools",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -26830,6 +28011,23 @@
             "reportedSignupsInSummary": 1
           },
           "note": "Self-reported case study. Last-click analytics and signup answers measure different things; the article contains attribution differences. These are not our measurements or expected results for another product."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 85,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Startup directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://startupfa.me/",
+          "submissionUrl": "https://startupfa.me/submit",
+          "description": "Directory of trending startups and products, refreshed daily",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -26896,6 +28094,23 @@
           "approvalWindow": "1–2 weeks",
           "badgeRequired": true,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 74,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Startup directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://startupfa.st/",
+          "submissionUrl": "https://www.startupfa.st/submit",
+          "description": "Startup directory with community rankings and a permanent product page",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -27130,6 +28345,23 @@
           "dr": 40,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 40,
+          "link": "follow",
+          "pricing": "paid",
+          "type": "Startup directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://startuplist.ing/",
+          "submissionUrl": "https://startuplist.ing/products/new",
+          "description": "Listing site for SaaS tools and side projects from indie makers",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Paid",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -27145,7 +28377,7 @@
       "dr": 65,
       "link": "nofollow",
       "eligibility": "Social login (Google/FB/LinkedIn/X); URL validated before form; ownership verification (HTML file/tweet/domain email); free queue ~80+ days, $25-49 for 24h approval.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -27166,6 +28398,23 @@
           "type": "Directory / Startup",
           "pricing": "freemium",
           "note": "bot check on first visit; state/region required & public"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 62,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "Startup directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://startupranking.com/",
+          "submissionUrl": "https://www.startupranking.com",
+          "description": "Global startup database ranked by web and social presence",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -27340,6 +28589,23 @@
           "approvalWindow": "1–7 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 66,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "Startup directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://startupstash.com/",
+          "submissionUrl": "https://startupstash.com/add-listing/",
+          "description": "Long-running curated directory of tools and resources for startups",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -27592,6 +28858,23 @@
           "retrieved": "2026-10-26",
           "website": "https://startupbase.io/",
           "note": "Rendered public card; rating and link type are source claims, not independent measurements."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 75,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://startupbase.io/",
+          "submissionUrl": "https://startupbase.io/launch",
+          "description": "Daily and weekly launch boards for new startups and products",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -27852,7 +29135,7 @@
       "dr": 56,
       "link": "nofollow",
       "eligibility": "Free listing (no card); weekly Monday batches; permanent product page; free dofollow backlink only for weekly Top-3 finishers; paid plans guarantee placement/dofollow.",
-      "flags": [],
+      "flags": ["DR sources disagree", "ProductsFarm reports conditional dofollow"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -27873,6 +29156,24 @@
           "type": "Directory / Launch",
           "pricing": "freemium",
           "note": "weekly launch platform; spotlight $29/30d; ads from $59/30d"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 53,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://startupslab.site/",
+          "submissionUrl": "https://startupslab.site/submit-product",
+          "description": "Weekly Monday launches voted on by founders; the top three earn a backlink",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow if you qualify",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows.",
+          "linkCondition": "ProductsFarm reports a conditional dofollow offer; qualifying conditions must be checked on the destination."
         }
       ]
     },
@@ -28018,7 +29319,7 @@
       "dr": 33,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -28036,6 +29337,23 @@
           "source": "playbook-research",
           "retrieved": "2026-09-26",
           "note": "Paid-only directory — $49 one-off, listed in 48h"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 48,
+          "link": "follow",
+          "pricing": "paid",
+          "type": "Startup directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://startups.fm/",
+          "submissionUrl": "https://startups.fm/submit",
+          "description": "Hand-picked startup database with funding rounds and open roles",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Paid",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -28163,7 +29481,7 @@
       "dr": 53,
       "link": "follow",
       "eligibility": null,
-      "flags": ["DR sources disagree"],
+      "flags": ["DR sources disagree", "ProductsFarm reports conditional dofollow"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -28190,6 +29508,24 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://startuptrusted.com/submit"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 62,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Startup directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://startuptrusted.com/",
+          "submissionUrl": "https://startuptrusted.com/submit",
+          "description": "Database of verified startups, browsable by category",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow if you qualify",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows.",
+          "linkCondition": "ProductsFarm reports a conditional dofollow offer; qualifying conditions must be checked on the destination."
         }
       ]
     },
@@ -28739,6 +30075,23 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 76,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://submitaitools.org/",
+          "submissionUrl": "https://submitaitools.org/submit-your-ai-tool/",
+          "description": "AI tools directory built around submissions from AI tool makers",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -28778,6 +30131,23 @@
           "type": "Startup Directory",
           "dr": 30,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 47,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://submithunt.com/",
+          "submissionUrl": "https://www.submithunt.com/submit",
+          "description": "Launch directory with a free queued slot or a paid instant launch",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -28860,7 +30230,7 @@
       "dr": 7,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -28883,6 +30253,23 @@
           "retrieved": "2026-10-26",
           "website": "https://sumodir.com/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 57,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://sumodir.com/",
+          "submissionUrl": "https://sumodir.com/submit",
+          "description": "Directory of SaaS tools, apps and startups",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -28938,6 +30325,23 @@
           "website": "https://www.superlaun.ch/products/2192",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type.",
           "exampleUrl": "https://www.superlaun.ch/products/2192"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 63,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://superlaun.ch/",
+          "submissionUrl": "https://www.superlaun.ch",
+          "description": "Launch platform that keeps each product on its front page for seven days",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -29240,6 +30644,23 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://www.techdirectory.io/get-listed"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 62,
+          "link": "follow",
+          "pricing": "free",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://techdirectory.io/",
+          "submissionUrl": "https://www.techdirectory.io/get-listed",
+          "description": "Online directory of technology companies and software products",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -30757,7 +32178,7 @@
       "dr": 77,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["Domain unreachable", "DR sources disagree"],
+      "flags": ["DR sources disagree", "Homepage verification blocked (HTTP 403)"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -30796,6 +32217,33 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 78,
+          "link": "unknown",
+          "pricing": "paid",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://theresanaiforthat.com/",
+          "submissionUrl": "https://theresanaiforthat.com/submit/",
+          "description": "One of the largest AI tool databases, organized by the task each tool does",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Paid",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-homepage-availability",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://theresanaiforthat.com/",
+          "retrieved": "2026-11-04",
+          "note": "Official homepage returned HTTP 403. Kept quarantined; no bypass or further retry attempted.",
+          "httpStatus": 403
         }
       ]
     },
@@ -30867,13 +32315,13 @@
       "dr": 50,
       "link": "nofollow",
       "eligibility": null,
-      "flags": ["DR sources disagree", "Domain unreachable"],
+      "flags": ["DR sources disagree", "Submission workflow unverified"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
       "retrieved": "2026-09-18",
       "measured": "2026-09-22",
-      "quarantined": true,
+      "quarantined": false,
       "claims": [
         {
           "source": "brandfactory",
@@ -30914,6 +32362,35 @@
             "reportedSignupsInSummary": 0
           },
           "note": "Self-reported case study. Last-click analytics and signup answers measure different things; the article contains attribution differences. These are not our measurements or expected results for another product."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 71,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://tinystartups.com/",
+          "submissionUrl": "https://www.tinystartups.com/submit",
+          "description": "Pay-what-you-want launch board, where higher payments rank higher",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-homepage-availability",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://tinystartups.com/",
+          "retrieved": "2026-11-04",
+          "note": "Public homepage returned HTTP 200 and identifies the expected launch or tools directory; removed the stale Domain unreachable hold. Submission workflow and historical listing claims remain unverified.",
+          "httpStatus": 200,
+          "finalUrl": "https://www.tinystartups.com/",
+          "pageTitle": "The #1 Startup Launch Platform & Product Hunt AlternativeRevenue verified by a payment provider"
         }
       ]
     },
@@ -30929,13 +32406,17 @@
       "dr": 73,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree", "Domain unreachable"],
+      "flags": [
+        "DR sources disagree",
+        "Submission workflow unverified",
+        "Free dofollow is conditional on winner badge"
+      ],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
       "retrieved": "2026-09-18",
       "measured": "2026-09-22",
-      "quarantined": true,
+      "quarantined": false,
       "claims": [
         {
           "source": "brandfactory",
@@ -30965,6 +32446,45 @@
           "type": "Launchpad",
           "dr": 71,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 74,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://tinylaunch.com/",
+          "submissionUrl": "https://www.tinylaunch.com/submit",
+          "description": "Launch platform for small products, with free and premium launch slots",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-homepage-availability",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.tinylaunch.com/",
+          "retrieved": "2026-11-04",
+          "note": "Public homepage returned HTTP 200 and identifies the expected launch or tools directory; removed the stale Domain unreachable hold. Submission workflow and historical listing claims remain unverified.",
+          "httpStatus": 200,
+          "finalUrl": "https://www.tinylaunch.com/",
+          "pageTitle": "TinyLaunch - Product Launch Platform"
+        },
+        {
+          "source": "official-public-page",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.tinylaunch.com/",
+          "retrieved": "2026-11-04",
+          "linkCondition": "Homepage says top-three launches receive a badge; dofollow requires embedding the badge with a dofollow link to TinyLaunch on the product landing page.",
+          "note": "Public homepage requirement; not a verified submission or guarantee of winning."
         }
       ]
     },
@@ -31050,13 +32570,17 @@
       "dr": 35,
       "link": "follow",
       "eligibility": null,
-      "flags": ["Domain unreachable", "DR sources disagree"],
+      "flags": [
+        "DR sources disagree",
+        "ProductsFarm reports conditional dofollow",
+        "Submission workflow unverified"
+      ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
       "retrieved": "2026-09-18",
       "measured": "2026-09-22",
-      "quarantined": true,
+      "quarantined": false,
       "claims": [
         {
           "source": "brandfactory",
@@ -31074,6 +32598,36 @@
           "type": "Launchpad",
           "dr": 39,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 45,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://tinylaunchpad.com/",
+          "submissionUrl": "https://tinylaunchpad.com/projects/submit",
+          "description": "Weekly launch list for new tools and apps, refreshed every Monday",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow if you qualify",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows.",
+          "linkCondition": "ProductsFarm reports a conditional dofollow offer; qualifying conditions must be checked on the destination."
+        },
+        {
+          "source": "official-homepage-availability",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://tinylaunchpad.com/",
+          "retrieved": "2026-11-04",
+          "note": "Public homepage returned HTTP 200 and identifies the expected launch or tools directory; removed the stale Domain unreachable hold. Submission workflow and historical listing claims remain unverified.",
+          "httpStatus": 200,
+          "finalUrl": "https://tinylaunchpad.com/",
+          "pageTitle": "TinyLaunchpad - Discover the Best Tech Products"
         }
       ]
     },
@@ -31386,13 +32940,13 @@
       "dr": 45,
       "link": "follow",
       "eligibility": null,
-      "flags": ["DR sources disagree", "Domain unreachable"],
+      "flags": ["DR sources disagree", "Submission workflow unverified"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
       "retrieved": "2026-09-18",
       "measured": "2026-09-22",
-      "quarantined": true,
+      "quarantined": false,
       "claims": [
         {
           "source": "brandfactory",
@@ -31434,6 +32988,35 @@
           "retrieved": "2026-10-26",
           "website": "https://toolfio.com/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 63,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://toolfio.com/",
+          "submissionUrl": "https://toolfio.com/submit",
+          "description": "Directory of SaaS and AI tools with reviews and comparisons for builders",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-homepage-availability",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://toolfio.com/",
+          "retrieved": "2026-11-04",
+          "note": "Public homepage returned HTTP 200 and identifies the expected launch or tools directory; removed the stale Domain unreachable hold. Submission workflow and historical listing claims remain unverified.",
+          "httpStatus": 200,
+          "finalUrl": "https://toolfio.com/",
+          "pageTitle": "Best SaaS & AI Tools Directory for Builders | Toolfio"
         }
       ]
     },
@@ -31533,7 +33116,11 @@
       "dr": 72,
       "link": "nofollow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree", "Link sources disagree", "Domain unreachable"],
+      "flags": [
+        "DR sources disagree",
+        "Link sources disagree",
+        "Homepage verification blocked (HTTP 403)"
+      ],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -31578,6 +33165,33 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 72,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://toolify.ai/",
+          "submissionUrl": "https://www.toolify.ai/submit",
+          "description": "Very large AI tools database with traffic and revenue rankings",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-homepage-availability",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.toolify.ai/",
+          "retrieved": "2026-11-04",
+          "note": "Official homepage returned HTTP 403. Kept quarantined; no bypass or further retry attempted.",
+          "httpStatus": 403
         }
       ]
     },
@@ -31689,7 +33303,11 @@
       "dr": 78,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree", "Link sources disagree", "Domain unreachable"],
+      "flags": [
+        "DR sources disagree",
+        "Link sources disagree",
+        "Homepage verification blocked (HTTP 429)"
+      ],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -31734,6 +33352,33 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 79,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://toolpilot.ai/",
+          "submissionUrl": "https://www.toolpilot.ai/pages/submit-your-ai-tool",
+          "description": "AI tools directory with reviews, ratings and category pages",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-homepage-availability",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://www.toolpilot.ai/",
+          "retrieved": "2026-11-04",
+          "note": "Official homepage returned HTTP 429. Kept quarantined; no bypass or further retry attempted.",
+          "httpStatus": 429
         }
       ]
     },
@@ -31929,13 +33574,13 @@
       "dr": 67,
       "link": "follow",
       "eligibility": null,
-      "flags": ["DR sources disagree", "Domain unreachable"],
+      "flags": ["DR sources disagree", "Submission workflow unverified"],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
       "retrieved": "2026-09-18",
       "measured": "2026-09-22",
-      "quarantined": true,
+      "quarantined": false,
       "claims": [
         {
           "source": "brandfactory",
@@ -31962,6 +33607,35 @@
           "approvalWindow": "1–3 days",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 63,
+          "link": "follow",
+          "pricing": "paid",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://toolsfine.com/",
+          "submissionUrl": "https://toolsfine.com/submit-ai-tools-or-product",
+          "description": "AI tools directory with verified pricing facts and task guides",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Paid",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-homepage-availability",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://toolsfine.com/",
+          "retrieved": "2026-11-04",
+          "note": "Public homepage returned HTTP 200 and identifies the expected launch or tools directory; removed the stale Domain unreachable hold. Submission workflow and historical listing claims remain unverified.",
+          "httpStatus": 200,
+          "finalUrl": "https://toolsfine.com/",
+          "pageTitle": "Toolsfine — AI Tools, Services and Industry Handbooks, Verified"
         }
       ]
     },
@@ -32129,7 +33803,7 @@
       "dr": 65,
       "link": "nofollow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["Domain unreachable"],
+      "flags": ["Homepage verification blocked (HTTP 403)"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -32154,6 +33828,33 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 65,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "AI directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://topai.tools/",
+          "submissionUrl": "https://topai.tools/submit",
+          "description": "AI tools directory with launch posts and category feeds",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-homepage-availability",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://topai.tools/",
+          "retrieved": "2026-11-04",
+          "note": "Official homepage returned HTTP 403. Kept quarantined; no bypass or further retry attempted.",
+          "httpStatus": 403
         }
       ]
     },
@@ -32622,6 +34323,23 @@
             "reportedSignupsInSummary": 1
           },
           "note": "Self-reported case study. Last-click analytics and signup answers measure different things; the article contains attribution differences. These are not our measurements or expected results for another product."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 72,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Startup directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://trustmrr.com/",
+          "submissionUrl": "https://trustmrr.com",
+          "description": "Startup database and marketplace built on Stripe-verified revenue",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -32791,6 +34509,23 @@
           "approvalWindow": "1–2 weeks",
           "badgeRequired": true,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 81,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://turbo0.com/",
+          "submissionUrl": "https://turbo0.com/submit",
+          "description": "Directory of software products made for content creators",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -32835,6 +34570,23 @@
           "retrieved": "2026-10-26",
           "website": "https://twelve.tools/",
           "note": "Public launched-on footer badge. This records a source-reported placement, not verified submission terms, pricing or link type."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 83,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://twelve.tools/",
+          "submissionUrl": "https://twelve.tools/submit-your-tool",
+          "description": "Puts twelve hand-picked tools on its front page every day",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -32906,7 +34658,12 @@
       "dr": 75,
       "link": "nofollow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["DR sources disagree", "Example link observed nofollow", "Link sources disagree"],
+      "flags": [
+        "DR sources disagree",
+        "Example link observed nofollow",
+        "Link sources disagree",
+        "ProductsFarm reports conditional dofollow"
+      ],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -32972,6 +34729,24 @@
           "retrieved": "2026-10-26",
           "website": "https://www.uneed.best/",
           "note": "Mentioned as a launch alternative in the dated public guide; verify present eligibility and submission terms."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 76,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://uneed.best/",
+          "submissionUrl": "https://www.uneed.best/submit-a-tool",
+          "description": "Daily launch platform where makers launch tools and the community votes",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow if you qualify",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows.",
+          "linkCondition": "ProductsFarm reports a conditional dofollow offer; qualifying conditions must be checked on the destination."
         }
       ]
     },
@@ -33042,6 +34817,23 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://unitelist.com/submit"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 60,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://unitelist.com/",
+          "submissionUrl": "https://unitelist.com/submit",
+          "description": "Software directory focused on team and shared-workflow tools",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -33409,6 +35201,23 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://versily.com/signup"
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 69,
+          "link": "unknown",
+          "pricing": "free",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://versily.com/",
+          "submissionUrl": "https://versily.com/products/submit-by-hand",
+          "description": "Product launch site that pairs each product with its own community",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -33721,6 +35530,23 @@
           "type": "Software Directory",
           "dr": 44,
           "note": "Reported on the public directory card. Rating provider and measurement date unspecified; website link is not a verified submission route."
+        },
+        {
+          "source": "productsfarm-directories",
+          "dr": 55,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://weliketools.com/",
+          "submissionUrl": "https://weliketools.com/submit",
+          "description": "Directory of recommended productivity, marketing, design and dev software",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Link type unknown",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
         }
       ]
     },
@@ -42522,6 +44348,354 @@
           "retrieved": "2026-10-26",
           "website": "https://www.reddit.com/r/EntrepreneurRideAlong/",
           "note": "Source recommends this community in its own case study. Check current sidebar rules, self-promotion restrictions, account requirements and designated threads before posting."
+        }
+      ]
+    },
+    {
+      "name": "PeerPush",
+      "domain": "peerpush.com",
+      "website": "https://peerpush.com/",
+      "submissionUrl": "https://peerpush.com/submit",
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launch platform",
+      "pricing": "freemium",
+      "dr": 78,
+      "link": "follow",
+      "eligibility": "A free account is required. Free listings wait for a publishing slot; paid plans can publish immediately or on a selected date. Homepage lists Standard Launch at $39, seven-day promotion at $89 and thirty-day promotion at $229. The dedicated pricing page returned HTTP 403; current terms and checkout remain unverified.",
+      "flags": ["Submission workflow unverified", "Pricing page verification blocked (HTTP 403)"],
+      "route": "source-reported",
+      "provider": "Ahrefs (source-reported by ProductsFarm; not independently verified)",
+      "sourceUrl": "https://productsfarm.com/directories",
+      "retrieved": "2026-11-04",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "productsfarm-directories",
+          "dr": 78,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://peerpush.com/",
+          "submissionUrl": "https://peerpush.com/submit",
+          "description": "Product listings structured so both people and AI assistants can read them",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-public-page",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://peerpush.com/",
+          "retrieved": "2026-11-04",
+          "website": "https://peerpush.com/",
+          "note": "A free account is required. Free listings wait for a publishing slot; paid plans can publish immediately or on a selected date. Homepage lists Standard Launch at $39, seven-day promotion at $89 and thirty-day promotion at $229. The dedicated pricing page returned HTTP 403; current terms and checkout remain unverified.",
+          "plans": [
+            {
+              "name": "Standard Launch",
+              "amount": 39,
+              "currency": "USD"
+            },
+            {
+              "name": "Launch + 7d Promotion",
+              "amount": 89,
+              "currency": "USD"
+            },
+            {
+              "name": "Launch + 30d Promotion",
+              "amount": 229,
+              "currency": "USD"
+            }
+          ],
+          "accountRequired": true,
+          "freeRoute": "Publishing queue; wait time not confirmed."
+        }
+      ]
+    },
+    {
+      "name": "The Launch Directory",
+      "domain": "thelaunchdirectory.com",
+      "website": "https://thelaunchdirectory.com/",
+      "submissionUrl": "https://thelaunchdirectory.com/submit",
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launch platform",
+      "pricing": "freemium",
+      "dr": 69,
+      "link": "follow",
+      "eligibility": "Weekly startup listings with permanent dated pages. Homepage describes free and paid listings and a $19 front-page week. Its dedicated pricing page returned HTTP 403; submission requirements and free-tier backlink conditions remain unverified.",
+      "flags": [
+        "Submission workflow unverified",
+        "Pricing page verification blocked (HTTP 403)",
+        "DR sources disagree"
+      ],
+      "route": "source-reported",
+      "provider": "Ahrefs (source-reported by ProductsFarm; not independently verified)",
+      "sourceUrl": "https://productsfarm.com/directories",
+      "retrieved": "2026-11-04",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "productsfarm-directories",
+          "dr": 69,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://thelaunchdirectory.com/",
+          "submissionUrl": "https://thelaunchdirectory.com/submit",
+          "description": "Weekly launch log that gives every startup a permanent, dated page",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-public-page",
+          "dr": 71,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://thelaunchdirectory.com/",
+          "retrieved": "2026-11-04",
+          "website": "https://thelaunchdirectory.com/",
+          "note": "Weekly startup listings with permanent dated pages. Homepage describes free and paid listings and a $19 front-page week. Its dedicated pricing page returned HTTP 403; submission requirements and free-tier backlink conditions remain unverified.",
+          "drProvider": "Ahrefs (self-reported)",
+          "drCheckedDate": "2026-11-02",
+          "plans": [
+            {
+              "name": "Front page for one week",
+              "amount": 19,
+              "currency": "USD"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Noonlaunch",
+      "domain": "noonlaunch.com",
+      "website": "https://noonlaunch.com/",
+      "submissionUrl": "https://noonlaunch.com/submit",
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launch platform",
+      "pricing": "freemium",
+      "dr": 57,
+      "link": "unknown",
+      "eligibility": "Free Standard launches wait in a queue and must keep the Noonlaunch badge on their site for a dofollow link; removing the badge changes the link to nofollow. Premium is $11 once per product, skips the queue and needs no badge. Spotlight is $49 once and includes a review. Only free Standard launches can win the weekly competition.",
+      "flags": ["Submission workflow unverified", "Free dofollow requires an ongoing badge"],
+      "route": "source-reported",
+      "provider": "Ahrefs (source-reported by ProductsFarm; not independently verified)",
+      "sourceUrl": "https://productsfarm.com/directories",
+      "retrieved": "2026-11-04",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "productsfarm-directories",
+          "dr": 57,
+          "link": "follow",
+          "pricing": "freemium",
+          "type": "Launch platform",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://noonlaunch.com/",
+          "submissionUrl": "https://noonlaunch.com/submit",
+          "description": "Weekly vote with a permanent product page; top three free launches win a badge",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow link",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "official-public-page",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://noonlaunch.com/pricing",
+          "retrieved": "2026-11-04",
+          "website": "https://noonlaunch.com/",
+          "note": "Free Standard launches wait in a queue and must keep the Noonlaunch badge on their site for a dofollow link; removing the badge changes the link to nofollow. Premium is $11 once per product, skips the queue and needs no badge. Spotlight is $49 once and includes a review. Only free Standard launches can win the weekly competition.",
+          "linkCondition": "Standard: dofollow only while the required badge remains live. Premium and Spotlight: no badge required.",
+          "plans": [
+            {
+              "name": "Standard",
+              "amount": 0,
+              "currency": "USD",
+              "badgeRequired": true
+            },
+            {
+              "name": "Premium",
+              "amount": 11,
+              "currency": "USD",
+              "billing": "once per product",
+              "badgeRequired": false
+            },
+            {
+              "name": "Spotlight",
+              "amount": 49,
+              "currency": "USD",
+              "billing": "once per product",
+              "badgeRequired": false
+            }
+          ],
+          "freeRoute": "Queue with required ongoing badge.",
+          "competitionEligibility": "Weekly winners are selected from Standard launches only."
+        },
+        {
+          "source": "official-public-page",
+          "dr": 59,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://noonlaunch.com/",
+          "retrieved": "2026-11-04",
+          "website": "https://noonlaunch.com/",
+          "drProvider": "Ahrefs (self-reported)",
+          "note": "Homepage reports DR 59; not independently measured. Free backlink remains conditional on an ongoing badge."
+        }
+      ]
+    },
+    {
+      "name": "CurlShip",
+      "domain": "curlship.com",
+      "website": "https://curlship.com/",
+      "submissionUrl": "https://curlship.com",
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "SaaS directory",
+      "pricing": "freemium",
+      "dr": 49,
+      "link": "unknown",
+      "eligibility": "Product directory with a public form and documented curl, API and MCP submission options. Homepage lists a free tier, Bronze at $1/month, Silver at $2/month, Gold at $3/month and Platinum at $49/year. ProductsFarm reports conditional dofollow; qualifying terms are unverified because the dedicated pricing page returned HTTP 403.",
+      "flags": [
+        "Submission workflow unverified",
+        "Dofollow is conditional",
+        "Pricing page verification blocked (HTTP 403)",
+        "DR sources disagree"
+      ],
+      "route": "source-reported",
+      "provider": "Ahrefs (source-reported by ProductsFarm; not independently verified)",
+      "sourceUrl": "https://productsfarm.com/directories",
+      "retrieved": "2026-11-04",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "productsfarm-directories",
+          "dr": 49,
+          "link": "unknown",
+          "pricing": "freemium",
+          "type": "SaaS directory",
+          "sourceUrl": "https://productsfarm.com/directories",
+          "retrieved": "2026-11-04",
+          "website": "https://curlship.com/",
+          "submissionUrl": "https://curlship.com",
+          "description": "Directory you can submit to with one curl command, an API or MCP",
+          "drProvider": "Ahrefs (reported by ProductsFarm; not independently verified)",
+          "drCheckedPeriod": "2026-10",
+          "pricingText": "Free, paid upgrades",
+          "linkText": "Dofollow if you qualify",
+          "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows.",
+          "linkCondition": "ProductsFarm reports a conditional dofollow offer; qualifying conditions must be checked on the destination."
+        },
+        {
+          "source": "official-public-page",
+          "dr": 51,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://curlship.com/",
+          "retrieved": "2026-11-04",
+          "website": "https://curlship.com/",
+          "note": "Product directory with a public form and documented curl, API and MCP submission options. Homepage lists a free tier, Bronze at $1/month, Silver at $2/month, Gold at $3/month and Platinum at $49/year. ProductsFarm reports conditional dofollow; qualifying terms are unverified because the dedicated pricing page returned HTTP 403.",
+          "drProvider": "Ahrefs (self-reported)",
+          "plans": [
+            {
+              "name": "Free",
+              "amount": 0,
+              "currency": "USD"
+            },
+            {
+              "name": "Bronze",
+              "amount": 1,
+              "currency": "USD",
+              "billing": "monthly"
+            },
+            {
+              "name": "Silver",
+              "amount": 2,
+              "currency": "USD",
+              "billing": "monthly"
+            },
+            {
+              "name": "Gold",
+              "amount": 3,
+              "currency": "USD",
+              "billing": "monthly"
+            },
+            {
+              "name": "Platinum",
+              "amount": 49,
+              "currency": "USD",
+              "billing": "yearly"
+            }
+          ],
+          "submissionMethods": ["Public form", "curl", "API", "MCP"]
+        }
+      ]
+    },
+    {
+      "name": "ProductsFarm",
+      "domain": "productsfarm.com",
+      "website": "https://productsfarm.com/",
+      "submissionUrl": "https://productsfarm.com/submit",
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launch platform",
+      "pricing": "freemium",
+      "dr": null,
+      "link": "unknown",
+      "eligibility": "Product owners or team members may submit. A free listing uses nofollow. Premium is $10 once per listing; dofollow is subject to review and the payment is refunded if the listing or dofollow link is rejected. Accounts require age 18 or older. Listings are reviewed; traffic, votes and rankings are not guaranteed.",
+      "flags": [
+        "Submission workflow unverified",
+        "Free links are nofollow; paid dofollow is conditional"
+      ],
+      "route": "source-reported",
+      "provider": null,
+      "sourceUrl": "https://productsfarm.com/terms",
+      "retrieved": "2026-11-04",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "official-public-terms",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://productsfarm.com/terms",
+          "retrieved": "2026-11-04",
+          "website": "https://productsfarm.com/",
+          "submissionUrl": "https://productsfarm.com/submit",
+          "freeLink": "nofollow",
+          "premiumLink": "conditional",
+          "premiumPrice": {
+            "amount": 10,
+            "currency": "USD",
+            "billing": "once per listing"
+          },
+          "minimumAccountAge": 18,
+          "note": "Product owners or team members may submit. A free listing uses nofollow. Premium is $10 once per listing; dofollow is subject to review and the payment is refunded if the listing or dofollow link is rejected. Accounts require age 18 or older. Listings are reviewed; traffic, votes and rankings are not guaranteed.",
+          "updated": "2026-10-30"
         }
       ]
     }
