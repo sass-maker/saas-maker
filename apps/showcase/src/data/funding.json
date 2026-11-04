@@ -3,7 +3,7 @@
   "source": "Funding & Accelerators workspace (imported from Notion)",
   "workspaceRebuilt": "2026-08-02",
   "collection": "01 — Master Opportunity Directory",
-  "count": 306,
+  "count": 307,
   "schema": {
     ":>?A": {
       "name": "Format",
@@ -13353,6 +13353,50 @@
         "y@kM": "Confirm whether independent individuals or external companies are eligible; onboarding, training and project approval may be required.",
         "XgJ?": "Review https://phxforge.com/ and confirm the exact location, current operation, external access, facilities and costs before planning work.",
         "o]ky": "Portfolio assessment: physical research or making resource; retain for hardware, biotechnology or scientific projects rather than treat it as general startup funding."
+      }
+    },
+    {
+      "id": "metadao",
+      "slug": "metadao",
+      "name": "MetaDAO",
+      "fields": {
+        "title": "MetaDAO",
+        "zAda": "MetaDAO",
+        "R~Od": "Investor Platform",
+        "[SLF": "https://metadao.fi/apply",
+        "IdvA": "Monitor",
+        "ENu;": "Monitor",
+        "Ix?y": "Possible now",
+        "q;Tr": "Unknown",
+        "B?aW": "Not started",
+        "G__U": "Official current",
+        "|od{": "Active",
+        "eMXL": "Open now",
+        "RtBH": "2026-11-05",
+        "GAIe": true,
+        "UFSg": ["Idea", "MVP", "Traction", "Revenue"],
+        "NfWm": "Yes",
+        "CffK": "Unclear",
+        "[aVx": "Unclear",
+        "bQLN": ["Consumer"],
+        "p`?l": ["Unknown"],
+        ":>?A": "Unknown",
+        "`HOv": "Conditional investment",
+        "|BVD": "Public fundraising; the amount sought is proposed by the applicant. No fixed investment amount or guaranteed funding is published in the checked sources.",
+        ";EPi": "Terms are set per company. The founder letter describes a higher ownership target than a typical pre-seed or seed raise; it does not state a fixed percentage.",
+        "FvCo": "Community ownership and market-driven governance differ from conventional equity fundraising. Official documentation describes governance over IP and treasury funds; the founder letter says treasury funds can be clawed back under specified circumstances.",
+        "C]`>": "Not specified in the checked application or founder letter; confirm directly.",
+        "]FZf": "Unclear",
+        "?y\\w": "Unclear",
+        "\\sKj": "Unclear",
+        ">[Ur": "Unclear",
+        "wz<z": ["Fundraising", "Community"],
+        "wKC}": "Medium",
+        "y@kM": "Founder background and team (a solo-founder option is available); product, audience and competitors; stage and traction; prior fundraising and amount sought; why MetaDAO; at least one deck, one-pager or memo link; email or Telegram contact. Pitch video is optional.",
+        "YcFq": "The official application is accessible. No deadline or review timetable is stated on the checked form; acceptance and a successful raise are not guaranteed.",
+        "o]ky": "Portfolio assessment: worth evaluating for a consumer product willing to build publicly with community ownership. Monitor until ownership, treasury, eligibility and commitment terms fit the chosen product; this is a fundraising platform, not a standard accelerator or grant.",
+        "XgJ?": "Review the company-specific ownership and treasury terms, confirm eligibility and commitment requirements, then prepare the application materials if the structure fits.",
+        "nVod": "Owner-supplied application https://metadao.fi/apply, added 2026-11-05. Official sources checked: https://metadao.fi/apply, https://metadao.fi/founders and https://metadao.fi/docs."
       }
     }
   ]
