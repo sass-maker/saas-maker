@@ -44698,6 +44698,62 @@
           "updated": "2026-10-30"
         }
       ]
+    },
+    {
+      "name": "LaunchBuck",
+      "domain": "launchbuck.com",
+      "website": "https://launchbuck.com/",
+      "submissionUrl": "https://launchbuck.com/submit",
+      "exampleUrl": null,
+      "category": "Launch",
+      "type": "Launch platform",
+      "pricing": "freemium",
+      "dr": null,
+      "link": "unknown",
+      "eligibility": "AI tools and SaaS products. Submitters must be affiliated with the product or have permission. Sign-in is required; the handbook requests a tagline, description, logo, screenshot and 1-3 categories. Free listings require badge installation and review; paid promotion is optional.",
+      "flags": [
+        "Login required",
+        "Free listing requires badge installation",
+        "Dofollow is conditional on badge verification; not measured",
+        "Authenticated submission workflow unverified"
+      ],
+      "route": "source-reported",
+      "provider": null,
+      "sourceUrl": "https://launchbuck.com/handbook",
+      "retrieved": "2026-11-05",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "official-public-handbook",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://launchbuck.com/handbook",
+          "retrieved": "2026-11-05",
+          "website": "https://launchbuck.com/",
+          "submissionUrl": "https://launchbuck.com/submit",
+          "note": "The handbook describes required product text, logo and screenshot, category selection, moderation and launch scheduling. It says outbound links begin nofollow and can become dofollow after a correctly linked badge is installed and verified; this has not been measured."
+        },
+        {
+          "source": "official-public-pricing",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://launchbuck.com/pricing",
+          "retrieved": "2026-11-05",
+          "note": "A free reviewed listing is offered with a badge requirement. Paid, time-limited promotional placements are optional; their current price and conditions should be checked before purchasing."
+        },
+        {
+          "source": "official-public-login-and-terms",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://launchbuck.com/terms",
+          "retrieved": "2026-11-05",
+          "note": "The supplied /submit URL redirects signed-out visitors to login. Terms require product affiliation or permission and permit listing review and rejection. No account, listing, payment or backlink verification was performed for this catalog addition."
+        }
+      ]
     }
   ]
 }
