@@ -26,6 +26,7 @@ export interface OAuthGrantProps {
   product: string;
   resource: string;
   scope: string;
+  scopes?: readonly string[];
 }
 
 export type HostedWorkerEnv = Env &
@@ -35,6 +36,7 @@ export type HostedWorkerEnv = Env &
     APP_HEALTH_RELEASE?: string;
     APP_HEALTH_STAGE_SAMPLE_RATE?: string;
     APP_HEALTH_BROWSER_KEY?: string;
+    MCP_ENABLED_WRITE_PRODUCTS?: string;
   };
 
 export type OAuthAuthorizationResult =
@@ -145,6 +147,10 @@ function grantedPermissions(payload: Auth0AccessClaims): Set<string> {
   ]);
 }
 
+function delegatedScopes(payload: Auth0AccessClaims): Set<string> {
+  return new Set(typeof payload.scope === "string" ? payload.scope.split(/\s+/u).filter(Boolean) : []);
+}
+
 function validAuth0Claims(
   payload: Auth0AccessClaims,
   route: HostedRouteDefinition,
@@ -160,7 +166,7 @@ function validAuth0Claims(
     typeof payload.iat === "number" &&
     payload.exp > payload.iat &&
     payload.exp - payload.iat <= MAX_ACCESS_TOKEN_LIFETIME_SECONDS + CLOCK_TOLERANCE_SECONDS &&
-    grantedPermissions(payload).has(expectedScope);
+    (route.writeScope ? delegatedScopes(payload) : grantedPermissions(payload)).has(expectedScope);
 }
 
 export async function verifyAuth0AccessToken(
@@ -189,6 +195,10 @@ export async function verifyAuth0AccessToken(
     product: route.id,
     resource,
     scope: route.scope,
+    ...(route.toolScopes ? {
+      scopes: [route.scope, ...(route.writeScope && delegatedScopes(payload).has(route.writeScope)
+        ? [route.writeScope] : [])],
+    } : {}),
   };
 }
 
@@ -257,8 +267,8 @@ function protectedResourceMetadata(
     resource: oauthResource(route, routeUrl),
     authorization_servers: [issuer],
     bearer_methods_supported: ["header"],
-    scopes_supported: [route.scope],
-    resource_name: `${route.id} read-only MCP`,
+    scopes_supported: route.writeScope ? [route.scope, route.writeScope] : [route.scope],
+    resource_name: `${route.id} ${route.writeScope ? "account" : "read-only"} MCP`,
   }, { headers: noStoreHeaders() });
 }
 

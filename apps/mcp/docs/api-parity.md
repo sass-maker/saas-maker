@@ -78,3 +78,71 @@ The following surfaces remain unavailable by design:
 
 Adding any excluded API is a privacy/product-scope change requiring a new
 review; it is not a parity bug.
+
+
+## Account actions and native products
+
+Anchor is the first prepared read/write native connection. Its `/anchor/mcp`
+route proxies the product-owned `/anchor/mcp` handler in Personal Platform.
+The gateway does not interpret planner records or run an AI model. The previous
+connections retain their existing read-only contracts.
+
+A new product supplies a native MCP handler that calls its own application
+services. Register a `kind: "native"` route with an exact OAuth resource, a
+required read scope, an optional write scope and an explicit `toolScopes` map.
+That map limits discovery and execution to the approved tool names. Each tool
+advertises its required scopes. A read-only grant can discover write tools but
+cannot execute them. Unknown tools and alternate protocol methods fail closed.
+The product must independently verify the same token and required permissions.
+For native account-action connections, the standard OAuth `scope` string is the
+delegated grant. RBAC `permissions` and nonstandard `scopes` claims cannot expand
+a read-only connection's consent.
+
+The identity authority maps a verified provider subject to an existing permanent
+account ID. Never accept a user ID from tool arguments, identify people by email,
+or replace per-account credentials with an owner-wide shared application token.
+
+Use one source of business rules for UI, REST and MCP. Validate external inputs
+once at the product boundary. Return stable IDs and current record versions;
+require expected versions for edits and caller-stable request IDs for retries.
+A conflict must leave the existing record intact. Do not automatically retry a
+write under a new request ID after a lost response.
+
+Device actions need a separate completion contract. Anchor focus commands target
+one device, expire, and carry the expected active session ID. Queue acceptance
+returns `pending`. Only a receipt from the actual native focus controller can
+report `applied`; an expired, interrupted or rejected command reports `failed`.
+Opening the capture sheet does not assert that a distraction was saved.
+
+Anchor schedule sharing is opt-in and account-bound. Device-local distraction
+notes and keywords are never uploaded or returned by the remote connection.
+System permissions, calendar/reminder credentials and native-only configuration
+must not appear in tool payloads. Preserve explicit capability limitations.
+
+### Anchor activation gates
+
+The route is prepared and fails closed until the gateway runtime explicitly sets
+`MCP_ENABLED_WRITE_PRODUCTS=anchor`. The flag is not configured by this change.
+Before advertising an installable
+connection, qualify the identity service, backend, gateway and signed Anchor
+build together. Configure the existing authorization provider for the exact
+Anchor resource and `anchor.read` / `anchor.write` permissions. Bind the branded
+host to the existing gateway, without copying product credentials. Issue account permissions only through the authorization provider's approved
+consent policy. The initial challenge requests read and write; separately qualify
+read-only grants and permission step-up in each supported client. Verify discovery,
+PKCE sign-in, an account-scoped read, a permitted edit and native readback. Deny a
+read-only write and a different account's record. Replay a lost-response write,
+exercise a version conflict and verify a queued focus command reaches an awake
+native app exactly once. Keep pending/offline receipts truthful.
+
+For ChatGPT, connect the remote HTTPS MCP endpoint using OAuth. For Codex or
+another MCP client, use the same endpoint and complete that client's OAuth flow.
+Client installation is separate from server release and source tests.
+
+The identity authority must return the verified `mcpProduct`, requested `scope`,
+exact `audience` and `authorizationVersion: 1` alongside the permanent `userId`.
+Personal Platform rejects missing or mismatched markers, including responses
+from the older native-session-only endpoint. Release the qualified identity
+handler before the product handler, qualify the native build and account consent,
+then enable the gateway route last. Keep the activation flag off for rollback;
+retain account data, command receipts and prior native releases.

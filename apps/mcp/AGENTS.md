@@ -1,7 +1,11 @@
 # SaaS Maker MCP Connections agent instructions
 
-- Preserve the read-only MCP boundary. Do not add mutations, administrative
-  tools, private-field exposure, or shared application credentials.
+- Preserve the existing connections' read-only contracts. The owner authorized
+  Anchor account data/actions on 2026-11-08. Only its explicit native toolScopes
+  allowlist may write, with anchor.read + anchor.write, product-side independent
+  authorization and account isolation. No administrative tools, device-private
+  fields or shared application credentials. New write routes require explicit
+  runtime activation after companion-service and native qualification.
 - Do not touch secrets, environment files, Cloudflare configuration, Auth0
   configuration, or production resources unless explicitly requested.
 - Production deploys are manual and must use `pnpm run deploy` from a clean,

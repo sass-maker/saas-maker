@@ -1,6 +1,6 @@
 # SaaS Maker MCP Connections
 
-ChatGPT Connections is the shared read-only MCP gateway in SaaS Maker for
+ChatGPT Connections is the shared MCP gateway in SaaS Maker for
 selected products. It routes data according to each product's existing storage boundary:
 
 - CodeVetter stays local and is available only to Codex through its installed
@@ -16,7 +16,8 @@ selected products. It routes data according to each product's existing storage b
 
 [`docs/api-parity.md`](docs/api-parity.md) defines the exact parity guarantee:
 complete parity with each approved MCP/read contract, not with every product
-API. Excluded writes, administrative surfaces, and private fields remain
+API. Anchor adds a separately scoped, default-disabled native action route.
+Excluded writes, administrative surfaces, and device-private fields remain
 deliberately unavailable.
 
 Secure MCP Tunnel is not required for this phase. Indulge and other device-only
@@ -315,3 +316,9 @@ or repository data.
 
 Retained evaluation prompts remain in [evaluations.md](docs/evaluations.md).
 Runtime decisions are in [runtime-compatibility.md](docs/runtime-compatibility.md).
+
+
+Anchor is the first prepared native account-action connection. Existing endpoints
+retain their read-only contracts. Anchor uses an exact tool allowlist, separate
+read/write scopes and independent account authorization at the product. Its
+runtime activation gate defaults closed. See [account actions and activation](docs/api-parity.md#account-actions-and-native-products).

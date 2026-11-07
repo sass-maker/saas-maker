@@ -30,9 +30,9 @@ interface HostedRequestAuthorization {
   upstreamToken: string | undefined;
 }
 
-function jsonRpcError(status: number, code: number, message: string, headers?: HeadersInit): Response {
+function jsonRpcError(status: number, code: number, message: string, headers?: HeadersInit, id: number | string | null = null): Response {
   return Response.json(
-    { jsonrpc: "2.0", error: { code, message }, id: null },
+    { jsonrpc: "2.0", error: { code, message }, id },
     { status, headers: { "Content-Type": "application/json", ...headers } },
   );
 }
@@ -559,9 +559,10 @@ function healthResponse(): Response {
   );
 }
 
-function securitySchemes(route: HostedRouteDefinition): readonly ToolSecurityScheme[] {
+function securitySchemes(route: HostedRouteDefinition, toolName?: string): readonly ToolSecurityScheme[] {
   return route.audience === "personal"
-    ? [{ type: "oauth2", scopes: [route.scope!] }]
+    ? [{ type: "oauth2", scopes: toolName && route.toolScopes
+        ? route.toolScopes[toolName]! : [route.scope!] }]
     : [{ type: "noauth" }];
 }
 
@@ -581,10 +582,10 @@ async function advertiseSecuritySchemes(
   if (!result || typeof result !== "object" || Array.isArray(result)) return response;
   const tools = (result as Record<string, unknown>).tools;
   if (!Array.isArray(tools)) return response;
-  const schemes = securitySchemes(route);
   for (const tool of tools) {
     if (!tool || typeof tool !== "object" || Array.isArray(tool)) continue;
     const definition = tool as Record<string, unknown>;
+    const schemes = securitySchemes(route, String(definition.name ?? ""));
     definition.securitySchemes = schemes;
     const meta = definition._meta && typeof definition._meta === "object" && !Array.isArray(definition._meta)
       ? definition._meta as Record<string, unknown>
@@ -618,7 +619,8 @@ function authorizationMatches(
 function oauthChallenge(request: Request, route: HostedRouteDefinition): Response {
   const url = new URL(request.url);
   const metadata = `${url.origin}/.well-known/oauth-protected-resource${url.pathname}`;
-  const challenge = `Bearer resource_metadata="${metadata}", scope="${route.scope}", error="invalid_token", error_description="OAuth authorization is required"`;
+  const scopes = route.writeScope ? `${route.scope} ${route.writeScope}` : route.scope;
+  const challenge = `Bearer resource_metadata="${metadata}", scope="${scopes}", error="invalid_token", error_description="OAuth authorization is required"`;
   return jsonRpcError(401, -32000, "OAuth authorization is required.", {
     "WWW-Authenticate": challenge,
   });
@@ -659,6 +661,7 @@ async function handleNative(
   route: Extract<HostedRouteDefinition, { kind: "native" }>,
   fetchImpl: typeof fetch,
   token?: string,
+  grant?: OAuthGrantProps,
 ): Promise<Response> {
   const safeRequest = await boundedRequest(request);
   const body = await safeRequest.arrayBuffer();
@@ -668,7 +671,8 @@ async function handleNative(
   } catch {
     return jsonRpcError(400, -32700, "Invalid JSON-RPC payload.");
   }
-  const allowlist = route.allowedTools ? new Set(route.allowedTools) : undefined;
+  const allowlist = route.toolScopes ? new Set(Object.keys(route.toolScopes))
+    : route.allowedTools ? new Set(route.allowedTools) : undefined;
   const allowedPublicNativeMethods = new Set([
     "initialize",
     "notifications/initialized",
@@ -688,6 +692,17 @@ async function handleNative(
         content: [{ type: "text", text: "Tool is not available on this connection." }],
       },
     });
+  }
+  if (route.toolScopes && message.method === "tools/call") {
+    const required = route.toolScopes[message.params?.name ?? ""]!;
+    const granted = new Set(grant?.scopes ?? (grant ? [grant.scope] : []));
+    if (required.some((scope) => !granted.has(scope))) {
+      const url = new URL(request.url);
+      const metadata = `${url.origin}/.well-known/oauth-protected-resource${url.pathname}`;
+      return jsonRpcError(403, -32000, "This action requires additional OAuth permission.", {
+        "WWW-Authenticate": `Bearer resource_metadata="${metadata}", error="insufficient_scope", scope="${required.join(" ")}"`,
+      }, typeof message.id === "string" || typeof message.id === "number" ? message.id : null);
+    }
   }
   const headers = new Headers({
     Accept: "application/json, text/event-stream",
@@ -745,6 +760,7 @@ export async function handleHostedRequest(
   fetchImpl: typeof fetch = fetch,
   authorization?: HostedRequestAuthorization,
   browserTracker?: BrowserTracker,
+  activation?: { writeProducts: readonly string[] },
 ): Promise<Response> {
   const url = new URL(request.url);
   const footerAsset = footerAssetResponse(request);
@@ -766,6 +782,9 @@ export async function handleHostedRequest(
 
   const route = hostedRoute(url.pathname, url.hostname);
   if (!route) return withProtocolHeaders(jsonRpcError(404, -32001, "Unknown MCP route."), request);
+  if (route.writeScope && !activation?.writeProducts.includes(route.id)) {
+    return withProtocolHeaders(productUnavailable(), request, route);
+  }
   if (request.headers.has("origin") && !allowedOrigin(request)) {
     return withProtocolHeaders(jsonRpcError(403, -32000, "Origin is not allowed."), request, route);
   }
@@ -802,7 +821,7 @@ export async function handleHostedRequest(
   try {
     const token = route.audience === "personal" ? authorization!.upstreamToken! : undefined;
     const response = route.kind === "native"
-      ? await handleNative(request, route, fetchImpl, token)
+      ? await handleNative(request, route, fetchImpl, token, authorization?.grant)
       : await handleAdapter(request, route, fetchImpl, token);
     return withProtocolHeaders(response, request, route);
   } catch (error) {

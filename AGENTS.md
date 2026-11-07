@@ -41,10 +41,13 @@ SaaS Maker owns only:
   `apps/memory-map/packer` with `memory-pack-ci.yml` and the tag-driven
   `memory-pack-release.yml`.
 
-MCP Connections at `apps/mcp` is the owner-approved shared read-only gateway
+MCP Connections at `apps/mcp` is the owner-approved shared MCP gateway
 absorbed from `chatgpt-connections`. It keeps its own pnpm lock and workspace
-boundary. Its existing Worker, branded endpoints, OAuth scopes and read-only
-contract remain unchanged. Follow its nested `AGENTS.md`; use `pnpm check:mcp`
+boundary. Its existing Worker, branded endpoints and read-only
+connections remain unchanged. The owner authorized a prepared Anchor account
+read/write native route on 2026-11-08, with explicit per-tool OAuth scopes,
+independent product authorization and a fail-closed runtime activation gate.
+Follow its nested `AGENTS.md`; use `pnpm check:mcp`
 for focused checks and `pnpm deploy:mcp` for the guarded manual release.
 For the initial cutover, verify exact-main MCP CI, then retire the legacy deploy
 path and workflows before the first SaaS Maker deployment. See the package's
