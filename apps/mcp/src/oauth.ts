@@ -26,6 +26,7 @@ export interface OAuthGrantProps {
   product: string;
   resource: string;
   scope: string;
+  scopes?: readonly string[];
 }
 
 export type HostedWorkerEnv = Env &
@@ -189,6 +190,10 @@ export async function verifyAuth0AccessToken(
     product: route.id,
     resource,
     scope: route.scope,
+    ...(route.toolScopes ? {
+      scopes: [route.scope, ...(route.writeScope && grantedPermissions(payload).has(route.writeScope)
+        ? [route.writeScope] : [])],
+    } : {}),
   };
 }
 
@@ -257,8 +262,8 @@ function protectedResourceMetadata(
     resource: oauthResource(route, routeUrl),
     authorization_servers: [issuer],
     bearer_methods_supported: ["header"],
-    scopes_supported: [route.scope],
-    resource_name: `${route.id} read-only MCP`,
+    scopes_supported: route.writeScope ? [route.scope, route.writeScope] : [route.scope],
+    resource_name: `${route.id} ${route.writeScope ? "account" : "read-only"} MCP`,
   }, { headers: noStoreHeaders() });
 }
 

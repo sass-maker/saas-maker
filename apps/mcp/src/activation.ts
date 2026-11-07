@@ -160,7 +160,7 @@ function validProtectedResourceMetadata(
   metadata: Record<string, unknown>,
   resource: string,
   issuer: string,
-  scope: string,
+  requiredScopes: readonly string[],
 ): boolean {
   const authorizationServers = strings(metadata.authorization_servers);
   const bearerMethods = strings(metadata.bearer_methods_supported);
@@ -168,7 +168,7 @@ function validProtectedResourceMetadata(
   return metadata.resource === resource &&
     authorizationServers?.length === 1 && authorizationServers[0] === issuer &&
     bearerMethods?.includes("header") === true &&
-    scopes?.length === 1 && scopes[0] === scope;
+    scopes?.length === requiredScopes.length && requiredScopes.every((scope) => scopes.includes(scope));
 }
 
 function noStore(headers: Headers): boolean {
@@ -245,7 +245,8 @@ export async function verifyActivation(
         `resource_${route.id}`,
         fetchImpl,
       );
-      if (!validProtectedResourceMetadata(metadata.body, resource, issuer, route.scope) || !noStore(metadata.headers)) {
+      const requiredScopes = route.writeScope ? [route.scope, route.writeScope] : [route.scope];
+      if (!validProtectedResourceMetadata(metadata.body, resource, issuer, requiredScopes) || !noStore(metadata.headers)) {
         throw new ActivationVerificationError(`resource_${route.id}_metadata_incompatible`);
       }
       resources.push({

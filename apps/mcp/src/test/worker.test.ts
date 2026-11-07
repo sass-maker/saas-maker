@@ -128,6 +128,18 @@ async function nativeMcpResponse(
 
 const routeFetch: typeof fetch = async (input, init) => {
   const request = input instanceof Request ? input : new Request(input, init);
+  if (request.url === "https://personal-platform.sarthakagrawal927.workers.dev/anchor/mcp") {
+    const message = await request.clone().json() as { id: number; method: string };
+    if (message.method !== "tools/list") return nativeMcpResponse(request, "anchor-by-significant-hobbies");
+    const route = HOSTED_ROUTES["/anchor/mcp"]!;
+    return Response.json({ jsonrpc: "2.0", id: message.id, result: {
+      tools: Object.entries(route.toolScopes!).map(([name, scopes]) => ({
+        name,
+        inputSchema: { type: "object", properties: {} },
+        annotations: { readOnlyHint: !scopes.includes(route.writeScope!), destructiveHint: name === "anchor_delete_record" },
+      })),
+    } });
+  }
   if (request.url === "https://anime.significanthobbies.com/api/mcp") {
     return nativeMcpResponse(request);
   }
@@ -145,6 +157,7 @@ const routeFetch: typeof fetch = async (input, init) => {
 
 test("hosted route registry is fixed and public Research Papers exposes only exports", () => {
   assert.deepEqual(Object.keys(HOSTED_ROUTES), [
+    "/anchor/mcp",
     "/reader/mcp",
     "/calorie/mcp",
     "/setline/mcp",
@@ -188,7 +201,7 @@ for (const [path, route] of Object.entries(HOSTED_ROUTES)) {
     assert.equal(JSON.stringify(payload).includes("worker-secret"), false);
   });
 
-  test(`${path} advertises its exact read-only security scheme`, async () => {
+  test(`${path} advertises its exact tool security scheme`, async () => {
     const authorization = route.audience === "personal" ? authorizationFor(path) : undefined;
     const response = await handleHostedRequest(
       requestFor(path, { jsonrpc: "2.0", id: 2, method: "tools/list", params: {} }),
@@ -202,10 +215,12 @@ for (const [path, route] of Object.entries(HOSTED_ROUTES)) {
     assert.ok(tools.length > 0);
     for (const tool of tools) {
       const annotations = tool.annotations as Record<string, unknown>;
-      assert.equal(annotations.readOnlyHint, true);
-      assert.equal(annotations.destructiveHint, false);
+      const requiredScopes = route.toolScopes?.[String(tool.name)] ?? [route.scope];
+      const writes = route.writeScope !== undefined && requiredScopes.includes(route.writeScope);
+      assert.equal(annotations.readOnlyHint, !writes);
+      assert.equal(annotations.destructiveHint, tool.name === "anchor_delete_record");
       const expected = route.audience === "personal"
-        ? [{ type: "oauth2", scopes: [route.scope] }]
+        ? [{ type: "oauth2", scopes: requiredScopes }]
         : [{ type: "noauth" }];
       assert.deepEqual(tool.securitySchemes, expected);
       assert.deepEqual((tool._meta as Record<string, unknown>).securitySchemes, expected);
@@ -702,4 +717,55 @@ test("invalid JSON-RPC remains a bounded protocol error", async () => {
   const text = JSON.stringify(await json(response));
   assert.equal(text.includes("Method not found"), true);
   assert.equal(text.length < 10_000, true);
+});
+
+
+test("Anchor rejects writes and unknown tools before forwarding, while preserving authorized request IDs", async () => {
+  let calls = 0;
+  const fetchImpl: typeof fetch = async (input, init) => {
+    calls += 1;
+    const request = input instanceof Request ? input : new Request(input, init);
+    assert.equal(request.headers.get("authorization"), `Bearer ${upstreamToken(HOSTED_ROUTES["/anchor/mcp"]!)}`);
+    const message = await request.json() as { params: { arguments: { requestId: string } } };
+    assert.equal(message.params.arguments.requestId, "stable-request");
+    return Response.json({ jsonrpc: "2.0", id: 5, result: { structuredContent: { status: "pending" } } });
+  };
+  const body = { jsonrpc: "2.0", id: 5, method: "tools/call", params: {
+    name: "anchor_queue_focus_command", arguments: { requestId: "stable-request" },
+  } };
+  const denied = await handleHostedRequest(requestFor("/anchor/mcp", body), fetchImpl, authorizationFor("/anchor/mcp"));
+  assert.equal(denied.status, 403);
+  assert.match(denied.headers.get("www-authenticate") ?? "", /insufficient_scope/u);
+  assert.equal(calls, 0);
+  const unknown = await handleHostedRequest(requestFor("/anchor/mcp", {
+    ...body, params: { ...body.params, name: "delete_all_accounts" },
+  }), fetchImpl, authorizationFor("/anchor/mcp", { scopes: ["anchor.read", "anchor.write"] }));
+  assert.equal(((await json(unknown)).result as { isError: boolean }).isError, true);
+  assert.equal(calls, 0);
+  const accepted = await handleHostedRequest(requestFor("/anchor/mcp", body), fetchImpl,
+    authorizationFor("/anchor/mcp", { scopes: ["anchor.read", "anchor.write"] }));
+  assert.equal(accepted.status, 200);
+  assert.equal(calls, 1);
+  assert.equal((((await json(accepted)).result as { structuredContent: { status: string } }).structuredContent).status, "pending");
+});
+
+test("Anchor filters undisclosed tools and blocks alternate protocol methods", async () => {
+  let calls = 0;
+  const fetchImpl: typeof fetch = async () => {
+    calls += 1;
+    return Response.json({ jsonrpc: "2.0", id: 1, result: { tools: [
+      { name: "anchor_get_account", annotations: { readOnlyHint: true } },
+      { name: "hidden_admin_tool" },
+    ] } });
+  };
+  const response = await handleHostedRequest(requestFor("/anchor/mcp", {
+    jsonrpc: "2.0", id: 1, method: "tools/list",
+  }), fetchImpl, authorizationFor("/anchor/mcp"));
+  const tools = ((await json(response)).result as { tools: { name: string }[] }).tools;
+  assert.deepEqual(tools.map((tool) => tool.name), ["anchor_get_account"]);
+  const blocked = await handleHostedRequest(requestFor("/anchor/mcp", {
+    jsonrpc: "2.0", id: 2, method: "resources/read",
+  }), fetchImpl, authorizationFor("/anchor/mcp"));
+  assert.equal(((await json(blocked)).error as { code: number }).code, -32601);
+  assert.equal(calls, 1);
 });

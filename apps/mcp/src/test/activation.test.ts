@@ -54,7 +54,7 @@ function successfulFetch(seen: string[] = []): typeof fetch {
         resource: oauthResource(route, `${gateway}${path}`),
         authorization_servers: [issuer],
         bearer_methods_supported: ["header"],
-        scopes_supported: [route.scope],
+        scopes_supported: route.writeScope ? [route.scope, route.writeScope] : [route.scope],
       }, true);
     }
     return json({ error: "not_found" }, true);
@@ -79,7 +79,7 @@ function successfulBrandedFetch(seen: string[] = []): typeof fetch {
         resource: oauthResource(route, `${url.origin}${path}`),
         authorization_servers: [issuer],
         bearer_methods_supported: ["header"],
-        scopes_supported: [route.scope],
+        scopes_supported: route.writeScope ? [route.scope, route.writeScope] : [route.scope],
       }, true);
     }
     return baseFetch(input, init);
@@ -108,6 +108,7 @@ test("activation verifier proves Auth0 metadata, JWKS, and every exact private r
     { id: "private_resource_metadata", status: "passed" },
   ]);
   assert.deepEqual(receipt.resources.map(({ id, path, scope }) => ({ id, path, scope })), [
+    { id: "anchor", path: "/anchor/mcp", scope: "anchor.read" },
     { id: "reader", path: "/reader/mcp", scope: "reader.read" },
     { id: "calorie", path: "/calorie/mcp", scope: "calorie.read" },
     { id: "setline", path: "/setline/mcp", scope: "setline.read" },
@@ -251,4 +252,20 @@ test("activation CLI accepts pnpm's conventional argument separator", () => {
   assert.equal(invalidIssuer.status, 1);
   assert.match(invalidIssuer.stderr, /"code":"issuer_invalid"/u);
   assert.doesNotMatch(invalidIssuer.stderr, /arguments_invalid/u);
+});
+
+
+test("Anchor activation rejects metadata that omits its write permission", async () => {
+  const base = successfulFetch();
+  const fetchImpl: typeof fetch = async (input, init) => {
+    if (String(input).endsWith("/.well-known/oauth-protected-resource/anchor/mcp")) {
+      return json({
+        resource: "https://mcp.significanthobbies.com/anchor/mcp",
+        authorization_servers: [issuer], bearer_methods_supported: ["header"],
+        scopes_supported: ["anchor.read"],
+      }, true);
+    }
+    return base(input, init);
+  };
+  await rejectsWithCode(verifyActivation({ issuer, gatewayOrigin: gateway, fetchImpl }), "resource_anchor_metadata_incompatible");
 });

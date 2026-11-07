@@ -1,3 +1,11 @@
+## Anchor account MCP preparation (2026-11-08)
+
+Prepared an Anchor native proxy with explicit read/write tool scopes. Existing
+connections retain their permissions. Product-side account mapping, planner
+sync consent and native command receipts are required companions. No production
+host, OAuth configuration, credentials or deployments were changed. End-to-end
+ChatGPT/Codex sign-in and installed-native acceptance remain unverified.
+
 # SaaS Maker MCP Connections
 
 ## Why / What

@@ -10,6 +10,8 @@ interface HostedRouteBase {
   authMode?: "federated" | "owner-token";
   oauthAudience?: string;
   scope?: string;
+  writeScope?: string;
+  toolScopes?: Readonly<Record<string, readonly string[]>>;
   tokenSecret?: PrivateTokenSecret;
   productionStatus?: "prepared";
 }
@@ -90,6 +92,29 @@ const hostedResearchPapers: AppDefinition = {
 };
 
 export const HOSTED_ROUTES: Readonly<Record<string, HostedRouteDefinition>> = Object.freeze({
+  "/anchor/mcp": {
+    id: "anchor",
+    kind: "native",
+    audience: "personal",
+    hosts: ["anchor-mcp.significanthobbies.com"],
+    authMode: "federated",
+    oauthAudience: "https://mcp.significanthobbies.com/anchor/mcp",
+    scope: "anchor.read",
+    writeScope: "anchor.write",
+    productionStatus: "prepared",
+    serverName: "anchor-by-significant-hobbies",
+    upstreamUrl: "https://personal-platform.sarthakagrawal927.workers.dev/anchor/mcp",
+    toolScopes: {
+      anchor_get_account: ["anchor.read"],
+      anchor_get_capabilities: ["anchor.read"],
+      anchor_list_records: ["anchor.read"],
+      anchor_get_record: ["anchor.read"],
+      anchor_create_record: ["anchor.read", "anchor.write"],
+      anchor_update_record: ["anchor.read", "anchor.write"],
+      anchor_delete_record: ["anchor.read", "anchor.write"],
+      anchor_queue_focus_command: ["anchor.read", "anchor.write"],
+    },
+  },
   "/reader/mcp": {
     id: "reader",
     kind: "adapter",
@@ -236,7 +261,7 @@ export const PRIVATE_HOSTED_PATHS = Object.freeze(
 export const PRIVATE_HOSTED_SCOPES = Object.freeze(
   Object.values(HOSTED_ROUTES)
     .filter((route) => route.audience === "personal")
-    .map((route) => route.scope!),
+    .flatMap((route) => route.writeScope ? [route.scope!, route.writeScope] : [route.scope!]),
 );
 
 function compatibilityHost(hostname: string): boolean {

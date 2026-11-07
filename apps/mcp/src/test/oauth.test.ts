@@ -137,6 +137,22 @@ test("the deferred Setline route remains owner-only", async () => {
   );
 });
 
+test("Anchor grants preserve verified read/write permissions without widening read-only tokens", async () => {
+  const fixture = await signingFixture();
+  const anchor = hostedRoute("/anchor/mcp")!;
+  const audience = "https://mcp.significanthobbies.com/anchor/mcp";
+  const request = new Request(audience);
+  for (const permissions of [["anchor.read"], ["anchor.read", "anchor.write", "calorie.read"]]) {
+    const grant = await verifyAuth0AccessToken(
+      await fixture.token({ audience, permissions }), request, anchor, env, fixture.getKey,
+    );
+    assert.deepEqual(grant.scopes, permissions.filter((scope) => scope.startsWith("anchor.")));
+  }
+  await assert.rejects(verifyAuth0AccessToken(
+    await fixture.token({ audience, permissions: ["anchor.write"] }), request, anchor, env, fixture.getKey,
+  ));
+});
+
 test("authorization classification never accepts malformed or cross-product bearer tokens", async () => {
   const fixture = await signingFixture();
   const missing = await authorizeOAuthRequest(new Request(resource), route, env, fixture.getKey);
