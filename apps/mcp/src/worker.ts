@@ -619,7 +619,8 @@ function authorizationMatches(
 function oauthChallenge(request: Request, route: HostedRouteDefinition): Response {
   const url = new URL(request.url);
   const metadata = `${url.origin}/.well-known/oauth-protected-resource${url.pathname}`;
-  const challenge = `Bearer resource_metadata="${metadata}", scope="${route.scope}", error="invalid_token", error_description="OAuth authorization is required"`;
+  const scopes = route.writeScope ? `${route.scope} ${route.writeScope}` : route.scope;
+  const challenge = `Bearer resource_metadata="${metadata}", scope="${scopes}", error="invalid_token", error_description="OAuth authorization is required"`;
   return jsonRpcError(401, -32000, "OAuth authorization is required.", {
     "WWW-Authenticate": challenge,
   });
@@ -759,6 +760,7 @@ export async function handleHostedRequest(
   fetchImpl: typeof fetch = fetch,
   authorization?: HostedRequestAuthorization,
   browserTracker?: BrowserTracker,
+  activation?: { writeProducts: readonly string[] },
 ): Promise<Response> {
   const url = new URL(request.url);
   const footerAsset = footerAssetResponse(request);
@@ -780,6 +782,9 @@ export async function handleHostedRequest(
 
   const route = hostedRoute(url.pathname, url.hostname);
   if (!route) return withProtocolHeaders(jsonRpcError(404, -32001, "Unknown MCP route."), request);
+  if (route.writeScope && !activation?.writeProducts.includes(route.id)) {
+    return withProtocolHeaders(productUnavailable(), request, route);
+  }
   if (request.headers.has("origin") && !allowedOrigin(request)) {
     return withProtocolHeaders(jsonRpcError(403, -32000, "Origin is not allowed."), request, route);
   }

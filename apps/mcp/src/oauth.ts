@@ -36,6 +36,7 @@ export type HostedWorkerEnv = Env &
     APP_HEALTH_RELEASE?: string;
     APP_HEALTH_STAGE_SAMPLE_RATE?: string;
     APP_HEALTH_BROWSER_KEY?: string;
+    MCP_ENABLED_WRITE_PRODUCTS?: string;
   };
 
 export type OAuthAuthorizationResult =

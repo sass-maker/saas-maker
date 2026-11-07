@@ -54,6 +54,9 @@ async function handleRequest(request: Request, env: HostedWorkerEnv, stages: Req
 
   const url = new URL(request.url);
   const route = hostedRoute(url.pathname, url.hostname);
+  const activation = {
+    writeProducts: env.MCP_ENABLED_WRITE_PRODUCTS?.split(",").map((id) => id.trim()).filter(Boolean) ?? [],
+  };
   const upstreamFetch: typeof fetch = async (input, init) => {
     const started = performance.now();
     try {
@@ -67,7 +70,7 @@ async function handleRequest(request: Request, env: HostedWorkerEnv, stages: Req
       key: env.APP_HEALTH_BROWSER_KEY ?? "",
     });
   }
-  if (!route || route.audience === "public") return handleHostedRequest(request, upstreamFetch);
+  if (!route || route.audience === "public") return handleHostedRequest(request, upstreamFetch, undefined, undefined, activation);
 
   const authStarted = performance.now();
   const authorization = await authorizeOAuthRequest(request, route, env).finally(() => {
@@ -76,14 +79,14 @@ async function handleRequest(request: Request, env: HostedWorkerEnv, stages: Req
   if (authorization.status === "unavailable" || authorization.status === "misconfigured") {
     return authorizationUnavailable();
   }
-  if (authorization.status !== "authorized") return handleHostedRequest(request, upstreamFetch);
+  if (authorization.status !== "authorized") return handleHostedRequest(request, upstreamFetch, undefined, undefined, activation);
 
   return handleHostedRequest(request, upstreamFetch, {
     grant: authorization.grant,
     upstreamToken: route.authMode === "federated"
       ? authorization.accessToken
       : productToken(env, route),
-  });
+  }, undefined, activation);
 }
 
 export default {

@@ -366,3 +366,16 @@ test("OpenAI verification challenges are isolated by branded plugin hostname", a
   assert.equal(absent.status, 404);
   assert.equal(reader.headers.get("cache-control"), "no-store");
 });
+
+
+test("runtime activation preserves Anchor's unauthenticated OAuth challenge", async () => {
+  const request = () => new Request("https://mcp.example/anchor/mcp", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize" }),
+  });
+  const disabled = await worker.fetch(request(), env as HostedWorkerEnv);
+  assert.equal(disabled.status, 503);
+  const enabled = await worker.fetch(request(), { ...env, MCP_ENABLED_WRITE_PRODUCTS: "anchor" } as HostedWorkerEnv);
+  assert.equal(enabled.status, 401);
+  assert.match(enabled.headers.get("www-authenticate") ?? "", /anchor.read anchor.write/u);
+});

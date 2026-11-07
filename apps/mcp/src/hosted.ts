@@ -113,6 +113,7 @@ export const HOSTED_ROUTES: Readonly<Record<string, HostedRouteDefinition>> = Ob
       anchor_update_record: ["anchor.read", "anchor.write"],
       anchor_delete_record: ["anchor.read", "anchor.write"],
       anchor_queue_focus_command: ["anchor.read", "anchor.write"],
+      anchor_queue_planner_command: ["anchor.read", "anchor.write"],
     },
   },
   "/reader/mcp": {

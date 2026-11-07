@@ -118,11 +118,15 @@ must not appear in tool payloads. Preserve explicit capability limitations.
 
 ### Anchor activation gates
 
-The route is prepared, not production-qualified. Before advertising an installable
+The route is prepared and fails closed until the gateway runtime explicitly sets
+`MCP_ENABLED_WRITE_PRODUCTS=anchor`. The flag is not configured by this change.
+Before advertising an installable
 connection, qualify the identity service, backend, gateway and signed Anchor
 build together. Configure the existing authorization provider for the exact
 Anchor resource and `anchor.read` / `anchor.write` permissions. Bind the branded
-host to the existing gateway, without copying product credentials. Verify discovery,
+host to the existing gateway, without copying product credentials. Issue account permissions only through the authorization provider's approved
+consent policy. The initial challenge requests read and write; separately qualify
+read-only grants and permission step-up in each supported client. Verify discovery,
 PKCE sign-in, an account-scoped read, a permitted edit and native readback. Deny a
 read-only write and a different account's record. Replay a lost-response write,
 exercise a version conflict and verify a queued focus command reaches an awake

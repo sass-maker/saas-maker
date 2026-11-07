@@ -1,24 +1,29 @@
+# SaaS Maker MCP Connections
+
 ## Anchor account MCP preparation (2026-11-08)
 
 Prepared an Anchor native proxy with explicit read/write tool scopes. Existing
 connections retain their permissions. Product-side account mapping, planner
 sync consent and native command receipts are required companions. No production
-host, OAuth configuration, credentials or deployments were changed. End-to-end
-ChatGPT/Codex sign-in and installed-native acceptance remain unverified.
+host, OAuth configuration, credentials or deployments were changed. The route
+fails closed until the gateway's optional `MCP_ENABLED_WRITE_PRODUCTS` includes
+`anchor`. Enable it only after companion services, OAuth configuration
+and native consent/command acceptance are qualified. End-to-end ChatGPT/Codex
+sign-in and installed-native acceptance remain unverified.
 
-# SaaS Maker MCP Connections
 
 ## Why / What
 
-ChatGPT Connections is Fleet's shared read-only MCP gateway for existing
-cloud-backed product data. Public product routes remain anonymous; Reader,
+ChatGPT Connections is Fleet's shared MCP gateway for existing product data.
+Its published connections remain read-only; Anchor is a prepared, explicitly
+scoped account-action integration. Public product routes remain anonymous; Reader,
 Calorie, and Anime List use user-scoped federated OAuth that is verified by
 both the gateway and the owning product. CodeVetter and other device-local
 sources remain outside this gateway.
 
-Multi-user account linking, mutations, device-only data upload, private
-Significant Hobbies records, and the full local Research Papers corpus are out
-of scope.
+Mutations outside the approved Anchor tool allowlist, device-only data upload,
+unscoped private Significant Hobbies records, and the full local Research Papers
+corpus remain out of scope.
 
 ## Public discovery (source, not deployed)
 

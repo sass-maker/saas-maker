@@ -5,7 +5,10 @@ import { readFile } from "node:fs/promises";
 
 import { HOSTED_ROUTES, oauthResource, type HostedRouteDefinition } from "../hosted.js";
 import type { OAuthGrantProps } from "../oauth.js";
-import { handleHostedRequest } from "../worker.js";
+import { handleHostedRequest as handleProductionRequest } from "../worker.js";
+
+const handleHostedRequest: typeof handleProductionRequest = (request, fetchImpl, authorization, browserTracker, activation) =>
+  handleProductionRequest(request, fetchImpl, authorization, browserTracker, activation ?? { writeProducts: ["anchor"] });
 
 const protocolVersion = "2025-11-25";
 
@@ -768,4 +771,24 @@ test("Anchor filters undisclosed tools and blocks alternate protocol methods", a
   }), fetchImpl, authorizationFor("/anchor/mcp"));
   assert.equal(((await json(blocked)).error as { code: number }).code, -32601);
   assert.equal(calls, 1);
+});
+
+
+test("prepared write connections require explicit runtime activation", async () => {
+  let calls = 0;
+  const response = await handleProductionRequest(
+    requestFor("/anchor/mcp", initializeRequest()),
+    async () => { calls += 1; return Response.json({}); },
+    authorizationFor("/anchor/mcp", { scopes: ["anchor.read", "anchor.write"] }),
+  );
+  assert.equal(response.status, 503);
+  assert.equal(calls, 0);
+  const readOnly = await handleProductionRequest(requestFor("/reader/mcp", initializeRequest()), routeFetch, authorizationFor("/reader/mcp"));
+  assert.equal(readOnly.status, 200);
+});
+
+test("Anchor initial authorization requests both declared account permissions", async () => {
+  const response = await handleHostedRequest(requestFor("/anchor/mcp", initializeRequest()), routeFetch);
+  assert.equal(response.status, 401);
+  assert.match(response.headers.get("www-authenticate") ?? "", /scope="anchor.read anchor.write"/u);
 });
