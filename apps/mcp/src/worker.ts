@@ -30,9 +30,9 @@ interface HostedRequestAuthorization {
   upstreamToken: string | undefined;
 }
 
-function jsonRpcError(status: number, code: number, message: string, headers?: HeadersInit): Response {
+function jsonRpcError(status: number, code: number, message: string, headers?: HeadersInit, id: number | string | null = null): Response {
   return Response.json(
-    { jsonrpc: "2.0", error: { code, message }, id: null },
+    { jsonrpc: "2.0", error: { code, message }, id },
     { status, headers: { "Content-Type": "application/json", ...headers } },
   );
 }
@@ -701,7 +701,7 @@ async function handleNative(
       const metadata = `${url.origin}/.well-known/oauth-protected-resource${url.pathname}`;
       return jsonRpcError(403, -32000, "This action requires additional OAuth permission.", {
         "WWW-Authenticate": `Bearer resource_metadata="${metadata}", error="insufficient_scope", scope="${required.join(" ")}"`,
-      });
+      }, typeof message.id === "string" || typeof message.id === "number" ? message.id : null);
     }
   }
   const headers = new Headers({

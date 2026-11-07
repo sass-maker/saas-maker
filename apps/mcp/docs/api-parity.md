@@ -94,6 +94,9 @@ That map limits discovery and execution to the approved tool names. Each tool
 advertises its required scopes. A read-only grant can discover write tools but
 cannot execute them. Unknown tools and alternate protocol methods fail closed.
 The product must independently verify the same token and required permissions.
+For native account-action connections, the standard OAuth `scope` string is the
+delegated grant. RBAC `permissions` and nonstandard `scopes` claims cannot expand
+a read-only connection's consent.
 
 The identity authority maps a verified provider subject to an existing permanent
 account ID. Never accept a user ID from tool arguments, identify people by email,

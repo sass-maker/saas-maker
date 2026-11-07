@@ -35,6 +35,7 @@ interface TokenOverrides {
   issuedAt?: number;
   issuer?: string;
   permissions?: string[];
+  scope?: unknown;
   subject?: string;
 }
 
@@ -54,6 +55,7 @@ async function signingFixture(): Promise<{
       const issuedAt = overrides.issuedAt ?? now;
       const payload: Record<string, unknown> = {
         permissions: overrides.permissions ?? [scope],
+        ...(overrides.scope === undefined ? {} : { scope: overrides.scope }),
       };
       return new SignJWT(payload)
         .setProtectedHeader({ alg: "RS256", kid: "auth0-key", typ: "JWT" })
@@ -144,12 +146,12 @@ test("Anchor grants preserve verified read/write permissions without widening re
   const request = new Request(audience);
   for (const permissions of [["anchor.read"], ["anchor.read", "anchor.write", "calorie.read"]]) {
     const grant = await verifyAuth0AccessToken(
-      await fixture.token({ audience, permissions }), request, anchor, env, fixture.getKey,
+      await fixture.token({ audience, permissions, scope: permissions.join(" ") }), request, anchor, env, fixture.getKey,
     );
     assert.deepEqual(grant.scopes, permissions.filter((scope) => scope.startsWith("anchor.")));
   }
   await assert.rejects(verifyAuth0AccessToken(
-    await fixture.token({ audience, permissions: ["anchor.write"] }), request, anchor, env, fixture.getKey,
+    await fixture.token({ audience, permissions: ["anchor.write"], scope: "anchor.write" }), request, anchor, env, fixture.getKey,
   ));
 });
 
@@ -378,4 +380,20 @@ test("runtime activation preserves Anchor's unauthenticated OAuth challenge", as
   const enabled = await worker.fetch(request(), { ...env, MCP_ENABLED_WRITE_PRODUCTS: "anchor" } as HostedWorkerEnv);
   assert.equal(enabled.status, 401);
   assert.match(enabled.headers.get("www-authenticate") ?? "", /anchor.read anchor.write/u);
+});
+
+
+test("Anchor delegated consent cannot be expanded by account permissions", async () => {
+  const fixture = await signingFixture();
+  const anchor = hostedRoute("/anchor/mcp")!;
+  const audience = "https://mcp.significanthobbies.com/anchor/mcp";
+  const permissions = ["anchor.read", "anchor.write"];
+  const request = new Request(audience);
+  const readOnly = await verifyAuth0AccessToken(await fixture.token({ audience, permissions, scope: "anchor.read" }), request, anchor, env, fixture.getKey);
+  assert.deepEqual(readOnly.scopes, ["anchor.read"]);
+  for (const scope of [undefined, null, ["anchor.read", "anchor.write"]]) {
+    await assert.rejects(verifyAuth0AccessToken(await fixture.token({ audience, permissions, scope }), request, anchor, env, fixture.getKey));
+  }
+  const full = await verifyAuth0AccessToken(await fixture.token({ audience, scope: "anchor.read anchor.write" }), request, anchor, env, fixture.getKey);
+  assert.deepEqual(full.scopes, permissions);
 });

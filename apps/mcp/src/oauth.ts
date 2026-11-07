@@ -147,6 +147,10 @@ function grantedPermissions(payload: Auth0AccessClaims): Set<string> {
   ]);
 }
 
+function delegatedScopes(payload: Auth0AccessClaims): Set<string> {
+  return new Set(typeof payload.scope === "string" ? payload.scope.split(/\s+/u).filter(Boolean) : []);
+}
+
 function validAuth0Claims(
   payload: Auth0AccessClaims,
   route: HostedRouteDefinition,
@@ -162,7 +166,7 @@ function validAuth0Claims(
     typeof payload.iat === "number" &&
     payload.exp > payload.iat &&
     payload.exp - payload.iat <= MAX_ACCESS_TOKEN_LIFETIME_SECONDS + CLOCK_TOLERANCE_SECONDS &&
-    grantedPermissions(payload).has(expectedScope);
+    (route.writeScope ? delegatedScopes(payload) : grantedPermissions(payload)).has(expectedScope);
 }
 
 export async function verifyAuth0AccessToken(
@@ -192,7 +196,7 @@ export async function verifyAuth0AccessToken(
     resource,
     scope: route.scope,
     ...(route.toolScopes ? {
-      scopes: [route.scope, ...(route.writeScope && grantedPermissions(payload).has(route.writeScope)
+      scopes: [route.scope, ...(route.writeScope && delegatedScopes(payload).has(route.writeScope)
         ? [route.writeScope] : [])],
     } : {}),
   };

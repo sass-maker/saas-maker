@@ -739,6 +739,7 @@ test("Anchor rejects writes and unknown tools before forwarding, while preservin
   const denied = await handleHostedRequest(requestFor("/anchor/mcp", body), fetchImpl, authorizationFor("/anchor/mcp"));
   assert.equal(denied.status, 403);
   assert.match(denied.headers.get("www-authenticate") ?? "", /insufficient_scope/u);
+  assert.equal((await json(denied)).id, 5);
   assert.equal(calls, 0);
   const unknown = await handleHostedRequest(requestFor("/anchor/mcp", {
     ...body, params: { ...body.params, name: "delete_all_accounts" },
