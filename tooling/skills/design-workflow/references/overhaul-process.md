@@ -182,10 +182,10 @@ Browser receipts use web viewports. For native macOS, read
 - Use real product content and assets. Do not substitute a component-gallery
   aesthetic for project identity.
 - For every new or materially redesigned web surface, read
-  `ui-library-standard.md`. Use its upstream-first selection order:
-  preserve a healthy project-native pattern, otherwise start with Tailwind Plus
-  when licensed access is available and use Preline as the free fallback.
-  Record exact source URLs in `direction.library`. Standard interface patterns
+  `ui-library-standard.md`. Build on shadcn/ui components and blocks with the
+  product's tokens; only owner-granted bespoke products keep their own system.
+  Put directional variety in tokens, typography, and imagery rather than in a
+  different component library. Record exact source URLs in `direction.library`. Standard interface patterns
   are reused, not reinvented. A custom replacement requires explicit owner
   authorization and a recorded upstream gap. Keep any runtime dependency to the
   smallest selective import. Apple-native interfaces are excluded from this web

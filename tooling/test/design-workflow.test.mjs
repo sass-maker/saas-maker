@@ -52,7 +52,7 @@ function completePersuadeReceipt() {
     qualityBar: 'Clear typographic hierarchy and product-specific composition across screen sizes.',
   };
   receipt.direction.library.primary = 'tailwind-plus';
-  receipt.direction.library.sources.push('https://tailwindcss.com/plus/ui-blocks/marketing/sections/footers');
+  receipt.direction.library.sources.push('https://ui.shadcn.com/blocks');
   receipt.direction.library.runtime = 'markup-only';
   receipt.direction.productSurfaces = {
     scope: 'standalone', landing: 'Synthetic landing fixture', app: '',
@@ -511,7 +511,7 @@ test('high visual scores cannot compensate for a weak purpose score', () => {
   );
 });
 
-test('a Tailwind Plus review records the exact upstream component source', () => {
+test('a shadcn/ui review records the exact upstream component source', () => {
   const receipt = completePersuadeReceipt();
   receipt.direction.library.sources = [];
   assert.throws(
@@ -519,7 +519,7 @@ test('a Tailwind Plus review records the exact upstream component source', () =>
     /upstream library adoption requires at least one exact component or block URL/,
   );
 
-  receipt.direction.library.sources.push('https://tailwindcss.com/plus/ui-blocks/marketing/sections/footers');
+  receipt.direction.library.sources.push('https://ui.shadcn.com/blocks');
   receipt.direction.library.runtime = 'markup-only';
   assert.doesNotThrow(() =>
     validateDesignReview(receipt, policy, { projectRoot: root, pathExists: () => true, readReport: () => scoredSlopReport() }),

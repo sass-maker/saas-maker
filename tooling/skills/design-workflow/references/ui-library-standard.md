@@ -1,135 +1,103 @@
-# Fleet web UI sourcing standard
+# Fleet web UI standard
 
-## Default
+## One library
 
-Use an upstream-first strategy. For every new or materially redesigned web
-surface, search for and adapt a proven component or block before authoring a
-replacement.
+**Owner decision (2026-10-09):** Fleet web surfaces use one UI library,
+[shadcn/ui](https://ui.shadcn.com/) (Radix primitives + Tailwind). This covers
+landing pages, product apps, docs chrome, dashboards, and internal tools. Do
+not mix in a second component library or introduce another one per project.
 
-Tailwind Plus is Fleet's default visual source for new or deficient web
-surfaces when the owner's personal license is available. It is selected for
-design quality, not cross-framework coverage: its professionally designed
-blocks, templates, and Catalyst application kit provide the strongest
-consistent starting point for one-shot web UI work.
+The goal is solid, consistent basics everywhere. A product reads as itself
+through its tokens and imagery, not through a different component system.
 
-- Product and license: https://tailwindcss.com/plus
-- UI blocks: https://tailwindcss.com/plus/ui-blocks
-- Catalyst application kit: https://tailwindcss.com/plus/ui-kit
-- Interactive HTML elements: https://tailwindcss.com/plus/ui-blocks/documentation/elements
+- Components: https://ui.shadcn.com/docs/components
+- Blocks (marketing, dashboards, auth, sidebars): https://ui.shadcn.com/blocks
+- Theming via CSS variables: https://ui.shadcn.com/docs/theming
 
-Preline remains the default no-license fallback because its free catalog has
-substantially broader raw coverage. It is not the quality-first default when
-Tailwind Plus is lawfully available:
+Apple-native interfaces use Apple frameworks and are outside this web standard.
 
-- Components: https://preline.co/docs/index.html
-- Blocks: https://preline.co/blocks/
-- License: https://preline.co/license.html
+## Where products differ
 
-**Current access decision (2026-09-01):** the owner confirmed there is no paid
-Tailwind Plus access. Until that changes, treat proprietary Tailwind Plus
-source as unavailable. Start deficient web surfaces from Preline's free catalog
-or another maintained free upstream that materially fits the product better,
-with the exact source and license recorded in the design receipt.
+Keep the components standard and put the variety in a few places:
 
-These libraries provide interface structure and behavior, not Fleet identity.
-Adapt the selected source with the product's real content, semantic tokens,
-typography, spacing, imagery, and distinctive product proof. The result must
-not look like an untouched component gallery.
+1. **Tokens.** Each product sets its own `--primary`, `--accent`, radius,
+   surface colors, and one or two typefaces in the shadcn CSS variables. That is
+   the whole per-product theming layer. Don't fork component internals for
+   style.
+2. **Imagery: be creative here.** Illustration, photography, product artwork,
+   generated art, mascots, textures, and hero visuals should be distinctive per
+   product. That is where Fleet sites earn character. A plain shadcn layout with
+   strong product imagery beats a bespoke layout with generic imagery.
+3. **Copy and real product proof.** Use real screens, data, and outcomes, not
+   gallery filler.
 
-## Selection order
+Animated text/background effects (for example [React Bits](https://reactbits.dev/),
+checking its MIT + Commons Clause license) count as imagery. Use them only in
+the hero or one signature moment, never as routine dashboard decoration.
 
-1. Preserve a healthy project-native component or pattern when it already
-   solves the job well.
-2. For a new or deficient landing page, marketing site, or general web surface,
-   search Tailwind Plus blocks and templates first when licensed access is
-   available through the owner's authenticated personal account.
-3. For a new React application system, use Tailwind Plus Catalyst as the visual
-   base. Use an existing Radix or shadcn primitive when the product already
-   depends on it or it better owns the required behavior.
-4. When licensed Tailwind Plus source is unavailable, use Preline as the free
-   fallback rather than delaying the work or inventing a replacement.
-5. Use another maintained upstream source only when it materially fits the
-   product better; record the reason and license.
-6. Create a replacement interface pattern only when the owner explicitly asks
-   for one. Record that authorization and the missing upstream capability.
+## Exceptions: bespoke designs
 
-Composing, styling, and adapting upstream parts to the product is expected.
-Reinventing standard navigation, forms, dialogs, disclosure, tables, cards,
-footers, pricing, FAQs, or other common UI is not.
+Only products whose design is clearly better than a tokenized shadcn baseline
+keep their own design. The owner grants these; agents do not add to the list.
 
-## Curated supplementary sources
+<!-- BESPOKE_LIST -->
 
-Owner-approved source shortlist (2026-09-11). These are discovery and reuse
-candidates, not installed dependencies, new defaults, or blanket production
-approvals. Use the selection order above; do not browse every source for every
-task. Preserve the project's framework and visual language.
+A bespoke product still uses shadcn/Radix for its standard controls (dialogs,
+menus, forms, tables) unless the existing system already owns them well. Its
+bespoke part is the layout, type, and art direction.
 
-### Active sources
+## Applying it
 
-| Source | Use when | Adoption boundary |
-| --- | --- | --- |
-| [Transitions.dev](https://transitions.dev/) | An existing UI needs focused CSS motion: open/close, state swaps, feedback, loading, or resizing. | Reuse the installed `transitions-dev` skill when available and read only the chosen transition reference. Preserve project motion tokens, behavior, and reduced-motion support; verify the selected snippet's license/access and do not assume Pro entitlement. No duplicate skill or motion-library install. |
-| [coss UI](https://coss.com/ui/docs/get-started) | A React application needs forms, controls, menus, or dialogs built on Base UI. | Check Tailwind v4 compatibility and token requirements; select individual components rather than migrating a healthy system. |
-| [shadcnblocks](https://www.shadcnblocks.com/) | A shadcn-based surface needs marketing sections, application shells, dashboards, or tables. | Check the selected block's free/paid access and license; no assumed paid entitlement. |
-| [21st.dev](https://21st.dev/) | Discovering a specific pattern across multiple authors and libraries. | Treat it as a registry, not one consistent system; inspect the original component source, license, and dependencies. |
-| [React Bits](https://reactbits.dev/) | A product-specific visual signature needs animated text, backgrounds, or effects. | Check the [upstream license](https://github.com/DavidHDev/react-bits/blob/main/LICENSE.md); the reviewed project uses MIT + Commons Clause, not plain MIT. Avoid routine dashboard decoration. |
-| [beUI](https://beui.dev/) | A selected control needs purposeful motion, such as tabs, drawers, pickers, or swipe actions. | Validate keyboard, touch, focus, and reduced-motion behavior; do not replace proven behavior primitives for animation alone. |
+- **New surface:** start from shadcn components and blocks with the product's
+  tokens. Install components with the shadcn CLI (`components.json`), which
+  copies source into the repo rather than adding a runtime library.
+- **Astro or other static landings:** use the same shadcn token CSS and the same
+  component class recipes in `.astro` markup. Add a React island only for a
+  component that needs behavior (dialog, menu, combobox, sheet). Do not add
+  React to a static page just to render buttons or cards.
+- **Existing surface on another system (Preline, hand-rolled, other library):**
+  move it to shadcn when the surface is being materially changed, or in an
+  owner-approved migration pass. Don't rewrite an untouched healthy page as a
+  side effect of unrelated work.
+- **Need something shadcn lacks:** first compose it from shadcn/Radix parts.
+  Then check [shadcnblocks](https://www.shadcnblocks.com/) (verify free/paid
+  access and license) or a shadcn-registry component on
+  [21st.dev](https://21st.dev/) (inspect source, license, dependencies). A fully
+  custom pattern needs owner authorization and a recorded gap.
+- **Motion:** use [Transitions.dev](https://transitions.dev/) CSS patterns (via
+  the `transitions-dev` skill when installed) for open/close and state changes.
+  Respect reduced motion.
 
-### Situational references
-
-| Source | Use when | Adoption boundary |
-| --- | --- | --- |
-| [Spectrum UI](https://ui.spectrumhq.in/) | An animated shadcn component or composed card fills a specific gap. | Secondary source with substantial overlap; inspect source and license without connecting its MCP by default. |
-| [Evil Charts](https://evilcharts.com/) | Exploring animated chart presentation for React/shadcn. | Implementation and licensing were not established in the shortlist review. Verify both before reuse, plus scale integrity, missing-data states, accessible alternatives, and motion controls. |
-| [Rare UI](https://www.rareui.com/) | A distinctive interaction such as a folder or duration picker fits the product. | Narrow inspiration/reuse source, not a general UI foundation; check the selected component's license and behavior. |
-| [8bitcn](https://www.8bitcn.com/) | The approved product direction deliberately uses retro pixel styling. | Do not apply its visual language to unrelated operational interfaces. |
-
-Before copying or running a registry installer, inspect the exact source,
-license, dependencies, and proposed file changes. Recheck changeable upstream
-requirements at adoption time. Record the chosen URL and fit in the existing
-design receipt. Inclusion here does not authorize purchases, MCP connections,
-bulk installs, or relaxed accessibility/performance checks. Do not add React
-to a static surface solely to use one of these sources.
+Retired as defaults (2026-10-09): Tailwind Plus/Catalyst, Preline, coss UI,
+beUI, Spectrum UI, Rare UI, 8bitcn, and Evil Charts. Don't start new work on
+them.
 
 ## Runtime and dependency rules
 
-- Prefer copied/adapted static markup when no JavaScript behavior is needed.
-- For licensed HTML blocks, use Tailwind Plus Elements only when the selected
-  interaction requires it. For React or Vue, use the behavior primitive shipped
-  with or specified by the selected source.
-- When using the Preline fallback, install `preline` only for a selected
-  interactive component and import only the needed plugin or non-auto entry
-  point. Do not install its optional integration stack by default.
-- Never store account credentials, license keys, downloaded archives, or
-  proprietary source in shared Fleet tooling. Licensed source belongs only in
-  the lawful end product. Purchasing a license remains a separate spend action.
-- Do not migrate a healthy Radix, shadcn, or project-native system merely for
-  conformity. Apply this standard when a surface is new or being materially
-  changed.
-- Apple-native interfaces use Apple frameworks and design resources as their
-  own upstream system and are outside this web standard.
+- Copied shadcn component source is the norm; keep only the components a
+  surface uses.
+- Never store account credentials, license keys, or paid source in shared Fleet
+  tooling. Buying a license is a separate spend action that needs owner
+  approval.
+- Do not add a production dependency, paid tool, or licensed asset without
+  owner approval.
 
 ## Priority-scaled delivery depth
 
-Use the canonical `identity.priority` in Site Health to decide how much bespoke
-craft and validation time a surface receives. Priority changes depth, not
+Use the canonical `identity.priority` in Site Health to decide how much craft
+and validation time a surface receives. Priority changes depth, not
 truthfulness or basic usability.
 
-- **P1 / flagship:** benchmark against strong original product references that
-  fit the surface's job and the owner-selected direction. Require a
-  product-specific composition and proof artifact, complete interaction states,
-  all three responsive viewports and the strongest project checks. Record how
-  the rendered result meets the benchmark, beyond a passing rubric total.
-- **P2 / active:** require polished production quality and a recognisable
-  product identity, but prefer selective adaptation over a new design system.
-  Use the standard responsive, rendered-review and project checks.
-- **P3 / secondary:** use a proven upstream composition with real product
-  content and one product-specific signature. Run the
-  smallest checks that cover the changed surface.
-- **P4 / parked or exploratory:** use the shared template or one upstream block,
-  keep the implementation intentionally small and coherent with the direction. Do
-  not spend flagship-level time inventing bespoke art direction for a held
-  experiment.
+- **P1 / flagship:** product-specific composition and proof artifact on the
+  standard components, complete interaction states, all three responsive
+  viewports, and the strongest project checks.
+- **P2 / active:** polished production quality and recognisable identity from
+  tokens and imagery. Standard responsive, rendered-review and project checks.
+- **P3 / secondary:** standard shadcn blocks with real product content and one
+  product-specific signature (usually the hero image). Smallest checks that
+  cover the changed surface.
+- **P4 / parked or exploratory:** shared template or one standard block; keep
+  it small and coherent.
 
 Every priority must still pass the applicable design-review gates; Persuade
 surfaces must pass the separate 85/100 product-purpose gate. Accurately state
@@ -138,14 +106,13 @@ focus, avoid responsive overflow, and keep the primary action functional.
 
 ## Receipt and quality gate
 
-Record the exact component or block URLs in `direction.library.sources`, along
-with the runtime posture. If a custom replacement pattern was owner-requested,
-record the authorization and reason.
+Record `direction.library.primary` (`shadcn-ui`, or `existing-project-system`
+for an owner-granted bespoke product) and the exact component or block URLs in
+`direction.library.sources`, with the runtime posture. If a custom pattern was
+owner-authorized, record the authorization and reason.
 
-Upstream sourcing does not waive Fleet's product-purpose, accessibility,
-responsive-browser, performance, or visual-review gates. A broad library helps
-avoid needless invention; it does not make the page product-specific or good by
-itself.
+A standard library does not waive Fleet's product-purpose, accessibility,
+responsive-browser, performance, or visual-review gates.
 
 Run performance evidence against a production build or production-equivalent
 preview. Framework development clients and hot-reload modules are not valid

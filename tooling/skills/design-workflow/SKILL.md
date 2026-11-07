@@ -92,9 +92,10 @@ A standalone visual language on one side needs a reason. Details:
 ## 5. Craft rules that always apply
 
 - Use real product content and assets, not lorem or component-gallery filler.
-- For new or materially redesigned web UI, reuse proven upstream patterns
-  before inventing: healthy project-native pattern first, then Tailwind Plus
-  (when licensed) or Preline. Smallest selective import. See
+- One web UI library everywhere: shadcn/ui (Radix + Tailwind) for landings,
+  apps, and internal tools. Products differ through tokens and creative
+  imagery, not separate component systems; only owner-granted bespoke products
+  keep their own design. See
   [UI library standard](references/ui-library-standard.md). Apple-native UI is
   excluded.
 - Dark mode: define semantic roles for surfaces, text, actions, focus, borders,
