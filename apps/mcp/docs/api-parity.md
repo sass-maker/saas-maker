@@ -138,3 +138,11 @@ native app exactly once. Keep pending/offline receipts truthful.
 For ChatGPT, connect the remote HTTPS MCP endpoint using OAuth. For Codex or
 another MCP client, use the same endpoint and complete that client's OAuth flow.
 Client installation is separate from server release and source tests.
+
+The identity authority must return the verified `mcpProduct`, requested `scope`,
+exact `audience` and `authorizationVersion: 1` alongside the permanent `userId`.
+Personal Platform rejects missing or mismatched markers, including responses
+from the older native-session-only endpoint. Release the qualified identity
+handler before the product handler, qualify the native build and account consent,
+then enable the gateway route last. Keep the activation flag off for rollback;
+retain account data, command receipts and prior native releases.
