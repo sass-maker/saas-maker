@@ -29,6 +29,15 @@ describe('published submission asset files', () => {
         if (asset.mimeType === 'image/svg+xml') expect(bytes.toString()).toContain('<svg');
       }
       for (const video of kit.assets.filter((asset) => asset.kind === 'video')) {
+        const downloadUrl = new URL(video.url);
+        if (downloadUrl.origin === 'https://assets.sassmaker.com') {
+          expect(downloadUrl.search, 'The CDN attachment rule matches this exact query').toBe(
+            '?download=1'
+          );
+          expect(video.viewUrl, 'Inline previews must use the bare video URL').toBe(
+            `${downloadUrl.origin}${downloadUrl.pathname}`
+          );
+        }
         expect(video.posterUrl, 'Video downloads need an identifiable preview').toBeDefined();
         const poster = readFileSync(
           resolve(publicRoot, new URL(video.posterUrl!).pathname.slice(1))

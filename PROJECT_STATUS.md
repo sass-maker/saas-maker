@@ -43,6 +43,10 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
   not acquire kits. Videos use dedicated public asset storage, with owner copies in Drive;
   pricing and destination-specific omissions stay explicit. Download access
   does not authorize submissions or spending.
+  Video download URLs require the exact `?download=1` query. The SaaS Maker
+  response-header rule "Product asset video downloads" on `assets.sassmaker.com`
+  sets `Content-Disposition: attachment` for that query; bare `viewUrl` URLs
+  retain inline playback. Keep this split when regenerating or publishing kits.
 
 - **2026-11-03:** Expanded the Browser Agent Testing article with agent-desktop,
   Open Interpreter, UI-TARS Desktop, Cua and OmniParser, distinguishing their
