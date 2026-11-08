@@ -31,7 +31,8 @@ test('standalone capability catalog has valid roots and execution profiles', () 
   assert.ok(webLandingReadme, 'web-landing README is cataloged');
   assert.doesNotMatch(webLandingReadme.summary, /^Fleet template:/);
   assert.ok(webLandingReadme.summary.length > 20);
-  assert.equal(skills.length, 44);
+  assert.equal(skills.length, 45);
+  assert.equal(skills.filter((skill) => skill.path === 'skills/product-assets/SKILL.md').length, 1);
   assert.equal(skills.filter((skill) => skill.path === 'skills/marketing/SKILL.md').length, 1);
   assert.equal(skills.filter((skill) => skill.path === 'skills/agentic-seo/SKILL.md').length, 1);
   assert.equal(

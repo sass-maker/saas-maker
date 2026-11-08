@@ -40,6 +40,9 @@ test('finds superseded links alongside current links and absent video posters', 
   index.products[0].assets.push({ filename: 'private-original.png' },
     { kind: 'video', publicDownloadUrl: 'https://assets.example.com/film-old.mp4', archived: true });
   assert.deepEqual(auditAssets({ directory: [p] }, index).products[0].issues, []);
+  index.products[0].assets.push({ kind: 'screenshots', publicDownloadUrl: 'https://example.com/typo.png' });
+  assert.deepEqual(auditAssets({ directory: [p] }, index).products[0].issues, ['unrecognized-public-kind:4']);
+  index.products[0].assets.pop();
   index.products[0].assets.push({ filename: 'bad.png', publicDownloadUrl: '' });
   assert.throws(() => auditAssets({ directory: [p] }, index), /Invalid public Drive asset link/);
 });

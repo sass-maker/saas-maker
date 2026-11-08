@@ -29,6 +29,11 @@ export function auditAssets(catalog, index, { productId, localSize } = {}) {
       if (drive.assets.some((asset) => !asset || typeof asset !== 'object' ||
         (asset.publicDownloadUrl != null && (typeof asset.publicDownloadUrl !== 'string' || !asset.publicDownloadUrl))))
         throw new Error(`Invalid public Drive asset link: ${product.id}`);
+      for (const [position, asset] of drive.assets.entries()) {
+        if (asset.publicDownloadUrl != null && asset.archived !== true && asset.kind &&
+          !['logo', 'screenshot', 'video', 'document', 'brief', 'json'].includes(asset.kind))
+          issues.push(`unrecognized-public-kind:${position}`);
+      }
       const publicAssets = drive.assets.map((asset, position) => ({ asset, position })).filter(({ asset }) =>
         asset.publicDownloadUrl != null && asset.archived !== true &&
         (!asset.kind || ['logo', 'screenshot', 'video'].includes(asset.kind)));
