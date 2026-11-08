@@ -1434,7 +1434,7 @@
         "audience": "A person moving between Mac, iPhone, and Apple Watch who wants a deliberate day rather than another task list.",
         "outcome": "Make more realistic plans, recover from interruptions, and protect activities that genuinely matter without moralizing imperfect adherence.",
         "mechanism": "Native apps combine schedule blocks, recurring routines, wall-clock focus sessions, interruption evidence, and an end-of-day divergence review.",
-        "proof": "Public notarized Mac build 20 remains available; local build 25 has passed a bounded personal workflow but Gatekeeper rejects it as unnotarized, so it is not a public update.",
+        "proof": "Public notarized Mac build 30 is available, and installed Focus, Today and Settings open successfully. Account MCP and cross-device continuity remain unqualified.",
         "nextAction": "Use Anchor through a real day and review the divergence evidence; let repeated lived patterns decide the next change."
       },
       "footerArt": {
@@ -2724,7 +2724,7 @@
         "audience": "A person moving between Mac, iPhone, and Apple Watch who wants a deliberate day rather than another task list.",
         "outcome": "Make more realistic plans, recover from interruptions, and protect activities that genuinely matter without moralizing imperfect adherence.",
         "mechanism": "Native apps combine schedule blocks, recurring routines, wall-clock focus sessions, interruption evidence, and an end-of-day divergence review.",
-        "proof": "Public notarized Mac build 20 remains available; local build 25 has passed a bounded personal workflow but Gatekeeper rejects it as unnotarized, so it is not a public update.",
+        "proof": "Public notarized Mac build 30 is available, and installed Focus, Today and Settings open successfully. Account MCP and cross-device continuity remain unqualified.",
         "nextAction": "Use Anchor through a real day and review the divergence evidence; let repeated lived patterns decide the next change."
       },
       "footerArt": {
