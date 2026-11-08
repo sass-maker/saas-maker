@@ -313,7 +313,8 @@
         "mcp.highsignal.app",
         "papers-mcp.highsignal.app",
         "starboard-mcp.codevetter.com",
-        "anchor-mcp.significanthobbies.com"
+        "anchor-mcp.significanthobbies.com",
+        "mcp.significanthobbies.com"
       ],
       "url": "https://sassmaker.com",
       "repositoryUrl": "https://github.com/sass-maker/saas-maker",

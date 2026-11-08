@@ -8,6 +8,7 @@
   "preview_urls": false,
   "routes": [
     { "pattern": "anchor-mcp.significanthobbies.com", "custom_domain": true },
+    { "pattern": "mcp.significanthobbies.com", "custom_domain": true },
     { "pattern": "reader-mcp.significanthobbies.com", "custom_domain": true },
     { "pattern": "calorie-mcp.significanthobbies.com", "custom_domain": true },
     { "pattern": "anime-mcp.significanthobbies.com", "custom_domain": true },
