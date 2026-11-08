@@ -18,6 +18,32 @@ export interface PurposeContract {
   nextAction?: string;
 }
 
+export interface SubmissionAsset {
+  id: string;
+  kind: 'logo' | 'screenshot' | 'video';
+  label: string;
+  url: string;
+  filename: string;
+  mimeType: string;
+  width?: number;
+  height?: number;
+  byteSize?: number;
+  sourceUrl?: string;
+  sourceRevision?: string;
+  checkedAt?: string;
+  viewUrl?: string;
+}
+export interface ProductSubmission {
+  tagline?: string;
+  shortDescription?: string;
+  longDescription?: string;
+  categoryWords?: string[];
+  pricingModel?: string;
+  demoUrl?: string;
+  checkedAt?: string;
+  assets: SubmissionAsset[];
+}
+
 export interface DirectoryProject {
   id: string;
   name: string;
@@ -25,6 +51,7 @@ export interface DirectoryProject {
   makerNote: string;
   purposeContract?: PurposeContract;
   logoUrl?: string;
+  submission?: ProductSubmission;
   kind?: 'product' | 'platform' | 'experiment' | 'utility' | 'project';
   category?: 'utility' | 'media' | 'experimental';
   form: string;

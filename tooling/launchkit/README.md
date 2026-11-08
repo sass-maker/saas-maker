@@ -79,3 +79,22 @@ node tooling/launchkit/scripts/sync-coverage.mjs --check  # verify freshness
 
 The projection drops evidence paths and withholds projects that are not in
 the public directory.
+
+## Fleet product briefs
+
+Public product profiles at `/p/<product-id>` expose reviewed copy and asset download
+links. `/submission-kits.json` indexes all eligible public products. Each kit is at
+`/p/<product-id>/submission.json`; its downloadable brief is at
+`/p/<product-id>/brief.txt`. Internal, preview and archived profiles have no kit.
+
+Export from the checked-in public catalog without a network request:
+
+```sh
+node tooling/launchkit/scripts/export-product-brief.mjs --product saas-maker --out brief.md
+```
+
+Use `--catalog https://sassmaker.com/projects.json` for the published catalog.
+The exporter refuses to overwrite existing files. Missing assets, pricing and
+other requirements remain listed. SVG logos are labelled because many image
+upload fields require a raster file. The kit does not grant campaign permission;
+account creation, publication, reciprocal badges and spending default to no.

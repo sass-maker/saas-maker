@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { validateSubmission, submissionEligible } from './submission-kits.mjs';
+
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -43,6 +45,7 @@ const DIRECTORY_FIELDS = new Set([
   'description',
   'makerNote',
   'logoUrl',
+  'submission',
   'purposeContract',
   'footerArt',
   'kind',
@@ -237,6 +240,11 @@ export function validateProjection(parsed, sourcePath) {
         project.publicUrlLabel !== 'Preview site'
       ) {
         throw new Error(`${project.id}: preview destination must not imply a released product`);
+      }
+      if (project.submission !== undefined) {
+        if (!submissionEligible(project))
+          throw new Error(`${project.id}: submission kit requires a shareable public-link profile`);
+        validateSubmission(project.submission, project.id);
       }
       validateProfilePurposeContract(project.purposeContract, project.id);
       if (directoryIds.has(project.id)) {
