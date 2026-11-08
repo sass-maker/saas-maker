@@ -82,6 +82,10 @@ the public directory.
 
 ## Fleet product briefs
 
+For finding or changing product files, follow the
+[product asset maintenance workflow](../skills/product-assets/SKILL.md). It
+keeps the Drive index, canonical metadata, public files and briefs aligned.
+
 Public product profiles at `/p/<product-id>` expose reviewed copy and asset download
 links. `/submission-kits.json` indexes all eligible public products. Each kit is at
 `/p/<product-id>/submission.json`; its downloadable brief is at
