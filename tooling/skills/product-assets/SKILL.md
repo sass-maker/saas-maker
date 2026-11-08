@@ -56,8 +56,12 @@ projection. Keep originals and prior versions recoverable.
    ```
 
    Omit `--product` for all current projects. The audit checks index links and
-   local image sizes; it does not fetch Drive, compare file hashes, verify
-   permissions or check production. Independently inspect the actual changed
+   local image sizes and poster presence; it does not fetch Drive, compare file
+   hashes, verify permissions or check production. An orphaned index entry needs
+   investigation, not automatic deletion. The Drive index is a JSON object with
+   `products[]` entries keyed by `id`, each having `driveFolderUrl` and `assets[]`;
+   every public-kit asset entry needs a `publicDownloadUrl` matching the kit.
+   Private inventory assets need not have public URLs. Independently inspect the actual changed
    Drive and public bytes. A 200 HTML fallback is not a JSON kit. Build, follow
    the existing release guard, and verify live routes only when a public site
    release is in scope and authentication is available.

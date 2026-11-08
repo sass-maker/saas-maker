@@ -25,13 +25,22 @@ export function auditAssets(catalog, index, { productId, localSize } = {}) {
     if (index && !drive) issues.push('missing-drive-folder-in-index');
     if (drive && !drive.driveFolderUrl) issues.push('missing-drive-folder-url');
     if (kit && drive) {
-      const links = new Set((drive.assets ?? []).map((asset) => asset.publicDownloadUrl));
+      if (!Array.isArray(drive.assets)) throw new Error(`Invalid Drive asset list: ${product.id}`);
+      if (drive.assets.some((asset) => typeof asset.publicDownloadUrl !== 'string' || !asset.publicDownloadUrl))
+        throw new Error(`Invalid public Drive asset link: ${product.id}`);
+      const links = new Set(drive.assets.map((asset) => asset.publicDownloadUrl));
+      const expected = new Set(kit.assets.map((asset) => asset.url));
       for (const asset of kit.assets) {
         if (!links.has(asset.url)) issues.push(`missing-or-stale-drive-index-link:${asset.id}`);
+      }
+      for (const [position, asset] of drive.assets.entries()) {
+        if (!expected.has(asset.publicDownloadUrl)) issues.push(`extra-drive-index-link:${position}`);
       }
     }
     if (kit && localSize) {
       for (const asset of kit.assets) {
+        if (asset.posterUrl && localSize(new URL(asset.posterUrl).pathname) === null)
+          issues.push(`missing-local-poster:${asset.id}`);
         const url = new URL(asset.url);
         if (url.origin !== 'https://sassmaker.com' || !url.pathname.startsWith('/product-assets/')) continue;
         const size = localSize(url.pathname);
@@ -64,7 +73,7 @@ function main(args) {
     try { return statSync(file).size; } catch (error) { if (error.code === 'ENOENT') return null; throw error; }
   } });
   console.log(JSON.stringify(report, null, 2));
-  if (report.products.some((p) => p.issues.length)) process.exitCode = 1;
+  if (report.products.some((p) => p.issues.length) || report.orphanedDriveIds.length) process.exitCode = 1;
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   try { main(process.argv.slice(2)); } catch (error) { console.error(error.message); process.exitCode = 2; }
