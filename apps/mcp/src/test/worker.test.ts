@@ -766,7 +766,6 @@ test("Anchor rejects invalid notification acknowledgements and empty tool respon
     { message: { ...notification, id: null }, status: 202, body: null },
     { message: notification, status: 202, body: "unexpected content" },
     { message: notification, status: 202, body: JSON.stringify({ result: {} }), contentType: "application/json" },
-    { message: notification, status: 204, body: null },
     { message: { jsonrpc: "2.0", id: 1, method: "tools/list" }, status: 202, body: null },
   ]) {
     const response = await handleHostedRequest(

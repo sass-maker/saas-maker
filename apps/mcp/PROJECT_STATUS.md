@@ -6,14 +6,19 @@ The Anchor proxy and companion product authorization are deployed. Auth0 now
 has the exact resource `https://mcp.significanthobbies.com/anchor/mcp`,
 `anchor.read` / `anchor.write`, RS256 and one-hour tokens. User consent cannot
 be skipped; machine-to-machine access is disabled. The branded hostname
-`anchor-mcp.significanthobbies.com` is deployed. Client authorization remains
-in progress.
+`anchor-mcp.significanthobbies.com` is deployed. Provided-client OAuth sign-in
+has succeeded; account and device qualification remains in progress.
 
 Use `https://mcp.significanthobbies.com/anchor/mcp` for Codex and other clients
 that require the metadata resource identifier to match the connected URL.
 Its hostname is deployed as an Anchor-only alias; the branded ChatGPT endpoint
 is retained. The Auth0 audience and product JWT contracts are unchanged.
-Real-client sign-in remains a qualification check.
+Real-client tool and device acceptance remain qualification checks.
+
+The native proxy preserves an empty HTTP 202 acknowledgement for initialized
+notifications without a request ID. Tool responses retain strict JSON filtering;
+202 acknowledgements carrying content or a request ID are rejected. This
+repairs the discovery failure observed after successful OAuth sign-in.
 
 This source sets the nonsecret `MCP_ENABLED_WRITE_PRODUCTS` binding to `anchor`
 for controlled account qualification through the guarded publisher. Anonymous
