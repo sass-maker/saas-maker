@@ -32,6 +32,7 @@ export interface SubmissionAsset {
   sourceRevision?: string;
   checkedAt?: string;
   viewUrl?: string;
+  posterUrl?: string;
 }
 export interface ProductSubmission {
   tagline?: string;

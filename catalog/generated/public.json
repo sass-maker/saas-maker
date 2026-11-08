@@ -60,7 +60,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://codevetter.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Execution-backed checks for AI-written code",
+        "shortDescription": "Verify AI-written code with executable checks and inspectable local evidence.",
+        "categoryWords": [
+          "developer tools",
+          "code review",
+          "software testing"
+        ],
+        "longDescription": "Execution-backed verification for AI-written software changes — local-first and inspectable.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square app icon (PNG)",
+            "url": "/product-assets/codevetter/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 63125,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Codevetter/codevetter/blob/526577eadf04e94221b51677cb0705b0ac58269c/apps/macos/CodeVetter/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png",
+            "sourceRevision": "526577eadf04e94221b51677cb0705b0ac58269c"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/codevetter/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 1372,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Codevetter/codevetter/blob/526577eadf04e94221b51677cb0705b0ac58269c/apps/landing-page-astro/public/favicon.svg",
+            "sourceRevision": "526577eadf04e94221b51677cb0705b0ac58269c"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "home (captured 2026-10-25)",
+            "url": "/product-assets/codevetter/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1248,
+            "byteSize": 441883,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://codevetter.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "Native workbench public fixture (Committed source snapshot 526577eadf04)",
+            "url": "/product-assets/codevetter/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 1440,
+            "height": 900,
+            "byteSize": 215095,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://codevetter.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/codevetter-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/codevetter/codevetter-launch-landscape-poster.jpg",
+            "filename": "codevetter-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 2216610,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/codevetter-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/codevetter/codevetter-launch-portrait-poster.jpg",
+            "filename": "codevetter-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 2352748,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "pace",
@@ -117,7 +212,89 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://heypace.app",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "An experimental voice agent for Mac",
+        "shortDescription": "A macOS voice-agent preview, with installation and permission-dependent workflows still being qualified.",
+        "categoryWords": [
+          "macOS",
+          "voice assistant",
+          "productivity"
+        ],
+        "longDescription": "An experimental macOS voice-agent preview; installation and permission-dependent workflows are still being qualified.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square app icon (PNG)",
+            "url": "/product-assets/pace/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 816112,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/HeyPace/pace/blob/268d5990363b5ac033dc836e34766d003e126ed9/leanring-buddy/Assets.xcassets/AppIcon.appiconset/1024-mac.png",
+            "sourceRevision": "268d5990363b5ac033dc836e34766d003e126ed9"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/pace/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 327,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/HeyPace/pace/blob/268d5990363b5ac033dc836e34766d003e126ed9/website/public/favicon.svg",
+            "sourceRevision": "268d5990363b5ac033dc836e34766d003e126ed9"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "pace revision live 2x (captured 2026-10-25)",
+            "url": "/product-assets/pace/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1111,
+            "byteSize": 351944,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://heypace.app"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/pace-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/pace/pace-launch-landscape-poster.jpg",
+            "filename": "pace-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1765254,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/pace-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/pace/pace-launch-portrait-poster.jpg",
+            "filename": "pace-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1775896,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "posttrainllm",
@@ -174,7 +351,89 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://posttrainllm.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Build and measure specialist LLMs on a Mac",
+        "shortDescription": "A Mac-local specialist-model lab with training, evaluation, packaging and a public browser playground.",
+        "categoryWords": [
+          "local AI",
+          "machine learning",
+          "developer tools"
+        ],
+        "longDescription": "A Mac-local specialist-model lab with training, evaluation, packaging and a public browser playground. Published experiments and artifacts describe measured results and their limits.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/posttrainllm/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 79840,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/PostTrainLLM/posttrainllm/blob/65abbc8acce6be9fed2881475d2cf06b553a0681/browser/public/favicon.svg",
+            "sourceRevision": "65abbc8acce6be9fed2881475d2cf06b553a0681"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/posttrainllm/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 550,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/PostTrainLLM/posttrainllm/blob/65abbc8acce6be9fed2881475d2cf06b553a0681/browser/public/favicon.svg",
+            "sourceRevision": "65abbc8acce6be9fed2881475d2cf06b553a0681"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "Current public homepage (captured 2026-11-08)",
+            "url": "/product-assets/posttrainllm/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1440,
+            "height": 1000,
+            "byteSize": 102000,
+            "sourceUrl": "https://posttrainllm.com/",
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/posttrainllm-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/posttrainllm/posttrainllm-launch-landscape-poster.jpg",
+            "filename": "posttrainllm-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1759649,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/posttrainllm-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/posttrainllm/posttrainllm-launch-portrait-poster.jpg",
+            "filename": "posttrainllm-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1836065,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "site-health",
@@ -256,7 +515,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://significanthobbies.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Find things worth doing",
+        "shortDescription": "Explore hobbies and experiences, build a bucket list, and save progress on your device or in your account.",
+        "categoryWords": [
+          "hobbies",
+          "experiences",
+          "personal planning"
+        ],
+        "longDescription": "Explore hobbies and possibilities, build a personal bucket list, and save your progress on this device or in your account.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/live/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 81399,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/live/blob/642d65c0012527fcd1afa3ddad3aa28b0e2c6b41/landing-astro/public/favicon.svg",
+            "sourceRevision": "642d65c0012527fcd1afa3ddad3aa28b0e2c6b41"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/live/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 285,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/live/blob/642d65c0012527fcd1afa3ddad3aa28b0e2c6b41/landing-astro/public/favicon.svg",
+            "sourceRevision": "642d65c0012527fcd1afa3ddad3aa28b0e2c6b41"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "catalog (captured 2026-10-25)",
+            "url": "/product-assets/live/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 713,
+            "height": 1920,
+            "byteSize": 333955,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://significanthobbies.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "guide (captured 2026-10-25)",
+            "url": "/product-assets/live/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 821,
+            "height": 1920,
+            "byteSize": 276113,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://significanthobbies.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/live-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/live/live-launch-landscape-poster.jpg",
+            "filename": "live-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 5715082,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/live-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/live/live-launch-portrait-poster.jpg",
+            "filename": "live-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 6041529,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "saas-maker",
@@ -325,7 +679,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://sassmaker.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "A product studio and reusable tooling workshop",
+        "shortDescription": "Explore Fleet products, reusable developer tools, launch destinations and per-product MCP connections.",
+        "categoryWords": [
+          "developer tools",
+          "product directory",
+          "launch tools"
+        ],
+        "longDescription": "The public Fleet product studio, reusable tooling workshop and common home for per-product MCP connections.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/saas-maker/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 79325,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/sass-maker/saas-maker/blob/f089fea58382372b80afc4dddb904233ddec39df/apps/showcase/public/favicon.svg",
+            "sourceRevision": "f089fea58382372b80afc4dddb904233ddec39df"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/saas-maker/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 374,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/sass-maker/saas-maker/blob/f089fea58382372b80afc4dddb904233ddec39df/apps/showcase/public/favicon.svg",
+            "sourceRevision": "f089fea58382372b80afc4dddb904233ddec39df"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "revision projects mobile (captured 2026-10-25)",
+            "url": "/product-assets/saas-maker/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 780,
+            "height": 608,
+            "byteSize": 37708,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://sassmaker.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "revision launch (captured 2026-10-25)",
+            "url": "/product-assets/saas-maker/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1111,
+            "byteSize": 209644,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://sassmaker.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/saas-maker-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/saas-maker/saas-maker-launch-landscape-poster.jpg",
+            "filename": "saas-maker-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 2372922,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/saas-maker-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/saas-maker/saas-maker-launch-portrait-poster.jpg",
+            "filename": "saas-maker-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 2381099,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "fleet-social",
@@ -407,7 +856,89 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://chatgpt.significanthobbies.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Explore the themes in your ChatGPT history",
+        "shortDescription": "Import a ChatGPT export and explore themes and semantic search locally in your browser.",
+        "categoryWords": [
+          "ChatGPT",
+          "personal knowledge",
+          "data visualization"
+        ],
+        "longDescription": "A browser-local experiment for importing a ChatGPT export, exploring semantic themes and search, and optionally saving analysis on your device.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/chatgpt-memory-insights/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 55285,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/sass-maker/saas-maker/blob/f089fea58382372b80afc4dddb904233ddec39df/apps/memory-map/public/favicon.svg",
+            "sourceRevision": "f089fea58382372b80afc4dddb904233ddec39df"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/chatgpt-memory-insights/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 64,
+            "height": 64,
+            "byteSize": 509,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/sass-maker/saas-maker/blob/f089fea58382372b80afc4dddb904233ddec39df/apps/memory-map/public/favicon.svg",
+            "sourceRevision": "f089fea58382372b80afc4dddb904233ddec39df"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "live import (captured 2026-10-25)",
+            "url": "/product-assets/chatgpt-memory-insights/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1111,
+            "byteSize": 241132,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://chatgpt.significanthobbies.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/chatgpt-memory-insights-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/chatgpt-memory-insights/chatgpt-memory-insights-launch-landscape-poster.jpg",
+            "filename": "chatgpt-memory-insights-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1274753,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/chatgpt-memory-insights-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/chatgpt-memory-insights/chatgpt-memory-insights-launch-portrait-poster.jpg",
+            "filename": "chatgpt-memory-insights-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1258876,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "free-ai",
@@ -464,7 +995,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://ai-gateway.sassmaker.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "An OpenAI-compatible free-tier model gateway",
+        "shortDescription": "Route model requests through a free-tier gateway with operator-provisioned project access.",
+        "categoryWords": [
+          "AI gateway",
+          "developer tools",
+          "API"
+        ],
+        "longDescription": "An OpenAI-compatible free-tier model gateway with operator-provisioned project access.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/free-ai/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 76618,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/sass-maker/free-ai/blob/82278d6880ad1489805ccfd932a65c4c6e574475/site/public/favicon.svg",
+            "sourceRevision": "82278d6880ad1489805ccfd932a65c4c6e574475"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/free-ai/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 424,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/sass-maker/free-ai/blob/82278d6880ad1489805ccfd932a65c4c6e574475/site/public/favicon.svg",
+            "sourceRevision": "82278d6880ad1489805ccfd932a65c4c6e574475"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "r2 full (captured 2026-10-25)",
+            "url": "/product-assets/free-ai/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 787,
+            "height": 1920,
+            "byteSize": 349593,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://ai-gateway.sassmaker.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "r2 code panel (captured 2026-10-25)",
+            "url": "/product-assets/free-ai/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 1063,
+            "height": 800,
+            "byteSize": 77561,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://ai-gateway.sassmaker.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/free-ai-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/free-ai/free-ai-launch-landscape-poster.jpg",
+            "filename": "free-ai-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1524825,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/free-ai-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/free-ai/free-ai-launch-portrait-poster.jpg",
+            "filename": "free-ai-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1503158,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "high-signal",
@@ -521,7 +1147,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://highsignal.app",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Daily intelligence with sources you can inspect",
+        "shortDescription": "Explore evidence-backed daily intelligence across technology, startups, finance and public markets.",
+        "categoryWords": [
+          "research",
+          "news",
+          "market intelligence"
+        ],
+        "longDescription": "Evidence-backed daily intelligence across technology, startups, finance, and public markets.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/high-signal/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 66415,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/High-Signal-App/high-signal/blob/350474a8775263c4b10bac3c26c901f2dd46ef48/apps/web/public/favicon.svg",
+            "sourceRevision": "350474a8775263c4b10bac3c26c901f2dd46ef48"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/high-signal/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 407,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/High-Signal-App/high-signal/blob/350474a8775263c4b10bac3c26c901f2dd46ef48/apps/web/public/favicon.svg",
+            "sourceRevision": "350474a8775263c4b10bac3c26c901f2dd46ef48"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "r2 live desktop (captured 2026-10-25)",
+            "url": "/product-assets/high-signal/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1248,
+            "byteSize": 230887,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://highsignal.app"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "r2 methodology mobile (captured 2026-10-25)",
+            "url": "/product-assets/high-signal/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 780,
+            "height": 608,
+            "byteSize": 30680,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://highsignal.app"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/high-signal-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/high-signal/high-signal-launch-landscape-poster.jpg",
+            "filename": "high-signal-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 2001952,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/high-signal-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/high-signal/high-signal-launch-portrait-poster.jpg",
+            "filename": "high-signal-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1848656,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "knowledge-base",
@@ -580,7 +1301,89 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://knowledgebase.sassmaker.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Agent search with citations and provenance",
+        "shortDescription": "Search specialized corpora through private agent retrieval with ranked citations and provenance.",
+        "categoryWords": [
+          "knowledge base",
+          "AI search",
+          "developer tools"
+        ],
+        "longDescription": "Private agent search over specialized corpora with ranked citations, provenance, and schema-aware retrieval.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/knowledge-base/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 50684,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/sass-maker/knowledge-base/blob/5f048d9472ccaf27efe862b1a3eb9530dd03afab/cloudflare/fullstack/public/favicon.svg",
+            "sourceRevision": "5f048d9472ccaf27efe862b1a3eb9530dd03afab"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/knowledge-base/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 369,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/sass-maker/knowledge-base/blob/5f048d9472ccaf27efe862b1a3eb9530dd03afab/cloudflare/fullstack/public/favicon.svg",
+            "sourceRevision": "5f048d9472ccaf27efe862b1a3eb9530dd03afab"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "evidence live 2x (captured 2026-10-25)",
+            "url": "/product-assets/knowledge-base/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 538,
+            "byteSize": 212915,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://knowledgebase.sassmaker.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/knowledge-base-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/knowledge-base/knowledge-base-launch-landscape-poster.jpg",
+            "filename": "knowledge-base-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1981436,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/knowledge-base-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/knowledge-base/knowledge-base-launch-portrait-poster.jpg",
+            "filename": "knowledge-base-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1823324,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "anime-list",
@@ -638,7 +1441,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://anime.significanthobbies.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Find anime and manga for your watchlist",
+        "shortDescription": "Discover anime and manga with multi-axis filters and keep personal watchlists.",
+        "categoryWords": [
+          "anime",
+          "manga",
+          "discovery"
+        ],
+        "longDescription": "Anime and manga discovery with multi-axis filtering and personal watchlists.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/anime-list/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 45725,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/anime-list/blob/7b24b47c51f4b13f750fb9a0bd9e11b479d02a50/public/favicon.svg",
+            "sourceRevision": "7b24b47c51f4b13f750fb9a0bd9e11b479d02a50"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/anime-list/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 326,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/anime-list/blob/7b24b47c51f4b13f750fb9a0bd9e11b479d02a50/public/favicon.svg",
+            "sourceRevision": "7b24b47c51f4b13f750fb9a0bd9e11b479d02a50"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "search desktop (captured 2026-10-25)",
+            "url": "/product-assets/anime-list/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 708,
+            "height": 1920,
+            "byteSize": 1521995,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://anime.significanthobbies.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "search mobile (captured 2026-10-25)",
+            "url": "/product-assets/anime-list/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 780,
+            "height": 608,
+            "byteSize": 110060,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://anime.significanthobbies.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/anime-list-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/anime-list/anime-list-launch-landscape-poster.jpg",
+            "filename": "anime-list-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 2219974,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/anime-list-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/anime-list/anime-list-launch-portrait-poster.jpg",
+            "filename": "anime-list-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 2694998,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "looptv",
@@ -695,7 +1593,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://tv.significanthobbies.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "A lean-back queue of curated videos",
+        "shortDescription": "Explore an experimental lean-back queue of curated science and other videos.",
+        "categoryWords": [
+          "video discovery",
+          "science",
+          "entertainment"
+        ],
+        "longDescription": "An experimental lean-back queue of curated science and other videos.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/looptv/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 47814,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/looptv/blob/92ecac30b3db725233208df3a915cccbc8cd82b6/public/favicon.svg",
+            "sourceRevision": "92ecac30b3db725233208df3a915cccbc8cd82b6"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/looptv/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 308,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/looptv/blob/92ecac30b3db725233208df3a915cccbc8cd82b6/public/favicon.svg",
+            "sourceRevision": "92ecac30b3db725233208df3a915cccbc8cd82b6"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "home (captured 2026-10-25)",
+            "url": "/product-assets/looptv/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1222,
+            "byteSize": 399910,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://tv.significanthobbies.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "science (captured 2026-10-25)",
+            "url": "/product-assets/looptv/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1000,
+            "byteSize": 55396,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://tv.significanthobbies.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/looptv-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/looptv/looptv-launch-landscape-poster.jpg",
+            "filename": "looptv-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1676557,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/looptv-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/looptv/looptv-launch-portrait-poster.jpg",
+            "filename": "looptv-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1705632,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "reader",
@@ -780,7 +1773,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://learn.significanthobbies.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "A learning OS for software engineering interviews",
+        "shortDescription": "Practice software engineering interview topics through a structured learning workspace.",
+        "categoryWords": [
+          "education",
+          "software engineering",
+          "interview preparation"
+        ],
+        "longDescription": "A learning OS for software-engineering interview practice.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/swe-interview-prep/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 53114,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/swe-interview-prep/blob/e4d8bd4cfef4e1e7dcb0a56b7ec58c8f591c9d70/public/favicon.svg",
+            "sourceRevision": "e4d8bd4cfef4e1e7dcb0a56b7ec58c8f591c9d70"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/swe-interview-prep/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 477,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/swe-interview-prep/blob/e4d8bd4cfef4e1e7dcb0a56b7ec58c8f591c9d70/public/favicon.svg",
+            "sourceRevision": "e4d8bd4cfef4e1e7dcb0a56b7ec58c8f591c9d70"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "concept (captured 2026-10-25)",
+            "url": "/product-assets/swe-interview-prep/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1600,
+            "byteSize": 190103,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://learn.significanthobbies.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "tokenizer drill (captured 2026-10-25)",
+            "url": "/product-assets/swe-interview-prep/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1600,
+            "byteSize": 232937,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://learn.significanthobbies.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/swe-interview-prep-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/swe-interview-prep/swe-interview-prep-launch-landscape-poster.jpg",
+            "filename": "swe-interview-prep-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1825082,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/swe-interview-prep-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/swe-interview-prep/swe-interview-prep-launch-portrait-poster.jpg",
+            "filename": "swe-interview-prep-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1838682,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "calorie",
@@ -839,7 +1927,88 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://calorie.significanthobbies.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "A local-first food, water and weight journal",
+        "shortDescription": "Track food, water and weight in a private local-first journal with transparent timing guidance.",
+        "categoryWords": [
+          "nutrition",
+          "health and fitness",
+          "food journal"
+        ],
+        "longDescription": "A private, local-first food, water, and weight journal with transparent timing guidance.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square app icon (PNG)",
+            "url": "/product-assets/calorie/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 26599,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/calorie/blob/029613771fcdbf6e38b521adf4cbfc955b2cf2b2/ios/Sources/Calorie/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png",
+            "sourceRevision": "029613771fcdbf6e38b521adf4cbfc955b2cf2b2"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "today light (captured 2026-10-25)",
+            "url": "/product-assets/calorie/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 883,
+            "height": 1920,
+            "byteSize": 360612,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://calorie.significanthobbies.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "quick log light (captured 2026-10-25)",
+            "url": "/product-assets/calorie/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 883,
+            "height": 1920,
+            "byteSize": 386131,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://calorie.significanthobbies.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/calorie-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/calorie/calorie-launch-landscape-poster.jpg",
+            "filename": "calorie-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1910148,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/calorie-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/calorie/calorie-launch-portrait-poster.jpg",
+            "filename": "calorie-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1917827,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "setline",
@@ -896,7 +2065,88 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://setline.significanthobbies.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Follow your training plan one set at a time",
+        "shortDescription": "An iOS training tracker for strength, cardio and mobility programmes with authored exercise targets.",
+        "categoryWords": [
+          "fitness",
+          "workout tracker",
+          "iOS"
+        ],
+        "longDescription": "An iOS-native training tracker that runs a written strength, cardio and mobility programme one set at a time and measures each exercise against an authored target.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square app icon (PNG)",
+            "url": "/product-assets/setline/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 805466,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/setline/blob/ce7289e7e12ca407618d08b086636ac370154bfc/ios/Sources/Setline/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png",
+            "sourceRevision": "ce7289e7e12ca407618d08b086636ac370154bfc"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "shot today (Committed source snapshot ce7289e7e12c)",
+            "url": "/product-assets/setline/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 294,
+            "height": 640,
+            "byteSize": 70251,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://setline.significanthobbies.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "shot workout player (Committed source snapshot ce7289e7e12c)",
+            "url": "/product-assets/setline/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 294,
+            "height": 640,
+            "byteSize": 50810,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://setline.significanthobbies.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/setline-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/setline/setline-launch-landscape-poster.jpg",
+            "filename": "setline-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1671610,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/setline-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/setline/setline-launch-portrait-poster.jpg",
+            "filename": "setline-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1713260,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "kith",
@@ -953,7 +2203,88 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://kith.significanthobbies.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Keep context for the people you care about",
+        "shortDescription": "A private iPhone app with a closeness-weighted home, standing notes and a chronological log per person.",
+        "categoryWords": [
+          "relationships",
+          "personal CRM",
+          "iOS"
+        ],
+        "longDescription": "A private iPhone app for the people you actually want to stay close to — closeness-weighted constellation home, standing notes, and a chronological log per person.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square app icon (PNG)",
+            "url": "/product-assets/kith/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 865010,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/kith/blob/571b897f36ff35deedba9197d79dbf021d974faa/ios/Sources/Kith/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png",
+            "sourceRevision": "571b897f36ff35deedba9197d79dbf021d974faa"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "constellation (captured 2026-10-25)",
+            "url": "/product-assets/kith/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 883,
+            "height": 1920,
+            "byteSize": 656959,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://kith.significanthobbies.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "person (captured 2026-10-25)",
+            "url": "/product-assets/kith/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 883,
+            "height": 1920,
+            "byteSize": 385740,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://kith.significanthobbies.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/kith-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/kith/kith-launch-landscape-poster.jpg",
+            "filename": "kith-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 2494167,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/kith-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/kith/kith-launch-portrait-poster.jpg",
+            "filename": "kith-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 2510673,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "rolepatch",
@@ -1010,7 +2341,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://rolepatch.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Tailor a resume with a reviewable diff",
+        "shortDescription": "A guest resume-tailoring experiment with a reviewable diff and browser-local document exports.",
+        "categoryWords": [
+          "resume",
+          "job search",
+          "career"
+        ],
+        "longDescription": "A guest resume-tailoring experiment with a reviewable diff and browser-local document exports.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/rolepatch/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 33210,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/rolepatch/blob/0ae9cf80930efd238a062b325a9e91dd14c48b16/landing-astro/public/favicon.svg",
+            "sourceRevision": "0ae9cf80930efd238a062b325a9e91dd14c48b16"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/rolepatch/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 467,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/rolepatch/blob/0ae9cf80930efd238a062b325a9e91dd14c48b16/landing-astro/public/favicon.svg",
+            "sourceRevision": "0ae9cf80930efd238a062b325a9e91dd14c48b16"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "home (captured 2026-10-25)",
+            "url": "/product-assets/rolepatch/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1248,
+            "byteSize": 321392,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://rolepatch.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "builder (captured 2026-10-25)",
+            "url": "/product-assets/rolepatch/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1111,
+            "byteSize": 182365,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://rolepatch.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/rolepatch-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/rolepatch/rolepatch-launch-landscape-poster.jpg",
+            "filename": "rolepatch-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 2489222,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/rolepatch-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/rolepatch/rolepatch-launch-portrait-poster.jpg",
+            "filename": "rolepatch-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 2478781,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "karte",
@@ -1068,7 +2494,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://karte.cc",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "A public profile that answers visitor questions",
+        "shortDescription": "Create a public profile that answers visitor questions and keeps context for better inbound.",
+        "categoryWords": [
+          "personal website",
+          "creator tools",
+          "public profile"
+        ],
+        "longDescription": "A creator-owned public profile that answers visitor questions and preserves context for better inbound.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/karte/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 74656,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/karte/blob/5fb1e561d1c97b5b526aafc45f74fab3c09cfb29/public/favicon.svg",
+            "sourceRevision": "5fb1e561d1c97b5b526aafc45f74fab3c09cfb29"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/karte/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 830,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/karte/blob/5fb1e561d1c97b5b526aafc45f74fab3c09cfb29/public/favicon.svg",
+            "sourceRevision": "5fb1e561d1c97b5b526aafc45f74fab3c09cfb29"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "landing desktop (captured 2026-10-25)",
+            "url": "/product-assets/karte/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1111,
+            "byteSize": 232822,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://karte.cc"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "specimen r2 2x (captured 2026-10-25)",
+            "url": "/product-assets/karte/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1484,
+            "byteSize": 232524,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://karte.cc"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/karte-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/karte/karte-launch-landscape-poster.jpg",
+            "filename": "karte-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 2210750,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/karte-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/karte/karte-launch-portrait-poster.jpg",
+            "filename": "karte-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 2209080,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "starboard",
@@ -1125,7 +2646,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://starboard.codevetter.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Explore public repositories and related projects",
+        "shortDescription": "Discover public GitHub repositories and related projects through a searchable experiment.",
+        "categoryWords": [
+          "GitHub",
+          "developer tools",
+          "software discovery"
+        ],
+        "longDescription": "Explore public GitHub repositories and related projects through a searchable discovery experiment.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/starboard/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 59062,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Codevetter/starboard/blob/b7434b247c5bb3832b0ea425daaeb23c3f9c9c0d/landing-astro/public/favicon.svg",
+            "sourceRevision": "b7434b247c5bb3832b0ea425daaeb23c3f9c9c0d"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/starboard/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 386,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Codevetter/starboard/blob/b7434b247c5bb3832b0ea425daaeb23c3f9c9c0d/landing-astro/public/favicon.svg",
+            "sourceRevision": "b7434b247c5bb3832b0ea425daaeb23c3f9c9c0d"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "home (captured 2026-10-25)",
+            "url": "/product-assets/starboard/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 671,
+            "height": 1920,
+            "byteSize": 227982,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://starboard.codevetter.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "preview form (captured 2026-10-25)",
+            "url": "/product-assets/starboard/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1455,
+            "byteSize": 201448,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://starboard.codevetter.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/starboard-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/starboard/starboard-launch-landscape-poster.jpg",
+            "filename": "starboard-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 2784409,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/starboard-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/starboard/starboard-launch-portrait-poster.jpg",
+            "filename": "starboard-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 2852383,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "ai-game",
@@ -1210,7 +2826,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://health.sassmaker.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Analytics, events, logs and endpoint health",
+        "shortDescription": "Review web analytics, product events, logs and endpoint health in one workspace.",
+        "categoryWords": [
+          "analytics",
+          "monitoring",
+          "developer tools"
+        ],
+        "longDescription": "Web analytics, product events, logs, and endpoint health in one workspace.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/app-health/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 45074,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/sass-maker/app-health/blob/fc050edd91e5c7c6a21dca782d8d5d2b55417844/apps/web/public/favicon.svg",
+            "sourceRevision": "fc050edd91e5c7c6a21dca782d8d5d2b55417844"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/app-health/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 1263,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/sass-maker/app-health/blob/fc050edd91e5c7c6a21dca782d8d5d2b55417844/apps/web/public/favicon.svg",
+            "sourceRevision": "fc050edd91e5c7c6a21dca782d8d5d2b55417844"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "revision home desktop (captured 2026-10-25)",
+            "url": "/product-assets/app-health/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1536,
+            "height": 1920,
+            "byteSize": 298430,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://health.sassmaker.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "revision home mobile (captured 2026-10-25)",
+            "url": "/product-assets/app-health/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 860,
+            "height": 671,
+            "byteSize": 49490,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://health.sassmaker.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/app-health-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/app-health/app-health-launch-landscape-poster.jpg",
+            "filename": "app-health-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 2131070,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/app-health-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/app-health/app-health-launch-portrait-poster.jpg",
+            "filename": "app-health-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 2118273,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "motion",
@@ -1298,7 +3009,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://idle.aliveville.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Small games you can play in your browser",
+        "shortDescription": "Explore small browser-playable game experiments.",
+        "categoryWords": [
+          "browser games",
+          "game development",
+          "playables"
+        ],
+        "longDescription": "Small browser-playable game experiments.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/web-playables/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 36378,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/web-playables/blob/053961785267fd72da924030fc6b48ca6b76f7d2/public/favicon.svg",
+            "sourceRevision": "053961785267fd72da924030fc6b48ca6b76f7d2"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/web-playables/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 210,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/web-playables/blob/053961785267fd72da924030fc6b48ca6b76f7d2/public/favicon.svg",
+            "sourceRevision": "053961785267fd72da924030fc6b48ca6b76f7d2"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "hub (captured 2026-10-25)",
+            "url": "/product-assets/web-playables/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1000,
+            "byteSize": 792841,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://idle.aliveville.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "game (captured 2026-10-25)",
+            "url": "/product-assets/web-playables/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1111,
+            "byteSize": 297596,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://idle.aliveville.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/web-playables-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/web-playables/web-playables-launch-landscape-poster.jpg",
+            "filename": "web-playables-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 2302052,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/web-playables-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/web-playables/web-playables-launch-portrait-poster.jpg",
+            "filename": "web-playables-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 2323970,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "what-it-takes-to-win",
@@ -1353,7 +3159,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://paths.significanthobbies.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Explore the turning points in career paths",
+        "shortDescription": "Explore sourced career turning points with explicit limits around survivorship and forecasting.",
+        "categoryWords": [
+          "careers",
+          "research",
+          "biography"
+        ],
+        "longDescription": "Explore sourced career turning points with explicit survivorship and forecasting limits.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/what-it-takes-to-win/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 87345,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win/blob/3ebd12051662089a1058175d7d18040c7b474bd3/public/favicon.svg",
+            "sourceRevision": "3ebd12051662089a1058175d7d18040c7b474bd3"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/what-it-takes-to-win/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 518,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win/blob/3ebd12051662089a1058175d7d18040c7b474bd3/public/favicon.svg",
+            "sourceRevision": "3ebd12051662089a1058175d7d18040c7b474bd3"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "revision live (captured 2026-10-25)",
+            "url": "/product-assets/what-it-takes-to-win/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1000,
+            "byteSize": 626991,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://paths.significanthobbies.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "age13 (captured 2026-10-25)",
+            "url": "/product-assets/what-it-takes-to-win/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 700,
+            "height": 270,
+            "byteSize": 15113,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://paths.significanthobbies.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/what-it-takes-to-win-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/what-it-takes-to-win/what-it-takes-to-win-launch-landscape-poster.jpg",
+            "filename": "what-it-takes-to-win-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 3005484,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/what-it-takes-to-win-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/what-it-takes-to-win/what-it-takes-to-win-launch-portrait-poster.jpg",
+            "filename": "what-it-takes-to-win-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 2843479,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "sarthakagrawal-personal",
@@ -1409,7 +3310,102 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://sarthakagrawal.dev",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Engineering work with inspectable demonstrations",
+        "shortDescription": "Explore selected engineering case studies, technical writing and working project demonstrations.",
+        "categoryWords": [
+          "engineering portfolio",
+          "technical writing",
+          "software"
+        ],
+        "longDescription": "Selected engineering case studies, technical writing and working project demonstrations.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/sarthakagrawal-personal/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 78621,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/portfolio/blob/4575321477622f4e43f826f800adb9938c5b0cda/public/favicon.svg",
+            "sourceRevision": "4575321477622f4e43f826f800adb9938c5b0cda"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/sarthakagrawal-personal/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 32,
+            "height": 32,
+            "byteSize": 493,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/portfolio/blob/4575321477622f4e43f826f800adb9938c5b0cda/public/favicon.svg",
+            "sourceRevision": "4575321477622f4e43f826f800adb9938c5b0cda"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "home desktop (captured 2026-10-25)",
+            "url": "/product-assets/sarthakagrawal-personal/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1248,
+            "byteSize": 1438279,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://sarthakagrawal.dev"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "durable phone (captured 2026-10-25)",
+            "url": "/product-assets/sarthakagrawal-personal/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 780,
+            "height": 608,
+            "byteSize": 28525,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://sarthakagrawal.dev"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/sarthakagrawal-personal-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/sarthakagrawal-personal/sarthakagrawal-personal-launch-landscape-poster.jpg",
+            "filename": "sarthakagrawal-personal-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1550173,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/sarthakagrawal-personal-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/sarthakagrawal-personal/sarthakagrawal-personal-launch-portrait-poster.jpg",
+            "filename": "sarthakagrawal-personal-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1598472,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "anchor",
@@ -1470,7 +3466,88 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://anchor.significanthobbies.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Plan your day and understand how it unfolded",
+        "shortDescription": "A local-first planner and focus timer for Mac, iPhone and Apple Watch that compares planned and lived time.",
+        "categoryWords": [
+          "day planner",
+          "focus timer",
+          "productivity"
+        ],
+        "longDescription": "A local-first day planner and focus timer for Mac, iPhone, and Apple Watch that explains the gap between the schedule you planned and the day you lived.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square app icon (PNG)",
+            "url": "/product-assets/anchor/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 38969,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/anchor/blob/55fabc9e2138aad6da5c1367a11a41043f69e268/Apps/Shared/Assets.xcassets/AppIcon.appiconset/ios_1024.png",
+            "sourceRevision": "55fabc9e2138aad6da5c1367a11a41043f69e268"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "today phone (captured 2026-10-25)",
+            "url": "/product-assets/anchor/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 804,
+            "height": 1748,
+            "byteSize": 138010,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://anchor.significanthobbies.com"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "focus phone (captured 2026-10-25)",
+            "url": "/product-assets/anchor/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 804,
+            "height": 1748,
+            "byteSize": 170343,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://anchor.significanthobbies.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/anchor-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/anchor/anchor-launch-landscape-poster.jpg",
+            "filename": "anchor-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1735959,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/anchor-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/anchor/anchor-launch-portrait-poster.jpg",
+            "filename": "anchor-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1687382,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "storagedaddy",
@@ -1528,7 +3605,89 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://daddyrad.com/storage/",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Review what is taking up space on your Mac",
+        "shortDescription": "Analyze Mac developer caches, builds, dependencies and AI session archives with reviewed cleanup.",
+        "categoryWords": [
+          "macOS",
+          "storage analyzer",
+          "developer tools"
+        ],
+        "longDescription": "An open-source native Mac storage analyzer for developer caches, builds, dependencies and AI session archives, with reviewed cleanup. Free during early access.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square app icon (PNG)",
+            "url": "/product-assets/storagedaddy/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 464087,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/storagedaddy/blob/796fd296dd5be320e1bd26c46d85b35515b45fbd/Assets/StorageDaddy.png",
+            "sourceRevision": "796fd296dd5be320e1bd26c46d85b35515b45fbd"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "explorer public (captured 2026-10-25)",
+            "url": "/product-assets/storagedaddy/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1405,
+            "height": 768,
+            "byteSize": 153706,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://daddyrad.com/storage/"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "live home (captured 2026-10-25)",
+            "url": "/product-assets/storagedaddy/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1248,
+            "byteSize": 425020,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://daddyrad.com/storage/"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/storagedaddy-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/storagedaddy/storagedaddy-launch-landscape-poster.jpg",
+            "filename": "storagedaddy-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1419996,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/storagedaddy-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/storagedaddy/storagedaddy-launch-portrait-poster.jpg",
+            "filename": "storagedaddy-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1391916,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08",
+        "pricingModel": "Free during early access"
+      }
     },
     {
       "id": "browserdaddy",
@@ -1587,7 +3746,75 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://daddyrad.com/browser/",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Understand your browsing history and attention",
+        "shortDescription": "A local-first Mac app for a unified browsing history archive and attention tracking.",
+        "categoryWords": [
+          "macOS",
+          "browsing history",
+          "productivity"
+        ],
+        "longDescription": "A local-first Mac browsing intelligence app for a unified history archive and real attention tracking.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square app icon (PNG)",
+            "url": "/product-assets/browserdaddy/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1254,
+            "height": 1254,
+            "byteSize": 1329985,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/browserdaddy/blob/c3bed317d8ca78cffb975cf265a8a0f36007ec31/Sources/BrowserDaddy/Resources/BrowserDaddyIcon.png",
+            "sourceRevision": "c3bed317d8ca78cffb975cf265a8a0f36007ec31"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "revision live (captured 2026-10-25)",
+            "url": "/product-assets/browserdaddy/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1111,
+            "byteSize": 511401,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://daddyrad.com/browser/"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/browserdaddy-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/browserdaddy/browserdaddy-launch-landscape-poster.jpg",
+            "filename": "browserdaddy-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1562516,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/browserdaddy-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/browserdaddy/browserdaddy-launch-portrait-poster.jpg",
+            "filename": "browserdaddy-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1482548,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "performancedaddy",
@@ -1646,7 +3873,88 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://daddyrad.com/performance/",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Investigate what is slowing down your Mac",
+        "shortDescription": "Investigate Mac background apps, helpers and developer workloads with measured evidence and reviewed actions.",
+        "categoryWords": [
+          "macOS",
+          "performance monitoring",
+          "developer tools"
+        ],
+        "longDescription": "A local Mac performance investigator for background apps, helpers and developer workloads, with measured evidence and reviewed actions.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square app icon (PNG)",
+            "url": "/product-assets/performancedaddy/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1254,
+            "height": 1254,
+            "byteSize": 1123523,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/performancedaddy/blob/1dda6fea97bb96bf93ad9296bf3e8a86efc29c21/Sources/PerformanceDaddy/Resources/PerformanceDaddy.png",
+            "sourceRevision": "1dda6fea97bb96bf93ad9296bf3e8a86efc29c21"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "diagnose safe (captured 2026-10-25)",
+            "url": "/product-assets/performancedaddy/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 560,
+            "height": 320,
+            "byteSize": 46579,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://daddyrad.com/performance/"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "record control (captured 2026-10-25)",
+            "url": "/product-assets/performancedaddy/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 600,
+            "height": 154,
+            "byteSize": 30762,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://daddyrad.com/performance/"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/performancedaddy-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/performancedaddy/performancedaddy-launch-landscape-poster.jpg",
+            "filename": "performancedaddy-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1934388,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/performancedaddy-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/performancedaddy/performancedaddy-launch-portrait-poster.jpg",
+            "filename": "performancedaddy-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1914601,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "meme-lab",
@@ -1674,8 +3982,77 @@
       },
       "roster": "current",
       "availability": "public-link",
+      "shareable": true,
       "publicUrl": "https://memes.significanthobbies.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Find a reaction meme for your comment",
+        "shortDescription": "Rank 3,000 reaction memes for a comment, with scored alternatives when available.",
+        "categoryWords": [
+          "memes",
+          "social media",
+          "entertainment"
+        ],
+        "longDescription": "A public tool that ranks 3,000 reaction memes for a comment; its Anna review candidate also creates personal photo memes with private saves and PNG downloads.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Current website wordmark (PNG)",
+            "url": "/product-assets/meme-lab/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 50618,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/meme-lab/blob/ce72ece2ad51ce6e0e2f0b82bccf5a3d22e347cd/worker/public/index.html",
+            "sourceRevision": "ce72ece2ad51ce6e0e2f0b82bccf5a3d22e347cd"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "home 2x (captured 2026-10-25)",
+            "url": "/product-assets/meme-lab/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1111,
+            "byteSize": 398388,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://memes.significanthobbies.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/meme-lab-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/meme-lab/meme-lab-launch-landscape-poster.jpg",
+            "filename": "meme-lab-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 3668562,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/meme-lab-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/meme-lab/meme-lab-launch-portrait-poster.jpg",
+            "filename": "meme-lab-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 3395606,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "nutrition-formula-engine",
@@ -1727,8 +4104,91 @@
       },
       "roster": "current",
       "availability": "public-link",
+      "shareable": true,
       "publicUrl": "https://music.significanthobbies.com",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "A different interactive world for each song",
+        "shortDescription": "Browse 143 songs as interactive visual worlds, with embedded video and licensed lyrics.",
+        "categoryWords": [
+          "music",
+          "interactive art",
+          "web experiments"
+        ],
+        "longDescription": "A playful static site where each of 143 songs gets its own interactive visual world — old desktop, picnic blanket, acid poster, neon night, or scrapbook page — with embedded video and licensed lyrics.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/every-song-is-a-website/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 21475,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/every-song-is-a-website/blob/f7633fe7e0aab1b30d7e377c270a4ca0a84782a0/index.html",
+            "sourceRevision": "f7633fe7e0aab1b30d7e377c270a4ca0a84782a0"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/every-song-is-a-website/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 100,
+            "height": 100,
+            "byteSize": 114,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/every-song-is-a-website/blob/f7633fe7e0aab1b30d7e377c270a4ca0a84782a0/index.html",
+            "sourceRevision": "f7633fe7e0aab1b30d7e377c270a4ca0a84782a0"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "gallery desktop (captured 2026-10-25)",
+            "url": "/product-assets/every-song-is-a-website/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1111,
+            "byteSize": 299091,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://music.significanthobbies.com"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/every-song-is-a-website-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/every-song-is-a-website/every-song-is-a-website-launch-landscape-poster.jpg",
+            "filename": "every-song-is-a-website-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 2355890,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/every-song-is-a-website-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/every-song-is-a-website/every-song-is-a-website-launch-portrait-poster.jpg",
+            "filename": "every-song-is-a-website-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 2186656,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "contextdaddy",
@@ -1784,7 +4244,75 @@
       "roster": "current",
       "availability": "public-link",
       "publicUrl": "https://daddyrad.com/context/",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "A Mac workspace for coding-agent context",
+        "shortDescription": "Manage coding-agent skills, context, usage and telemetry with explicit local changes and recovery history.",
+        "categoryWords": [
+          "macOS",
+          "AI coding",
+          "developer tools"
+        ],
+        "longDescription": "A native Mac workspace for coding-agent skills, context, usage and telemetry, with a unified skill library, explicit local changes, and recovery history.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square app icon (PNG)",
+            "url": "/product-assets/contextdaddy/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1254,
+            "height": 1254,
+            "byteSize": 680664,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/Significant-Hobbies/contextdaddy/blob/ab9c7318df8b982c85ceec22a6491ae864844dd4/Assets/ContextDaddyIcon.png",
+            "sourceRevision": "ab9c7318df8b982c85ceec22a6491ae864844dd4"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "site revision (captured 2026-10-25)",
+            "url": "/product-assets/contextdaddy/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1111,
+            "byteSize": 1507157,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://daddyrad.com/context/"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/contextdaddy-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/contextdaddy/contextdaddy-launch-landscape-poster.jpg",
+            "filename": "contextdaddy-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 3899696,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/contextdaddy-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/contextdaddy/contextdaddy-launch-portrait-poster.jpg",
+            "filename": "contextdaddy-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 3983188,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "agent-inbox",
@@ -1838,8 +4366,104 @@
       },
       "roster": "current",
       "availability": "public-link",
+      "shareable": true,
       "publicUrl": "https://data.highsignal.app",
-      "publicUrlLabel": "Visit website"
+      "publicUrlLabel": "Visit website",
+      "submission": {
+        "tagline": "Explore public datasets in one workbench",
+        "shortDescription": "Search, filter, compare and export public datasets from a read-only workbench with provenance.",
+        "categoryWords": [
+          "data research",
+          "public datasets",
+          "analytics"
+        ],
+        "longDescription": "A public, read-only data workbench: Nomad Atlas places, High Signal Podcasts claims, Reddit Insights, Research Papers and the full Product Hunt catalogue in one console with ⌘K search, filters, comparison and provenance-carrying exports.",
+        "assets": [
+          {
+            "id": "logo-png",
+            "kind": "logo",
+            "label": "Square site icon (PNG)",
+            "url": "/product-assets/techdata/logo.png",
+            "filename": "logo.png",
+            "mimeType": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "byteSize": 35879,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/High-Signal-App/techdata/blob/81a2bc03fb91211caf79fa53df9b7cb43f9e2a29/public/favicon.svg",
+            "sourceRevision": "81a2bc03fb91211caf79fa53df9b7cb43f9e2a29"
+          },
+          {
+            "id": "logo-svg",
+            "kind": "logo",
+            "label": "Original site icon (SVG)",
+            "url": "/product-assets/techdata/logo.svg",
+            "filename": "logo.svg",
+            "mimeType": "image/svg+xml",
+            "width": 64,
+            "height": 64,
+            "byteSize": 249,
+            "checkedAt": "2026-11-08",
+            "sourceUrl": "https://github.com/High-Signal-App/techdata/blob/81a2bc03fb91211caf79fa53df9b7cb43f9e2a29/public/favicon.svg",
+            "sourceRevision": "81a2bc03fb91211caf79fa53df9b7cb43f9e2a29"
+          },
+          {
+            "id": "screenshot-1-png",
+            "kind": "screenshot",
+            "label": "nomad (captured 2026-10-25)",
+            "url": "/product-assets/techdata/screenshot-1.png",
+            "filename": "screenshot-1.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1111,
+            "byteSize": 234389,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://data.highsignal.app"
+          },
+          {
+            "id": "screenshot-2-png",
+            "kind": "screenshot",
+            "label": "notes (captured 2026-10-25)",
+            "url": "/product-assets/techdata/screenshot-2.png",
+            "filename": "screenshot-2.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1111,
+            "byteSize": 329170,
+            "checkedAt": "2026-10-25",
+            "sourceUrl": "https://data.highsignal.app"
+          },
+          {
+            "id": "launch-landscape",
+            "kind": "video",
+            "label": "Launch film, landscape (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/techdata-launch-landscape.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/techdata/techdata-launch-landscape-poster.jpg",
+            "filename": "techdata-launch-landscape.mp4",
+            "mimeType": "video/mp4",
+            "width": 1920,
+            "height": 1080,
+            "byteSize": 1881695,
+            "checkedAt": "2026-11-08"
+          },
+          {
+            "id": "launch-portrait",
+            "kind": "video",
+            "label": "Launch film, portrait (October 2026)",
+            "url": "https://github.com/sass-maker/saas-maker/releases/download/product-assets-2026-11-08/techdata-launch-portrait.mp4",
+            "viewUrl": "https://github.com/sass-maker/saas-maker/releases/tag/product-assets-2026-11-08",
+            "posterUrl": "/product-assets/techdata/techdata-launch-portrait-poster.jpg",
+            "filename": "techdata-launch-portrait.mp4",
+            "mimeType": "video/mp4",
+            "width": 1080,
+            "height": 1920,
+            "byteSize": 1790368,
+            "checkedAt": "2026-11-08"
+          }
+        ],
+        "checkedAt": "2026-11-08"
+      }
     },
     {
       "id": "domain-inbox",

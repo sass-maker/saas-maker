@@ -23,6 +23,7 @@ const ASSET_FIELDS = new Set([
   'sourceRevision',
   'checkedAt',
   'viewUrl',
+  'posterUrl',
 ]);
 const MIME_EXTENSIONS = {
   'image/png': ['png'],
@@ -144,6 +145,16 @@ export function validateSubmission(record, productId) {
     }
     for (const key of ['sourceUrl', 'viewUrl'])
       if (asset[key] !== undefined) validatePublicSubmissionUrl(asset[key], `${trail}.${key}`);
+    if (asset.posterUrl !== undefined) {
+      if (
+        asset.kind !== 'video' ||
+        typeof asset.posterUrl !== 'string' ||
+        !asset.posterUrl.startsWith(`/product-assets/${productId}/`) ||
+        !/^\/[a-zA-Z0-9/._-]+\.(?:png|jpg|jpeg|webp)$/.test(asset.posterUrl) ||
+        asset.posterUrl.includes('..')
+      )
+        throw new Error(`${trail}: invalid video poster URL`);
+    }
     for (const key of ['width', 'height', 'byteSize'])
       if (
         asset[key] !== undefined &&
@@ -176,6 +187,7 @@ export function buildSubmissionKit(project) {
   const assets = submission.assets.map((asset) => ({
     ...asset,
     url: asset.url.startsWith('/') ? `${SITE}${asset.url}` : asset.url,
+    ...(asset.posterUrl ? { posterUrl: `${SITE}${asset.posterUrl}` } : {}),
     uploadSuitable: asset.mimeType !== 'image/svg+xml',
     ...(asset.mimeType === 'image/svg+xml'
       ? {

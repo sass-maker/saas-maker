@@ -336,6 +336,7 @@ export function buildPublicProducts(catalog) {
       ...preservedPublicFields,
       roster,
       availability,
+      ...(shareable && availability === 'public-link' ? { shareable: true } : {}),
       ...(destinationUrl ? { publicUrl: destinationUrl } : {}),
       ...(destinationLabel ? { publicUrlLabel: destinationLabel } : {}),
     };

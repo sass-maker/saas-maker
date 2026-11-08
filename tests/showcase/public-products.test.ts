@@ -770,6 +770,49 @@ function submission() {
 }
 
 describe('public product submission kits', () => {
+  it('includes explicitly public shareable profiles outside the maintained homepage listing', () => {
+    const input = structureCatalog(catalog());
+    input.projects[0].presentation.public.listing = 'hidden';
+    input.projects[0].presentation.directory.availabilityLabel = 'public-link';
+    input.projects[0].presentation.directory.publicDestinationUrl = 'https://primary.example';
+    input.projects[0].presentation.directory.submission = submission();
+    const product = buildPublicProducts(input).directory.find(({ id }) => id === 'primary');
+    expect(product.shareable).toBe(true);
+    expect(buildSubmissionKit(product).assets[0].filename).toBe('logo.png');
+    expect(product.repositoryUrl).toBeUndefined();
+    expect(product.domains).toBeUndefined();
+    input.projects[0].sharing.shareable = false;
+    const unshared = buildPublicProducts(input).directory.find(({ id }) => id === 'primary');
+    expect(unshared.submission).toBeUndefined();
+  });
+
+  it('keeps video posters on the product asset origin and rejects unrelated or unsafe paths', () => {
+    const input = structureCatalog(catalog());
+    const video = {
+      id: 'launch',
+      kind: 'video',
+      label: 'Launch film',
+      url: 'https://github.com/example/product/releases/download/assets/launch.mp4',
+      filename: 'launch.mp4',
+      mimeType: 'video/mp4',
+      posterUrl: '/product-assets/primary/launch-poster.jpg',
+    };
+    input.projects[0].presentation.directory.submission = { ...submission(), assets: [video] };
+    const project = buildPublicProducts(input).directory.find(({ id }) => id === 'primary');
+    expect(buildSubmissionKit(project).assets[0].posterUrl).toBe(
+      'https://sassmaker.com/product-assets/primary/launch-poster.jpg'
+    );
+    for (const posterUrl of [
+      'https://example.com/picture.jpg',
+      '/product-assets/other/picture.jpg',
+      '/product-assets/primary/../picture.jpg',
+      '/product-assets/primary/picture.svg',
+    ]) {
+      input.projects[0].presentation.directory.submission.assets[0].posterUrl = posterUrl;
+      expect(() => buildPublicProducts(input)).toThrow('invalid video poster URL');
+    }
+  });
+
   it('roundtrips allowlisted canonical copy and assets without mutating the catalog', () => {
     const input = structureCatalog(catalog());
     input.projects[0].presentation.directory.submission = submission();

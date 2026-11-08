@@ -42,6 +42,8 @@ function assetDisplayUrl(url: string) {
 }
 const logoUrl = current.logoUrl ?? submissionKit?.assets.find((asset) => asset.kind === 'logo')?.url;
 const displayLogo = logoUrl ? assetDisplayUrl(logoUrl) : undefined;
+const downloadLogo = submissionKit?.assets.find((asset) => asset.kind === 'logo' && asset.mimeType === 'image/png');
+const missingLabels: Record<string, string> = { tagline: 'tagline', longDescription: 'long description', pricingModel: 'pricing', checkedAt: 'review date', categoryWords: 'categories', logo: 'logo', screenshot: 'screenshots', video: 'video', rasterLogo: 'PNG logo' };
 const repositoryUrl = archivedRepository ? product.repositoryUrl : !archived ? current.repositoryUrl : undefined;
 const repositoryMatch = repositoryUrl?.match(
   /^https:\/\/github\.com\/([a-z\d](?:[a-z\d-]*[a-z\d])?)\/([a-z\d._-]+?)(?:\.git)?\/?$/i
@@ -239,9 +241,9 @@ const productJsonLd = {
           <section class="project-submission" id="submission-kit" aria-labelledby="submission-title">
             <div class="project-section-head">
               <p class="project-folio">Submission kit</p>
-              <h2 id="submission-title">Copy. Download. Prepare.</h2>
+              <h2 id="submission-title">Logos, screenshots and product details</h2>
               <p>Reviewed listing copy and public assets for directory forms. Check each destination’s requirements before preparing a listing.</p>
-              <p><a href={submissionKit.briefUrl} download={`${product.id}-brief.txt`}>Download product brief</a> · <a href={submissionKit.kitUrl}>JSON kit</a></p>
+              <p>{downloadLogo && <><a href={assetDisplayUrl(downloadLogo.url)} download={`${product.id}-logo.png`}>Download PNG logo</a> · </>}<a href={submissionKit.briefUrl} download={`${product.id}-brief.txt`}>Download product brief</a> · <a href={submissionKit.kitUrl}>JSON kit</a></p>
             </div>
             <div class="submission-content">
               <dl class="submission-copy">
@@ -255,16 +257,16 @@ const productJsonLd = {
               <ul class="submission-assets">
                 {submissionKit.assets.map((asset) => (
                   <li>
-                    {asset.kind === 'video' ? <video controls preload="none" aria-label={asset.label} src={assetDisplayUrl(asset.url)} /> : <img loading="lazy" src={assetDisplayUrl(asset.url)} alt={asset.label} width={asset.width} height={asset.height} />}
+                    {asset.kind === 'video' ? <video controls preload="none" aria-label={asset.label} src={assetDisplayUrl(asset.url)} poster={asset.posterUrl ? assetDisplayUrl(asset.posterUrl) : undefined} /> : <img loading="lazy" src={assetDisplayUrl(asset.url)} alt={asset.label} width={asset.width} height={asset.height} />}
                     <div><strong>{asset.label}</strong><p>{asset.mimeType}{asset.width ? ` · ${asset.width} × ${asset.height}` : ''}{asset.byteSize ? ` · ${(asset.byteSize / 1024 / 1024).toFixed(2)} MB` : ''}</p>
-                    <a href={assetDisplayUrl(asset.url)} download={asset.filename}>Download {asset.kind}</a>{asset.viewUrl && <> · <a href={asset.viewUrl}>View video</a></>}
+                    <a href={assetDisplayUrl(asset.url)} download={asset.filename}>Download {asset.label}</a>{asset.viewUrl && <> · <a href={asset.viewUrl}>View video</a></>}
                     {asset.uploadLimit && <p>{asset.uploadLimit}</p>}</div>
                   </li>
                 ))}
               </ul>
               {submissionKit.demoUrl && <p><a href={submissionKit.demoUrl}>Open demo</a></p>}
-              <p class="submission-gaps">Missing from this kit: {submissionKit.missing.length ? submissionKit.missing.join(', ') : 'none of the standard fields'}. Destination-specific fields may still be required.</p>
-              <p>Checked: {submissionKit.checkedAt ?? 'not recorded'}. Downloading this kit grants no permission to create accounts, submit listings, accept badges, or spend money.</p>
+              <p class="submission-gaps">Missing from this kit: {submissionKit.missing.length ? submissionKit.missing.map((field) => missingLabels[field] ?? field).join(', ') : 'none of the standard fields'}. Each directory may ask for additional details.</p>
+              <p>Last checked: {submissionKit.checkedAt ?? 'not recorded'}.</p>
             </div>
           </section>
         )}
