@@ -99,6 +99,7 @@ async function nativeMcpResponse(
       },
     });
   }
+  if (message.method === "notifications/initialized") return new Response(null, { status: 202 });
   if (message.method === "tools/call") {
     return Response.json({
       jsonrpc: "2.0",
@@ -739,6 +740,43 @@ test("invalid JSON-RPC remains a bounded protocol error", async () => {
   assert.equal(text.length < 10_000, true);
 });
 
+
+test("Anchor completes discovery after an empty initialized acknowledgement", async () => {
+  const authorization = authorizationFor("/anchor/mcp");
+  const initialized = await handleHostedRequest(requestFor("/anchor/mcp", initializeRequest()), routeFetch, authorization);
+  assert.equal(initialized.status, 200);
+  const acknowledged = await handleHostedRequest(requestFor("/anchor/mcp", {
+    jsonrpc: "2.0", method: "notifications/initialized",
+  }), routeFetch, authorization);
+  assert.equal(acknowledged.status, 202);
+  assert.equal(await acknowledged.text(), "");
+  assert.equal(acknowledged.headers.get("cache-control"), "no-store");
+  const listed = await handleHostedRequest(requestFor("/anchor/mcp", {
+    jsonrpc: "2.0", id: 2, method: "tools/list",
+  }), routeFetch, authorization);
+  assert.equal(listed.status, 200);
+  const result = (await json(listed)).result as { tools: { name: string }[] };
+  assert.deepEqual(result.tools.map((tool) => tool.name), Object.keys(HOSTED_ROUTES["/anchor/mcp"]!.toolScopes!));
+});
+
+test("Anchor rejects invalid notification acknowledgements and empty tool responses", async () => {
+  const notification = { jsonrpc: "2.0", method: "notifications/initialized" };
+  for (const { message, status, body, contentType } of [
+    { message: { ...notification, id: 0 }, status: 202, body: null },
+    { message: { ...notification, id: null }, status: 202, body: null },
+    { message: notification, status: 202, body: "unexpected content" },
+    { message: notification, status: 202, body: JSON.stringify({ result: {} }), contentType: "application/json" },
+    { message: notification, status: 204, body: null },
+    { message: { jsonrpc: "2.0", id: 1, method: "tools/list" }, status: 202, body: null },
+  ]) {
+    const response = await handleHostedRequest(
+      requestFor("/anchor/mcp", message),
+      async () => new Response(body, { status, headers: contentType ? { "Content-Type": contentType } : {} }),
+      authorizationFor("/anchor/mcp"),
+    );
+    assert.equal(response.status, 502, JSON.stringify({ message, status, contentType }));
+  }
+});
 
 test("Anchor rejects writes and unknown tools before forwarding, while preserving authorized request IDs", async () => {
   let calls = 0;
