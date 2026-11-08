@@ -36,7 +36,11 @@ test('finds superseded links alongside current links and absent video posters', 
   ] }] };
   const report = auditAssets({ directory: [p] }, index, { localSize: (path) => path.endsWith('poster.jpg') ? null : 42 });
   assert.deepEqual(report.products[0].issues, ['extra-drive-index-link:2', 'missing-local-poster:film']);
-  index.products[0].assets.push({ filename: 'bad.png' });
+  index.products[0].assets.pop();
+  index.products[0].assets.push({ filename: 'private-original.png' },
+    { kind: 'video', publicDownloadUrl: 'https://assets.example.com/film-old.mp4', archived: true });
+  assert.deepEqual(auditAssets({ directory: [p] }, index).products[0].issues, []);
+  index.products[0].assets.push({ filename: 'bad.png', publicDownloadUrl: '' });
   assert.throws(() => auditAssets({ directory: [p] }, index), /Invalid public Drive asset link/);
 });
 

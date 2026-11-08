@@ -26,14 +26,18 @@ export function auditAssets(catalog, index, { productId, localSize } = {}) {
     if (drive && !drive.driveFolderUrl) issues.push('missing-drive-folder-url');
     if (kit && drive) {
       if (!Array.isArray(drive.assets)) throw new Error(`Invalid Drive asset list: ${product.id}`);
-      if (drive.assets.some((asset) => typeof asset.publicDownloadUrl !== 'string' || !asset.publicDownloadUrl))
+      if (drive.assets.some((asset) => !asset || typeof asset !== 'object' ||
+        (asset.publicDownloadUrl != null && (typeof asset.publicDownloadUrl !== 'string' || !asset.publicDownloadUrl))))
         throw new Error(`Invalid public Drive asset link: ${product.id}`);
-      const links = new Set(drive.assets.map((asset) => asset.publicDownloadUrl));
+      const publicAssets = drive.assets.map((asset, position) => ({ asset, position })).filter(({ asset }) =>
+        asset.publicDownloadUrl != null && asset.archived !== true &&
+        (!asset.kind || ['logo', 'screenshot', 'video'].includes(asset.kind)));
+      const links = new Set(publicAssets.map(({ asset }) => asset.publicDownloadUrl));
       const expected = new Set(kit.assets.map((asset) => asset.url));
       for (const asset of kit.assets) {
         if (!links.has(asset.url)) issues.push(`missing-or-stale-drive-index-link:${asset.id}`);
       }
-      for (const [position, asset] of drive.assets.entries()) {
+      for (const { position, asset } of publicAssets) {
         if (!expected.has(asset.publicDownloadUrl)) issues.push(`extra-drive-index-link:${position}`);
       }
     }
