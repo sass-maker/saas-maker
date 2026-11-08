@@ -385,6 +385,30 @@ test("runtime activation preserves Anchor's unauthenticated OAuth challenge", as
   assert.match(enabled.headers.get("www-authenticate") ?? "", /anchor.read anchor.write/u);
 });
 
+test("canonical Anchor discovery binds metadata to the client resource URL", async () => {
+  const endpoint = "https://mcp.significanthobbies.com/anchor/mcp";
+  const initialize = await worker.fetch(new Request(endpoint, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize" }),
+  }), env as HostedWorkerEnv);
+  assert.equal(initialize.status, 401);
+  const challenge = initialize.headers.get("www-authenticate") ?? "";
+  assert.match(challenge, /scope="anchor.read anchor.write"/u);
+  const metadataURL = challenge.match(/resource_metadata="([^"]+)"/u)?.[1];
+  assert.equal(metadataURL, "https://mcp.significanthobbies.com/.well-known/oauth-protected-resource/anchor/mcp");
+  const response = await worker.fetch(new Request(metadataURL!), env as HostedWorkerEnv);
+  assert.equal(response.status, 200);
+  const metadata = await response.json() as Record<string, unknown>;
+  assert.equal(metadata.resource, endpoint);
+  assert.equal(new URL(String(metadata.resource)).origin, new URL(endpoint).origin);
+  assert.deepEqual(metadata.authorization_servers, [issuer]);
+  assert.deepEqual(metadata.scopes_supported, ["anchor.read", "anchor.write"]);
+  const foreignMetadata = await worker.fetch(new Request(
+    "https://mcp.significanthobbies.com/.well-known/oauth-protected-resource/reader/mcp",
+  ), env as HostedWorkerEnv);
+  assert.equal(foreignMetadata.status, 404);
+});
+
 
 test("Anchor delegated consent cannot be expanded by account permissions", async () => {
   const fixture = await signingFixture();

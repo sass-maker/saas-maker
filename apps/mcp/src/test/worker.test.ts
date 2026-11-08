@@ -513,6 +513,23 @@ test("branded hosts expose only their assigned plugin routes", async () => {
   assert.equal(isolated.status, 404);
 });
 
+test("canonical Anchor hostname exposes only the Anchor route", async () => {
+  let calls = 0;
+  for (const path of Object.keys(HOSTED_ROUTES)) {
+    const response = await handleProductionRequest(
+      new Request(`https://mcp.significanthobbies.com${path}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(initializeRequest()),
+      }),
+      async () => { calls += 1; return Response.json({}); },
+    );
+    assert.equal(response.status, path === "/anchor/mcp" ? 401 : 404, path);
+    assert.equal(response.headers.get("cache-control"), "no-store");
+  }
+  assert.equal(calls, 0);
+});
+
 test("Studio landing preserves endpoint cards and adds bundled footer navigation", async () => {
   const response = await handleHostedRequest(new Request("https://reader-mcp.significanthobbies.com/"));
   assert.equal(response.status, 200);
