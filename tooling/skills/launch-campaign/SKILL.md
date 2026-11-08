@@ -20,6 +20,9 @@ directories", "plan a launch run", /launchkit), follow
 once, plan truthfully, submit with evidence. The same approval and honesty
 rules below apply.
 
+For product logos, videos, screenshots or stale briefs, use the
+[product asset workflow](../product-assets/SKILL.md) before preparing the run.
+
 When automation detection blocks a directory form before intake, use the
 optional [Fortress fallback](references/fortress-directory-fallback.md).
 It preserves the run's existing publication permissions and evidence rules.
