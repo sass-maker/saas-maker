@@ -15,13 +15,14 @@ selected products. It routes data according to each product's existing storage b
   exports.
 
 [`docs/api-parity.md`](docs/api-parity.md) defines the exact parity guarantee:
-complete parity with each approved MCP/read contract, not with every product
-API. Anchor adds a separately scoped, default-disabled native action route.
+complete parity with each approved MCP contract, not with every product
+API. Anchor adds a separately scoped account and native-action route, enabled
+for controlled account qualification through its versioned activation binding.
 Excluded writes, administrative surfaces, and device-private fields remain
 deliberately unavailable.
 
-Secure MCP Tunnel is not required for this phase. Indulge and other device-only
-products remain deferred until they have an approved cloud data boundary.
+Secure MCP Tunnel is not required for this phase. Device-only products need an
+approved local or cloud data boundary before adding a hosted connection.
 
 ## Hosted routes
 
@@ -29,10 +30,9 @@ The compatibility workers.dev origin remains active. Public submissions use a
 different branded hostname for every plugin so OpenAI can verify and retain one
 independent domain challenge per submission.
 
-Eight hostnames passed the live monitor on 2026-09-07. The remaining hostnames below
-are **planned names, not production URLs** — they have no DNS record and no
-entry in `wrangler.jsonc`, so they will not resolve until their route is
-activated. Do not publish or submit them.
+Eight original hostnames passed the live monitor on 2026-09-07. Anchor's canonical
+and branded hosts were deployed and checked on 2026-11-08. The table lists active
+hosts; the planned-hostnames section below remains separate.
 
 | Product | Production MCP URL | ChatGPT auth | Upstream boundary |
 | --- | --- | --- | --- |
@@ -44,6 +44,7 @@ activated. Do not publish or submit them.
 | Significant Hobbies | `https://hobbies-mcp.significanthobbies.com/significant-hobbies/mcp` | None | Public hobby, experience, and PUBLIC-timeline projections only |
 | Research Papers | `https://papers-mcp.highsignal.app/research-papers/mcp` | None | Approved public hot, sleeper, and reading-path exports only |
 | SWE Interview Prep | `https://learn-mcp.significanthobbies.com/swe-interview-prep/mcp` | OAuth, `swe-interview-prep.read` | Daily/on-demand priority, progress, answer-free understanding checks, exact product links, and published curriculum catalogs |
+| Anchor | `https://mcp.significanthobbies.com/anchor/mcp` | OAuth, `anchor.read`; mutations also require `anchor.write` | Explicitly shared account planner/history and targeted native command receipts; Codex owner flow qualified, ChatGPT refresh pending |
 
 ### Planned hostnames (no DNS yet)
 
@@ -58,17 +59,18 @@ resolve and are not registered in `wrangler.jsonc`.
 | Setline | `https://setline-mcp.significanthobbies.com/setline/mcp` | Owner token | Owner-only Setline projection |
 | Personal Apps | `https://personal-apps-mcp.significanthobbies.com/personal-apps/mcp` | OAuth, `personal-apps.read` | Prepared native personal-platform proxy |
 
-`mcp.significanthobbies.com` also has no DNS record, and that is correct: it is
-only the immutable Auth0 audience identifier for Reader, Calorie, Anime List,
-and SWE Interview Prep. It is advertised in protected-resource metadata and is
-never fetched.
+`mcp.significanthobbies.com` is deployed as an Anchor-only alias. Other product
+paths are not served on this host; their immutable Auth0 audience identifiers
+and branded endpoint hosts remain unchanged. The additional Anchor branded
+endpoint is `https://anchor-mcp.significanthobbies.com/anchor/mcp`.
 
 Setline remains available only on the compatibility endpoint and is not one of
 the eleven listing packages. It retains the existing owner-only token bridge
 until its separate account boundary is ready.
 
 Research Papers' local corpus search, detail, similarity, RAG, PDFs, and ingest
-are not hosted. Significant Hobbies private records are not hosted.
+are not hosted. The public Significant Hobbies connector does not expose private
+records; consented Anchor data uses its separately authorized account route.
 
 ## OAuth and secret boundary
 
@@ -77,13 +79,15 @@ access/refresh tokens, rotation, and revocation. The Worker is an OAuth
 resource server: it publishes route-specific protected-resource metadata,
 proxies Auth0 authorization-server discovery for older clients, validates
 Auth0 JWTs with `jose` against Auth0's remote JWKS, and forwards only a verified
-Reader, Calorie, Anime List, or SWE Interview Prep caller token to that matching
+Reader, Calorie, Anime List, SWE Interview Prep, or Anchor caller token to that matching
 product.
 
 Every federated private request must have the exact Auth0 issuer, the route's
 fixed canonical product resource in `aud`, an RS256 signature, a lifetime no
 longer than one hour, a supported federated subject, and the route's single
-read permission. Protected-resource metadata on each distinct public hostname
+read permission for existing read-only routes. Anchor read tools require
+`anchor.read`; its mutation tools require both `anchor.read` and `anchor.write`.
+Protected-resource metadata on each distinct public hostname
 advertises that canonical resource. The product repeats the checks and maps the
 subject to its own account; a missing account returns 403 without an owner
 fallback. OAuth bearer values and private response bodies are not logged or
@@ -318,7 +322,8 @@ Retained evaluation prompts remain in [evaluations.md](docs/evaluations.md).
 Runtime decisions are in [runtime-compatibility.md](docs/runtime-compatibility.md).
 
 
-Anchor is the first prepared native account-action connection. Existing endpoints
+Anchor is the first native account-action connection under controlled qualification. Existing endpoints
 retain their read-only contracts. Anchor uses an exact tool allowlist, separate
 read/write scopes and independent account authorization at the product. Its
-runtime activation gate defaults closed. See [account actions and activation](docs/api-parity.md#account-actions-and-native-products).
+runtime activation gate closes when its versioned binding is absent. See
+[account actions and activation](docs/api-parity.md#account-actions-and-native-products).
