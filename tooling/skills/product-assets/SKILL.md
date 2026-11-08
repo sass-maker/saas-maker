@@ -64,7 +64,9 @@ projection. Keep originals and prior versions recoverable.
    Private files may omit it; mark historical entries `archived: true` rather
    than listing an old URL as a current public download. Public logo, screenshot
    and video entries are checked against the kit; document, brief and JSON
-   entries are ignored for asset reconciliation. Independently inspect the actual changed
+   entries are ignored for asset reconciliation. Untyped public entries are
+   checked as assets; other unrecognized public kinds are reported as issues.
+   Independently inspect the actual changed
    Drive and public bytes. A 200 HTML fallback is not a JSON kit. Build, follow
    the existing release guard, and verify live routes only when a public site
    release is in scope and authentication is available.
