@@ -1,16 +1,18 @@
 # SaaS Maker MCP Connections
 
-## Anchor account MCP preparation (2026-11-08)
+## Anchor account MCP activation (2026-11-08)
 
-Prepared an Anchor native proxy with explicit read/write tool scopes. Existing
-connections retain their permissions. Product-side account mapping, planner
-sync consent and native command receipts are required companions. No production
-host, OAuth configuration, credentials or deployments were changed. The route
-fails closed until the gateway's optional `MCP_ENABLED_WRITE_PRODUCTS` includes
-`anchor`. Enable it only after companion services, OAuth configuration
-and native consent/command acceptance are qualified. End-to-end ChatGPT/Codex
-sign-in and installed-native acceptance remain unverified.
+The Anchor proxy and companion product authorization are deployed. Auth0 now
+has the exact resource `https://mcp.significanthobbies.com/anchor/mcp`,
+`anchor.read` / `anchor.write`, RS256 and one-hour tokens. User consent cannot
+be skipped; machine-to-machine access is disabled. No installation client has
+been granted these scopes yet. The approved branded hostname is added to the
+Worker deployment configuration.
 
+The route still fails closed until `MCP_ENABLED_WRITE_PRODUCTS` includes
+`anchor`. Client authorization, real-account read/write checks and native
+command receipts must be qualified before enabling it. Existing connections
+retain their permissions. No directory submission is claimed.
 
 ## Why / What
 
@@ -38,18 +40,13 @@ Allowing GPTBot, ClaudeBot, Google-Extended, Applebot-Extended, CCBot and
 Bytespider on public pages is an explicit owner decision. These source changes
 do not establish production deployment or successful AI indexing.
 
-## Migration cutover remains pending
+## Source migration completed (2026-11-08)
 
-First merge the SaaS Maker source and verify successful `mcp-ci.yml` at the exact
-main revision. Before the first `pnpm deploy:mcp`, land the legacy repository's
-fail-closed publisher and source tombstone, move its active Wrangler configuration
-to `docs/archive` so direct deployment cannot discover it, and disable its CI and
-production-monitor workflows. Verify these retirements before deploying from
-SaaS Maker. Both source trees target the same Worker, so the old release path
-must not remain available to replace a SaaS Maker release with stale source.
-Migration is incomplete until the legacy release path is retired and the SaaS
-Maker release checks pass. No retirement or production release is claimed by this
-source move. Final cutover evidence stays private.
+SaaS Maker is the active publisher for the shared gateway. The former repository's
+publisher is fail-closed and its workflows are disabled. Its source and review
+history remain retained. Releases use the owning `mcp-ci.yml` at the exact main
+revision and the guarded `apps/mcp` deployment command. This source cutover does
+not establish authenticated-owner acceptance for every connection.
 
 ## Dependencies
 
