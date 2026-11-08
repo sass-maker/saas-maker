@@ -725,6 +725,13 @@ async function handleNative(
     return jsonRpcError(502, -32603, "Upstream MCP redirects are not allowed.");
   }
   let bounded = await boundedResponse(response);
+  if (allowlist && message.method === "notifications/initialized" && bounded.status === 202) {
+    const acknowledgement = await bounded.arrayBuffer();
+    if (message.id === undefined && acknowledgement.byteLength === 0) {
+      return new Response(null, { status: 202, headers: bounded.headers });
+    }
+    return jsonRpcError(502, -32603, "Upstream MCP notification acknowledgement is invalid.");
+  }
   const responseIsJson = bounded.headers.get("content-type")?.toLowerCase().includes("application/json") === true;
   if (allowlist && !responseIsJson) {
     await bounded.body?.cancel();
