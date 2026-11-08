@@ -770,6 +770,20 @@ function submission() {
 }
 
 describe('public product submission kits', () => {
+  it('preserves canonical product URL fragments while rejecting fragments on asset download URLs', () => {
+    const input = structureCatalog(catalog());
+    input.projects[0].presentation.directory.publicDestinationUrl =
+      'https://primary.example/#product';
+    input.projects[0].presentation.directory.submission = submission();
+    const projection = buildPublicProducts(input);
+    expect(() => validateProjection(projection, 'fixture')).not.toThrow();
+    const product = projection.directory.find(({ id }) => id === 'primary');
+    expect(buildSubmissionKit(product).url).toBe('https://primary.example/#product');
+    input.projects[0].presentation.directory.submission.assets[0].url =
+      'https://cdn.example/logo.png#preview';
+    expect(() => buildPublicProducts(input)).toThrow('without credentials');
+  });
+
   it('rejects invalid public profile text during catalog generation and projection validation', () => {
     const input = structureCatalog(catalog());
     input.projects[0].presentation.directory.description = 'A -> B';

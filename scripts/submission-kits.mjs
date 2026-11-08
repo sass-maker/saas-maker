@@ -181,7 +181,9 @@ export function submissionEligible(project) {
 export function validateSubmissionProfile(project) {
   text(project.name, `${project.id}.name`, 240);
   text(project.description, `${project.id}.description`);
-  validatePublicSubmissionUrl(project.publicUrl, `${project.id}.publicUrl`, { allowFragment: true });
+  validatePublicSubmissionUrl(project.publicUrl, `${project.id}.publicUrl`, {
+    allowFragment: true,
+  });
 }
 export function buildSubmissionKit(project) {
   if (!submissionEligible(project)) return undefined;

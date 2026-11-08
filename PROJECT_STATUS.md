@@ -40,7 +40,7 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
   listing copy. `/submission-kits.json`, per-product `submission.json` and
   `brief.txt` expose the same data to agents. The canonical records remain in
   Site Health's private catalog; private, unreleased and archived profiles do
-  not acquire kits. Videos are Release downloads, with owner copies in Drive;
+  not acquire kits. Videos use dedicated public asset storage, with owner copies in Drive;
   pricing and destination-specific omissions stay explicit. Download access
   does not authorize submissions or spending.
 
