@@ -376,7 +376,10 @@ test("runtime activation preserves Anchor's unauthenticated OAuth challenge", as
     body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize" }),
   });
   const disabled = await worker.fetch(request(), env as HostedWorkerEnv);
-  assert.equal(disabled.status, 503);
+  assert.equal(disabled.status, 401);
+  assert.match(disabled.headers.get("www-authenticate") ?? "", /anchor.read anchor.write/u);
+  assert.match(disabled.headers.get("www-authenticate") ?? "", /resource_metadata="https:\/\/mcp.example\/\.well-known\/oauth-protected-resource\/anchor\/mcp"/u);
+  assert.equal(disabled.headers.get("cache-control"), "no-store");
   const enabled = await worker.fetch(request(), { ...env, MCP_ENABLED_WRITE_PRODUCTS: "anchor" } as HostedWorkerEnv);
   assert.equal(enabled.status, 401);
   assert.match(enabled.headers.get("www-authenticate") ?? "", /anchor.read anchor.write/u);
