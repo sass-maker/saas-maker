@@ -257,9 +257,9 @@ const productJsonLd = {
               <ul class="submission-assets">
                 {submissionKit.assets.map((asset) => (
                   <li>
-                    {asset.kind === 'video' ? <video controls preload="none" aria-label={asset.label} src={assetDisplayUrl(asset.url)} poster={asset.posterUrl ? assetDisplayUrl(asset.posterUrl) : undefined} /> : <img loading="lazy" src={assetDisplayUrl(asset.url)} alt={asset.label} width={asset.width} height={asset.height} />}
+                    {asset.kind === 'video' ? <video controls preload="none" aria-label={asset.label} src={assetDisplayUrl(asset.viewUrl ?? asset.url)} poster={asset.posterUrl ? assetDisplayUrl(asset.posterUrl) : undefined} /> : <img loading="lazy" src={assetDisplayUrl(asset.url)} alt={asset.label} width={asset.width} height={asset.height} />}
                     <div><strong>{asset.label}</strong><p>{asset.mimeType}{asset.width ? ` · ${asset.width} × ${asset.height}` : ''}{asset.byteSize ? ` · ${(asset.byteSize / 1024 / 1024).toFixed(2)} MB` : ''}</p>
-                    <a href={assetDisplayUrl(asset.url)} download={asset.filename}>Download {asset.label}</a>{asset.viewUrl && <> · <a href={asset.viewUrl}>View video</a></>}
+                    <a href={assetDisplayUrl(asset.url)} download={asset.filename}>Download {asset.label}</a>{asset.viewUrl && asset.viewUrl !== asset.url && <> · <a href={asset.viewUrl}>View video</a></>}
                     {asset.uploadLimit && <p>{asset.uploadLimit}</p>}</div>
                   </li>
                 ))}
