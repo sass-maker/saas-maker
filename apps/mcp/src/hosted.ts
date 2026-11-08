@@ -96,7 +96,7 @@ export const HOSTED_ROUTES: Readonly<Record<string, HostedRouteDefinition>> = Ob
     id: "anchor",
     kind: "native",
     audience: "personal",
-    hosts: ["anchor-mcp.significanthobbies.com"],
+    hosts: ["anchor-mcp.significanthobbies.com", "mcp.significanthobbies.com"],
     authMode: "federated",
     oauthAudience: "https://mcp.significanthobbies.com/anchor/mcp",
     scope: "anchor.read",
