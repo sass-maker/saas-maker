@@ -14,6 +14,7 @@ import Nav from '../components/Nav.astro';
 import { LAUNCH_AGENT_PROMPT } from '../data/catalogPrompts';
 import launchdeskData from '../data/launchdesk.json';
 import Layout from '../layouts/Layout.astro';
+import { SUBMISSION_KITS } from '../data/submissionKits';
 
 const playbookModules = import.meta.glob('../data/launchdesk-playbooks/*.json');
 const playbookCount = Object.keys(playbookModules).filter(
@@ -45,6 +46,22 @@ const playbookCount = Object.keys(playbookModules).filter(
         description="Paste this into your agent with your product URL and goals. It can read the catalog, verify routes and prepare your launch plan without cloning the repository."
         prompt={LAUNCH_AGENT_PROMPT}
       />
+
+      <section class="launchkit-pane" id="product-assets">
+        <h2>Fleet product submission kits</h2>
+        <p>Start with the <a href="/projects">product directory</a>. Public product profiles include reviewed listing copy, downloadable logos, screenshots and videos, and an explicit list of missing fields. Agents can search the <a href="/submission-kits.json">complete JSON kit index</a>.</p>
+        <p>Download a product’s <code>/p/&lt;product-id&gt;/brief.txt</code>, or export it locally:</p>
+        <pre><code>node tooling/launchkit/scripts/export-product-brief.mjs --product saas-maker --out brief.md</code></pre>
+        <p>Exported briefs default to no account creation, submissions, badges, or spending. The operator supplies campaign permissions and destination-specific requirements.</p>
+        <label class="kit-search" for="product-kit-search">Find a product kit <input id="product-kit-search" type="search" placeholder="Search product names" /></label>
+        <ul class="product-kits" id="product-kit-list">
+          {SUBMISSION_KITS.map((kit) => {
+            const png = kit.assets.find((asset) => asset.kind === 'logo' && asset.mimeType === 'image/png');
+            return <li data-kit-name={kit.name.toLocaleLowerCase()}><strong>{kit.name}</strong><span>{kit.id !== 'saas-maker' && <><a href={`/p/${kit.id}#submission-kit`}>Preview kit</a> · </>}<a href={kit.briefUrl} download={`${kit.id}-brief.txt`}>Brief</a> · <a href={kit.kitUrl}>JSON</a>{png && <> · <a href={png.url.replace('https://sassmaker.com/product-assets/', '/product-assets/')} download={png.filename}>PNG logo</a></>}</span></li>;
+          })}
+        </ul>
+        <p id="product-kit-empty" hidden>No matching product kits.</p>
+      </section>
 
       <section class="launchkit-pane">
         <h2>Run locally with the planner and tracker</h2>
@@ -203,4 +220,23 @@ node tooling/launchkit/scripts/report.mjs --tracker tracker.json</code></pre>
   .launchkit-back a:hover {
     color: var(--copper);
   }
+</style>
+
+<script>
+  const search = document.querySelector<HTMLInputElement>('#product-kit-search');
+  const items = [...document.querySelectorAll<HTMLElement>('#product-kit-list li')];
+  search?.addEventListener('input', () => {
+    const query = search.value.trim().toLocaleLowerCase();
+    items.forEach((item) => { item.hidden = !item.dataset.kitName?.includes(query); });
+    const empty = document.querySelector<HTMLElement>('#product-kit-empty');
+    if (empty) empty.hidden = items.some((item) => !item.hidden);
+  });
+</script>
+<style>
+  .kit-search { display: grid; gap: 0.5rem; margin-top: 1.5rem; font-weight: 650; }
+  .kit-search input { width: 100%; min-height: 44px; padding: 0.75rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink); font: inherit; }
+  .product-kits { list-style: none; margin: 1rem 0 0; padding: 0; }
+  .product-kits li { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1rem; padding: 0.85rem 0; border-bottom: 1px solid var(--line); }
+  .product-kits li[hidden] { display: none; }
+  .product-kits span { font-size: 0.875rem; }
 </style>

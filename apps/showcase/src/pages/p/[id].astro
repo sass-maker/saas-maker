@@ -1,4 +1,5 @@
 ---
+import { buildSubmissionKit } from '../../../../../scripts/submission-kits.mjs';
 import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
@@ -35,6 +36,14 @@ const archived = product.roster === 'archived';
 const archivedRepository = product.roster === 'archived-repository';
 const pastProfile = archived || archivedRepository;
 const current = product as DirectoryProject;
+const submissionKit = !pastProfile ? buildSubmissionKit(current) : undefined;
+function assetDisplayUrl(url: string) {
+  return url.startsWith('https://sassmaker.com/product-assets/') ? url.replace('https://sassmaker.com', '') : url;
+}
+const logoUrl = current.logoUrl ?? submissionKit?.assets.find((asset) => asset.kind === 'logo')?.url;
+const displayLogo = logoUrl ? assetDisplayUrl(logoUrl) : undefined;
+const downloadLogo = submissionKit?.assets.find((asset) => asset.kind === 'logo' && asset.mimeType === 'image/png');
+const missingLabels: Record<string, string> = { tagline: 'tagline', longDescription: 'long description', pricingModel: 'pricing', checkedAt: 'review date', categoryWords: 'categories', logo: 'logo', screenshot: 'screenshots', video: 'video', rasterLogo: 'PNG logo' };
 const repositoryUrl = archivedRepository ? product.repositoryUrl : !archived ? current.repositoryUrl : undefined;
 const repositoryMatch = repositoryUrl?.match(
   /^https:\/\/github\.com\/([a-z\d](?:[a-z\d-]*[a-z\d])?)\/([a-z\d._-]+?)(?:\.git)?\/?$/i
@@ -133,12 +142,12 @@ const productJsonLd = {
         </div>
 
         <header class="project-hero">
-          <div class:list={['project-identity', { 'project-identity--with-logo': current.logoUrl && !archived }]}>
+          <div class:list={['project-identity', { 'project-identity--with-logo': displayLogo && !pastProfile }]}>
             <p class="project-folio">SaaS Maker directory</p>
             {archived && <p class="project-folio">Historical profile · no public destination listed</p>}
             {archivedRepository && <p class="project-folio">Past standalone repository · retained public source</p>}
-            {!pastProfile && current.logoUrl && (
-              <img class="project-logo" src={current.logoUrl} alt="" width="96" height="96" />
+            {!pastProfile && displayLogo && (
+              <img class="project-logo" src={displayLogo} alt="" width="96" height="96" />
             )}
             <h1>{product.name}</h1>
             <p class="project-summary">{productSummary}</p>
@@ -228,6 +237,40 @@ const productJsonLd = {
           </dl>
         </section>
 
+        {submissionKit && (
+          <section class="project-submission" id="submission-kit" aria-labelledby="submission-title">
+            <div class="project-section-head">
+              <p class="project-folio">Submission kit</p>
+              <h2 id="submission-title">Logos, screenshots and product details</h2>
+              <p>Reviewed listing copy and public assets for directory forms. Check each destination’s requirements before preparing a listing.</p>
+              <p>{downloadLogo && <><a href={assetDisplayUrl(downloadLogo.url)} download={`${product.id}-logo.png`}>Download PNG logo</a> · </>}<a href={submissionKit.briefUrl} download={`${product.id}-brief.txt`}>Download product brief</a> · <a href={submissionKit.kitUrl}>JSON kit</a></p>
+            </div>
+            <div class="submission-content">
+              <dl class="submission-copy">
+                <div><dt>Product URL</dt><dd><a href={submissionKit.url}>{submissionKit.url}</a></dd></div>
+                {submissionKit.tagline && <div><dt>Tagline</dt><dd>{submissionKit.tagline}</dd></div>}
+                <div><dt>Short description</dt><dd>{submissionKit.shortDescription}</dd></div>
+                {submissionKit.longDescription && <div><dt>Long description</dt><dd>{submissionKit.longDescription}</dd></div>}
+                {submissionKit.categoryWords.length > 0 && <div><dt>Category words</dt><dd>{submissionKit.categoryWords.join(', ')}</dd></div>}
+                {submissionKit.pricingModel && <div><dt>Pricing model</dt><dd>{submissionKit.pricingModel}</dd></div>}
+              </dl>
+              <ul class="submission-assets">
+                {submissionKit.assets.map((asset) => (
+                  <li>
+                    {asset.kind === 'video' ? <video controls preload="none" aria-label={asset.label} src={assetDisplayUrl(asset.viewUrl ?? asset.url)} poster={asset.posterUrl ? assetDisplayUrl(asset.posterUrl) : undefined} /> : <img loading="lazy" src={assetDisplayUrl(asset.url)} alt={asset.label} width={asset.width} height={asset.height} />}
+                    <div><strong>{asset.label}</strong><p>{asset.mimeType}{asset.width ? ` · ${asset.width} × ${asset.height}` : ''}{asset.byteSize ? ` · ${(asset.byteSize / 1024 / 1024).toFixed(2)} MB` : ''}</p>
+                    <a href={assetDisplayUrl(asset.url)} download={asset.filename}>Download {asset.label}</a>{asset.viewUrl && asset.viewUrl !== asset.url && <> · <a href={asset.viewUrl}>View video</a></>}
+                    {asset.uploadLimit && <p>{asset.uploadLimit}</p>}</div>
+                  </li>
+                ))}
+              </ul>
+              {submissionKit.demoUrl && <p><a href={submissionKit.demoUrl}>Open demo</a></p>}
+              <p class="submission-gaps">Missing from this kit: {submissionKit.missing.length ? submissionKit.missing.map((field) => missingLabels[field] ?? field).join(', ') : 'none of the standard fields'}. Each directory may ask for additional details.</p>
+              <p>Last checked: {submissionKit.checkedAt ?? 'not recorded'}.</p>
+            </div>
+          </section>
+        )}
+
         <section class="project-progress" aria-labelledby="progress-title">
           <div class="project-section-head">
             <p class="project-folio">{progressLabel}</p>
@@ -302,6 +345,21 @@ const productJsonLd = {
 </Layout>
 
 <style>
+  .project-submission { display: grid; grid-template-columns: minmax(20rem, 0.65fr) minmax(0, 1.35fr); gap: 1px; background: var(--line); border-bottom: 1px solid var(--line); }
+  .project-submission .project-section-head { justify-content: flex-start; }
+  .project-submission .project-section-head h2 { max-width: none; font-size: clamp(2.5rem, 3.5vw, 3rem); }
+  .submission-content { min-width: 0; padding: clamp(1.5rem, 4vw, 3rem); background: var(--surface); }
+  .submission-content a, .project-submission .project-section-head a { color: var(--copper-hi); text-decoration: underline; text-underline-offset: 0.2em; }
+  .submission-copy { display: grid; gap: 1.5rem; }
+  .submission-copy dt { color: var(--ink-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+  .submission-copy dd { margin: 0; user-select: all; overflow-wrap: anywhere; }
+  .submission-assets { display: grid; gap: 1.5rem; list-style: none; margin-top: 2rem; }
+  .submission-assets li { border-top: 1px solid var(--line); padding-top: 1.5rem; }
+  .submission-assets img, .submission-assets video { display: block; width: 100%; max-height: 24rem; object-fit: contain; background: var(--surface-muted); margin-bottom: 1rem; }
+  .submission-assets p, .submission-content > p { margin-top: 0.75rem; color: var(--ink-muted); overflow-wrap: anywhere; }
+  .submission-gaps { border-top: 1px solid var(--line); padding-top: 1.5rem; }
+  @media (max-width: 900px) { .project-submission { grid-template-columns: 1fr; } }
+
   .project {
     width: var(--frame-width);
     margin: 0 auto;

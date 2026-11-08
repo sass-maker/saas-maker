@@ -103,3 +103,35 @@ test('coverage ledger only references public projects and real domains', () => {
     }
   }
 });
+
+test('product brief exporter preserves copy, downloads and conservative permissions', () => {
+  const exporter = resolve(LAUNCHKIT, 'scripts/export-product-brief.mjs');
+  const dir = mkdtempSync(join(tmpdir(), 'launchkit-brief-'));
+  const catalogPath = join(dir, 'public.json');
+  const out = join(dir, 'brief.md');
+  const product = {
+    id: 'example', name: 'Example', roster: 'current', shareable: true,
+    availability: 'public-link', publicUrl: 'https://example.com/', description: 'Reviewed fallback copy.',
+    submission: {
+      shortDescription: 'Exact approved listing copy.', categoryWords: ['developer tools'], assets: [
+        { id: 'logo', kind: 'logo', label: 'Logo', filename: 'logo.png', mimeType: 'image/png', url: '/product-assets/example/logo.png', width: 512, height: 512 },
+      ],
+    },
+  };
+  writeFileSync(catalogPath, JSON.stringify({ directory: [product] }));
+  execFileSync(process.execPath, [exporter, '--product', 'example', '--catalog', catalogPath, '--out', out]);
+  const brief = readFileSync(out, 'utf8');
+  assert.match(brief, /Exact approved listing copy\./);
+  assert.match(brief, /https:\/\/sassmaker.com\/product-assets\/example\/logo.png/);
+  assert.match(brief, /\*\*Category words:\*\* developer tools/);
+  for (const permission of ['create accounts', 'publish/submit listings', 'accept reciprocal-badge requirements', 'spend money']) assert.ok(brief.includes(`**May ${permission}:** no`));
+  assert.match(brief, /- pricingModel/);
+  assert.match(brief, /- screenshot/);
+  assert.throws(() => execFileSync(process.execPath, [exporter, '--product', 'example', '--catalog', catalogPath, '--out', out], { stdio: 'pipe' }), /Command failed/);
+  writeFileSync(catalogPath, JSON.stringify({ directory: [{ ...product, availability: 'preview-not-qualified' }] }));
+  assert.throws(() => execFileSync(process.execPath, [exporter, '--product', 'example', '--catalog', catalogPath], { stdio: 'pipe' }), /No public submission kit/);
+  const publishedCatalog = JSON.parse(readFileSync(resolve(REPO_ROOT, 'catalog/generated/public.json'), 'utf8'));
+  const publicProduct = publishedCatalog.directory.find((entry) => entry.shareable === true && entry.availability === 'public-link');
+  const checkedInBrief = execFileSync(process.execPath, [exporter, '--product', publicProduct.id], { encoding: 'utf8' });
+  assert.ok(checkedInBrief.includes(publicProduct.name));
+});

@@ -1,3 +1,8 @@
+import {
+  validateSubmission,
+  validateSubmissionProfile,
+  submissionEligible,
+} from './submission-kits.mjs';
 import { compatibilityCatalog } from './catalog-schema.mjs';
 import { validateFooterArt } from '../packages/fleet-footer/src/artwork.mjs';
 import { buildPublicCollections } from './project-collections.mjs';
@@ -41,6 +46,7 @@ const DIRECTORY_FIELDS = new Set([
   'description',
   'makerNote',
   'logoUrl',
+  'submission',
   'purposeContract',
   'footerArt',
   'kind',
@@ -334,9 +340,15 @@ export function buildPublicProducts(catalog) {
       ...preservedPublicFields,
       roster,
       availability,
+      ...(shareable && availability === 'public-link' ? { shareable: true } : {}),
       ...(destinationUrl ? { publicUrl: destinationUrl } : {}),
       ...(destinationLabel ? { publicUrlLabel: destinationLabel } : {}),
     };
+    if (submissionEligible(output)) {
+      validateSubmissionProfile(output);
+      if (metadata.submission !== undefined)
+        output.submission = validateSubmission(metadata.submission, project.id);
+    }
     assertShape(output, DIRECTORY_FIELDS, [
       'id',
       'name',

@@ -34,6 +34,20 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-11-08:** Added submission kits for the 30 current public products
+  (issue #373). Existing product profiles and `/launchkit#product-assets`
+  provide PNG/SVG marks, dated screenshots, launch-film downloads and factual
+  listing copy. `/submission-kits.json`, per-product `submission.json` and
+  `brief.txt` expose the same data to agents. The canonical records remain in
+  Site Health's private catalog; private, unreleased and archived profiles do
+  not acquire kits. Videos use dedicated public asset storage, with owner copies in Drive;
+  pricing and destination-specific omissions stay explicit. Download access
+  does not authorize submissions or spending.
+  Video download URLs require the exact `?download=1` query. The SaaS Maker
+  response-header rule "Product asset video downloads" on `assets.sassmaker.com`
+  sets `Content-Disposition: attachment` for that query; bare `viewUrl` URLs
+  retain inline playback. Keep this split when regenerating or publishing kits.
+
 - **2026-11-03:** Expanded the Browser Agent Testing article with agent-desktop,
   Open Interpreter, UI-TARS Desktop, Cua and OmniParser, distinguishing their
   interaction, orchestration, infrastructure and perception roles. The retained

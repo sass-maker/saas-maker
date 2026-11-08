@@ -38,6 +38,7 @@ cockroach-sql-*/
 # Misc
 *.png
 !apps/showcase/public/images/project-icons/*.png
+!apps/showcase/public/product-assets/**/*.png
 !apps/showcase/public/footer-art/*.png
 project-idea-dump.md
 .fallow/

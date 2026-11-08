@@ -1,3 +1,11 @@
+import { SUBMISSION_KITS } from '../../apps/showcase/src/data/submissionKits';
+import { GET as getSubmissionKits } from '../../apps/showcase/src/pages/submission-kits.json';
+import {
+  getStaticPaths as kitPaths,
+  GET as getKit,
+} from '../../apps/showcase/src/pages/p/[id]/submission.json';
+import { GET as getBrief } from '../../apps/showcase/src/pages/p/[id]/brief.txt';
+import { DIRECTORY_PROJECTS } from '../../apps/showcase/src/data/directory';
 import { GET as getLlms } from '../../apps/showcase/src/pages/llms.txt';
 import { readFile } from 'node:fs/promises';
 import { describe, expect, it } from 'vitest';
@@ -234,5 +242,45 @@ describe('SaaS Maker public source boundary', () => {
     }
     expect(directoryPage).toMatch(/project\.logoUrl/);
     expect(detailPage).toMatch(/current\.logoUrl/);
+  });
+});
+
+describe('submission kit public routes', () => {
+  it('makes every kit discoverable by name on the existing Launchkit page', async () => {
+    const page = await readShowcase('src/pages/launchkit.astro');
+    expect(page).toContain('SUBMISSION_KITS.map');
+    expect(page).toContain('id="product-kit-search"');
+    expect(page).toContain('data-kit-name={kit.name.toLocaleLowerCase()}');
+    expect(page).toContain('kit.briefUrl');
+    expect(page).toContain('PNG logo');
+    expect(page).toContain("kit.id !== 'saas-maker'");
+  });
+  it('serves every eligible profile and no unavailable profiles with the exact public assets', async () => {
+    const eligible = DIRECTORY_PROJECTS.filter(
+      (project) =>
+        project.roster === 'current' &&
+        project.shareable === true &&
+        project.availability === 'public-link'
+    );
+    expect(SUBMISSION_KITS.map(({ id }) => id)).toEqual(eligible.map(({ id }) => id));
+    const response = getSubmissionKits();
+    expect(response.headers.get('access-control-allow-origin')).toBe('*');
+    expect((await response.json()).kits).toEqual(SUBMISSION_KITS);
+    const paths = kitPaths();
+    expect(paths.map(({ params }) => params.id)).toEqual(eligible.map(({ id }) => id));
+    for (const path of paths) {
+      const project = eligible.find(({ id }) => id === path.params.id)!;
+      const kit = await getKit({ props: path.props }).json();
+      expect(kit.assets.map(({ filename }) => filename)).toEqual(
+        (project.submission?.assets ?? []).map(({ filename }) => filename)
+      );
+      const brief = await getBrief({ props: path.props }).text();
+      expect(brief).toContain(project.name);
+      expect(brief).toContain('**May create accounts:** no');
+      expect(brief).toContain('**May publish/submit listings:** no');
+      expect(brief).toContain('**May accept reciprocal-badge requirements:** no');
+      expect(brief).toContain('**May spend money:** no');
+      expect(kit.pricingModel).toBe(project.submission?.pricingModel ?? null);
+    }
   });
 });

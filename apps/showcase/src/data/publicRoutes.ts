@@ -1,3 +1,4 @@
+import { buildSubmissionKit, submissionBrief } from '../../../../scripts/submission-kits.mjs';
 import { PUBLIC_ROUTE_DETAILS } from './publicRouteDetails';
 import publicCatalog from '../../../../catalog/generated/public.json';
 import tokenWorld from './tokenWorld.json';
@@ -98,6 +99,17 @@ function productMarkdown(product: PublicProductProfile): string {
       ''
     );
   }
+
+  const kit = !archived ? buildSubmissionKit(profile) : undefined;
+  if (kit)
+    lines.push(
+      '## Submission kit',
+      '',
+      `[Machine-readable kit](${kit.kitUrl}) · [Download brief](${kit.briefUrl})`,
+      '',
+      submissionBrief(kit).replace(/^#/gm, '##'),
+      ''
+    );
 
   lines.push(
     '## Directory boundary',
@@ -416,6 +428,8 @@ const fixedRoutes: PublicRoute[] = [
       'A free, agent-executable launch toolkit: fill one product brief, generate a truthful run plan, execute each route from its per-platform playbook with human gates, and record submitted/scheduled/live states with evidence.',
       '',
       `- Manifest: ${SITE_URL}/launchkit.json`,
+      `- Product submission kits: ${SITE_URL}/submission-kits.json`,
+      `- Product brief: ${SITE_URL}/p/<product-id>/brief.txt`,
       `- Human page: ${SITE_URL}/launchkit`,
       `- Destination catalog: ${SITE_URL}/launchdesk.json`,
       `- Playbook index: ${SITE_URL}/launchdesk-playbooks.json`,

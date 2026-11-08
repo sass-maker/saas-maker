@@ -32,6 +32,7 @@ export function GET() {
     ],
     pieces: {
       brief: `${RAW}/tooling/launchkit/brief.template.md`,
+      productBriefExporter: `${RAW}/tooling/launchkit/scripts/export-product-brief.mjs`,
       planner: `${RAW}/tooling/launchkit/scripts/plan-run.mjs`,
       runPrompt: `${RAW}/tooling/launchkit/prompts/run.prompt.md`,
       trackerSchema: `${RAW}/tooling/launchkit/tracker.schema.json`,
@@ -41,6 +42,10 @@ export function GET() {
       skill: `${RAW}/tooling/skills/launch-campaign/references/launchkit-directory-run.md`,
     },
     data: {
+      productSubmissionKits: `${SITE}/submission-kits.json`,
+      productKitPattern: `${SITE}/p/<product-id>/submission.json`,
+      productBriefPattern: `${SITE}/p/<product-id>/brief.txt`,
+      publicProducts: `${SITE}/projects.json`,
       catalog: `${SITE}/launchdesk.json`,
       catalogSnapshot: launchdeskData.snapshot,
       destinations: launchdeskData.destinations.length,
