@@ -777,12 +777,19 @@ test("Anchor filters undisclosed tools and blocks alternate protocol methods", a
 
 test("prepared write connections require explicit runtime activation", async () => {
   let calls = 0;
-  const response = await handleProductionRequest(
-    requestFor("/anchor/mcp", initializeRequest()),
-    async () => { calls += 1; return Response.json({}); },
-    authorizationFor("/anchor/mcp", { scopes: ["anchor.read", "anchor.write"] }),
-  );
-  assert.equal(response.status, 503);
+  for (const message of [
+    initializeRequest(),
+    { jsonrpc: "2.0", id: 2, method: "tools/list" },
+    { jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "anchor_create_record", arguments: {} } },
+  ]) {
+    const response = await handleProductionRequest(
+      requestFor("/anchor/mcp", message),
+      async () => { calls += 1; return Response.json({}); },
+      authorizationFor("/anchor/mcp", { scopes: ["anchor.read", "anchor.write"] }),
+    );
+    assert.equal(response.status, 503);
+    assert.equal(response.headers.get("cache-control"), "no-store");
+  }
   assert.equal(calls, 0);
   const readOnly = await handleProductionRequest(requestFor("/reader/mcp", initializeRequest()), routeFetch, authorizationFor("/reader/mcp"));
   assert.equal(readOnly.status, 200);
