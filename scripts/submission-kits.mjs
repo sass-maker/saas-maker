@@ -54,7 +54,7 @@ function text(value, trail, max = 5000) {
     throw new Error(`${trail}: invalid public text`);
   return value;
 }
-export function validatePublicSubmissionUrl(value, trail = 'submission URL') {
+export function validatePublicSubmissionUrl(value, trail = 'submission URL', options = {}) {
   text(value, trail, 2000);
   let url;
   try {
@@ -67,7 +67,7 @@ export function validatePublicSubmissionUrl(value, trail = 'submission URL') {
     url.protocol !== 'https:' ||
     url.username ||
     url.password ||
-    url.hash ||
+    (url.hash && options.allowFragment !== true) ||
     url.port ||
     !host.includes('.') ||
     host.endsWith('.localhost') ||
@@ -178,11 +178,14 @@ export function submissionEligible(project) {
     project.shareable === true
   );
 }
-export function buildSubmissionKit(project) {
-  if (!submissionEligible(project)) return undefined;
+export function validateSubmissionProfile(project) {
   text(project.name, `${project.id}.name`, 240);
   text(project.description, `${project.id}.description`);
-  validatePublicSubmissionUrl(project.publicUrl, `${project.id}.publicUrl`);
+  validatePublicSubmissionUrl(project.publicUrl, `${project.id}.publicUrl`, { allowFragment: true });
+}
+export function buildSubmissionKit(project) {
+  if (!submissionEligible(project)) return undefined;
+  validateSubmissionProfile(project);
   const submission = validateSubmission(project.submission, project.id) ?? { assets: [] };
   const assets = submission.assets.map((asset) => ({
     ...asset,

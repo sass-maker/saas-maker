@@ -1,4 +1,8 @@
-import { validateSubmission, submissionEligible } from './submission-kits.mjs';
+import {
+  validateSubmission,
+  validateSubmissionProfile,
+  submissionEligible,
+} from './submission-kits.mjs';
 import { compatibilityCatalog } from './catalog-schema.mjs';
 import { validateFooterArt } from '../packages/fleet-footer/src/artwork.mjs';
 import { buildPublicCollections } from './project-collections.mjs';
@@ -340,8 +344,10 @@ export function buildPublicProducts(catalog) {
       ...(destinationUrl ? { publicUrl: destinationUrl } : {}),
       ...(destinationLabel ? { publicUrlLabel: destinationLabel } : {}),
     };
-    if (submissionEligible(output) && metadata.submission !== undefined) {
-      output.submission = validateSubmission(metadata.submission, project.id);
+    if (submissionEligible(output)) {
+      validateSubmissionProfile(output);
+      if (metadata.submission !== undefined)
+        output.submission = validateSubmission(metadata.submission, project.id);
     }
     assertShape(output, DIRECTORY_FIELDS, [
       'id',

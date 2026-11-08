@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 
-import { validateSubmission, submissionEligible } from './submission-kits.mjs';
+import {
+  validateSubmission,
+  validateSubmissionProfile,
+  submissionEligible,
+} from './submission-kits.mjs';
 
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -241,6 +245,7 @@ export function validateProjection(parsed, sourcePath) {
       ) {
         throw new Error(`${project.id}: preview destination must not imply a released product`);
       }
+      if (submissionEligible(project)) validateSubmissionProfile(project);
       if (project.submission !== undefined) {
         if (!submissionEligible(project))
           throw new Error(`${project.id}: submission kit requires a shareable public-link profile`);

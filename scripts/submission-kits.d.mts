@@ -29,12 +29,17 @@ export interface SubmissionKit {
     spendMoney: false;
   };
 }
-export function validatePublicSubmissionUrl(value: unknown, trail?: string): string;
+export function validatePublicSubmissionUrl(
+  value: unknown,
+  trail?: string,
+  options?: { allowFragment?: boolean }
+): string;
 export function validateSubmission(
   record: unknown,
   productId: string
 ): ProductSubmission | undefined;
 export function submissionEligible(project: Partial<DirectoryProject>): boolean;
+export function validateSubmissionProfile(project: Partial<DirectoryProject>): void;
 export function buildSubmissionKit(project: DirectoryProject): SubmissionKit | undefined;
 export function buildSubmissionKits(projects: DirectoryProject[]): SubmissionKit[];
 export function submissionBrief(kit: SubmissionKit): string;

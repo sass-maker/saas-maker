@@ -770,6 +770,18 @@ function submission() {
 }
 
 describe('public product submission kits', () => {
+  it('rejects invalid public profile text during catalog generation and projection validation', () => {
+    const input = structureCatalog(catalog());
+    input.projects[0].presentation.directory.description = 'A -> B';
+    expect(() => buildPublicProducts(input)).toThrow('invalid public text');
+    const projection = buildPublicProducts(catalog());
+    const publicProfile = projection.directory.find(
+      (project) => project.availability === 'public-link' && project.shareable
+    );
+    publicProfile.description = 'A -> B';
+    expect(() => validateProjection(projection, 'fixture')).toThrow('invalid public text');
+  });
+
   it('includes explicitly public shareable profiles outside the maintained homepage listing', () => {
     const input = structureCatalog(catalog());
     input.projects[0].presentation.public.listing = 'hidden';
