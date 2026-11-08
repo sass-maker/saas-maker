@@ -772,7 +772,7 @@
         },
         {
           "field": "sharing.evidence.reason",
-          "value": "Public and installed Mac build 31 is Developer ID signed, notarized, stapled and Gatekeeper accepted. Public bytes match the qualified artifact; installed Settings and project-label management were inspected with the existing local library. Rates, currencies, timer earnings and tracked-value reporting are removed; legacy storage and sync remain compatible. Native source passed 265 Swift tests, an isolated MCP transport check, Codex-only source review and the exact-source hosted Mac UI suite. Authenticated account/MCP/device receipts and mixed-version continuity remain unqualified; connector stays disabled and readyToBeShared remains false."
+          "value": "Public Mac build 32 remains signed, notarized, stapled and Gatekeeper accepted, with matching public bytes and updated privacy disclosure. Installed signed local build 33 repairs shared Hub affiliation loss and passes 273 native tests, Codex source review, normal launch and actual owner-account convergence: one create stayed at v1, one edit stayed at v2 over repeated native polls, and cleanup remained absent after sync. Public build 33 notarization is blocked by unavailable local credential profile lookup. Codex nine-tool reads, CRUD, replay, conflict, cleanup and an applied native no-op receipt are verified. ChatGPT post-fix tool refresh, actual separate read-only-token and second-account tests, physical-device and mixed-version continuity remain unverified; readyToBeShared remains false."
         },
         {
           "field": "deployment.status",

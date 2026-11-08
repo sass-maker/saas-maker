@@ -7,13 +7,18 @@ has the exact resource `https://mcp.significanthobbies.com/anchor/mcp`,
 `anchor.read` / `anchor.write`, RS256 and one-hour tokens. User consent cannot
 be skipped; machine-to-machine access is disabled. The branded hostname
 `anchor-mcp.significanthobbies.com` is deployed. Provided-client OAuth sign-in
-has succeeded; account and device qualification remains in progress.
+has succeeded. A normal Codex client completed account/planner reads, disposable
+metadata CRUD, stable-request replay and stale-version conflict checks. The
+temporary record remained absent after cleanup and native sync.
 
 Use `https://mcp.significanthobbies.com/anchor/mcp` for Codex and other clients
 that require the metadata resource identifier to match the connected URL.
 Its hostname is deployed as an Anchor-only alias; the branded ChatGPT endpoint
 is retained. The Auth0 audience and product JWT contracts are unchanged.
-Real-client tool and device acceptance remain qualification checks.
+The target native device applied a same-day copy command with zero affected
+records. ChatGPT authentication succeeded before the discovery repair; actual
+post-fix ChatGPT tool refresh remains unverified because desktop window controls
+are unavailable. No new OAuth access is needed to retry that saved connection.
 
 The native proxy preserves an empty HTTP 202 acknowledgement for initialized
 notifications without a request ID. Tool responses retain strict JSON filtering;
@@ -27,17 +32,22 @@ authorization, exact resource/scopes and independent product account isolation.
 Removing `anchor` from the binding or restoring the previous disabled Worker
 version closes authenticated tool access without changing account data.
 
-Native build 32 has approved account history and planner sharing, with a successful
-full resync and no pending local changes. Real ChatGPT/Codex read/write checks
-and native command receipts remain unverified acceptance checks. The connection
-remains prepared until that evidence is collected. Existing read-only connections
-retain their permissions. No directory submission is claimed.
+Public Mac build 32 remains notarized. Installed local build 33 uses the merged
+PersonalSyncKit affiliation repair: repeated native polls preserve unchanged
+planner versions, while a real edit advances the version once. Its signed
+production archive passes the native regression suite and independent Codex
+review, but public build 33 publication waits for a working Apple notarization
+profile. The original private interruption-note boundary is unchanged.
+
+Actual separate read-only-token and second-account tests, ChatGPT post-fix
+acceptance and mixed-version/device continuity remain unverified. Existing
+read-only connections retain their permissions. No directory submission is claimed.
 
 ## Why / What
 
 ChatGPT Connections is Fleet's shared MCP gateway for existing product data.
-Its published connections remain read-only; Anchor is a prepared, explicitly
-scoped account-action integration. Public product routes remain anonymous; Reader,
+Its other published connections remain read-only; Anchor is an explicitly
+scoped account-action integration under controlled qualification. Public product routes remain anonymous; Reader,
 Calorie, and Anime List use user-scoped federated OAuth that is verified by
 both the gateway and the owning product. CodeVetter and other device-local
 sources remain outside this gateway.

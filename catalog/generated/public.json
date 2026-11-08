@@ -3422,7 +3422,8 @@
         "SwiftUI",
         "SwiftData",
         "CloudKit",
-        "Foundation Models"
+        "Foundation Models",
+        "MCP"
       ],
       "group": "current",
       "makerNote": "I wanted a realistic daily planner that could help me follow the day and explain why the lived plan diverged from the intended one.",
@@ -3432,7 +3433,7 @@
         "audience": "A person moving between Mac, iPhone, and Apple Watch who wants a deliberate day rather than another task list.",
         "outcome": "Make more realistic plans, recover from interruptions, and protect activities that genuinely matter without moralizing imperfect adherence.",
         "mechanism": "Native apps combine schedule blocks, recurring routines, wall-clock focus sessions, interruption evidence, and an end-of-day divergence review.",
-        "proof": "Public notarized Mac build 31 is available with project labels and without rates or currency. Installed Settings and the hosted Mac UI suite pass. Account MCP and cross-device continuity remain unqualified.",
+        "proof": "Public notarized Mac build 32 keeps project labels without rates or currency. Signed local build 33 passes the core Codex account MCP workflow and repeated native sync checks; public build 33 notarization, ChatGPT and cross-device continuity remain unverified.",
         "nextAction": "Use Anchor through a real day and review the divergence evidence; let repeated lived patterns decide the next change."
       },
       "footerArt": {
@@ -5350,7 +5351,7 @@
         "audience": "A person moving between Mac, iPhone, and Apple Watch who wants a deliberate day rather than another task list.",
         "outcome": "Make more realistic plans, recover from interruptions, and protect activities that genuinely matter without moralizing imperfect adherence.",
         "mechanism": "Native apps combine schedule blocks, recurring routines, wall-clock focus sessions, interruption evidence, and an end-of-day divergence review.",
-        "proof": "Public notarized Mac build 31 is available with project labels and without rates or currency. Installed Settings and the hosted Mac UI suite pass. Account MCP and cross-device continuity remain unqualified.",
+        "proof": "Public notarized Mac build 32 keeps project labels without rates or currency. Signed local build 33 passes the core Codex account MCP workflow and repeated native sync checks; public build 33 notarization, ChatGPT and cross-device continuity remain unverified.",
         "nextAction": "Use Anchor through a real day and review the divergence evidence; let repeated lived patterns decide the next change."
       },
       "footerArt": {
