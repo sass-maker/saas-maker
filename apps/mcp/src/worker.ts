@@ -782,9 +782,6 @@ export async function handleHostedRequest(
 
   const route = hostedRoute(url.pathname, url.hostname);
   if (!route) return withProtocolHeaders(jsonRpcError(404, -32001, "Unknown MCP route."), request);
-  if (route.writeScope && !activation?.writeProducts.includes(route.id)) {
-    return withProtocolHeaders(productUnavailable(), request, route);
-  }
   if (request.headers.has("origin") && !allowedOrigin(request)) {
     return withProtocolHeaders(jsonRpcError(403, -32000, "Origin is not allowed."), request, route);
   }
@@ -815,6 +812,9 @@ export async function handleHostedRequest(
   } else if (!authorizationMatches(request, route, authorization)) {
     return withProtocolHeaders(oauthChallenge(request, route), request, route);
   } else if (!validUpstreamToken(route, authorization.upstreamToken)) {
+    return withProtocolHeaders(productUnavailable(), request, route);
+  }
+  if (route.writeScope && !activation?.writeProducts.includes(route.id)) {
     return withProtocolHeaders(productUnavailable(), request, route);
   }
 

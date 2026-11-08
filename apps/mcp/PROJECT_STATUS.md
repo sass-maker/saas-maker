@@ -5,14 +5,21 @@
 The Anchor proxy and companion product authorization are deployed. Auth0 now
 has the exact resource `https://mcp.significanthobbies.com/anchor/mcp`,
 `anchor.read` / `anchor.write`, RS256 and one-hour tokens. User consent cannot
-be skipped; machine-to-machine access is disabled. No installation client has
-been granted these scopes yet. The approved branded hostname is added to the
-Worker deployment configuration.
+be skipped; machine-to-machine access is disabled. The branded hostname
+`anchor-mcp.significanthobbies.com` is deployed. No installation client has
+been granted these scopes yet.
 
-The route still fails closed until `MCP_ENABLED_WRITE_PRODUCTS` includes
-`anchor`. Client authorization, real-account read/write checks and native
-command receipts must be qualified before enabling it. Existing connections
-retain their permissions. No directory submission is claimed.
+Unauthenticated MCP initialization returns the OAuth challenge even while
+actions are disabled, so clients can discover authorization and obtain consent.
+Authenticated MCP requests remain unavailable, with no upstream call, until
+`MCP_ENABLED_WRITE_PRODUCTS` includes `anchor`.
+
+Native build 31 has approved account history and planner sharing. Full-resync
+compatibility qualification is in progress. Controlled activation follows native
+qualification and client authorization; real-account read/write checks and
+native command receipts remain the final acceptance checks before the connection
+is ready. Existing connections retain their permissions. No directory submission
+is claimed.
 
 ## Why / What
 
