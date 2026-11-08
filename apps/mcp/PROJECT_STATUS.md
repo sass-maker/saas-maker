@@ -6,26 +6,27 @@ The Anchor proxy and companion product authorization are deployed. Auth0 now
 has the exact resource `https://mcp.significanthobbies.com/anchor/mcp`,
 `anchor.read` / `anchor.write`, RS256 and one-hour tokens. User consent cannot
 be skipped; machine-to-machine access is disabled. The branded hostname
-`anchor-mcp.significanthobbies.com` is deployed. No installation client has
-been granted these scopes yet.
+`anchor-mcp.significanthobbies.com` is deployed. Client authorization remains
+in progress.
 
 Use `https://mcp.significanthobbies.com/anchor/mcp` for Codex and other clients
 that require the metadata resource identifier to match the connected URL.
-Its hostname is configured as an Anchor-only alias; the branded ChatGPT endpoint
+Its hostname is deployed as an Anchor-only alias; the branded ChatGPT endpoint
 is retained. The Auth0 audience and product JWT contracts are unchanged.
-Canonical-host deployment and real-client sign-in remain qualification checks.
+Real-client sign-in remains a qualification check.
 
-Unauthenticated MCP initialization returns the OAuth challenge even while
-actions are disabled, so clients can discover authorization and obtain consent.
-Authenticated MCP requests remain unavailable, with no upstream call, until
-`MCP_ENABLED_WRITE_PRODUCTS` includes `anchor`.
+This source sets the nonsecret `MCP_ENABLED_WRITE_PRODUCTS` binding to `anchor`
+for controlled account qualification through the guarded publisher. Anonymous
+initialization still returns the OAuth challenge; tool access requires Auth0
+authorization, exact resource/scopes and independent product account isolation.
+Removing `anchor` from the binding or restoring the previous disabled Worker
+version closes authenticated tool access without changing account data.
 
 Native build 32 has approved account history and planner sharing, with a successful
-full resync and no pending local changes. Controlled activation follows client
-authorization; real-account read/write checks and
-native command receipts remain the final acceptance checks before the connection
-is ready. Existing connections retain their permissions. No directory submission
-is claimed.
+full resync and no pending local changes. Real ChatGPT/Codex read/write checks
+and native command receipts remain unverified acceptance checks. The connection
+remains prepared until that evidence is collected. Existing read-only connections
+retain their permissions. No directory submission is claimed.
 
 ## Why / What
 
