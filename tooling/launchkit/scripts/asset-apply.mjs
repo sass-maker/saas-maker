@@ -179,9 +179,9 @@ export function classifyRecovery({ recovery, assetRoot, indexPath, selected, get
       const current = digest(bounded(target, MAX_ASSET));
       states.push(current === entry.beforeSha256 ? 'before' : current === entry.afterSha256 ? 'after' : 'other');
     }
-    if (states.every((state) => state === 'before')) return marked || result?.status === 'verification_pending' ? { status: 'needs_recovery', reason: 'A write may have started or a completed destination changed after staging' } : { status: 'replan' };
+    if (states.every((state) => state === 'before')) return marked || result?.status === 'verification_pending' ? { status: 'needs_recovery', reviewable: true, reason: 'A write may have started or a completed destination changed after staging' } : { status: 'replan' };
     if (states.every((state) => state === 'after')) return { status: 'verification_pending' };
-    return { status: 'needs_recovery', reason: 'Recovery batch is partial or a destination changed independently' };
+    return { status: 'needs_recovery', reviewable: true, reason: 'Recovery batch is partial or a destination changed independently' };
   } catch {
     return { status: 'needs_recovery', reason: 'Recovery batch, Drive identity or backup cannot be validated' };
   }

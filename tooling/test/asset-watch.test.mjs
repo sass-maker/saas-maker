@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, renameSync, symlinkSync, openSync, closeSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, renameSync, symlinkSync, openSync, closeSync, readdirSync, realpathSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { dirname, basename } from 'node:path';
@@ -8,12 +8,12 @@ import { fileURLToPath } from 'node:url';
 import { execFileSync, spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 import { randomUUID } from 'node:crypto';
-import { relevant, eventRelevant, projects, worktrees, enqueue, complete, start, fingerprint, mcpOverrides, affectedProducts, videoFingerprint, setRecoveryState, recordVerification, status, planningReadOverrides, queueRetirement, retireEligibleJobs, selectReady, resolveRecovery, trackScratch, assertWatcherLock } from '../launchkit/scripts/asset-watch.mjs';
+import { relevant, eventRelevant, projects, worktrees, enqueue, complete, start, fingerprint, mcpOverrides, affectedProducts, videoFingerprint, setRecoveryState, recordVerification, status, planningReadOverrides, queueRetirement, retireEligibleJobs, selectReady, resolveRecovery, trackScratch, assertWatcherLock, save, loadState } from '../launchkit/scripts/asset-watch.mjs';
 
 test('entrypoint runs when its parent path is a symlink alias', () => {
   const root = mkdtempSync(join(tmpdir(), 'asset-watch-entrypoint-'));
   const state = join(root, 'state'); mkdirSync(state);
-  writeFileSync(join(state, 'state.json'), JSON.stringify({ pending: { example: { retryAt: 0 } } }));
+  writeFileSync(join(state, 'state.json'), JSON.stringify({ pending: { example: { generation: 1, changedAt: 1, retryAt: 0 } } }));
   const source = fileURLToPath(new URL('../launchkit/scripts/asset-watch.mjs', import.meta.url));
   const alias = join(root, 'scripts-alias'); symlinkSync(dirname(source), alias, 'dir');
   const output = execFileSync(process.execPath, [join(alias, basename(source)), '--status'], {
@@ -76,6 +76,15 @@ test('new edits preserve recovery identity and unresolved verification', () => {
   assert.equal(status(state)[0].status, 'verification_pending');
 });
 
+test('verifying an earlier applied generation keeps newer source changes pending', () => {
+  const state = { pending: {} }; enqueue(state, 'a', 1);
+  setRecoveryState(state, { a: 1 }, '/private/recovery/batch', { status: 'verification_pending' });
+  enqueue(state, 'a', 2, '/new/source');
+  recordVerification(state, { a: 2 }, '/private/recovery/batch', true, 3);
+  assert.equal(state.pending.a.generation, 2);
+  assert.equal(state.pending.a.verificationPending, false);
+});
+
 test('planner has no Drive fetch tool', () => {
   assert.ok(planningReadOverrides.some((entry) => entry.includes('tools.get_file_metadata')));
   assert.ok(planningReadOverrides.every((entry) => !entry.includes('tools.fetch')));
@@ -125,6 +134,57 @@ test('resolve reclassifies a recovery group without deleting backup evidence', (
   assert.equal(readFileSync(join(recovery, 'backup'), 'utf8'), 'keep');
 });
 
+test('manually reviewed current bytes can be accepted without deleting recovery evidence', () => {
+  const { stateDir, indexPath } = fixture(); const recovery = join(stateDir, 'recovery', randomUUID());
+  mkdirSync(recovery, { recursive: true }); writeFileSync(join(recovery, 'backup'), 'keep');
+  const state = { pending: { example: { generation: 1, needsRecovery: 'partial', recovery } } };
+  const classify = () => ({ status: 'needs_recovery', reviewable: true, reason: 'changed' });
+  assert.throws(() => resolveRecovery({ state, id: 'example', stateDir, indexPath, classify }), /requires inspection/);
+  resolveRecovery({ state, id: 'example', stateDir, indexPath, classify, acceptCurrent: true });
+  assert.equal(state.pending.example.needsRecovery, null);
+  assert.equal(state.recoveryAcknowledgements[0].decision, 'accept-current-after-review');
+  assert.equal(readFileSync(join(recovery, 'backup'), 'utf8'), 'keep');
+  state.pending.example.needsRecovery = 'invalid data';
+  assert.throws(() => resolveRecovery({ state, id: 'example', stateDir, indexPath, classify: () => ({ status: 'needs_recovery', reviewable: false }), acceptCurrent: true }), /requires inspection/);
+});
+
+test('invalid recovery identity requires explicit acknowledgement and remains auditable', () => {
+  const { stateDir, indexPath } = fixture();
+  const state = { pending: { example: { generation: 1, needsRecovery: 'Invalid interrupted recovery identity', recovery: null } } };
+  assert.throws(() => resolveRecovery({ state, id: 'example', stateDir, indexPath }));
+  resolveRecovery({ state, id: 'example', stateDir, indexPath, acceptCurrent: true });
+  assert.equal(state.pending.example.needsRecovery, null);
+  assert.equal(state.recoveryAcknowledgements[0].reason, 'Invalid interrupted recovery identity');
+});
+
+test('durable state writes round-trip and corrupt state is preserved in a private backup', () => {
+  const { stateDir } = fixture(); mkdirSync(stateDir); const path = join(stateDir, 'state.json');
+  save(path, { pending: { x: { generation: 1, changedAt: 1 } }, checkpoints: {} });
+  assert.equal(loadState(path).pending.x.generation, 1);
+  writeFileSync(path, '{broken');
+  assert.throws(() => loadState(path, true), /State is corrupt/);
+  assert.equal(readFileSync(path, 'utf8'), '{broken');
+  const backups = readdirSync(stateDir).filter((name) => name.startsWith('state.corrupt-'));
+  assert.equal(backups.length, 1); assert.equal(readFileSync(join(stateDir, backups[0]), 'utf8'), '{broken');
+  assert.throws(() => loadState(path, true), /State is corrupt/);
+  assert.equal(readdirSync(stateDir).filter((name) => name.startsWith('state.corrupt-')).length, 1);
+});
+
+test('corrupt state keeps supervised service fail-closed instead of restarting', async () => {
+  const { root, stateDir, indexPath } = fixture(); mkdirSync(stateDir); const statePath = join(stateDir, 'state.json');
+  writeFileSync(statePath, '{broken');
+  const supervisor = join(import.meta.dirname, '../launchkit/scripts/asset-watch-supervisor.py');
+  const script = fileURLToPath(new URL('../launchkit/scripts/asset-watch.mjs', import.meta.url));
+  const proc = spawn('/usr/bin/python3', [supervisor, stateDir, process.execPath, script], { stdio: 'ignore', env: { ...process.env, FLEET_ROOT: root, FLEET_ASSET_INDEX: indexPath, FLEET_ASSET_WATCH_STATE: stateDir } });
+  try {
+    const deadline = Date.now() + 5000;
+    while (!readdirSync(stateDir).some((name) => name.startsWith('state.corrupt-')) && Date.now() < deadline) await delay(50);
+    assert.ok(readdirSync(stateDir).some((name) => name.startsWith('state.corrupt-')));
+    await delay(100); assert.equal(proc.exitCode, null);
+    assert.equal(readFileSync(statePath, 'utf8'), '{broken');
+  } finally { proc.kill('SIGTERM'); await new Promise((resolve) => proc.on('exit', resolve)); }
+});
+
 test('events ignore Git ignored files and rendered video frames', () => {
   const { project } = fixture(); writeFileSync(join(project, '.gitignore'), 'ignored/\n');
   assert.equal(eventRelevant('git', project, 'ignored/noise.png'), false);
@@ -132,6 +192,7 @@ test('events ignore Git ignored files and rendered video frames', () => {
   assert.equal(eventRelevant('videos', project, 'check/frame.png'), false);
   assert.equal(eventRelevant('videos', project, 'frames/frame.png'), false);
   assert.equal(eventRelevant('videos', project, 'launch.mp4'), true);
+  assert.equal(eventRelevant('git', project, 'submodule/file', () => { const error = Error('git unavailable'); error.status = 128; throw error; }), true);
 });
 
 test('retirement moves only eligible, unreferenced scratch and preserves all other state', () => {
@@ -185,7 +246,7 @@ test('verification selects every product sharing a batch even when a later edit 
 });
 
 test('successful multi-product verification retires planning and verifier scratch, preserving recovery', async () => {
-  const { root, indexPath, stateDir } = fixture();
+  const { root, project, indexPath, stateDir } = fixture();
   const other = join(root, 'other'); mkdirSync(other); execFileSync('git', ['init', '-q', other]);
   execFileSync('git', ['-C', other, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '--allow-empty', '-qm', 'base']);
   const catalogPath = join(root, 'site-health/catalog/projects.json');
@@ -193,8 +254,9 @@ test('successful multi-product verification retires planning and verifier scratc
   const plannerId = '11111111-1111-4111-8111-111111111111';
   const workerDir = join(stateDir, 'worker'); const plannerDir = join(workerDir, plannerId); mkdirSync(plannerDir, { recursive: true }); writeFileSync(join(plannerDir, 'proposal.json'), '{}');
   const recovery = join(stateDir, 'recovery', '22222222-2222-4222-8222-222222222222'); mkdirSync(recovery, { recursive: true }); writeFileSync(join(recovery, 'manifest.json'), '{"changes":[]}');
-  const entry = { generation: 1, changedAt: 1, firstAt: 1, failures: 0, retryAt: 0, sources: [], verificationPending: true, recovery };
-  writeFileSync(join(stateDir, 'state.json'), JSON.stringify({ pending: { example: entry, other: entry }, checkpoints: {}, batchJobs: { [recovery]: { jobId: plannerId, products: ['example', 'other'] } } }));
+  const entry = { generation: 1, appliedGeneration: 1, changedAt: 1, firstAt: 1, failures: 0, retryAt: 0, sources: [], verificationPending: true, recovery };
+  const checkpoints = { [`example\0${realpathSync(project)}`]: fingerprint(project), [`other\0${realpathSync(other)}`]: fingerprint(other) };
+  writeFileSync(join(stateDir, 'state.json'), JSON.stringify({ pending: { example: entry, other: entry }, checkpoints, batchJobs: { [recovery]: { jobId: plannerId, products: ['example', 'other'] } } }));
   const trashed = join(root, 'trashed'); mkdirSync(trashed);
   const stop = start({ fleetRoot: root, indexPath, stateDir, codexPath: '/unused', debounceMs: 0, tickMs: 20, records: () => [], overrides: () => [], driveReady: () => true, classify: () => ({ status: 'verification_pending' }), verifyRemote: () => ({ child: {}, promise: Promise.resolve(true) }), trash: (path) => renameSync(path, join(trashed, path.split('/').at(-1))), requireLock: false });
   try {
@@ -401,6 +463,24 @@ test('supervisor lock remains held by an inherited child', async () => {
   try { execFileSync('/usr/bin/python3', [supervisor, stateDir, '/usr/bin/true'], { stdio: 'ignore' }); } catch { blocked = true; }
   assert.equal(blocked, true, 'a surviving child retains the lock');
   await delay(2300);
+  execFileSync('/usr/bin/python3', [supervisor, stateDir, '/usr/bin/true'], { stdio: 'ignore' });
+});
+
+test('SIGTERM drains a detached worker and releases the supervisor lock', async () => {
+  const { root, indexPath, stateDir } = fixture(); const marker = join(root, 'worker-ready');
+  const worker = join(root, 'worker-cli');
+  writeFileSync(worker, `#!${process.execPath}\nrequire('node:fs').writeFileSync(${JSON.stringify(marker)}, 'ready'); process.on('SIGTERM', () => {}); setInterval(() => {}, 1000);\n`, { mode: 0o700 });
+  const wrapper = join(root, 'wrapper.mjs');
+  const moduleUrl = new URL('../launchkit/scripts/asset-watch.mjs', import.meta.url).href;
+  writeFileSync(wrapper, `import { start, installSignalHandlers } from ${JSON.stringify(moduleUrl)}; const stop=start({fleetRoot:${JSON.stringify(root)},indexPath:${JSON.stringify(indexPath)},stateDir:${JSON.stringify(stateDir)},codexPath:${JSON.stringify(worker)},debounceMs:0,tickMs:20,records:()=>[],overrides:()=>[],driveReady:()=>true}); installSignalHandlers(stop);`);
+  const supervisor = join(import.meta.dirname, '../launchkit/scripts/asset-watch-supervisor.py');
+  const proc = spawn('/usr/bin/python3', [supervisor, stateDir, process.execPath, wrapper], { stdio: 'ignore' });
+  const deadline = Date.now() + 8000;
+  while (!existsSync(marker) && Date.now() < deadline) await delay(50);
+  assert.ok(existsSync(marker), 'worker started under the supervisor');
+  proc.kill('SIGTERM');
+  const code = await Promise.race([new Promise((resolve) => proc.on('exit', resolve)), delay(8000).then(() => 'timeout')]);
+  assert.equal(code, 0);
   execFileSync('/usr/bin/python3', [supervisor, stateDir, '/usr/bin/true'], { stdio: 'ignore' });
 });
 

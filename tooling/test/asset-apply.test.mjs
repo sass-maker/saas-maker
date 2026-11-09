@@ -79,6 +79,7 @@ test('recovery distinguishes missing preparation, unchanged bytes, applied bytes
   f.writeAsset = () => { throw Error('write began but outcome unknown'); };
   const ambiguous = applyProposal(f);
   assert.equal(classifyRecovery({ ...f, recovery: ambiguous.recovery }).status, 'needs_recovery');
+  assert.equal(classifyRecovery({ ...f, recovery: ambiguous.recovery }).reviewable, true);
   delete f.writeAsset;
   const applied = applyProposal(f);
   assert.equal(classifyRecovery({ ...f, recovery: applied.recovery }).status, 'verification_pending');
@@ -86,6 +87,7 @@ test('recovery distinguishes missing preparation, unchanged bytes, applied bytes
   assert.equal(classifyRecovery({ ...f, recovery: applied.recovery }).status, 'needs_recovery');
   writeFileSync(f.destination, 'independent change');
   assert.equal(classifyRecovery({ ...f, recovery: applied.recovery }).status, 'needs_recovery');
+  assert.equal(classifyRecovery({ ...f, recovery: applied.recovery }).reviewable, true);
 });
 
 test('partial two-file application is held for recovery and never auto-reapplied', () => {

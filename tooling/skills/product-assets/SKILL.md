@@ -81,3 +81,32 @@ actually running before calling it automatic. Its private state is under
 `~/Library/Application Support/Fleet/Product Asset Watch/`; preserve pending
 work and backups, and report any recovery or verification gaps. The user's
 current instructions control submission and publishing permissions.
+
+For an installed watcher, read the owned LaunchAgent paths and inspect status:
+
+```sh
+PLIST="$HOME/Library/LaunchAgents/com.sarthak.fleet-product-assets.plist"
+WATCHER=$(/usr/bin/plutil -extract ProgramArguments.4 raw -o - "$PLIST")
+STATE=$(/usr/bin/plutil -extract EnvironmentVariables.FLEET_ASSET_WATCH_STATE raw -o - "$PLIST")
+FLEET_ASSET_WATCH_STATE="$STATE" /opt/homebrew/bin/node "$WATCHER" --status
+/bin/launchctl print "gui/$(id -u)/com.sarthak.fleet-product-assets"
+```
+
+To resolve a recovery, first inspect the affected files and retained backup.
+Stop the owned service, run the resolver under its supervisor lock, and restart
+the same plist even if resolution fails:
+
+```sh
+SUPERVISOR=$(/usr/bin/plutil -extract ProgramArguments.1 raw -o - "$PLIST")
+INDEX=$(/usr/bin/plutil -extract EnvironmentVariables.FLEET_ASSET_INDEX raw -o - "$PLIST")
+/bin/launchctl bootout "gui/$(id -u)/com.sarthak.fleet-product-assets"
+FLEET_ASSET_INDEX="$INDEX" FLEET_ASSET_WATCH_STATE="$STATE" /usr/bin/python3 "$SUPERVISOR" "$STATE" /opt/homebrew/bin/node "$WATCHER" --resolve PRODUCT_ID
+/bin/launchctl bootstrap "gui/$(id -u)" "$PLIST"
+```
+
+If the resolver reports a reviewable partial or externally changed batch,
+`--accept-current` explicitly records acceptance of the current files for
+replanning. Use it only after comparing them with the retained backups. Invalid
+Drive identities or backups remain blocked. Neither resolution mode deletes the
+backup. If the state file is corrupt, preserve the original and its named
+`state.corrupt-*.json` copy; stop the service and investigate before restoring.
