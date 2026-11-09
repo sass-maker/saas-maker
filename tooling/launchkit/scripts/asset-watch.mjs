@@ -186,7 +186,8 @@ export function setRecoveryState(state, selected, recovery, classification) {
     entry.uncertain = classification.status !== 'replan';
     if (classification.status !== 'replan') entry.appliedGeneration ??= selected[id];
     if (classification.status === 'verification_pending') { entry.appliedGeneration ??= selected[id]; entry.verificationAttempts = 0; entry.failures = 0; entry.retryAt = 0; }
-    if (classification.status === 'retryable') entry.retryAt = Date.now() + 60000;
+    if (classification.status === 'retryable') { entry.expectPrepared = classification.expectPrepared ?? true; entry.retryAt = Date.now() + 60000; }
+    else delete entry.expectPrepared;
     if (classification.status === 'replan') delete entry.appliedGeneration;
     if (entry.needsRecovery) console.error(`Product ${id} needs recovery: ${entry.needsRecovery}; backup: ${recovery}`);
   }
@@ -203,7 +204,7 @@ export function resolveRecovery({ state, id, stateDir, indexPath, classify = cla
     const root = resolve(join(stateDir, 'recovery'));
     if (!resolve(entry.recovery).startsWith(root + '/')) throw Error('Unsafe recovery location');
     const members = Object.fromEntries(Object.entries(state.pending).filter(([, p]) => p.recovery === entry.recovery).map(([key, p]) => [key, Number.isInteger(p.appliedGeneration) ? p.appliedGeneration : -1]));
-    const result = classify({ recovery: entry.recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(members) });
+    const result = classify({ recovery: entry.recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(members), expectPrepared: true });
     if (result.status === 'retryable') throw Error('Recovery or Drive is temporarily unavailable; retry later');
     if (result.status === 'needs_recovery' && (!acceptCurrent || !result.reviewable)) throw Error('Recovery still requires inspection; backups retained');
     if (result.status === 'needs_recovery') {
@@ -391,7 +392,7 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
       if (awaiting) {
         const recovery = awaiting[1].recovery;
         if (!recovery || resolve(recovery).slice(0, resolve(join(stateDir, 'recovery')).length + 1) !== resolve(join(stateDir, 'recovery')) + '/') throw Error('Verification recovery is unavailable');
-        const current = classify({ recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(selected) });
+        const current = classify({ recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(selected), expectPrepared: awaiting[1].expectPrepared ?? true });
         if (current.status === 'retryable') {
           recordVerification(state, selected, recovery, false, Date.now()); state.inflight = null; trackScratch(state, jobId, 'failed'); persist(); retire(); running = false; return;
         }
@@ -413,7 +414,7 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
         child = verification.child;
         verification.promise.then((verified) => {
           if (verified) {
-            const after = classify({ recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(selected) });
+            const after = classify({ recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(selected), expectPrepared: true });
             if (after.status === 'retryable') verified = false;
             else if (after.status !== 'verification_pending') { setRecoveryState(state, selected, recovery, { status: 'needs_recovery', reason: 'A staged destination or its recovery evidence changed during verification' }); verified = false; }
           }
@@ -469,7 +470,7 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
           state.inflight = { selected, startedAt: now, phase: 'applying', recoveryId, jobId }; persist();
           const result = apply({ proposal, selected: Object.keys(selected), indexPath, assetRoot: resolve(indexPath, '..'), scratchDir: jobDir, recoveryDir: join(stateDir, 'recovery'), recoveryId, expectedIndex });
           if (result.recovery) {
-            const classification = classify({ recovery: result.recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(selected) });
+            const classification = classify({ recovery: result.recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(selected), expectPrepared: true });
             setRecoveryState(state, selected, result.recovery, classification);
             if (classification.status !== 'replan') for (const id of Object.keys(selected)) if (state.pending[id]) state.pending[id].planningJob = jobId;
             if (['verification_pending', 'retryable'].includes(classification.status)) state.batchJobs[result.recovery] = { jobId, products: Object.keys(selected) };

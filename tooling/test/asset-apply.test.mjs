@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, symlinkSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, symlinkSync, renameSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
@@ -98,6 +98,28 @@ test('temporary Drive metadata I/O leaves staged recovery retryable', () => {
   assert.equal(classifyRecovery({ ...f, recovery: result.recovery }).status, 'verification_pending');
 });
 
+test('missing or unsafe recovery evidence and missing Drive items require recovery when service is available', () => {
+  const f = fixture(); const result = applyProposal(f);
+  const backup = join(result.recovery, '0.bak'); const saved = backup + '.saved';
+  renameSync(backup, saved);
+  assert.equal(classifyRecovery({ ...f, recovery: result.recovery, serviceAvailable: () => false, expectPrepared: true }).status, 'needs_recovery');
+  symlinkSync(saved, backup);
+  assert.equal(classifyRecovery({ ...f, recovery: result.recovery, serviceAvailable: () => false, expectPrepared: true }).status, 'needs_recovery');
+  const link = join(f.root, 'recovery-link'); symlinkSync(result.recovery, link, 'dir');
+  assert.equal(classifyRecovery({ ...f, recovery: link, expectPrepared: true }).status, 'needs_recovery');
+  const g = fixture(); const staged = applyProposal(g); renameSync(g.destination, g.destination + '.moved');
+  assert.equal(classifyRecovery({ ...g, recovery: staged.recovery, serviceAvailable: () => true, expectPrepared: true }).status, 'needs_recovery');
+  assert.equal(classifyRecovery({ ...g, recovery: staged.recovery, serviceAvailable: () => false, expectPrepared: true }).status, 'retryable');
+  assert.equal(classifyRecovery({ ...g, recovery: join(g.root, 'missing'), expectPrepared: true }).status, 'needs_recovery');
+});
+
+test('missing xattr requires recovery with a live service but retries an unavailable service', () => {
+  const f = fixture(); const result = applyProposal(f);
+  f.getId = () => { const error = Error('xattr missing'); error.status = 1; throw error; };
+  assert.equal(classifyRecovery({ ...f, recovery: result.recovery, serviceAvailable: () => true, expectPrepared: true }).status, 'needs_recovery');
+  assert.equal(classifyRecovery({ ...f, recovery: result.recovery, serviceAvailable: () => false, expectPrepared: true }).status, 'retryable');
+});
+
 test('partial two-file application is held for recovery and never auto-reapplied', () => {
   const f = fixture();
   const folder = join(f.assetRoot, 'Submission kits', 'product');
@@ -137,6 +159,9 @@ test('checks expected formats and rejects malformed or sensitive proposed text',
   assert.throws(() => validateAsset('logo', 'logo.png', Buffer.from('not a png')));
   assert.throws(() => validateAsset('json', 'submission.json', Buffer.from('{bad')));
   assert.throws(() => validateAsset('brief', 'brief.txt', Buffer.from('-----BEGIN PRIVATE KEY-----')));
-  for (const value of ['sk_live_' + 'a'.repeat(20), 'ghp_' + 'b'.repeat(20), 'github_pat_' + 'c'.repeat(20), 'AKIA' + 'D'.repeat(16), 'xoxb-' + 'e'.repeat(20), 'password: illustrative-value']) assert.throws(() => validateAsset('brief', 'brief.txt', Buffer.from(value)));
+  for (const value of ['sk_live_' + 'a'.repeat(20), 'ghp_' + 'b'.repeat(20), 'github_pat_' + 'c'.repeat(20), 'AKIA' + 'D'.repeat(16), 'xoxb-' + 'e'.repeat(20), 'password: Abcdef123456789!']) assert.throws(() => validateAsset('brief', 'brief.txt', Buffer.from(value)));
+  assert.throws(() => validateAsset('json', 'submission.json', Buffer.from('{"client_secret":"Abcdef123456789!"}')));
+  assert.throws(() => validateAsset('json', 'submission.json', Buffer.from('{"password":"Abcdef123456789!"}')));
+  assert.doesNotThrow(() => validateAsset('brief', 'brief.txt', Buffer.from('Demo password: available on request. Our secret: integration-first.')));
   assert.throws(() => validateAsset('screenshot', 'image.svg', Buffer.from('<svg/>')));
 });
