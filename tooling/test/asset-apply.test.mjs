@@ -137,7 +137,8 @@ test('missing mount, index or index provider identity remains retryable while Dr
 test('missing Submission kits requires recovery after root and index identity are verified', () => {
   const f = fixture(); const result = applyProposal(f);
   const kits = join(f.assetRoot, 'Submission kits'); renameSync(kits, kits + '.missing');
-  assert.equal(classifyRecovery({ ...f, recovery: result.recovery, serviceAvailable: () => true, expectPrepared: true }).status, 'needs_recovery');
+  const missing = classifyRecovery({ ...f, recovery: result.recovery, serviceAvailable: () => true, expectPrepared: true });
+  assert.equal(missing.status, 'needs_recovery'); assert.match(missing.reason, /Submission kits folder is missing/);
   assert.equal(classifyRecovery({ ...f, recovery: result.recovery, serviceAvailable: () => false, expectPrepared: true }).status, 'retryable');
 });
 
@@ -209,7 +210,8 @@ test('checks expected formats and rejects malformed or sensitive proposed text',
   assert.throws(() => validateAsset('json', 'submission.json', Buffer.from('{"apiKey":"abcdefabcdefabcdefabcdef"}')));
   assert.throws(() => validateAsset('json', 'submission.json', Buffer.from('{"password":"Abcdef!!"}')));
   assert.throws(() => validateAsset('brief', 'brief.txt', Buffer.from('password=Abcd!xyz')));
-  assert.doesNotThrow(() => validateAsset('brief', 'brief.txt', Buffer.from('Demo password: available on request. Our secret: integration-first. Our secret: Simplicity. Password: Optional. The secret: Fast-onboarding. secret: Built-in2FA')));
+  assert.doesNotThrow(() => validateAsset('brief', 'brief.txt', Buffer.from('Demo password: available on request. Our secret: integration-first. Our secret: Simplicity. Password: Optional. The secret: Fast-onboarding.')));
   assert.doesNotThrow(() => validateAsset('brief', 'brief.txt', Buffer.from('client_secret: <your-client-secret-here> access_token=https://example.com/docs/auth api_key=YOUR_API_KEY_HERE')));
+  for (const value of ['password: Summer-2024-Secret', 'password: Abcd-Efgh1234ijkl5678wxyz', 'api_key: live-9f8a7b6c5d4e3f2a1b0c', 'password: Summer-2024', 'password: Welcome-2025!', 'password: Qwerty-Pass1', 'password: Pa$$word', 'password: Hunter!xY', 'password: Abcdef!!', 'secret: Built-in2FA', 'secret=https://hooks.slack.com/services/T0000/B0000/XXXXXXXXXXXXXXXX', 'access_token=https://example.com/docs/auth?token=123456789', 'secret=https://name:pass@example.com/docs/auth', 'password=YOUR_ACTUAL_PASSWORD_123']) assert.throws(() => validateAsset('brief', 'brief.txt', Buffer.from(value)), value);
   assert.throws(() => validateAsset('screenshot', 'image.svg', Buffer.from('<svg/>')));
 });

@@ -21,13 +21,19 @@ export function validateAsset(kind, filename, bytes) {
     let value; try { value = new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { throw Error('Invalid UTF-8'); }
     if (/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\b(?:sk-proj-|sk-|sk_live_|ghp_|github_pat_|xox[baprs]-)[a-zA-Z0-9_-]{16,}|\bAKIA[A-Z0-9]{16}\b/i.test(value)) throw Error('Possible secret in proposed text asset');
     const assignments = value.matchAll(/\b(api[_-]?key|access[_-]?token|client[_-]?secret|password|secret)(["']?)\s*([:=])\s*(["']?)([^\s"',}]{8,})/gi);
-    for (const [, , keyQuote, separator, valueQuote, raw] of assignments) {
+    for (const [, key, keyQuote, separator, valueQuote, raw] of assignments) {
       const structured = Boolean(keyQuote || valueQuote || separator === '=');
-      const candidate = structured ? raw : raw.replace(/[.,;:!?]+$/, '');
-      if (/^https?:\/\//i.test(candidate) || /^<[^>]+>$/.test(candidate) || /^(?:YOUR_|REPLACE_|EXAMPLE_|PLACEHOLDER)/i.test(candidate)) continue;
-      if (!structured && /^[a-zA-Z]+(?:-[a-zA-Z0-9]+)+$/.test(candidate)) continue;
+      const candidate = !structured && /^[a-zA-Z]+\.$/.test(raw) ? raw.slice(0, -1) : raw;
+      if (/^<your-(?:client-secret|api-key|access-token|password|secret)-here>$/i.test(candidate) || /^(?:YOUR_API_KEY_HERE|YOUR_TOKEN_HERE|YOUR_CLIENT_SECRET_HERE|REPLACE_ME|EXAMPLE_TOKEN|PLACEHOLDER)$/i.test(candidate)) continue;
+      if (/^https?:\/\//i.test(candidate)) {
+        let benign = false;
+        try { const url = new URL(candidate); benign = url.hostname === 'example.com' && !url.username && !url.password && !url.search && !url.hash && /^\/docs(?:\/|$)/.test(url.pathname); } catch {}
+        if (benign) continue;
+        throw Error('Possible secret in proposed text asset');
+      }
+      if (!structured && /^secret$/i.test(key) && candidate.length <= 20 && /^[A-Z]?[a-z]+(?:-[a-z]+){1,2}\.?$/.test(candidate)) continue;
       const classes = [/[a-z]/, /[A-Z]/, /\d/, /[^a-zA-Z0-9]/].filter((pattern) => pattern.test(candidate)).length;
-      if ((classes >= 3 && (structured || /\d/.test(candidate))) || (candidate.length >= 20 && classes >= 2) || /^[a-zA-Z0-9]{24,}$/.test(candidate) || /^[A-Z0-9]{20,}$/.test(candidate)) throw Error('Possible secret in proposed text asset');
+      if (classes >= 3 || (candidate.length >= 20 && classes >= 2) || /^[a-zA-Z0-9]{24,}$/.test(candidate) || /^[A-Z0-9]{20,}$/.test(candidate)) throw Error('Possible secret in proposed text asset');
     }
     if (extension === 'json') { try { JSON.parse(value); } catch { throw Error('Invalid JSON asset'); } }
     if (extension === 'svg' && (!/^\s*(?:<\?xml[^>]*>\s*)?<svg\b/i.test(value) || /<!DOCTYPE|<!ENTITY|<script\b|\bon\w+\s*=/i.test(value))) throw Error('Invalid or unsafe SVG asset');
@@ -206,7 +212,8 @@ export function classifyRecovery({ recovery, assetRoot, indexPath, selected, get
     const index = JSON.parse(bounded(indexPath, MAX_INDEX).toString('utf8'));
     if (!Array.isArray(index.products)) throw Error('Invalid asset index');
     area = 'drive';
-    inspect(join(assetRoot, 'Submission kits'), true);
+    try { inspect(join(assetRoot, 'Submission kits'), true); }
+    catch (error) { const classified = recoveryError(error, 'drive', serviceAvailable, true); return error.code === 'ENOENT' && classified.status === 'needs_recovery' ? { ...classified, reason: 'Submission kits folder is missing from the mounted Drive' } : classified; }
     const states = [];
     for (const entry of manifest.changes) {
       const products = index.products.filter((p) => p?.id === entry.productId);
