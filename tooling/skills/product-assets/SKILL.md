@@ -73,6 +73,11 @@ projection. Keep originals and prior versions recoverable.
 
 On partial failure, say which copies were updated and which remain pending;
 do not claim synchronization or invent a missing logo, screenshot, pricing or
-video. This workflow is invoked when asked or when an asset changes; it is not
-an automatic watcher. The user’s current instructions control submission and
-publishing permissions.
+video. Where the optional macOS product-asset watcher is installed, inspect its
+status and pending recovery before making overlapping updates. The watcher
+checks local product changes and updates only existing indexed Drive files; it
+does not create missing entries or publish the public kit. Confirm the service is
+actually running before calling it automatic. Its private state is under
+`~/Library/Application Support/Fleet/Product Asset Watch/`; preserve pending
+work and backups, and report any recovery or verification gaps. The user's
+current instructions control submission and publishing permissions.
