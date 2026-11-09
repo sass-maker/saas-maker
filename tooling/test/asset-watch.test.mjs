@@ -78,6 +78,38 @@ test('live watchers use refreshed inventory and reconcile events during catalog 
   } finally { await stop(); }
 });
 
+test('unavailable product discovery does not block healthy work or verification and recovers', async () => {
+  const { root, project, stateDir, indexPath } = fixture();
+  const missing = join(root, 'missing');
+  const catalogPath = join(root, 'site-health/catalog/projects.json');
+  const catalog = JSON.parse(readFileSync(catalogPath, 'utf8'));
+  catalog.projects.push({ id: 'missing', lifecycle: { portfolioStatus: 'active' }, repositories: { localPath: 'missing' } });
+  writeFileSync(catalogPath, JSON.stringify(catalog));
+  mkdirSync(stateDir);
+  const oldKey = `missing\0${missing}`;
+  const entry = { generation: 1, changedAt: Date.now(), firstAt: Date.now(), retryAt: 0, sources: [] };
+  writeFileSync(join(stateDir, 'state.json'), JSON.stringify({ pending: { missing: entry }, checkpoints: { [oldKey]: 'old-checkpoint' } }));
+  let attempts = 0;
+  const stop = start({ fleetRoot: root, indexPath, stateDir, codexPath: '/unused', records: () => [], driveReady: () => { attempts++; return false; }, debounceMs: 200, maxWaitMs: 1000, tickMs: 20, refreshMs: 80, requireLock: false });
+  const read = () => JSON.parse(readFileSync(join(stateDir, 'state.json'), 'utf8'));
+  const waitFor = async (predicate) => { for (let i = 0; i < 200; i++) { const s = read(); if (predicate(s)) return s; await delay(20); } assert.fail('Timed out waiting for isolated inventory recovery'); };
+  try {
+    await waitFor((s) => s.inventoryFailures?.missing);
+    const source = join(realpathSync(project), 'logo.svg'); writeFileSync(join(project, 'logo.svg'), 'asset');
+    const healthy = await waitFor((s) => attempts > 0 && s.pending.example?.sources.includes(source));
+    assert.equal(healthy.checkpoints[oldKey], 'old-checkpoint');
+    assert.equal(healthy.pending.missing.generation, 1);
+    assert.ok(status(healthy).some((s) => s.id === 'inventory:missing' && s.status === 'inventory_unavailable'));
+    const verificationState = { inventoryFailures: { missing: true }, pending: { missing: { ...entry, verificationPending: true, recovery: '/batch' } } };
+    assert.deepEqual(selectReady(verificationState, Date.now() + 1000, 0, 0).selected, { missing: 1 });
+    mkdirSync(missing); execFileSync('git', ['init', '-q', missing]);
+    execFileSync('git', ['-C', missing, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '--allow-empty', '-qm', 'base']);
+    const recovered = await waitFor((s) => !s.inventoryFailures?.missing && s.pending.missing.generation > 1);
+    assert.ok(recovered.pending.example);
+    assert.ok(!status(recovered).some((s) => s.id === 'inventory:missing'));
+  } finally { await stop(); }
+});
+
 test('ignores generated files and secrets while observing source edits', () => {
   assert.equal(relevant('src/logo.svg'), true);
   for (const path of ['node_modules/a.js', '.git/index', 'src/.env.production', 'secret.key', 'wrangler.toml', '../secret', '/tmp/a', '']) assert.equal(relevant(path), false);

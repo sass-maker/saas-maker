@@ -195,7 +195,8 @@ export function setRecoveryState(state, selected, recovery, classification) {
 export function status(state) {
   const products = Object.entries(state.pending ?? {}).map(([id, p]) => ({ id, status: p.needsRecovery ? 'needs_recovery' : p.verificationPending ? 'verification_pending' : 'pending', recovery: p.recovery ?? null, reason: p.needsRecovery ?? null, retryAt: p.retryAt ?? 0 }));
   const cleanup = Object.entries(state.retirements ?? {}).filter(([, r]) => r.status === 'failed' || r.status === 'unknown').map(([id, r]) => ({ id: `scratch:${id}`, status: `cleanup_${r.status}`, reason: r.reason }));
-  return [...products, ...cleanup];
+  const inventory = Object.keys(state.inventoryFailures ?? {}).map((id) => ({ id: `inventory:${id}`, status: 'inventory_unavailable', reason: 'Worktree discovery failed; retrying' }));
+  return [...products, ...cleanup, ...inventory];
 }
 export function resolveRecovery({ state, id, stateDir, indexPath, classify = classifyRecovery, acceptCurrent = false }) {
   if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(id) || !state.pending?.[id]?.needsRecovery || state.inflight) throw Error('Product is not safely resolvable');
@@ -275,7 +276,7 @@ export function recordVerification(state, selected, recovery, verified, now) {
   if (verified) complete(state, completed, true, now);
 }
 export function selectReady(state, now, debounceMs, maxWaitMs) {
-  const ready = Object.entries(state.pending).filter(([, p]) => !p.needsRecovery && (now - p.changedAt >= debounceMs || now - (p.firstAt ?? p.changedAt) >= maxWaitMs) && now >= p.retryAt);
+  const ready = Object.entries(state.pending).filter(([id, p]) => !p.needsRecovery && (p.verificationPending || !state.inventoryFailures?.[id]) && (now - p.changedAt >= debounceMs || now - (p.firstAt ?? p.changedAt) >= maxWaitMs) && now >= p.retryAt);
   const awaiting = ready.find(([, p]) => p.verificationPending && Object.values(state.pending).filter((item) => item.recovery === p.recovery && item.verificationPending).every((item) => !item.needsRecovery && now >= item.retryAt));
   const batchMembers = awaiting ? Object.entries(state.pending).filter(([, p]) => p.verificationPending && p.recovery === awaiting[1].recovery) : [];
   const selected = Object.fromEntries((awaiting ? batchMembers : ready.filter(([, p]) => !p.verificationPending).slice(0, 5)).map(([id, p]) => [id, p.generation]));
@@ -324,10 +325,10 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
       const managed = records().filter((r) => r.state === 'active');
       const active = projects(catalog, null, fleetRoot);
       const activeIds = new Set(active.map((p) => p.id));
-      let inventoryComplete = true;
+      const failures = {};
       for (const product of active) {
         let discovered = [];
-        try { discovered = worktrees(product.path); } catch (error) { inventoryComplete = false; console.error(`Cannot discover worktrees for ${product.id}: ${error.message}`); }
+        try { discovered = worktrees(product.path); } catch (error) { failures[product.id] = true; console.error(`Cannot discover worktrees for ${product.id}: ${error.message}`); continue; }
         const trees = [product.path, ...managed.filter((r) => resolve(r.repo) === product.path).map((r) => r.path), ...discovered];
         for (const path of trees) if (existsSync(path)) {
           const tree = realpathSync(path);
@@ -336,10 +337,11 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
         const videos = join(videoRoot, product.id, 'out');
         if (existsSync(videos) && !lstatSync(videos).isSymbolicLink()) paths.set(`${product.id}\0${videos}`, { id: product.id, tree: videos, kind: 'videos' });
       }
-      inventoryValid = inventoryComplete;
-      if (inventoryValid) currentActiveIds = activeIds;
-      else observedEvents.clear();
-      if (inventoryValid) for (const [key, watcher] of watchers) if (!paths.has(key)) { watcher.close(); watchers.delete(key); }
+      inventoryValid = true;
+      currentActiveIds = activeIds;
+      for (const key of observedEvents) if (failures[key.split('\0')[0]]) observedEvents.delete(key);
+      if (JSON.stringify(state.inventoryFailures ?? {}) !== JSON.stringify(failures)) { state.inventoryFailures = failures; persist(); }
+      for (const [key, watcher] of watchers) if (!paths.has(key) && !failures[key.split('\0')[0]]) { watcher.close(); watchers.delete(key); }
       for (const [key, { id, tree, base, kind }] of paths) {
         try {
           if (!watchers.has(key)) {
@@ -348,7 +350,7 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
                 const relative = name?.toString();
                 if (!(kind === 'git' && id === 'site-health' && relative === 'catalog/projects.json') && !eventRelevant(kind, tree, relative)) return;
                 for (const productId of kind === 'git' ? affectedProducts(id, relative, currentActiveIds) : [id]) enqueue(state, productId, Date.now(), relative ? join(tree, relative) : tree);
-                persist(); if (inventoryValid) observedEvents.add(key);
+                persist(); if (inventoryValid && !state.inventoryFailures?.[id]) observedEvents.add(key);
               }
               catch (error) { console.error(`Cannot persist change for ${id}: ${error.message}`); process.exitCode = 1; stop(); }
             });
@@ -368,9 +370,9 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
           observedEvents.delete(key);
         } catch (error) { console.error(`Cannot watch or reconcile ${id}: ${error.message}`); watchers.get(key)?.close(); watchers.delete(key); }
       }
-      if (inventoryComplete) {
+      {
         let pruned = false;
-        for (const key of Object.keys(state.checkpoints)) if (!paths.has(key)) { delete state.checkpoints[key]; pruned = true; }
+        for (const key of Object.keys(state.checkpoints)) if (!paths.has(key) && !failures[key.split('\0')[0]]) { delete state.checkpoints[key]; pruned = true; }
         if (pruned) persist();
       }
       console.log(`Watching ${watchers.size} project worktrees`);
