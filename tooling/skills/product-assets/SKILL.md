@@ -87,8 +87,9 @@ For an installed watcher, read the owned LaunchAgent paths and inspect status:
 ```sh
 PLIST="$HOME/Library/LaunchAgents/com.sarthak.fleet-product-assets.plist"
 WATCHER=$(/usr/bin/plutil -extract ProgramArguments.4 raw -o - "$PLIST")
+NODE=$(/usr/bin/plutil -extract ProgramArguments.3 raw -o - "$PLIST")
 STATE=$(/usr/bin/plutil -extract EnvironmentVariables.FLEET_ASSET_WATCH_STATE raw -o - "$PLIST")
-FLEET_ASSET_WATCH_STATE="$STATE" /opt/homebrew/bin/node "$WATCHER" --status
+FLEET_ASSET_WATCH_STATE="$STATE" "$NODE" "$WATCHER" --status
 /bin/launchctl print "gui/$(id -u)/com.sarthak.fleet-product-assets"
 ```
 
@@ -100,7 +101,7 @@ the same plist even if resolution fails:
 SUPERVISOR=$(/usr/bin/plutil -extract ProgramArguments.1 raw -o - "$PLIST")
 INDEX=$(/usr/bin/plutil -extract EnvironmentVariables.FLEET_ASSET_INDEX raw -o - "$PLIST")
 /bin/launchctl bootout "gui/$(id -u)/com.sarthak.fleet-product-assets"
-FLEET_ASSET_INDEX="$INDEX" FLEET_ASSET_WATCH_STATE="$STATE" /usr/bin/python3 "$SUPERVISOR" "$STATE" /opt/homebrew/bin/node "$WATCHER" --resolve PRODUCT_ID
+FLEET_ASSET_INDEX="$INDEX" FLEET_ASSET_WATCH_STATE="$STATE" /usr/bin/python3 "$SUPERVISOR" "$STATE" "$NODE" "$WATCHER" --resolve PRODUCT_ID
 /bin/launchctl bootstrap "gui/$(id -u)" "$PLIST"
 ```
 

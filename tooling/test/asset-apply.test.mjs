@@ -90,6 +90,14 @@ test('recovery distinguishes missing preparation, unchanged bytes, applied bytes
   assert.equal(classifyRecovery({ ...f, recovery: applied.recovery }).reviewable, true);
 });
 
+test('temporary Drive metadata I/O leaves staged recovery retryable', () => {
+  const f = fixture(); const result = applyProposal(f); const original = f.getId;
+  f.getId = () => { const error = Error('temporary I/O'); error.code = 'EIO'; throw error; };
+  assert.equal(classifyRecovery({ ...f, recovery: result.recovery }).status, 'retryable');
+  f.getId = original;
+  assert.equal(classifyRecovery({ ...f, recovery: result.recovery }).status, 'verification_pending');
+});
+
 test('partial two-file application is held for recovery and never auto-reapplied', () => {
   const f = fixture();
   const folder = join(f.assetRoot, 'Submission kits', 'product');
@@ -129,5 +137,6 @@ test('checks expected formats and rejects malformed or sensitive proposed text',
   assert.throws(() => validateAsset('logo', 'logo.png', Buffer.from('not a png')));
   assert.throws(() => validateAsset('json', 'submission.json', Buffer.from('{bad')));
   assert.throws(() => validateAsset('brief', 'brief.txt', Buffer.from('-----BEGIN PRIVATE KEY-----')));
+  for (const value of ['sk_live_' + 'a'.repeat(20), 'ghp_' + 'b'.repeat(20), 'github_pat_' + 'c'.repeat(20), 'AKIA' + 'D'.repeat(16), 'xoxb-' + 'e'.repeat(20), 'password: illustrative-value']) assert.throws(() => validateAsset('brief', 'brief.txt', Buffer.from(value)));
   assert.throws(() => validateAsset('screenshot', 'image.svg', Buffer.from('<svg/>')));
 });

@@ -1,4 +1,4 @@
-import { constants, closeSync, existsSync, fstatSync, fsyncSync, ftruncateSync, lstatSync, mkdirSync, openSync, readFileSync, writeFileSync, writeSync } from 'node:fs';
+import { constants, closeSync, fstatSync, fsyncSync, ftruncateSync, lstatSync, mkdirSync, openSync, readFileSync, writeFileSync, writeSync } from 'node:fs';
 import { basename, dirname, join, resolve, sep } from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -19,7 +19,7 @@ export function validateAsset(kind, filename, bytes) {
   if (['svg', 'txt', 'md', 'json'].includes(extension)) {
     if (bytes.length > 1024 * 1024) throw Error('Text asset exceeds size limit');
     let value; try { value = new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { throw Error('Invalid UTF-8'); }
-    if (/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\b(?:sk-proj-|sk-)[a-zA-Z0-9_-]{16,}|\b(?:api[_-]?key|access[_-]?token|client[_-]?secret)\s*[:=]\s*["']?[a-zA-Z0-9_/-]{16,}/i.test(value)) throw Error('Possible secret in proposed text asset');
+    if (/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\b(?:sk-proj-|sk-|sk_live_|ghp_|github_pat_|xox[baprs]-)[a-zA-Z0-9_-]{16,}|\bAKIA[A-Z0-9]{16}\b|\b(?:api[_-]?key|access[_-]?token|client[_-]?secret|password|secret)\s*[:=]\s*["']?[^\s"',}]{8,}/i.test(value)) throw Error('Possible secret in proposed text asset');
     if (extension === 'json') { try { JSON.parse(value); } catch { throw Error('Invalid JSON asset'); } }
     if (extension === 'svg' && (!/^\s*(?:<\?xml[^>]*>\s*)?<svg\b/i.test(value) || /<!DOCTYPE|<!ENTITY|<script\b|\bon\w+\s*=/i.test(value))) throw Error('Invalid or unsafe SVG asset');
   }
@@ -51,6 +51,9 @@ function bounded(path, max) {
     if (!st.isFile() || st.nlink !== 1 || st.size > max) throw Error('Invalid or oversized file');
     return readFileSync(fd);
   } finally { closeSync(fd); }
+}
+function present(path) {
+  try { lstatSync(path); return true; } catch (error) { if (error.code === 'ENOENT') return false; throw error; }
 }
 function syncDirectory(path) {
   const fd = openSync(path, constants.O_RDONLY);
@@ -150,20 +153,19 @@ export function applyProposal({ proposal, selected, indexPath, assetRoot, scratc
 
 export function classifyRecovery({ recovery, assetRoot, indexPath, selected, getId = driveItemId }) {
   if (!Array.isArray(selected) || selected.some((id) => !safeId(id))) throw Error('Invalid recovery selection');
-  if (!existsSync(recovery)) return { status: 'replan' };
-  inspect(recovery, true);
+  try { inspect(recovery, true); } catch (error) { return error.code === 'ENOENT' ? { status: 'replan' } : { status: 'retryable', reason: 'Recovery directory is temporarily unavailable' }; }
   const manifestPath = join(recovery, 'manifest.json');
-  if (!existsSync(manifestPath)) return { status: 'replan' };
+  try { lstatSync(manifestPath); } catch (error) { return error.code === 'ENOENT' ? { status: 'replan' } : { status: 'retryable', reason: 'Recovery manifest is temporarily unavailable' }; }
   try {
     if (resolve(indexPath) !== resolve(join(assetRoot, 'Fleet-product-asset-index.json'))) throw Error('Invalid asset index');
     const manifest = JSON.parse(bounded(manifestPath, MAX_INDEX).toString('utf8'));
     const index = JSON.parse(bounded(indexPath, MAX_INDEX).toString('utf8'));
     if (manifest.status !== 'prepared' || !Array.isArray(manifest.changes) || !manifest.changes.length || manifest.changes.length > 10 || !Array.isArray(index.products)) throw Error('Invalid recovery manifest');
     const resultPath = join(recovery, 'result.json');
-    const result = existsSync(resultPath) ? JSON.parse(bounded(resultPath, MAX_INDEX).toString('utf8')) : null;
+    const result = present(resultPath) ? JSON.parse(bounded(resultPath, MAX_INDEX).toString('utf8')) : null;
     if (result && !['verification_pending', 'uncertain'].includes(result.status)) throw Error('Invalid recovery result');
     const markerPath = join(recovery, 'applying.txt');
-    const marked = existsSync(markerPath);
+    const marked = present(markerPath);
     if (marked && bounded(markerPath, 64).toString('utf8') !== 'applying\n') throw Error('Invalid recovery marker');
     const states = [];
     for (const [i, entry] of manifest.changes.entries()) {
@@ -182,7 +184,8 @@ export function classifyRecovery({ recovery, assetRoot, indexPath, selected, get
     if (states.every((state) => state === 'before')) return marked || result?.status === 'verification_pending' ? { status: 'needs_recovery', reviewable: true, reason: 'A write may have started or a completed destination changed after staging' } : { status: 'replan' };
     if (states.every((state) => state === 'after')) return { status: 'verification_pending' };
     return { status: 'needs_recovery', reviewable: true, reason: 'Recovery batch is partial or a destination changed independently' };
-  } catch {
+  } catch (error) {
+    if (error.code || error.status != null || error.signal) return { status: 'retryable', reason: 'Recovery or Drive metadata is temporarily unavailable' };
     return { status: 'needs_recovery', reason: 'Recovery batch, Drive identity or backup cannot be validated' };
   }
 }

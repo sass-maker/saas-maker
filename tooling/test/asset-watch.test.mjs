@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { execFileSync, spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 import { randomUUID } from 'node:crypto';
-import { relevant, eventRelevant, projects, worktrees, enqueue, complete, start, fingerprint, mcpOverrides, affectedProducts, videoFingerprint, setRecoveryState, recordVerification, status, planningReadOverrides, queueRetirement, retireEligibleJobs, selectReady, resolveRecovery, trackScratch, assertWatcherLock, save, loadState } from '../launchkit/scripts/asset-watch.mjs';
+import { relevant, eventRelevant, projects, worktrees, enqueue, complete, start, fingerprint, mcpOverrides, affectedProducts, videoFingerprint, setRecoveryState, recordVerification, status, planningReadOverrides, queueRetirement, retireEligibleJobs, selectReady, resolveRecovery, trackScratch, assertWatcherLock, save, loadState, newWorktreeProducts } from '../launchkit/scripts/asset-watch.mjs';
 
 test('entrypoint runs when its parent path is a symlink alias', () => {
   const root = mkdtempSync(join(tmpdir(), 'asset-watch-entrypoint-'));
@@ -83,6 +83,46 @@ test('verifying an earlier applied generation keeps newer source changes pending
   recordVerification(state, { a: 2 }, '/private/recovery/batch', true, 3);
   assert.equal(state.pending.a.generation, 2);
   assert.equal(state.pending.a.verificationPending, false);
+});
+
+test('resolving a previously partial batch preserves edits queued during recovery', () => {
+  const { stateDir, indexPath } = fixture(); const recovery = join(stateDir, 'recovery', randomUUID());
+  mkdirSync(recovery, { recursive: true });
+  const state = { pending: {} }; enqueue(state, 'a', 1);
+  setRecoveryState(state, { a: 1 }, recovery, { status: 'needs_recovery', reason: 'partial' });
+  enqueue(state, 'a', 2);
+  resolveRecovery({ state, id: 'a', stateDir, indexPath, classify: () => ({ status: 'verification_pending' }) });
+  recordVerification(state, { a: 2 }, recovery, true, 3);
+  assert.equal(state.pending.a.generation, 2);
+  assert.equal(state.pending.a.verificationPending, false);
+});
+
+test('temporary recovery I/O keeps the batch pending and does not acknowledge changes', () => {
+  const state = { pending: {} }; enqueue(state, 'a', 1);
+  setRecoveryState(state, { a: 1 }, '/private/recovery/batch', { status: 'retryable' });
+  assert.equal(state.pending.a.classificationPending, true);
+  assert.equal(state.pending.a.verificationPending, true);
+  assert.equal(state.pending.a.needsRecovery, null);
+  assert.ok(state.pending.a.retryAt > Date.now());
+});
+
+test('a transient recovery classification failure retries and later verifies', async () => {
+  const { root, project, indexPath, stateDir } = fixture(); mkdirSync(stateDir);
+  const recovery = join(stateDir, 'recovery', randomUUID()); mkdirSync(recovery, { recursive: true }); writeFileSync(join(recovery, 'manifest.json'), '{"changes":[]}');
+  const checkpoints = { [`example\0${realpathSync(project)}`]: fingerprint(project) };
+  const entry = { generation: 1, appliedGeneration: 1, changedAt: 1, firstAt: 1, failures: 0, retryAt: 0, sources: [], verificationPending: true, classificationPending: true, recovery };
+  writeFileSync(join(stateDir, 'state.json'), JSON.stringify({ pending: { example: entry }, checkpoints }));
+  const oldNow = Date.now; let now = 1000000; Date.now = () => now;
+  let calls = 0; const trashed = join(root, 'trashed'); mkdirSync(trashed);
+  const stop = start({ fleetRoot: root, indexPath, stateDir, codexPath: '/unused', debounceMs: 0, tickMs: 20, records: () => [], overrides: () => [], driveReady: () => true, classify: () => (++calls === 1 ? { status: 'retryable' } : { status: 'verification_pending' }), verifyRemote: () => ({ child: {}, promise: Promise.resolve(true) }), trash: (path) => renameSync(path, join(trashed, path.split('/').at(-1))), requireLock: false });
+  try {
+    let state = JSON.parse(readFileSync(join(stateDir, 'state.json'), 'utf8'));
+    assert.equal(state.pending.example.verificationPending, true); assert.equal(state.pending.example.needsRecovery, undefined);
+    now += 61000;
+    const deadline = oldNow() + 5000;
+    while (oldNow() < deadline) { state = JSON.parse(readFileSync(join(stateDir, 'state.json'), 'utf8')); if (!state.pending.example) { assert.ok(calls >= 3); return; } await delay(50); }
+    assert.fail('retryable recovery did not verify');
+  } finally { stop(); Date.now = oldNow; }
 });
 
 test('planner has no Drive fetch tool', () => {
@@ -320,6 +360,28 @@ test('maps shared product asset changes and discovers changed local video bytes'
   const previous = videoFingerprint(folder);
   writeFileSync(join(folder, 'launch.mp4'), 'second version');
   assert.notEqual(videoFingerprint(folder), previous);
+});
+
+test('new shared worktree routes changed asset paths without fanning out an unchanged checkout', () => {
+  const ids = new Set(['saas-maker', 'product', 'other']);
+  const git = (_bin, args) => args.includes('rev-parse') ? 'abc\n' : '';
+  assert.deepEqual(newWorktreeProducts('saas-maker', '/tree', '/base', ids, git), ['saas-maker']);
+  const changed = (_bin, args) => args.includes('rev-parse') ? 'abc\n' : args.includes('diff') ? 'apps/showcase/public/product-assets/product/logo.png\0' : '';
+  assert.deepEqual(newWorktreeProducts('saas-maker', '/tree', '/base', ids, changed), ['saas-maker', 'product']);
+});
+
+test('a HEAD-only commit leaves the source fingerprint unchanged', () => {
+  const { project } = fixture(); const before = fingerprint(project);
+  execFileSync('git', ['-C', project, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '--allow-empty', '-qm', 'head-only']);
+  assert.equal(fingerprint(project), before);
+});
+
+test('the private ignored Site Health catalog remains represented in its fingerprint', () => {
+  const { project } = fixture(); mkdirSync(join(project, 'catalog'));
+  writeFileSync(join(project, '.gitignore'), 'catalog/\n'); writeFileSync(join(project, 'catalog/projects.json'), '{"version":1}');
+  const before = fingerprint(project, ['catalog/projects.json']);
+  writeFileSync(join(project, 'catalog/projects.json'), '{"version":22}');
+  assert.notEqual(fingerprint(project, ['catalog/projects.json']), before);
 });
 
 test('restart detects a second edit to an already dirty tracked file', () => {

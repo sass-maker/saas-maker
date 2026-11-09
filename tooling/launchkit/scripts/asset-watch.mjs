@@ -46,10 +46,10 @@ export function complete(state, selected, ok, now) {
     }
   }
 }
-export function fingerprint(tree) {
+export function fingerprint(tree, extraPaths = []) {
   const listing = execFileSync('git', ['-C', tree, 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], { maxBuffer: 32 * 1024 * 1024, timeout: 30000 });
   const hash = createHash('sha256');
-  for (const name of [...new Set(listing.toString('utf8').split('\0').filter(relevant))].sort()) {
+  for (const name of [...new Set([...listing.toString('utf8').split('\0'), ...extraPaths].filter(relevant))].sort()) {
     hash.update(name).update('\0');
     try {
       const st = lstatSync(join(tree, name), { bigint: true });
@@ -57,8 +57,22 @@ export function fingerprint(tree) {
     } catch (error) { if (error.code !== 'ENOENT') throw error; hash.update('missing'); }
     hash.update('\0');
   }
-  hash.update(execFileSync('git', ['-C', tree, 'rev-parse', 'HEAD'], { timeout: 10000, stdio: ['ignore', 'pipe', 'pipe'] }));
   return hash.digest('hex');
+}
+export function newWorktreeProducts(id, tree, base, activeIds, git = execFileSync) {
+  const ids = new Set([id]);
+  const baseHead = git('git', ['-C', base, 'rev-parse', '--verify', 'HEAD'], { encoding: 'utf8', timeout: 10000, stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+  const diff = git('git', ['-C', tree, 'diff', '--name-only', '-z', baseHead, 'HEAD'], { encoding: 'utf8', timeout: 30000, maxBuffer: 32 * 1024 * 1024 });
+  const status = git('git', ['-C', tree, 'status', '--porcelain=v1', '-z', '--untracked-files=all'], { encoding: 'utf8', timeout: 30000, maxBuffer: 32 * 1024 * 1024 });
+  const paths = diff.split('\0').filter(Boolean);
+  const records = status.split('\0');
+  for (let i = 0; i < records.length; i++) {
+    const record = records[i]; if (!record) continue;
+    paths.push(record.slice(3));
+    if (/[RC]/.test(record.slice(0, 2)) && records[i + 1]) paths.push(records[++i]);
+  }
+  for (const path of paths.filter(relevant)) for (const productId of affectedProducts(id, path, activeIds)) ids.add(productId);
+  return [...ids];
 }
 export function videoFingerprint(tree) {
   const hash = createHash('sha256');
@@ -162,14 +176,17 @@ export function assertWatcherLock(stateDir, fd) {
   catch { throw Error('Watcher lock is held by another process'); }
 }
 export function setRecoveryState(state, selected, recovery, classification) {
-  if (!['replan', 'verification_pending', 'needs_recovery'].includes(classification?.status)) throw Error('Unknown recovery classification');
+  if (!['replan', 'verification_pending', 'needs_recovery', 'retryable'].includes(classification?.status)) throw Error('Unknown recovery classification');
   for (const id of Object.keys(selected)) {
     const entry = state.pending[id]; if (!entry) continue;
     entry.recovery = recovery;
-    entry.verificationPending = classification.status === 'verification_pending';
+    entry.verificationPending = ['verification_pending', 'retryable'].includes(classification.status);
+    entry.classificationPending = classification.status === 'retryable';
     entry.needsRecovery = classification.status === 'needs_recovery' ? classification.reason : null;
     entry.uncertain = classification.status !== 'replan';
+    if (classification.status !== 'replan') entry.appliedGeneration ??= selected[id];
     if (classification.status === 'verification_pending') { entry.appliedGeneration ??= selected[id]; entry.verificationAttempts = 0; entry.failures = 0; entry.retryAt = 0; }
+    if (classification.status === 'retryable') entry.retryAt = Date.now() + 60000;
     if (classification.status === 'replan') delete entry.appliedGeneration;
     if (entry.needsRecovery) console.error(`Product ${id} needs recovery: ${entry.needsRecovery}; backup: ${recovery}`);
   }
@@ -185,8 +202,9 @@ export function resolveRecovery({ state, id, stateDir, indexPath, classify = cla
   if (entry.recovery) {
     const root = resolve(join(stateDir, 'recovery'));
     if (!resolve(entry.recovery).startsWith(root + '/')) throw Error('Unsafe recovery location');
-    const members = Object.fromEntries(Object.entries(state.pending).filter(([, p]) => p.recovery === entry.recovery).map(([key, p]) => [key, p.generation]));
+    const members = Object.fromEntries(Object.entries(state.pending).filter(([, p]) => p.recovery === entry.recovery).map(([key, p]) => [key, Number.isInteger(p.appliedGeneration) ? p.appliedGeneration : -1]));
     const result = classify({ recovery: entry.recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(members) });
+    if (result.status === 'retryable') throw Error('Recovery or Drive is temporarily unavailable; retry later');
     if (result.status === 'needs_recovery' && (!acceptCurrent || !result.reviewable)) throw Error('Recovery still requires inspection; backups retained');
     if (result.status === 'needs_recovery') {
       state.recoveryAcknowledgements ??= [];
@@ -198,7 +216,7 @@ export function resolveRecovery({ state, id, stateDir, indexPath, classify = cla
     if (acceptCurrent && entry.needsRecovery === 'Invalid interrupted recovery identity') {
       state.recoveryAcknowledgements ??= [];
       state.recoveryAcknowledgements.push({ recovery: null, products: [id], acceptedAt: Date.now(), decision: 'accept-current-after-review', reason: entry.needsRecovery });
-    } else if (!entry.needsRecovery.startsWith('Worker scratch unavailable') || readdirSync(join(stateDir, 'worker')).length >= 50) throw Error('Recovery still requires inspection');
+    } else throw Error('Recovery still requires inspection');
     entry.needsRecovery = null; entry.failures = 0; entry.retryAt = 0;
   }
   return state;
@@ -286,7 +304,7 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
       catch { outcome = { status: 'needs_recovery', reason: 'Unable to inspect interrupted recovery batch' }; }
       setRecoveryState(state, state.inflight.selected, recovery, outcome);
       if (outcome.status !== 'replan' && jobIdPattern.test(state.inflight.jobId ?? '')) for (const id of Object.keys(state.inflight.selected)) if (state.pending[id]) state.pending[id].planningJob = state.inflight.jobId;
-      if (outcome.status === 'verification_pending' && jobIdPattern.test(state.inflight.jobId ?? '')) state.batchJobs[recovery] = { jobId: state.inflight.jobId, products: Object.keys(state.inflight.selected) };
+      if (['verification_pending', 'retryable'].includes(outcome.status) && jobIdPattern.test(state.inflight.jobId ?? '')) state.batchJobs[recovery] = { jobId: state.inflight.jobId, products: Object.keys(state.inflight.selected) };
     }
     state.inflight = null;
   }
@@ -311,19 +329,19 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
         const trees = [product.path, ...managed.filter((r) => resolve(r.repo) === product.path).map((r) => r.path), ...discovered];
         for (const path of trees) if (existsSync(path)) {
           const tree = realpathSync(path);
-          if (!tree.includes('/Agent Workspaces.noindex/retired/')) paths.set(`${product.id}\0${tree}`, { id: product.id, tree, kind: 'git' });
+          if (!tree.includes('/Agent Workspaces.noindex/retired/')) paths.set(`${product.id}\0${tree}`, { id: product.id, tree, base: product.path, kind: 'git' });
         }
         const videos = join(videoRoot, product.id, 'out');
         if (existsSync(videos) && !lstatSync(videos).isSymbolicLink()) paths.set(`${product.id}\0${videos}`, { id: product.id, tree: videos, kind: 'videos' });
       }
       for (const [key, watcher] of watchers) if (!paths.has(key)) { watcher.close(); watchers.delete(key); }
-      for (const [key, { id, tree, kind }] of paths) {
+      for (const [key, { id, tree, base, kind }] of paths) {
         try {
           if (!watchers.has(key)) {
             const watcher = watch(tree, { recursive: true }, (_event, name) => {
               try {
                 const relative = name?.toString();
-                if (!eventRelevant(kind, tree, relative)) return;
+                if (!(kind === 'git' && id === 'site-health' && relative === 'catalog/projects.json') && !eventRelevant(kind, tree, relative)) return;
                 for (const productId of kind === 'git' ? affectedProducts(id, relative, activeIds) : [id]) enqueue(state, productId, Date.now(), relative ? join(tree, relative) : tree);
                 persist(); observedEvents.add(key);
               }
@@ -332,9 +350,12 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
             watcher.on('error', (error) => { console.error(`Watch failed for ${id}: ${error.message}`); watcher.close(); watchers.delete(key); });
             watchers.set(key, watcher);
           }
-          const snapshot = kind === 'git' ? fingerprint(tree) : videoFingerprint(tree);
+          const snapshot = kind === 'git' ? fingerprint(tree, id === 'site-health' ? ['catalog/projects.json'] : []) : videoFingerprint(tree);
           if (state.checkpoints[key] !== snapshot) {
-            if (!observedEvents.has(key)) for (const productId of kind === 'git' ? affectedProducts(id, null, activeIds) : [id]) enqueue(state, productId, Date.now(), tree);
+            if (!observedEvents.has(key)) {
+              const ids = kind !== 'git' ? [id] : state.checkpoints[key] == null ? newWorktreeProducts(id, tree, base, activeIds) : affectedProducts(id, null, activeIds);
+              for (const productId of ids) enqueue(state, productId, Date.now(), tree);
+            }
             state.checkpoints[key] = snapshot;
             persist();
           }
@@ -371,10 +392,19 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
         const recovery = awaiting[1].recovery;
         if (!recovery || resolve(recovery).slice(0, resolve(join(stateDir, 'recovery')).length + 1) !== resolve(join(stateDir, 'recovery')) + '/') throw Error('Verification recovery is unavailable');
         const current = classify({ recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(selected) });
+        if (current.status === 'retryable') {
+          recordVerification(state, selected, recovery, false, Date.now()); state.inflight = null; trackScratch(state, jobId, 'failed'); persist(); retire(); running = false; return;
+        }
+        if (current.status === 'replan' && Object.keys(selected).every((id) => state.pending[id]?.classificationPending)) {
+          setRecoveryState(state, selected, recovery, current);
+          for (const id of Object.keys(selected)) if (state.pending[id]) delete state.pending[id].planningJob;
+          delete state.batchJobs[recovery]; complete(state, selected, false, Date.now()); state.inflight = null; trackScratch(state, jobId, 'failed'); persist(); retire(); running = false; return;
+        }
         if (current.status !== 'verification_pending') {
           setRecoveryState(state, selected, recovery, { status: 'needs_recovery', reason: 'A staged destination or its recovery evidence changed before verification' });
           complete(state, selected, false, Date.now()); state.inflight = null; persist(); running = false; return;
         }
+        for (const id of Object.keys(selected)) if (state.pending[id]) state.pending[id].classificationPending = false;
         const manifestPath = join(recovery, 'manifest.json');
         const stat = lstatSync(manifestPath);
         if (!stat.isFile() || stat.isSymbolicLink() || stat.size > 1024 * 1024) throw Error('Invalid recovery manifest');
@@ -384,7 +414,8 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
         verification.promise.then((verified) => {
           if (verified) {
             const after = classify({ recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(selected) });
-            if (after.status !== 'verification_pending') { setRecoveryState(state, selected, recovery, { status: 'needs_recovery', reason: 'A staged destination or its recovery evidence changed during verification' }); verified = false; }
+            if (after.status === 'retryable') verified = false;
+            else if (after.status !== 'verification_pending') { setRecoveryState(state, selected, recovery, { status: 'needs_recovery', reason: 'A staged destination or its recovery evidence changed during verification' }); verified = false; }
           }
           if (verified) for (const id of Object.keys(selected)) if (state.pending[id]?.recovery === recovery) delete state.pending[id].planningJob;
           recordVerification(state, selected, recovery, verified, Date.now());
@@ -441,7 +472,7 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
             const classification = classify({ recovery: result.recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(selected) });
             setRecoveryState(state, selected, result.recovery, classification);
             if (classification.status !== 'replan') for (const id of Object.keys(selected)) if (state.pending[id]) state.pending[id].planningJob = jobId;
-            if (classification.status === 'verification_pending') state.batchJobs[result.recovery] = { jobId, products: Object.keys(selected) };
+            if (['verification_pending', 'retryable'].includes(classification.status)) state.batchJobs[result.recovery] = { jobId, products: Object.keys(selected) };
           }
           ok = result.status === 'no_changes' && Object.keys(selected).every((id) => !state.pending[id]?.verificationPending);
           if (!ok) console.error(`Asset maintenance ${result.status}; inspect state for verification or recovery`);
