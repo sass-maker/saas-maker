@@ -129,6 +129,63 @@ class ServiceTests(unittest.TestCase):
         self.assertEqual(sum(a[:2] == ['/bin/launchctl', 'bootout'] for a in self.calls), 1)
         self.assertEqual(sum(a[:2] == ['/bin/launchctl', 'bootstrap'] for a in self.calls), 3)
 
+    def test_owned_running_service_is_stopped_and_drained_before_upgrade(self):
+        with patch.object(s, 'run', side_effect=self.fake_run):
+            target = s.install(**self.kwargs)
+        self.loaded = True
+        fd = os.open(self.state / 'watch.lock', os.O_CREAT | os.O_RDWR, 0o600)
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        released = []
+        def stopping(argv, **kwargs):
+            if argv[:2] == ['/bin/launchctl', 'bootout']:
+                os.close(fd); released.append(True)
+            return self.fake_run(argv, **kwargs)
+        try:
+            with patch.object(s, 'run', side_effect=stopping):
+                s.install(**self.kwargs)
+        finally:
+            if not released: os.close(fd)
+        self.assertTrue(released)
+        self.assertTrue(target.is_file())
+
+    def test_failed_drain_reloads_previous_owned_service_without_replacing_plist(self):
+        with patch.object(s, 'run', side_effect=self.fake_run):
+            target = s.install(**self.kwargs)
+        original = target.read_bytes(); self.loaded = True
+        with patch.object(s, 'run', side_effect=self.fake_run), patch.object(s, 'drain_lock', side_effect=RuntimeError('holds the lock')):
+            with self.assertRaisesRegex(RuntimeError, 'holds the lock'):
+                s.install(**self.kwargs)
+        self.assertEqual(target.read_bytes(), original)
+        self.assertEqual(sum(a[:2] == ['/bin/launchctl', 'bootout'] for a in self.calls), 1)
+        self.assertEqual(sum(a[:2] == ['/bin/launchctl', 'bootstrap'] for a in self.calls), 2)
+
+    def test_state_parent_alias_and_launchd_canonical_path_are_accepted(self):
+        actual = self.root / 'actual'
+        actual.mkdir()
+        alias = self.root / 'alias'
+        alias.symlink_to(actual, target_is_directory=True)
+        self.state = actual / 'state'
+        self.agents = actual / 'agents'
+        self.kwargs['state'] = str(alias / 'state')
+        self.kwargs['agents'] = str(alias / 'agents')
+        with patch.object(s, 'run', side_effect=self.fake_run):
+            target = s.install(**self.kwargs)
+            self.assertEqual(s.owned_plist(target, self.state), target.read_bytes())
+            self.loaded = True
+            s.install(**self.kwargs)
+        self.assertTrue(any(a[:2] == ['/bin/launchctl', 'bootout'] for a in self.calls))
+
+    def test_state_or_plist_leaf_symlinks_remain_rejected(self):
+        with patch.object(s, 'run', side_effect=self.fake_run):
+            target = s.install(**self.kwargs)
+        state_link = self.root / 'state-link'
+        state_link.symlink_to(self.state, target_is_directory=True)
+        with self.assertRaisesRegex(RuntimeError, 'unowned'):
+            s.owned_plist(target, state_link)
+        plist_link = self.root / 'plist-link'
+        plist_link.symlink_to(target)
+        self.assertFalse(s.launchd_uses_plist(f'path = {plist_link}\n'.encode(), target))
+
     def test_loaded_job_without_owned_plist_is_never_booted_out(self):
         self.loaded = True
         with patch.object(s, 'run', side_effect=self.fake_run), self.assertRaisesRegex(RuntimeError, 'not verified'):

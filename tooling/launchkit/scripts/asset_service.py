@@ -9,6 +9,7 @@ import re
 import stat
 import subprocess
 import tempfile
+import time
 import uuid
 
 LABEL = 'com.sarthak.fleet-product-assets'
@@ -144,7 +145,15 @@ def owned_plist(path, state):
     try:
         data = plistlib.loads(raw)
         args = data['ProgramArguments']
-        release_root = (pathlib.Path(state) / 'releases').resolve()
+        requested_state = pathlib.Path(state)
+        written_state = pathlib.Path(args[2])
+        if requested_state.is_symlink() or written_state.is_symlink():
+            raise ValueError('state directory is a symlink')
+        if not requested_state.is_absolute() or not written_state.is_absolute():
+            raise ValueError('state directory is not absolute')
+        if requested_state.resolve(strict=True) != written_state.resolve(strict=True):
+            raise ValueError('state directory mismatch')
+        release_root = written_state / 'releases'
         supervisor = pathlib.Path(args[1])
         watcher = pathlib.Path(args[4])
         rel = supervisor.relative_to(release_root)
@@ -152,11 +161,23 @@ def owned_plist(path, state):
                 or not re.fullmatch(r'[0-9a-f]{40}', rel.parts[0])
                 or rel.parts[1:] != ('tooling', 'launchkit', 'scripts', 'asset-watch-supervisor.py')
                 or watcher != release_root / rel.parts[0] / 'tooling/launchkit/scripts/asset-watch.mjs'
-                or args[2] != str(state)):
+                ):
             raise ValueError('not owned')
-    except (ValueError, KeyError, TypeError, IndexError, plistlib.InvalidFileException):
+    except (ValueError, KeyError, TypeError, IndexError, OSError, plistlib.InvalidFileException):
         raise RuntimeError('An unowned plist occupies the service label path') from None
     return raw
+
+
+def launchd_uses_plist(output, expected):
+    """Allow /tmp and /private/tmp aliases but reject leaf symlinks and missing files."""
+    lines = output.decode('utf8', errors='replace').splitlines()
+    paths = [line.strip()[7:] for line in lines if line.strip().startswith('path = ')]
+    if len(paths) != 1 or not regular(expected) or not regular(paths[0]):
+        return False
+    try:
+        return os.path.samefile(paths[0], expected)
+    except OSError:
+        return False
 
 
 def locked_file(path):
@@ -170,6 +191,17 @@ def locked_file(path):
         os.close(fd)
         raise RuntimeError('Active watcher or installation holds the lock') from None
     return fd
+
+
+def drain_lock(path, seconds=30):
+    deadline = time.monotonic() + seconds
+    while True:
+        try:
+            return locked_file(path)
+        except RuntimeError as error:
+            if 'holds the lock' not in str(error) or time.monotonic() >= deadline:
+                raise
+            time.sleep(0.1)
 
 
 def atomic_file(path, data):
@@ -210,8 +242,6 @@ def install(*, repo, sha, state, fleet, index, node, codex, python, agents, uid)
     watcher_lock = None
     try:
         previous = owned_plist(plist, state)
-        # Never stop/replace a running watcher or its surviving worker.
-        watcher_lock = locked_file(state / 'watch.lock')
         stage_release(state, sha, files)
         logs = private_dir(state / 'logs')
         for name in ('stdout.log', 'stderr.log'):
@@ -227,16 +257,21 @@ def install(*, repo, sha, state, fleet, index, node, codex, python, agents, uid)
         current = run(['/bin/launchctl', 'print', domain + '/' + LABEL])
         was_loaded = current.returncode == 0
         if was_loaded:
-            lines = current.stdout.decode('utf8', errors='replace').splitlines()
-            if not previous or f'path = {plist}' not in [line.strip() for line in lines]:
+            if not previous or not launchd_uses_plist(current.stdout, plist):
                 raise RuntimeError('The loaded service is not verified as this owned plist')
         if previous:
             atomic_file(state / 'previous.plist', previous)
         if was_loaded:
             command(['/bin/launchctl', 'bootout', domain + '/' + LABEL])
-        atomic_file(plist, plistlib.dumps(planned))
-        os.close(watcher_lock); watcher_lock = None
         try:
+            watcher_lock = drain_lock(state / 'watch.lock') if was_loaded else locked_file(state / 'watch.lock')
+        except BaseException:
+            if was_loaded:
+                command(['/bin/launchctl', 'bootstrap', domain, str(plist)])
+            raise
+        try:
+            atomic_file(plist, plistlib.dumps(planned))
+            os.close(watcher_lock); watcher_lock = None
             command(['/bin/launchctl', 'bootstrap', domain, str(plist)])
         except BaseException:
             # Preserve failed candidate. Restore only a plist we verified as ours.
@@ -244,7 +279,7 @@ def install(*, repo, sha, state, fleet, index, node, codex, python, agents, uid)
                 atomic_file(plist, previous)
                 if was_loaded:
                     command(['/bin/launchctl', 'bootstrap', domain, str(plist)])
-            else:
+            elif plist.exists():
                 os.rename(plist, state / ('failed-' + uuid.uuid4().hex + '.plist'))
             raise
         return plist
@@ -270,7 +305,7 @@ def main():
             owned = owned_plist(path, a.state)
             current = run(['/bin/launchctl', 'print', f'gui/{a.uid}/{LABEL}'])
             loaded = current.returncode == 0
-            if loaded and (not owned or f'path = {path}' not in [line.strip() for line in current.stdout.decode('utf8', errors='replace').splitlines()]):
+            if loaded and (not owned or not launchd_uses_plist(current.stdout, path)):
                 raise RuntimeError('Loaded service does not match the owned plist')
             print('owned:', bool(owned), 'loaded:', loaded)
             return

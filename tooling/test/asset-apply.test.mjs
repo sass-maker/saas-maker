@@ -4,7 +4,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, symlinkSync } from
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
-import { applyProposal, classifyRecovery } from '../launchkit/scripts/asset-apply.mjs';
+import { applyProposal, classifyRecovery, validateAsset } from '../launchkit/scripts/asset-apply.mjs';
 
 const hash = (value) => createHash('sha256').update(value).digest('hex');
 function fixture() {
@@ -12,13 +12,13 @@ function fixture() {
   const assetRoot = join(root, 'assets'); const scratchDir = join(root, 'scratch'); const recoveryDir = join(root, 'recovery');
   const folder = join(assetRoot, 'Submission kits', 'product');
   mkdirSync(folder, { recursive: true }); mkdirSync(scratchDir);
-  const destination = join(folder, 'logo.png'); const source = join(scratchDir, 'new.png');
+  const destination = join(folder, 'brief.txt'); const source = join(scratchDir, 'new.txt');
   writeFileSync(destination, 'old'); writeFileSync(source, 'new');
   const indexPath = join(assetRoot, 'Fleet-product-asset-index.json');
-  writeFileSync(indexPath, JSON.stringify({ products: [{ id: 'product', driveFolderUrl: 'https://drive.google.com/drive/folders/folderid', assets: [{ filename: 'logo.png', kind: 'logo', driveUrl: 'https://drive.google.com/file/d/fileid/view' }] }] }));
-  const proposal = { version: 1, changes: [{ productId: 'product', filename: 'logo.png', sourceFile: 'new.png', beforeSha256: hash('old') }] };
-  const getId = (path) => path === folder ? 'folderid' : path === destination ? 'fileid' : '';
-  return { root, assetRoot, scratchDir, recoveryDir, indexPath, proposal, destination, getId, selected: ['product'] };
+  writeFileSync(indexPath, JSON.stringify({ products: [{ id: 'product', driveFolderUrl: 'https://drive.google.com/drive/folders/folderid', assets: [{ filename: 'brief.txt', kind: 'brief', driveUrl: 'https://drive.google.com/file/d/fileid/view' }] }] }));
+  const proposal = { version: 1, changes: [{ productId: 'product', filename: 'brief.txt', sourceFile: 'new.txt', beforeSha256: hash('old') }] };
+  const getId = (path) => path === indexPath ? 'indexid' : path === folder ? 'folderid' : path === destination ? 'fileid' : '';
+  return { root, assetRoot, scratchDir, recoveryDir, indexPath, proposal, destination, getId, selected: ['product'], get expectedIndex() { return { fileId: 'indexid', afterSha256: hash(readFileSync(indexPath)) }; } };
 }
 
 test('updates only indexed existing file, saves recovery bytes, and reports remote verification pending', () => {
@@ -46,6 +46,14 @@ test('refuses a concurrently changed destination before applying', () => {
   const f = fixture(); writeFileSync(f.destination, 'other writer');
   assert.throws(() => applyProposal(f), /changed since proposal/);
   assert.equal(readFileSync(f.destination, 'utf8'), 'other writer');
+});
+
+test('rejects a changed or unverified master index before even a no-change proposal', () => {
+  const f = fixture(); const expectedIndex = f.expectedIndex;
+  writeFileSync(f.indexPath, readFileSync(f.indexPath, 'utf8') + ' ');
+  f.proposal.changes = [];
+  assert.throws(() => applyProposal({ ...f, expectedIndex }), /does not match verified remote index/);
+  assert.equal(readFileSync(f.destination, 'utf8'), 'old');
 });
 
 test('keeps recovery bytes and reports uncertainty after a partial write failure', () => {
@@ -83,13 +91,13 @@ test('recovery distinguishes missing preparation, unchanged bytes, applied bytes
 test('partial two-file application is held for recovery and never auto-reapplied', () => {
   const f = fixture();
   const folder = join(f.assetRoot, 'Submission kits', 'product');
-  const second = join(folder, 'second.png'); writeFileSync(second, 'old2');
-  writeFileSync(join(f.scratchDir, 'new2.png'), 'new2');
+  const second = join(folder, 'second.txt'); writeFileSync(second, 'old2');
+  writeFileSync(join(f.scratchDir, 'new2.txt'), 'new2');
   const index = JSON.parse(readFileSync(f.indexPath, 'utf8'));
-  index.products[0].assets.push({ filename: 'second.png', kind: 'screenshot', driveUrl: 'https://drive.google.com/file/d/secondid/view' });
+  index.products[0].assets.push({ filename: 'second.txt', kind: 'brief', driveUrl: 'https://drive.google.com/file/d/secondid/view' });
   writeFileSync(f.indexPath, JSON.stringify(index));
-  f.getId = (path) => path === folder ? 'folderid' : path === f.destination ? 'fileid' : path === second ? 'secondid' : '';
-  f.proposal.changes.push({ productId: 'product', filename: 'second.png', sourceFile: 'new2.png', beforeSha256: hash('old2') });
+  f.getId = (path) => path === f.indexPath ? 'indexid' : path === folder ? 'folderid' : path === f.destination ? 'fileid' : path === second ? 'secondid' : '';
+  f.proposal.changes.push({ productId: 'product', filename: 'second.txt', sourceFile: 'new2.txt', beforeSha256: hash('old2') });
   let calls = 0; f.writeAsset = (path, bytes) => { if (++calls === 2) throw Error('second write failed'); writeFileSync(path, bytes); };
   const result = applyProposal(f);
   assert.equal(result.status, 'uncertain');
@@ -99,16 +107,25 @@ test('partial two-file application is held for recovery and never auto-reapplied
 });
 
 test('allows uniquely indexed briefs and product JSON with verified Drive IDs', () => {
-  for (const [kind, filename] of [['brief', 'brief.txt'], ['json', 'submission.json']]) {
+  for (const [kind, filename] of [['brief', 'press.txt'], ['json', 'submission.json']]) {
     const f = fixture();
     const folder = join(f.assetRoot, 'Submission kits', 'product');
     f.destination = join(folder, filename); writeFileSync(f.destination, 'old');
     const index = JSON.parse(readFileSync(f.indexPath, 'utf8'));
     index.products[0].assets.push({ filename, kind, driveUrl: 'https://drive.google.com/file/d/briefid/view' });
     writeFileSync(f.indexPath, JSON.stringify(index));
-    f.getId = (path) => path === folder ? 'folderid' : path === f.destination ? 'briefid' : '';
+    f.getId = (path) => path === f.indexPath ? 'indexid' : path === folder ? 'folderid' : path === f.destination ? 'briefid' : '';
     f.proposal.changes[0].filename = filename;
+    if (kind === 'json') writeFileSync(join(f.scratchDir, 'new.txt'), '{"name":"new"}');
     assert.equal(applyProposal(f).status, 'verification_pending');
-    assert.equal(readFileSync(f.destination, 'utf8'), 'new');
+    assert.equal(readFileSync(f.destination, 'utf8'), kind === 'json' ? '{"name":"new"}' : 'new');
   }
+});
+
+test('checks expected formats and rejects malformed or sensitive proposed text', () => {
+  assert.doesNotThrow(() => validateAsset('logo', 'logo.png', Buffer.from('89504e470d0a1a0a00000000', 'hex')));
+  assert.throws(() => validateAsset('logo', 'logo.png', Buffer.from('not a png')));
+  assert.throws(() => validateAsset('json', 'submission.json', Buffer.from('{bad')));
+  assert.throws(() => validateAsset('brief', 'brief.txt', Buffer.from('-----BEGIN PRIVATE KEY-----')));
+  assert.throws(() => validateAsset('screenshot', 'image.svg', Buffer.from('<svg/>')));
 });

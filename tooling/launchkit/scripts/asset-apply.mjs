@@ -6,6 +6,24 @@ import { execFileSync } from 'node:child_process';
 const MAX_INDEX = 4 * 1024 * 1024;
 const MAX_ASSET = 100 * 1024 * 1024;
 const digest = (bytes) => createHash('sha256').update(bytes).digest('hex');
+export function validateAsset(kind, filename, bytes) {
+  const extension = filename.toLowerCase().split('.').pop();
+  const allowed = { logo: ['png', 'svg', 'jpg', 'jpeg', 'webp'], screenshot: ['png', 'jpg', 'jpeg', 'webp'], video: ['mp4', 'mov', 'webm'], brief: ['txt', 'md'], json: ['json'] };
+  if (!allowed[kind]?.includes(extension)) throw Error('Asset kind and extension do not match');
+  const hex = bytes.subarray(0, 16).toString('hex');
+  if (extension === 'png' && !hex.startsWith('89504e470d0a1a0a')) throw Error('Invalid PNG bytes');
+  if (['jpg', 'jpeg'].includes(extension) && !hex.startsWith('ffd8ff')) throw Error('Invalid JPEG bytes');
+  if (extension === 'webp' && !(bytes.subarray(0, 4).toString('ascii') === 'RIFF' && bytes.subarray(8, 12).toString('ascii') === 'WEBP')) throw Error('Invalid WebP bytes');
+  if (['mp4', 'mov'].includes(extension) && bytes.subarray(4, 8).toString('ascii') !== 'ftyp') throw Error('Invalid video bytes');
+  if (extension === 'webm' && !hex.startsWith('1a45dfa3')) throw Error('Invalid WebM bytes');
+  if (['svg', 'txt', 'md', 'json'].includes(extension)) {
+    if (bytes.length > 1024 * 1024) throw Error('Text asset exceeds size limit');
+    let value; try { value = new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { throw Error('Invalid UTF-8'); }
+    if (/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\b(?:sk-proj-|sk-)[a-zA-Z0-9_-]{16,}|\b(?:api[_-]?key|access[_-]?token|client[_-]?secret)\s*[:=]\s*["']?[a-zA-Z0-9_/-]{16,}/i.test(value)) throw Error('Possible secret in proposed text asset');
+    if (extension === 'json') { try { JSON.parse(value); } catch { throw Error('Invalid JSON asset'); } }
+    if (extension === 'svg' && (!/^\s*(?:<\?xml[^>]*>\s*)?<svg\b/i.test(value) || /<!DOCTYPE|<!ENTITY|<script\b|\bon\w+\s*=/i.test(value))) throw Error('Invalid or unsafe SVG asset');
+  }
+}
 const safeId = (value) => typeof value === 'string' && /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(value);
 const driveId = (url, folder) => {
   const match = typeof url === 'string' && url.match(folder ? /^https:\/\/drive\.google\.com\/drive\/folders\/([a-zA-Z0-9_-]+)(?:[/?#]|$)/ : /^https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)(?:[/?#]|$)/);
@@ -41,13 +59,19 @@ function syncDirectory(path) {
 export function driveItemId(path) {
   return execFileSync('/usr/bin/xattr', ['-p', 'com.google.drivefs.item-id#S', path], { encoding: 'utf8', timeout: 10000 }).trim();
 }
-export function applyProposal({ proposal, selected, indexPath, assetRoot, scratchDir, recoveryDir, recoveryId = randomUUID(), getId = driveItemId, writeAsset }) {
+export function snapshotIndex({ indexPath, getId = driveItemId }) {
+  const fileId = getId(indexPath);
+  if (!safeId(fileId)) throw Error('Invalid mounted index identity');
+  return { fileId, afterSha256: digest(bounded(indexPath, MAX_INDEX)) };
+}
+export function applyProposal({ proposal, selected, indexPath, assetRoot, scratchDir, recoveryDir, recoveryId = randomUUID(), expectedIndex, getId = driveItemId, writeAsset }) {
   if (!proposal || Object.keys(proposal).sort().join(',') !== 'changes,version' || proposal.version !== 1 || !Array.isArray(proposal.changes) || proposal.changes.length > 10) throw Error('Invalid proposal');
   if (!Array.isArray(selected) || selected.some((id) => !safeId(id)) || new Set(selected).size !== selected.length) throw Error('Invalid selected products');
   inspect(assetRoot, true); inspect(scratchDir, true);
-  const expectedIndex = join(assetRoot, 'Fleet-product-asset-index.json');
-  if (resolve(indexPath) !== resolve(expectedIndex)) throw Error('Index is outside the asset root');
+  const expectedIndexPath = join(assetRoot, 'Fleet-product-asset-index.json');
+  if (resolve(indexPath) !== resolve(expectedIndexPath)) throw Error('Index is outside the asset root');
   const indexBytes = bounded(indexPath, MAX_INDEX);
+  if (!expectedIndex || !safeId(expectedIndex.fileId) || !/^[a-f0-9]{64}$/.test(expectedIndex.afterSha256) || getId(indexPath) !== expectedIndex.fileId || digest(indexBytes) !== expectedIndex.afterSha256) throw Error('Mounted asset index does not match verified remote index');
   const index = JSON.parse(indexBytes.toString('utf8'));
   if (!Array.isArray(index.products)) throw Error('Invalid asset index');
   const productMap = new Map();
@@ -76,6 +100,7 @@ export function applyProposal({ proposal, selected, indexPath, assetRoot, scratc
     if (totalBytes > 200 * 1024 * 1024) throw Error('Proposal exceeds total size limit');
     if (digest(before) !== change.beforeSha256) throw Error('Destination changed since proposal');
     if (!after.length) throw Error('Empty proposed asset');
+    validateAsset(matches[0].kind, change.filename, after);
     plan.push({ productId: change.productId, filename: change.filename, fileId, destination, destinationStat, before, after, beforeSha256: change.beforeSha256, afterSha256: digest(after) });
   }
   if (digest(bounded(indexPath, MAX_INDEX)) !== digest(indexBytes)) throw Error('Asset index changed during validation');

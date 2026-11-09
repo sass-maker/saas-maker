@@ -3,16 +3,23 @@ import { watch, mkdirSync, readFileSync, writeFileSync, renameSync, existsSync, 
 import { join, resolve, isAbsolute } from 'node:path';
 import { homedir } from 'node:os';
 import { execFileSync, spawn } from 'node:child_process';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { createHash, randomUUID } from 'node:crypto';
 import { AgentWorkspaces } from '../../lib/agent-workspaces.mjs';
-import { applyProposal, classifyRecovery } from './asset-apply.mjs';
+import { applyProposal, classifyRecovery, snapshotIndex } from './asset-apply.mjs';
 import { startRemoteVerification } from './asset-verify.mjs';
 
 const ignored = new Set(['.git', '.ssh', '.aws', '.config', 'node_modules', '.next', '.turbo', '.cache', '.wrangler', '.svelte-kit', '.astro', '.vercel', '.output', '.expo', 'Pods', '__pycache__', 'dist', 'build', 'coverage', 'DerivedData', '.venv', 'target', '.fleet']);
 export function relevant(name) {
   return typeof name === 'string' && name.length > 0 && !isAbsolute(name) &&
-    !name.split(/[\\/]/).some((part) => ignored.has(part) || part === '..' || part === '.env' || part.startsWith('.env.') || part === '.DS_Store' || part.startsWith('wrangler.') || /\.(pem|key|p12|pfx|tsbuildinfo|log)$/i.test(part));
+    !name.split(/[\\/]/).some((part) => ignored.has(part) || part === '..' || part === '.env' || part.startsWith('.env.') || ['.npmrc', '.pypirc', '.netrc', '.DS_Store'].includes(part) || part.startsWith('wrangler.') || /^(credentials|secrets?)(\.|$)/i.test(part) || /\.(pem|key|p12|pfx|tsbuildinfo|log)$/i.test(part));
+}
+export function eventRelevant(kind, tree, name, git = execFileSync) {
+  if (!name) return true;
+  if (!relevant(name)) return false;
+  if (kind === 'videos') return !name.split(/[\\/]/).some((part) => ['check', 'frames'].includes(part));
+  try { git('git', ['-C', tree, 'check-ignore', '-q', '--', name], { timeout: 5000, stdio: 'ignore' }); return false; }
+  catch (error) { if (error.status === 1) return true; throw error; }
 }
 export function projects(catalog, index, fleetRoot) {
   if (!Array.isArray(catalog?.projects)) throw Error('Invalid catalog');
@@ -36,7 +43,6 @@ export function complete(state, selected, ok, now) {
     if (ok && entry.generation === generation) delete state.pending[id];
     else if (!ok) {
       entry.failures++; entry.uncertain = true; entry.retryAt = now + Math.min(3600000, 60000 * 2 ** Math.min(entry.failures - 1, 6));
-      if (entry.failures >= 5 && !entry.needsRecovery) { entry.needsRecovery = 'Maintenance failed after five attempts; inspect retained job evidence'; console.error(`Product ${id} needs recovery: ${entry.needsRecovery}`); }
     }
   }
 }
@@ -114,6 +120,14 @@ export function driveAvailable(indexPath) {
   if (process.platform === 'darwin') execFileSync('/usr/bin/pgrep', ['-x', 'Google Drive'], { timeout: 5000, stdio: 'ignore' });
   return true;
 }
+export function assertWatcherLock(stateDir, fd) {
+  if (!Number.isInteger(fd) || fd < 3) throw Error('Start through asset-watch-supervisor.py');
+  const held = fstatSync(fd); const path = lstatSync(join(stateDir, 'watch.lock'));
+  if (!held.isFile() || !path.isFile() || path.isSymbolicLink() || held.dev !== path.dev || held.ino !== path.ino) throw Error('Invalid watcher lock');
+  const stdio = ['ignore', 'ignore', 'ignore']; while (stdio.length < fd) stdio.push('ignore'); stdio[fd] = fd;
+  try { execFileSync('/usr/bin/python3', ['-c', 'import fcntl,sys; fcntl.flock(int(sys.argv[1]), fcntl.LOCK_EX|fcntl.LOCK_NB)', String(fd)], { stdio, timeout: 5000 }); }
+  catch { throw Error('Watcher lock is held by another process'); }
+}
 export function setRecoveryState(state, selected, recovery, classification) {
   if (!['replan', 'verification_pending', 'needs_recovery'].includes(classification?.status)) throw Error('Unknown recovery classification');
   for (const id of Object.keys(selected)) {
@@ -131,11 +145,36 @@ export function status(state) {
   const cleanup = Object.entries(state.retirements ?? {}).filter(([, r]) => r.status === 'failed' || r.status === 'unknown').map(([id, r]) => ({ id: `scratch:${id}`, status: `cleanup_${r.status}`, reason: r.reason }));
   return [...products, ...cleanup];
 }
+export function resolveRecovery({ state, id, stateDir, indexPath, classify = classifyRecovery }) {
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(id) || !state.pending?.[id]?.needsRecovery || state.inflight) throw Error('Product is not safely resolvable');
+  const entry = state.pending[id];
+  if (entry.recovery) {
+    const root = resolve(join(stateDir, 'recovery'));
+    if (!resolve(entry.recovery).startsWith(root + '/')) throw Error('Unsafe recovery location');
+    const members = Object.fromEntries(Object.entries(state.pending).filter(([, p]) => p.recovery === entry.recovery).map(([key, p]) => [key, p.generation]));
+    const result = classify({ recovery: entry.recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(members) });
+    if (result.status === 'needs_recovery') throw Error('Recovery still requires inspection; backups retained');
+    setRecoveryState(state, members, entry.recovery, result);
+    for (const key of Object.keys(members)) { state.pending[key].failures = 0; state.pending[key].retryAt = 0; }
+  } else {
+    if (!entry.needsRecovery.startsWith('Worker scratch unavailable') || readdirSync(join(stateDir, 'worker')).length >= 50) throw Error('Recovery still requires inspection');
+    entry.needsRecovery = null; entry.failures = 0; entry.retryAt = 0;
+  }
+  return state;
+}
 const jobIdPattern = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
 export function queueRetirement(state, jobId) {
   if (!jobIdPattern.test(jobId)) throw Error('Invalid scratch job identity');
   state.retirements ??= {};
   state.retirements[jobId] ??= { status: 'eligible' };
+}
+export function trackScratch(state, jobId, outcome, now = Date.now(), keep = 10) {
+  if (!jobIdPattern.test(jobId) || !['failed', 'superseded', 'interrupted'].includes(outcome)) throw Error('Invalid scratch history');
+  state.scratchHistory ??= {};
+  state.scratchSequence = (state.scratchSequence ?? 0) + 1;
+  state.scratchHistory[jobId] = { outcome, completedAt: now, sequence: state.scratchSequence };
+  const old = Object.entries(state.scratchHistory).sort((a, b) => b[1].completedAt - a[1].completedAt || (b[1].sequence ?? 0) - (a[1].sequence ?? 0)).slice(keep);
+  for (const [id] of old) queueRetirement(state, id);
 }
 export function retireEligibleJobs({ state, workerDir, persist, trash = (path) => execFileSync('/usr/bin/trash', [path], { timeout: 30000, stdio: 'ignore' }) }) {
   for (const [jobId, entry] of Object.entries(state.retirements ?? {})) {
@@ -149,6 +188,7 @@ export function retireEligibleJobs({ state, workerDir, persist, trash = (path) =
       trash(path);
       if (existsSync(path)) throw Error('Scratch job still exists after trash');
       entry.status = 'retired'; entry.completedAt = Date.now();
+      if (state.scratchHistory) delete state.scratchHistory[jobId];
       state.retiredScratchCount = (state.retiredScratchCount ?? 0) + 1;
       counted = true;
       persist();
@@ -169,9 +209,9 @@ export function recordVerification(state, selected, recovery, verified, now) {
   for (const id of Object.keys(selected)) if (state.pending[id]?.recovery === recovery) {
     const entry = state.pending[id];
     if (verified) { entry.verificationPending = false; entry.verificationAttempts = 0; entry.failures = 0; entry.retryAt = 0; entry.uncertain = false; }
-    else if ((entry.verificationAttempts = (entry.verificationAttempts ?? 0) + 1) >= 5) { entry.verificationPending = false; entry.needsRecovery = 'Remote verification failed after five attempts'; console.error(`Product ${id} needs recovery: ${entry.needsRecovery}; backup: ${recovery}`); }
+    else { entry.verificationAttempts = (entry.verificationAttempts ?? 0) + 1; entry.retryAt = now + Math.min(3600000, 60000 * 2 ** Math.min(entry.verificationAttempts - 1, 6)); }
   }
-  complete(state, selected, verified, now);
+  if (verified) complete(state, selected, true, now);
 }
 export function selectReady(state, now, debounceMs, maxWaitMs) {
   const ready = Object.entries(state.pending).filter(([, p]) => !p.needsRecovery && (now - p.changedAt >= debounceMs || now - (p.firstAt ?? p.changedAt) >= maxWaitMs) && now >= p.retryAt);
@@ -180,15 +220,12 @@ export function selectReady(state, now, debounceMs, maxWaitMs) {
   const selected = Object.fromEntries((awaiting ? batchMembers : ready.filter(([, p]) => !p.verificationPending).slice(0, 5)).map(([id, p]) => [id, p.generation]));
   return { awaiting, selected };
 }
-export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = join(homedir(), 'Movies/fleet-videos-v2'), debounceMs = 600000, maxWaitMs = 1800000, refreshMs = 300000, tickMs = 30000, workerTimeoutMs = 900000, requireLock = true, records = () => new AgentWorkspaces().records(), overrides = () => mcpOverrides(codexPath), driveReady = () => driveAvailable(indexPath), apply = applyProposal, classify = classifyRecovery, verifyRemote = startRemoteVerification, trash }) {
+export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = join(homedir(), 'Movies/fleet-videos-v2'), debounceMs = 600000, maxWaitMs = 1800000, refreshMs = 300000, tickMs = 30000, workerTimeoutMs = 900000, requireLock = true, records = () => new AgentWorkspaces().records(), overrides = () => mcpOverrides(codexPath), driveReady = () => driveAvailable(indexPath), apply = applyProposal, classify = classifyRecovery, verifyRemote = startRemoteVerification, snapshot = () => snapshotIndex({ indexPath }), trash }) {
   mkdirSync(stateDir, { recursive: true, mode: 0o700 });
   if (!lstatSync(stateDir).isDirectory() || lstatSync(stateDir).isSymbolicLink()) throw Error('Unsafe state directory');
   chmodSync(stateDir, 0o700);
   const lockFd = Number(process.env.FLEET_ASSET_LOCK_FD);
-  if (requireLock) {
-    if (!Number.isInteger(lockFd) || lockFd < 3) throw Error('Start through asset-watch-supervisor.py');
-    fstatSync(lockFd);
-  }
+  if (requireLock) assertWatcherLock(stateDir, lockFd);
   const workerDir = join(stateDir, 'worker');
   mkdirSync(workerDir, { recursive: true, mode: 0o700 });
   if (!lstatSync(workerDir).isDirectory() || lstatSync(workerDir).isSymbolicLink()) throw Error('Unsafe worker directory');
@@ -199,6 +236,7 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
   state.checkpoints ??= {};
   state.batchJobs ??= {};
   if (state.inflight) {
+    if (jobIdPattern.test(state.inflight.jobId ?? '') && existsSync(join(workerDir, state.inflight.jobId))) trackScratch(state, state.inflight.jobId, 'interrupted');
     if (state.inflight.phase === 'applying' && state.inflight.recoveryId) {
       const validId = /^[a-f0-9-]{36}$/.test(state.inflight.recoveryId);
       const recovery = validId ? join(stateDir, 'recovery', state.inflight.recoveryId) : null;
@@ -206,6 +244,7 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
       try { outcome = validId ? classify({ recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(state.inflight.selected) }) : { status: 'needs_recovery', reason: 'Invalid interrupted recovery identity' }; }
       catch { outcome = { status: 'needs_recovery', reason: 'Unable to inspect interrupted recovery batch' }; }
       setRecoveryState(state, state.inflight.selected, recovery, outcome);
+      if (outcome.status !== 'replan' && jobIdPattern.test(state.inflight.jobId ?? '')) for (const id of Object.keys(state.inflight.selected)) if (state.pending[id]) state.pending[id].planningJob = state.inflight.jobId;
       if (outcome.status === 'verification_pending' && jobIdPattern.test(state.inflight.jobId ?? '')) state.batchJobs[recovery] = { jobId: state.inflight.jobId, products: Object.keys(state.inflight.selected) };
     }
     state.inflight = null;
@@ -224,9 +263,10 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
       const managed = records().filter((r) => r.state === 'active');
       const active = projects(catalog, null, fleetRoot);
       const activeIds = new Set(active.map((p) => p.id));
+      let inventoryComplete = true;
       for (const product of active) {
         let discovered = [];
-        try { discovered = worktrees(product.path); } catch (error) { console.error(`Cannot discover worktrees for ${product.id}: ${error.message}`); }
+        try { discovered = worktrees(product.path); } catch (error) { inventoryComplete = false; console.error(`Cannot discover worktrees for ${product.id}: ${error.message}`); }
         const trees = [product.path, ...managed.filter((r) => resolve(r.repo) === product.path).map((r) => r.path), ...discovered];
         for (const path of trees) if (existsSync(path)) {
           const tree = realpathSync(path);
@@ -240,9 +280,9 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
         try {
           if (!watchers.has(key)) {
             const watcher = watch(tree, { recursive: true }, (_event, name) => {
-              if (name && !relevant(name.toString())) return;
               try {
                 const relative = name?.toString();
+                if (!eventRelevant(kind, tree, relative)) return;
                 for (const productId of kind === 'git' ? affectedProducts(id, relative, activeIds) : [id]) enqueue(state, productId, Date.now(), relative ? join(tree, relative) : tree);
                 persist(); observedEvents.add(key);
               }
@@ -260,6 +300,11 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
           observedEvents.delete(key);
         } catch (error) { console.error(`Cannot watch or reconcile ${id}: ${error.message}`); watchers.get(key)?.close(); watchers.delete(key); }
       }
+      if (inventoryComplete) {
+        let pruned = false;
+        for (const key of Object.keys(state.checkpoints)) if (!paths.has(key)) { delete state.checkpoints[key]; pruned = true; }
+        if (pruned) persist();
+      }
       console.log(`Watching ${watchers.size} project worktrees`);
     } catch (error) { console.error(`Cannot refresh project inventory: ${error.message}`); }
   }
@@ -274,12 +319,13 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
     const output = join(jobDir, 'response.txt');
     const changes = Object.fromEntries(Object.keys(selected).map((id) => [id, state.pending[id].sources]));
     state.inflight = { selected, startedAt: now, phase: 'planning', jobId };
+    let restrictions;
     try {
       persist();
       if (!driveReady()) throw Error('Mounted Drive is unavailable');
-      if (readdirSync(workerDir).length >= 50) throw Error('Worker scratch limit reached; inspect retained jobs before cleanup');
+      if (readdirSync(workerDir).length >= 50) { retire(); if (readdirSync(workerDir).length >= 50) throw Error('Worker scratch limit reached; inspect retained jobs before cleanup'); }
       mkdirSync(jobDir, { mode: 0o700 });
-      const restrictions = overrides();
+      restrictions = overrides();
       if (awaiting) {
         const recovery = awaiting[1].recovery;
         if (!recovery || resolve(recovery).slice(0, resolve(join(stateDir, 'recovery')).length + 1) !== resolve(join(stateDir, 'recovery')) + '/') throw Error('Verification recovery is unavailable');
@@ -299,16 +345,17 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
             const after = classify({ recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(selected) });
             if (after.status !== 'verification_pending') { setRecoveryState(state, selected, recovery, { status: 'needs_recovery', reason: 'A staged destination or its recovery evidence changed during verification' }); verified = false; }
           }
+          if (verified) for (const id of Object.keys(selected)) if (state.pending[id]?.recovery === recovery) delete state.pending[id].planningJob;
           recordVerification(state, selected, recovery, verified, Date.now());
           state.inflight = null;
           if (verified) {
             const batch = state.batchJobs[recovery];
             if (batch && Array.isArray(batch.products) && batch.products.every((id) => Object.hasOwn(selected, id)) && jobIdPattern.test(batch.jobId ?? '')) { delete state.batchJobs[recovery]; queueRetirement(state, batch.jobId); }
             queueRetirement(state, jobId);
-          }
+          } else trackScratch(state, jobId, 'failed');
           persist(); retire(); child = null; running = false;
           console.log(`Remote asset verification ${verified ? 'passed' : 'pending'}`);
-        }).catch(() => { recordVerification(state, selected, recovery, false, Date.now()); state.inflight = null; persist(); child = null; running = false; });
+        }).catch(() => { recordVerification(state, selected, recovery, false, Date.now()); state.inflight = null; trackScratch(state, jobId, 'failed'); persist(); retire(); child = null; running = false; });
         return;
       }
       writeFileSync(output, '', { mode: 0o600 });
@@ -317,25 +364,20 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
       child = spawn(codexPath, ['exec', '--enable', 'apps', ...planningReadOverrides, ...restrictions, '--skip-git-repo-check', '--ephemeral', '-s', 'workspace-write', '-C', jobDir, '-o', output, prompt(changes, indexPath, jobDir)], { stdio, detached: true });
     } catch (error) {
       console.error(`Cannot start maintenance: ${error.message}`);
-      if (error.message.startsWith('Worker scratch limit reached') || ['ENOSPC', 'EACCES'].includes(error.code)) {
-        for (const id of Object.keys(selected)) if (state.pending[id]) {
-          state.pending[id].needsRecovery = 'Worker scratch unavailable; inspect retained jobs and filesystem space';
-          console.error(`Product ${id} needs recovery: ${state.pending[id].needsRecovery}`);
-        }
-      }
-      complete(state, selected, false, Date.now()); state.inflight = null; persist(); running = false; return;
+      if (existsSync(jobDir)) trackScratch(state, jobId, 'failed');
+      complete(state, selected, false, Date.now()); state.inflight = null; persist(); retire(); running = false; return;
     }
     let done = false; let timedOut = false; let killer;
     const groupAlive = (pid) => { if (!Number.isInteger(pid) || pid <= 0) return false; try { process.kill(-pid, 0); return true; } catch (error) { return error.code === 'EPERM'; } };
     const terminate = (pid) => { try { process.kill(-pid, 'SIGTERM'); } catch {} killer = setTimeout(() => { try { process.kill(-pid, 'SIGKILL'); } catch {} }, 2000); };
     const timeout = setTimeout(() => { timedOut = true; if (child?.pid) terminate(child.pid); }, workerTimeoutMs);
-    const finish = (ok) => { if (done) return; done = true; clearTimeout(timeout); const unchanged = Object.entries(selected).every(([id, generation]) => state.pending[id]?.generation === generation); complete(state, selected, ok, Date.now()); state.inflight = null; if (ok && unchanged) queueRetirement(state, jobId); persist(); retire(); running = false; child = null; };
+    const finish = (ok) => { if (done) return; done = true; clearTimeout(timeout); const unchanged = Object.entries(selected).every(([id, generation]) => state.pending[id]?.generation === generation); const eligible = ok ? selected : Object.fromEntries(Object.entries(selected).filter(([id]) => !state.pending[id]?.verificationPending && !state.pending[id]?.needsRecovery)); complete(state, eligible, ok, Date.now()); state.inflight = null; if (ok && unchanged) queueRetirement(state, jobId); else trackScratch(state, jobId, ok ? 'superseded' : 'failed'); persist(); retire(); running = false; child = null; };
     child.on('error', (error) => { console.error(`Cannot start maintenance: ${error.message}`); finish(false); });
     const spawned = child;
     child.on('exit', (code) => {
       if (done) return;
       const pid = spawned.pid;
-      const settled = () => {
+      const settled = async () => {
         if (done) return;
         if (groupAlive(pid)) { setTimeout(settled, 200); return; }
         if (killer) clearTimeout(killer);
@@ -346,12 +388,18 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
           const st = lstatSync(proposalFile);
           if (!st.isFile() || st.isSymbolicLink() || st.nlink !== 1 || st.size > 1024 * 1024) throw Error('Invalid proposal file');
           const proposal = JSON.parse(readFileSync(proposalFile, 'utf8'));
+          clearTimeout(timeout);
+          const expectedIndex = snapshot();
+          const verification = verifyRemote({ expected: [expectedIndex], codexPath, cwd: jobDir, args: ['--enable', 'apps', ...driveReadOverrides, ...restrictions], lockFd: requireLock ? lockFd : undefined, timeoutMs: workerTimeoutMs });
+          child = verification.child;
+          if (!await verification.promise || stopping) throw Error('Remote asset index verification is pending');
           const recoveryId = randomUUID();
           state.inflight = { selected, startedAt: now, phase: 'applying', recoveryId, jobId }; persist();
-          const result = apply({ proposal, selected: Object.keys(selected), indexPath, assetRoot: resolve(indexPath, '..'), scratchDir: jobDir, recoveryDir: join(stateDir, 'recovery'), recoveryId });
+          const result = apply({ proposal, selected: Object.keys(selected), indexPath, assetRoot: resolve(indexPath, '..'), scratchDir: jobDir, recoveryDir: join(stateDir, 'recovery'), recoveryId, expectedIndex });
           if (result.recovery) {
             const classification = classify({ recovery: result.recovery, assetRoot: resolve(indexPath, '..'), indexPath, selected: Object.keys(selected) });
             setRecoveryState(state, selected, result.recovery, classification);
+            if (classification.status !== 'replan') for (const id of Object.keys(selected)) if (state.pending[id]) state.pending[id].planningJob = jobId;
             if (classification.status === 'verification_pending') state.batchJobs[result.recovery] = { jobId, products: Object.keys(selected) };
           }
           ok = result.status === 'no_changes' && Object.keys(selected).every((id) => !state.pending[id]?.verificationPending);
@@ -368,14 +416,25 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
   const timer = setInterval(tick, tickMs); const refreshTimer = setInterval(refresh, refreshMs);
   return stop;
 }
-if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+export function isEntrypoint(arg, moduleUrl) {
+  try { return !!arg && realpathSync(arg) === realpathSync(fileURLToPath(moduleUrl)); }
+  catch { return false; }
+}
+if (isEntrypoint(process.argv[1], import.meta.url)) {
   const root = process.env.FLEET_ROOT || join(homedir(), 'Desktop/fleet');
   const drive = process.env.FLEET_ASSET_INDEX;
   const state = process.env.FLEET_ASSET_WATCH_STATE || join(homedir(), 'Library/Application Support/Fleet/Product Asset Watch');
   const codex = process.env.FLEET_CODEX || join(homedir(), '.local/bin/codex');
   try {
     if (process.argv[2] === '--status') { console.log(JSON.stringify(status(JSON.parse(readFileSync(join(state, 'state.json'), 'utf8'))), null, 2)); }
-    else { if (!drive || !isAbsolute(drive)) throw Error('FLEET_ASSET_INDEX must be an absolute path'); start({ fleetRoot: root, indexPath: drive, stateDir: state, codexPath: codex }); }
+    else {
+      if (!drive || !isAbsolute(drive)) throw Error('FLEET_ASSET_INDEX must be an absolute path');
+      if (process.argv[2] === '--resolve') {
+        const fd = Number(process.env.FLEET_ASSET_LOCK_FD); assertWatcherLock(state, fd);
+        const path = join(state, 'state.json'); const data = JSON.parse(readFileSync(path, 'utf8'));
+        resolveRecovery({ state: data, id: process.argv[3], stateDir: state, indexPath: drive }); save(path, data); console.log(JSON.stringify(status(data), null, 2));
+      } else start({ fleetRoot: root, indexPath: drive, stateDir: state, codexPath: codex });
+    }
   }
   catch (error) { console.error(error.stack); process.exitCode = 1; }
 }

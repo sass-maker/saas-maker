@@ -1,11 +1,26 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, renameSync, symlinkSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, renameSync, symlinkSync, openSync, closeSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { dirname, basename } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { execFileSync, spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
-import { relevant, projects, worktrees, enqueue, complete, start, fingerprint, mcpOverrides, affectedProducts, videoFingerprint, setRecoveryState, recordVerification, status, planningReadOverrides, queueRetirement, retireEligibleJobs, selectReady } from '../launchkit/scripts/asset-watch.mjs';
+import { randomUUID } from 'node:crypto';
+import { relevant, eventRelevant, projects, worktrees, enqueue, complete, start, fingerprint, mcpOverrides, affectedProducts, videoFingerprint, setRecoveryState, recordVerification, status, planningReadOverrides, queueRetirement, retireEligibleJobs, selectReady, resolveRecovery, trackScratch, assertWatcherLock } from '../launchkit/scripts/asset-watch.mjs';
+
+test('entrypoint runs when its parent path is a symlink alias', () => {
+  const root = mkdtempSync(join(tmpdir(), 'asset-watch-entrypoint-'));
+  const state = join(root, 'state'); mkdirSync(state);
+  writeFileSync(join(state, 'state.json'), JSON.stringify({ pending: { example: { retryAt: 0 } } }));
+  const source = fileURLToPath(new URL('../launchkit/scripts/asset-watch.mjs', import.meta.url));
+  const alias = join(root, 'scripts-alias'); symlinkSync(dirname(source), alias, 'dir');
+  const output = execFileSync(process.execPath, [join(alias, basename(source)), '--status'], {
+    encoding: 'utf8', timeout: 5000, env: { ...process.env, FLEET_ASSET_WATCH_STATE: state },
+  });
+  assert.equal(JSON.parse(output)[0].id, 'example');
+});
 
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), 'asset-watch-test-'));
@@ -54,15 +69,69 @@ test('new edits preserve recovery identity and unresolved verification', () => {
   assert.equal(state.pending.a.recovery, '/private/recovery/batch');
   assert.equal(status(state)[0].status, 'verification_pending');
   for (let i = 0; i < 5; i++) recordVerification(state, { a: 2 }, '/private/recovery/batch', false, 100 + i);
-  assert.equal(status(state)[0].status, 'needs_recovery');
-  assert.match(status(state)[0].reason, /five attempts/);
+  assert.equal(status(state)[0].status, 'verification_pending');
+  assert.equal(state.pending.a.verificationAttempts, 5);
+  assert.equal(state.pending.a.failures, 0);
   enqueue(state, 'a', 200);
-  assert.equal(status(state)[0].status, 'needs_recovery');
+  assert.equal(status(state)[0].status, 'verification_pending');
 });
 
 test('planner has no Drive fetch tool', () => {
   assert.ok(planningReadOverrides.some((entry) => entry.includes('tools.get_file_metadata')));
   assert.ok(planningReadOverrides.every((entry) => !entry.includes('tools.fetch')));
+});
+
+test('temporary failures retain capped retry and do not become terminal recovery', () => {
+  const state = { pending: {} }; enqueue(state, 'a', 1);
+  for (let i = 0; i < 12; i++) complete(state, { a: 1 }, false, 100 + i);
+  assert.equal(status(state)[0].status, 'pending');
+  assert.equal(state.pending.a.retryAt, 111 + 3600000);
+});
+
+test('old failed scratch is eligible for rotation while recent and referenced evidence stays', () => {
+  const state = { pending: {} }; const ids = Array.from({ length: 12 }, () => randomUUID());
+  ids.forEach((id, i) => trackScratch(state, id, 'failed', i, 10));
+  assert.equal(state.retirements[ids[0]].status, 'eligible');
+  assert.equal(state.retirements[ids[1]].status, 'eligible');
+  assert.equal(state.retirements[ids[2]], undefined);
+});
+
+test('same-time scratch rotation retains the most recently recorded evidence', () => {
+  const state = { pending: {} }; const ids = Array.from({ length: 12 }, () => randomUUID());
+  ids.forEach((id) => trackScratch(state, id, 'failed', 100, 10));
+  assert.equal(state.retirements[ids[0]].status, 'eligible');
+  assert.equal(state.retirements[ids[11]], undefined);
+});
+
+test('stale checkpoints are pruned only after a complete inventory', () => {
+  const { root, indexPath, stateDir } = fixture(); mkdirSync(stateDir);
+  const file = join(stateDir, 'state.json');
+  const oldState = { pending: {}, checkpoints: { stale: 'old' } };
+  writeFileSync(file, JSON.stringify(oldState));
+  const base = { fleetRoot: root, indexPath, stateDir, codexPath: '/unused', debounceMs: 100000, overrides: () => [], requireLock: false };
+  let stop = start({ ...base, records: () => { throw Error('inventory unavailable'); } }); stop();
+  assert.equal(JSON.parse(readFileSync(file, 'utf8')).checkpoints.stale, 'old');
+  stop = start({ ...base, records: () => [] }); stop();
+  assert.equal(JSON.parse(readFileSync(file, 'utf8')).checkpoints.stale, undefined);
+});
+
+test('resolve reclassifies a recovery group without deleting backup evidence', () => {
+  const { root, stateDir, indexPath } = fixture(); const recovery = join(stateDir, 'recovery', randomUUID());
+  mkdirSync(recovery, { recursive: true }); writeFileSync(join(recovery, 'backup'), 'keep');
+  const state = { pending: { example: { generation: 1, needsRecovery: 'partial', recovery }, other: { generation: 2, needsRecovery: 'partial', recovery } } };
+  assert.throws(() => resolveRecovery({ state, id: 'example', stateDir, indexPath, classify: () => ({ status: 'needs_recovery', reason: 'partial' }) }), /requires inspection/);
+  resolveRecovery({ state, id: 'example', stateDir, indexPath, classify: () => ({ status: 'verification_pending' }) });
+  assert.equal(state.pending.example.verificationPending, true); assert.equal(state.pending.other.verificationPending, true);
+  assert.equal(readFileSync(join(recovery, 'backup'), 'utf8'), 'keep');
+});
+
+test('events ignore Git ignored files and rendered video frames', () => {
+  const { project } = fixture(); writeFileSync(join(project, '.gitignore'), 'ignored/\n');
+  assert.equal(eventRelevant('git', project, 'ignored/noise.png'), false);
+  assert.equal(eventRelevant('git', project, 'source/logo.png'), true);
+  assert.equal(eventRelevant('videos', project, 'check/frame.png'), false);
+  assert.equal(eventRelevant('videos', project, 'frames/frame.png'), false);
+  assert.equal(eventRelevant('videos', project, 'launch.mp4'), true);
 });
 
 test('retirement moves only eligible, unreferenced scratch and preserves all other state', () => {
@@ -162,7 +231,7 @@ test('a real source edit queues and invokes the worker', async () => {
   const calls = join(root, 'calls');
   writeFileSync(worker, `#!/bin/sh\necho run >> '${calls}'\nwhile [ "$1" != "-C" ]; do shift; done\ncd "$2"\nprintf \'{"version":1,"changes":[]}\' > proposal.json\n`, { mode: 0o700 });
   const trashed = join(root, 'trashed'); mkdirSync(trashed);
-  const stop = start({ fleetRoot: root, indexPath, stateDir, codexPath: worker, debounceMs: 100, tickMs: 50, records: () => [], overrides: () => [], driveReady: () => true, apply: () => ({ status: 'no_changes' }), trash: (path) => renameSync(path, join(trashed, path.split('/').at(-1))), requireLock: false });
+  const stop = start({ fleetRoot: root, indexPath, stateDir, codexPath: worker, debounceMs: 100, tickMs: 50, records: () => [], overrides: () => [], driveReady: () => true, snapshot: () => ({ fileId: 'indexid', afterSha256: 'a'.repeat(64) }), verifyRemote: () => ({ child: {}, promise: Promise.resolve(true) }), apply: () => ({ status: 'no_changes' }), trash: (path) => renameSync(path, join(trashed, path.split('/').at(-1))), requireLock: false });
   try {
     const firstDeadline = Date.now() + 5000;
     while ((!existsSync(calls) || JSON.parse(readFileSync(join(stateDir, 'state.json'), 'utf8')).pending.example) && Date.now() < firstDeadline) await delay(50);
@@ -234,7 +303,7 @@ test('scratch limit leaves work pending without starting a worker', async () => 
   const { root, indexPath, stateDir } = fixture(); const scratch = join(stateDir, 'worker'); mkdirSync(scratch, { recursive: true });
   for (let i = 0; i < 50; i++) mkdirSync(join(scratch, String(i)));
   const stop = start({ fleetRoot: root, indexPath, stateDir, codexPath: '/no/worker', debounceMs: 0, tickMs: 20, records: () => [], overrides: () => [], driveReady: () => true, requireLock: false });
-  try { await delay(100); const state = JSON.parse(readFileSync(join(stateDir, 'state.json'), 'utf8')); assert.ok(state.pending.example.failures); assert.equal(status(state)[0].status, 'needs_recovery'); } finally { stop(); }
+  try { await delay(100); const state = JSON.parse(readFileSync(join(stateDir, 'state.json'), 'utf8')); assert.ok(state.pending.example.failures); assert.equal(status(state)[0].status, 'pending'); } finally { stop(); }
 });
 
 test('planner spawn failure remains pending and does not leave a polling loop', async () => {
@@ -287,6 +356,22 @@ test('prose SUCCESS without a structured proposal never clears the queue', async
   } finally { stop(); }
 });
 
+test('failed remote index verification cannot acknowledge even an empty proposal', async () => {
+  const { root, indexPath, stateDir } = fixture(); const worker = join(root, 'proposal');
+  writeFileSync(worker, '#!/bin/sh\nwhile [ "$1" != "-C" ]; do shift; done\ncd "$2"\nprintf \'{"version":1,"changes":[]}\' > proposal.json\n', { mode: 0o700 });
+  let applied = false;
+  const stop = start({ fleetRoot: root, indexPath, stateDir, codexPath: worker, debounceMs: 0, tickMs: 20, records: () => [], overrides: () => [], driveReady: () => true, snapshot: () => ({ fileId: 'indexid', afterSha256: 'a'.repeat(64) }), verifyRemote: () => ({ child: {}, promise: Promise.resolve(false) }), apply: () => { applied = true; return { status: 'no_changes' }; }, requireLock: false });
+  try {
+    const deadline = Date.now() + 5000;
+    while (Date.now() < deadline) {
+      const state = JSON.parse(readFileSync(join(stateDir, 'state.json'), 'utf8'));
+      if (state.pending.example?.failures) { assert.equal(applied, false); return; }
+      await delay(50);
+    }
+    assert.fail('unverified index did not leave work pending');
+  } finally { stop(); }
+});
+
 test('worker timeout kills a TERM-resistant group before retry can begin', async () => {
   const { root, indexPath, stateDir } = fixture();
   const worker = join(root, 'resistant'); writeFileSync(worker, `#!${process.execPath}\nprocess.on('SIGTERM', () => {}); setInterval(() => {}, 1000);\n`, { mode: 0o700 });
@@ -317,4 +402,13 @@ test('supervisor lock remains held by an inherited child', async () => {
   assert.equal(blocked, true, 'a surviving child retains the lock');
   await delay(2300);
   execFileSync('/usr/bin/python3', [supervisor, stateDir, '/usr/bin/true'], { stdio: 'ignore' });
+});
+
+test('lock verification acquires the actual state lock and excludes a second owner', () => {
+  const { stateDir } = fixture(); mkdirSync(stateDir);
+  const path = join(stateDir, 'watch.lock'); const fd = openSync(path, 'w+');
+  try {
+    assertWatcherLock(stateDir, fd);
+    assert.throws(() => execFileSync('/usr/bin/python3', ['-c', 'import fcntl,sys; f=open(sys.argv[1],"r+"); fcntl.flock(f,fcntl.LOCK_EX|fcntl.LOCK_NB)', path], { stdio: 'ignore' }));
+  } finally { closeSync(fd); }
 });
