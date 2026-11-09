@@ -412,6 +412,26 @@ test('restart before a recovery manifest is created is safely replannable', () =
   assert.equal(state.inflight, null);
 });
 
+test('startup persists an unknown preparation state and passes it back to the next classification', async () => {
+  const { root, indexPath, stateDir } = fixture(); mkdirSync(stateDir);
+  const recoveryId = '11111111-1111-4111-8111-111111111111';
+  writeFileSync(join(stateDir, 'state.json'), JSON.stringify({ pending: { example: { generation: 1, changedAt: 1, failures: 0, retryAt: 0, sources: [] } }, checkpoints: {}, inflight: { phase: 'applying', selected: { example: 1 }, recoveryId } }));
+  const calls = []; const oldNow = Date.now; let now = 1000000; Date.now = () => now;
+  const stop = start({ fleetRoot: root, indexPath, stateDir, codexPath: '/unused', debounceMs: 0, tickMs: 20, records: () => [], overrides: () => [], driveReady: () => true, classify: (args) => { calls.push(args); return calls.length === 1 ? { status: 'retryable', expectPrepared: false } : { status: 'replan' }; }, requireLock: false });
+  try {
+    let state = JSON.parse(readFileSync(join(stateDir, 'state.json'), 'utf8'));
+    assert.equal(state.pending.example.expectPrepared, false);
+    now += 61000;
+    const deadline = oldNow() + 5000;
+    while (oldNow() < deadline) {
+      state = JSON.parse(readFileSync(join(stateDir, 'state.json'), 'utf8'));
+      if (calls.length >= 2 && state.pending.example.classificationPending === false) { assert.equal(calls[1].expectPrepared, false); assert.equal('expectPrepared' in state.pending.example, false); return; }
+      await delay(50);
+    }
+    assert.fail('preparation state was not read back');
+  } finally { stop(); Date.now = oldNow; }
+});
+
 test('restart with a partial prepared batch surfaces needs-recovery and preserves backup', () => {
   const { root, indexPath, stateDir } = fixture(); mkdirSync(stateDir);
   const recoveryId = '11111111-1111-4111-8111-111111111111';

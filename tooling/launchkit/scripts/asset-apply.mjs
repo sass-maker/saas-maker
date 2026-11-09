@@ -20,10 +20,10 @@ export function validateAsset(kind, filename, bytes) {
     if (bytes.length > 1024 * 1024) throw Error('Text asset exceeds size limit');
     let value; try { value = new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { throw Error('Invalid UTF-8'); }
     if (/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\b(?:sk-proj-|sk-|sk_live_|ghp_|github_pat_|xox[baprs]-)[a-zA-Z0-9_-]{16,}|\bAKIA[A-Z0-9]{16}\b/i.test(value)) throw Error('Possible secret in proposed text asset');
-    const assignments = value.matchAll(/\b(api[_-]?key|access[_-]?token|client[_-]?secret|password|secret)["']?\s*[:=]\s*["']?([^\s"',}]{16,})/gi);
-    for (const [, key, candidate] of assignments) {
+    const assignments = value.matchAll(/\b(api[_-]?key|access[_-]?token|client[_-]?secret|password|secret)["']?\s*[:=]\s*["']?([^\s"',}]{8,})/gi);
+    for (const [, , candidate] of assignments) {
       const classes = [/[a-z]/, /[A-Z]/, /\d/, /[^a-zA-Z0-9]/].filter((pattern) => pattern.test(candidate)).length;
-      if (classes >= (/^(password|secret)$/i.test(key) ? 3 : 2)) throw Error('Possible secret in proposed text asset');
+      if (classes >= 3 || (candidate.length >= 20 && classes >= 2) || /^[a-zA-Z0-9]{24,}$/.test(candidate)) throw Error('Possible secret in proposed text asset');
     }
     if (extension === 'json') { try { JSON.parse(value); } catch { throw Error('Invalid JSON asset'); } }
     if (extension === 'svg' && (!/^\s*(?:<\?xml[^>]*>\s*)?<svg\b/i.test(value) || /<!DOCTYPE|<!ENTITY|<script\b|\bon\w+\s*=/i.test(value))) throw Error('Invalid or unsafe SVG asset');
@@ -163,6 +163,7 @@ function driveServiceAvailable() {
 function recoveryError(error, area, serviceAvailable, expectPrepared = false) {
   const transient = new Set(['EIO', 'EAGAIN', 'EBUSY', 'ETIMEDOUT', 'ENOTCONN', 'EINTR', 'ESTALE', 'ENXIO', 'ENODEV', 'ECONNRESET']);
   if (transient.has(error.code) || error.signal) return { status: 'retryable', expectPrepared, reason: 'Recovery or Drive metadata is temporarily unavailable' };
+  if (area === 'mount' && (error.code === 'ENOENT' || error.status === 1)) return { status: 'retryable', expectPrepared, reason: 'Drive mount or index is unavailable' };
   if (area === 'drive' && (error.code === 'ENOENT' || error.status === 1)) {
     let available = false;
     try { available = serviceAvailable(); } catch {}
@@ -184,26 +185,29 @@ export function classifyRecovery({ recovery, assetRoot, indexPath, selected, get
   try {
     if (resolve(indexPath) !== resolve(join(assetRoot, 'Fleet-product-asset-index.json'))) throw Error('Invalid asset index');
     const manifest = JSON.parse(bounded(manifestPath, MAX_INDEX).toString('utf8'));
-    area = 'drive';
-    const index = JSON.parse(bounded(indexPath, MAX_INDEX).toString('utf8'));
-    if (manifest.status !== 'prepared' || !Array.isArray(manifest.changes) || !manifest.changes.length || manifest.changes.length > 10 || !Array.isArray(index.products)) throw Error('Invalid recovery manifest');
-    area = 'recovery';
+    if (manifest.status !== 'prepared' || !Array.isArray(manifest.changes) || !manifest.changes.length || manifest.changes.length > 10) throw Error('Invalid recovery manifest');
     const resultPath = join(recovery, 'result.json');
     const result = present(resultPath) ? JSON.parse(bounded(resultPath, MAX_INDEX).toString('utf8')) : null;
     if (result && !['verification_pending', 'uncertain'].includes(result.status)) throw Error('Invalid recovery result');
     const markerPath = join(recovery, 'applying.txt');
     const marked = present(markerPath);
     if (marked && bounded(markerPath, 64).toString('utf8') !== 'applying\n') throw Error('Invalid recovery marker');
-    const states = [];
     for (const [i, entry] of manifest.changes.entries()) {
       if (!selected.includes(entry.productId) || !safeId(entry.productId) || typeof entry.filename !== 'string' || basename(entry.filename) !== entry.filename || entry.filename === '.' || entry.filename === '..' || entry.filename.includes('\\') || !/^[a-f0-9]{64}$/.test(entry.beforeSha256) || !/^[a-f0-9]{64}$/.test(entry.afterSha256) || entry.backup !== `${i}.bak`) throw Error('Invalid recovery entry');
+      if (digest(bounded(join(recovery, entry.backup), MAX_ASSET)) !== entry.beforeSha256) throw Error('Recovery backup mismatch');
+    }
+    area = 'mount';
+    inspect(assetRoot, true); inspect(join(assetRoot, 'Submission kits'), true); inspect(indexPath);
+    if (!safeId(getId(indexPath))) return { status: 'retryable', expectPrepared: true, reason: 'Drive index identity is unavailable' };
+    const index = JSON.parse(bounded(indexPath, MAX_INDEX).toString('utf8'));
+    if (!Array.isArray(index.products)) throw Error('Invalid asset index');
+    area = 'drive';
+    const states = [];
+    for (const entry of manifest.changes) {
       const products = index.products.filter((p) => p?.id === entry.productId);
       if (products.length !== 1 || !Array.isArray(products[0].assets)) throw Error('Unrecognized recovery product');
       const assets = products[0].assets.filter((a) => a?.filename === entry.filename && a.archived !== true);
       if (assets.length !== 1 || driveId(assets[0].driveUrl, false) !== entry.fileId) throw Error('Recovery asset changed in index');
-      area = 'recovery';
-      if (digest(bounded(join(recovery, entry.backup), MAX_ASSET)) !== entry.beforeSha256) throw Error('Recovery backup mismatch');
-      area = 'drive';
       const folder = join(assetRoot, 'Submission kits', entry.productId);
       inspect(assetRoot, true); inspect(join(assetRoot, 'Submission kits'), true); inspect(folder, true);
       const target = join(folder, entry.filename); inspect(target);

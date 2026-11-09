@@ -4,7 +4,9 @@ import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, symlinkSync, renam
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { applyProposal, classifyRecovery, validateAsset } from '../launchkit/scripts/asset-apply.mjs';
+import { start, resolveRecovery } from '../launchkit/scripts/asset-watch.mjs';
 
 const hash = (value) => createHash('sha256').update(value).digest('hex');
 function fixture() {
@@ -115,9 +117,43 @@ test('missing or unsafe recovery evidence and missing Drive items require recove
 
 test('missing xattr requires recovery with a live service but retries an unavailable service', () => {
   const f = fixture(); const result = applyProposal(f);
-  f.getId = () => { const error = Error('xattr missing'); error.status = 1; throw error; };
+  f.getId = (path) => { if (path === f.indexPath) return 'indexid'; const error = Error('xattr missing'); error.status = 1; throw error; };
   assert.equal(classifyRecovery({ ...f, recovery: result.recovery, serviceAvailable: () => true, expectPrepared: true }).status, 'needs_recovery');
   assert.equal(classifyRecovery({ ...f, recovery: result.recovery, serviceAvailable: () => false, expectPrepared: true }).status, 'retryable');
+});
+
+test('missing mount, submission folder, index or index provider identity remains retryable while Drive is running', () => {
+  for (const mode of ['root', 'kits', 'index', 'index-xattr']) {
+    const f = fixture(); const result = applyProposal(f);
+    const target = mode === 'root' ? f.assetRoot : mode === 'kits' ? join(f.assetRoot, 'Submission kits') : f.indexPath;
+    if (mode === 'index-xattr') {
+      const original = f.getId; f.getId = (path) => { if (path === f.indexPath) { const error = Error('index xattr unavailable'); error.status = 1; throw error; } return original(path); };
+    } else renameSync(target, target + '.offline');
+    const state = classifyRecovery({ recovery: result.recovery, assetRoot: f.assetRoot, indexPath: f.indexPath, selected: f.selected, getId: f.getId, serviceAvailable: () => true, expectPrepared: true });
+    assert.equal(state.status, 'retryable', mode); assert.equal(state.expectPrepared, true);
+  }
+});
+
+test('interrupted apply at startup remains pending if the Drive index is not mounted yet', () => {
+  const f = fixture(); const result = applyProposal(f); const recoveryId = result.recovery.split('/').at(-1);
+  renameSync(f.indexPath, f.indexPath + '.offline');
+  const fleet = join(f.root, 'fleet'); const project = join(fleet, 'project'); mkdirSync(project, { recursive: true });
+  execFileSync('git', ['init', '-q', project]);
+  execFileSync('git', ['-C', project, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '--allow-empty', '-qm', 'base']);
+  mkdirSync(join(fleet, 'site-health/catalog'), { recursive: true });
+  writeFileSync(join(fleet, 'site-health/catalog/projects.json'), JSON.stringify({ projects: [{ id: 'product', lifecycle: { portfolioStatus: 'active' }, repositories: { localPath: 'project' } }] }));
+  writeFileSync(join(f.root, 'state.json'), JSON.stringify({ pending: { product: { generation: 1, changedAt: 1, failures: 0, retryAt: 0, sources: [] } }, checkpoints: {}, inflight: { phase: 'applying', selected: { product: 1 }, recoveryId } }));
+  const stop = start({ fleetRoot: fleet, indexPath: f.indexPath, stateDir: f.root, codexPath: '/unused', records: () => [], requireLock: false, classify: (args) => classifyRecovery({ ...args, getId: f.getId, serviceAvailable: () => true }) });
+  stop();
+  const entry = JSON.parse(readFileSync(join(f.root, 'state.json'), 'utf8')).pending.product;
+  assert.equal(entry.needsRecovery, null); assert.equal(entry.verificationPending, true); assert.equal(entry.expectPrepared, true);
+});
+
+test('resolve does not convert an unavailable Drive index into a permanent or successful decision', () => {
+  const f = fixture(); const result = applyProposal(f); renameSync(f.indexPath, f.indexPath + '.offline');
+  const state = { pending: { product: { generation: 1, needsRecovery: 'manual review', recovery: result.recovery } } };
+  assert.throws(() => resolveRecovery({ state, id: 'product', stateDir: f.root, indexPath: f.indexPath, classify: (args) => classifyRecovery({ ...args, getId: f.getId, serviceAvailable: () => true }) }), /temporarily unavailable/);
+  assert.equal(state.pending.product.needsRecovery, 'manual review');
 });
 
 test('partial two-file application is held for recovery and never auto-reapplied', () => {
@@ -162,6 +198,8 @@ test('checks expected formats and rejects malformed or sensitive proposed text',
   for (const value of ['sk_live_' + 'a'.repeat(20), 'ghp_' + 'b'.repeat(20), 'github_pat_' + 'c'.repeat(20), 'AKIA' + 'D'.repeat(16), 'xoxb-' + 'e'.repeat(20), 'password: Abcdef123456789!']) assert.throws(() => validateAsset('brief', 'brief.txt', Buffer.from(value)));
   assert.throws(() => validateAsset('json', 'submission.json', Buffer.from('{"client_secret":"Abcdef123456789!"}')));
   assert.throws(() => validateAsset('json', 'submission.json', Buffer.from('{"password":"Abcdef123456789!"}')));
+  for (const value of ['password: P@ssw0rd2024!', 'password=Tr0ub4dor&3xyz', 'password: Hunter2!x', 'password: hunter2hunter2hunter2', 'password=correcthorsebatterystaple', 'api_key: abcdefabcdefabcdefabcdef', 'secret: ' + 'a1'.repeat(32)]) assert.throws(() => validateAsset('brief', 'brief.txt', Buffer.from(value)));
+  assert.throws(() => validateAsset('json', 'submission.json', Buffer.from('{"apiKey":"abcdefabcdefabcdefabcdef"}')));
   assert.doesNotThrow(() => validateAsset('brief', 'brief.txt', Buffer.from('Demo password: available on request. Our secret: integration-first.')));
   assert.throws(() => validateAsset('screenshot', 'image.svg', Buffer.from('<svg/>')));
 });
