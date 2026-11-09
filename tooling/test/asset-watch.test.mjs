@@ -34,6 +34,50 @@ function fixture() {
   return { root, project, stateDir: join(root, 'state'), indexPath: join(root, 'unavailable-index.json') };
 }
 
+test('live watchers use refreshed inventory and reconcile events during catalog failure', async () => {
+  const { root, project, stateDir, indexPath } = fixture();
+  const shared = join(project, 'apps/showcase/public/product-assets');
+  mkdirSync(join(shared, 'new-product'), { recursive: true });
+  mkdirSync(join(shared, 'later-product'), { recursive: true });
+  for (const id of ['new-product', 'later-product']) {
+    const repo = join(root, id); mkdirSync(repo);
+    execFileSync('git', ['init', '-q', repo]);
+    execFileSync('git', ['-C', repo, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '--allow-empty', '-qm', 'base']);
+  }
+  const catalogPath = join(root, 'site-health/catalog/projects.json');
+  const product = (id, localPath) => ({ id, lifecycle: { portfolioStatus: 'active' }, repositories: { localPath } });
+  const catalog = { projects: [product('saas-maker', 'project')] };
+  writeFileSync(catalogPath, JSON.stringify(catalog));
+  const stop = start({ fleetRoot: root, indexPath, stateDir, codexPath: '/unused', videoRoot: join(root, 'videos'), records: () => [], debounceMs: 1000000, maxWaitMs: 1000000, tickMs: 20, refreshMs: 80, requireLock: false });
+  const read = () => JSON.parse(readFileSync(join(stateDir, 'state.json'), 'utf8'));
+  const waitFor = async (predicate) => {
+    for (let i = 0; i < 150; i++) { const state = read(); if (predicate(state)) return state; await delay(20); }
+    assert.fail('Timed out waiting for watcher state');
+  };
+  try {
+    await waitFor((s) => s.pending['saas-maker']);
+    catalog.projects.push(product('new-product', 'new-product'));
+    writeFileSync(catalogPath, JSON.stringify(catalog));
+    const before = await waitFor((s) => s.pending['new-product']);
+    const generation = before.pending['new-product'].generation;
+    const source = join(realpathSync(project), 'apps/showcase/public/product-assets/new-product/logo.png');
+    writeFileSync(join(shared, 'new-product/logo.png'), 'new image');
+    const routed = await waitFor((s) => s.pending['new-product']?.generation > generation && s.pending['new-product'].sources.includes(source));
+    assert.ok(routed.pending['saas-maker']);
+
+    writeFileSync(catalogPath, '{');
+    await delay(300);
+    const laterSource = join(realpathSync(project), 'apps/showcase/public/product-assets/later-product/logo.png');
+    writeFileSync(join(shared, 'later-product/logo.png'), 'later image');
+    await waitFor((s) => s.pending['saas-maker'].sources.includes(laterSource));
+    catalog.projects.push(product('later-product', 'later-product'));
+    writeFileSync(catalogPath, JSON.stringify(catalog));
+    const recovered = await waitFor((s) => s.pending['later-product']?.sources.includes(realpathSync(project)));
+    assert.ok(recovered.pending['new-product']);
+    assert.ok(recovered.pending['saas-maker']);
+  } finally { await stop(); }
+});
+
 test('ignores generated files and secrets while observing source edits', () => {
   assert.equal(relevant('src/logo.svg'), true);
   for (const path of ['node_modules/a.js', '.git/index', 'src/.env.production', 'secret.key', 'wrangler.toml', '../secret', '/tmp/a', '']) assert.equal(relevant(path), false);

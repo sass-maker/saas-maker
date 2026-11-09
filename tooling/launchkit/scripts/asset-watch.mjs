@@ -312,6 +312,7 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
   for (const item of status(state)) if (item.status === 'needs_recovery') console.error(`Product ${item.id} needs recovery: ${item.reason}; backup: ${item.recovery}`);
   for (const item of status(state)) if (item.status === 'cleanup_failed' || item.status === 'cleanup_unknown') console.error(`Scratch ${item.id} ${item.status}: ${item.reason}`);
   const watchers = new Map(); const observedEvents = new Set(); let running = false; let stopping = false; let child;
+  let currentActiveIds = new Set(); let inventoryValid = false;
   const persist = () => save(statePath, state);
   persist();
   const retire = () => retireEligibleJobs({ state, workerDir, persist, trash });
@@ -335,7 +336,10 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
         const videos = join(videoRoot, product.id, 'out');
         if (existsSync(videos) && !lstatSync(videos).isSymbolicLink()) paths.set(`${product.id}\0${videos}`, { id: product.id, tree: videos, kind: 'videos' });
       }
-      for (const [key, watcher] of watchers) if (!paths.has(key)) { watcher.close(); watchers.delete(key); }
+      inventoryValid = inventoryComplete;
+      if (inventoryValid) currentActiveIds = activeIds;
+      else observedEvents.clear();
+      if (inventoryValid) for (const [key, watcher] of watchers) if (!paths.has(key)) { watcher.close(); watchers.delete(key); }
       for (const [key, { id, tree, base, kind }] of paths) {
         try {
           if (!watchers.has(key)) {
@@ -343,14 +347,15 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
               try {
                 const relative = name?.toString();
                 if (!(kind === 'git' && id === 'site-health' && relative === 'catalog/projects.json') && !eventRelevant(kind, tree, relative)) return;
-                for (const productId of kind === 'git' ? affectedProducts(id, relative, activeIds) : [id]) enqueue(state, productId, Date.now(), relative ? join(tree, relative) : tree);
-                persist(); observedEvents.add(key);
+                for (const productId of kind === 'git' ? affectedProducts(id, relative, currentActiveIds) : [id]) enqueue(state, productId, Date.now(), relative ? join(tree, relative) : tree);
+                persist(); if (inventoryValid) observedEvents.add(key);
               }
               catch (error) { console.error(`Cannot persist change for ${id}: ${error.message}`); process.exitCode = 1; stop(); }
             });
             watcher.on('error', (error) => { console.error(`Watch failed for ${id}: ${error.message}`); watcher.close(); watchers.delete(key); });
             watchers.set(key, watcher);
           }
+          if (!inventoryValid) continue;
           const snapshot = kind === 'git' ? fingerprint(tree, id === 'site-health' ? ['catalog/projects.json'] : []) : videoFingerprint(tree);
           if (state.checkpoints[key] !== snapshot) {
             if (!observedEvents.has(key)) {
@@ -369,10 +374,10 @@ export function start({ fleetRoot, indexPath, stateDir, codexPath, videoRoot = j
         if (pruned) persist();
       }
       console.log(`Watching ${watchers.size} project worktrees`);
-    } catch (error) { console.error(`Cannot refresh project inventory: ${error.message}`); }
+    } catch (error) { inventoryValid = false; observedEvents.clear(); console.error(`Cannot refresh project inventory: ${error.message}`); }
   }
   function tick() {
-    if (running || stopping) return;
+    if (running || stopping || !inventoryValid) return;
     const now = Date.now();
     const { awaiting, selected } = selectReady(state, now, debounceMs, maxWaitMs);
     if (!Object.keys(selected).length) return;
