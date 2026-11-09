@@ -122,16 +122,23 @@ test('missing xattr requires recovery with a live service but retries an unavail
   assert.equal(classifyRecovery({ ...f, recovery: result.recovery, serviceAvailable: () => false, expectPrepared: true }).status, 'retryable');
 });
 
-test('missing mount, submission folder, index or index provider identity remains retryable while Drive is running', () => {
-  for (const mode of ['root', 'kits', 'index', 'index-xattr']) {
+test('missing mount, index or index provider identity remains retryable while Drive is running', () => {
+  for (const mode of ['root', 'index', 'index-xattr']) {
     const f = fixture(); const result = applyProposal(f);
-    const target = mode === 'root' ? f.assetRoot : mode === 'kits' ? join(f.assetRoot, 'Submission kits') : f.indexPath;
+    const target = mode === 'root' ? f.assetRoot : f.indexPath;
     if (mode === 'index-xattr') {
       const original = f.getId; f.getId = (path) => { if (path === f.indexPath) { const error = Error('index xattr unavailable'); error.status = 1; throw error; } return original(path); };
     } else renameSync(target, target + '.offline');
     const state = classifyRecovery({ recovery: result.recovery, assetRoot: f.assetRoot, indexPath: f.indexPath, selected: f.selected, getId: f.getId, serviceAvailable: () => true, expectPrepared: true });
     assert.equal(state.status, 'retryable', mode); assert.equal(state.expectPrepared, true);
   }
+});
+
+test('missing Submission kits requires recovery after root and index identity are verified', () => {
+  const f = fixture(); const result = applyProposal(f);
+  const kits = join(f.assetRoot, 'Submission kits'); renameSync(kits, kits + '.missing');
+  assert.equal(classifyRecovery({ ...f, recovery: result.recovery, serviceAvailable: () => true, expectPrepared: true }).status, 'needs_recovery');
+  assert.equal(classifyRecovery({ ...f, recovery: result.recovery, serviceAvailable: () => false, expectPrepared: true }).status, 'retryable');
 });
 
 test('interrupted apply at startup remains pending if the Drive index is not mounted yet', () => {
@@ -200,6 +207,9 @@ test('checks expected formats and rejects malformed or sensitive proposed text',
   assert.throws(() => validateAsset('json', 'submission.json', Buffer.from('{"password":"Abcdef123456789!"}')));
   for (const value of ['password: P@ssw0rd2024!', 'password=Tr0ub4dor&3xyz', 'password: Hunter2!x', 'password: hunter2hunter2hunter2', 'password=correcthorsebatterystaple', 'api_key: abcdefabcdefabcdefabcdef', 'secret: ' + 'a1'.repeat(32)]) assert.throws(() => validateAsset('brief', 'brief.txt', Buffer.from(value)));
   assert.throws(() => validateAsset('json', 'submission.json', Buffer.from('{"apiKey":"abcdefabcdefabcdefabcdef"}')));
-  assert.doesNotThrow(() => validateAsset('brief', 'brief.txt', Buffer.from('Demo password: available on request. Our secret: integration-first.')));
+  assert.throws(() => validateAsset('json', 'submission.json', Buffer.from('{"password":"Abcdef!!"}')));
+  assert.throws(() => validateAsset('brief', 'brief.txt', Buffer.from('password=Abcd!xyz')));
+  assert.doesNotThrow(() => validateAsset('brief', 'brief.txt', Buffer.from('Demo password: available on request. Our secret: integration-first. Our secret: Simplicity. Password: Optional. The secret: Fast-onboarding. secret: Built-in2FA')));
+  assert.doesNotThrow(() => validateAsset('brief', 'brief.txt', Buffer.from('client_secret: <your-client-secret-here> access_token=https://example.com/docs/auth api_key=YOUR_API_KEY_HERE')));
   assert.throws(() => validateAsset('screenshot', 'image.svg', Buffer.from('<svg/>')));
 });

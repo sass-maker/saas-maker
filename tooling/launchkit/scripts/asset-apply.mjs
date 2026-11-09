@@ -20,10 +20,14 @@ export function validateAsset(kind, filename, bytes) {
     if (bytes.length > 1024 * 1024) throw Error('Text asset exceeds size limit');
     let value; try { value = new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { throw Error('Invalid UTF-8'); }
     if (/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\b(?:sk-proj-|sk-|sk_live_|ghp_|github_pat_|xox[baprs]-)[a-zA-Z0-9_-]{16,}|\bAKIA[A-Z0-9]{16}\b/i.test(value)) throw Error('Possible secret in proposed text asset');
-    const assignments = value.matchAll(/\b(api[_-]?key|access[_-]?token|client[_-]?secret|password|secret)["']?\s*[:=]\s*["']?([^\s"',}]{8,})/gi);
-    for (const [, , candidate] of assignments) {
+    const assignments = value.matchAll(/\b(api[_-]?key|access[_-]?token|client[_-]?secret|password|secret)(["']?)\s*([:=])\s*(["']?)([^\s"',}]{8,})/gi);
+    for (const [, , keyQuote, separator, valueQuote, raw] of assignments) {
+      const structured = Boolean(keyQuote || valueQuote || separator === '=');
+      const candidate = structured ? raw : raw.replace(/[.,;:!?]+$/, '');
+      if (/^https?:\/\//i.test(candidate) || /^<[^>]+>$/.test(candidate) || /^(?:YOUR_|REPLACE_|EXAMPLE_|PLACEHOLDER)/i.test(candidate)) continue;
+      if (!structured && /^[a-zA-Z]+(?:-[a-zA-Z0-9]+)+$/.test(candidate)) continue;
       const classes = [/[a-z]/, /[A-Z]/, /\d/, /[^a-zA-Z0-9]/].filter((pattern) => pattern.test(candidate)).length;
-      if (classes >= 3 || (candidate.length >= 20 && classes >= 2) || /^[a-zA-Z0-9]{24,}$/.test(candidate)) throw Error('Possible secret in proposed text asset');
+      if ((classes >= 3 && (structured || /\d/.test(candidate))) || (candidate.length >= 20 && classes >= 2) || /^[a-zA-Z0-9]{24,}$/.test(candidate) || /^[A-Z0-9]{20,}$/.test(candidate)) throw Error('Possible secret in proposed text asset');
     }
     if (extension === 'json') { try { JSON.parse(value); } catch { throw Error('Invalid JSON asset'); } }
     if (extension === 'svg' && (!/^\s*(?:<\?xml[^>]*>\s*)?<svg\b/i.test(value) || /<!DOCTYPE|<!ENTITY|<script\b|\bon\w+\s*=/i.test(value))) throw Error('Invalid or unsafe SVG asset');
@@ -197,11 +201,12 @@ export function classifyRecovery({ recovery, assetRoot, indexPath, selected, get
       if (digest(bounded(join(recovery, entry.backup), MAX_ASSET)) !== entry.beforeSha256) throw Error('Recovery backup mismatch');
     }
     area = 'mount';
-    inspect(assetRoot, true); inspect(join(assetRoot, 'Submission kits'), true); inspect(indexPath);
+    inspect(assetRoot, true); inspect(indexPath);
     if (!safeId(getId(indexPath))) return { status: 'retryable', expectPrepared: true, reason: 'Drive index identity is unavailable' };
     const index = JSON.parse(bounded(indexPath, MAX_INDEX).toString('utf8'));
     if (!Array.isArray(index.products)) throw Error('Invalid asset index');
     area = 'drive';
+    inspect(join(assetRoot, 'Submission kits'), true);
     const states = [];
     for (const entry of manifest.changes) {
       const products = index.products.filter((p) => p?.id === entry.productId);
