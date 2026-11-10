@@ -6225,7 +6225,7 @@
       "dr": 94,
       "link": "nofollow",
       "eligibility": "Showcase original creative work; not a generic SaaS link dump.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -6245,6 +6245,14 @@
           "type": "Profile / Portfolio",
           "pricing": "free",
           "note": "free per Behance Helpcenter; publishing is in-app via 'Share Your Work' > Project — no standalone submit URL"
+        },
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 92,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
         }
       ]
     },
@@ -8032,6 +8040,14 @@
           "approvalWindow": "1–2 weeks",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 92,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified. Interpreted the supplied \"GT / Capterra.com DR 92\" entry as G2 and Capterra; the shared rating is ambiguous."
         }
       ]
     },
@@ -8162,6 +8178,14 @@
           "dr": 99,
           "link": "follow",
           "pricing": "paid"
+        },
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 99,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
         }
       ]
     },
@@ -9326,6 +9350,14 @@
           "approvalWindow": "Instant (edits reviewed)",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 91,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
         }
       ]
     },
@@ -10127,6 +10159,14 @@
           "pricing": "free",
           "type": "Publishing / Community",
           "submissionUrl": "https://dev.to/new"
+        },
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 90,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
         }
       ]
     },
@@ -10752,7 +10792,7 @@
       "dr": 93,
       "link": "nofollow",
       "eligibility": "Design work and portfolio presentation; respect platform rules.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "needs-research",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -10772,6 +10812,14 @@
           "type": "Profile / Portfolio",
           "pricing": "freemium",
           "note": "free tier can upload/publish shots (10/day cap); paid Pro tiers ($4/$8/$99 per mo billed yearly) add leads, services, ranking boosts"
+        },
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 91,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
         }
       ]
     },
@@ -13226,6 +13274,14 @@
           "approvalWindow": "1–2 weeks",
           "badgeRequired": false,
           "note": "Source-reported article table; approval times are estimates, not a current acceptance guarantee. Pricing and target link type are not specified for this row."
+        },
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 92,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified. Interpreted the supplied \"GT / Capterra.com DR 92\" entry as G2 and Capterra; the shared rating is ambiguous."
         }
       ]
     },
@@ -14240,7 +14296,7 @@
       "dr": 83,
       "link": "follow",
       "eligibility": "Publish original useful technical content; a blog is not an automatic product listing.",
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -14253,6 +14309,14 @@
           "dr": 83,
           "link": "follow",
           "pricing": "free"
+        },
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 88,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
         }
       ]
     },
@@ -21224,7 +21288,7 @@
       "dr": 91,
       "link": "nofollow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
-      "flags": ["Link sources disagree"],
+      "flags": ["Link sources disagree", "DR sources disagree"],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -21280,6 +21344,14 @@
           "pricingText": "Free",
           "linkText": "Nofollow link",
           "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 90,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
         }
       ]
     },
@@ -34340,6 +34412,14 @@
           "pricingText": "Free, paid upgrades",
           "linkText": "Link type unknown",
           "note": "Public directory snapshot. Ratings, pricing and listing-link policies are source reports, not independent measurements or verified submission workflows."
+        },
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 78,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
         }
       ]
     },
@@ -36759,7 +36839,7 @@
       "dr": 93,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": ["DR sources disagree"],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://dofollowback.link/",
@@ -36774,6 +36854,14 @@
           "pricing": "free",
           "type": "Publishing / Newsletter",
           "submissionUrl": "https://substack.com/signup"
+        },
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 88,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
         }
       ]
     },
@@ -44752,6 +44840,474 @@
           "sourceUrl": "https://launchbuck.com/terms",
           "retrieved": "2026-11-05",
           "note": "The supplied /submit URL redirects signed-out visitors to login. Terms require product affiliation or permission and permit listing review and rejection. No account, listing, payment or backlink verification was performed for this catalog addition."
+        }
+      ]
+    },
+    {
+      "name": "Taplink",
+      "domain": "taplink.cc",
+      "website": "https://taplink.cc/",
+      "submissionUrl": "https://taplink.at/en/",
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Profile / Link in bio",
+      "pricing": "freemium",
+      "dr": 86,
+      "link": "unknown",
+      "eligibility": "Create and publish a link-in-bio page with product links; this is a page builder rather than a curated directory. The official site sends signups to taplink.at.",
+      "flags": ["DR not independently verified", "Link type unverified"],
+      "route": "source-reported",
+      "provider": "Owner-supplied DR; provider and measurement date unspecified; not independently verified",
+      "sourceUrl": null,
+      "retrieved": "2026-11-10",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 86,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
+        },
+        {
+          "source": "official-site-research",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://taplink.cc/",
+          "retrieved": "2026-11-10",
+          "website": "https://taplink.cc/",
+          "submissionUrl": "https://taplink.at/en/",
+          "note": "Create and publish a link-in-bio page with product links; this is a page builder rather than a curated directory. The official site sends signups to taplink.at."
+        }
+      ]
+    },
+    {
+      "name": "Indie Page",
+      "domain": "indiepa.ge",
+      "website": "https://indiepa.ge/",
+      "submissionUrl": "https://indiepa.ge/",
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Founder profile / Portfolio",
+      "pricing": "freemium",
+      "dr": 67,
+      "link": "unknown",
+      "eligibility": "Founder profile for showcasing startups. Building a page is advertised as free; review the paid pass needed to publish it. Revenue verification requires connecting a supported payment account.",
+      "flags": [
+        "DR not independently verified",
+        "Link type unverified",
+        "Free building does not establish free publication"
+      ],
+      "route": "source-reported",
+      "provider": "Owner-supplied DR; provider and measurement date unspecified; not independently verified",
+      "sourceUrl": null,
+      "retrieved": "2026-11-10",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 67,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
+        },
+        {
+          "source": "official-site-research",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://indiepa.ge/",
+          "retrieved": "2026-11-10",
+          "website": "https://indiepa.ge/",
+          "submissionUrl": "https://indiepa.ge/",
+          "note": "Founder profile for showcasing startups. Building a page is advertised as free; review the paid pass needed to publish it. Revenue verification requires connecting a supported payment account."
+        }
+      ]
+    },
+    {
+      "name": "Carrd",
+      "domain": "carrd.co",
+      "website": "https://carrd.co/",
+      "submissionUrl": "https://carrd.com/signup",
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Website builder / Portfolio",
+      "pricing": "freemium",
+      "dr": 89,
+      "link": "unknown",
+      "eligibility": "Publish a one-page site with product links; this is hosting, not directory acceptance. carrd.co currently redirects to the official carrd.com site. Hosted pages and custom domains need not share the supplied DR.",
+      "flags": [
+        "DR not independently verified",
+        "Link type unverified",
+        "Official site redirects to carrd.com"
+      ],
+      "route": "source-reported",
+      "provider": "Owner-supplied DR; provider and measurement date unspecified; not independently verified",
+      "sourceUrl": null,
+      "retrieved": "2026-11-10",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 89,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
+        },
+        {
+          "source": "official-site-research",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://carrd.com/",
+          "retrieved": "2026-11-10",
+          "website": "https://carrd.co/",
+          "submissionUrl": "https://carrd.com/signup",
+          "note": "Publish a one-page site with product links; this is hosting, not directory acceptance. carrd.co currently redirects to the official carrd.com site. Hosted pages and custom domains need not share the supplied DR."
+        }
+      ]
+    },
+    {
+      "name": "Linktree",
+      "domain": "linktr.ee",
+      "website": "https://linktr.ee/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Profile / Link in bio",
+      "pricing": "freemium",
+      "dr": 92,
+      "link": "unknown",
+      "eligibility": "Create a link-in-bio profile and add product links; account required. Check current signup and publication terms. A profile does not guarantee indexing or followed links.",
+      "flags": ["DR not independently verified", "Link type unverified"],
+      "route": "needs-research",
+      "provider": "Owner-supplied DR; provider and measurement date unspecified; not independently verified",
+      "sourceUrl": null,
+      "retrieved": "2026-11-10",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 92,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
+        },
+        {
+          "source": "official-site-research",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://linktr.ee/",
+          "retrieved": "2026-11-10",
+          "website": "https://linktr.ee/",
+          "submissionUrl": null,
+          "note": "Create a link-in-bio profile and add product links; account required. Check current signup and publication terms. A profile does not guarantee indexing or followed links."
+        }
+      ]
+    },
+    {
+      "name": "Mssg.me",
+      "domain": "mssg.me",
+      "website": "https://www.mssg.me/",
+      "submissionUrl": "https://next.mssg.me/auth/signup",
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Profile / Website builder",
+      "pricing": "freemium",
+      "dr": 88,
+      "link": "unknown",
+      "eligibility": "Create a multilink page, landing page or store; account required. The official site advertises a free start. Review plan limits and published link attributes.",
+      "flags": ["DR not independently verified", "Link type unverified"],
+      "route": "source-reported",
+      "provider": "Owner-supplied DR; provider and measurement date unspecified; not independently verified",
+      "sourceUrl": null,
+      "retrieved": "2026-11-10",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 88,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
+        },
+        {
+          "source": "official-site-research",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://www.mssg.me/",
+          "retrieved": "2026-11-10",
+          "website": "https://www.mssg.me/",
+          "submissionUrl": "https://next.mssg.me/auth/signup",
+          "note": "Create a multilink page, landing page or store; account required. The official site advertises a free start. Review plan limits and published link attributes."
+        }
+      ]
+    },
+    {
+      "name": "Stripe Climate",
+      "domain": "climate.stripe.com",
+      "website": "https://stripe.com/climate",
+      "submissionUrl": "https://dashboard.stripe.com/climate/commitment",
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Climate contribution / Public page",
+      "pricing": "paid",
+      "dr": 94,
+      "link": "unknown",
+      "eligibility": "A Stripe Climate contribution commitment enables a Stripe-hosted custom climate page. Requires a Stripe account and financial contributions; this is not a free directory listing. The bare climate.stripe.com root returned 404; use the official product page and Dashboard. The supplied subdomain DR is unverified.",
+      "flags": [
+        "DR not independently verified",
+        "Link type unverified",
+        "Contribution required",
+        "Root URL returns 404; use official product page"
+      ],
+      "route": "source-reported",
+      "provider": "Owner-supplied DR; provider and measurement date unspecified; not independently verified",
+      "sourceUrl": null,
+      "retrieved": "2026-11-10",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 94,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
+        },
+        {
+          "source": "official-site-research",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "paid",
+          "sourceUrl": "https://docs.stripe.com/climate/commitments",
+          "retrieved": "2026-11-10",
+          "website": "https://stripe.com/climate",
+          "submissionUrl": "https://dashboard.stripe.com/climate/commitment",
+          "note": "A Stripe Climate contribution commitment enables a Stripe-hosted custom climate page. Requires a Stripe account and financial contributions; this is not a free directory listing. The bare climate.stripe.com root returned 404; use the official product page and Dashboard. The supplied subdomain DR is unverified."
+        }
+      ]
+    },
+    {
+      "name": "Medium",
+      "domain": "medium.com",
+      "website": "https://medium.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Publishing / Blog",
+      "pricing": "unknown",
+      "dr": 94,
+      "link": "unknown",
+      "eligibility": "Publish original content under Medium rules; a publishing account is not automatic directory acceptance. Review current publishing terms and outbound link attributes.",
+      "flags": ["DR not independently verified", "Link type unverified"],
+      "route": "needs-research",
+      "provider": "Owner-supplied DR; provider and measurement date unspecified; not independently verified",
+      "sourceUrl": null,
+      "retrieved": "2026-11-10",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 94,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
+        },
+        {
+          "source": "official-site-research",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://medium.com/",
+          "retrieved": "2026-11-10",
+          "website": "https://medium.com/",
+          "submissionUrl": null,
+          "note": "Publish original content under Medium rules; a publishing account is not automatic directory acceptance. Review current publishing terms and outbound link attributes."
+        }
+      ]
+    },
+    {
+      "name": "GitHub Pages",
+      "domain": "pages.github.com",
+      "website": "https://pages.github.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Developer",
+      "type": "Website hosting / Project site",
+      "pricing": "unknown",
+      "dr": 96,
+      "link": "unknown",
+      "eligibility": "Publish a project website from a GitHub repository using GitHub Pages. pages.github.com is the service documentation site; published sites use github.io or a custom domain and do not inherit the supplied documentation-domain DR.",
+      "flags": [
+        "DR not independently verified",
+        "Link type unverified",
+        "Reported DR is for service documentation, not hosted project sites"
+      ],
+      "route": "needs-research",
+      "provider": "Owner-supplied DR; provider and measurement date unspecified; not independently verified",
+      "sourceUrl": null,
+      "retrieved": "2026-11-10",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 96,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
+        },
+        {
+          "source": "official-site-research",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://pages.github.com/",
+          "retrieved": "2026-11-10",
+          "website": "https://pages.github.com/",
+          "submissionUrl": null,
+          "note": "Publish a project website from a GitHub repository using GitHub Pages. pages.github.com is the service documentation site; published sites use github.io or a custom domain and do not inherit the supplied documentation-domain DR."
+        }
+      ]
+    },
+    {
+      "name": "Gumroad",
+      "domain": "gumroad.com",
+      "website": "https://gumroad.com/",
+      "submissionUrl": "https://gumroad.com/signup",
+      "exampleUrl": null,
+      "category": "Marketplace",
+      "type": "Digital product storefront",
+      "pricing": "unknown",
+      "dr": 90,
+      "link": "unknown",
+      "eligibility": "Create a seller account and publish an eligible digital product or storefront. Review current fees and product rules; this is a sales platform, not a generic free backlink listing.",
+      "flags": ["DR not independently verified", "Link type unverified"],
+      "route": "source-reported",
+      "provider": "Owner-supplied DR; provider and measurement date unspecified; not independently verified",
+      "sourceUrl": null,
+      "retrieved": "2026-11-10",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 90,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
+        },
+        {
+          "source": "official-site-research",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "unknown",
+          "sourceUrl": "https://gumroad.com/",
+          "retrieved": "2026-11-10",
+          "website": "https://gumroad.com/",
+          "submissionUrl": "https://gumroad.com/signup",
+          "note": "Create a seller account and publish an eligible digital product or storefront. Review current fees and product rules; this is a sales platform, not a generic free backlink listing."
+        }
+      ]
+    },
+    {
+      "name": "Viral Marketing Lab",
+      "domain": "viralmarketinglab.com",
+      "website": "https://www.viralmarketinglab.com/",
+      "submissionUrl": null,
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Marketing resources / Tools",
+      "pricing": "paid",
+      "dr": 35,
+      "link": "unknown",
+      "eligibility": "Business growth, marketing resource and AI tool directory. The official Add Product action opens a payment checkout; review current cost, editorial eligibility and link terms before submitting.",
+      "flags": ["DR not independently verified", "Link type unverified"],
+      "route": "needs-research",
+      "provider": "Owner-supplied DR; provider and measurement date unspecified; not independently verified",
+      "sourceUrl": null,
+      "retrieved": "2026-11-10",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 35,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
+        },
+        {
+          "source": "official-site-research",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "paid",
+          "sourceUrl": "https://www.viralmarketinglab.com/",
+          "retrieved": "2026-11-10",
+          "website": "https://www.viralmarketinglab.com/",
+          "submissionUrl": null,
+          "note": "Business growth, marketing resource and AI tool directory. The official Add Product action opens a payment checkout; review current cost, editorial eligibility and link terms before submitting."
+        }
+      ]
+    },
+    {
+      "name": "about.me",
+      "domain": "about.me",
+      "website": "https://about.me/",
+      "submissionUrl": "https://about.me/signup/email",
+      "exampleUrl": null,
+      "category": "Community",
+      "type": "Personal profile / Portfolio",
+      "pricing": "freemium",
+      "dr": 92,
+      "link": "unknown",
+      "eligibility": "Create a personal homepage with links to your work. The official site advertises a free page with paid options; verify current plan limits and outbound link attributes.",
+      "flags": ["DR not independently verified", "Link type unverified"],
+      "route": "source-reported",
+      "provider": "Owner-supplied DR; provider and measurement date unspecified; not independently verified",
+      "sourceUrl": null,
+      "retrieved": "2026-11-10",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "owner-provided-2026-11-10",
+          "dr": 92,
+          "link": "unknown",
+          "pricing": "unknown",
+          "retrieved": "2026-11-10",
+          "note": "Owner-supplied DR estimate. Provider, measurement date, pricing and backlink attributes were not supplied; not independently verified."
+        },
+        {
+          "source": "official-site-research",
+          "dr": null,
+          "link": "unknown",
+          "pricing": "freemium",
+          "sourceUrl": "https://about.me/",
+          "retrieved": "2026-11-10",
+          "website": "https://about.me/",
+          "submissionUrl": "https://about.me/signup/email",
+          "note": "Create a personal homepage with links to your work. The official site advertises a free page with paid options; verify current plan limits and outbound link attributes."
         }
       ]
     }
