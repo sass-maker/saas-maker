@@ -378,7 +378,7 @@
       "wiredFiles": [
         "ui-library/archives/ios-landings/src/lib/clarity.ts"
       ],
-      "surfaceOwner": "ios-landings",
+      "surfaceOwner": "../fleet-archive/ios-landings",
       "browserSurfaces": [
         {
           "kind": "landing",
@@ -406,7 +406,7 @@
       "wiredFiles": [
         "ui-library/archives/ios-landings/src/lib/clarity.ts"
       ],
-      "surfaceOwner": "ios-landings",
+      "surfaceOwner": "../fleet-archive/ios-landings",
       "browserSurfaces": [
         {
           "kind": "landing",
@@ -663,7 +663,7 @@
       "wiredFiles": [
         "ui-library/archives/ios-landings/src/lib/clarity.ts"
       ],
-      "surfaceOwner": "ios-landings",
+      "surfaceOwner": "../fleet-archive/ios-landings",
       "browserSurfaces": [
         {
           "kind": "landing",
@@ -699,7 +699,7 @@
       "wiredFiles": [
         "ui-library/archives/ios-landings/src/lib/clarity.ts"
       ],
-      "surfaceOwner": "ios-landings",
+      "surfaceOwner": "../fleet-archive/ios-landings",
       "reason": "Clarity covers only the generated public landing site; the native macOS diagnostic app remains local and telemetry-free.",
       "browserSurfaces": [
         {
@@ -718,7 +718,7 @@
       "wiredFiles": [
         "ui-library/archives/ios-landings/src/lib/clarity.ts"
       ],
-      "surfaceOwner": "ios-landings",
+      "surfaceOwner": "../fleet-archive/ios-landings",
       "reason": "Clarity covers only the generated public landing site; the native macOS performance app remains local and telemetry-free.",
       "browserSurfaces": [
         {
@@ -815,7 +815,7 @@
       "wiredFiles": [
         "ui-library/archives/ios-landings/src/lib/clarity.ts"
       ],
-      "surfaceOwner": "ios-landings",
+      "surfaceOwner": "../fleet-archive/ios-landings",
       "reason": "context.daddyrad.com proxies all page traffic to the contextdaddy-landing Pages site, so the generated-landing map covers the public surface; /download serves only the DMG.",
       "browserSurfaces": [
         {

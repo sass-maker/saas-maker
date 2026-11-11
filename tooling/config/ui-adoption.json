@@ -511,7 +511,7 @@
         "notes": "Bounded local source inspection; Live rendered behavior was not exercised. Source revision 3e0e3a7fa99c511d8b603334e55c6ba73da65af1. Landing/app attribution and default theme have not been render-qualified.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "chatgpt-connections/package.json"
+          "../fleet-archive/chatgpt-connections/package.json"
         ],
         "libraryVersion": {
           "state": "source-observed",
@@ -519,7 +519,7 @@
           "notes": "Dependency specifications from local package manifests; this does not prove installed or live asset versions. Surface attribution remains unknown.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "chatgpt-connections/package.json"
+            "../fleet-archive/chatgpt-connections/package.json"
           ]
         },
         "loading": {
@@ -527,7 +527,7 @@
           "notes": "No loading-state signal was found in the bounded source inspection; completeness and runtime states remain unverified.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "chatgpt-connections/package.json"
+            "../fleet-archive/chatgpt-connections/package.json"
           ]
         }
       },
@@ -537,7 +537,7 @@
         "notes": "Bounded local source inspection; Live rendered behavior was not exercised. Source revision 3e0e3a7fa99c511d8b603334e55c6ba73da65af1. Landing/app attribution and default theme have not been render-qualified.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "chatgpt-connections/package.json"
+          "../fleet-archive/chatgpt-connections/package.json"
         ],
         "libraryVersion": {
           "state": "source-observed",
@@ -545,7 +545,7 @@
           "notes": "Dependency specifications from local package manifests; this does not prove installed or live asset versions. Surface attribution remains unknown.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "chatgpt-connections/package.json"
+            "../fleet-archive/chatgpt-connections/package.json"
           ]
         },
         "loading": {
@@ -553,7 +553,7 @@
           "notes": "No loading-state signal was found in the bounded source inspection; completeness and runtime states remain unverified.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "chatgpt-connections/package.json"
+            "../fleet-archive/chatgpt-connections/package.json"
           ]
         }
       },
@@ -563,7 +563,7 @@
         "notes": "Landing/app continuity requires paired rendered evidence; source inspection does not establish a score.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "chatgpt-connections/package.json"
+          "../fleet-archive/chatgpt-connections/package.json"
         ]
       }
     },
@@ -1588,28 +1588,28 @@
         "notes": "Bounded local source inspection; Live rendered behavior was not exercised. Source revision 08461900ceb9c89bbd6c5aa73026b4810705722c. Landing/app attribution and default theme have not been render-qualified.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "on-record/package.json",
-          "on-record/apps/web/package.json",
-          "on-record/packages/db/package.json",
-          "on-record/workers/api/package.json",
-          "on-record/packages/db/src/index.ts",
-          "on-record/workers/api/src/index.ts",
-          "on-record/workers/api/src/index.test.ts",
-          "on-record/apps/web/src/pages/index.astro"
+          "../fleet-archive/on-record/package.json",
+          "../fleet-archive/on-record/apps/web/package.json",
+          "../fleet-archive/on-record/packages/db/package.json",
+          "../fleet-archive/on-record/workers/api/package.json",
+          "../fleet-archive/on-record/packages/db/src/index.ts",
+          "../fleet-archive/on-record/workers/api/src/index.ts",
+          "../fleet-archive/on-record/workers/api/src/index.test.ts",
+          "../fleet-archive/on-record/apps/web/src/pages/index.astro"
         ],
         "libraryVersion": {
           "state": "unknown",
           "notes": "No SaaS Maker UI dependency specification was found in the bounded manifest inspection; copied or vendored assets and live versions remain unverified.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "on-record/package.json",
-            "on-record/apps/web/package.json",
-            "on-record/packages/db/package.json",
-            "on-record/workers/api/package.json",
-            "on-record/packages/db/src/index.ts",
-            "on-record/workers/api/src/index.ts",
-            "on-record/workers/api/src/index.test.ts",
-            "on-record/apps/web/src/pages/index.astro"
+            "../fleet-archive/on-record/package.json",
+            "../fleet-archive/on-record/apps/web/package.json",
+            "../fleet-archive/on-record/packages/db/package.json",
+            "../fleet-archive/on-record/workers/api/package.json",
+            "../fleet-archive/on-record/packages/db/src/index.ts",
+            "../fleet-archive/on-record/workers/api/src/index.ts",
+            "../fleet-archive/on-record/workers/api/src/index.test.ts",
+            "../fleet-archive/on-record/apps/web/src/pages/index.astro"
           ]
         },
         "loading": {
@@ -1617,14 +1617,14 @@
           "notes": "No loading-state signal was found in the bounded source inspection; completeness and runtime states remain unverified.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "on-record/package.json",
-            "on-record/apps/web/package.json",
-            "on-record/packages/db/package.json",
-            "on-record/workers/api/package.json",
-            "on-record/packages/db/src/index.ts",
-            "on-record/workers/api/src/index.ts",
-            "on-record/workers/api/src/index.test.ts",
-            "on-record/apps/web/src/pages/index.astro"
+            "../fleet-archive/on-record/package.json",
+            "../fleet-archive/on-record/apps/web/package.json",
+            "../fleet-archive/on-record/packages/db/package.json",
+            "../fleet-archive/on-record/workers/api/package.json",
+            "../fleet-archive/on-record/packages/db/src/index.ts",
+            "../fleet-archive/on-record/workers/api/src/index.ts",
+            "../fleet-archive/on-record/workers/api/src/index.test.ts",
+            "../fleet-archive/on-record/apps/web/src/pages/index.astro"
           ]
         }
       },
@@ -1634,28 +1634,28 @@
         "notes": "Bounded local source inspection; Live rendered behavior was not exercised. Source revision 08461900ceb9c89bbd6c5aa73026b4810705722c. Landing/app attribution and default theme have not been render-qualified.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "on-record/package.json",
-          "on-record/apps/web/package.json",
-          "on-record/packages/db/package.json",
-          "on-record/workers/api/package.json",
-          "on-record/packages/db/src/index.ts",
-          "on-record/workers/api/src/index.ts",
-          "on-record/workers/api/src/index.test.ts",
-          "on-record/apps/web/src/pages/index.astro"
+          "../fleet-archive/on-record/package.json",
+          "../fleet-archive/on-record/apps/web/package.json",
+          "../fleet-archive/on-record/packages/db/package.json",
+          "../fleet-archive/on-record/workers/api/package.json",
+          "../fleet-archive/on-record/packages/db/src/index.ts",
+          "../fleet-archive/on-record/workers/api/src/index.ts",
+          "../fleet-archive/on-record/workers/api/src/index.test.ts",
+          "../fleet-archive/on-record/apps/web/src/pages/index.astro"
         ],
         "libraryVersion": {
           "state": "unknown",
           "notes": "No SaaS Maker UI dependency specification was found in the bounded manifest inspection; copied or vendored assets and live versions remain unverified.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "on-record/package.json",
-            "on-record/apps/web/package.json",
-            "on-record/packages/db/package.json",
-            "on-record/workers/api/package.json",
-            "on-record/packages/db/src/index.ts",
-            "on-record/workers/api/src/index.ts",
-            "on-record/workers/api/src/index.test.ts",
-            "on-record/apps/web/src/pages/index.astro"
+            "../fleet-archive/on-record/package.json",
+            "../fleet-archive/on-record/apps/web/package.json",
+            "../fleet-archive/on-record/packages/db/package.json",
+            "../fleet-archive/on-record/workers/api/package.json",
+            "../fleet-archive/on-record/packages/db/src/index.ts",
+            "../fleet-archive/on-record/workers/api/src/index.ts",
+            "../fleet-archive/on-record/workers/api/src/index.test.ts",
+            "../fleet-archive/on-record/apps/web/src/pages/index.astro"
           ]
         },
         "loading": {
@@ -1663,14 +1663,14 @@
           "notes": "No loading-state signal was found in the bounded source inspection; completeness and runtime states remain unverified.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "on-record/package.json",
-            "on-record/apps/web/package.json",
-            "on-record/packages/db/package.json",
-            "on-record/workers/api/package.json",
-            "on-record/packages/db/src/index.ts",
-            "on-record/workers/api/src/index.ts",
-            "on-record/workers/api/src/index.test.ts",
-            "on-record/apps/web/src/pages/index.astro"
+            "../fleet-archive/on-record/package.json",
+            "../fleet-archive/on-record/apps/web/package.json",
+            "../fleet-archive/on-record/packages/db/package.json",
+            "../fleet-archive/on-record/workers/api/package.json",
+            "../fleet-archive/on-record/packages/db/src/index.ts",
+            "../fleet-archive/on-record/workers/api/src/index.ts",
+            "../fleet-archive/on-record/workers/api/src/index.test.ts",
+            "../fleet-archive/on-record/apps/web/src/pages/index.astro"
           ]
         }
       },
@@ -1680,14 +1680,14 @@
         "notes": "Landing/app continuity requires paired rendered evidence; source inspection does not establish a score.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "on-record/package.json",
-          "on-record/apps/web/package.json",
-          "on-record/packages/db/package.json",
-          "on-record/workers/api/package.json",
-          "on-record/packages/db/src/index.ts",
-          "on-record/workers/api/src/index.ts",
-          "on-record/workers/api/src/index.test.ts",
-          "on-record/apps/web/src/pages/index.astro"
+          "../fleet-archive/on-record/package.json",
+          "../fleet-archive/on-record/apps/web/package.json",
+          "../fleet-archive/on-record/packages/db/package.json",
+          "../fleet-archive/on-record/workers/api/package.json",
+          "../fleet-archive/on-record/packages/db/src/index.ts",
+          "../fleet-archive/on-record/workers/api/src/index.ts",
+          "../fleet-archive/on-record/workers/api/src/index.test.ts",
+          "../fleet-archive/on-record/apps/web/src/pages/index.astro"
         ]
       }
     },
@@ -2068,14 +2068,14 @@
         "notes": "Bounded local source inspection; Live rendered behavior was not exercised. Source revision 3c8937e4385e9234ecc2be391762d1918e1a0306. Landing/app attribution and default theme have not been render-qualified.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "significanthobbies/package.json",
-          "significanthobbies/landing/package.json",
-          "significanthobbies/services/hub-backend/package.json",
-          "significanthobbies/src/server/auth/index.ts",
-          "significanthobbies/landing/src/pages/index.astro",
-          "significanthobbies/services/hub-backend/src/index.ts",
-          "significanthobbies/src/components/aceternity/index.ts",
-          "significanthobbies/src/lib/bucket-list-category-styles.ts"
+          "../fleet-archive/significanthobbies/package.json",
+          "../fleet-archive/significanthobbies/landing/package.json",
+          "../fleet-archive/significanthobbies/services/hub-backend/package.json",
+          "../fleet-archive/significanthobbies/src/server/auth/index.ts",
+          "../fleet-archive/significanthobbies/landing/src/pages/index.astro",
+          "../fleet-archive/significanthobbies/services/hub-backend/src/index.ts",
+          "../fleet-archive/significanthobbies/src/components/aceternity/index.ts",
+          "../fleet-archive/significanthobbies/src/lib/bucket-list-category-styles.ts"
         ],
         "libraryVersion": {
           "state": "source-observed",
@@ -2083,7 +2083,7 @@
           "notes": "Dependency specifications from local package manifests; this does not prove installed or live asset versions. Surface attribution remains unknown.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "significanthobbies/landing/package.json"
+            "../fleet-archive/significanthobbies/landing/package.json"
           ]
         },
         "loading": {
@@ -2091,14 +2091,14 @@
           "notes": "No loading-state signal was found in the bounded source inspection; completeness and runtime states remain unverified.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "significanthobbies/package.json",
-            "significanthobbies/landing/package.json",
-            "significanthobbies/services/hub-backend/package.json",
-            "significanthobbies/src/server/auth/index.ts",
-            "significanthobbies/landing/src/pages/index.astro",
-            "significanthobbies/services/hub-backend/src/index.ts",
-            "significanthobbies/src/components/aceternity/index.ts",
-            "significanthobbies/src/lib/bucket-list-category-styles.ts"
+            "../fleet-archive/significanthobbies/package.json",
+            "../fleet-archive/significanthobbies/landing/package.json",
+            "../fleet-archive/significanthobbies/services/hub-backend/package.json",
+            "../fleet-archive/significanthobbies/src/server/auth/index.ts",
+            "../fleet-archive/significanthobbies/landing/src/pages/index.astro",
+            "../fleet-archive/significanthobbies/services/hub-backend/src/index.ts",
+            "../fleet-archive/significanthobbies/src/components/aceternity/index.ts",
+            "../fleet-archive/significanthobbies/src/lib/bucket-list-category-styles.ts"
           ]
         }
       },
@@ -2108,14 +2108,14 @@
         "notes": "Bounded local source inspection; Live rendered behavior was not exercised. Source revision 3c8937e4385e9234ecc2be391762d1918e1a0306. Landing/app attribution and default theme have not been render-qualified.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "significanthobbies/package.json",
-          "significanthobbies/landing/package.json",
-          "significanthobbies/services/hub-backend/package.json",
-          "significanthobbies/src/server/auth/index.ts",
-          "significanthobbies/landing/src/pages/index.astro",
-          "significanthobbies/services/hub-backend/src/index.ts",
-          "significanthobbies/src/components/aceternity/index.ts",
-          "significanthobbies/src/lib/bucket-list-category-styles.ts"
+          "../fleet-archive/significanthobbies/package.json",
+          "../fleet-archive/significanthobbies/landing/package.json",
+          "../fleet-archive/significanthobbies/services/hub-backend/package.json",
+          "../fleet-archive/significanthobbies/src/server/auth/index.ts",
+          "../fleet-archive/significanthobbies/landing/src/pages/index.astro",
+          "../fleet-archive/significanthobbies/services/hub-backend/src/index.ts",
+          "../fleet-archive/significanthobbies/src/components/aceternity/index.ts",
+          "../fleet-archive/significanthobbies/src/lib/bucket-list-category-styles.ts"
         ],
         "libraryVersion": {
           "state": "source-observed",
@@ -2123,7 +2123,7 @@
           "notes": "Dependency specifications from local package manifests; this does not prove installed or live asset versions. Surface attribution remains unknown.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "significanthobbies/landing/package.json"
+            "../fleet-archive/significanthobbies/landing/package.json"
           ]
         },
         "loading": {
@@ -2131,14 +2131,14 @@
           "notes": "No loading-state signal was found in the bounded source inspection; completeness and runtime states remain unverified.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "significanthobbies/package.json",
-            "significanthobbies/landing/package.json",
-            "significanthobbies/services/hub-backend/package.json",
-            "significanthobbies/src/server/auth/index.ts",
-            "significanthobbies/landing/src/pages/index.astro",
-            "significanthobbies/services/hub-backend/src/index.ts",
-            "significanthobbies/src/components/aceternity/index.ts",
-            "significanthobbies/src/lib/bucket-list-category-styles.ts"
+            "../fleet-archive/significanthobbies/package.json",
+            "../fleet-archive/significanthobbies/landing/package.json",
+            "../fleet-archive/significanthobbies/services/hub-backend/package.json",
+            "../fleet-archive/significanthobbies/src/server/auth/index.ts",
+            "../fleet-archive/significanthobbies/landing/src/pages/index.astro",
+            "../fleet-archive/significanthobbies/services/hub-backend/src/index.ts",
+            "../fleet-archive/significanthobbies/src/components/aceternity/index.ts",
+            "../fleet-archive/significanthobbies/src/lib/bucket-list-category-styles.ts"
           ]
         }
       },
@@ -2148,14 +2148,14 @@
         "notes": "Landing/app continuity requires paired rendered evidence; source inspection does not establish a score.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "significanthobbies/package.json",
-          "significanthobbies/landing/package.json",
-          "significanthobbies/services/hub-backend/package.json",
-          "significanthobbies/src/server/auth/index.ts",
-          "significanthobbies/landing/src/pages/index.astro",
-          "significanthobbies/services/hub-backend/src/index.ts",
-          "significanthobbies/src/components/aceternity/index.ts",
-          "significanthobbies/src/lib/bucket-list-category-styles.ts"
+          "../fleet-archive/significanthobbies/package.json",
+          "../fleet-archive/significanthobbies/landing/package.json",
+          "../fleet-archive/significanthobbies/services/hub-backend/package.json",
+          "../fleet-archive/significanthobbies/src/server/auth/index.ts",
+          "../fleet-archive/significanthobbies/landing/src/pages/index.astro",
+          "../fleet-archive/significanthobbies/services/hub-backend/src/index.ts",
+          "../fleet-archive/significanthobbies/src/components/aceternity/index.ts",
+          "../fleet-archive/significanthobbies/src/lib/bucket-list-category-styles.ts"
         ]
       }
     },
