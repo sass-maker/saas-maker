@@ -289,15 +289,22 @@ describe('verified public Fleet directory', () => {
       {}
     );
     expect(catalog.schemaVersion).toBe(6);
-    expect(ids).toHaveLength(38);
+    expect(ids).toHaveLength(39);
     expect(ids).not.toContain('significanthobbies');
     expect(new Set(ids).size).toBe(catalog.directory.length);
     const archivedIds = catalog.archivedDirectory.map((project: { id: string }) => project.id);
-    expect(archivedIds).toHaveLength(41);
+    expect(archivedIds).toHaveLength(40);
     expect(archivedIds).toEqual(
       expect.arrayContaining(['significanthobbies', 'chatgpt-connections', 'unified-portfolio'])
     );
     expect(ids).toContain('domain-inbox');
+    expect(ids).toContain('protein-index');
+    expect(ids).not.toContain('food');
+    expect(archivedIds).not.toContain('protein-index');
+    expect(archivedIds).toContain('veg-protein-food');
+    expect(
+      catalog.directory.find((project: { id: string }) => project.id === 'protein-index')
+    ).toMatchObject({ name: 'Food', roster: 'current' });
     for (const id of ['chatgpt-connections', 'unified-portfolio']) {
       expect(ids).not.toContain(id);
       const archived = catalog.archivedDirectory.find(

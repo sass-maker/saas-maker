@@ -500,13 +500,13 @@
     },
     {
       "id": "protein-index",
-      "name": "Protein Index",
-      "repo": "protein-index",
+      "name": "Food",
+      "repo": "food",
       "clarityId": "y6bv7pucg0",
-      "hostname": "protein.significanthobbies.com",
+      "hostname": "food.significanthobbies.com",
       "wiredFiles": [],
       "browserSurfaces": [],
-      "reason": "Intentionally unwired: product decommissioned 2026-09-26 (Cloudflare deployment removed, repository transferred to personal profile); Clarity identity retained for historical data only."
+      "reason": "Historical Protein Index Clarity identity retained. Food is live; browser instrumentation and actual traffic remain unqualified."
     },
     {
       "id": "veg-protein-food",

@@ -117,6 +117,11 @@
       "probePath": "/"
     },
     {
+      "id": "protein-index",
+      "url": "https://food.significanthobbies.com",
+      "probePath": "/"
+    },
+    {
       "id": "web-playables",
       "url": "https://idle.aliveville.com",
       "probePath": "/"

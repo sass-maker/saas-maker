@@ -3469,62 +3469,75 @@
     {
       "id": "protein-index",
       "landing": {
-        "state": "unknown",
-        "mode": null,
-        "notes": "Bounded local source inspection; Live rendered behavior was not exercised. Landing/app attribution and default theme have not been render-qualified.",
-        "checkedAt": "2026-10-14",
+        "state": "source-observed",
+        "mode": "light",
+        "notes": "Food uses the selected Label Desk direction with shared UI atoms. Production390px and1440px product/recipe/source journeys passed; final tall-image bounds are62px. No performance score is inferred.",
+        "checkedAt": "2026-11-12",
         "evidence": [
-          "catalog/projects.json:presentation.directory.platforms"
+          "food/package.json",
+          "food/src/FoodApp.tsx",
+          "food/index.html"
         ],
         "libraryVersion": {
-          "state": "unknown",
-          "notes": "No SaaS Maker UI dependency specification was found in the bounded manifest inspection; copied or vendored assets and live versions remain unverified.",
-          "checkedAt": "2026-10-14",
+          "state": "source-observed",
+          "notes": "Exact committed dependency and Button/Input imports verified; production rendered journeys passed on main014f0ad4.",
+          "checkedAt": "2026-11-12",
           "evidence": [
-            "catalog/projects.json:presentation.directory.platforms"
-          ]
+            "food/package.json",
+            "food/src/FoodApp.tsx"
+          ],
+          "value": "@saas-maker/ui github:sass-maker/ui-library#v0.1.33&path:/packages/ui"
         },
         "loading": {
           "state": "unknown",
-          "notes": "No loading-state signal was found in the bounded source inspection; completeness and runtime states remain unverified.",
+          "notes": "Blocked app-module recovery was exercised successfully. Loading, empty recipe filters, conflict and mutation-denial behaviors were checked; comprehensive degraded-network performance remains unmeasured.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "catalog/projects.json:presentation.directory.platforms"
+            "food/src/FoodApp.tsx"
           ]
-        }
+        },
+        "library": true,
+        "version": "v0.1.33"
       },
       "app": {
-        "state": "unknown",
-        "mode": null,
-        "notes": "Bounded local source inspection; Live rendered behavior was not exercised. Landing/app attribution and default theme have not been render-qualified.",
-        "checkedAt": "2026-10-14",
+        "state": "source-observed",
+        "mode": "light",
+        "notes": "Food uses the selected Label Desk direction with shared UI atoms. Production390px and1440px product/recipe/source journeys passed; final tall-image bounds are62px. No performance score is inferred.",
+        "checkedAt": "2026-11-12",
         "evidence": [
-          "catalog/projects.json:presentation.directory.platforms"
+          "food/package.json",
+          "food/src/FoodApp.tsx",
+          "food/index.html"
         ],
         "libraryVersion": {
-          "state": "unknown",
-          "notes": "No SaaS Maker UI dependency specification was found in the bounded manifest inspection; copied or vendored assets and live versions remain unverified.",
-          "checkedAt": "2026-10-14",
+          "state": "source-observed",
+          "notes": "Exact committed dependency and Button/Input imports verified; production rendered journeys passed on main014f0ad4.",
+          "checkedAt": "2026-11-12",
           "evidence": [
-            "catalog/projects.json:presentation.directory.platforms"
-          ]
+            "food/package.json",
+            "food/src/FoodApp.tsx"
+          ],
+          "value": "@saas-maker/ui github:sass-maker/ui-library#v0.1.33&path:/packages/ui"
         },
         "loading": {
           "state": "unknown",
-          "notes": "No loading-state signal was found in the bounded source inspection; completeness and runtime states remain unverified.",
+          "notes": "Blocked app-module recovery was exercised successfully. Loading, empty recipe filters, conflict and mutation-denial behaviors were checked; comprehensive degraded-network performance remains unmeasured.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "catalog/projects.json:presentation.directory.platforms"
+            "food/src/FoodApp.tsx"
           ]
-        }
+        },
+        "library": true,
+        "version": "v0.1.33"
       },
       "continuity": {
         "state": "unknown",
         "score": null,
-        "notes": "Landing/app continuity requires paired rendered evidence; source inspection does not establish a score.",
-        "checkedAt": "2026-10-14",
+        "notes": "One Food interface contains product and recipe routes in the selected Label Desk system; production390/1440px journeys passed. No numeric continuity rating assigned.",
+        "checkedAt": "2026-11-12",
         "evidence": [
-          "catalog/projects.json:presentation.directory.platforms"
+          "food/src/FoodApp.tsx",
+          "food/src/food.css"
         ]
       }
     },

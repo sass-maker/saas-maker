@@ -2771,6 +2771,53 @@
       "publicUrlLabel": "Preview site"
     },
     {
+      "id": "protein-index",
+      "name": "Food",
+      "description": "Compare packaged food nutrition and find source-linked vegetarian recipes for Indian kitchens.",
+      "form": "Web app and data API",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "React",
+        "Vite",
+        "Cloudflare Workers",
+        "D1",
+        "SaaS Maker UI"
+      ],
+      "group": "current",
+      "makerNote": "I wanted a clear catalog for comparing the protein products available in India, despite the difficulty of reliable data.",
+      "purposeContract": {
+        "purpose": "Food helps Indian shoppers compare packaged-food nutrition and discover vegetarian recipes with the original sources visible.",
+        "audience": "Indian shoppers and vegetarian cooks comparing foods and practical meal ideas.",
+        "outcome": "Find useful foods and recipes while understanding the nutrition basis, source and missing evidence.",
+        "mechanism": "One searchable food catalogue combines Open Food Facts product records with a source-linked vegetarian recipe collection.",
+        "proof": "Live production serves 22,673 canonical products from a complete 22,794-record staged source and 50 source-linked recipes. Nutrition conflicts and missing data remain explicit; source records do not establish market completeness or verify every label.",
+        "nextAction": "Search foods, compare nutrition on a shared basis, or browse vegetarian recipes with original publisher links."
+      },
+      "kind": "product",
+      "category": "experimental",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "food.significanthobbies.com"
+      ],
+      "url": "https://food.significanthobbies.com/",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/food",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/food/issues",
+      "firstCommitAt": "2026-07-15",
+      "latestCommitAt": "2026-11-12",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://food.significanthobbies.com/",
+      "publicUrlLabel": "Visit website"
+    },
+    {
       "id": "app-health",
       "name": "App Health",
       "description": "Web analytics, product events, logs, and endpoint health in one workspace.",
@@ -4809,28 +4856,9 @@
       "profileUrl": "https://sassmaker.com/p/ios-landings"
     },
     {
-      "id": "protein-index",
-      "name": "Protein Index",
-      "description": "Explore dated nutrition records with original label links, observation dates and explicit verification limits.",
-      "form": "Data API and web app",
-      "platforms": [
-        "Web",
-        "API"
-      ],
-      "technologies": [
-        "React",
-        "Hono",
-        "Cloudflare Workers",
-        "D1"
-      ],
-      "roster": "archived",
-      "availability": "archived",
-      "profileUrl": "https://sassmaker.com/p/protein-index"
-    },
-    {
       "id": "veg-protein-food",
       "name": "Recipe Index",
-      "description": "Search vegetarian recipes by protein and calories, with links to the original recipe publishers.",
+      "description": "Historical vegetarian recipe collection integrated into Food.",
       "form": "Food directory",
       "platforms": [
         "Web"
@@ -5532,6 +5560,30 @@
         "focalY": 50,
         "credit": "Original illustration for ContextDaddy",
         "sha256": "81de7c1273d8b842a1456495296807b5310b3998d0f0be16d4a7616596365301"
+      }
+    },
+    {
+      "id": "protein-index",
+      "name": "Food",
+      "description": "Compare packaged food nutrition and find source-linked vegetarian recipes for Indian kitchens.",
+      "url": "https://food.significanthobbies.com/",
+      "tier": "secondary",
+      "category": "experimental",
+      "priority": "P4",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "maintained",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/food",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/food/issues",
+      "pillarId": "learn",
+      "purposeContract": {
+        "purpose": "Food helps Indian shoppers compare packaged-food nutrition and discover vegetarian recipes with the original sources visible.",
+        "audience": "Indian shoppers and vegetarian cooks comparing foods and practical meal ideas.",
+        "outcome": "Find useful foods and recipes while understanding the nutrition basis, source and missing evidence.",
+        "mechanism": "One searchable food catalogue combines Open Food Facts product records with a source-linked vegetarian recipe collection.",
+        "proof": "Live production serves 22,673 canonical products from a complete 22,794-record staged source and 50 source-linked recipes. Nutrition conflicts and missing data remain explicit; source records do not establish market completeness or verify every label.",
+        "nextAction": "Search foods, compare nutrition on a shared basis, or browse vegetarian recipes with original publisher links."
       }
     },
     {
