@@ -184,3 +184,12 @@ not establish authenticated-owner acceptance for every connection.
 ## Work queue
 
 [SaaS Maker GitHub Issues](https://github.com/sass-maker/saas-maker/issues)
+
+## 2026-11-12: DaddyRad source consolidation
+
+The local DaddyRad stdio adapter is part of MCP Connections at
+`local/daddyrad`, transferred from the former `daddyrad-mcp` source container.
+Its eight tools, scope selection and privacy contracts are unchanged. Engine
+revisions remain exact; SwiftPM fetches them directly instead of requiring
+sibling checkouts. Dedicated macOS CI runs the native tests and protocol driver.
+This source move does not activate a hosted route or install a client connection.

@@ -31,18 +31,10 @@ SaaS Maker owns only:
   import, not a live sync). Preserve per-row evidence quality, uncertainty,
   and the assessment-vs-fact distinction; assessments are portfolio judgment,
   not the programs' claims.
-- Memory Map at `apps/memory-map`: a bounded, credential-free, browser-local
-  ChatGPT-export analysis tool absorbed from `chatgpt-memory-insights`
-  (#210). Archives and derived text stay on the visitor's device; it is not a
-  hosted analytics service or AI gateway. It deploys manually with
-  `pnpm deploy:memory-map` to the existing `chatgpt-memory-insights` Pages
-  project on `chatgpt.significanthobbies.com` (never change that origin: it
-  owns visitors' saved indexes). Its `memory-pack` Rust CLI lives in
-  `apps/memory-map/packer` with `memory-pack-ci.yml` and the tag-driven
-  `memory-pack-release.yml`.
 
 MCP Connections at `apps/mcp` is the owner-approved shared MCP gateway
-absorbed from `chatgpt-connections`. It keeps its own pnpm lock and workspace
+absorbed from `chatgpt-connections`. Its local DaddyRad adapter lives at
+`apps/mcp/local/daddyrad` and remains a local-only Swift stdio server. It keeps its own pnpm lock and workspace
 boundary. Its existing Worker, branded endpoints and read-only
 connections remain unchanged. The owner authorized a prepared Anchor account
 read/write native route on 2026-11-08, with explicit per-tool OAuth scopes,
@@ -76,7 +68,6 @@ pnpm build:widget
 pnpm check:shared-packages
 pnpm build:showcase
 pnpm build:cockpit
-pnpm check:memory-map
 pnpm catalog:check-public
 pnpm check:docs
 ~~~
