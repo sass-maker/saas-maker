@@ -628,6 +628,26 @@
       ]
     },
     {
+      "id": "protein-index",
+      "applicability": "newsletter",
+      "confidence": "medium",
+      "rationale": "Live public web product: newsletter is the capture policy for optional product updates. Wiring, subscription persistence and actual signups remain unqualified; this policy does not claim active capture.",
+      "evidence": [
+        {
+          "field": "lifecycle.status",
+          "value": "active"
+        },
+        {
+          "field": "purpose.audience",
+          "value": "public"
+        },
+        {
+          "field": "deployment.status",
+          "value": "live"
+        }
+      ]
+    },
+    {
       "id": "app-health",
       "applicability": "newsletter",
       "confidence": "medium",
@@ -666,7 +686,7 @@
       "id": "motion",
       "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The existing public landing includes “Get Motion updates” and a full feedback form. This records form applicability only; delivery and feedback handling have not been requalified after reactivation.",
+      "rationale": "The existing public landing includes \u201cGet Motion updates\u201d and a full feedback form. This records form applicability only; delivery and feedback handling have not been requalified after reactivation.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -739,7 +759,7 @@
         },
         {
           "field": "presentation.directory.purposeContract.nextAction",
-          "value": "Explore the current work and résumé or use the listed contact paths; do not infer stale focus areas from older copy."
+          "value": "Explore the current work and r\u00e9sum\u00e9 or use the listed contact paths; do not infer stale focus areas from older copy."
         }
       ]
     },
@@ -976,7 +996,7 @@
         },
         {
           "field": "presentation.directory.purposeContract.purpose",
-          "value": "Every Song Is a Website gives each song a curated visual world — a shareable URL with embedded video, licensed lyrics, and playful interactions."
+          "value": "Every Song Is a Website gives each song a curated visual world \u2014 a shareable URL with embedded video, licensed lyrics, and playful interactions."
         },
         {
           "field": "deployment.status",

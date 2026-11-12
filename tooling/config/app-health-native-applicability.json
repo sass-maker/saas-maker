@@ -139,6 +139,12 @@
       "serverRequests": "not-applicable"
     },
     {
+      "id": "protein-index",
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "applicable",
+      "serverRequests": "applicable"
+    },
+    {
       "id": "app-health",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
