@@ -19,7 +19,6 @@ allowBuilds:
 # when Astro pulls a fresher one transitively. See fleet AGENTS.md →
 # release-age policy.
 overrides:
-  '@huggingface/transformers@3.8.1>sharp': 0.35.5
   'miniflare@5.20260820.0-alpha>sharp': 0.35.5
   # Patch the existing Cockpit OpenNext adapter graph without broad upgrades.
   'express@5.2.1>proxy-addr': 2.0.8
@@ -29,11 +28,4 @@ overrides:
   'minimatch@10.2.5>brace-expansion': 5.0.11
   rollup: 4.60.2
   esbuild: 0.28.1
-  # Memory Map runs Transformers.js in the browser only; never install the native runtime.
-  '@huggingface/transformers@3.8.1>onnxruntime-node': '-'
-  # Memory Map security pins carried over from chatgpt-memory-insights, scoped to its Astro.
-  'astro@7.3.3>devalue': 5.9.3
-  'astro@7.3.3>http-cache-semantics': 4.3.0
-  'astro@7.3.3>smol-toml': 1.9.0
-  'astro@7.3.3>vite': 8.1.6
   '@vercel/cli-config>zod': 4.6.7

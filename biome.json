@@ -12,8 +12,6 @@
       "!**/dist",
       "!apps/showcase/public/footer.js",
       "!apps/showcase/public/footer.css",
-      "!apps/memory-map/public/footer.js",
-      "!apps/memory-map/public/footer.css",
       "!**/build",
       "!**/node_modules",
       "!**/coverage",
@@ -33,7 +31,6 @@
       "!services/drank",
       "!services/reel-pipeline",
       "!tools/psi-swarm",
-      "!apps/memory-map",
       "!apps/mcp",
       "!**/*.css",
       "!**/*.astro"
