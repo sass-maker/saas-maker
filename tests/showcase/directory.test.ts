@@ -302,8 +302,9 @@ describe('verified public Fleet directory', () => {
     expect(ids).not.toContain('food');
     expect(archivedIds).not.toContain('protein-index');
     expect(archivedIds).toContain('veg-protein-food');
-    expect(catalog.directory.find((project: { id: string }) => project.id === 'protein-index'))
-      .toMatchObject({ name: 'Food', roster: 'current' });
+    expect(
+      catalog.directory.find((project: { id: string }) => project.id === 'protein-index')
+    ).toMatchObject({ name: 'Food', roster: 'current' });
     for (const id of ['chatgpt-connections', 'unified-portfolio']) {
       expect(ids).not.toContain(id);
       const archived = catalog.archivedDirectory.find(
