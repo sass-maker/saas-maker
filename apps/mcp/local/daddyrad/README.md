@@ -48,9 +48,9 @@ append operator-selected roots to `args`, for example:
 
 ```json
 [
-  "--storage-root", "/Users/sarthak/Desktop/fleet/performancedaddy",
-  "--context-home", "/Users/sarthak",
-  "--context-project", "/Users/sarthak/Desktop/fleet/performancedaddy"
+  "--storage-root", "/Users/you/projects/example",
+  "--context-home", "/Users/you",
+  "--context-project", "/Users/you/projects/example"
 ]
 ```
 
