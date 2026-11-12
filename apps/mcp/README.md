@@ -24,6 +24,15 @@ deliberately unavailable.
 Secure MCP Tunnel is not required for this phase. Device-only products need an
 approved local or cloud data boundary before adding a hosted connection.
 
+## Local DaddyRad connection
+
+[DaddyRad](local/daddyrad/README.md) is the local, read-only Swift stdio
+connection for PerformanceDaddy, ContextDaddy, StorageDaddy and BrowserDaddy.
+Its source, native tests and macOS CI live here with the other MCP connections.
+It runs locally with explicitly selected filesystem scopes; it has no hosted
+route and does not connect to the GUI apps' live state. Build and client setup
+are in its README. On macOS, run `pnpm check:daddyrad` from this directory.
+
 ## Hosted routes
 
 The compatibility workers.dev origin remains active. Public submissions use a

@@ -5,7 +5,6 @@ packages:
   - 'packages/portfolio-project-strip'
   - 'apps/cockpit'
   - 'apps/showcase'
-  - 'apps/memory-map'
   - 'workers/api'
   - 'tooling/tools/gitstat'
 allowBuilds:

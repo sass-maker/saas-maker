@@ -114,64 +114,6 @@ importers:
         specifier: 4.125.0
         version: 4.125.0(@cloudflare/workers-types@5.20260926.1)(@types/node@25.6.0)
 
-  apps/memory-map:
-    dependencies:
-      '@huggingface/transformers':
-        specifier: 3.8.1
-        version: 3.8.1(@types/node@25.6.0)
-      '@observablehq/plot':
-        specifier: 0.6.17
-        version: 0.6.17
-      '@zip.js/zip.js':
-        specifier: 2.8.34
-        version: 2.8.34
-      astro:
-        specifier: 7.4.2
-        version: 7.4.2(@types/node@25.6.0)(@vercel/functions@3.7.5(@aws-sdk/credential-provider-web-identity@3.972.35)(ws@8.22.0))(aws4fetch@1.0.20)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.23.15)(yaml@2.9.1)
-    devDependencies:
-      '@astrojs/check':
-        specifier: 0.9.6
-        version: 0.9.6(@emnapi/runtime@1.11.3)(prettier@3.9.9)(typescript@5.9.3)
-      '@biomejs/biome':
-        specifier: 2.5.5
-        version: 2.5.5
-      '@playwright/test':
-        specifier: 1.62.0
-        version: 1.62.0
-      '@tailwindcss/vite':
-        specifier: 4.3.3
-        version: 4.3.3(vite@8.1.6(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.23.15)(yaml@2.9.1))
-      '@vitest/coverage-v8':
-        specifier: 4.1.12
-        version: 4.1.12(vitest@4.1.12)
-      jscpd:
-        specifier: 5.0.14
-        version: 5.0.14
-      knip:
-        specifier: 6.42.1
-        version: 6.42.1
-      lightningcss:
-        specifier: 1.30.2
-        version: 1.30.2
-      tailwindcss:
-        specifier: 4.3.3
-        version: 4.3.3
-      typescript:
-        specifier: 5.9.3
-        version: 5.9.3
-      ultracite:
-        specifier: 7.12.4
-        version: 7.12.4(@biomejs/biome@2.5.5)(prettier@3.9.9)
-      vite:
-        specifier: 8.1.6
-        version: 8.1.6(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.23.15)(yaml@2.9.1)
-      vitest:
-        specifier: 4.1.12
-        version: 4.1.12(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.12)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@2.2.0))(msw@2.13.6(@types/node@25.6.0)(typescript@5.9.3))(vite@8.1.6(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.23.15)(yaml@2.9.1))
-      wrangler:
-        specifier: 4.125.0
-        version: 4.125.0(@cloudflare/workers-types@5.20260926.1)(@types/node@25.6.0)
-
   apps/showcase:
     dependencies:
       astro:

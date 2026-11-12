@@ -18,3 +18,9 @@
   the repository's `mcp-ci.yml` workflow at the exact source revision.
 - Track operational work in SaaS Maker's GitHub Issues and keep
   `PROJECT_STATUS.md` current when durable product truth changes.
+
+- `local/daddyrad` owns the local, read-only Swift stdio connection for the four
+  DaddyRad native cores. It is part of MCP Connections, with no hosted route,
+  network listener or access to running GUI state. Run `pnpm check:daddyrad`
+  on macOS for changes to this connection. Keep the exact engine revisions in
+  `Package.swift` and `engine-revisions.json` aligned.
