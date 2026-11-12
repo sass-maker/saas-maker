@@ -4838,7 +4838,7 @@
     {
       "id": "veg-protein-food",
       "name": "Recipe Index",
-      "description": "Historical vegetarian recipe collection being integrated into Food.",
+      "description": "Historical vegetarian recipe collection integrated into Food.",
       "form": "Food directory",
       "platforms": [
         "Web"
