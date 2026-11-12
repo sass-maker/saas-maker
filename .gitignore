@@ -57,3 +57,7 @@ project-idea-dump.md
 /tooling/config/directory-submissions/awesome-lists.json
 
 !apps/showcase/public/footer-art/*.webp
+
+# Local native MCP build artifacts
+.swiftpm/
+.build/

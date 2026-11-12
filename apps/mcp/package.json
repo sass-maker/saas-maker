@@ -27,7 +27,8 @@
     "start:research-papers": "node dist/entrypoints/research-papers.js",
     "start:setline": "node dist/entrypoints/setline.js",
     "test": "node --test dist/test/*.test.js",
-    "test:deploy": "node --test scripts/deploy.test.mjs"
+    "test:deploy": "node --test scripts/deploy.test.mjs",
+    "check:daddyrad": "node local/daddyrad/scripts/check.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.29.0",

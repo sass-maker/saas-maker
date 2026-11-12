@@ -34,6 +34,12 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-11-12:** DaddyRad's local read-only native MCP connection now lives in
+  `apps/mcp/local/daddyrad` with dedicated macOS CI. ChatGPT Insights (Memory Map)
+  is restored to its independent repository; its production hostname and
+  browser-local storage origin remain unchanged.
+
+
 - **2026-11-08:** Added submission kits for the 30 current public products
   (issue #373). Existing product profiles and `/launchkit#product-assets`
   provide PNG/SVG marks, dated screenshots, launch-film downloads and factual

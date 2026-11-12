@@ -1,0 +1,30 @@
+name: DaddyRad local MCP CI
+
+on:
+  push:
+    branches: [main]
+    paths: ['apps/mcp/local/daddyrad/**', '.github/workflows/daddyrad-mcp-ci.yml']
+  pull_request:
+    branches: [main]
+    paths: ['apps/mcp/local/daddyrad/**', '.github/workflows/daddyrad-mcp-ci.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  local-mcp:
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - run: node apps/mcp/local/daddyrad/scripts/check.mjs
