@@ -299,7 +299,7 @@
     {
       "id": "posttrainllm",
       "name": "PostTrainLLM",
-      "description": "An experimental browser model playground: run small language models locally with visible generation metrics.",
+      "description": "A Mac-local specialist-model lab for training, evaluation and packaging, with a public browser playground.",
       "form": "Research platform",
       "platforms": [
         "Web",
@@ -3048,9 +3048,9 @@
         "historia.aliveville.com"
       ],
       "url": "https://idle.aliveville.com",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/web-playables",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/web-playables",
       "changelogUrl": "https://idle.aliveville.com/changelog",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/web-playables/issues",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/web-playables/issues",
       "firstCommitAt": "2026-07-10",
       "latestCommitAt": "2026-09-07",
       "roster": "current",
@@ -3349,9 +3349,9 @@
         "sarthakagrawal.dev"
       ],
       "url": "https://sarthakagrawal.dev",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/portfolio",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/portfolio",
       "changelogUrl": "https://sarthakagrawal.dev/changelog",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/portfolio/issues",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/portfolio/issues",
       "firstCommitAt": "2026-05-22",
       "latestCommitAt": "2026-09-19",
       "roster": "current",
@@ -5328,7 +5328,7 @@
     {
       "id": "posttrainllm",
       "name": "PostTrainLLM",
-      "description": "An experimental browser model playground: run small language models locally with visible generation metrics.",
+      "description": "A Mac-local specialist-model lab for training, evaluation and packaging, with a public browser playground.",
       "url": "https://posttrainllm.com",
       "tier": "core",
       "category": "utility",
@@ -6051,8 +6051,8 @@
       "shareable": true,
       "maturity": "experiment",
       "changelogUrl": "https://sarthakagrawal.dev/changelog",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/portfolio",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/portfolio/issues",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/portfolio",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/portfolio/issues",
       "pillarId": "personal",
       "purposeContract": {
         "purpose": "Sarthak Agrawal’s personal site is the durable public record of his work, writing, résumé, and professional identity.",
@@ -6222,8 +6222,8 @@
       "lifecycle": "active",
       "shareable": true,
       "changelogUrl": "https://idle.aliveville.com/changelog",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/web-playables",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/web-playables/issues",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/web-playables",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/web-playables/issues",
       "purposeContract": {
         "purpose": "Web Playables is a small laboratory for learning how browser and YouTube-ready games are designed, packaged, and distributed.",
         "audience": "A builder studying reusable HTML5 game mechanics and portable distribution constraints.",

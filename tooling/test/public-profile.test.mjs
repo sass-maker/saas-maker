@@ -37,3 +37,26 @@ test('metadata cannot inject Markdown or HTML', () => {
   assert.ok(rendered.includes('\\[bad\\]'));
   assert.ok(rendered.includes('line \\# heading'));
 });
+
+test('schema 6 uses public links and omits unavailable and internal surfaces', () => {
+  const directory = [
+    { ...project, publicUrl: 'https://public.example.com', url: 'https://legacy.example.com', availability: 'public-link' },
+    { ...project, id: 'internal', name: 'Internal dashboard', shareable: false, availability: 'internal-private', url: 'http://localhost:4321' },
+    { ...project, id: 'preview', name: 'Unqualified preview', availability: 'preview-not-qualified' },
+    { ...project, id: 'prototype', name: 'Prototype', availability: 'unreleased-prototype' },
+  ];
+  const rendered = renderProjectSection({ schemaVersion: 6, directory });
+  assert.match(rendered, /https:\/\/public.example.com/);
+  for (const omitted of ['legacy.example.com', 'localhost', 'Internal dashboard', 'Unqualified preview', 'Prototype']) {
+    assert.ok(!rendered.includes(omitted));
+  }
+});
+
+test('schema 6 fails closed for malformed or missing public links', () => {
+  for (const publicUrl of [undefined, 'javascript:alert(1)', 'http://localhost:4321', 'https://user:pass@example.com']) {
+    assert.throws(() => renderProjectSection({ schemaVersion: 6, directory: [{ ...project, availability: 'public-link', publicUrl }] }));
+  }
+  assert.throws(() => renderProjectSection({ schemaVersion: 6, directory: [{ ...project, availability: 'internal-private' }] }));
+  assert.throws(() => renderProjectSection({ schemaVersion: 6, directory: [{ ...project, shareable: false, availability: 'public-link', publicUrl: project.url }] }));
+  assert.throws(() => renderProjectSection({ schemaVersion: 7, directory: [project] }));
+});
