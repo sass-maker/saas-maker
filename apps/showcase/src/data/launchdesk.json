@@ -45310,6 +45310,84 @@
           "note": "Create a personal homepage with links to your work. The official site advertises a free page with paid options; verify current plan limits and outbound link attributes."
         }
       ]
+    },
+    {
+      "name": "launched.tools",
+      "domain": "launched.tools",
+      "website": "https://launched.tools/",
+      "submissionUrl": "https://launched.tools/submit",
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Reviewed AI / SaaS tools",
+      "pricing": "free",
+      "dr": null,
+      "link": "follow",
+      "eligibility": "Working AI / SaaS tools that pass the acceptance check. Free listings require a verified badge on your site; a paid badge waiver and Pro dashboard are optional. Thin wrappers, vaporware and prohibited categories are excluded.",
+      "flags": [
+        "DR unknown",
+        "Link type source-reported; not independently verified",
+        "Free listing requires badge"
+      ],
+      "route": "source-reported",
+      "provider": null,
+      "sourceUrl": "https://launched.tools/submit",
+      "retrieved": "2026-11-13",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "official-site-research",
+          "dr": null,
+          "link": "follow",
+          "pricing": "free",
+          "sourceUrl": "https://launched.tools/submit",
+          "retrieved": "2026-11-13",
+          "submissionUrl": "https://launched.tools/submit",
+          "note": "Official submission page advertises free listing, an acceptance check and publication after badge verification, with two dofollow links. Backlink attributes and submission completion were not independently verified; no DR measurement was obtained."
+        },
+        {
+          "source": "official-site-research",
+          "sourceUrl": "https://launched.tools/trust",
+          "retrieved": "2026-11-13",
+          "note": "Trust page describes editorial review and scoring, optional Pro dashboard and paid badge waiver. These are provider claims, not an independent assessment of review quality."
+        }
+      ]
+    },
+    {
+      "name": "Launchpadly",
+      "domain": "launchpadly.co",
+      "website": "https://launchpadly.co/",
+      "submissionUrl": "https://launchpadly.co/submit",
+      "exampleUrl": null,
+      "category": "Directory",
+      "type": "Startup launch platform / Weekly board",
+      "pricing": "freemium",
+      "dr": 72,
+      "link": "follow",
+      "eligibility": "Early-stage startups; sign-in is required to submit. The free tier requires a badge on your site and review, advertised as 1–3 days. An optional Featured tier advertises faster publication and seven days of homepage placement without a badge. Paid visibility is separate from community rankings.",
+      "flags": [
+        "DR not independently verified",
+        "Link type source-reported; not independently verified",
+        "Free listing requires badge"
+      ],
+      "route": "source-reported",
+      "provider": "Site-reported Ahrefs DR; measurement date unspecified; not independently verified",
+      "sourceUrl": "https://launchpadly.co/",
+      "retrieved": "2026-11-13",
+      "measured": null,
+      "quarantined": false,
+      "claims": [
+        {
+          "source": "official-site-research",
+          "dr": 72,
+          "link": "follow",
+          "pricing": "freemium",
+          "sourceUrl": "https://launchpadly.co/",
+          "retrieved": "2026-11-13",
+          "submissionUrl": "https://launchpadly.co/submit",
+          "note": "Official homepage advertises Ahrefs DR 72 and a permanent dofollow backlink. Free listing requires review and a site badge; optional Featured placement is advertised at $9 for seven days with no badge requirement. The submission route redirects to sign-in. DR, backlink attributes and actual review turnaround were not independently verified."
+        }
+      ]
     }
   ]
 }
