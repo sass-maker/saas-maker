@@ -6,6 +6,7 @@ import { isDeepStrictEqual } from 'node:util';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { validateFeedbackApplicability } from './capture-policy-validation.mjs';
 import { validateDesignPolicies } from './design-policy-validation.mjs';
+import { appHealthMonitoringManifests } from './app-health-monitoring-policy.mjs';
 
 import { fileURLToPath } from 'node:url';
 import { catalogPaths } from './catalog-paths.mjs';
@@ -321,40 +322,9 @@ outputs.set(
 }
 
 {
-  // Journey probes are read-only by policy: every catalogued journey is a
-  // public GET with no body, credentials or query values. App Health reads the
-  // generated file; it never decides which products are probed.
-  const config = systems.probeJourneys ?? {};
-  const allowedJourney = new Set([
-    'journey',
-    'url',
-    'budget_ms',
-    'timeout_ms',
-    'warm_check',
-    'expect',
-  ]);
-  const entries = systemEntries('probe');
-  for (const [id, policy] of entries) {
-    if (!Array.isArray(policy.journeys) || policy.journeys.length === 0)
-      throw new Error(`Probe policy needs journeys or an absent reason: ${id}`);
-    for (const journey of policy.journeys) {
-      const unknown = Object.keys(journey).filter((field) => !allowedJourney.has(field));
-      if (unknown.length > 0)
-        throw new Error(`Probe journeys are GET-only; unexpected ${unknown.join(', ')}: ${id}`);
-      const url = new URL(journey.url);
-      if (url.protocol !== 'https:' || url.search || url.username || url.password)
-        throw new Error(`Probe journey URL must be plain public https: ${id}/${journey.journey}`);
-    }
-  }
-  outputs.set('app-health/apps/probe/journeys.json', {
-    schema_version: 1,
-    generated_from: 'saas-maker catalog/projects.json projects[].systems.probe (pnpm catalog:sync)',
-    purpose: config.purpose,
-    source_issue: config.sourceIssue,
-    journeys: inOrder(config, entries, (id) =>
-      entries.get(id)?.journeys.map((journey) => ({ project: id, ...journey }))
-    ).flat(),
-  });
+  const monitoring = appHealthMonitoringManifests(source);
+  outputs.set('app-health/apps/probe/journeys.json', monitoring.probes);
+  outputs.set('app-health/.fleet-local/monitoring-policy.json', monitoring.coverage);
 }
 
 outputs.set('site-health/apps/backend/config/root-search-queries.json', systems.searchRoots ?? {});

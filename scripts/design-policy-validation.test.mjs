@@ -158,6 +158,7 @@ test('worktree generation writes locally, preserves catalog order and checks dri
       'catalog-paths.mjs',
       'design-policy-validation.mjs',
       'capture-policy-validation.mjs',
+      'app-health-monitoring-policy.mjs',
     ]) {
       cpSync(new URL(name, import.meta.url), join(repo, 'scripts', name));
     }
@@ -178,7 +179,15 @@ test('worktree generation writes locally, preserves catalog order and checks dri
         capturePolicy: { schemaVersion: 1, purpose: 'Test', sourceIssue: 'Test', order: [] },
       },
       projects: [
-        { id: 'z', systems: { ui: { app: { library: true, version: 'v0.1.19' } } } },
+        {
+          id: 'z',
+          name: 'Z',
+          lifecycle: { portfolioStatus: 'active' },
+          systems: {
+            ui: { app: { library: true, version: 'v0.1.19' } },
+            probe: { scope: 'local', absent: 'Local fixture only.' },
+          },
+        },
         { id: 'absent' },
         { id: 'a', systems: { ui: {} } },
       ],

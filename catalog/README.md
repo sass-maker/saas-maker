@@ -99,6 +99,15 @@ pnpm --dir ../site-health docs:projects
   `projects[].systems.probe` (ordered by top-level `systems.probeJourneys`).
   Journeys are public GET requests only: the sync rejects methods, bodies,
   query strings and credentials. App Health's probe reads this file by default.
+- The complete active monitoring roster is owner-local setup data at App Health's
+  ignored `.fleet-local/monitoring-policy.json`, including explicit local/private
+  limits. It is uploaded through the authenticated workspace policy API, never
+  bundled into the public dashboard or published as a catalog projection.
+  An isolated writer can generate both outputs with
+  `node scripts/sync-app-health-monitoring.mjs --target /path/to/app-health`.
+  Use that command to bootstrap a fresh checkout; ordinary `catalog:sync`
+  preserves its existing rule of skipping unavailable sibling output directories.
+  The target App Health checkout must retain its `.fleet-local/` ignore rule.
 
 App Health browser visitors are inferred from catalogued browser surfaces.
 Projects with no reportable browser audience may set
