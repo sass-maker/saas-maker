@@ -324,7 +324,7 @@ outputs.set(
 {
   const monitoring = appHealthMonitoringManifests(source);
   outputs.set('app-health/apps/probe/journeys.json', monitoring.probes);
-  outputs.set('app-health/apps/probe/coverage.json', monitoring.coverage);
+  outputs.set('app-health/.fleet-local/monitoring-policy.json', monitoring.coverage);
 }
 
 outputs.set('site-health/apps/backend/config/root-search-queries.json', systems.searchRoots ?? {});

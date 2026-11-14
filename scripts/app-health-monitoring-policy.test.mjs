@@ -1,5 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { appHealthMonitoringManifests } from './app-health-monitoring-policy.mjs';
 
 const journey = {
@@ -190,4 +202,51 @@ test('non-string identities and URLs are rejected before a runtime-invalid file 
     assert.throws(() =>
       appHealthMonitoringManifests({ projects: [project('x', { journeys: [invalid] })] })
     );
+});
+
+test('standalone generation keeps the complete roster in the ignored owner-local directory', () => {
+  const root = mkdtempSync(join(tmpdir(), 'monitoring-projection-'));
+  try {
+    const repo = join(root, 'saas-maker');
+    const target = join(root, 'app-health');
+    for (const path of [join(repo, 'scripts'), join(repo, 'catalog'), join(target, 'apps/probe')])
+      mkdirSync(path, { recursive: true });
+    for (const name of [
+      'sync-app-health-monitoring.mjs',
+      'app-health-monitoring-policy.mjs',
+      'catalog-paths.mjs',
+    ])
+      cpSync(new URL(name, import.meta.url), join(repo, 'scripts', name));
+    writeFileSync(
+      join(repo, 'catalog/projects.json'),
+      JSON.stringify({
+        projects: [
+          project('public-tool', { journeys: [journey] }),
+          project('private-tool', {
+            scope: 'private',
+            absent: 'Owner-only infrastructure context.',
+          }),
+        ],
+      })
+    );
+    writeFileSync(join(target, 'package.json'), JSON.stringify({ name: 'app-health' }));
+    const run = (...args) =>
+      spawnSync(
+        process.execPath,
+        [join(repo, 'scripts/sync-app-health-monitoring.mjs'), '--target', target, ...args],
+        { cwd: repo, encoding: 'utf8' }
+      );
+    assert.equal(run().status, 0);
+    assert.equal(run('--check').status, 0);
+    const policy = JSON.parse(
+      readFileSync(join(target, '.fleet-local/monitoring-policy.json'), 'utf8')
+    );
+    assert.equal(policy.projects.length, 2);
+    assert.equal(existsSync(join(target, 'apps/probe/coverage.json')), false);
+    assert.ok(
+      !readFileSync(join(target, 'apps/probe/journeys.json'), 'utf8').includes('private-tool')
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
