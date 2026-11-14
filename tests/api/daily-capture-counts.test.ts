@@ -254,15 +254,23 @@ describe('daily PII-free capture receipts', () => {
     expect(result.feedbackApplicabilityByCatalogId['agent-inbox']).toBe('not_applicable');
     expect(result.feedbackApplicabilityByCatalogId.techdata).toBe('not_applicable');
     expect(result.feedbackApplicabilityByCatalogId['domain-inbox']).toBe('not_applicable');
+    expect(result.feedbackApplicabilityByCatalogId['linkedin-insights']).toBe('not_applicable');
     expect(result.feedbackApplicabilityByCatalogId.motion).toBe('applicable');
     expect(
       Object.entries(result.feedbackApplicabilityByCatalogId)
         .filter(
           ([id]) =>
-            !['site-health', 'agent-inbox', 'techdata', 'motion', 'domain-inbox'].includes(id)
+            ![
+              'site-health',
+              'agent-inbox',
+              'techdata',
+              'motion',
+              'domain-inbox',
+              'linkedin-insights',
+            ].includes(id)
         )
         .map(([, applicability]) => applicability)
-    ).toEqual(Array.from({ length: reportProjects.length - 5 }, () => 'unknown'));
+    ).toEqual(Array.from({ length: reportProjects.length - 6 }, () => 'unknown'));
     expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(
       reportProjects.length
     );
@@ -378,7 +386,12 @@ describe('daily PII-free capture receipts', () => {
       .filter(([, applicability]) => applicability === 'not_applicable')
       .map(([id]) => id)
       .sort();
-    expect(browserNotApplicable).toEqual(['domain-inbox', 'fleet-social', 'site-health']);
+    expect(browserNotApplicable).toEqual([
+      'domain-inbox',
+      'fleet-social',
+      'linkedin-insights',
+      'site-health',
+    ]);
     expect(result.browserVisitorsApplicabilityByCatalogId['agent-inbox']).toBe('applicable');
     for (const id of ['fleet-social', 'site-health']) {
       const policy = nativeApplicability.products.find((product) => product.id === id);
@@ -431,6 +444,7 @@ describe('daily PII-free capture receipts', () => {
       'agent-inbox',
       'domain-inbox',
       'fleet-social',
+      'linkedin-insights',
       'site-health',
       'techdata',
     ]);
