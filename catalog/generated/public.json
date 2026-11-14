@@ -3003,26 +3003,26 @@
       "id": "web-playables",
       "name": "Web Playables",
       "description": "Small browser-playable game experiments.",
-      "form": "Game collection",
+      "form": "Browser game collection",
       "platforms": [
         "Web",
         "YouTube Playables"
       ],
       "technologies": [
         "TypeScript",
-        "Vite",
-        "Cloudflare Pages",
-        "Cloudflare Workers"
+        "Canvas 2D",
+        "Godot",
+        "Cloudflare Pages"
       ],
       "group": "current",
       "makerNote": "I built this laboratory to understand how idle and HTML-based games are designed, shipped, and distributed.",
       "purposeContract": {
-        "purpose": "Web Playables is a small laboratory for learning how browser and YouTube-ready games are designed, packaged, and distributed.",
-        "audience": "A builder studying reusable HTML5 game mechanics and portable distribution constraints.",
-        "outcome": "Prototype a mechanic once and ship it as a normal web game and a submission-ready playable package.",
-        "mechanism": "A reusable gamekit supplies loops, saves, offline progress, platform adapters, and builds for a small games hub.",
-        "proof": "The research goal produced a working gamekit, a live idle game, and YouTube-compatible packaging; the project is now parked.",
-        "nextAction": "Preserved experiment; no current work or obligation to resume."
+        "purpose": "Build and play small browser games with considered characters, animation and portable distribution.",
+        "audience": "The owner playing and evaluating small browser-game experiments.",
+        "outcome": "Play complete game loops and judge their combat, progression and presentation.",
+        "mechanism": "A gamekit powers TypeScript games; a separate Godot web-export lane retains War Chest’s authored campaign and original rules.",
+        "proof": "Idle Startup remains live. War Chest and the original Ember Road web study have local playable builds and scoped verification; no new production deployment or player enjoyment is claimed.",
+        "nextAction": "Play the two local candidates and decide which game earns another iteration."
       },
       "footerArt": {
         "src": "/footer-art/web-playables.webp",
@@ -5231,11 +5231,11 @@
     {
       "id": "war-chest",
       "name": "War Chest",
-      "description": "An experimental local tactical war game.",
-      "form": "Local macOS game",
+      "description": "The historical War Chest experiment is now maintained as a browser-playable game inside Web Playables.",
+      "form": "Browser game within Web Playables",
       "platforms": [
-        "macOS",
-        "Local"
+        "Web",
+        "macOS"
       ],
       "technologies": [
         "Godot",
@@ -6293,12 +6293,12 @@
       "repositoryUrl": "https://github.com/Significant-Hobbies/web-playables",
       "roadmapUrl": "https://github.com/Significant-Hobbies/web-playables/issues",
       "purposeContract": {
-        "purpose": "Web Playables is a small laboratory for learning how browser and YouTube-ready games are designed, packaged, and distributed.",
-        "audience": "A builder studying reusable HTML5 game mechanics and portable distribution constraints.",
-        "outcome": "Prototype a mechanic once and ship it as a normal web game and a submission-ready playable package.",
-        "mechanism": "A reusable gamekit supplies loops, saves, offline progress, platform adapters, and builds for a small games hub.",
-        "proof": "The research goal produced a working gamekit, a live idle game, and YouTube-compatible packaging; the project is now parked.",
-        "nextAction": "Preserved experiment; no current work or obligation to resume."
+        "purpose": "Build and play small browser games with considered characters, animation and portable distribution.",
+        "audience": "The owner playing and evaluating small browser-game experiments.",
+        "outcome": "Play complete game loops and judge their combat, progression and presentation.",
+        "mechanism": "A gamekit powers TypeScript games; a separate Godot web-export lane retains War Chest’s authored campaign and original rules.",
+        "proof": "Idle Startup remains live. War Chest and the original Ember Road web study have local playable builds and scoped verification; no new production deployment or player enjoyment is claimed.",
+        "nextAction": "Play the two local candidates and decide which game earns another iteration."
       },
       "footerArt": {
         "src": "/footer-art/web-playables.webp",
