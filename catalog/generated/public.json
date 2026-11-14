@@ -4550,7 +4550,7 @@
       "technologies": [
         "React",
         "SaaS Maker UI library",
-        "Cloudflare Pages"
+        "Cloudflare Workers Static Assets"
       ],
       "group": "current",
       "makerNote": "A free browser-local tool for exploring insights from your own LinkedIn export.",
