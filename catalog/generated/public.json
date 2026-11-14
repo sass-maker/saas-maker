@@ -3021,8 +3021,8 @@
         "audience": "The owner playing and evaluating small browser-game experiments.",
         "outcome": "Play complete game loops and judge their combat, progression and presentation.",
         "mechanism": "A gamekit powers TypeScript games; a separate Godot web-export lane retains War Chest’s authored campaign and original rules.",
-        "proof": "Idle Startup remains live. War Chest and the original Ember Road web study have local playable builds and scoped verification; no new production deployment or player enjoyment is claimed.",
-        "nextAction": "Play the two local candidates and decide which game earns another iteration."
+        "proof": "Idle Startup, War Chest and the original Ember Road browser study are publicly playable. Open Historia retains its separate networked deployment. Source, model suites and scoped browser checks are recorded; owner enjoyment and exact Epic Idle Journey parity remain unverified.",
+        "nextAction": "Play the browser games and choose which experience earns another iteration."
       },
       "footerArt": {
         "src": "/footer-art/web-playables.webp",
@@ -6297,8 +6297,8 @@
         "audience": "The owner playing and evaluating small browser-game experiments.",
         "outcome": "Play complete game loops and judge their combat, progression and presentation.",
         "mechanism": "A gamekit powers TypeScript games; a separate Godot web-export lane retains War Chest’s authored campaign and original rules.",
-        "proof": "Idle Startup remains live. War Chest and the original Ember Road web study have local playable builds and scoped verification; no new production deployment or player enjoyment is claimed.",
-        "nextAction": "Play the two local candidates and decide which game earns another iteration."
+        "proof": "Idle Startup, War Chest and the original Ember Road browser study are publicly playable. Open Historia retains its separate networked deployment. Source, model suites and scoped browser checks are recorded; owner enjoyment and exact Epic Idle Journey parity remain unverified.",
+        "nextAction": "Play the browser games and choose which experience earns another iteration."
       },
       "footerArt": {
         "src": "/footer-art/web-playables.webp",
