@@ -104,3 +104,58 @@ test('duplicate project and journey identities fail instead of conflating covera
     /duplicate/
   );
 });
+
+test('private scope cannot be converted into a public probe when its reason is missing', () => {
+  for (const scope of ['local', 'private'])
+    assert.throws(() =>
+      appHealthMonitoringManifests({ projects: [project('x', { scope, journeys: [journey] })] })
+    );
+});
+
+test('trailing-dot and private network hostnames stay outside public probes', () => {
+  for (const url of [
+    'https://localhost./',
+    'https://router.lan/',
+    'https://app.home.arpa/',
+    'https://app.localdomain/',
+    'https://app.internal./',
+    'https://app.test/',
+    'https://app.corp/',
+  ])
+    assert.throws(() =>
+      appHealthMonitoringManifests({
+        projects: [project('x', { journeys: [{ ...journey, url }] })],
+      })
+    );
+});
+
+test('identities fit the probe runtime limit before manifests are emitted', () => {
+  assert.throws(() =>
+    appHealthMonitoringManifests({ projects: [project('x'.repeat(65), { journeys: [journey] })] })
+  );
+  assert.throws(() =>
+    appHealthMonitoringManifests({
+      projects: [project('x', { journeys: [{ ...journey, journey: 'x'.repeat(65) }] })],
+    })
+  );
+});
+
+test('journeys retain reviewed policy order and append newly registered projects', () => {
+  const result = appHealthMonitoringManifests({
+    systems: { probeJourneys: { order: ['b', 'old', 'a'] } },
+    projects: [
+      project('a', { journeys: [journey] }),
+      project('b', { journeys: [journey] }),
+      project('c', { journeys: [journey] }),
+      project('old', { journeys: [journey] }, 'inactive'),
+    ],
+  });
+  assert.deepEqual(
+    result.probes.journeys.map((row) => row.project),
+    ['b', 'a', 'c']
+  );
+  assert.deepEqual(
+    result.coverage.projects.map((row) => row.catalog_id),
+    ['a', 'b', 'c']
+  );
+});
