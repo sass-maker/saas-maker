@@ -289,7 +289,7 @@ describe('verified public Fleet directory', () => {
       {}
     );
     expect(catalog.schemaVersion).toBe(6);
-    expect(ids).toHaveLength(39);
+    expect(ids).toHaveLength(40);
     expect(ids).not.toContain('significanthobbies');
     expect(new Set(ids).size).toBe(catalog.directory.length);
     const archivedIds = catalog.archivedDirectory.map((project: { id: string }) => project.id);
@@ -298,6 +298,14 @@ describe('verified public Fleet directory', () => {
       expect.arrayContaining(['significanthobbies', 'chatgpt-connections', 'unified-portfolio'])
     );
     expect(ids).toContain('domain-inbox');
+    expect(
+      catalog.directory.find((project: { id: string }) => project.id === 'linkedin-insights')
+    ).toMatchObject({
+      name: 'LinkedIn Archive',
+      roster: 'current',
+      availability: 'public-link',
+      publicUrl: 'https://linkedin.significanthobbies.com',
+    });
     expect(ids).toContain('protein-index');
     expect(ids).not.toContain('food');
     expect(archivedIds).not.toContain('protein-index');

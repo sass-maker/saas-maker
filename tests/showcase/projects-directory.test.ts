@@ -93,7 +93,7 @@ describe('current projects browsing boundary', () => {
   it('preserves historical standalone repository routes without changing roster counts', () => {
     const legacyIds = ['ai-badges', 'pinpoint', 'port-whisperer', 'society-relay'];
     expect(ARCHIVED_REPOSITORY_PROJECTS.map((project) => project.id).sort()).toEqual(legacyIds);
-    expect(DIRECTORY_PROJECTS).toHaveLength(39);
+    expect(DIRECTORY_PROJECTS).toHaveLength(40);
     expect(ARCHIVED_DIRECTORY_PROJECTS).toHaveLength(40);
 
     for (const project of ARCHIVED_REPOSITORY_PROJECTS) {

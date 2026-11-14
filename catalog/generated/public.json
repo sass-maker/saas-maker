@@ -4538,6 +4538,50 @@
       },
       "roster": "current",
       "availability": "internal-private"
+    },
+    {
+      "id": "linkedin-insights",
+      "name": "LinkedIn Archive",
+      "description": "Explore insights from your LinkedIn data export in your browser. Choose the extracted export folder; personal archive data stays on your device.",
+      "form": "Web app",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "React",
+        "SaaS Maker UI library",
+        "Cloudflare Workers Static Assets"
+      ],
+      "group": "current",
+      "makerNote": "A free browser-local tool for exploring insights from your own LinkedIn export.",
+      "purposeContract": {
+        "purpose": "Turn an exported LinkedIn archive into understandable personal data insights.",
+        "audience": "People who want to explore their own LinkedIn data export without uploading it.",
+        "outcome": "Understand the contents and patterns in an exported LinkedIn history.",
+        "mechanism": "Select an extracted export folder and parse its CSV files locally in the browser.",
+        "proof": "The deployed static browser app passes synthetic folder-import, failure recovery, clear/reload and 21 responsive layout checks; the imported archive triggers no remote requests or stored records.",
+        "nextAction": "Choose your extracted LinkedIn export folder and explore the analysis locally; clear the session when finished."
+      },
+      "kind": "product",
+      "category": "utility",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "linkedin.significanthobbies.com"
+      ],
+      "url": "https://linkedin.significanthobbies.com",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/linkedin-insights",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/linkedin-insights/issues",
+      "firstCommitAt": "2026-11-14",
+      "latestCommitAt": "2026-11-14",
+      "roster": "current",
+      "availability": "public-link",
+      "publicUrl": "https://linkedin.significanthobbies.com",
+      "publicUrlLabel": "Visit website"
     }
   ],
   "archivedDirectory": [
@@ -5794,6 +5838,30 @@
         "focalY": 50,
         "credit": "Original illustration for Knowledge Base",
         "sha256": "418cd23e703c38e823c4f90fd48185ad7e87faeb8a512e9f0059085eaf4d39b2"
+      }
+    },
+    {
+      "id": "linkedin-insights",
+      "name": "LinkedIn Archive",
+      "description": "Explore insights from your LinkedIn data export in your browser. Choose the extracted export folder; personal archive data stays on your device.",
+      "url": "https://linkedin.significanthobbies.com",
+      "tier": "active",
+      "category": "utility",
+      "priority": null,
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "public-ready",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/linkedin-insights",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/linkedin-insights/issues",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "Turn an exported LinkedIn archive into understandable personal data insights.",
+        "audience": "People who want to explore their own LinkedIn data export without uploading it.",
+        "outcome": "Understand the contents and patterns in an exported LinkedIn history.",
+        "mechanism": "Select an extracted export folder and parse its CSV files locally in the browser.",
+        "proof": "The deployed static browser app passes synthetic folder-import, failure recovery, clear/reload and 21 responsive layout checks; the imported archive triggers no remote requests or stored records.",
+        "nextAction": "Choose your extracted LinkedIn export folder and explore the analysis locally; clear the session when finished."
       }
     },
     {

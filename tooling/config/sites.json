@@ -175,6 +175,11 @@
       "id": "techdata",
       "url": "https://data.highsignal.app",
       "probePath": "/"
+    },
+    {
+      "id": "linkedin-insights",
+      "url": "https://linkedin.significanthobbies.com",
+      "probePath": "/"
     }
   ]
 }
