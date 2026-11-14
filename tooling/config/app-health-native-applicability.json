@@ -241,6 +241,14 @@
       "browserVisitorsReason": "Private owner email inbox; email content and browsing are not sent to hosted analytics. First-party usage qualification remains pending.",
       "browserVisitorsSourceIssue": "https://github.com/sass-maker/fleet-mail/issues/1",
       "serverRequests": "not-applicable"
+    },
+    {
+      "id": "linkedin-insights",
+      "nativeSessions": "not-applicable",
+      "browserVisitors": "not-applicable",
+      "browserVisitorsReason": "Privacy-bounded browser-local personal archive analyzer; no visitor telemetry or replay is installed, and archive views remain network silent.",
+      "browserVisitorsSourceIssue": "https://github.com/Significant-Hobbies/linkedin-insights/issues/1",
+      "serverRequests": "not-applicable"
     }
   ]
 }

@@ -686,7 +686,7 @@
       "id": "motion",
       "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The existing public landing includes \u201cGet Motion updates\u201d and a full feedback form. This records form applicability only; delivery and feedback handling have not been requalified after reactivation.",
+      "rationale": "The existing public landing includes “Get Motion updates” and a full feedback form. This records form applicability only; delivery and feedback handling have not been requalified after reactivation.",
       "evidence": [
         {
           "field": "lifecycle.status",
@@ -759,7 +759,7 @@
         },
         {
           "field": "presentation.directory.purposeContract.nextAction",
-          "value": "Explore the current work and r\u00e9sum\u00e9 or use the listed contact paths; do not infer stale focus areas from older copy."
+          "value": "Explore the current work and résumé or use the listed contact paths; do not infer stale focus areas from older copy."
         }
       ]
     },
@@ -996,7 +996,7 @@
         },
         {
           "field": "presentation.directory.purposeContract.purpose",
-          "value": "Every Song Is a Website gives each song a curated visual world \u2014 a shareable URL with embedded video, licensed lyrics, and playful interactions."
+          "value": "Every Song Is a Website gives each song a curated visual world — a shareable URL with embedded video, licensed lyrics, and playful interactions."
         },
         {
           "field": "deployment.status",
@@ -1085,6 +1085,19 @@
           "value": "private-authenticated"
         }
       ]
+    },
+    {
+      "id": "linkedin-insights",
+      "applicability": "not-applicable",
+      "confidence": "high",
+      "rationale": "Free browser-local utility with no accounts or newsletter collection. Preserve a network-silent archive analysis workflow.",
+      "evidence": [
+        {
+          "field": "ownerNotes.notes",
+          "value": "Browser-local analysis of personal LinkedIn exports: no third-party analytics, session replay, imported archive uploads or remote processing. Public static delivery does not collect archive content. Selected stack: React, TypeScript, shared internal UI library and static Cloudflare Pages. No accounts, server storage or Pages Functions. Preparing target linkedin.significanthobbies.com; no live release claimed before provider verification."
+        }
+      ],
+      "feedbackApplicability": "not_applicable"
     }
   ]
 }
