@@ -246,6 +246,9 @@ test('standalone generation keeps the complete roster in the ignored owner-local
     assert.ok(
       !readFileSync(join(target, 'apps/probe/journeys.json'), 'utf8').includes('private-tool')
     );
+    const publicProbes = readFileSync(join(target, 'apps/probe/journeys.json'), 'utf8');
+    assert.ok(!publicProbes.includes('Owner-only infrastructure context.'));
+    assert.deepEqual(JSON.parse(publicProbes).journeys, [{ project: 'public-tool', ...journey }]);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
