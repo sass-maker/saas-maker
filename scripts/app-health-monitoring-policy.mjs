@@ -7,7 +7,7 @@ export function appHealthMonitoringManifests(catalog) {
   for (const project of catalog.projects) {
     if (project.lifecycle?.portfolioStatus !== 'active') continue;
     const id = project.id;
-    if (!/^[a-z0-9][a-z0-9-]{0,63}$/.test(id) || identities.has(id))
+    if (typeof id !== 'string' || !/^[a-z0-9][a-z0-9-]{0,63}$/.test(id) || identities.has(id))
       throw new Error(`Invalid or duplicate monitoring project: ${id}`);
     identities.add(id);
     const policy = project.systems?.probe;
@@ -30,11 +30,17 @@ export function appHealthMonitoringManifests(catalog) {
       if (!Array.isArray(policy.journeys) || !policy.journeys.length || policy.journeys.length > 10)
         throw new Error(`Monitoring needs one to ten public journeys: ${id}`);
       for (const journey of policy.journeys) {
-        if (!/^[a-z0-9][a-z0-9-]{0,63}$/.test(journey.journey) || names.has(journey.journey))
+        if (
+          typeof journey.journey !== 'string' ||
+          !/^[a-z0-9][a-z0-9-]{0,63}$/.test(journey.journey) ||
+          names.has(journey.journey)
+        )
           throw new Error(`Invalid or duplicate monitoring journey: ${id}`);
         const allowed = ['journey', 'url', 'budget_ms', 'timeout_ms', 'warm_check', 'expect'];
         if (Object.keys(journey).some((key) => !allowed.includes(key)))
           throw new Error(`Monitoring journeys must be credential-free GET requests: ${id}`);
+        if (typeof journey.url !== 'string')
+          throw new Error(`Monitoring URL must be a string: ${id}`);
         const url = new URL(journey.url);
         const hostname = url.hostname.toLowerCase().replace(/\.$/, '');
         if (
@@ -58,12 +64,18 @@ export function appHealthMonitoringManifests(catalog) {
       catalog_id: id,
       name: project.identity?.publicName ?? project.name,
       scope: policy.absent === undefined ? 'public' : policy.scope,
-      reason: policy.absent ?? policy.coverageReason ?? null,
+      reason:
+        policy.absent === undefined
+          ? (policy.coverageReason ?? null)
+          : policy.scope === 'local'
+            ? 'Local-only service; public synthetic checks do not measure this project.'
+            : 'Private service; hosted telemetry and public synthetic checks are disabled.',
       journeys: [...names],
     });
   }
   if (!projects.length || projects.length > 60)
     throw new Error('Monitoring roster must contain one to sixty active projects');
+  if (journeys.length > 200) throw new Error('Monitoring supports at most 200 public journeys');
   const order = new Map(
     (catalog.systems?.probeJourneys?.order ?? []).map((id, index) => [id, index])
   );

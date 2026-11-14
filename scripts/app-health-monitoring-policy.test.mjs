@@ -39,7 +39,7 @@ test('all current projects survive projection, including local and private exemp
     catalog_id: 'private-tool',
     name: 'private-tool',
     scope: 'private',
-    reason: 'Private content stays outside telemetry.',
+    reason: 'Private service; hosted telemetry and public synthetic checks are disabled.',
     journeys: [],
   });
   assert.ok(!JSON.stringify(result).includes('"old"'));
@@ -158,4 +158,36 @@ test('journeys retain reviewed policy order and append newly registered projects
     result.coverage.projects.map((row) => row.catalog_id),
     ['a', 'b', 'c']
   );
+});
+
+test('the generated file never exceeds the runtime-wide journey capacity', () => {
+  const projects = Array.from({ length: 21 }, (_, i) =>
+    project(`p-${i}`, {
+      journeys: Array.from({ length: 10 }, (_, j) => ({ ...journey, journey: `check-${j}` })),
+    })
+  );
+  assert.throws(() => appHealthMonitoringManifests({ projects }), /200/);
+});
+
+test('private catalog exemption notes do not enter the public projection', () => {
+  const result = appHealthMonitoringManifests({
+    projects: [
+      project('x', {
+        scope: 'private',
+        absent: 'Internal infrastructure notes and private provider context.',
+      }),
+    ],
+  });
+  assert.ok(!JSON.stringify(result).includes('Internal infrastructure'));
+  assert.ok(result.coverage.projects[0].reason.length > 0);
+});
+
+test('non-string identities and URLs are rejected before a runtime-invalid file is emitted', () => {
+  for (const invalid of [
+    { ...journey, journey: 1 },
+    { ...journey, url: { toString: () => 'https://example.com/' } },
+  ])
+    assert.throws(() =>
+      appHealthMonitoringManifests({ projects: [project('x', { journeys: [invalid] })] })
+    );
 });
