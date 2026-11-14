@@ -152,9 +152,9 @@
     },
     {
       "id": "motion",
-      "nativeSessions": "applicable",
+      "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "web-playables",

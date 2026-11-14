@@ -2,39 +2,50 @@
 // The manifests on disk are read-only compatibility outputs, exactly like
 // catalog/generated/operations.json: edit catalog/projects.json, never these.
 
-import { isDeepStrictEqual } from 'node:util';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { validateFeedbackApplicability } from './capture-policy-validation.mjs';
-import { validateDesignPolicies } from './design-policy-validation.mjs';
+import { isDeepStrictEqual } from "node:util";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { validateFeedbackApplicability } from "./capture-policy-validation.mjs";
+import { validateDesignPolicies } from "./design-policy-validation.mjs";
+import { appHealthMonitoringManifests } from "./app-health-monitoring-policy.mjs";
 
-import { fileURLToPath } from 'node:url';
-import { catalogPaths } from './catalog-paths.mjs';
+import { fileURLToPath } from "node:url";
+import { catalogPaths } from "./catalog-paths.mjs";
 
-const repoRoot = new URL('../', import.meta.url);
+const repoRoot = new URL("../", import.meta.url);
 const paths = catalogPaths(fileURLToPath(repoRoot));
 const catalogPath = paths.source;
 // Source ownership follows the primary catalog; writes stay beside this checkout.
 // An isolated writer must never mutate another repository's primary checkout.
-const fleetRoot = new URL('../../', import.meta.url);
-const check = process.argv.includes('--check');
+const fleetRoot = new URL("../../", import.meta.url);
+const check = process.argv.includes("--check");
 
-const source = JSON.parse(readFileSync(catalogPath, 'utf8'));
+const source = JSON.parse(readFileSync(catalogPath, "utf8"));
 const systems = source.systems ?? {};
 validateDesignPolicies(systems, source.projects);
 
 // Capture policy is explicit for every primary/active product. Keep evidence
 // tied to the canonical catalog so a policy cannot silently outlive its basis.
-const captureApps = new Set(['newsletter', 'waitlist', 'not-applicable', 'undetermined']);
-const captureConfidence = new Set(['high', 'medium', 'low']);
-const captureFields = new Set([
-  'applicability',
-  'confidence',
-  'rationale',
-  'evidence',
-  'feedbackApplicability',
+const captureApps = new Set([
+  "newsletter",
+  "waitlist",
+  "not-applicable",
+  "undetermined",
 ]);
-const captureEvidenceFields = new Set(['field', 'value']);
-const captureConfigFields = new Set(['schemaVersion', 'purpose', 'sourceIssue', 'order']);
+const captureConfidence = new Set(["high", "medium", "low"]);
+const captureFields = new Set([
+  "applicability",
+  "confidence",
+  "rationale",
+  "evidence",
+  "feedbackApplicability",
+]);
+const captureEvidenceFields = new Set(["field", "value"]);
+const captureConfigFields = new Set([
+  "schemaVersion",
+  "purpose",
+  "sourceIssue",
+  "order",
+]);
 const captureConfig = systems.capturePolicy ?? {};
 if (
   Object.keys(captureConfig).some((field) => !captureConfigFields.has(field)) ||
@@ -43,16 +54,20 @@ if (
   !captureConfig.sourceIssue?.trim() ||
   !Array.isArray(captureConfig.order)
 ) {
-  throw new Error('Invalid or unknown fields in capture policy configuration');
+  throw new Error("Invalid or unknown fields in capture policy configuration");
 }
 const captureCohort = source.projects.filter((project) =>
-  ['primary', 'active'].includes(project.lifecycle?.status)
+  ["primary", "active"].includes(project.lifecycle?.status),
 );
 if (
   captureCohort.length !== captureConfig.order.length ||
-  captureCohort.some((project, index) => captureConfig.order[index] !== project.id)
+  captureCohort.some(
+    (project, index) => captureConfig.order[index] !== project.id,
+  )
 ) {
-  throw new Error('Capture policy order must exactly match the primary/active catalog cohort');
+  throw new Error(
+    "Capture policy order must exactly match the primary/active catalog cohort",
+  );
 }
 for (const project of captureCohort) {
   const policy = project.systems?.capture;
@@ -68,27 +83,39 @@ for (const project of captureCohort) {
   const evidenceFields = new Set();
   for (const evidence of policy.evidence) {
     if (
-      Object.keys(evidence).some((field) => !captureEvidenceFields.has(field)) ||
+      Object.keys(evidence).some(
+        (field) => !captureEvidenceFields.has(field),
+      ) ||
       !evidence.field ||
-      !Object.hasOwn(evidence, 'value') ||
+      !Object.hasOwn(evidence, "value") ||
       evidenceFields.has(evidence.field)
     )
       throw new Error(`Malformed capture evidence: ${project.id}`);
     evidenceFields.add(evidence.field);
-    const actual = evidence.field.split('.').reduce((value, key) => value?.[key], project);
+    const actual = evidence.field
+      .split(".")
+      .reduce((value, key) => value?.[key], project);
     if (actual === undefined || !isDeepStrictEqual(actual, evidence.value))
-      throw new Error(`Stale capture evidence for ${project.id}: ${evidence.field}`);
+      throw new Error(
+        `Stale capture evidence for ${project.id}: ${evidence.field}`,
+      );
   }
   if (
-    policy.applicability === 'waitlist' &&
+    policy.applicability === "waitlist" &&
     !policy.evidence.some(
       ({ field, value }) =>
-        /purposeContract\.(purpose|proof|nextAction)|sharing\.evidence\.reason/.test(field) &&
-        typeof value === 'string' &&
-        /unreleased|not yet (?:available|launched)|pre[- ]launch|coming soon/i.test(value)
+        /purposeContract\.(purpose|proof|nextAction)|sharing\.evidence\.reason/.test(
+          field,
+        ) &&
+        typeof value === "string" &&
+        /unreleased|not yet (?:available|launched)|pre[- ]launch|coming soon/i.test(
+          value,
+        ),
     )
   ) {
-    throw new Error(`Waitlist requires direct unreleased-offering evidence: ${project.id}`);
+    throw new Error(
+      `Waitlist requires direct unreleased-offering evidence: ${project.id}`,
+    );
   }
 }
 
@@ -96,76 +123,96 @@ for (const project of captureCohort) {
 // platform, not from telemetry receipts. Native-looking platform tags on a
 // CLI or a benchmark guide do not make that product a native app.
 const nativePlatforms = new Set([
-  'macOS',
-  'iOS',
-  'iPadOS',
-  'Android',
-  'watchOS',
-  'tvOS',
-  'visionOS',
+  "macOS",
+  "iOS",
+  "iPadOS",
+  "Android",
+  "watchOS",
+  "tvOS",
+  "visionOS",
 ]);
 const appHealthMetricProducts = captureCohort.map((project) => {
   const directory = project.presentation?.directory;
   const form = directory?.form;
   const platforms = directory?.platforms;
-  if (typeof form !== 'string' || !Array.isArray(platforms) || platforms.length === 0) {
-    throw new Error(`Native-session applicability needs catalog form and platforms: ${project.id}`);
+  if (
+    typeof form !== "string" ||
+    !Array.isArray(platforms) ||
+    platforms.length === 0
+  ) {
+    throw new Error(
+      `Native-session applicability needs catalog form and platforms: ${project.id}`,
+    );
   }
-  const hasNativePlatform = platforms.some((platform) => nativePlatforms.has(platform));
+  const hasNativePlatform = platforms.some((platform) =>
+    nativePlatforms.has(platform),
+  );
   const hasNativeAppForm = hasNativePlatform && /\b(app|game)\b/i.test(form);
   const declaredNativeSessions = project.systems?.appHealth?.nativeSessions;
-  if (hasNativeAppForm && !['applicable', 'not-applicable'].includes(declaredNativeSessions)) {
+  if (
+    hasNativeAppForm &&
+    !["applicable", "not-applicable"].includes(declaredNativeSessions)
+  ) {
     throw new Error(
-      `Native-session applicability needs an explicit catalog decision: ${project.id}`
+      `Native-session applicability needs an explicit catalog decision: ${project.id}`,
     );
   }
   if (!hasNativeAppForm && declaredNativeSessions !== undefined) {
     throw new Error(
-      `Native-session applicability is only allowed for native app/game forms: ${project.id}`
+      `Native-session applicability is only allowed for native app/game forms: ${project.id}`,
     );
   }
   // A product website is a browser surface even when the underlying product
   // is native. Explicit, evidence-backed N/A policy is reserved for internal,
   // factory, local-only, or privacy-bounded products with no reportable
   // browser audience.
-  const hasCataloguedSite = typeof project.systems?.site?.url === 'string';
+  const hasCataloguedSite = typeof project.systems?.site?.url === "string";
   const hasVisualFooter =
     Array.isArray(project.systems?.footerSurfaces) &&
     project.systems.footerSurfaces.some(
-      ({ kind, state }) => kind === 'visual' && state === 'required'
+      ({ kind, state }) => kind === "visual" && state === "required",
     );
   const browserForm = /\b(web|website|browser|dashboard)\b/i.test(form);
   const hasBrowserSurface =
-    platforms.includes('Web') || hasCataloguedSite || hasVisualFooter || browserForm;
+    platforms.includes("Web") ||
+    hasCataloguedSite ||
+    hasVisualFooter ||
+    browserForm;
   const browserVisitorOverride = project.systems?.appHealth?.browserVisitors;
   if (browserVisitorOverride !== undefined) {
-    const allowedFields = new Set(['applicability', 'reason', 'sourceIssue']);
+    const allowedFields = new Set(["applicability", "reason", "sourceIssue"]);
     if (
       !browserVisitorOverride ||
-      typeof browserVisitorOverride !== 'object' ||
+      typeof browserVisitorOverride !== "object" ||
       Array.isArray(browserVisitorOverride) ||
-      Object.keys(browserVisitorOverride).some((field) => !allowedFields.has(field)) ||
-      browserVisitorOverride.applicability !== 'not-applicable' ||
-      typeof browserVisitorOverride.reason !== 'string' ||
+      Object.keys(browserVisitorOverride).some(
+        (field) => !allowedFields.has(field),
+      ) ||
+      browserVisitorOverride.applicability !== "not-applicable" ||
+      typeof browserVisitorOverride.reason !== "string" ||
       browserVisitorOverride.reason.trim().length < 20 ||
-      typeof browserVisitorOverride.sourceIssue !== 'string' ||
+      typeof browserVisitorOverride.sourceIssue !== "string" ||
       !/^https:\/\/github\.com\/[^/]+\/[^/]+\/issues\/\d+(?:#[A-Za-z0-9._-]+)?$/.test(
-        browserVisitorOverride.sourceIssue
+        browserVisitorOverride.sourceIssue,
       )
     ) {
       throw new Error(`Invalid browser-visitor N/A override: ${project.id}`);
     }
   }
   const serverRequests = project.systems?.appHealth?.serverRequests;
-  if (!['applicable', 'not-applicable', 'unknown'].includes(serverRequests)) {
-    throw new Error(`Server-request applicability needs a catalog decision: ${project.id}`);
+  if (!["applicable", "not-applicable", "unknown"].includes(serverRequests)) {
+    throw new Error(
+      `Server-request applicability needs a catalog decision: ${project.id}`,
+    );
   }
   return {
     id: project.id,
-    nativeSessions: hasNativeAppForm ? declaredNativeSessions : 'not-applicable',
+    nativeSessions: hasNativeAppForm
+      ? declaredNativeSessions
+      : "not-applicable",
     browserVisitors:
       browserVisitorOverride?.applicability ??
-      (hasBrowserSurface ? 'applicable' : 'not-applicable'),
+      (hasBrowserSurface ? "applicable" : "not-applicable"),
     ...(browserVisitorOverride
       ? {
           browserVisitorsReason: browserVisitorOverride.reason,
@@ -176,9 +223,15 @@ const appHealthMetricProducts = captureCohort.map((project) => {
   };
 });
 for (const project of source.projects) {
-  if (!['primary', 'active'].includes(project.lifecycle?.status) && project.systems?.capture)
+  if (
+    !["primary", "active"].includes(project.lifecycle?.status) &&
+    project.systems?.capture
+  )
     throw new Error(`Capture policy is out of scope for ${project.id}`);
-  if (!['primary', 'active'].includes(project.lifecycle?.status) && project.systems?.appHealth)
+  if (
+    !["primary", "active"].includes(project.lifecycle?.status) &&
+    project.systems?.appHealth
+  )
     throw new Error(`App Health policy is out of scope for ${project.id}`);
 }
 
@@ -188,7 +241,8 @@ const systemEntries = (key) => {
     const value = project.systems?.[key];
     // `{"absent": "<reason>"}` documents an intentional non-entry in the
     // catalog; it is never emitted to the manifest.
-    if (value === undefined || (typeof value === 'object' && 'absent' in value)) continue;
+    if (value === undefined || (typeof value === "object" && "absent" in value))
+      continue;
     found.set(project.id, value);
   }
   return found;
@@ -222,7 +276,7 @@ const withoutKey = (entry, key) => {
   return rest;
 };
 
-const emitProjectKeyed = (config, entries, idField = 'id') =>
+const emitProjectKeyed = (config, entries, idField = "id") =>
   inOrder(config, entries, (id) => {
     const entry = entries.get(id);
     return entry === undefined ? undefined : { [idField]: id, ...entry };
@@ -231,26 +285,26 @@ const emitProjectKeyed = (config, entries, idField = 'id') =>
 const outputs = new Map();
 
 {
-  const entries = systemEntries('clarity');
+  const entries = systemEntries("clarity");
   const { order: _order, ...config } = systems.clarity ?? {};
-  outputs.set('saas-maker/tooling/config/clarity-projects.json', {
+  outputs.set("saas-maker/tooling/config/clarity-projects.json", {
     ...config,
     projects: emitProjectKeyed(systems.clarity, entries),
   });
 }
 
 {
-  const entries = systemEntries('clarityJourneys');
+  const entries = systemEntries("clarityJourneys");
   const { order: _order, ...config } = systems.clarityJourneys ?? {};
-  outputs.set('saas-maker/tooling/config/clarity-journeys.json', {
+  outputs.set("saas-maker/tooling/config/clarity-journeys.json", {
     ...config,
     projects: emitProjectKeyed(systems.clarityJourneys, entries),
   });
 }
 
 outputs.set(
-  'saas-maker/tooling/config/clarity-capabilities.json',
-  systems.clarityCapabilities ?? {}
+  "saas-maker/tooling/config/clarity-capabilities.json",
+  systems.clarityCapabilities ?? {},
 );
 
 {
@@ -263,147 +317,145 @@ outputs.set(
       bySurface.set(surface.id, surface);
     }
   }
-  outputs.set('site-health/apps/backend/config/footer-surfaces.json', {
-    ...withoutKey(config, 'order'),
+  outputs.set("site-health/apps/backend/config/footer-surfaces.json", {
+    ...withoutKey(config, "order"),
     surfaces: inOrder(config, bySurface, (id) => bySurface.get(id)),
   });
 }
 
 {
-  const entries = systemEntries('geoObservatory');
+  const entries = systemEntries("geoObservatory");
   const { order: _order, ...config } = systems.geoObservatory ?? {};
-  outputs.set('site-health/apps/backend/config/geo-observatory.json', {
+  outputs.set("site-health/apps/backend/config/geo-observatory.json", {
     ...config,
     products: emitProjectKeyed(systems.geoObservatory, entries),
   });
 }
 
 {
-  const entries = systemEntries('actionsPolicy');
+  const entries = systemEntries("actionsPolicy");
   const config = systems.actionsPolicy ?? {};
   const projects = {};
   for (const entry of inOrder(config, entries, (id) =>
-    entries.has(id) ? [id, entries.get(id)] : undefined
+    entries.has(id) ? [id, entries.get(id)] : undefined,
   )) {
     projects[entry[0]] = entry[1];
   }
-  outputs.set('site-health/apps/backend/config/project-actions-policy.json', {
-    ...withoutKey(config, 'order'),
+  outputs.set("site-health/apps/backend/config/project-actions-policy.json", {
+    ...withoutKey(config, "order"),
     projects,
   });
 }
 
 {
-  const entries = systemEntries('aiVisibility');
+  const entries = systemEntries("aiVisibility");
   const { order: _order, ...config } = systems.aiVisibility ?? {};
-  outputs.set('site-health/apps/backend/config/ai-visibility.json', {
+  outputs.set("site-health/apps/backend/config/ai-visibility.json", {
     ...config,
-    projects: emitProjectKeyed(systems.aiVisibility, entries, 'slug'),
+    projects: emitProjectKeyed(systems.aiVisibility, entries, "slug"),
   });
 }
 
 {
-  const entries = systemEntries('psiTarget');
+  const entries = systemEntries("psiTarget");
   const { order: _order, ...config } = systems.psiPortfolioTargets ?? {};
-  outputs.set('site-health/apps/backend/config/psi-portfolio-targets.json', {
+  outputs.set("site-health/apps/backend/config/psi-portfolio-targets.json", {
     ...config,
-    targets: emitProjectKeyed(systems.psiPortfolioTargets, entries, 'projectId'),
+    targets: emitProjectKeyed(
+      systems.psiPortfolioTargets,
+      entries,
+      "projectId",
+    ),
   });
 }
 
 {
-  const entries = systemEntries('site');
+  const entries = systemEntries("site");
   const { order: _order, ...config } = systems.sites ?? {};
-  outputs.set('saas-maker/tooling/config/sites.json', {
+  outputs.set("saas-maker/tooling/config/sites.json", {
     ...config,
     sites: emitProjectKeyed(systems.sites, entries),
   });
 }
 
 {
-  // Journey probes are read-only by policy: every catalogued journey is a
-  // public GET with no body, credentials or query values. App Health reads the
-  // generated file; it never decides which products are probed.
-  const config = systems.probeJourneys ?? {};
-  const allowedJourney = new Set([
-    'journey',
-    'url',
-    'budget_ms',
-    'timeout_ms',
-    'warm_check',
-    'expect',
-  ]);
-  const entries = systemEntries('probe');
-  for (const [id, policy] of entries) {
-    if (!Array.isArray(policy.journeys) || policy.journeys.length === 0)
-      throw new Error(`Probe policy needs journeys or an absent reason: ${id}`);
-    for (const journey of policy.journeys) {
-      const unknown = Object.keys(journey).filter((field) => !allowedJourney.has(field));
-      if (unknown.length > 0)
-        throw new Error(`Probe journeys are GET-only; unexpected ${unknown.join(', ')}: ${id}`);
-      const url = new URL(journey.url);
-      if (url.protocol !== 'https:' || url.search || url.username || url.password)
-        throw new Error(`Probe journey URL must be plain public https: ${id}/${journey.journey}`);
-    }
-  }
-  outputs.set('app-health/apps/probe/journeys.json', {
-    schema_version: 1,
-    generated_from: 'saas-maker catalog/projects.json projects[].systems.probe (pnpm catalog:sync)',
-    purpose: config.purpose,
-    source_issue: config.sourceIssue,
-    journeys: inOrder(config, entries, (id) =>
-      entries.get(id)?.journeys.map((journey) => ({ project: id, ...journey }))
-    ).flat(),
-  });
+  const monitoring = appHealthMonitoringManifests(source);
+  outputs.set("app-health/apps/probe/journeys.json", monitoring.probes);
+  outputs.set("app-health/apps/probe/coverage.json", monitoring.coverage);
 }
 
-outputs.set('site-health/apps/backend/config/root-search-queries.json', systems.searchRoots ?? {});
-outputs.set('site-health/apps/backend/config/root-brands.json', systems.rootBrands ?? {});
-outputs.set('site-health/apps/backend/config/search-console.json', systems.searchConsole ?? {});
 outputs.set(
-  'saas-maker/tooling/config/entity-identity-canonical.json',
-  systems.entityIdentity ?? {}
+  "site-health/apps/backend/config/root-search-queries.json",
+  systems.searchRoots ?? {},
 );
 outputs.set(
-  'saas-maker/tooling/config/entity-identity-sources.json',
-  systems.entityIdentitySources ?? {}
+  "site-health/apps/backend/config/root-brands.json",
+  systems.rootBrands ?? {},
 );
-outputs.set('saas-maker/tooling/config/ai-client-standard.json', systems.aiClientStandard ?? {});
-outputs.set('saas-maker/tooling/config/design-workflow.json', systems.designWorkflow ?? {});
 outputs.set(
-  'saas-maker/tooling/config/design-policy.json',
+  "site-health/apps/backend/config/search-console.json",
+  systems.searchConsole ?? {},
+);
+outputs.set(
+  "saas-maker/tooling/config/entity-identity-canonical.json",
+  systems.entityIdentity ?? {},
+);
+outputs.set(
+  "saas-maker/tooling/config/entity-identity-sources.json",
+  systems.entityIdentitySources ?? {},
+);
+outputs.set(
+  "saas-maker/tooling/config/ai-client-standard.json",
+  systems.aiClientStandard ?? {},
+);
+outputs.set(
+  "saas-maker/tooling/config/design-workflow.json",
+  systems.designWorkflow ?? {},
+);
+outputs.set(
+  "saas-maker/tooling/config/design-policy.json",
   Object.fromEntries(
-    ['uiLibrary', 'designDefaults', 'loadingStates', 'releaseGate'].map((key) => [
-      key,
-      systems[key],
-    ])
-  )
+    ["uiLibrary", "designDefaults", "loadingStates", "releaseGate"].map(
+      (key) => [key, systems[key]],
+    ),
+  ),
 );
-outputs.set('saas-maker/tooling/config/ui-adoption.json', {
+outputs.set("saas-maker/tooling/config/ui-adoption.json", {
   schemaVersion: 1,
   projects: source.projects
     .filter((project) => project.systems?.ui !== undefined)
     .map((project) => ({ id: project.id, ...project.systems.ui })),
 });
-outputs.set('site-health/apps/backend/config/indexnow.json', systems.indexNow ?? {});
-outputs.set('site-health/apps/backend/config/capabilities.json', systems.capabilities ?? {});
+outputs.set(
+  "site-health/apps/backend/config/indexnow.json",
+  systems.indexNow ?? {},
+);
+outputs.set(
+  "site-health/apps/backend/config/capabilities.json",
+  systems.capabilities ?? {},
+);
 
 {
   const config = captureConfig;
   const { order: _order, ...policy } = config;
-  outputs.set('saas-maker/tooling/config/capture-projects.json', {
+  outputs.set("saas-maker/tooling/config/capture-projects.json", {
     ...policy,
     projects: emitProjectKeyed(
       config,
-      new Map(captureCohort.map((project) => [project.id, project.systems.capture]))
+      new Map(
+        captureCohort.map((project) => [project.id, project.systems.capture]),
+      ),
     ),
   });
-  outputs.set('saas-maker/tooling/config/app-health-native-applicability.json', {
-    schemaVersion: 1,
-    purpose:
-      'Native sessions, browser visitors, and server requests apply only to their catalogued product surfaces; missing telemetry remains unknown.',
-    products: appHealthMetricProducts,
-  });
+  outputs.set(
+    "saas-maker/tooling/config/app-health-native-applicability.json",
+    {
+      schemaVersion: 1,
+      purpose:
+        "Native sessions, browser visitors, and server requests apply only to their catalogued product surfaces; missing telemetry remains unknown.",
+      products: appHealthMetricProducts,
+    },
+  );
 }
 
 const stale = [];
@@ -411,21 +463,21 @@ let skipped = 0;
 for (const [relative, value] of outputs) {
   // Own outputs follow this checkout even when a worktree has another name.
   // Isolated writers skip sibling outputs; missing checkouts are never created.
-  const local = relative.startsWith('saas-maker/');
+  const local = relative.startsWith("saas-maker/");
   const target = local
-    ? new URL(relative.slice('saas-maker/'.length), repoRoot)
+    ? new URL(relative.slice("saas-maker/".length), repoRoot)
     : new URL(relative, fleetRoot);
-  if (!local && (paths.isolated || !existsSync(new URL('./', target)))) {
+  if (!local && (paths.isolated || !existsSync(new URL("./", target)))) {
     console.log(
       paths.isolated
         ? `skipped sibling manifest from isolated worktree: ${relative}`
-        : `skipped unavailable sibling manifest: ${relative}`
+        : `skipped unavailable sibling manifest: ${relative}`,
     );
     skipped++;
     continue;
   }
   const rendered = `${JSON.stringify(value, null, 2)}\n`;
-  const current = existsSync(target) ? readFileSync(target, 'utf8') : null;
+  const current = existsSync(target) ? readFileSync(target, "utf8") : null;
   if (current === rendered) continue;
   const currentValue = current === null ? null : JSON.parse(current);
   if (currentValue !== null && isDeepStrictEqual(currentValue, value)) {
@@ -448,10 +500,12 @@ for (const [relative, value] of outputs) {
 }
 
 if (stale.length > 0) {
-  console.error(`stale generated manifests (run pnpm catalog:sync): ${stale.join(', ')}`);
+  console.error(
+    `stale generated manifests (run pnpm catalog:sync): ${stale.join(", ")}`,
+  );
   process.exitCode = 1;
 } else {
   console.log(
-    `systems manifests match the one source (${outputs.size - skipped} files; ${skipped} sibling outputs unverified)`
+    `systems manifests match the one source (${outputs.size - skipped} files; ${skipped} sibling outputs unverified)`,
   );
 }
