@@ -303,7 +303,8 @@ describe('verified public Fleet directory', () => {
     ).toMatchObject({
       name: 'LinkedIn Archive',
       roster: 'current',
-      availability: 'unreleased-prototype',
+      availability: 'public-link',
+      publicUrl: 'https://linkedin.significanthobbies.com',
     });
     expect(ids).toContain('protein-index');
     expect(ids).not.toContain('food');

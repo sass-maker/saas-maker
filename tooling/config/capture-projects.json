@@ -1094,7 +1094,7 @@
       "evidence": [
         {
           "field": "ownerNotes.notes",
-          "value": "Browser-local analysis of personal LinkedIn exports: no third-party analytics, session replay, imported archive uploads or remote processing. Public static delivery does not collect archive content. Selected stack: React, shared internal UI library and Cloudflare Workers Static Assets. No accounts, server storage or dynamic Worker handlers. Preparing target linkedin.significanthobbies.com; no live release claimed before provider verification."
+          "value": "Browser-local analysis of personal LinkedIn exports: no third-party analytics, session replay, imported archive uploads or remote processing. Static Cloudflare Workers delivery with React and the shared internal UI library; no accounts, server storage or dynamic Worker handlers. Public dossier ownerVoice contains exact safe excerpts; the complete original owner message is retained only in private task evidence. Live core workflow qualified with synthetic data on 2026-11-14; actual user outcomes remain unknown."
         }
       ],
       "feedbackApplicability": "not_applicable"
