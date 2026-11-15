@@ -19,7 +19,15 @@ export function GET() {
     $schema: 'fleet.launchkit-manifest.v1',
     name: 'SaaS Maker Launchkit',
     description:
-      'Free agent-executable launch toolkit: one product brief, a truthful run planner over the launchdesk catalog, per-platform submission playbooks, an evidence-based tracker, and a run prompt. The open equivalent of paid launch-repo kits.',
+      'Free toolkit to prepare a product brief, compare launch destinations and verify submission requirements with an AI agent. Includes source-attributed playbooks, a run planner and an evidence-based tracker. Each destination sets its own terms.',
+    preparationWorkflow: [
+      'Record the audience, current availability, canonical URL, working access path and evidence behind product claims.',
+      'Compare audience fit, route, pricing and link conditions. Reported DR is a dated source claim, not proof of relevant traffic or endorsement.',
+      'Verify current official eligibility, existing listings, required assets, fees, badge conditions and approval queues. Keep uncertain routes as research items; do not pad a shortlist.',
+      'Save tailored copy, sources, date checked and blockers. Prepared means ready for review; submitted needs an intake receipt; live needs a public listing URL that resolves without login.',
+    ],
+    permissions:
+      'Research and preparation are separate from submitting, messaging, account creation, spending or badge changes. Follow the operator campaign permissions and the starter prompt.',
     gradeSemantics:
       'Playbook grade "researched" = assembled from cited public pages; "observed" = witnessed during a real submission run. Tracker states are evidence-based: a draft is prepared, a confirmed date is scheduled, live requires a resolving public URL.',
     starterPrompt: LAUNCH_AGENT_PROMPT,
