@@ -420,7 +420,8 @@ const fixedRoutes: PublicRoute[] = [
   {
     id: 'launchkit',
     path: '/launchkit',
-    description: 'Plan a product launch with your AI agent: verified facts, qualified destinations and an inspectable submission pack',
+    description:
+      'Plan a product launch with your AI agent: verified facts, qualified destinations and an inspectable submission pack',
     kind: 'static',
     markdown: [
       '# SaaS Maker Launchkit',
