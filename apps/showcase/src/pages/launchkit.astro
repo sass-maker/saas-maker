@@ -1,8 +1,7 @@
 ---
 /**
- * THESIS: The kit is the honest middle between "a spreadsheet of directories" and a
- * €100 zip file — the brief, the planner, the playbooks, and the ledger are all here,
- * free, and the evidence grades say exactly how much to trust each row.
+ * THESIS: Turn product facts into a useful shortlist and an inspectable submission
+ * pack, with source-attributed playbooks and explicit outcome states.
  * OWN-WORLD: Same workshop interior as /launchdesk; this is the kit's workbench card.
  * STORY: What it is → the five pieces → the quickstart → why the states are honest.
  * FIRST VIEWPORT: Kicker, one-line promise, quickstart block visible without scroll.
@@ -12,7 +11,6 @@ import Footer from '../components/Footer.astro';
 import Nav from '../components/Nav.astro';
 
 import { LAUNCH_AGENT_PROMPT } from '../data/catalogPrompts';
-import launchdeskData from '../data/launchdesk.json';
 import Layout from '../layouts/Layout.astro';
 import { SUBMISSION_KITS } from '../data/submissionKits';
 
@@ -23,21 +21,20 @@ const playbookCount = Object.keys(playbookModules).filter(
 ---
 
 <Layout
-  title="Launchkit — a free agent-executable launch toolkit"
-  description={`A free launch toolkit for AI agents: one product brief, a truthful run planner, ${playbookCount} per-platform submission playbooks, an evidence-based tracker, and a run prompt. No paywall, no account.`}
+  title="Launchkit — plan a product launch with your AI agent"
+  description="Prepare a product brief, compare launch destinations and verify submission requirements with your AI agent. Free toolkit with source-attributed playbooks."
 >
   <div class="workshop-world interior-world launchkit-world">
     <Nav />
     <main id="main-content" class="launchkit-page">
       <header class="launchkit-hero">
         <p class="launchkit-kicker">SaaS Maker / Launchkit</p>
-        <h1>Your agent launches the product. Free.</h1>
+        <h1>Plan a product launch with your AI agent.</h1>
         <p class="launchkit-lede">
-          Paid launch kits sell a git repo of directory guides for around €100. This is the same
-          shape — a product brief, a run planner, {playbookCount} per-platform submission
-          playbooks, an evidence tracker, and a run prompt — built on the public
-          <a href="/launchdesk">launch catalog</a> of {launchdeskData.destinations.length}
-          destinations. No account, no payment, no upsell.
+          Turn your product facts into a qualified shortlist and a reusable submission pack.
+          Start with the public <a href="/launchdesk">launch catalog</a>, then check current
+          requirements using {playbookCount} source-attributed platform playbooks. Research and
+          preparation need no SaaS Maker account or payment. Each destination sets its own terms.
         </p>
       </header>
 
@@ -46,6 +43,18 @@ const playbookCount = Object.keys(playbookModules).filter(
         description="Paste this into your agent with your product URL and goals. It can read the catalog, verify routes and prepare your launch plan without cloning the repository."
         prompt={LAUNCH_AGENT_PROMPT}
       />
+
+      <section class="launchkit-pane" id="prepare-a-launch">
+        <h2>From product facts to a useful shortlist</h2>
+        <ol>
+          <li><strong>Make the product understandable.</strong> Record who it helps, what is available today, the canonical URL and a working way to try it. Keep claims tied to evidence: a benchmark needs its workload and limits, and a private beta needs an honest access path.</li>
+          <li><strong>Choose the audience before the metric.</strong> A developer tool and a hobby catalog need different readers. Use the <a href="/launchdesk">catalog filters</a> to compare fit, route, pricing and link conditions. Reported DR is a dated source claim; it does not establish relevant traffic or a useful endorsement.</li>
+          <li><strong>Verify before preparing a submission.</strong> Open the destination's current official route. Check eligibility, an existing listing, assets, fees, badge requirements and any approval queue. A missing or uncertain route stays a research item. A shortlist can contain fewer than ten destinations.</li>
+          <li><strong>Keep the result inspectable.</strong> Save the tailored copy, sources, date checked and remaining blockers. A prepared pack is ready for review. An intake receipt means submitted; a live result needs a public listing URL that resolves without login.</li>
+        </ol>
+        <p>For concrete briefs, inspect <a href="/p/codevetter#submission-kit">CodeVetter's code-verification kit</a> or <a href="/p/posttrainllm#submission-kit">PostTrainLLM's browser-training kit</a>. Reuse the structure with your own verified facts.</p>
+        <p>Submitting, messaging, creating accounts, spending or adding a badge requires the operator's campaign permission. The starter prompt keeps those actions separate from research and preparation.</p>
+      </section>
 
       <section class="launchkit-pane" id="product-assets">
         <h2>Fleet product submission kits</h2>
@@ -183,6 +192,20 @@ node tooling/launchkit/scripts/report.mjs --tracker tracker.json</code></pre>
   }
   .launchkit-pane a {
     color: var(--copper-hi);
+  }
+  #prepare-a-launch ol {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+  #prepare-a-launch p {
+    margin: 1.25rem 0 0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
   }
   .launchkit-pieces {
     margin: 0;
