@@ -292,15 +292,10 @@ describe('verified public Fleet directory', () => {
     expect(ids).toHaveLength(39);
     expect(ids).not.toContain('significanthobbies');
     expect(ids).not.toContain('agent-inbox');
-    expect(
-      catalog.archivedDirectory.find((project: { id: string }) => project.id === 'agent-inbox')
-    ).toMatchObject({
-      roster: 'archived',
-      availability: 'archived',
-    });
     expect(new Set(ids).size).toBe(catalog.directory.length);
     const archivedIds = catalog.archivedDirectory.map((project: { id: string }) => project.id);
-    expect(archivedIds).toHaveLength(41);
+    expect(archivedIds).toHaveLength(40);
+    expect(archivedIds).not.toContain('agent-inbox');
     expect(archivedIds).toEqual(
       expect.arrayContaining(['significanthobbies', 'chatgpt-connections', 'unified-portfolio'])
     );

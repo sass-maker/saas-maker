@@ -5290,24 +5290,6 @@
       "roster": "archived",
       "availability": "archived",
       "profileUrl": "https://sassmaker.com/p/human-v2"
-    },
-    {
-      "id": "agent-inbox",
-      "name": "Agent Inbox",
-      "description": "A local inbox for coding-agent status, attention requests and verified conversation replies.",
-      "form": "Local macOS app",
-      "platforms": [
-        "macOS",
-        "Local"
-      ],
-      "technologies": [
-        "Electron",
-        "TypeScript",
-        "Swift"
-      ],
-      "roster": "archived",
-      "availability": "archived",
-      "profileUrl": "https://sassmaker.com/p/agent-inbox"
     }
   ],
   "collections": [
