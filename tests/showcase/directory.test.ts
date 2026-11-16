@@ -289,11 +289,18 @@ describe('verified public Fleet directory', () => {
       {}
     );
     expect(catalog.schemaVersion).toBe(6);
-    expect(ids).toHaveLength(40);
+    expect(ids).toHaveLength(39);
     expect(ids).not.toContain('significanthobbies');
+    expect(ids).not.toContain('agent-inbox');
+    expect(
+      catalog.archivedDirectory.find((project: { id: string }) => project.id === 'agent-inbox')
+    ).toMatchObject({
+      roster: 'archived',
+      availability: 'archived',
+    });
     expect(new Set(ids).size).toBe(catalog.directory.length);
     const archivedIds = catalog.archivedDirectory.map((project: { id: string }) => project.id);
-    expect(archivedIds).toHaveLength(40);
+    expect(archivedIds).toHaveLength(41);
     expect(archivedIds).toEqual(
       expect.arrayContaining(['significanthobbies', 'chatgpt-connections', 'unified-portfolio'])
     );
@@ -430,7 +437,7 @@ describe('verified public Fleet directory', () => {
         publicUrlLabel: 'Visit website',
       });
     }
-    for (const id of ['reader', 'ai-game', 'agent-inbox']) {
+    for (const id of ['reader', 'ai-game']) {
       expect(catalog.directory.find((project: { id: string }) => project.id === id)).toMatchObject({
         availability: 'preview-not-qualified',
         publicUrlLabel: 'Preview site',

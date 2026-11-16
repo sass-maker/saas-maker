@@ -1040,23 +1040,6 @@
       ]
     },
     {
-      "id": "agent-inbox",
-      "applicability": "not-applicable",
-      "confidence": "high",
-      "rationale": "Informational preview website for an internal local app; directs visitors to the existing preview and source. No newsletter or waitlist requested.",
-      "feedbackApplicability": "not_applicable",
-      "evidence": [
-        {
-          "field": "purpose.audience",
-          "value": "internal"
-        },
-        {
-          "field": "presentation.directory.availabilityLabel",
-          "value": "preview-not-qualified"
-        }
-      ]
-    },
-    {
       "id": "techdata",
       "applicability": "not-applicable",
       "confidence": "high",

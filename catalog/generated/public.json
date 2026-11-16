@@ -4363,33 +4363,6 @@
       }
     },
     {
-      "id": "agent-inbox",
-      "name": "Agent Inbox",
-      "description": "A local inbox for coding-agent status, attention requests and verified conversation replies.",
-      "form": "Local macOS app",
-      "platforms": [
-        "macOS",
-        "Local"
-      ],
-      "technologies": [
-        "Electron",
-        "TypeScript",
-        "Swift"
-      ],
-      "group": "current",
-      "makerNote": "I want a local inbox that shows which coding agents need me and lets me reach the correct conversation.",
-      "purposeContract": {
-        "purpose": "Notice local coding-agent work that needs attention and reply through a verified connection.",
-        "audience": "The owner running local Claude Code and Codex conversations.",
-        "outcome": "Find the correct live conversation, review its status and respond to requests without confusing transcripts with live sessions.",
-        "mechanism": "A local inbox, floating pill and bounded lifecycle metadata connect observed agents to verified conversation transports or host-app handoff."
-      },
-      "roster": "current",
-      "availability": "preview-not-qualified",
-      "publicUrl": "https://agentinbox.significanthobbies.com/",
-      "publicUrlLabel": "Preview site"
-    },
-    {
       "id": "techdata",
       "name": "techdata",
       "description": "A public, read-only data workbench: Nomad Atlas places, High Signal Podcasts claims, Reddit Insights, Research Papers and the full Product Hunt catalogue in one console with ⌘K search, filters, comparison and provenance-carrying exports.",
@@ -5317,6 +5290,24 @@
       "roster": "archived",
       "availability": "archived",
       "profileUrl": "https://sassmaker.com/p/human-v2"
+    },
+    {
+      "id": "agent-inbox",
+      "name": "Agent Inbox",
+      "description": "A local inbox for coding-agent status, attention requests and verified conversation replies.",
+      "form": "Local macOS app",
+      "platforms": [
+        "macOS",
+        "Local"
+      ],
+      "technologies": [
+        "Electron",
+        "TypeScript",
+        "Swift"
+      ],
+      "roster": "archived",
+      "availability": "archived",
+      "profileUrl": "https://sassmaker.com/p/agent-inbox"
     }
   ],
   "collections": [
