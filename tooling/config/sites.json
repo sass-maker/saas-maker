@@ -167,11 +167,6 @@
       "probePath": "/"
     },
     {
-      "id": "agent-inbox",
-      "url": "https://agentinbox.significanthobbies.com/",
-      "probePath": "/"
-    },
-    {
       "id": "techdata",
       "url": "https://data.highsignal.app",
       "probePath": "/"
