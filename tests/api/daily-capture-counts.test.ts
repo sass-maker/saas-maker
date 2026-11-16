@@ -251,7 +251,7 @@ describe('daily PII-free capture receipts', () => {
       reportProjects.length
     );
     expect(result.feedbackApplicabilityByCatalogId['site-health']).toBe('applicable');
-    expect(result.feedbackApplicabilityByCatalogId['agent-inbox']).toBe('not_applicable');
+    expect(result.feedbackApplicabilityByCatalogId).not.toHaveProperty('agent-inbox');
     expect(result.feedbackApplicabilityByCatalogId.techdata).toBe('not_applicable');
     expect(result.feedbackApplicabilityByCatalogId['domain-inbox']).toBe('not_applicable');
     expect(result.feedbackApplicabilityByCatalogId['linkedin-insights']).toBe('not_applicable');
@@ -260,17 +260,10 @@ describe('daily PII-free capture receipts', () => {
       Object.entries(result.feedbackApplicabilityByCatalogId)
         .filter(
           ([id]) =>
-            ![
-              'site-health',
-              'agent-inbox',
-              'techdata',
-              'motion',
-              'domain-inbox',
-              'linkedin-insights',
-            ].includes(id)
+            !['site-health', 'techdata', 'motion', 'domain-inbox', 'linkedin-insights'].includes(id)
         )
         .map(([, applicability]) => applicability)
-    ).toEqual(Array.from({ length: reportProjects.length - 6 }, () => 'unknown'));
+    ).toEqual(Array.from({ length: reportProjects.length - 5 }, () => 'unknown'));
     expect(Object.keys(result.nativeSessionsApplicabilityByCatalogId)).toHaveLength(
       reportProjects.length
     );
@@ -392,7 +385,7 @@ describe('daily PII-free capture receipts', () => {
       'linkedin-insights',
       'site-health',
     ]);
-    expect(result.browserVisitorsApplicabilityByCatalogId['agent-inbox']).toBe('applicable');
+    expect(result.browserVisitorsApplicabilityByCatalogId).not.toHaveProperty('agent-inbox');
     for (const id of ['fleet-social', 'site-health']) {
       const policy = nativeApplicability.products.find((product) => product.id === id);
       expect(policy?.browserVisitors).toBe('not-applicable');
@@ -441,7 +434,6 @@ describe('daily PII-free capture receipts', () => {
       .map(([id]) => id)
       .sort();
     expect(notApplicable).toEqual([
-      'agent-inbox',
       'domain-inbox',
       'fleet-social',
       'linkedin-insights',
