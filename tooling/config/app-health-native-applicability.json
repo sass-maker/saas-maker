@@ -154,7 +154,7 @@
       "id": "motion",
       "nativeSessions": "applicable",
       "browserVisitors": "applicable",
-      "serverRequests": "unknown"
+      "serverRequests": "not-applicable"
     },
     {
       "id": "web-playables",
