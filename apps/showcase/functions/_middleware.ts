@@ -4,6 +4,7 @@ import {
   advertiseMarkdown,
 } from '../../../tooling/lib/agent-surfaces/adapters/static-assets.mjs';
 import preservedMarkdownPaths from '../src/data/preservedMarkdown.json';
+import { servePublicMcp } from '../src/lib/public-mcp';
 
 const handleMarkdown = createStaticAssetHandler({
   origin: 'https://sassmaker.com',
@@ -466,6 +467,7 @@ const resolveRequest: PagesFunction = async (context) => {
 
 export const onRequest: PagesFunction = async (context) => {
   const request = context.request;
+  if (new URL(request.url).pathname === '/mcp') return servePublicMcp(request);
   const getRequest =
     request.method === 'HEAD'
       ? new Request(request.url, { method: 'GET', headers: request.headers })
