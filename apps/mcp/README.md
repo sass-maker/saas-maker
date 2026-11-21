@@ -165,6 +165,10 @@ LoopTV, PostTrainLLM, and What It Takes to Win are explicitly **not needed for
 now** and are outside the release surface. The full eligibility review is in
 [`docs/non-ios-eligibility.md`](docs/non-ios-eligibility.md).
 
+The SaaS Maker public catalog can also be connected at
+`https://sassmaker.com/mcp` over Streamable HTTP, with no credentials. It serves
+product search and details, public surfaces, and published learnings.
+
 ## Development and verification
 
 ```bash
