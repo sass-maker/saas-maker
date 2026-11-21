@@ -7,6 +7,7 @@ import { PRODUCTION_AUTH0_ISSUER, runProductionMonitor } from "../monitor.js";
 const protocolVersion = "2025-11-25";
 const protectedPrefix = "/.well-known/oauth-protected-resource";
 const animeNativeUrl = "https://anime.significanthobbies.com/api/mcp";
+const saasMakerFirstPartyUrl = "https://sassmaker.com/mcp";
 
 function responseJson(
   value: unknown,
@@ -74,7 +75,13 @@ const productionFetch: typeof fetch = async (input, init) => {
       },
     });
   }
-  const route = hostedRoute(url.pathname, url.hostname);
+  const route = url.href === saasMakerFirstPartyUrl
+    ? HOSTED_ROUTES["/saas-maker/mcp"]
+    : hostedRoute(url.pathname, url.hostname);
+  if (url.href === saasMakerFirstPartyUrl) {
+    assert.equal(request.headers.has("authorization"), false);
+    assert.equal(request.headers.has("cookie"), false);
+  }
   if (!route) return responseJson({ error: "not_found" }, 404);
   if (route.audience === "personal" && !request.headers.has("authorization")) {
     const resourceMetadata = `${url.origin}${protectedPrefix}${url.pathname}`;
@@ -158,7 +165,7 @@ test("production monitor retains only redacted contract evidence", async () => {
     now: () => new Date("2026-08-12T00:00:00.000Z"),
   });
   assert.equal(receipt.ok, true);
-  assert.deepEqual(receipt.summary, { passed: 69, failed: 0, skipped: 0, total: 69 });
+  assert.deepEqual(receipt.summary, { passed: 73, failed: 0, skipped: 0, total: 73 });
   assert.equal(receipt.checkedAt, "2026-08-12T00:00:00.000Z");
   const serialized = JSON.stringify(receipt);
   assert.equal(serialized.includes("must-never-enter-receipt"), false);
@@ -171,7 +178,16 @@ test("production monitor retains only redacted contract evidence", async () => {
 
 test("production monitor excludes prepared routes until activation", async () => {
   const receipt = await runProductionMonitor({ fetchImpl: productionFetch });
-  assert.deepEqual(receipt.summary, { passed: 49, failed: 0, skipped: 0, total: 49 });
+  assert.deepEqual(receipt.summary, { passed: 53, failed: 0, skipped: 0, total: 53 });
+  assert.deepEqual(
+    receipt.checks.filter(({ plugin }) => plugin === "saas-maker").map(({ id, status }) => [id, status]),
+    [
+      ["first-party-initialize", "passed"],
+      ["first-party-pagination", "passed"],
+      ["first-party-representative-read", "passed"],
+      ["first-party-tools-readonly", "passed"],
+    ],
+  );
   assert.equal(receipt.checks.filter(({ id }) => id === "representative-read").length, 4);
   assert.equal(receipt.checks.filter(({ id }) => id === "pagination").length, 4);
   assert.equal(receipt.checks.filter(({ id }) => id === "host-isolation").length, 8);
@@ -188,7 +204,7 @@ test("production monitor can verify private collection pagination without retain
     },
   });
   assert.equal(receipt.ok, true);
-  assert.deepEqual(receipt.summary, { passed: 52, failed: 0, skipped: 0, total: 52 });
+  assert.deepEqual(receipt.summary, { passed: 56, failed: 0, skipped: 0, total: 56 });
   assert.equal(receipt.checks.filter(({ id }) => id === "authenticated-pagination").length, 3);
   const serialized = JSON.stringify(receipt);
   assert.equal(serialized.includes("private-monitor-secret"), false);
@@ -299,7 +315,7 @@ test("a live dataset too small for three pages skips pagination instead of faili
     skipReason: "pagination_dataset_too_small",
   });
   assert.equal(receipt.ok, true);
-  assert.deepEqual(receipt.summary, { passed: 48, failed: 0, skipped: 1, total: 49 });
+  assert.deepEqual(receipt.summary, { passed: 52, failed: 0, skipped: 1, total: 53 });
 });
 
 test("an empty live dataset skips pagination instead of failing", async () => {
@@ -459,4 +475,19 @@ test("a native Anime List tool failure fails the monitor even when gateway OAuth
     status: "failed",
     errorCode: "tool_call_failed",
   });
+});
+
+test("the first-party SaaS Maker endpoint fails the default monitor when its proxy is unavailable", async () => {
+  const fetchImpl: typeof fetch = async (input, init) => {
+    const request = input instanceof Request ? input : new Request(input, init);
+    if (request.url !== saasMakerFirstPartyUrl) return productionFetch(request);
+    return responseJson({ error: "gateway-private-detail" }, 502);
+  };
+
+  const receipt = await runProductionMonitor({ fetchImpl });
+  assert.equal(receipt.ok, false);
+  assert.equal(receipt.summary.failed, 4);
+  const failures = receipt.checks.filter(({ status }) => status === "failed");
+  assert.ok(failures.every(({ id, plugin }) => plugin === "saas-maker" && id.startsWith("first-party-")));
+  assert.equal(JSON.stringify(receipt).includes("gateway-private-detail"), false);
 });

@@ -1,5 +1,7 @@
+import { APP_DEFINITIONS } from "./apps.js";
 import { HOSTED_ROUTES, hostedRoute, oauthResource, type HostedRouteDefinition } from "./hosted.js";
 
+const SAAS_MAKER_FIRST_PARTY_MCP_URL = "https://sassmaker.com/mcp";
 const PROTOCOL_VERSION = "2025-11-25";
 const REQUEST_TIMEOUT_MS = 15_000;
 const MAX_RESPONSE_BYTES = 1_000_000;
@@ -18,6 +20,12 @@ interface PaginationCall extends RepresentativeCall {
   limitArgument?: "limit" | "pagesize";
 }
 
+const saasMakerRepresentative: RepresentativeCall = {
+  name: "search_public_products",
+  arguments: { q: "CodeVetter", limit: 1, offset: 0 },
+};
+const saasMakerPagination: PaginationCall = { name: "search_public_products", arguments: {} };
+
 const REPRESENTATIVE_CALLS: Readonly<Record<string, RepresentativeCall>> = Object.freeze({
   "starboard": { name: "search_repositories", arguments: { q: "MCP", limit: 1, offset: 0 } },
   "high-signal": { name: "get_daily_brief", arguments: {} },
@@ -25,7 +33,7 @@ const REPRESENTATIVE_CALLS: Readonly<Record<string, RepresentativeCall>> = Objec
   "research-papers": { name: "list_hot_papers", arguments: { limit: 1, offset: 0 } },
   "anime-list-public": { name: "search_anime", arguments: { pagesize: 1, offset: 0 } },
   "swe-interview-prep": { name: "get_daily_learning_priority", arguments: {} },
-  "saas-maker": { name: "search_public_products", arguments: { q: "CodeVetter", limit: 1, offset: 0 } },
+  "saas-maker": saasMakerRepresentative,
   drank: { name: "get_domain_rating", arguments: { domain: "example.com" } },
 });
 
@@ -36,7 +44,7 @@ const PAGINATION_CALLS: Readonly<Record<string, PaginationCall>> = Object.freeze
   "research-papers": { name: "list_hot_papers", arguments: {} },
   "anime-list-public": { name: "search_anime", arguments: {}, limitArgument: "pagesize" },
   "swe-interview-prep": { name: "search_curriculum", arguments: {} },
-  "saas-maker": { name: "search_public_products", arguments: {} },
+  "saas-maker": saasMakerPagination,
 });
 
 const PERSONAL_PAGINATION_CALLS: Readonly<Record<string, PaginationCall>> = Object.freeze({
@@ -299,6 +307,7 @@ async function healthCheck(fetchImpl: typeof fetch, origin: string): Promise<Mon
 async function initializeCheck(
   fetchImpl: typeof fetch,
   mcpUrl: string,
+  expectedServerName?: string,
 ): Promise<MonitorEvidence> {
   const response = await mcpPost(fetchImpl, mcpUrl, 1, "initialize", {
     protocolVersion: PROTOCOL_VERSION,
@@ -311,6 +320,9 @@ async function initializeCheck(
   const serverInfo = asRecord(result.serverInfo, "initialize_server_invalid");
   if (result.protocolVersion !== PROTOCOL_VERSION || typeof serverInfo.name !== "string") {
     throw new MonitorError("initialize_contract_invalid");
+  }
+  if (expectedServerName && serverInfo.name !== expectedServerName) {
+    throw new MonitorError("initialize_server_mismatch");
   }
   return { httpStatus: response.status, protocolVersion: PROTOCOL_VERSION, serverName: serverInfo.name };
 }
@@ -609,6 +621,20 @@ async function monitorRoute(
   return Promise.all(checks);
 }
 
+function monitorFirstPartySaasMaker(fetchImpl: typeof fetch): Promise<ProductionMonitorCheck[]> {
+  const app = APP_DEFINITIONS["saas-maker"];
+  const url = SAAS_MAKER_FIRST_PARTY_MCP_URL;
+  return Promise.all([
+    executeCheck("first-party-initialize", app.id, () => initializeCheck(fetchImpl, url, app.serverName)),
+    executeCheck("first-party-tools-readonly", app.id, () =>
+      toolsCheck(fetchImpl, url, Object.keys(app.tools))),
+    executeCheck("first-party-representative-read", app.id, () =>
+      representativeCallCheck(fetchImpl, url, saasMakerRepresentative, 1)),
+    executeCheck("first-party-pagination", app.id, () =>
+      paginationCheck(fetchImpl, url, saasMakerPagination)),
+  ]);
+}
+
 export async function runProductionMonitor(
   options: ProductionMonitorOptions = {},
 ): Promise<ProductionMonitorReceipt> {
@@ -617,7 +643,7 @@ export async function runProductionMonitor(
   const entries = publishedRoutes(options.includePrepared);
   const expectedRouteCount = options.includePrepared ? 11 : 8;
   if (entries.length !== expectedRouteCount) throw new MonitorError("published_route_count_invalid");
-  const nested = await Promise.all(entries.map((entry, index) => {
+  const hostedChecks = entries.map((entry, index) => {
     const wrongPath = entries[(index + 1) % entries.length]?.path;
     if (!wrongPath || hostedRoute(wrongPath, new URL(entry.origin).hostname)) {
       throw new MonitorError("isolation_probe_invalid");
@@ -629,7 +655,8 @@ export async function runProductionMonitor(
       wrongPath,
       options.personalAuthorizations?.[entry.route.id],
     );
-  }));
+  });
+  const nested = await Promise.all([...hostedChecks, monitorFirstPartySaasMaker(fetchImpl)]);
   const checks = nested.flat().sort((left, right) =>
     left.plugin.localeCompare(right.plugin) || left.id.localeCompare(right.id)
   );

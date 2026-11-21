@@ -231,8 +231,9 @@ mutation rejection. Collection tools additionally verify non-overlapping
 first, middle, and terminal pages with one stable exact total and valid
 continuation state. Private routes verify OAuth challenges and metadata. Anime List also runs a
 credential-free, one-result read against its native MCP catalog so healthy OAuth
-metadata cannot mask a broken product tool. The JSON
-receipt retains only status codes, protocol/schema fields, server/tool names,
+metadata cannot mask a broken product tool. The default monitor also checks
+discovery, tool catalog, a one-result read, and pagination at
+`https://sassmaker.com/mcp`. The JSON receipt retains only status codes, protocol/schema fields, server/tool names,
 item counts, scopes, resource identifiers, and timestamps. It never retains
 bearers or source record bodies.
 
