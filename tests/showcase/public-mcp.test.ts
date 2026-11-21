@@ -41,7 +41,7 @@ describe('SaaS Maker public MCP', () => {
 
     expect(gateway).toHaveBeenCalledExactlyOnceWith(
       'https://fleet-chatgpt-connections.sarthakagrawal927.workers.dev/saas-maker/mcp',
-      expect.objectContaining({ method: 'POST', redirect: 'error' })
+      expect.objectContaining({ method: 'POST', redirect: 'manual' })
     );
     const headers = gateway.mock.calls[0]?.[1].headers as Headers;
     expect(Object.fromEntries(headers)).toEqual({
@@ -95,6 +95,22 @@ describe('SaaS Maker public MCP', () => {
     expect(response.status).toBe(204);
     expect(response.headers.get('access-control-allow-origin')).toBe('https://chatgpt.com');
     expect(response.body).toBeNull();
+  });
+
+  it('rejects redirects without exposing the upstream Location', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        async () =>
+          new Response(null, {
+            status: 302,
+            headers: { location: 'https://example.invalid/other-mcp' },
+          })
+      )
+    );
+    const response = await call(new Request('https://sassmaker.com/mcp', { method: 'POST' }));
+    expect(response.status).toBe(502);
+    expect(response.headers.has('location')).toBe(false);
   });
 
   it('returns a bounded failure without returning upstream transport details', async () => {

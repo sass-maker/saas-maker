@@ -42,9 +42,10 @@ export async function servePublicMcp(request: Request): Promise<Response> {
       method: request.method,
       headers: selectHeaders(request.headers, requestHeaders),
       body: request.method === 'POST' ? request.body : null,
-      redirect: 'error',
+      redirect: 'manual',
       signal: AbortSignal.timeout(25_000),
     });
+    if (response.status >= 300 && response.status < 400) throw new Error('Unexpected MCP redirect');
     const outgoing = selectHeaders(response.headers, responseHeaders);
     for (const [name, value] of Object.entries(headers)) outgoing.set(name, value);
     return new Response(response.body, { status: response.status, headers: outgoing });
