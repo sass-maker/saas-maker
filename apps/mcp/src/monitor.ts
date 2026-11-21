@@ -351,6 +351,7 @@ async function representativeCallCheck(
   fetchImpl: typeof fetch,
   mcpUrl: string,
   call: RepresentativeCall,
+  minimumItems = 0,
 ): Promise<MonitorEvidence> {
   const response = await mcpPost(fetchImpl, mcpUrl, 3, "tools/call", {
     name: call.name,
@@ -366,6 +367,7 @@ async function representativeCallCheck(
   }
   const items = structuredItemCount(content);
   if (items > 1) throw new MonitorError("tool_call_unbounded");
+  if (items < minimumItems) throw new MonitorError("tool_call_empty");
   return {
     httpStatus: response.status,
     schemaVersion: "1",
@@ -587,6 +589,15 @@ async function monitorRoute(
       executeCheck("oauth-resource", route.id, () => protectedResourceCheck(fetchImpl, origin, path, route, issuer)),
       executeCheck("oauth-server", route.id, () => authorizationServerCheck(fetchImpl, origin, issuer)),
     );
+    // Anime List serves public catalog tools at the native MCP endpoint even
+    // when its branded connector requires OAuth. Exercise the actual backend.
+    if (route.id === "anime-list" && route.kind === "native") {
+      checks.push(executeCheck("native-public-read", route.id, () =>
+        representativeCallCheck(fetchImpl, route.upstreamUrl, {
+          name: "search_anime",
+          arguments: { pagesize: 1, offset: 0 },
+        }, 1)));
+    }
     const pagination = PERSONAL_PAGINATION_CALLS[route.id];
     if (personalAuthorization && pagination) {
       checks.push(
