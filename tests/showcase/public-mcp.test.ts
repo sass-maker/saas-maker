@@ -19,7 +19,11 @@ describe('SaaS Maker public MCP', () => {
     const gateway = vi.fn(async (_url: string, init: RequestInit) => {
       expect(await new Response(init.body).json()).toEqual(message);
       return Response.json(result, {
-        headers: { 'set-cookie': 'gateway-only=1', 'x-internal': 'gateway-only' },
+        headers: {
+          'set-cookie': 'gateway-only=1',
+          'x-internal': 'gateway-only',
+          'access-control-allow-origin': 'https://chatgpt.com',
+        },
       });
     });
     vi.stubGlobal('fetch', gateway);
@@ -54,6 +58,7 @@ describe('SaaS Maker public MCP', () => {
     expect(response.headers.get('cache-control')).toBe('no-store');
     expect(response.headers.has('set-cookie')).toBe(false);
     expect(response.headers.has('x-internal')).toBe(false);
+    expect(response.headers.get('access-control-expose-headers')).toBe('Mcp-Protocol-Version');
     expect(await response.json()).toEqual(result);
   });
 
@@ -71,7 +76,7 @@ describe('SaaS Maker public MCP', () => {
           })
         )
       ).status
-    ).toBe(400);
+    ).toBe(401);
     expect(gateway).not.toHaveBeenCalled();
   });
 
@@ -82,7 +87,11 @@ describe('SaaS Maker public MCP', () => {
         async () =>
           new Response(null, {
             status: 204,
-            headers: { 'access-control-allow-origin': 'https://chatgpt.com', vary: 'Origin' },
+            headers: {
+              'access-control-allow-origin': 'https://chatgpt.com',
+              'access-control-allow-headers': 'Authorization, Content-Type, Mcp-Protocol-Version',
+              vary: 'Origin',
+            },
           })
       )
     );
@@ -94,6 +103,9 @@ describe('SaaS Maker public MCP', () => {
     );
     expect(response.status).toBe(204);
     expect(response.headers.get('access-control-allow-origin')).toBe('https://chatgpt.com');
+    expect(response.headers.get('access-control-allow-headers')).toBe(
+      'Content-Type, Mcp-Protocol-Version'
+    );
     expect(response.body).toBeNull();
   });
 
@@ -123,7 +135,9 @@ describe('SaaS Maker public MCP', () => {
     const response = await call(new Request('https://sassmaker.com/mcp', { method: 'POST' }));
     expect(response.status).toBe(502);
     expect(await response.json()).toEqual({
-      error: 'The SaaS Maker MCP service is temporarily unavailable.',
+      jsonrpc: '2.0',
+      id: null,
+      error: { code: -32000, message: 'The SaaS Maker MCP service is temporarily unavailable.' },
     });
   });
 });
