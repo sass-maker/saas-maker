@@ -225,7 +225,9 @@ hostname-isolation boundaries; public MCP
 initialization, read-only tool catalogs, representative bounded reads, and
 mutation rejection. Collection tools additionally verify non-overlapping
 first, middle, and terminal pages with one stable exact total and valid
-continuation state. Private routes verify OAuth challenges and metadata. The JSON
+continuation state. Private routes verify OAuth challenges and metadata. Anime List also runs a
+credential-free, one-result read against its native MCP catalog so healthy OAuth
+metadata cannot mask a broken product tool. The JSON
 receipt retains only status codes, protocol/schema fields, server/tool names,
 item counts, scopes, resource identifiers, and timestamps. It never retains
 bearers or source record bodies.

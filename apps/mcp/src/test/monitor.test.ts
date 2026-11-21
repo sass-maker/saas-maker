@@ -6,6 +6,7 @@ import { PRODUCTION_AUTH0_ISSUER, runProductionMonitor } from "../monitor.js";
 
 const protocolVersion = "2025-11-25";
 const protectedPrefix = "/.well-known/oauth-protected-resource";
+const animeNativeUrl = "https://anime.significanthobbies.com/api/mcp";
 
 function responseJson(
   value: unknown,
@@ -52,6 +53,25 @@ const productionFetch: typeof fetch = async (input, init) => {
       authorization_servers: [PRODUCTION_AUTH0_ISSUER],
       scopes_supported: [route.scope],
       bearer_methods_supported: ["header"],
+    });
+  }
+  if (url.href === animeNativeUrl) {
+    assert.equal(request.headers.has("authorization"), false);
+    assert.equal(request.headers.has("cookie"), false);
+    const message = await request.json() as { id: number; method: string; params: unknown };
+    assert.equal(message.method, "tools/call");
+    assert.deepEqual(message.params, { name: "search_anime", arguments: { pagesize: 1, offset: 0 } });
+    return responseJson({
+      jsonrpc: "2.0",
+      id: message.id,
+      result: {
+        structuredContent: {
+          schemaVersion: "1",
+          ok: true,
+          tool: "search_anime",
+          data: { filteredList: [{ mal_id: 1, title: "must-never-enter-receipt" }], totalFiltered: 10 },
+        },
+      },
     });
   }
   const route = hostedRoute(url.pathname, url.hostname);
@@ -138,7 +158,7 @@ test("production monitor retains only redacted contract evidence", async () => {
     now: () => new Date("2026-08-12T00:00:00.000Z"),
   });
   assert.equal(receipt.ok, true);
-  assert.deepEqual(receipt.summary, { passed: 68, failed: 0, skipped: 0, total: 68 });
+  assert.deepEqual(receipt.summary, { passed: 69, failed: 0, skipped: 0, total: 69 });
   assert.equal(receipt.checkedAt, "2026-08-12T00:00:00.000Z");
   const serialized = JSON.stringify(receipt);
   assert.equal(serialized.includes("must-never-enter-receipt"), false);
@@ -151,7 +171,7 @@ test("production monitor retains only redacted contract evidence", async () => {
 
 test("production monitor excludes prepared routes until activation", async () => {
   const receipt = await runProductionMonitor({ fetchImpl: productionFetch });
-  assert.deepEqual(receipt.summary, { passed: 48, failed: 0, skipped: 0, total: 48 });
+  assert.deepEqual(receipt.summary, { passed: 49, failed: 0, skipped: 0, total: 49 });
   assert.equal(receipt.checks.filter(({ id }) => id === "representative-read").length, 4);
   assert.equal(receipt.checks.filter(({ id }) => id === "pagination").length, 4);
   assert.equal(receipt.checks.filter(({ id }) => id === "host-isolation").length, 8);
@@ -168,7 +188,7 @@ test("production monitor can verify private collection pagination without retain
     },
   });
   assert.equal(receipt.ok, true);
-  assert.deepEqual(receipt.summary, { passed: 51, failed: 0, skipped: 0, total: 51 });
+  assert.deepEqual(receipt.summary, { passed: 52, failed: 0, skipped: 0, total: 52 });
   assert.equal(receipt.checks.filter(({ id }) => id === "authenticated-pagination").length, 3);
   const serialized = JSON.stringify(receipt);
   assert.equal(serialized.includes("private-monitor-secret"), false);
@@ -279,7 +299,7 @@ test("a live dataset too small for three pages skips pagination instead of faili
     skipReason: "pagination_dataset_too_small",
   });
   assert.equal(receipt.ok, true);
-  assert.deepEqual(receipt.summary, { passed: 47, failed: 0, skipped: 1, total: 48 });
+  assert.deepEqual(receipt.summary, { passed: 48, failed: 0, skipped: 1, total: 49 });
 });
 
 test("an empty live dataset skips pagination instead of failing", async () => {
@@ -417,4 +437,26 @@ test("production monitor fails if an installed High Signal brief method breaks",
   const receipt = await runProductionMonitor({ fetchImpl });
   assert.equal(receipt.ok, false);
   assert.equal(receipt.checks.find(check => check.plugin === "high-signal" && check.id === "representative-read")?.status, "failed");
+});
+
+test("a native Anime List tool failure fails the monitor even when gateway OAuth is healthy", async () => {
+  const fetchImpl: typeof fetch = async (input, init) => {
+    const request = input instanceof Request ? input : new Request(input, init);
+    if (request.url !== animeNativeUrl) return productionFetch(request);
+    return responseJson({
+      jsonrpc: "2.0",
+      id: 3,
+      result: { isError: true, structuredContent: { ok: false, error: { code: "not_found" } } },
+    });
+  };
+  const receipt = await runProductionMonitor({ fetchImpl });
+  assert.equal(receipt.ok, false);
+  const anime = receipt.checks.filter(({ plugin }) => plugin === "anime-list");
+  assert.equal(anime.find(({ id }) => id === "oauth-challenge")?.status, "passed");
+  assert.deepEqual(anime.find(({ id }) => id === "native-public-read"), {
+    id: "native-public-read",
+    plugin: "anime-list",
+    status: "failed",
+    errorCode: "tool_call_failed",
+  });
 });
