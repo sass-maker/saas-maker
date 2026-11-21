@@ -339,7 +339,7 @@ test("operation routes stay on their verified surfaces", () => {
   assert.equal(APP_DEFINITIONS["swe-interview-prep"].operations.progress!.auth, true);
   assert.equal(APP_DEFINITIONS["swe-interview-prep"].operations.verification!.path({}), "/api/mcp/verification");
   assert.equal(APP_DEFINITIONS["swe-interview-prep"].operations.verification!.auth, true);
-  assert.equal(APP_DEFINITIONS["saas-maker"].operations.catalog!.path({}), "/api/ai");
+  assert.equal(APP_DEFINITIONS["saas-maker"].operations.catalog!.path({}), "/mcp-catalog.json");
   const normalizedDomain = APP_DEFINITIONS.drank.tools.get_domain_rating!.inputSchema.domain!.parse("https://Example.com/path");
   assert.equal(APP_DEFINITIONS.drank.operations.rating!.path({ domain: normalizedDomain }), "/api/dr?target=example.com");
   assert.throws(() => APP_DEFINITIONS.drank.tools.get_domain_rating!.inputSchema.domain!.parse("127.0.0.1"));
