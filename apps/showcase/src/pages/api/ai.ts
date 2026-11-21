@@ -1,10 +1,9 @@
 import publicCatalog from '../../../../../catalog/generated/public.json';
 import tokenWorld from '../../data/tokenWorld.json';
 import { PACKAGE_URL } from '../../data/links';
-import { LEARNINGS } from '../../data/learnings';
 import { TOOLING_CAPABILITIES } from '../../data/tooling';
 import { STUDIO_PROFILE } from '../../data/studio';
-import { markdownPath, PUBLIC_ROUTES, publicRouteUrl } from '../../data/publicRoutes';
+import { publicMcpCatalog } from '../../data/publicMcpCatalog';
 export const prerender = true;
 export function GET() {
   return new Response(
@@ -25,13 +24,7 @@ export function GET() {
           page: 'https://sassmaker.com/studio',
           markdown: 'https://sassmaker.com/studio.md',
         },
-        surfaces: PUBLIC_ROUTES.map((route) => ({
-          id: route.id,
-          url: publicRouteUrl(route),
-          md: `https://sassmaker.com/${markdownPath(route)}.md`,
-          kind: route.kind,
-          description: route.description,
-        })),
+        surfaces: publicMcpCatalog.surfaces,
         externalResources: [
           {
             id: 'feedback-package',
@@ -52,15 +45,12 @@ export function GET() {
           metric: 'Verified provider-reported model tokens from contributing products',
           ...tokenWorld,
         },
-        products: publicCatalog.products,
+        products: publicMcpCatalog.products,
         directory: publicCatalog.directory,
         archivedDirectory: publicCatalog.archivedDirectory,
         historySemantics: publicCatalog.historySemantics,
         pastProjects: publicCatalog.pastProjects,
-        learnings: LEARNINGS.map((learning) => ({
-          ...learning,
-          url: `https://sassmaker.com${learning.href}`,
-        })),
+        learnings: publicMcpCatalog.learnings,
       },
       null,
       2

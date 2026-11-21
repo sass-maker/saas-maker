@@ -63,7 +63,7 @@ resolve and are not registered in `wrangler.jsonc`.
 | Product | Planned MCP URL | ChatGPT auth | Upstream boundary |
 | --- | --- | --- | --- |
 | Anime List | `https://catalog-anime-mcp.significanthobbies.com/anime-list-public/mcp` | None | Prepared anonymous proxy exposing only six public catalog/discovery tools |
-| SaaS Maker | `https://mcp.sassmaker.com/saas-maker/mcp` | None | Privacy-checked public `/api/ai` portfolio projection |
+| SaaS Maker | `https://mcp.sassmaker.com/saas-maker/mcp` | None | Privacy-checked public `/mcp-catalog.json` portfolio projection |
 | Drank | `https://domains-mcp.sassmaker.com/drank/mcp` | None | Live rating for one validated public hostname |
 | Setline | `https://setline-mcp.significanthobbies.com/setline/mcp` | Owner token | Owner-only Setline projection |
 | Personal Apps | `https://personal-apps-mcp.significanthobbies.com/personal-apps/mcp` | OAuth, `personal-apps.read` | Prepared native personal-platform proxy |

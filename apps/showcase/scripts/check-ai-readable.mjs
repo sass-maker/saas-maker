@@ -99,3 +99,13 @@ test('built public HTML and Markdown stay in sync', () => {
     )
   );
 });
+
+test('built MCP catalog stays within the gateway limit and matches the public export', () => {
+  const root = process.argv[2]
+    ? resolve(process.argv[2])
+    : fileURLToPath(new URL('../dist/', import.meta.url));
+  const body = readFileSync(join(root, 'mcp-catalog.json'));
+  assert.ok(body.length <= 1_000_000, 'MCP catalog exceeds the gateway read limit');
+  const { products, surfaces, learnings } = JSON.parse(readFileSync(join(root, 'api/ai'), 'utf8'));
+  assert.deepEqual(JSON.parse(body), { products, surfaces, learnings });
+});

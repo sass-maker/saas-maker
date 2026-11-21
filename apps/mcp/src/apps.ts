@@ -1064,7 +1064,7 @@ const saasMaker: AppDefinition = {
   instructions:
     "Read-only access to SaaS Maker's privacy-checked public portfolio catalog. Never expose private Fleet configuration, operations, credentials, or owner-only data.",
   operations: {
-    catalog: { path: () => "/api/ai", mode: "public-agent-catalog" },
+    catalog: { path: () => "/mcp-catalog.json", mode: "public-agent-catalog" },
   },
   tools: {
     search_public_products: {

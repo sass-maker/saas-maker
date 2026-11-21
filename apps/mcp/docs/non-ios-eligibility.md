@@ -18,7 +18,7 @@ appropriate for the intended audience. Marketing pages alone do not qualify.
 | Significant Hobbies | Public | Public taxonomy, experiences, and PUBLIC timelines | Hosted |
 | Research Papers | Public | Approved public exports | Hosted; PDFs, ingest, and private corpus excluded |
 | SWE Interview Prep | Personal | Federated learning projections with `swe-interview-prep.read`, plus public curriculum catalogs | Hosted and user-scoped; evidence and progress are read-only; notes and mastery writes excluded |
-| SaaS Maker | Public | Privacy-checked `/api/ai` projection | Added; internal Fleet registry and operations excluded |
+| SaaS Maker | Public | Privacy-checked `/mcp-catalog.json` projection | Added; internal Fleet registry and operations excluded |
 | Drank | Public | Validated `/api/dr?target=` lookup | Added; provider credential stays in the product Worker |
 
 CodeVetter remains a local Codex-only MCP. It does not belong in the hosted
