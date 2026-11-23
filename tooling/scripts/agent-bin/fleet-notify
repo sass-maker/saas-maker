@@ -25,7 +25,7 @@ const receiptsPath = resolve(stateDir, "receipts.ndjson");
 const lockPath = resolve(stateDir, ".drain.lock");
 const emitLockPath = resolve(stateDir, ".emit.lock");
 const severities = new Set(["info", "success", "warning", "critical"]);
-const knownChannels = new Set(["hermes-telegram", "openclaw-telegram", "ntfy"]);
+const knownChannels = new Set(["hermes-telegram", "ntfy"]);
 
 function usage(exitCode = 0) {
   const output = exitCode ? console.error : console.log;
@@ -42,7 +42,7 @@ Emit options:
   --severity <info|success|warning|critical>
   --source <name> --project <name> --title <text> --body <text>
   --url <https-url> --dedupe-key <key> --ttl-minutes <minutes>
-  --channel <hermes-telegram|openclaw-telegram|ntfy> (repeatable)
+  --channel <hermes-telegram|ntfy> (repeatable)
   --no-drain --json`);
   process.exit(exitCode);
 }
@@ -168,16 +168,12 @@ function adapterStatus(channel) {
     const configured = spawnSync("hermes", ["send", "--list", "telegram"], { stdio: "ignore", timeout: 5000 }).status === 0;
     return configured ? { ready: true } : { ready: false, reason: "Hermes Telegram is not configured" };
   }
-  if (channel === "openclaw-telegram") {
-    return process.env.OPENCLAW_TELEGRAM_TARGET
-      ? { ready: true }
-      : { ready: false, reason: "OPENCLAW_TELEGRAM_TARGET is missing" };
-  }
   if (channel === "ntfy") {
     return process.env.FLEET_NTFY_URL
       ? { ready: true }
       : { ready: false, reason: "FLEET_NTFY_URL is missing" };
   }
+  if (channel === "openclaw-telegram") return { ready: false, reason: "OpenClaw Telegram has been retired" };
   return { ready: false, reason: `unknown channel: ${channel}` };
 }
 
@@ -187,15 +183,6 @@ async function deliver(channel, event) {
   const message = formatMessage(event);
   if (channel === "hermes-telegram") {
     const result = spawnSync("hermes", ["send", "--to", process.env.HERMES_TELEGRAM_TARGET || "telegram", "--json", message], {
-      encoding: "utf8",
-      timeout: 30_000
-    });
-    return result.status === 0
-      ? { ok: true, response: (result.stdout || "").trim().slice(0, 500) }
-      : { ok: false, error: (result.stderr || result.stdout || `exit ${result.status}`).trim().slice(0, 500) };
-  }
-  if (channel === "openclaw-telegram") {
-    const result = spawnSync("openclaw", ["message", "send", "--channel", "telegram", "--target", process.env.OPENCLAW_TELEGRAM_TARGET, "--message", message, "--json"], {
       encoding: "utf8",
       timeout: 30_000
     });
@@ -405,7 +392,9 @@ async function main() {
     const explicitChannels = Boolean(options.channel?.length);
     const channels = explicitChannels
       ? options.channel
-      : config.routes[severity].filter((channel) => !config.optionalChannels?.includes(channel) || adapterStatus(channel).ready);
+      : config.routes[severity].filter((channel) =>
+        channel !== "openclaw-telegram" && (!config.optionalChannels?.includes(channel) || adapterStatus(channel).ready)
+      );
     for (const channel of channels) if (!knownChannels.has(channel)) throw new Error(`invalid channel: ${channel}`);
     for (const url of options.url || []) if (!/^https:\/\//.test(url)) throw new Error(`only HTTPS URLs are allowed: ${url}`);
     const occurredAt = new Date().toISOString();

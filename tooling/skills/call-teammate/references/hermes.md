@@ -2,7 +2,7 @@
 
 Use Hermes only for optional repeatable research, analysis, skills that benefit
 from its persistent learning loop, backup delivery, or workflows that need a
-separate model provider. In Fleet, OpenClaw is the primary mobile operator.
+separate model provider.
 Hermes should run as a launchd-supervised gateway only when it has a named job,
 its own Telegram bot token, and an allowlist.
 

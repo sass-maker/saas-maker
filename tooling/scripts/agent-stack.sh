@@ -19,7 +19,6 @@ EXPOSED_FLEET_SKILLS=(
   local-ports-cleanup
   marketing
   media-acquisition
-  mobile-task-control
   name-domains
   seo-research
   site-health
@@ -35,16 +34,15 @@ usage: agent-stack.sh <command>
 Commands:
   install-skills  Link Fleet Ops skills into local agent runtimes, or defer to
                   a user-level skills manager when one is present.
-  install-agents  Register Fleet support projects as OpenClaw agents.
   mobile          Show or configure mobile control surfaces.
   notify          Send or inspect a durable Fleet notification.
   workspace       Manage writer worktrees, shared pnpm installs and build limits.
-  check           Validate local OpenClaw, optional Hermes, Telegram, and security state.
-  start           Start OpenClaw and notifications.
-  pause           Stop OpenClaw and notifications.
-  resume          Start OpenClaw and notifications.
-  restart         Restart OpenClaw and notifications.
-  status          Show gateway, cron, mobile, and paired-device status.
+  check           Validate Hermes and show mobile access status.
+  start           Start Fleet notifications.
+  pause           Stop Fleet notifications.
+  resume          Start Fleet notifications.
+  restart         Restart Fleet notifications.
+  status          Show notification, mobile access, and cron status.
 EOF
 }
 
@@ -230,11 +228,7 @@ install_skills() {
   fi
   "$FLEET_OPS_DIR/scripts/link-project-agent-assets.sh" --skills-only
 
-  # Gateway runtimes are not repository-scoped, so keep user-level links.
-  for dir in "$HOME/.openclaw/skills"; do
-    link_fleet_skills "$dir"
-    link_teammate_parent "$dir"
-  done
+  # Hermes runs outside the repository and uses user-level skill links.
   if [ -d "$HOME/.hermes/skills" ]; then
     dir="$HOME/.hermes/skills"
     link_fleet_skills "$dir"
@@ -244,15 +238,10 @@ install_skills() {
 
 case "${1:-}" in
   install-skills) install_skills ;;
-  install-agents) "$FLEET_OPS_DIR/scripts/agent-bin/setup-openclaw-support-agents" "${@:2}" ;;
   mobile) "$FLEET_OPS_DIR/scripts/agent-bin/mobile-control" "${@:2}" ;;
   notify) "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notify" "${@:2}" ;;
   workspace) "$FLEET_OPS_DIR/scripts/agent-bin/fleet-workspace" "${@:2}" ;;
   check)
-    openclaw config validate
-    openclaw plugins doctor
-    openclaw channels status --deep || true
-    openclaw security audit
     if command -v hermes >/dev/null 2>&1; then
       hermes doctor || true
       hermes status --deep || true
@@ -261,26 +250,19 @@ case "${1:-}" in
     ;;
   start|resume)
     "$FLEET_OPS_DIR/scripts/agent-stack.sh" install-skills
-    openclaw plugins enable telegram >/dev/null 2>&1 || true
-    openclaw gateway start
     "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" start
     ;;
   pause)
-    openclaw gateway stop
     "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" stop
     ;;
   restart)
-    openclaw gateway restart
     "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" restart
     ;;
   status)
-    openclaw status --all
-    openclaw channels list --all | sed -n '/Telegram/p' || true
     if command -v hermes >/dev/null 2>&1; then
       hermes gateway status || true
       hermes status | sed -n '1,120p' || true
     fi
-    openclaw nodes status
     "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" status
     "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notify" status
     "$FLEET_OPS_DIR/scripts/agent-bin/mobile-control" status

@@ -30,7 +30,7 @@ Subskills live as sibling directories under `skills/`.
 If the request spans multiple subskills (e.g. "audit the fleet, then scaffold a new project for the gap you find"), run them in sequence.
 
 For a substantive prepared change awaiting an owner decision, use the existing
-[decision-ready handoff guide](../mobile-task-control/references/decision-cards.md).
+[decision-ready handoff guide](references/decision-cards.md).
 It is a message format, not a task system or permission to make the change.
 
 ## What this skill does NOT cover
