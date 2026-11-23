@@ -20,8 +20,7 @@ usage: mobile-control <command>
 Commands:
   needs               Print user-provided configuration still required.
   status              Show Telegram, agent, and private-access state.
-  configure-telegram  Configure OpenClaw Telegram and optional Hermes Telegram.
-  ping                Send a mobile ping through OpenClaw Telegram.
+  configure-telegram  Configure Hermes Telegram.
   start-tailscale     Start Tailscale with SSH enabled; may print a login URL/QR.
   stop-tailscale      Stop the machine-local userspace Tailscale service.
   tailscale-status    Show the private tailnet connection state.
@@ -30,15 +29,11 @@ Commands:
   stop-tmate          Stop an emergency tmate session.
 
 Telegram configure env:
-  OPENCLAW_TELEGRAM_BOT_TOKEN   BotFather token for the OpenClaw bot.
-  HERMES_TELEGRAM_BOT_TOKEN     Optional BotFather token for the Hermes bot.
+  HERMES_TELEGRAM_BOT_TOKEN     BotFather token for the Hermes bot.
   TELEGRAM_ALLOWED_USERS        Comma-separated numeric Telegram user IDs.
   TELEGRAM_HOME_CHANNEL         Optional chat/group ID for notification delivery.
   TELEGRAM_GROUP_ALLOWED_CHATS  Optional comma-separated Telegram group IDs.
 
-If Hermes is enabled, use two different bot tokens. Telegram long polling allows
-one active gateway per bot token; sharing a token between OpenClaw and Hermes
-will flap.
 EOF
 }
 
@@ -108,12 +103,12 @@ env_has_name() {
 print_needs() {
   cat <<'EOF'
 Needed from you:
-1. Create one Telegram bot in @BotFather for OpenClaw.
+1. Create one Telegram bot in @BotFather for Hermes.
 2. Send me or export your numeric Telegram user ID:
    - get it from @userinfobot, @getidsbot, or by DMing the bot and reading logs.
 3. Optional but recommended: create a private Telegram group/topic for Fleet Ops:
-   - add the OpenClaw bot;
-   - disable BotFather privacy mode or make the bots admins;
+   - add the Hermes bot;
+   - disable BotFather privacy mode or make the bot an admin;
    - provide the negative group chat ID, e.g. -1001234567890.
 4. Log this Mac and your phone into the same Tailscale tailnet.
 5. In Tailscale admin, allow Tailscale SSH from your user to this Mac.
@@ -126,10 +121,9 @@ Needed from you:
 
 Then run, without pasting secrets into git:
 
-  export OPENCLAW_TELEGRAM_BOT_TOKEN='...'
+  export HERMES_TELEGRAM_BOT_TOKEN='...'
   export TELEGRAM_ALLOWED_USERS='123456789'
   export TELEGRAM_HOME_CHANNEL='123456789'
-  # optional: export HERMES_TELEGRAM_BOT_TOKEN='...'
   # optional: export TELEGRAM_GROUP_ALLOWED_CHATS='-1001234567890'
   ./saas-maker/tooling/scripts/agent-bin/mobile-control configure-telegram
 
@@ -137,92 +131,39 @@ EOF
 }
 
 configure_telegram() {
-  require_env OPENCLAW_TELEGRAM_BOT_TOKEN TELEGRAM_ALLOWED_USERS || {
+  require_env HERMES_TELEGRAM_BOT_TOKEN TELEGRAM_ALLOWED_USERS || {
     print_needs
     exit 2
   }
 
-  if [ -n "${HERMES_TELEGRAM_BOT_TOKEN:-}" ] && [ "$OPENCLAW_TELEGRAM_BOT_TOKEN" = "$HERMES_TELEGRAM_BOT_TOKEN" ]; then
-    echo "Refusing to use the same Telegram bot token for both OpenClaw and Hermes."
-    echo "Create two bots in @BotFather so both gateways can run without polling conflicts."
-    exit 2
+  if ! has hermes; then
+    echo "Hermes CLI is missing." >&2
+    return 1
   fi
 
-  local owner
-  owner="$(first_csv "$TELEGRAM_ALLOWED_USERS")"
-
-  if has openclaw; then
-    openclaw plugins enable telegram >/dev/null 2>&1 || true
-    openclaw exec-policy preset yolo >/dev/null
-    openclaw config unset channels.telegram.tokenFile >/dev/null 2>&1 || true
-    openclaw channels add --channel telegram --token "$OPENCLAW_TELEGRAM_BOT_TOKEN"
-    python3 - "$TELEGRAM_ALLOWED_USERS" "$owner" "${TELEGRAM_GROUP_ALLOWED_CHATS:-}" <<'PY' | openclaw config patch --stdin
-import json
-import sys
-
-users = [item.strip() for item in sys.argv[1].split(",") if item.strip()]
-owner = sys.argv[2]
-groups = [item.strip() for item in sys.argv[3].split(",") if item.strip()] if len(sys.argv) > 3 else []
-telegram = {
-    "enabled": True,
-    "dmPolicy": "allowlist",
-    "allowFrom": users,
-    "groupPolicy": "allowlist",
-}
-if groups:
-    telegram["groups"] = {group: {"requireMention": True} for group in groups}
-patch = {
-    "channels": {"telegram": telegram},
-    "commands": {"ownerAllowFrom": [f"telegram:{owner}"]},
-}
-print(json.dumps(patch))
-PY
-    openclaw gateway restart || openclaw gateway start || true
-    openclaw agents bind --agent fleet-ops --bind telegram:default >/dev/null 2>&1 || true
+  local hermes_env
+  hermes_env="$(hermes config env-path)"
+  set_env_value "$hermes_env" TELEGRAM_BOT_TOKEN "$HERMES_TELEGRAM_BOT_TOKEN"
+  set_env_value "$hermes_env" TELEGRAM_ALLOWED_USERS "$TELEGRAM_ALLOWED_USERS"
+  if [ -n "${TELEGRAM_HOME_CHANNEL:-}" ]; then
+    set_env_value "$hermes_env" TELEGRAM_HOME_CHANNEL "$TELEGRAM_HOME_CHANNEL"
   fi
-
-  if has hermes && [ -n "${HERMES_TELEGRAM_BOT_TOKEN:-}" ]; then
-    local hermes_env
-    hermes_env="$(hermes config env-path)"
-    set_env_value "$hermes_env" TELEGRAM_BOT_TOKEN "$HERMES_TELEGRAM_BOT_TOKEN"
-    set_env_value "$hermes_env" TELEGRAM_ALLOWED_USERS "$TELEGRAM_ALLOWED_USERS"
-    if [ -n "${TELEGRAM_HOME_CHANNEL:-}" ]; then
-      set_env_value "$hermes_env" TELEGRAM_HOME_CHANNEL "$TELEGRAM_HOME_CHANNEL"
-    fi
-    if [ -n "${TELEGRAM_GROUP_ALLOWED_CHATS:-}" ]; then
-      set_env_value "$hermes_env" TELEGRAM_GROUP_ALLOWED_CHATS "$TELEGRAM_GROUP_ALLOWED_CHATS"
-    fi
-    hermes gateway install --start-now --start-on-login || hermes gateway start || true
-    hermes gateway restart || true
+  if [ -n "${TELEGRAM_GROUP_ALLOWED_CHATS:-}" ]; then
+    set_env_value "$hermes_env" TELEGRAM_GROUP_ALLOWED_CHATS "$TELEGRAM_GROUP_ALLOWED_CHATS"
   fi
+  hermes gateway install --start-now --start-on-login || hermes gateway start || true
+  hermes gateway restart || true
 
   local notification_env="$HOME/Library/Application Support/Fleet Ops/notifications/env"
-  local notification_target="${TELEGRAM_HOME_CHANNEL:-$owner}"
-  set_env_value "$notification_env" OPENCLAW_TELEGRAM_TARGET "$notification_target"
-  if [ -n "${HERMES_TELEGRAM_BOT_TOKEN:-}" ]; then
-    set_env_value "$notification_env" HERMES_TELEGRAM_TARGET "telegram:$notification_target"
-  fi
+  local notification_target="${TELEGRAM_HOME_CHANNEL:-$(first_csv "$TELEGRAM_ALLOWED_USERS")}"
+  set_env_value "$notification_env" HERMES_TELEGRAM_TARGET "telegram:$notification_target"
 
-  echo "Telegram config applied. DM the OpenClaw bot, then run:"
-  echo "  openclaw pairing list telegram"
-  echo "  openclaw pairing approve telegram <CODE>"
-  if [ -n "${HERMES_TELEGRAM_BOT_TOKEN:-}" ]; then
-    echo "If using Hermes, also DM the Hermes bot, then run:"
-    echo "  hermes pairing list"
-    echo "  hermes pairing approve <CODE>"
-  fi
+  echo "Telegram config applied. DM the Hermes bot, then run:"
+  echo "  hermes pairing list"
+  echo "  hermes pairing approve <CODE>"
 }
 
 status() {
-  echo "OpenClaw"
-  if has openclaw; then
-    openclaw status | sed -n '1,28p' || true
-    openclaw channels list --all | sed -n '/Telegram/p' || true
-  else
-    echo "  not installed"
-  fi
-
-  echo
   echo "Hermes"
   if has hermes; then
     hermes gateway status || true
@@ -233,9 +174,8 @@ status() {
 
   echo
   echo "Telegram secrets"
-  env_has_name "$HOME/.hermes/.env" TELEGRAM_BOT_TOKEN && echo "  Hermes token: present (optional)" || echo "  Hermes token: not configured (optional)"
-  env_has_name "$HOME/.hermes/.env" TELEGRAM_ALLOWED_USERS && echo "  Hermes allowlist: present (optional)" || echo "  Hermes allowlist: not configured (optional)"
-  openclaw channels list --all 2>/dev/null | sed -n '/Telegram/p' || true
+  env_has_name "$HOME/.hermes/.env" TELEGRAM_BOT_TOKEN && echo "  Hermes token: present" || echo "  Hermes token: required for Telegram delivery"
+  env_has_name "$HOME/.hermes/.env" TELEGRAM_ALLOWED_USERS && echo "  Hermes allowlist: present" || echo "  Hermes allowlist: required for Telegram setup"
 
   echo
   echo "Teammates"
@@ -272,16 +212,6 @@ status() {
   echo
   echo "Emergency access"
   "$0" tmate-status || true
-}
-
-ping_mobile() {
-  local message="${*:-Fleet ping: machine is online, dashboard refreshes every minute, and mobile control status is available.}"
-  "$SCRIPT_DIR/fleet-notify" emit \
-    --severity info \
-    --source mobile-control \
-    --title "Fleet ping" \
-    --body "$message" \
-    --channel openclaw-telegram
 }
 
 start_tmate() {
@@ -407,7 +337,6 @@ case "${1:-}" in
   needs|"") print_needs ;;
   status) status ;;
   configure-telegram) configure_telegram ;;
-  ping) shift; ping_mobile "$@" ;;
   emergency-tmate) shift; start_tmate "${1:-}"; print_tmate_links ;;
   start-tmate) shift; start_tmate "${1:-}"; print_tmate_links ;;
   stop-tmate) stop_tmate ;;

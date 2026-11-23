@@ -14,8 +14,7 @@ guidance is needed; verify current facts and tool availability before using it.
   or implicitly loaded. SEO, analytics and iOS workflows retain their Fleet owners.
 - Agency, reviewed revision
   [53651cecb61d5b71b208504c7790c1e0e94bb3ad](https://github.com/browser-use/agency/tree/53651cecb61d5b71b208504c7790c1e0e94bb3ad).
-  Its decision-handoff concept is adapted in the existing mobile-task-control
-  reference. No application, profile miner, service discovery or scheduler is installed.
+  Its decision-handoff concept is adapted in the Fleet Ops decision guide. No application, profile miner, service discovery or scheduler is installed.
 
 The upstream collection is available through these revision links, not loaded
 into every prompt. Do not blindly inherit upstream cross-skill dependencies,
