@@ -26,6 +26,7 @@ const lockPath = resolve(stateDir, ".drain.lock");
 const emitLockPath = resolve(stateDir, ".emit.lock");
 const severities = new Set(["info", "success", "warning", "critical"]);
 const knownChannels = new Set(["hermes-telegram", "ntfy"]);
+const retiredChannel = "openclaw-telegram";
 
 function usage(exitCode = 0) {
   const output = exitCode ? console.error : console.log;
@@ -173,7 +174,7 @@ function adapterStatus(channel) {
       ? { ready: true }
       : { ready: false, reason: "FLEET_NTFY_URL is missing" };
   }
-  if (channel === "openclaw-telegram") return { ready: false, reason: "OpenClaw Telegram has been retired" };
+  if (channel === retiredChannel) return { ready: false, reason: "OpenClaw Telegram has been retired" };
   return { ready: false, reason: `unknown channel: ${channel}` };
 }
 
@@ -390,12 +391,15 @@ async function main() {
     if ((options.body || "").length > 3000) throw new Error("--body must be 3000 characters or fewer");
     if ((options.url || []).length > 3) throw new Error("at most three --url values are allowed");
     const explicitChannels = Boolean(options.channel?.length);
+    const defaultRoute = explicitChannels ? [] : config.routes[severity];
     const channels = explicitChannels
       ? options.channel
-      : config.routes[severity].filter((channel) =>
-        channel !== "openclaw-telegram" && (!config.optionalChannels?.includes(channel) || adapterStatus(channel).ready)
+      : defaultRoute.filter((channel) =>
+        channel !== retiredChannel && (!config.optionalChannels?.includes(channel) || adapterStatus(channel).ready)
       );
     for (const channel of channels) if (!knownChannels.has(channel)) throw new Error(`invalid channel: ${channel}`);
+    // Keep a visible blocked delivery when the legacy route has no replacement.
+    if (!channels.length && defaultRoute.includes(retiredChannel)) channels.push(retiredChannel);
     for (const url of options.url || []) if (!/^https:\/\//.test(url)) throw new Error(`only HTTPS URLs are allowed: ${url}`);
     const occurredAt = new Date().toISOString();
     const event = {

@@ -12,13 +12,15 @@ test('retired Telegram routes cannot send or prevent new notifications from queu
   const state = mkdtempSync(join(tmpdir(), 'fleet-notify-test-'));
   t.after(() => rmSync(state, { recursive: true, force: true }));
   const config = join(state, 'config.json');
-  writeFileSync(config, JSON.stringify({
+  const writeRoutes = (routes) => writeFileSync(config, JSON.stringify({
     schemaVersion: 1,
-    routes: { critical: ['openclaw-telegram', 'ntfy'] },
+    routes,
     dedupeWindowMinutes: 60,
     retentionDays: 7,
     maxAttempts: 3,
   }));
+
+  writeRoutes({ critical: ['openclaw-telegram', 'ntfy'] });
 
   const run = (...args) => spawnSync(process.execPath, [cli, ...args], {
     encoding: 'utf8',
@@ -41,10 +43,18 @@ test('retired Telegram routes cannot send or prevent new notifications from queu
   event.channels = ['openclaw-telegram'];
   writeFileSync(pendingFile, JSON.stringify(event));
 
+  writeRoutes({ critical: ['openclaw-telegram'] });
+  const retiredOnly = emit('--title', 'Retired route notification');
+  assert.equal(retiredOnly.status, 0, retiredOnly.stderr);
+  const retiredEvent = JSON.parse(retiredOnly.stdout);
+  assert.deepEqual(retiredEvent.channels, ['openclaw-telegram']);
+
   const drained = run('drain', '--json');
   assert.equal(drained.status, 0, drained.stderr);
-  assert.equal(JSON.parse(drained.stdout).blocked, 1);
+  assert.equal(JSON.parse(drained.stdout).blocked, 2);
   const pending = JSON.parse(readFileSync(pendingFile, 'utf8'));
   assert.equal(pending.state, 'blocked');
+  const newPending = JSON.parse(readFileSync(join(state, 'pending', `${retiredEvent.id}.json`), 'utf8'));
+  assert.equal(newPending.state, 'blocked');
   assert.equal(pending.deliveries['openclaw-telegram'].error, 'OpenClaw Telegram has been retired');
 });

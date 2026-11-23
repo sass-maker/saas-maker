@@ -174,8 +174,8 @@ status() {
 
   echo
   echo "Telegram secrets"
-  env_has_name "$HOME/.hermes/.env" TELEGRAM_BOT_TOKEN && echo "  Hermes token: present (optional)" || echo "  Hermes token: not configured (optional)"
-  env_has_name "$HOME/.hermes/.env" TELEGRAM_ALLOWED_USERS && echo "  Hermes allowlist: present (optional)" || echo "  Hermes allowlist: not configured (optional)"
+  env_has_name "$HOME/.hermes/.env" TELEGRAM_BOT_TOKEN && echo "  Hermes token: present" || echo "  Hermes token: required for Telegram delivery"
+  env_has_name "$HOME/.hermes/.env" TELEGRAM_ALLOWED_USERS && echo "  Hermes allowlist: present" || echo "  Hermes allowlist: required for Telegram setup"
 
   echo
   echo "Teammates"
