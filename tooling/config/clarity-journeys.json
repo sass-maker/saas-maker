@@ -152,15 +152,15 @@
       "id": "reader",
       "state": "ready",
       "event": {
-        "name": "sample_opened",
-        "text": "Try a sample document",
-        "href": "/sample"
+        "name": "sign_in_opened",
+        "text": "Sign in to your inbox",
+        "href": "/login"
       },
       "funnel": {
-        "name": "discover_to_sample",
+        "name": "discover_to_sign_in",
         "steps": [
           "page:/",
-          "event:sample_opened"
+          "event:sign_in_opened"
         ]
       }
     },
