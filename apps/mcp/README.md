@@ -47,7 +47,7 @@ hosts; the planned-hostnames section below remains separate.
 | --- | --- | --- | --- |
 | Reader | `https://reader-mcp.significanthobbies.com/reader/mcp` | OAuth, `reader.read` | Reader verifies the caller token and resolves its Auth0 subject to that user's account |
 | Calorie | `https://calorie-mcp.significanthobbies.com/calorie/mcp` | OAuth, `calorie.read` | Calorie verifies the caller token and resolves its Auth0 subject to that user's account |
-| My Anime List | `https://anime-mcp.significanthobbies.com/anime-list/mcp` | OAuth, `anime-list.read` | Full native read catalog plus user-scoped watchlists |
+| My Anime List | `https://anime-mcp.significanthobbies.com/anime-list/mcp` | OAuth, `anime-list.read` and optional `anime-list.write` | Scoped catalog, library and discovery tools. Writes require both delegated scopes. |
 | Starboard | `https://starboard-mcp.codevetter.com/starboard/mcp` | None | Approved anonymous product APIs; live tool calls and pagination verified 2026-09-07 |
 | High Signal | `https://mcp.highsignal.app/high-signal/mcp` | None | Daily signals and evidence, plus compatible brief/search/signal/ledger methods |
 | Significant Hobbies | `https://hobbies-mcp.significanthobbies.com/significant-hobbies/mcp` | None | Public hobby, experience, and PUBLIC-timeline projections only |
@@ -94,7 +94,7 @@ product.
 Every federated private request must have the exact Auth0 issuer, the route's
 fixed canonical product resource in `aud`, an RS256 signature, a lifetime no
 longer than one hour, a supported federated subject, and the route's single
-read permission for existing read-only routes. Anchor read tools require
+read permission for existing read-only routes. Anime List accepts legacy read grants. Its library, preference, feedback and franchise-monitor mutations require both delegated `anime-list.read` and `anime-list.write`. Anchor read tools require
 `anchor.read`; its mutation tools require both `anchor.read` and `anchor.write`.
 Protected-resource metadata on each distinct public hostname
 advertises that canonical resource. The product repeats the checks and maps the
@@ -338,8 +338,7 @@ Retained evaluation prompts remain in [evaluations.md](docs/evaluations.md).
 Runtime decisions are in [runtime-compatibility.md](docs/runtime-compatibility.md).
 
 
-Anchor is the first native account-action connection under controlled qualification. Existing endpoints
-retain their read-only contracts. Anchor uses an exact tool allowlist, separate
+Anchor is the first native account-action connection under controlled qualification. Anime List also supports explicitly scoped library and discovery edits. Anchor uses an exact tool allowlist, separate
 read/write scopes and independent account authorization at the product. Its
 runtime activation gate closes when its versioned binding is absent. See
 [account actions and activation](docs/api-parity.md#account-actions-and-native-products).

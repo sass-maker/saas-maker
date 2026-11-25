@@ -166,7 +166,7 @@ function validAuth0Claims(
     typeof payload.iat === "number" &&
     payload.exp > payload.iat &&
     payload.exp - payload.iat <= MAX_ACCESS_TOKEN_LIFETIME_SECONDS + CLOCK_TOLERANCE_SECONDS &&
-    (route.writeScope ? delegatedScopes(payload) : grantedPermissions(payload)).has(expectedScope);
+    (route.writeScope && route.id !== "anime-list" ? delegatedScopes(payload) : grantedPermissions(payload)).has(expectedScope);
 }
 
 export async function verifyAuth0AccessToken(
@@ -190,13 +190,14 @@ export async function verifyAuth0AccessToken(
   if (!validAuth0Claims(payload, route, expectedOwnerId, route.scope)) {
     throw new joseErrors.JWTClaimValidationFailed("required Auth0 claims are invalid", payload, "sub");
   }
+  const delegated = delegatedScopes(payload);
   return {
     subject: payload.sub,
     product: route.id,
     resource,
     scope: route.scope,
     ...(route.toolScopes ? {
-      scopes: [route.scope, ...(route.writeScope && delegatedScopes(payload).has(route.writeScope)
+      scopes: [route.scope, ...(route.writeScope && delegated.has(route.scope) && delegated.has(route.writeScope)
         ? [route.writeScope] : [])],
     } : {}),
   };

@@ -424,3 +424,15 @@ test("Anchor delegated consent cannot be expanded by account permissions", async
   const full = await verifyAuth0AccessToken(await fixture.token({ audience, scope: "anchor.read anchor.write" }), request, anchor, env, fixture.getKey);
   assert.deepEqual(full.scopes, permissions);
 });
+
+
+test("Anime List keeps legacy read grants and requires both delegated scopes for writes", async () => {
+  const fixture = await signingFixture();
+  const anime = hostedRoute("/anime-list/mcp")!;
+  const audience = anime.oauthAudience!;
+  const permissions = ["anime-list.read", "anime-list.write"];
+  for (const scope of [undefined, "anime-list.read", "anime-list.write", "anime-list.read anime-list.write"]) {
+    const grant = await verifyAuth0AccessToken(await fixture.token({ audience, permissions, scope }), new Request(audience), anime, env, fixture.getKey);
+    assert.deepEqual(grant.scopes, scope === permissions.join(" ") ? permissions : ["anime-list.read"]);
+  }
+});
