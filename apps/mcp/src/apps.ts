@@ -42,6 +42,7 @@ export interface ToolDefinition {
   detailArgument?: string;
   detailFields?: readonly string[];
   localFilters?: Record<string, readonly string[]>;
+  localPagination?: boolean;
 }
 
 export interface AppDefinition {
@@ -73,6 +74,10 @@ export interface AppDefinition {
 const boundedText = z.string().trim().min(1).max(200);
 const optionalQuery = z.string().trim().max(200).optional();
 const stableId = z.string().trim().min(1).max(200).regex(/^[A-Za-z0-9._:@/-]+$/);
+const foodProductId = z.string().trim().regex(/^prd_[a-f0-9]{24}$/u);
+const foodSearchQuery = z.string().trim().max(200)
+  .refine((value) => value.split(/\s+/u).filter(Boolean).length <= 12, "Use at most 12 search terms.")
+  .optional();
 const slug = z.string().trim().min(1).max(160).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 const timezone = z.string().trim().min(1).max(100).default("UTC");
@@ -187,13 +192,17 @@ function explicitTotal(payload: unknown): number | undefined {
   if (typeof nested === "number" && Number.isFinite(nested) && nested >= 0) {
     return Math.floor(nested);
   }
+  const paginationTotal = objectValue(objectValue(payload, "pagination"), "total");
+  if (typeof paginationTotal === "number" && Number.isFinite(paginationTotal) && paginationTotal >= 0) {
+    return Math.floor(paginationTotal);
+  }
   return undefined;
 }
 
 function explicitPage(payload: unknown):
   | { total?: number; nextOffset?: number | null }
   | undefined {
-  const page = objectValue(payload, "page");
+  const page = objectValue(payload, "page") ?? objectValue(payload, "pagination");
   if (!page || typeof page !== "object" || Array.isArray(page)) return undefined;
   const totalValue = objectValue(page, "total");
   const nextValue = objectValue(page, "nextOffset");
@@ -315,7 +324,7 @@ export function normalizeToolResult(options: {
 
   const upstreamPage = explicitPage(payload);
   const upstreamTotal = upstreamPage ? upstreamPage.total : explicitTotal(payload);
-  const alreadyPaginated = upstreamPage !== undefined || upstreamTotal !== undefined;
+  const alreadyPaginated = upstreamPage !== undefined || (upstreamTotal !== undefined && !tool.localPagination);
   const page = alreadyPaginated ? source.slice(0, limit) : source.slice(offset, offset + limit);
   const total = upstreamTotal ?? (alreadyPaginated ? undefined : source.length);
   const nextOffset =
@@ -599,7 +608,7 @@ const techdataFood: AppDefinition = {
       description:
         "Search the public packaged-food catalog. Nutrition observations include their measurement basis, status, and source evidence; use only like-for-like bases when comparing values.",
       inputSchema: {
-        q: optionalQuery,
+        q: foodSearchQuery,
         limit: commonLimitInput,
         offset: commonOffsetInput,
       },
@@ -612,7 +621,7 @@ const techdataFood: AppDefinition = {
       title: "Get packaged food",
       description:
         "Retrieve a packaged-food record by exact catalog ID, including nullable nutrition and ingredient fields, source URLs, record observation time, and verification status.",
-      inputSchema: { id: stableId },
+      inputSchema: { id: foodProductId },
       operation: "product",
       mode: "public-api",
       detail: true,
@@ -624,16 +633,18 @@ const techdataFood: AppDefinition = {
       inputSchema: {
         q: optionalQuery,
         dietary: z.enum(["all", "vegan", "vegetarian"]).default("all"),
-        format: z.string().trim().max(80).default("all"),
-        proteinSource: z.string().trim().max(80).default("all"),
+        format: z.enum(["all", "bar", "bread", "breakfast", "component", "dessert", "drink", "meal"]).default("all"),
+        proteinSource: z.enum(["all", "dairy-food", "legumes", "seitan-gluten", "soy-tofu-tvp", "tempeh", "vegan-powder", "whey-powder"]).default("all"),
         indiaFit: z.enum(["all", "easy", "adaptable", "specialty"]).default("all"),
         sort: z.enum(["curated", "protein-density", "protein", "calories", "title"]).default("curated"),
         limit: z.number().int().min(1).max(20).default(10),
+        offset: commonOffsetInput,
       },
       operation: "recipes",
       mode: "public-api",
       collectionKeys: ["recipes"],
       requireCollection: true,
+      localPagination: true,
     },
     get_vegetarian_recipe: {
       title: "Get vegetarian recipe",

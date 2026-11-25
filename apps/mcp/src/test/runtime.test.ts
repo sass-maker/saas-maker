@@ -540,7 +540,10 @@ test("TechData Food preserves bounded API paths, exact recipe lookup, and source
     "/api/products?q=peanut+butter&page=3&pageSize=2");
   assert.throws(() => app.operations.products!.path({ q: "beans", limit: 3, offset: 1 }),
     /multiple of the requested limit/i);
-  assert.equal(app.operations.product!.path({ id: "prd_123" }), "/api/products/prd_123");
+  const productId = "prd_69de458df3a93c70d7da841d";
+  assert.equal(app.operations.product!.path({ id: productId }), `/api/products/${productId}`);
+  assert.equal(app.tools.get_food_product!.inputSchema.id!.safeParse("..").success, false);
+  assert.equal(app.tools.get_food_product!.inputSchema.id!.safeParse(`${productId}.md`).success, false);
   assert.equal(app.operations.recipes!.path({ q: "tofu", dietary: "all", sort: "curated" }),
     "/api/recipes?q=tofu&dietary=all&sort=curated");
   const recipe = { id: "easy-tofu", title: "Easy tofu", url: "https://publisher.example/recipe",
@@ -553,6 +556,30 @@ test("TechData Food preserves bounded API paths, exact recipe lookup, and source
   assert.throws(() => normalizeToolResult({ app, toolName: "get_vegetarian_recipe", tool: app.tools.get_vegetarian_recipe!,
     payload: { recipes: [recipe] }, args: { id: "missing" }, sourceUrl: "https://food.significanthobbies.com/api/recipes" }),
   /not found/i);
+
+  const upstreamRows = Array.from({ length: 10 }, (_, index) => ({ id: `row-${index + 10}` }));
+  const secondProductPage = normalizeToolResult({ app, toolName: "search_food_products", tool: app.tools.search_food_products!,
+    payload: { products: upstreamRows, pagination: { page: 2, pageSize: 10, total: 50, pages: 5 } },
+    args: { limit: 10, offset: 10 }, sourceUrl: "https://food.significanthobbies.com/api/products?page=2&pageSize=10" });
+  assert.equal(secondProductPage.total, 50);
+  assert.equal(secondProductPage.items?.length, 10);
+  assert.equal(secondProductPage.items?.[0]?.id, "row-10");
+  assert.equal(secondProductPage.nextOffset, 20);
+  assert.equal(secondProductPage.hasMore, true);
+
+  const fiftyRecipes = Array.from({ length: 50 }, (_, index) => ({ id: `recipe-${index}`, title: "Tofu" }));
+  const secondRecipePage = normalizeToolResult({ app, toolName: "search_vegetarian_recipes", tool: app.tools.search_vegetarian_recipes!,
+    payload: { recipes: fiftyRecipes, total: 50, collectionTotal: 50, collectedAt: "2026-11-12" },
+    args: { limit: 20, offset: 20 }, sourceUrl: "https://food.significanthobbies.com/api/recipes" });
+  assert.equal(secondRecipePage.total, 50);
+  assert.equal(secondRecipePage.items?.length, 20);
+  assert.equal(secondRecipePage.items?.[0]?.id, "recipe-20");
+  assert.equal(secondRecipePage.nextOffset, 40);
+  const lastRecipePage = normalizeToolResult({ app, toolName: "search_vegetarian_recipes", tool: app.tools.search_vegetarian_recipes!,
+    payload: { recipes: fiftyRecipes, total: 50, collectedAt: "2026-11-12" },
+    args: { limit: 20, offset: 40 }, sourceUrl: "https://food.significanthobbies.com/api/recipes" });
+  assert.equal(lastRecipePage.items?.length, 10);
+  assert.equal(lastRecipePage.nextOffset, null);
 });
 
 
@@ -581,7 +608,7 @@ test("installed High Signal connector methods execute through MCP transport", as
 });
 
 test("TechData Food tools preserve record provenance, source basis, and bounded recipes", async () => {
-  const product = { id: "prd_123", name: "Lentil protein", nutrition: {
+  const product = { id: "prd_69de458df3a93c70d7da841d", name: "Lentil protein", nutrition: {
     proteinGrams: 24, basis: "per_100g", observedAt: "2026-10-01T00:00:00Z", status: "unverified",
   }, sourceRecords: [{ sourceUrl: "https://world.openfoodfacts.org/product/123" }] };
   const recipe = { id: "tofu-bowl", title: "Tofu bowl", url: "https://publisher.example/tofu",
@@ -590,7 +617,7 @@ test("TechData Food tools preserve record provenance, source basis, and bounded 
     const url = new URL(String(input));
     if (url.pathname === "/api/products") return Response.json({ products: [product],
       pagination: { page: Number(url.searchParams.get("page") ?? 1), pageSize: 1, total: 1, pages: 1 } });
-    if (url.pathname === "/api/products/prd_123") return Response.json(product);
+    if (url.pathname === `/api/products/${product.id}`) return Response.json(product);
     if (url.pathname === "/api/recipes") return Response.json({ recipes: [recipe], total: 1,
       collectionTotal: 1, collectedAt: "2026-11-12", nutritionAuthority: "publisher_stated_estimate",
       nutritionBasis: "per_stated_recipe_serving" });
@@ -606,7 +633,7 @@ test("TechData Food tools preserve record provenance, source basis, and bounded 
     assert.equal(search.ok, true);
     assert.equal(search.total, 1);
     assert.equal((search.items?.[0]?.nutrition as { basis?: string }).basis, "per_100g");
-    const detail = await client.callTool({ name: "get_food_product", arguments: { id: "prd_123" } });
+    const detail = await client.callTool({ name: "get_food_product", arguments: { id: product.id } });
     assert.equal((detail.structuredContent as { item?: { sourceRecords?: Array<{ sourceUrl: string }> } }).item?.sourceRecords?.[0]?.sourceUrl,
       "https://world.openfoodfacts.org/product/123");
     const recipes = await client.callTool({ name: "search_vegetarian_recipes", arguments: { q: "tofu", limit: 1 } });

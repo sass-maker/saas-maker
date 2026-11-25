@@ -177,6 +177,7 @@ test("hosted route registry is fixed and public Research Papers exposes only exp
     "/saas-maker/mcp",
     "/drank/mcp",
   ]);
+  assert.equal(HOSTED_ROUTES["/techdata/mcp"]!.publicMonitor, true);
   const papers = HOSTED_ROUTES["/research-papers/mcp"]!;
   assert.equal(papers.kind, "adapter");
   if (papers.kind !== "adapter") throw new Error("expected adapter route");
