@@ -8,7 +8,7 @@ import type { OAuthGrantProps } from "../oauth.js";
 import { handleHostedRequest as handleProductionRequest } from "../worker.js";
 
 const handleHostedRequest: typeof handleProductionRequest = (request, fetchImpl, authorization, browserTracker, activation) =>
-  handleProductionRequest(request, fetchImpl, authorization, browserTracker, activation ?? { writeProducts: ["anchor"] });
+  handleProductionRequest(request, fetchImpl, authorization, browserTracker, activation ?? { writeProducts: ["anchor", "anime-list"] });
 
 const protocolVersion = "2025-11-25";
 
@@ -853,4 +853,34 @@ test("Anchor initial authorization requests both declared account permissions", 
   const response = await handleHostedRequest(requestFor("/anchor/mcp", initializeRequest()), routeFetch);
   assert.equal(response.status, 401);
   assert.match(response.headers.get("www-authenticate") ?? "", /scope="anchor.read anchor.write"/u);
+});
+
+test("Anime List uses the exact delegated permissions for reads and mutations", async () => {
+  const path = "/anime-list/mcp";
+  const tools = HOSTED_ROUTES[path]!.toolScopes!;
+  const writes = Object.keys(tools).filter((name) => tools[name]!.includes("anime-list.write"));
+  assert.deepEqual(writes.sort(), [
+    "manage_watchlist_tags", "record_recommendation_feedback", "remove_watchlist_entries",
+    "set_franchise_monitor", "update_user_preferences", "upsert_watchlist_entries",
+  ]);
+  let calls = 0;
+  const upstream: typeof fetch = async () => {
+    calls++;
+    return Response.json({ jsonrpc: "2.0", id: 1, result: {} });
+  };
+  const read = authorizationFor(path);
+  const write = authorizationFor(path, { scopes: ["anime-list.read", "anime-list.write"] });
+  function call(name: string) {
+    return requestFor(path, { jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: {} } });
+  }
+  for (const name of writes) {
+    const denied = await handleHostedRequest(call(name), upstream, read);
+    assert.equal(denied.status, 403, name);
+  }
+  assert.equal(calls, 0);
+  assert.equal((await handleHostedRequest(call("get_streaming_links"), upstream, read)).status, 200);
+  for (const name of writes) {
+    assert.equal((await handleHostedRequest(call(name), upstream, write)).status, 200, name);
+  }
+  assert.equal(calls, writes.length + 1);
 });

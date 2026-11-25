@@ -46,13 +46,14 @@ read-only connections retain their permissions. No directory submission is claim
 ## Why / What
 
 ChatGPT Connections is Fleet's shared MCP gateway for existing product data.
-Its other published connections remain read-only; Anchor is an explicitly
-scoped account-action integration under controlled qualification. Public product routes remain anonymous; Reader,
-Calorie, and Anime List use user-scoped federated OAuth that is verified by
-both the gateway and the owning product. CodeVetter and other device-local
+The gateway uses explicit tool allowlists for Anchor account actions and Anime
+List library, preference, feedback and franchise-monitor edits. Anime List reads
+use `anime-list.read`. Mutations also require `anime-list.write`, runtime
+activation, and independent authorization by Anime List. Public product routes
+remain anonymous. Reader and Calorie use user-scoped federated read access. CodeVetter and other device-local
 sources remain outside this gateway.
 
-Mutations outside the approved Anchor tool allowlist, device-only data upload,
+Mutations outside the approved Anchor and Anime List tool allowlists, device-only data upload,
 unscoped private Significant Hobbies records, and the full local Research Papers
 corpus remain out of scope.
 
