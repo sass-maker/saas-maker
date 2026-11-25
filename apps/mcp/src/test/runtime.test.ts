@@ -534,6 +534,27 @@ test("High Signal installed methods retain their original response semantics", (
   assert.equal(app.operations.trackRecord!.path({}), "/track-record?cohort=live");
 });
 
+test("TechData Food preserves bounded API paths, exact recipe lookup, and source basis", () => {
+  const app = APP_DEFINITIONS.techdata;
+  assert.equal(app.operations.products!.path({ q: "peanut butter", limit: 2, offset: 4 }),
+    "/api/products?q=peanut+butter&page=3&pageSize=2");
+  assert.throws(() => app.operations.products!.path({ q: "beans", limit: 3, offset: 1 }),
+    /multiple of the requested limit/i);
+  assert.equal(app.operations.product!.path({ id: "prd_123" }), "/api/products/prd_123");
+  assert.equal(app.operations.recipes!.path({ q: "tofu", dietary: "all", sort: "curated" }),
+    "/api/recipes?q=tofu&dietary=all&sort=curated");
+  const recipe = { id: "easy-tofu", title: "Easy tofu", url: "https://publisher.example/recipe",
+    nutrition: { protein: 18, servingBasis: "1 of 4 servings", sourceNote: "Publisher estimate" } };
+  const detail = normalizeToolResult({ app, toolName: "get_vegetarian_recipe", tool: app.tools.get_vegetarian_recipe!,
+    payload: { recipes: [recipe], total: 1, collectionTotal: 50, collectedAt: "2026-11-12" },
+    args: { id: "easy-tofu" }, sourceUrl: "https://food.significanthobbies.com/api/recipes" });
+  assert.deepEqual(detail.item, recipe);
+  assert.equal(detail.freshness, "2026-11-12");
+  assert.throws(() => normalizeToolResult({ app, toolName: "get_vegetarian_recipe", tool: app.tools.get_vegetarian_recipe!,
+    payload: { recipes: [recipe] }, args: { id: "missing" }, sourceUrl: "https://food.significanthobbies.com/api/recipes" }),
+  /not found/i);
+});
+
 
 test("installed High Signal connector methods execute through MCP transport", async () => {
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
@@ -556,5 +577,43 @@ test("installed High Signal connector methods execute through MCP transport", as
       assert.notEqual(result.isError, true, name);
       assert.equal((result.structuredContent as { ok?: boolean } | undefined)?.ok, true, name);
     }
+  } finally { await client.close(); await server.close(); }
+});
+
+test("TechData Food tools preserve record provenance, source basis, and bounded recipes", async () => {
+  const product = { id: "prd_123", name: "Lentil protein", nutrition: {
+    proteinGrams: 24, basis: "per_100g", observedAt: "2026-10-01T00:00:00Z", status: "unverified",
+  }, sourceRecords: [{ sourceUrl: "https://world.openfoodfacts.org/product/123" }] };
+  const recipe = { id: "tofu-bowl", title: "Tofu bowl", url: "https://publisher.example/tofu",
+    nutrition: { protein: 20, servingBasis: "1 serving", sourceNote: "Publisher estimate" } };
+  const fetchImpl: typeof fetch = async (input) => {
+    const url = new URL(String(input));
+    if (url.pathname === "/api/products") return Response.json({ products: [product],
+      pagination: { page: Number(url.searchParams.get("page") ?? 1), pageSize: 1, total: 1, pages: 1 } });
+    if (url.pathname === "/api/products/prd_123") return Response.json(product);
+    if (url.pathname === "/api/recipes") return Response.json({ recipes: [recipe], total: 1,
+      collectionTotal: 1, collectedAt: "2026-11-12", nutritionAuthority: "publisher_stated_estimate",
+      nutritionBasis: "per_stated_recipe_serving" });
+    return Response.json({ error: "not_found" }, { status: 404 });
+  };
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  const server = buildServer("techdata", fetchImpl);
+  const client = new Client({ name: "food-contract-test", version: "1.0.0" });
+  await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+  try {
+    const products = await client.callTool({ name: "search_food_products", arguments: { q: "lentil", limit: 1, offset: 0 } });
+    const search = products.structuredContent as { ok?: boolean; total?: number; items?: Array<Record<string, unknown>> };
+    assert.equal(search.ok, true);
+    assert.equal(search.total, 1);
+    assert.equal((search.items?.[0]?.nutrition as { basis?: string }).basis, "per_100g");
+    const detail = await client.callTool({ name: "get_food_product", arguments: { id: "prd_123" } });
+    assert.equal((detail.structuredContent as { item?: { sourceRecords?: Array<{ sourceUrl: string }> } }).item?.sourceRecords?.[0]?.sourceUrl,
+      "https://world.openfoodfacts.org/product/123");
+    const recipes = await client.callTool({ name: "search_vegetarian_recipes", arguments: { q: "tofu", limit: 1 } });
+    const recipeResult = recipes.structuredContent as { freshness?: string; items?: Array<Record<string, unknown>> };
+    assert.equal(recipeResult.freshness, "2026-11-12");
+    assert.equal((recipeResult.items?.[0]?.nutrition as { servingBasis?: string }).servingBasis, "1 serving");
+    const recipeDetail = await client.callTool({ name: "get_vegetarian_recipe", arguments: { id: "tofu-bowl" } });
+    assert.equal((recipeDetail.structuredContent as { item?: { url?: string } }).item?.url, "https://publisher.example/tofu");
   } finally { await client.close(); await server.close(); }
 });

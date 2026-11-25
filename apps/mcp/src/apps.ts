@@ -14,6 +14,7 @@ export type AppId =
   | "reader"
   | "starboard"
   | "high-signal"
+  | "techdata"
   | "calorie"
   | "significant-hobbies"
   | "research-papers"
@@ -127,6 +128,19 @@ function calorieHistoryPath(args: Record<string, unknown>): string {
   });
 }
 
+function foodProductSearchPath(args: Record<string, unknown>): string {
+  const limit = readLimit(args);
+  const offset = readOffset(args);
+  if (offset % limit !== 0) {
+    throw new ConnectionError("invalid_input", "Food catalog offsets must be a multiple of the requested limit.");
+  }
+  return queryPath("/api/products", {
+    q: args.q,
+    page: Math.floor(offset / limit) + 1,
+    pageSize: limit,
+  });
+}
+
 function readLimit(args: Record<string, unknown>): number {
   const value = typeof args.limit === "number" ? args.limit : DEFAULT_COLLECTION_LIMIT;
   return Math.min(Math.max(value, 1), MAX_COLLECTION_LIMIT);
@@ -197,7 +211,7 @@ function explicitPage(payload: unknown):
 }
 
 function explicitFreshness(payload: unknown): string | undefined {
-  for (const key of ["freshness", "generatedAt", "updatedAt", "publishedAt", "asOf", "date"]) {
+  for (const key of ["freshness", "generatedAt", "updatedAt", "publishedAt", "collectedAt", "asOf", "date"]) {
     const value = objectValue(payload, key);
     if (typeof value === "string" && value.trim()) return value.trim();
     if (typeof value === "number" && Number.isFinite(value)) {
@@ -549,6 +563,90 @@ const highSignal: AppDefinition = {
       operation: "evidence",
       mode: "public-api",
       detail: true,
+    },
+  },
+};
+
+const techdataFood: AppDefinition = {
+  id: "techdata",
+  name: "TechData",
+  serverName: "fleet-techdata-readonly",
+  baseUrl: "https://food.significanthobbies.com",
+  baseUrlEnv: "FOOD_API_URL",
+  instructions:
+    "Read-only access to TechData's packaged-food catalog and curated vegetarian recipes. Product nutrition values retain their source basis (usually per 100 g), observation date, verification status, and source links; do not treat missing or unverified values as zero or verified. Recipe nutrition is a publisher-stated estimate for the publisher's stated serving. The result generatedAt is gateway retrieval time, not data freshness. Recipe collectedAt and each product's nutrition.observedAt describe source-record freshness.",
+  operations: {
+    products: {
+      path: foodProductSearchPath,
+    },
+    product: {
+      path: (args) => `/api/products/${encodeURIComponent(String(args.id))}`,
+    },
+    recipes: {
+      path: (args) => queryPath("/api/recipes", {
+        q: args.q,
+        dietary: args.dietary,
+        format: args.format,
+        proteinSource: args.proteinSource,
+        indiaFit: args.indiaFit,
+        sort: args.sort,
+      }),
+    },
+  },
+  tools: {
+    search_food_products: {
+      title: "Search packaged foods",
+      description:
+        "Search the public packaged-food catalog. Nutrition observations include their measurement basis, status, and source evidence; use only like-for-like bases when comparing values.",
+      inputSchema: {
+        q: optionalQuery,
+        limit: commonLimitInput,
+        offset: commonOffsetInput,
+      },
+      operation: "products",
+      mode: "public-api",
+      collectionKeys: ["products"],
+      requireCollection: true,
+    },
+    get_food_product: {
+      title: "Get packaged food",
+      description:
+        "Retrieve a packaged-food record by exact catalog ID, including nullable nutrition and ingredient fields, source URLs, record observation time, and verification status.",
+      inputSchema: { id: stableId },
+      operation: "product",
+      mode: "public-api",
+      detail: true,
+    },
+    search_vegetarian_recipes: {
+      title: "Search vegetarian recipes",
+      description:
+        "Search the curated vegetarian recipe collection. Nutrition figures are publisher-stated estimates, normalized to the publisher's stated serving basis; use the source link for context.",
+      inputSchema: {
+        q: optionalQuery,
+        dietary: z.enum(["all", "vegan", "vegetarian"]).default("all"),
+        format: z.string().trim().max(80).default("all"),
+        proteinSource: z.string().trim().max(80).default("all"),
+        indiaFit: z.enum(["all", "easy", "adaptable", "specialty"]).default("all"),
+        sort: z.enum(["curated", "protein-density", "protein", "calories", "title"]).default("curated"),
+        limit: z.number().int().min(1).max(20).default(10),
+      },
+      operation: "recipes",
+      mode: "public-api",
+      collectionKeys: ["recipes"],
+      requireCollection: true,
+    },
+    get_vegetarian_recipe: {
+      title: "Get vegetarian recipe",
+      description:
+        "Retrieve a curated recipe by exact recipe ID. Nutrition is a publisher-stated estimate on the source's stated serving basis; the result preserves its publisher and source URL.",
+      inputSchema: { id: slug },
+      operation: "recipes",
+      mode: "public-api",
+      detail: true,
+      detailCollectionKeys: ["recipes"],
+      detailArgument: "id",
+      detailFields: ["id"],
+      requireCollection: true,
     },
   },
 };
@@ -1150,6 +1248,7 @@ export const APP_DEFINITIONS: Record<AppId, AppDefinition> = {
   reader,
   starboard,
   "high-signal": highSignal,
+  techdata: techdataFood,
   calorie,
   "significant-hobbies": significantHobbies,
   "research-papers": researchPapers,

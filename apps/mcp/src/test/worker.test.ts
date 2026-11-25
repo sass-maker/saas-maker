@@ -170,6 +170,7 @@ test("hosted route registry is fixed and public Research Papers exposes only exp
     "/anime-list-public/mcp",
     "/starboard/mcp",
     "/high-signal/mcp",
+    "/techdata/mcp",
     "/significant-hobbies/mcp",
     "/research-papers/mcp",
     "/swe-interview-prep/mcp",

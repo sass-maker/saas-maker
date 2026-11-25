@@ -206,6 +206,13 @@ export const HOSTED_ROUTES: Readonly<Record<string, HostedRouteDefinition>> = Ob
     challengeSecret: "OPENAI_CHALLENGE_HIGH_SIGNAL",
     app: APP_DEFINITIONS["high-signal"],
   },
+  "/techdata/mcp": {
+    id: "techdata",
+    kind: "adapter",
+    audience: "public",
+    hosts: ["mcp.highsignal.app"],
+    app: APP_DEFINITIONS.techdata,
+  },
   "/significant-hobbies/mcp": {
     id: "significant-hobbies",
     kind: "adapter",

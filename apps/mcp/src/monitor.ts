@@ -29,6 +29,7 @@ const saasMakerPagination: PaginationCall = { name: "search_public_products", ar
 const REPRESENTATIVE_CALLS: Readonly<Record<string, RepresentativeCall>> = Object.freeze({
   "starboard": { name: "search_repositories", arguments: { q: "MCP", limit: 1, offset: 0 } },
   "high-signal": { name: "get_daily_brief", arguments: {} },
+  techdata: { name: "search_food_products", arguments: { q: "peanut butter", limit: 1, offset: 0 } },
   "significant-hobbies": { name: "search_hobbies", arguments: { q: "astronomy", limit: 1, offset: 0 } },
   "research-papers": { name: "list_hot_papers", arguments: { limit: 1, offset: 0 } },
   "anime-list-public": { name: "search_anime", arguments: { pagesize: 1, offset: 0 } },
@@ -40,6 +41,7 @@ const REPRESENTATIVE_CALLS: Readonly<Record<string, RepresentativeCall>> = Objec
 const PAGINATION_CALLS: Readonly<Record<string, PaginationCall>> = Object.freeze({
   "starboard": { name: "search_repositories", arguments: {} },
   "high-signal": { name: "get_daily_signals", arguments: {} },
+  techdata: { name: "search_food_products", arguments: {} },
   "significant-hobbies": { name: "search_public_timelines", arguments: {} },
   "research-papers": { name: "list_hot_papers", arguments: {} },
   "anime-list-public": { name: "search_anime", arguments: {}, limitArgument: "pagesize" },

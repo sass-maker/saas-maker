@@ -55,6 +55,12 @@ hosts; the planned-hostnames section below remains separate.
 | SWE Interview Prep | `https://learn-mcp.significanthobbies.com/swe-interview-prep/mcp` | OAuth, `swe-interview-prep.read` | Daily/on-demand priority, progress, answer-free understanding checks, exact product links, and published curriculum catalogs |
 | Anchor | `https://mcp.significanthobbies.com/anchor/mcp` | OAuth, `anchor.read`; mutations also require `anchor.write` | Explicitly shared account planner/history and targeted native command receipts; Codex owner flow qualified, ChatGPT refresh pending |
 
+TechData Food has a prepared read-only route at
+`https://mcp.highsignal.app/techdata/mcp`, sharing the existing High Signal
+gateway hostname. It is implemented in source but is not live until a later
+gateway release; it reads only Food's public packaged-product and vegetarian
+recipe GET APIs.
+
 ### Planned hostnames (no DNS yet)
 
 These routes exist in code but are not deployed. The hostnames below do not
@@ -145,6 +151,7 @@ and every other hosted product must not be added to Codex.
 | Anime List | Public native catalog live | Six-tool anonymous proxy implemented; not deployed | No auth | Activation pending |
 | Starboard | **Public API unreachable — blocked upstream** (see [Known outages](#known-outages)) | Anonymous branded route live | No auth | Submission blocked until the upstream fix ships |
 | High Signal | Public surface live | Anonymous branded route live | No auth | OpenAI portal draft/submission pending |
+| TechData Food | Public catalog and recipe GET APIs live | Anonymous route implemented; not deployed | No auth | Awaiting gateway release |
 | Significant Hobbies | Hobbies, experiences, and public timelines live | Anonymous branded route live | No auth | OpenAI portal draft/submission pending |
 | Research Papers | Public exports live | Export-only branded route live | No auth | OpenAI portal draft/submission pending |
 | SWE Interview Prep | Public catalogs and private projections live | Branded OAuth gateway route live | `swe-interview-prep.read` metadata verified | ChatGPT creation and authenticated smoke pending |
