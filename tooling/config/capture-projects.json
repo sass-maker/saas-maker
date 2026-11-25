@@ -628,26 +628,6 @@
       ]
     },
     {
-      "id": "protein-index",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "Live public web product: newsletter is the capture policy for optional product updates. Wiring, subscription persistence and actual signups remain unqualified; this policy does not claim active capture.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "public"
-        },
-        {
-          "field": "deployment.status",
-          "value": "live"
-        }
-      ]
-    },
-    {
       "id": "app-health",
       "applicability": "newsletter",
       "confidence": "medium",

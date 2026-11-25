@@ -302,6 +302,10 @@ describe('verified public Fleet directory', () => {
       expect.arrayContaining(['significanthobbies', 'chatgpt-connections', 'unified-portfolio'])
     );
     expect(ids).toContain('domain-inbox');
+    expect(ids).toContain('techdata');
+    expect(
+      catalog.directory.find((project: { id: string }) => project.id === 'techdata')
+    ).toMatchObject({ roster: 'current' });
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'linkedin-insights')
     ).toMatchObject({
@@ -310,13 +314,13 @@ describe('verified public Fleet directory', () => {
       availability: 'public-link',
       publicUrl: 'https://linkedin.significanthobbies.com',
     });
-    expect(ids).toContain('protein-index');
+    expect(ids).not.toContain('protein-index');
     expect(ids).not.toContain('food');
-    expect(archivedIds).not.toContain('protein-index');
+    expect(archivedIds).toContain('protein-index');
     expect(archivedIds).toContain('veg-protein-food');
     expect(
-      catalog.directory.find((project: { id: string }) => project.id === 'protein-index')
-    ).toMatchObject({ name: 'Food', roster: 'current' });
+      catalog.archivedDirectory.find((project: { id: string }) => project.id === 'protein-index')
+    ).toMatchObject({ name: 'Food', roster: 'archived', availability: 'archived' });
     for (const id of ['chatgpt-connections', 'unified-portfolio']) {
       expect(ids).not.toContain(id);
       const archived = catalog.archivedDirectory.find(
