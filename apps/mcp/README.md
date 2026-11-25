@@ -309,7 +309,10 @@ submission.
 
 1. In the free Auth0 tenant, enable CIMD and the resource-parameter
    compatibility profile, create one API for each exact canonical private resource
-   with one matching read permission, add a default third-party user grant,
+   with its matching read permission. For Anime List, also register
+   `anime-list.write` on the Anime List API and allow that permission in the
+   third-party user grant for clients that can request write consent. Add the
+   default third-party user grant,
    request `offline_access`, and keep open dynamic client registration
    disabled. Set each API access-token lifetime to one hour or less.
 2. Confirm Auth0 metadata advertises CIMD, PKCE S256, refresh tokens, and

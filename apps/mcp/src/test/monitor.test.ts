@@ -491,3 +491,18 @@ test("the first-party SaaS Maker endpoint fails the default monitor when its pro
   assert.ok(failures.every(({ id, plugin }) => plugin === "saas-maker" && id.startsWith("first-party-")));
   assert.equal(JSON.stringify(receipt).includes("gateway-private-detail"), false);
 });
+
+test("the monitor flags an Anime List resource missing delegated write capability", async () => {
+  const receipt = await runProductionMonitor({ fetchImpl: async (input, init) => {
+    const request = new Request(input, init);
+    if (request.url === "https://anime-mcp.significanthobbies.com/.well-known/oauth-protected-resource/anime-list/mcp") {
+      const response = await productionFetch(request);
+      const metadata = await response.json() as Record<string, unknown>;
+      return responseJson({ ...metadata, scopes_supported: ["anime-list.read"] });
+    }
+    return productionFetch(request);
+  } });
+  assert.deepEqual(receipt.checks.find((check) => check.plugin === "anime-list" && check.id === "oauth-resource"), {
+    id: "oauth-resource", plugin: "anime-list", status: "failed", errorCode: "resource_contract_invalid",
+  });
+});
