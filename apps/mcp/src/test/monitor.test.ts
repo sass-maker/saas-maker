@@ -86,7 +86,7 @@ const productionFetch: typeof fetch = async (input, init) => {
   if (route.audience === "personal" && !request.headers.has("authorization")) {
     const resourceMetadata = `${url.origin}${protectedPrefix}${url.pathname}`;
     return responseJson({ jsonrpc: "2.0", error: { code: -32000 }, id: null }, 401, true, {
-      "WWW-Authenticate": `Bearer resource_metadata="${resourceMetadata}", scope="${route.writeScope ? `${route.scope} ${route.writeScope}` : route.scope}"`,
+      "WWW-Authenticate": `Bearer resource_metadata="${resourceMetadata}", scope="${route.writeScope && !route.preserveLegacyReads ? `${route.scope} ${route.writeScope}` : route.scope}"`,
     });
   }
   const message = await request.json() as { id: number; method: string; params?: Record<string, unknown> };

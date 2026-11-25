@@ -7,6 +7,7 @@ import {
   HOSTED_ROUTES,
   hostedRoute,
   routeForActivation,
+  initialOAuthScope,
   oauthResource,
   type HostedRouteDefinition,
 } from "./hosted.js";
@@ -620,7 +621,7 @@ function authorizationMatches(
 function oauthChallenge(request: Request, route: HostedRouteDefinition): Response {
   const url = new URL(request.url);
   const metadata = `${url.origin}/.well-known/oauth-protected-resource${url.pathname}`;
-  const scopes = route.writeScope ? `${route.scope} ${route.writeScope}` : route.scope;
+  const scopes = initialOAuthScope(route);
   const challenge = `Bearer resource_metadata="${metadata}", scope="${scopes}", error="invalid_token", error_description="OAuth authorization is required"`;
   return jsonRpcError(401, -32000, "OAuth authorization is required.", {
     "WWW-Authenticate": challenge,
@@ -666,7 +667,7 @@ async function handleNative(
 ): Promise<Response> {
   const safeRequest = await boundedRequest(request);
   const body = await safeRequest.arrayBuffer();
-  let message: { id?: number | string; method?: string; params?: { name?: string } };
+  let message: { id?: number | string; method?: string; params?: { name?: string; _meta?: Record<string, unknown> } };
   try {
     message = JSON.parse(new TextDecoder().decode(body)) as typeof message;
   } catch {
@@ -700,9 +701,21 @@ async function handleNative(
     if (required.some((scope) => !granted.has(scope))) {
       const url = new URL(request.url);
       const metadata = `${url.origin}/.well-known/oauth-protected-resource${url.pathname}`;
-      return jsonRpcError(403, -32000, "This action requires additional OAuth permission.", {
-        "WWW-Authenticate": `Bearer resource_metadata="${metadata}", error="insufficient_scope", scope="${required.join(" ")}"`,
-      }, typeof message.id === "string" || typeof message.id === "number" ? message.id : null);
+      const challenge = `Bearer resource_metadata="${metadata}", error="insufficient_scope", scope="${required.join(" ")}", error_description="Authorize the requested account permissions to continue"`;
+      const id = typeof message.id === "string" || typeof message.id === "number" ? message.id : null;
+      if (route.preserveLegacyReads) {
+        // ChatGPT consumes a tool-level linking challenge. HTTP MCP transports
+        // use the 403 challenge header for the same incremental authorization.
+        const clientMeta = message.params?._meta ?? {};
+        const openAiClient = Object.keys(clientMeta).some((key) => key.startsWith("openai/") || key === "webplus/i18n") ||
+          /chatgpt|openai/iu.test(request.headers.get("user-agent") ?? "");
+        return Response.json({ jsonrpc: "2.0", id, result: {
+          isError: true,
+          content: [{ type: "text", text: "Authorize write access to Anime List, then retry. If the app does not prompt, reconnect it and request the write action again." }],
+          _meta: { "mcp/www_authenticate": [challenge] },
+        } }, { status: openAiClient ? 200 : 403, headers: { "WWW-Authenticate": challenge } });
+      }
+      return jsonRpcError(403, -32000, "This action requires additional OAuth permission.", { "WWW-Authenticate": challenge }, id);
     }
   }
   const headers = new Headers({

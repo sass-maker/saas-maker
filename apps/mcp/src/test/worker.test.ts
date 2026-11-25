@@ -873,9 +873,12 @@ test("Anime List uses the exact delegated permissions for reads and mutations", 
   function call(name: string) {
     return requestFor(path, { jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: {} } });
   }
+  const initial = await handleHostedRequest(requestFor(path, initializeRequest()), upstream);
+  assert.match(initial.headers.get("www-authenticate") ?? "", /scope="anime-list.read"/u);
   for (const name of writes) {
     const denied = await handleHostedRequest(call(name), upstream, read);
     assert.equal(denied.status, 403, name);
+    assert.match(denied.headers.get("www-authenticate") ?? "", /scope="anime-list.read anime-list.write"/u);
   }
   assert.equal(calls, 0);
   assert.equal((await handleHostedRequest(call("get_streaming_links"), upstream, read)).status, 200);
@@ -901,4 +904,37 @@ test("disabling Anime List writes keeps signed-in reads, filters listings and re
   const alternate = await json(await send("resources/read", {}));
   assert.equal(alternate.id, 41);
   assert.equal(calls, 2);
+});
+
+test("both Anime List grants discover write tools and ChatGPT receives the tool-level reauthorization signal", async () => {
+  const path = "/anime-list/mcp";
+  const scopes = ["anime-list.read","anime-list.write"];
+  const read = authorizationFor(path);
+  const write = authorizationFor(path,{scopes});
+  let calls = 0;
+  const upstream: typeof fetch = async () => {
+    calls++;
+    return Response.json({jsonrpc:"2.0",id:3,result:{tools:[
+      {name:"get_watchlist",annotations:{readOnlyHint:true,destructiveHint:false}},
+      {name:"remove_watchlist_entries",annotations:{readOnlyHint:false,destructiveHint:true}},
+      {name:"not_authorized"},
+    ]}});
+  };
+  for (const grant of [read,write]) {
+    const listed = await handleHostedRequest(requestFor(path,{jsonrpc:"2.0",id:3,method:"tools/list",params:{}}),upstream,grant);
+    const result = (await json(listed)).result as {tools: {name:string;annotations:unknown;securitySchemes:unknown;_meta:{securitySchemes:unknown}}[]};
+    assert.deepEqual(result.tools.map(t=>t.name),["get_watchlist","remove_watchlist_entries"]);
+    assert.deepEqual(result.tools[1]!.securitySchemes,[{type:"oauth2",scopes}]);
+    assert.deepEqual(result.tools[1]!._meta.securitySchemes,result.tools[1]!.securitySchemes);
+    assert.deepEqual(result.tools[1]!.annotations,{readOnlyHint:false,destructiveHint:true});
+  }
+  const denied=await handleHostedRequest(requestFor(path,{jsonrpc:"2.0",id:4,method:"tools/call",params:{
+    name:"remove_watchlist_entries",arguments:{},_meta:{"openai/locale":"en-US"},
+  }}),upstream,read);
+  assert.equal(denied.status,200);
+  const result=(await json(denied)).result as {isError:boolean;_meta:Record<string,string[]>};
+  assert.equal(result.isError,true);
+  assert.deepEqual(result._meta["mcp/www_authenticate"],[denied.headers.get("www-authenticate")]);
+  assert.match(denied.headers.get("www-authenticate") ?? "",/error_description="/);
+  assert.equal(calls,2);
 });

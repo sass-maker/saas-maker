@@ -338,3 +338,7 @@ export function routeForActivation(route: HostedRouteDefinition, writeProducts: 
   const { writeScope: _disabledWrite, ...readRoute } = route;
   return { ...readRoute, toolScopes };
 }
+
+export function initialOAuthScope(route: HostedRouteDefinition): string | undefined {
+  return route.writeScope && !route.preserveLegacyReads ? `${route.scope} ${route.writeScope}` : route.scope;
+}

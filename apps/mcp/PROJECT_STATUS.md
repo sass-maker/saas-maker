@@ -25,9 +25,13 @@ notifications without a request ID. Tool responses retain strict JSON filtering;
 202 acknowledgements carrying content or a request ID are rejected. This
 repairs the discovery failure observed after successful OAuth sign-in.
 
-This source sets the nonsecret `MCP_ENABLED_WRITE_PRODUCTS` binding to `anchor,anime-list`. The guarded
-publisher deploys the Anime List route after the independently authorized product
-Worker. Removing `anime-list` disables its mutations while keeping read grants usable. Anonymous
+This source sets the nonsecret `MCP_ENABLED_WRITE_PRODUCTS` binding to `anchor,anime-list`. The release
+operator verifies the product Worker’s published tool manifest before merging and
+deploying this gateway. The deployment script enforces clean main and current
+MCP CI. Removing `anime-list` disables mutations through the gateway while
+keeping read grants usable. The production monitor and activation verifier
+expect the write-enabled deployment and will report the missing write scope
+during a deliberate rollback. Anime List independently controls its own endpoint. Anonymous
 initialization still returns the OAuth challenge; tool access requires Auth0
 authorization, exact resource/scopes and independent product account isolation.
 Removing `anchor` from the binding or restoring the previous disabled Worker
