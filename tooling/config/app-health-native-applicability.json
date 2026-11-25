@@ -211,12 +211,6 @@
       "serverRequests": "applicable"
     },
     {
-      "id": "every-song-is-a-website",
-      "nativeSessions": "not-applicable",
-      "browserVisitors": "applicable",
-      "serverRequests": "not-applicable"
-    },
-    {
       "id": "contextdaddy",
       "nativeSessions": "not-applicable",
       "browserVisitors": "applicable",
