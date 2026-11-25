@@ -621,7 +621,8 @@ function authorizationMatches(
 function oauthChallenge(request: Request, route: HostedRouteDefinition): Response {
   const url = new URL(request.url);
   const metadata = `${url.origin}/.well-known/oauth-protected-resource${url.pathname}`;
-  const scopes = initialOAuthScope(route);
+  const requestWrites = route.writeScope && url.searchParams.get("access") === "write";
+  const scopes = requestWrites ? `${route.scope} ${route.writeScope}` : initialOAuthScope(route);
   const challenge = `Bearer resource_metadata="${metadata}", scope="${scopes}", error="invalid_token", error_description="OAuth authorization is required"`;
   return jsonRpcError(401, -32000, "OAuth authorization is required.", {
     "WWW-Authenticate": challenge,
@@ -706,14 +707,19 @@ async function handleNative(
       if (route.preserveLegacyReads) {
         // ChatGPT consumes a tool-level linking challenge. HTTP MCP transports
         // use the 403 challenge header for the same incremental authorization.
+        url.search = "?access=write";
+        const hint = `Authorize write access, then retry. If no prompt appears, connect the MCP URL ${url.href} to request write consent explicitly.`;
         const clientMeta = message.params?._meta ?? {};
         const openAiClient = Object.keys(clientMeta).some((key) => key.startsWith("openai/") || key === "webplus/i18n") ||
           /chatgpt|openai/iu.test(request.headers.get("user-agent") ?? "");
-        return Response.json({ jsonrpc: "2.0", id, result: {
-          isError: true,
-          content: [{ type: "text", text: "Authorize write access to Anime List, then retry. If the app does not prompt, reconnect it and request the write action again." }],
-          _meta: { "mcp/www_authenticate": [challenge] },
-        } }, { status: openAiClient ? 200 : 403, headers: { "WWW-Authenticate": challenge } });
+        if (openAiClient) {
+          return Response.json({ jsonrpc: "2.0", id, result: {
+            isError: true,
+            content: [{ type: "text", text: hint }],
+            _meta: { "mcp/www_authenticate": [challenge] },
+          } }, { headers: { "WWW-Authenticate": challenge } });
+        }
+        return jsonRpcError(403, -32000, hint, { "WWW-Authenticate": challenge }, id);
       }
       return jsonRpcError(403, -32000, "This action requires additional OAuth permission.", { "WWW-Authenticate": challenge }, id);
     }

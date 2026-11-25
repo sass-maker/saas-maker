@@ -96,7 +96,7 @@ fixed canonical product resource in `aud`, an RS256 signature, a lifetime no
 longer than one hour, a supported federated subject, and the route's single
 read permission for existing read-only routes. Anime List accepts legacy read grants. Its library, preference, feedback and franchise-monitor mutations require both delegated `anime-list.read` and `anime-list.write`. Anchor read tools require
 `anchor.read`; its mutation tools require both `anchor.read` and `anchor.write`.
-The Anime List connection initially asks for read access and advertises its write tools to read-only clients. A write request can prompt ChatGPT to obtain the extra permission. If no prompt appears, reconnect the app, refresh its tool list and request the write action again.
+The Anime List connection initially asks for read access and advertises its write tools to read-only clients. A write request can prompt ChatGPT to obtain the extra permission. If a client does not support incremental prompts, connect the private MCP URL `https://anime-mcp.significanthobbies.com/anime-list/mcp?access=write` to request both scopes during OAuth, then request the write action again. In ChatGPT, use a custom MCP connection if the installed connection has a fixed URL. The audience and the account permission checks remain the same.
 Protected-resource metadata on each distinct public hostname
 advertises that canonical resource. The product repeats the checks and maps the
 subject to its own account; a missing account returns 403 without an owner

@@ -879,6 +879,7 @@ test("Anime List uses the exact delegated permissions for reads and mutations", 
     const denied = await handleHostedRequest(call(name), upstream, read);
     assert.equal(denied.status, 403, name);
     assert.match(denied.headers.get("www-authenticate") ?? "", /scope="anime-list.read anime-list.write"/u);
+    assert.equal(((await json(denied)).error as {code:number}).code, -32000);
   }
   assert.equal(calls, 0);
   assert.equal((await handleHostedRequest(call("get_streaming_links"), upstream, read)).status, 200);
@@ -937,4 +938,14 @@ test("both Anime List grants discover write tools and ChatGPT receives the tool-
   assert.deepEqual(result._meta["mcp/www_authenticate"],[denied.headers.get("www-authenticate")]);
   assert.match(denied.headers.get("www-authenticate") ?? "",/error_description="/);
   assert.equal(calls,2);
+});
+
+test("the explicit write setup URL requests both delegated scopes only when activation is enabled", async () => {
+  const path = "/anime-list/mcp?access=write";
+  const on = await handleHostedRequest(requestFor(path,initializeRequest()));
+  assert.equal(on.status,401);
+  assert.match(on.headers.get("www-authenticate") ?? "",/scope="anime-list.read anime-list.write"/u);
+  const off = await handleProductionRequest(requestFor(path,initializeRequest()),routeFetch,undefined,undefined,{writeProducts:[]});
+  assert.equal(off.status,401);
+  assert.match(off.headers.get("www-authenticate") ?? "",/scope="anime-list.read"/u);
 });
