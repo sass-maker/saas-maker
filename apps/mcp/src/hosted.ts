@@ -11,6 +11,7 @@ interface HostedRouteBase {
   oauthAudience?: string;
   scope?: string;
   writeScope?: string;
+  preserveLegacyReads?: boolean;
   toolScopes?: Readonly<Record<string, readonly string[]>>;
   tokenSecret?: PrivateTokenSecret;
   productionStatus?: "prepared";
@@ -170,6 +171,7 @@ export const HOSTED_ROUTES: Readonly<Record<string, HostedRouteDefinition>> = Ob
     oauthAudience: "https://mcp.significanthobbies.com/anime-list/mcp",
     scope: "anime-list.read",
     writeScope: "anime-list.write",
+    preserveLegacyReads: true,
     toolScopes: {
       search_anime: ["anime-list.read"],
       search_manga: ["anime-list.read"],
@@ -327,4 +329,12 @@ export function openAiChallengeSecret(hostname: string): OpenAIChallengeSecret |
 
 export function oauthResource(route: HostedRouteDefinition, fallback: string): string {
   return route.oauthAudience ?? fallback;
+}
+
+export function routeForActivation(route: HostedRouteDefinition, writeProducts: readonly string[]): HostedRouteDefinition {
+  if (!route.preserveLegacyReads || !route.writeScope || writeProducts.includes(route.id)) return route;
+  const write = route.writeScope;
+  const toolScopes = Object.fromEntries(Object.entries(route.toolScopes ?? {}).filter(([, scopes]) => !scopes.includes(write)));
+  const { writeScope: _disabledWrite, ...readRoute } = route;
+  return { ...readRoute, toolScopes };
 }

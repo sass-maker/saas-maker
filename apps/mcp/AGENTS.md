@@ -1,6 +1,10 @@
 # SaaS Maker MCP Connections agent instructions
 
-- Preserve the existing connections' read-only contracts. The owner authorized
+- The owner authorized explicit Anime List account actions on 2026-11-26.
+  They require `anime-list.read` and `anime-list.write`, caller confirmation
+  at the product, and release of the companion Worker before gateway activation.
+  Preserve Anime List read access when its write binding is disabled.
+- Preserve the other connections' read-only contracts. The owner authorized
   Anchor account data/actions on 2026-11-08. Only its explicit native toolScopes
   allowlist may write, with anchor.read + anchor.write, product-side independent
   authorization and account isolation. No administrative tools, device-private

@@ -20,7 +20,7 @@ other capabilities outside the read-only publication boundary.
 | --- | ---: | --- |
 | Reader | 3 | Gateway/product tests pass; authenticated live discovery awaits the OpenAI reviewer flow |
 | Calorie | 4 | Gateway/product tests pass; authenticated live discovery awaits the OpenAI reviewer flow |
-| My Anime List | 10 | Native production discovery returns the exact ten-tool catalog; authenticated branded discovery awaits the reviewer flow |
+| My Anime List | 34 | The signed-in route declares each tool’s required scopes in `src/hosted.ts`. Branded discovery requires OAuth. |
 | Anime List | 6 | Gateway tests enforce the exact anonymous native allowlist; activation pending |
 | Starboard | 4 | Live catalog equality holds, but every tool *call* currently fails: Starboard's edge worker 404s all `GET /api/*`. See "Known outages" in the README |
 | High Signal | 2 | Local contract is intentionally reduced to daily signals plus exact signal evidence, and production now serves the same 2 (`get_daily_signals`, `get_signal_evidence`) since the reduction shipped in `ef11d519`. Its live dataset is currently empty; that is tracked separately |
@@ -36,9 +36,9 @@ The private expected catalogs are:
   `list_reader_collections`.
 - Calorie: `get_daily_nutrition`, `get_nutrition_history`,
   `search_saved_foods`, `list_goal_cycles`.
-- My Anime List: `search_anime`, `search_manga`, `get_anime_detail`,
-  `get_manga_detail`, `get_anime_stats`, `get_random_anime`, `list_watchlist`,
-  `list_manga_watchlist`, `list_watchlist_tags`, `get_watchlist_enriched`.
+- My Anime List: the read and write allowlist for `/anime-list/mcp` in
+  [hosted.ts](../src/hosted.ts) covers catalog discovery, library, preferences,
+  feedback and franchise monitoring.
 - SWE Interview Prep: `get_daily_learning_priority`, `get_learning_progress`,
   `get_current_learning_check`,
   plus the five public curriculum and system-design tools.
@@ -57,10 +57,10 @@ evaluation, not something inferred from unauthenticated metadata.
 The following surfaces remain unavailable by design:
 
 - All create, update, delete, upload, send, sync, ingest, refresh, purchase, and
-  other mutation APIs.
+  other mutation APIs outside the Anchor and Anime List allowlists.
 - Reader sharing, PDF download, AI chat, and credential surfaces.
 - Calorie medication and weight history plus all journal/goal mutations.
-- Anime List watchlist mutations and arbitrary API/browser-session access.
+- Anime List arbitrary API access and browser sessions.
 - Significant Hobbies journals, Daily, habits, Trajectory, commitments,
   bucket lists, accounts, and non-public timelines.
 - Starboard private repositories, saved lists, discussions, jobs, and admin.
@@ -84,8 +84,8 @@ review; it is not a parity bug.
 
 Anchor is the first prepared read/write native connection. Its `/anchor/mcp`
 route proxies the product-owned `/anchor/mcp` handler in Personal Platform.
-The gateway does not interpret planner records or run an AI model. The previous
-connections retain their existing read-only contracts.
+The gateway does not interpret planner records or run an AI model. Anime List uses the same scoped account-action model. Disabling its write
+binding preserves its existing read tools.
 
 A new product supplies a native MCP handler that calls its own application
 services. Register a `kind: "native"` route with an exact OAuth resource, a

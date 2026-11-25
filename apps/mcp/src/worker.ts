@@ -6,6 +6,7 @@ import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/
 import {
   HOSTED_ROUTES,
   hostedRoute,
+  routeForActivation,
   oauthResource,
   type HostedRouteDefinition,
 } from "./hosted.js";
@@ -681,7 +682,7 @@ async function handleNative(
     "tools/call",
   ]);
   if (allowlist && !allowedPublicNativeMethods.has(message.method ?? "")) {
-    return jsonRpcError(200, -32601, "Method is not available on this connection.");
+    return jsonRpcError(200, -32601, "Method is not available on this connection.", undefined, typeof message.id === "number" || typeof message.id === "string" ? message.id : null);
   }
   if (allowlist && message.method === "tools/call" && !allowlist.has(message.params?.name ?? "")) {
     return Response.json({
@@ -787,8 +788,9 @@ export async function handleHostedRequest(
     return request.method === "HEAD" ? new Response(null, { headers: response.headers }) : response;
   }
 
-  const route = hostedRoute(url.pathname, url.hostname);
-  if (!route) return withProtocolHeaders(jsonRpcError(404, -32001, "Unknown MCP route."), request);
+  const registered = hostedRoute(url.pathname, url.hostname);
+  if (!registered) return withProtocolHeaders(jsonRpcError(404, -32001, "Unknown MCP route."), request);
+  const route = routeForActivation(registered, activation?.writeProducts ?? []);
   if (request.headers.has("origin") && !allowedOrigin(request)) {
     return withProtocolHeaders(jsonRpcError(403, -32000, "Origin is not allowed."), request, route);
   }

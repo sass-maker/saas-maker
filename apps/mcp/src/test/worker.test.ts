@@ -884,3 +884,21 @@ test("Anime List uses the exact delegated permissions for reads and mutations", 
   }
   assert.equal(calls, writes.length + 1);
 });
+
+test("disabling Anime List writes keeps signed-in reads, filters listings and rejects calls before forwarding", async () => {
+  const path = "/anime-list/mcp";
+  const read = authorizationFor(path);
+  const off = { writeProducts: ["anchor"] };
+  const listed = [{ name: "get_watchlist" }, { name: "remove_watchlist_entries" }, { name: "unknown" }];
+  let calls = 0;
+  const upstream: typeof fetch = async () => { calls++; return Response.json({ jsonrpc: "2.0", id: 41, result: { tools: listed } }); };
+  const send = (method: string, params: object) => handleProductionRequest(requestFor(path, { jsonrpc: "2.0", id: 41, method, params }), upstream, read, undefined, off);
+  assert.equal((await send("tools/call", { name: "get_watchlist", arguments: {} })).status, 200);
+  const manifest = (await json(await send("tools/list", {}))).result as { tools: { name: string; securitySchemes: unknown }[] };
+  assert.deepEqual(manifest.tools.map(t=>[t.name,t.securitySchemes]), [["get_watchlist",[{type:"oauth2",scopes:["anime-list.read"]}]]]);
+  const absent = await json(await send("tools/call", { name: "remove_watchlist_entries", arguments: {} }));
+  assert.equal((absent.result as {isError:boolean}).isError, true);
+  const alternate = await json(await send("resources/read", {}));
+  assert.equal(alternate.id, 41);
+  assert.equal(calls, 2);
+});

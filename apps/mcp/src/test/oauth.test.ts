@@ -436,3 +436,11 @@ test("Anime List keeps legacy read grants and requires both delegated scopes for
     assert.deepEqual(grant.scopes, scope === permissions.join(" ") ? permissions : ["anime-list.read"]);
   }
 });
+
+test("Anime List advertises read-only OAuth when writes are disabled", async () => {
+  const request = new Request("https://anime-mcp.significanthobbies.com/.well-known/oauth-protected-resource/anime-list/mcp");
+  for (const [products,expected] of [["anchor",["anime-list.read"]],["anchor,anime-list",["anime-list.read","anime-list.write"]]] as const) {
+    const metadata = await handleOAuthMetadataRequest(request, { ...env, MCP_ENABLED_WRITE_PRODUCTS: products });
+    assert.deepEqual((await metadata!.json() as {scopes_supported:string[]}).scopes_supported,expected);
+  }
+});
