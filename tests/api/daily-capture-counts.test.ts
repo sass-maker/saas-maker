@@ -298,8 +298,8 @@ describe('daily PII-free capture receipts', () => {
     expect(result.serverRequestsApplicabilityByCatalogId.motion).toBe('not_applicable');
     expect(result.serverRequestsApplicabilityByCatalogId['ai-game']).toBe('not_applicable');
     expect(result.serverRequestsApplicabilityByCatalogId['swe-interview-prep']).toBe('applicable');
-    expect(result.serverRequestsApplicabilityByCatalogId['every-song-is-a-website']).toBe(
-      'not_applicable'
+    expect(result.serverRequestsApplicabilityByCatalogId).not.toHaveProperty(
+      'every-song-is-a-website'
     );
     expect(result.serverRequestsApplicabilityByCatalogId).not.toHaveProperty('reddit-insights');
     expect(result.serverRequestsApplicabilityByCatalogId.codevetter).toBe('not_applicable');

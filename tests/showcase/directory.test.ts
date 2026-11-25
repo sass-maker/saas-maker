@@ -289,12 +289,14 @@ describe('verified public Fleet directory', () => {
       {}
     );
     expect(catalog.schemaVersion).toBe(6);
-    expect(ids).toHaveLength(39);
+    expect(ids).not.toContain('every-song-is-a-website');
     expect(ids).not.toContain('significanthobbies');
     expect(ids).not.toContain('agent-inbox');
     expect(new Set(ids).size).toBe(catalog.directory.length);
     const archivedIds = catalog.archivedDirectory.map((project: { id: string }) => project.id);
-    expect(archivedIds).toHaveLength(40);
+    expect(new Set([...ids, ...archivedIds]).size).toBe(ids.length + archivedIds.length);
+    expect(ids.length + archivedIds.length).toBe(79);
+    expect(archivedIds).toContain('every-song-is-a-website');
     expect(archivedIds).not.toContain('agent-inbox');
     expect(archivedIds).toEqual(
       expect.arrayContaining(['significanthobbies', 'chatgpt-connections', 'unified-portfolio'])
@@ -426,7 +428,7 @@ describe('verified public Fleet directory', () => {
         catalog.directory.find((project: { id: string }) => project.id === id)
       ).not.toHaveProperty('publicUrl');
     }
-    for (const id of ['techdata', 'meme-lab', 'every-song-is-a-website']) {
+    for (const id of ['techdata', 'meme-lab']) {
       expect(catalog.directory.find((project: { id: string }) => project.id === id)).toMatchObject({
         availability: 'public-link',
         publicUrlLabel: 'Visit website',
