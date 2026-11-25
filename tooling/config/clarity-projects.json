@@ -788,24 +788,6 @@
       ]
     },
     {
-      "id": "every-song-is-a-website",
-      "name": "Every Song Is a Website",
-      "repo": "every-song-is-a-website",
-      "clarityId": "ymduocdsrk",
-      "hostname": "music.significanthobbies.com",
-      "tag": "every-song-is-a-website",
-      "wiredFiles": [
-        "every-song-is-a-website/shared/clarity.js"
-      ],
-      "reason": "A shared side-effect module loads the dedicated tracker from both the gallery entrypoint and every generated song world.",
-      "browserSurfaces": [
-        {
-          "kind": "combined",
-          "file": "every-song-is-a-website/shared/clarity.js"
-        }
-      ]
-    },
-    {
       "id": "contextdaddy",
       "name": "ContextDaddy",
       "repo": "contextdaddy",

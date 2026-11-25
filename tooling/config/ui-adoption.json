@@ -5867,28 +5867,28 @@
         "notes": "Bounded local source inspection; Live rendered behavior was not exercised. Source revision a7b821ab1f004d5eefe1739d892331e03f464f03. Landing/app attribution and default theme have not been render-qualified.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "every-song-is-a-website/index.html",
-          "every-song-is-a-website/360/index.html",
-          "every-song-is-a-website/dna/index.html",
-          "every-song-is-a-website/themes/neon.js",
-          "every-song-is-a-website/wap/index.html",
-          "every-song-is-a-website/themes/neon.css",
-          "every-song-is-a-website/apple/index.html",
-          "every-song-is-a-website/bloom/index.html"
+          "../fleet-archive/every-song-is-a-website/index.html",
+          "../fleet-archive/every-song-is-a-website/360/index.html",
+          "../fleet-archive/every-song-is-a-website/dna/index.html",
+          "../fleet-archive/every-song-is-a-website/themes/neon.js",
+          "../fleet-archive/every-song-is-a-website/wap/index.html",
+          "../fleet-archive/every-song-is-a-website/themes/neon.css",
+          "../fleet-archive/every-song-is-a-website/apple/index.html",
+          "../fleet-archive/every-song-is-a-website/bloom/index.html"
         ],
         "libraryVersion": {
           "state": "unknown",
           "notes": "No SaaS Maker UI dependency specification was found in the bounded manifest inspection; copied or vendored assets and live versions remain unverified.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "every-song-is-a-website/index.html",
-            "every-song-is-a-website/360/index.html",
-            "every-song-is-a-website/dna/index.html",
-            "every-song-is-a-website/themes/neon.js",
-            "every-song-is-a-website/wap/index.html",
-            "every-song-is-a-website/themes/neon.css",
-            "every-song-is-a-website/apple/index.html",
-            "every-song-is-a-website/bloom/index.html"
+            "../fleet-archive/every-song-is-a-website/index.html",
+            "../fleet-archive/every-song-is-a-website/360/index.html",
+            "../fleet-archive/every-song-is-a-website/dna/index.html",
+            "../fleet-archive/every-song-is-a-website/themes/neon.js",
+            "../fleet-archive/every-song-is-a-website/wap/index.html",
+            "../fleet-archive/every-song-is-a-website/themes/neon.css",
+            "../fleet-archive/every-song-is-a-website/apple/index.html",
+            "../fleet-archive/every-song-is-a-website/bloom/index.html"
           ]
         },
         "loading": {
@@ -5896,14 +5896,14 @@
           "notes": "No loading-state signal was found in the bounded source inspection; completeness and runtime states remain unverified.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "every-song-is-a-website/index.html",
-            "every-song-is-a-website/360/index.html",
-            "every-song-is-a-website/dna/index.html",
-            "every-song-is-a-website/themes/neon.js",
-            "every-song-is-a-website/wap/index.html",
-            "every-song-is-a-website/themes/neon.css",
-            "every-song-is-a-website/apple/index.html",
-            "every-song-is-a-website/bloom/index.html"
+            "../fleet-archive/every-song-is-a-website/index.html",
+            "../fleet-archive/every-song-is-a-website/360/index.html",
+            "../fleet-archive/every-song-is-a-website/dna/index.html",
+            "../fleet-archive/every-song-is-a-website/themes/neon.js",
+            "../fleet-archive/every-song-is-a-website/wap/index.html",
+            "../fleet-archive/every-song-is-a-website/themes/neon.css",
+            "../fleet-archive/every-song-is-a-website/apple/index.html",
+            "../fleet-archive/every-song-is-a-website/bloom/index.html"
           ]
         }
       },
@@ -5913,28 +5913,28 @@
         "notes": "Bounded local source inspection; Live rendered behavior was not exercised. Source revision a7b821ab1f004d5eefe1739d892331e03f464f03. Landing/app attribution and default theme have not been render-qualified.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "every-song-is-a-website/index.html",
-          "every-song-is-a-website/360/index.html",
-          "every-song-is-a-website/dna/index.html",
-          "every-song-is-a-website/themes/neon.js",
-          "every-song-is-a-website/wap/index.html",
-          "every-song-is-a-website/themes/neon.css",
-          "every-song-is-a-website/apple/index.html",
-          "every-song-is-a-website/bloom/index.html"
+          "../fleet-archive/every-song-is-a-website/index.html",
+          "../fleet-archive/every-song-is-a-website/360/index.html",
+          "../fleet-archive/every-song-is-a-website/dna/index.html",
+          "../fleet-archive/every-song-is-a-website/themes/neon.js",
+          "../fleet-archive/every-song-is-a-website/wap/index.html",
+          "../fleet-archive/every-song-is-a-website/themes/neon.css",
+          "../fleet-archive/every-song-is-a-website/apple/index.html",
+          "../fleet-archive/every-song-is-a-website/bloom/index.html"
         ],
         "libraryVersion": {
           "state": "unknown",
           "notes": "No SaaS Maker UI dependency specification was found in the bounded manifest inspection; copied or vendored assets and live versions remain unverified.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "every-song-is-a-website/index.html",
-            "every-song-is-a-website/360/index.html",
-            "every-song-is-a-website/dna/index.html",
-            "every-song-is-a-website/themes/neon.js",
-            "every-song-is-a-website/wap/index.html",
-            "every-song-is-a-website/themes/neon.css",
-            "every-song-is-a-website/apple/index.html",
-            "every-song-is-a-website/bloom/index.html"
+            "../fleet-archive/every-song-is-a-website/index.html",
+            "../fleet-archive/every-song-is-a-website/360/index.html",
+            "../fleet-archive/every-song-is-a-website/dna/index.html",
+            "../fleet-archive/every-song-is-a-website/themes/neon.js",
+            "../fleet-archive/every-song-is-a-website/wap/index.html",
+            "../fleet-archive/every-song-is-a-website/themes/neon.css",
+            "../fleet-archive/every-song-is-a-website/apple/index.html",
+            "../fleet-archive/every-song-is-a-website/bloom/index.html"
           ]
         },
         "loading": {
@@ -5942,14 +5942,14 @@
           "notes": "No loading-state signal was found in the bounded source inspection; completeness and runtime states remain unverified.",
           "checkedAt": "2026-10-14",
           "evidence": [
-            "every-song-is-a-website/index.html",
-            "every-song-is-a-website/360/index.html",
-            "every-song-is-a-website/dna/index.html",
-            "every-song-is-a-website/themes/neon.js",
-            "every-song-is-a-website/wap/index.html",
-            "every-song-is-a-website/themes/neon.css",
-            "every-song-is-a-website/apple/index.html",
-            "every-song-is-a-website/bloom/index.html"
+            "../fleet-archive/every-song-is-a-website/index.html",
+            "../fleet-archive/every-song-is-a-website/360/index.html",
+            "../fleet-archive/every-song-is-a-website/dna/index.html",
+            "../fleet-archive/every-song-is-a-website/themes/neon.js",
+            "../fleet-archive/every-song-is-a-website/wap/index.html",
+            "../fleet-archive/every-song-is-a-website/themes/neon.css",
+            "../fleet-archive/every-song-is-a-website/apple/index.html",
+            "../fleet-archive/every-song-is-a-website/bloom/index.html"
           ]
         }
       },
@@ -5959,14 +5959,14 @@
         "notes": "Landing/app continuity requires paired rendered evidence; source inspection does not establish a score.",
         "checkedAt": "2026-10-14",
         "evidence": [
-          "every-song-is-a-website/index.html",
-          "every-song-is-a-website/360/index.html",
-          "every-song-is-a-website/dna/index.html",
-          "every-song-is-a-website/themes/neon.js",
-          "every-song-is-a-website/wap/index.html",
-          "every-song-is-a-website/themes/neon.css",
-          "every-song-is-a-website/apple/index.html",
-          "every-song-is-a-website/bloom/index.html"
+          "../fleet-archive/every-song-is-a-website/index.html",
+          "../fleet-archive/every-song-is-a-website/360/index.html",
+          "../fleet-archive/every-song-is-a-website/dna/index.html",
+          "../fleet-archive/every-song-is-a-website/themes/neon.js",
+          "../fleet-archive/every-song-is-a-website/wap/index.html",
+          "../fleet-archive/every-song-is-a-website/themes/neon.css",
+          "../fleet-archive/every-song-is-a-website/apple/index.html",
+          "../fleet-archive/every-song-is-a-website/bloom/index.html"
         ]
       }
     },

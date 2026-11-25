@@ -422,22 +422,6 @@
       }
     },
     {
-      "id": "every-song-is-a-website",
-      "state": "ready",
-      "event": {
-        "name": "song_world_opened",
-        "text": "enter →",
-        "selector": ".door"
-      },
-      "funnel": {
-        "name": "gallery_to_song_world",
-        "steps": [
-          "page:/",
-          "event:song_world_opened"
-        ]
-      }
-    },
-    {
       "id": "contextdaddy",
       "state": "ready",
       "event": {

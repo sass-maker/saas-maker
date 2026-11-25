@@ -975,36 +975,6 @@
       ]
     },
     {
-      "id": "every-song-is-a-website",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "public"
-        },
-        {
-          "field": "presentation.directory.platforms",
-          "value": [
-            "Web"
-          ]
-        },
-        {
-          "field": "presentation.directory.purposeContract.purpose",
-          "value": "Every Song Is a Website gives each song a curated visual world — a shareable URL with embedded video, licensed lyrics, and playful interactions."
-        },
-        {
-          "field": "deployment.status",
-          "value": "live"
-        }
-      ]
-    },
-    {
       "id": "contextdaddy",
       "applicability": "newsletter",
       "confidence": "medium",
