@@ -133,6 +133,9 @@ if (hidden.length) {
   console.warn(`  withheld non-public projects: ${hidden.join(', ')}`);
 }
 
+const retiredProjects = existsSync(OUT)
+  ? JSON.parse(readFileSync(OUT, 'utf8')).retiredProjects
+  : undefined;
 const ledger = {
   $schema: 'fleet.launch-coverage.v1',
   updated: new Date().toISOString().slice(0, 10),
@@ -142,6 +145,7 @@ const ledger = {
   projects: Object.fromEntries(
     Object.entries(projects).sort(([a], [b]) => a.localeCompare(b))
   ),
+  ...(retiredProjects ? { retiredProjects } : {}),
 };
 
 const rendered = JSON.stringify(ledger, null, 2) + '\n';

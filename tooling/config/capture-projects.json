@@ -851,9 +851,9 @@
     },
     {
       "id": "daddyrad",
-      "applicability": "undetermined",
+      "applicability": "newsletter",
       "confidence": "medium",
-      "rationale": "The brand website is public. No product-specific subscription flow was established for the unified native application.",
+      "rationale": "The four public Mac utilities each carried a product-updates policy. Continue that policy on the unified product's existing public brand website.",
       "evidence": [
         {
           "field": "lifecycle.status",
