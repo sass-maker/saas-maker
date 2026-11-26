@@ -345,7 +345,10 @@ describe('daily PII-free capture receipts', () => {
       'mashup',
       'open-historia',
       'mentionpilot',
-      'daddyrad',
+      'storagedaddy',
+      'browserdaddy',
+      'performancedaddy',
+      'contextdaddy',
       'email-manager',
       'research-papers',
       'ph-catalog',
@@ -366,12 +369,9 @@ describe('daily PII-free capture receipts', () => {
       'setline',
       'kith',
       'anchor',
-      'storagedaddy',
-      'browserdaddy',
-      'performancedaddy',
-      'contextdaddy',
+      'daddyrad',
     ];
-    expect(nativeProducts).toHaveLength(10);
+    expect(nativeProducts).toHaveLength(7);
     for (const id of nativeProducts) {
       expect(result.nativeSessionsApplicabilityByCatalogId[id]).toBe('not_applicable');
     }

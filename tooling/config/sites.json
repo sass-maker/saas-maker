@@ -107,6 +107,11 @@
       "probePath": "/"
     },
     {
+      "id": "daddyrad",
+      "url": "https://daddyrad.com",
+      "probePath": "/"
+    },
+    {
       "id": "live",
       "url": "https://significanthobbies.com",
       "probePath": "/"

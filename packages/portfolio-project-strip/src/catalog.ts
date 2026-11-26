@@ -78,18 +78,18 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
-    "id": "browserdaddy",
-    "name": "BrowserDaddy",
-    "url": "https://browser.daddyrad.com/",
-    "description": "A local-first Mac browsing intelligence app for a unified history archive and real attention tracking.",
+    "id": "daddyrad",
+    "name": "daddyrad",
+    "url": "https://daddyrad.com/",
+    "description": "A native Mac workspace for storage cleanup, performance diagnosis, coding agents and browser activity.",
     "tier": "active",
-    "priority": null,
+    "priority": "P2",
     "category": "utility",
-    "maturity": "preview",
+    "maturity": "beta",
     "spotlight": false,
     "pillarId": "build",
     "domains": [
-      "browser.daddyrad.com"
+      "daddyrad.com"
     ]
   },
   {
@@ -105,21 +105,6 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     "pillarId": "learn",
     "domains": [
       "calorie.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "contextdaddy",
-    "name": "ContextDaddy",
-    "url": "https://context.daddyrad.com/",
-    "description": "A local Mac desk for agent context, skills, usage, and observed telemetry.",
-    "tier": "active",
-    "priority": null,
-    "category": "utility",
-    "maturity": "beta",
-    "spotlight": false,
-    "pillarId": "build",
-    "domains": [
-      "context.daddyrad.com"
     ]
   },
   {
@@ -273,21 +258,6 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
-    "id": "performancedaddy",
-    "name": "PerformanceDaddy",
-    "url": "https://performance.daddyrad.com/",
-    "description": "A local Mac performance investigator for background apps, helpers and developer workloads, with measured evidence and reviewed actions.",
-    "tier": "active",
-    "priority": null,
-    "category": "utility",
-    "maturity": "preview",
-    "spotlight": false,
-    "pillarId": "build",
-    "domains": [
-      "performance.daddyrad.com"
-    ]
-  },
-  {
     "id": "rolepatch",
     "name": "RolePatch",
     "url": "https://rolepatch.com",
@@ -360,21 +330,6 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     "pillarId": "learn",
     "domains": [
       "starboard.codevetter.com"
-    ]
-  },
-  {
-    "id": "storagedaddy",
-    "name": "storagedaddy",
-    "url": "https://storage.daddyrad.com/",
-    "description": "An open-source native Mac storage analyzer for developer caches, builds, dependencies and AI session archives, with reviewed cleanup. Free during early access.",
-    "tier": "active",
-    "priority": null,
-    "category": "utility",
-    "maturity": "beta",
-    "spotlight": false,
-    "pillarId": "build",
-    "domains": [
-      "storage.daddyrad.com"
     ]
   },
   {

@@ -6,6 +6,7 @@ import {
 } from '../../apps/showcase/src/pages/p/[id]/submission.json';
 import { GET as getBrief } from '../../apps/showcase/src/pages/p/[id]/brief.txt';
 import { DIRECTORY_PROJECTS } from '../../apps/showcase/src/data/directory';
+import { PUBLIC_ROUTES } from '../../apps/showcase/src/data/publicRoutes';
 import { GET as getLlms } from '../../apps/showcase/src/pages/llms.txt';
 import { readFile } from 'node:fs/promises';
 import { describe, expect, it } from 'vitest';
@@ -201,9 +202,10 @@ describe('SaaS Maker public source boundary', () => {
     expect(currentIds).toEqual(
       expect.arrayContaining(catalog.products.map((product: { id: string }) => product.id))
     );
-    expect(new Set([...currentIds, ...archivedIds, ...pastRepositoryIds]).size).toBe(
-      currentIds.length + archivedIds.length + pastRepositoryIds.length
-    );
+    for (const id of new Set([...currentIds, ...archivedIds, ...pastRepositoryIds])) {
+      const path = id === 'saas-maker' ? '/' : '/p/' + id;
+      expect(PUBLIC_ROUTES.filter((route) => route.path === path)).toHaveLength(1);
+    }
     expect(detailPage).toMatch(/\.\.\.DIRECTORY_PROJECTS/);
     expect(detailPage).toMatch(/\.\.\.ARCHIVED_DIRECTORY_PROJECTS/);
     expect(detailPage).toMatch(/\.\.\.ARCHIVED_REPOSITORY_PROJECTS/);

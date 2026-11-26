@@ -112,7 +112,9 @@ export interface ArchivedRepositoryProject {
 
 // Keep historical standalone repository profiles resolvable without adding
 // these repositories to the current portfolio roster.
-export const ARCHIVED_REPOSITORY_PROJECTS = publicCatalog.pastProjects.map((project) => ({
+export const ARCHIVED_REPOSITORY_PROJECTS = publicCatalog.pastProjects
+  .filter((project) => !ARCHIVED_DIRECTORY_PROJECTS.some((archived) => archived.id === project.id))
+  .map((project) => ({
   id: project.id,
   name: project.name,
   description: project.description,
