@@ -47,7 +47,16 @@ async function sendFoodUsageEvents(env: HostedWorkerEnv, names: FoodUsageEvent[]
       })),
     }),
   });
-  await response.body?.cancel();
+  if (response.status !== 202) {
+    await response.body?.cancel();
+    console.warn("TechData Food usage rejected by App Health", response.status);
+    return;
+  }
+  const receipt = await response.json() as { accepted?: unknown; duplicates?: unknown } | null;
+  if (typeof receipt?.accepted !== "number" || typeof receipt.duplicates !== "number" ||
+      receipt.accepted + receipt.duplicates !== names.length) {
+    console.warn("TechData Food usage received an incomplete App Health receipt");
+  }
 }
 
 let firstRequest = true;
@@ -142,6 +151,7 @@ export async function monitorAppHealthRequest(
       if (status === 200 && stages.foodEvents?.length) {
         const usageDelivery = sendFoodUsageEvents(env, stages.foodEvents).catch(() => {
           // Product metrics must not change tool behavior on collector failure.
+          console.warn("TechData Food usage delivery to App Health failed");
         });
         ctx?.waitUntil(usageDelivery);
       }

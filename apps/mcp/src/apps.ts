@@ -388,7 +388,7 @@ const reader: AppDefinition = {
       inputSchema: {
         q: optionalQuery,
         status: z.enum(["all", "unread", "read"]).optional(),
-        limit: commonLimitInput,
+        limit: commonLimitInput.describe("Maximum links to return. Reader pages contain at most 20 links."),
         offset: commonOffsetInput,
       },
       operation: "search",

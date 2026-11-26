@@ -208,15 +208,17 @@ test("worker measures OAuth and upstream only when they run and excludes other r
 
 test("successful Food tools emit named App Health events while errors and QA calls do not", async (t) => {
   const productBatches: unknown[] = [];
+  const warnings: unknown[][] = [];
+  t.mock.method(console, "warn", (...args: unknown[]) => { warnings.push(args); });
   const upstream = t.mock.method(globalThis, "fetch", async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = new URL(String(input));
     if (url.hostname === "ingest.sassmaker.com") {
       if (url.pathname === "/v1/product-events") {
         productBatches.push(JSON.parse(String(init?.body)));
         assert.equal(init?.redirect, "error");
+        return Response.json({ accepted: productBatches.length === 1 ? 1 : 0, duplicates: 0 }, { status: 202 });
       }
-      // Simulate a collector rejecting the metrics independently of the read.
-      return Response.json({ accepted: 0 }, { status: 503 });
+      return Response.json({ accepted: 1 }, { status: 202 });
     }
     if (url.searchParams.get("q") === "failed-query") return new Response("Unavailable", { status: 503 });
     return Response.json({
@@ -247,11 +249,15 @@ test("successful Food tools emit named App Health events while errors and QA cal
   };
 
   assert.equal(await callTool("sample-query", false), true);
+  await Promise.all(waits);
+  assert.deepEqual(warnings, []);
   assert.equal(await callTool("same-query-from-monitor", true), true);
   assert.equal(await callTool("failed-query", false), false);
+  assert.equal(await callTool("collector-receipt-incomplete", false), true);
   await Promise.all(waits);
   assert.ok(upstream.mock.callCount() >= 3);
-  assert.equal(productBatches.length, 1);
+  assert.equal(productBatches.length, 2);
+  assert.deepEqual(warnings, [["TechData Food usage received an incomplete App Health receipt"]]);
   const batch = productBatches[0] as {
     batch_id: string; schema_version: number; environment: string;
     events: Array<Record<string, unknown>>;
