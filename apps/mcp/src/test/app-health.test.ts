@@ -217,6 +217,8 @@ test("successful Food tools emit named App Health events while errors and QA cal
         productBatches.push(JSON.parse(String(init?.body)));
         assert.equal(init?.redirect, "error");
         assert.equal(new Headers(init?.headers).get("Authorization"), "Bearer test-techdata-ingest-key");
+        if (productBatches.length === 3) return new Response(null, { status: 503 });
+        if (productBatches.length === 4) throw new Error("synthetic credential-bearing transport error");
         return Response.json({ accepted: productBatches.length === 1 ? 1 : 0, duplicates: 0 }, { status: 202 });
       }
       return Response.json({ accepted: 1 }, { status: 202 });
@@ -265,9 +267,17 @@ test("successful Food tools emit named App Health events while errors and QA cal
   assert.equal(await callTool("failed-query", false), false);
   assert.equal(await callTool("collector-receipt-incomplete", false), true);
   await Promise.all(waits);
+  assert.equal(await callTool("collector-rejected", false), true);
+  await Promise.all(waits);
+  assert.equal(await callTool("collector-threw", false), true);
+  await Promise.all(waits);
   assert.ok(upstream.mock.callCount() >= 3);
-  assert.equal(productBatches.length, 2);
-  assert.deepEqual(warnings, [["TechData Food usage received an incomplete App Health receipt"]]);
+  assert.equal(productBatches.length, 4);
+  assert.deepEqual(warnings, [
+    ["TechData Food usage received an incomplete App Health receipt"],
+    ["TechData Food usage rejected by App Health", 503],
+    ["TechData Food usage delivery to App Health failed"],
+  ]);
   const batch = productBatches[0] as {
     batch_id: string; schema_version: number; environment_id: string;
     events: Array<Record<string, unknown>>;
