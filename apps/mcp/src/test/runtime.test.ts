@@ -536,6 +536,9 @@ test("High Signal installed methods retain their original response semantics", (
 
 test("TechData Food preserves bounded API paths, exact recipe lookup, and source basis", () => {
   const app = APP_DEFINITIONS.techdata;
+  const querySchema = app.tools.search_food_products!.inputSchema.q!;
+  assert.equal(querySchema.safeParse("a-b-c-d-e-f-g-h-i-j-k-l-m").success, false);
+  assert.equal(querySchema.safeParse("a-b-c-d-e-f-g-h-i-j-k-l").success, true);
   assert.equal(app.operations.products!.path({ q: "peanut butter", limit: 2, offset: 4 }),
     "/api/products?q=peanut+butter&page=3&pageSize=2");
   assert.throws(() => app.operations.products!.path({ q: "beans", limit: 3, offset: 1 }),

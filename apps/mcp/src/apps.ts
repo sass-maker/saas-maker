@@ -75,8 +75,21 @@ const boundedText = z.string().trim().min(1).max(200);
 const optionalQuery = z.string().trim().max(200).optional();
 const stableId = z.string().trim().min(1).max(200).regex(/^[A-Za-z0-9._:@/-]+$/);
 const foodProductId = z.string().trim().regex(/^prd_[a-f0-9]{24}$/u);
+function foodSearchTermCount(value: string): number {
+  const normalized = value
+    .replace(/[™®©]/gu, "")
+    .replace(/[βΒ]/gu, " beta ")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/gu, "")
+    .toLowerCase()
+    .replace(/&/gu, " and ")
+    .replace(/[^a-z0-9]+/gu, " ")
+    .trim()
+    .replace(/\s+/gu, " ");
+  return normalized ? normalized.split(" ").length : 0;
+}
 const foodSearchQuery = z.string().trim().max(200)
-  .refine((value) => value.split(/\s+/u).filter(Boolean).length <= 12, "Use at most 12 search terms.")
+  .refine((value) => foodSearchTermCount(value) <= 12, "Use at most 12 search terms.")
   .optional();
 const slug = z.string().trim().min(1).max(160).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
