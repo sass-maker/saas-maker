@@ -14,6 +14,7 @@ export type AppId =
   | "reader"
   | "starboard"
   | "high-signal"
+  | "techdata"
   | "calorie"
   | "significant-hobbies"
   | "research-papers"
@@ -41,6 +42,7 @@ export interface ToolDefinition {
   detailArgument?: string;
   detailFields?: readonly string[];
   localFilters?: Record<string, readonly string[]>;
+  localPagination?: boolean;
 }
 
 export interface AppDefinition {
@@ -72,6 +74,23 @@ export interface AppDefinition {
 const boundedText = z.string().trim().min(1).max(200);
 const optionalQuery = z.string().trim().max(200).optional();
 const stableId = z.string().trim().min(1).max(200).regex(/^[A-Za-z0-9._:@/-]+$/);
+const foodProductId = z.string().trim().regex(/^prd_[a-f0-9]{24}$/u);
+function foodSearchTermCount(value: string): number {
+  const normalized = value
+    .replace(/[™®©]/gu, "")
+    .replace(/[βΒ]/gu, " beta ")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/gu, "")
+    .toLowerCase()
+    .replace(/&/gu, " and ")
+    .replace(/[^a-z0-9]+/gu, " ")
+    .trim()
+    .replace(/\s+/gu, " ");
+  return normalized ? normalized.split(" ").length : 0;
+}
+const foodSearchQuery = z.string().trim().max(200)
+  .refine((value) => foodSearchTermCount(value) <= 12, "Use at most 12 search terms.")
+  .optional();
 const slug = z.string().trim().min(1).max(160).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 const timezone = z.string().trim().min(1).max(100).default("UTC");
@@ -127,6 +146,19 @@ function calorieHistoryPath(args: Record<string, unknown>): string {
   });
 }
 
+function foodProductSearchPath(args: Record<string, unknown>): string {
+  const limit = readLimit(args);
+  const offset = readOffset(args);
+  if (offset % limit !== 0) {
+    throw new ConnectionError("invalid_input", "Food catalog offsets must be a multiple of the requested limit.");
+  }
+  return queryPath("/api/products", {
+    q: args.q,
+    page: Math.floor(offset / limit) + 1,
+    pageSize: limit,
+  });
+}
+
 function readLimit(args: Record<string, unknown>): number {
   const value = typeof args.limit === "number" ? args.limit : DEFAULT_COLLECTION_LIMIT;
   return Math.min(Math.max(value, 1), MAX_COLLECTION_LIMIT);
@@ -173,13 +205,17 @@ function explicitTotal(payload: unknown): number | undefined {
   if (typeof nested === "number" && Number.isFinite(nested) && nested >= 0) {
     return Math.floor(nested);
   }
+  const paginationTotal = objectValue(objectValue(payload, "pagination"), "total");
+  if (typeof paginationTotal === "number" && Number.isFinite(paginationTotal) && paginationTotal >= 0) {
+    return Math.floor(paginationTotal);
+  }
   return undefined;
 }
 
 function explicitPage(payload: unknown):
   | { total?: number; nextOffset?: number | null }
   | undefined {
-  const page = objectValue(payload, "page");
+  const page = objectValue(payload, "page") ?? objectValue(payload, "pagination");
   if (!page || typeof page !== "object" || Array.isArray(page)) return undefined;
   const totalValue = objectValue(page, "total");
   const nextValue = objectValue(page, "nextOffset");
@@ -197,7 +233,7 @@ function explicitPage(payload: unknown):
 }
 
 function explicitFreshness(payload: unknown): string | undefined {
-  for (const key of ["freshness", "generatedAt", "updatedAt", "publishedAt", "asOf", "date"]) {
+  for (const key of ["freshness", "generatedAt", "updatedAt", "publishedAt", "collectedAt", "asOf", "date"]) {
     const value = objectValue(payload, key);
     if (typeof value === "string" && value.trim()) return value.trim();
     if (typeof value === "number" && Number.isFinite(value)) {
@@ -301,7 +337,7 @@ export function normalizeToolResult(options: {
 
   const upstreamPage = explicitPage(payload);
   const upstreamTotal = upstreamPage ? upstreamPage.total : explicitTotal(payload);
-  const alreadyPaginated = upstreamPage !== undefined || upstreamTotal !== undefined;
+  const alreadyPaginated = upstreamPage !== undefined || (upstreamTotal !== undefined && !tool.localPagination);
   const page = alreadyPaginated ? source.slice(0, limit) : source.slice(offset, offset + limit);
   const total = upstreamTotal ?? (alreadyPaginated ? undefined : source.length);
   const nextOffset =
@@ -549,6 +585,92 @@ const highSignal: AppDefinition = {
       operation: "evidence",
       mode: "public-api",
       detail: true,
+    },
+  },
+};
+
+const techdataFood: AppDefinition = {
+  id: "techdata",
+  name: "TechData",
+  serverName: "fleet-techdata-readonly",
+  baseUrl: "https://food.significanthobbies.com",
+  baseUrlEnv: "FOOD_API_URL",
+  instructions:
+    "Read-only access to TechData's packaged-food catalog and curated vegetarian recipes. Product nutrition values retain their source basis (usually per 100 g), observation date, verification status, and source links; do not treat missing or unverified values as zero or verified. Recipe nutrition is a publisher-stated estimate for the publisher's stated serving. The result generatedAt is gateway retrieval time, not data freshness. Recipe collectedAt and each product's nutrition.observedAt describe source-record freshness.",
+  operations: {
+    products: {
+      path: foodProductSearchPath,
+    },
+    product: {
+      path: (args) => `/api/products/${encodeURIComponent(String(args.id))}`,
+    },
+    recipes: {
+      path: (args) => queryPath("/api/recipes", {
+        q: args.q,
+        dietary: args.dietary,
+        format: args.format,
+        proteinSource: args.proteinSource,
+        indiaFit: args.indiaFit,
+        sort: args.sort,
+      }),
+    },
+  },
+  tools: {
+    search_food_products: {
+      title: "Search packaged foods",
+      description:
+        "Search the public packaged-food catalog. Nutrition observations include their measurement basis, status, and source evidence; use only like-for-like bases when comparing values.",
+      inputSchema: {
+        q: foodSearchQuery,
+        limit: commonLimitInput,
+        offset: commonOffsetInput,
+      },
+      operation: "products",
+      mode: "public-api",
+      collectionKeys: ["products"],
+      requireCollection: true,
+    },
+    get_food_product: {
+      title: "Get packaged food",
+      description:
+        "Retrieve a packaged-food record by exact catalog ID, including nullable nutrition and ingredient fields, source URLs, record observation time, and verification status.",
+      inputSchema: { id: foodProductId },
+      operation: "product",
+      mode: "public-api",
+      detail: true,
+    },
+    search_vegetarian_recipes: {
+      title: "Search vegetarian recipes",
+      description:
+        "Search the curated vegetarian recipe collection. Nutrition figures are publisher-stated estimates, normalized to the publisher's stated serving basis; use the source link for context.",
+      inputSchema: {
+        q: optionalQuery,
+        dietary: z.enum(["all", "vegan", "vegetarian"]).default("all"),
+        format: z.enum(["all", "bar", "bread", "breakfast", "component", "dessert", "drink", "meal"]).default("all"),
+        proteinSource: z.enum(["all", "dairy-food", "legumes", "seitan-gluten", "soy-tofu-tvp", "tempeh", "vegan-powder", "whey-powder"]).default("all"),
+        indiaFit: z.enum(["all", "easy", "adaptable", "specialty"]).default("all"),
+        sort: z.enum(["curated", "protein-density", "protein", "calories", "title"]).default("curated"),
+        limit: z.number().int().min(1).max(20).default(10),
+        offset: commonOffsetInput,
+      },
+      operation: "recipes",
+      mode: "public-api",
+      collectionKeys: ["recipes"],
+      requireCollection: true,
+      localPagination: true,
+    },
+    get_vegetarian_recipe: {
+      title: "Get vegetarian recipe",
+      description:
+        "Retrieve a curated recipe by exact recipe ID. Nutrition is a publisher-stated estimate on the source's stated serving basis; the result preserves its publisher and source URL.",
+      inputSchema: { id: slug },
+      operation: "recipes",
+      mode: "public-api",
+      detail: true,
+      detailCollectionKeys: ["recipes"],
+      detailArgument: "id",
+      detailFields: ["id"],
+      requireCollection: true,
     },
   },
 };
@@ -1150,6 +1272,7 @@ export const APP_DEFINITIONS: Record<AppId, AppDefinition> = {
   reader,
   starboard,
   "high-signal": highSignal,
+  techdata: techdataFood,
   calorie,
   "significant-hobbies": significantHobbies,
   "research-papers": researchPapers,

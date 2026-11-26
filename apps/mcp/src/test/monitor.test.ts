@@ -165,20 +165,20 @@ test("production monitor retains only redacted contract evidence", async () => {
     now: () => new Date("2026-08-12T00:00:00.000Z"),
   });
   assert.equal(receipt.ok, true);
-  assert.deepEqual(receipt.summary, { passed: 73, failed: 0, skipped: 0, total: 73 });
+  assert.deepEqual(receipt.summary, { passed: 80, failed: 0, skipped: 0, total: 80 });
   assert.equal(receipt.checkedAt, "2026-08-12T00:00:00.000Z");
   const serialized = JSON.stringify(receipt);
   assert.equal(serialized.includes("must-never-enter-receipt"), false);
   assert.equal(serialized.includes("password"), false);
-  assert.equal(receipt.checks.filter(({ id }) => id === "representative-read").length, 7);
-  assert.equal(receipt.checks.filter(({ id }) => id === "pagination").length, 6);
+  assert.equal(receipt.checks.filter(({ id }) => id === "representative-read").length, 8);
+  assert.equal(receipt.checks.filter(({ id }) => id === "pagination").length, 7);
   assert.equal(receipt.checks.filter(({ id }) => id === "oauth-resource").length, 4);
-  assert.equal(receipt.checks.filter(({ id }) => id === "host-isolation").length, 11);
+  assert.equal(receipt.checks.filter(({ id }) => id === "host-isolation").length, 12);
 });
 
 test("production monitor excludes prepared routes until activation", async () => {
   const receipt = await runProductionMonitor({ fetchImpl: productionFetch });
-  assert.deepEqual(receipt.summary, { passed: 53, failed: 0, skipped: 0, total: 53 });
+  assert.deepEqual(receipt.summary, { passed: 60, failed: 0, skipped: 0, total: 60 });
   assert.deepEqual(
     receipt.checks.filter(({ plugin }) => plugin === "saas-maker").map(({ id, status }) => [id, status]),
     [
@@ -188,9 +188,9 @@ test("production monitor excludes prepared routes until activation", async () =>
       ["first-party-tools-readonly", "passed"],
     ],
   );
-  assert.equal(receipt.checks.filter(({ id }) => id === "representative-read").length, 4);
-  assert.equal(receipt.checks.filter(({ id }) => id === "pagination").length, 4);
-  assert.equal(receipt.checks.filter(({ id }) => id === "host-isolation").length, 8);
+  assert.equal(receipt.checks.filter(({ id }) => id === "representative-read").length, 5);
+  assert.equal(receipt.checks.filter(({ id }) => id === "pagination").length, 5);
+  assert.equal(receipt.checks.filter(({ id }) => id === "host-isolation").length, 9);
   assert.equal(receipt.checks.filter(({ id }) => id === "oauth-resource").length, 4);
 });
 
@@ -204,7 +204,7 @@ test("production monitor can verify private collection pagination without retain
     },
   });
   assert.equal(receipt.ok, true);
-  assert.deepEqual(receipt.summary, { passed: 56, failed: 0, skipped: 0, total: 56 });
+  assert.deepEqual(receipt.summary, { passed: 63, failed: 0, skipped: 0, total: 63 });
   assert.equal(receipt.checks.filter(({ id }) => id === "authenticated-pagination").length, 3);
   const serialized = JSON.stringify(receipt);
   assert.equal(serialized.includes("private-monitor-secret"), false);
@@ -303,6 +303,48 @@ function smallDatasetFetch(total: number): typeof fetch {
   };
 }
 
+function oddFoodDatasetFetch(total: number): typeof fetch {
+  return async (input, init) => {
+    const request = input instanceof Request ? input : new Request(input, init);
+    const url = new URL(request.url);
+    const route = hostedRoute(url.pathname, url.hostname);
+    if (route?.id === "techdata" && request.method === "POST") {
+      const message = await request.clone().json() as {
+        id: number;
+        method: string;
+        params?: { name?: string; arguments?: { limit?: number; offset?: number } };
+      };
+      if (message.method === "tools/call" && message.params?.name === "search_food_products") {
+        const offset = message.params.arguments?.offset ?? 0;
+        const limit = message.params.arguments?.limit ?? 2;
+        assert.equal(offset % limit, 0);
+        const items = Array.from(
+          { length: Math.max(0, Math.min(limit, total - offset)) },
+          (_, index) => ({ id: `food-${offset + index}` }),
+        );
+        const nextOffset = offset + items.length < total ? offset + items.length : null;
+        return responseJson({
+          jsonrpc: "2.0",
+          id: message.id,
+          result: { structuredContent: {
+            schemaVersion: "1", ok: true, tool: "search_food_products", items, total,
+            nextOffset, hasMore: nextOffset !== null, truncated: nextOffset !== null,
+          } },
+        });
+      }
+    }
+    return productionFetch(request);
+  };
+}
+
+test("secretless TechData route is monitored and probes aligned offsets across an odd total", async () => {
+  assert.equal(HOSTED_ROUTES["/techdata/mcp"]!.challengeSecret, undefined);
+  const receipt = await runProductionMonitor({ fetchImpl: oddFoodDatasetFetch(51) });
+  const pagination = receipt.checks.find(({ plugin, id }) => plugin === "techdata" && id === "pagination");
+  assert.equal(pagination?.status, "passed");
+  assert.deepEqual(pagination?.evidence, { httpStatus: 200, toolName: "search_food_products", pageSize: 2, total: 51, pagesChecked: 3 });
+});
+
 test("a live dataset too small for three pages skips pagination instead of failing", async () => {
   const receipt = await runProductionMonitor({ fetchImpl: smallDatasetFetch(3) });
   const check = receipt.checks.find(
@@ -315,7 +357,7 @@ test("a live dataset too small for three pages skips pagination instead of faili
     skipReason: "pagination_dataset_too_small",
   });
   assert.equal(receipt.ok, true);
-  assert.deepEqual(receipt.summary, { passed: 52, failed: 0, skipped: 1, total: 53 });
+  assert.deepEqual(receipt.summary, { passed: 59, failed: 0, skipped: 1, total: 60 });
 });
 
 test("an empty live dataset skips pagination instead of failing", async () => {

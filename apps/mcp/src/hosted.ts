@@ -7,6 +7,7 @@ interface HostedRouteBase {
   audience: HostedAudience;
   hosts: readonly string[];
   challengeSecret?: OpenAIChallengeSecret;
+  publicMonitor?: boolean;
   authMode?: "federated" | "owner-token";
   oauthAudience?: string;
   scope?: string;
@@ -244,6 +245,14 @@ export const HOSTED_ROUTES: Readonly<Record<string, HostedRouteDefinition>> = Ob
     hosts: ["mcp.highsignal.app"],
     challengeSecret: "OPENAI_CHALLENGE_HIGH_SIGNAL",
     app: APP_DEFINITIONS["high-signal"],
+  },
+  "/techdata/mcp": {
+    id: "techdata",
+    kind: "adapter",
+    audience: "public",
+    hosts: ["mcp.highsignal.app"],
+    publicMonitor: true,
+    app: APP_DEFINITIONS.techdata,
   },
   "/significant-hobbies/mcp": {
     id: "significant-hobbies",

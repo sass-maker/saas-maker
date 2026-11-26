@@ -499,16 +499,6 @@
       ]
     },
     {
-      "id": "protein-index",
-      "name": "Food",
-      "repo": "food",
-      "clarityId": "y6bv7pucg0",
-      "hostname": "food.significanthobbies.com",
-      "wiredFiles": [],
-      "browserSurfaces": [],
-      "reason": "Historical Protein Index Clarity identity retained. Food is live; browser instrumentation and actual traffic remain unqualified."
-    },
-    {
       "id": "veg-protein-food",
       "name": "Recipe Index",
       "repo": "recipe-dashboard",

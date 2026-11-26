@@ -18,6 +18,7 @@ interface RepresentativeCall {
 
 interface PaginationCall extends RepresentativeCall {
   limitArgument?: "limit" | "pagesize";
+  pageAligned?: boolean;
 }
 
 const saasMakerRepresentative: RepresentativeCall = {
@@ -29,6 +30,7 @@ const saasMakerPagination: PaginationCall = { name: "search_public_products", ar
 const REPRESENTATIVE_CALLS: Readonly<Record<string, RepresentativeCall>> = Object.freeze({
   "starboard": { name: "search_repositories", arguments: { q: "MCP", limit: 1, offset: 0 } },
   "high-signal": { name: "get_daily_brief", arguments: {} },
+  techdata: { name: "search_food_products", arguments: { q: "peanut butter", limit: 1, offset: 0 } },
   "significant-hobbies": { name: "search_hobbies", arguments: { q: "astronomy", limit: 1, offset: 0 } },
   "research-papers": { name: "list_hot_papers", arguments: { limit: 1, offset: 0 } },
   "anime-list-public": { name: "search_anime", arguments: { pagesize: 1, offset: 0 } },
@@ -40,6 +42,7 @@ const REPRESENTATIVE_CALLS: Readonly<Record<string, RepresentativeCall>> = Objec
 const PAGINATION_CALLS: Readonly<Record<string, PaginationCall>> = Object.freeze({
   "starboard": { name: "search_repositories", arguments: {} },
   "high-signal": { name: "get_daily_signals", arguments: {} },
+  techdata: { name: "search_food_products", arguments: {}, pageAligned: true },
   "significant-hobbies": { name: "search_public_timelines", arguments: {} },
   "research-papers": { name: "list_hot_papers", arguments: {} },
   "anime-list-public": { name: "search_anime", arguments: {}, limitArgument: "pagesize" },
@@ -241,7 +244,7 @@ async function json(response: Response, code: string): Promise<Record<string, un
 function publishedRoutes(includePrepared = false): Array<{ path: string; route: HostedRouteDefinition; origin: string }> {
   return Object.entries(HOSTED_ROUTES).flatMap(([path, route]) => {
     if (!includePrepared && route.productionStatus === "prepared") return [];
-    const host = route.challengeSecret ? route.hosts[0] : undefined;
+    const host = route.challengeSecret || route.publicMonitor ? route.hosts[0] : undefined;
     return host ? [{ path, route, origin: `https://${host}` }] : [];
   });
 }
@@ -431,8 +434,13 @@ async function paginationCheck(
   if (first.items.length !== pageSize) {
     throw new MonitorError("pagination_page_size_invalid");
   }
-  const middleOffset = Math.floor((first.total - pageSize) / 2);
-  const terminalOffset = first.total - pageSize;
+  const middleCandidate = Math.floor((first.total - pageSize) / 2);
+  const middleOffset = call.pageAligned ? Math.floor(middleCandidate / pageSize) * pageSize : middleCandidate;
+  const terminalCandidate = first.total - pageSize;
+  const terminalOffset = call.pageAligned
+    ? Math.floor(Math.max(0, first.total - 1) / pageSize) * pageSize
+    : terminalCandidate;
+  const terminalSize = Math.min(pageSize, first.total - terminalOffset);
   const [middle, terminal] = await Promise.all([
     readPage(middleOffset, 8),
     readPage(terminalOffset, 9),
@@ -441,7 +449,7 @@ async function paginationCheck(
     middle.total !== first.total ||
     terminal.total !== first.total ||
     middle.items.length !== pageSize ||
-    terminal.items.length !== pageSize
+    terminal.items.length !== (call.pageAligned ? terminalSize : pageSize)
   ) {
     throw new MonitorError("pagination_total_unstable");
   }
@@ -643,11 +651,12 @@ export async function runProductionMonitor(
   const fetchImpl = options.fetchImpl ?? fetch;
   const issuer = options.issuer ?? PRODUCTION_AUTH0_ISSUER;
   const entries = publishedRoutes(options.includePrepared);
-  const expectedRouteCount = options.includePrepared ? 11 : 8;
+  const expectedRouteCount = options.includePrepared ? 12 : 9;
   if (entries.length !== expectedRouteCount) throw new MonitorError("published_route_count_invalid");
-  const hostedChecks = entries.map((entry, index) => {
-    const wrongPath = entries[(index + 1) % entries.length]?.path;
-    if (!wrongPath || hostedRoute(wrongPath, new URL(entry.origin).hostname)) {
+  const hostedChecks = entries.map((entry) => {
+    const hostname = new URL(entry.origin).hostname;
+    const wrongPath = entries.find(({ path }) => !hostedRoute(path, hostname))?.path;
+    if (!wrongPath) {
       throw new MonitorError("isolation_probe_invalid");
     }
     return monitorRoute(
