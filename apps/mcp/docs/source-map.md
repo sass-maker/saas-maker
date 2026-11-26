@@ -4,7 +4,7 @@ This is the review map for every upstream operation. Anything absent is unavaila
 
 | App | Approved source routes | Explicit exclusions |
 | --- | --- | --- |
-| Reader | `GET /api/mcp/reading`, `/api/mcp/reading/:id`, `/api/mcp/collections` | writes, sharing, PDF download, AI chat, credentials |
+| Reader | `GET /api/mcp/reading`, `/api/mcp/reading/:id` | writes, sharing, PDF download, AI chat, credentials |
 | Starboard | `GET /api/discover`, `/api/repos/:id?catalogOnly=1`, `/api/project-preview`, `/api/tools` | private GitHub data, saved projects, recommendations that require owner context, discussions/jobs/admin |
 | High Signal | `GET https://api.highsignal.app/data/daily`, `/signals/:slug/evidence` | per-source browsing, raw article bodies, watchlists, review/delivery/admin/ingest/refresh/provider operations |
 | Calorie | `GET /api/mcp/daily`, `/history`, `/foods`, `/cycles` | all `/api/app` mutations; medication and weight tables/fields |
@@ -18,3 +18,14 @@ This is the review map for every upstream operation. Anything absent is unavaila
 | Drank | `GET /api/dr?target=<validated-public-hostname>` | provider credentials, private targets, persistence, arbitrary provider calls |
 
 The shared runtime enforces GET, relative fixed paths, configured origins, a 10-second default timeout, at most one retry, a one-megabyte upstream bound, structured output bounds, credential-key redaction, and per-app credentials that are never accepted as tool input.
+
+TechData's four Food tools emit first-party App Health usage events after successful
+reads. The event contains a fixed operation name and route, a timestamp, and random
+delivery identifiers. Queries, source records, and caller identity are excluded.
+These server events use a TechData-scoped `APP_HEALTH_TECHDATA_INGEST_KEY` and the
+matching `APP_HEALTH_TECHDATA_ENVIRONMENT_ID`. Delivery is disabled until both
+are configured.
+The monitor declares its requests with `X-Fleet-QA: 1`, which omits those calls from
+product-event reporting. Clients can opt out with the same header, so counts are
+observed successful calls. Delivery runs outside the tool response and reports
+rejected or incomplete receipts with fixed diagnostics.

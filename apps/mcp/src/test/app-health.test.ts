@@ -206,6 +206,106 @@ test("worker measures OAuth and upstream only when they run and excludes other r
   }
 });
 
+test("successful Food tools emit named App Health events while errors and QA calls do not", async (t) => {
+  const productBatches: unknown[] = [];
+  const warnings: unknown[][] = [];
+  t.mock.method(console, "warn", (...args: unknown[]) => { warnings.push(args); });
+  const upstream = t.mock.method(globalThis, "fetch", async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = new URL(String(input));
+    if (url.hostname === "ingest.sassmaker.com") {
+      if (url.pathname === "/v1/product-events") {
+        productBatches.push(JSON.parse(String(init?.body)));
+        assert.equal(init?.redirect, "error");
+        assert.equal(new Headers(init?.headers).get("Authorization"), "Bearer test-techdata-ingest-key");
+        if (productBatches.length === 3) return new Response(null, { status: 503 });
+        if (productBatches.length === 4) throw new Error("synthetic credential-bearing transport error");
+        return Response.json({ accepted: productBatches.length === 1 ? 1 : 0, duplicates: 0 }, { status: 202 });
+      }
+      return Response.json({ accepted: 1 }, { status: 202 });
+    }
+    if (url.searchParams.get("q") === "failed-query") return new Response("Unavailable", { status: 503 });
+    return Response.json({
+      products: [{ id: "food-result-id" }],
+      pagination: { page: 1, pageSize: 20, total: 1, pages: 1 },
+    });
+  });
+  const waits: Promise<unknown>[] = [];
+  const techDataScope = {
+    APP_HEALTH_TECHDATA_INGEST_KEY: "test-techdata-ingest-key",
+    APP_HEALTH_TECHDATA_ENVIRONMENT_ID: "env-techdata-test",
+  };
+  const callTool = async (q: string, qa: boolean, scope: Partial<typeof techDataScope> = techDataScope) => {
+    const response = await worker.fetch(
+      new Request("https://mcp.highsignal.app/techdata/mcp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json, text/event-stream",
+          ...(qa ? { "X-Fleet-QA": "1" } : {}),
+        },
+        body: JSON.stringify({
+          jsonrpc: "2.0", id: 1, method: "tools/call",
+          params: { name: "search_food_products", arguments: { q } },
+        }),
+      }),
+      {
+        ...baseEnv,
+        APP_HEALTH_INGEST_KEY: "test-gateway-ingest-key",
+        APP_HEALTH_STAGE_SAMPLE_RATE: "0",
+        ...scope,
+      },
+      { waitUntil: (promise) => { waits.push(promise); } },
+    );
+    assert.equal(response.status, 200);
+    return (await response.json() as { result: { structuredContent: { ok: boolean } } }).result.structuredContent.ok;
+  };
+
+  assert.equal(await callTool("sample-query", false), true);
+  await Promise.all(waits);
+  assert.deepEqual(warnings, []);
+  assert.equal(await callTool("same-query-from-monitor", true), true);
+  assert.equal(await callTool("generic-gateway-key-only", false, {}), true);
+  assert.equal(await callTool("missing-product-environment", false, {
+    APP_HEALTH_TECHDATA_INGEST_KEY: techDataScope.APP_HEALTH_TECHDATA_INGEST_KEY,
+  }), true);
+  assert.equal(await callTool("missing-product-key", false, {
+    APP_HEALTH_TECHDATA_ENVIRONMENT_ID: techDataScope.APP_HEALTH_TECHDATA_ENVIRONMENT_ID,
+  }), true);
+  assert.equal(await callTool("failed-query", false), false);
+  assert.equal(await callTool("collector-receipt-incomplete", false), true);
+  await Promise.all(waits);
+  assert.equal(await callTool("collector-rejected", false), true);
+  await Promise.all(waits);
+  assert.equal(await callTool("collector-threw", false), true);
+  await Promise.all(waits);
+  assert.ok(upstream.mock.callCount() >= 3);
+  assert.equal(productBatches.length, 4);
+  assert.deepEqual(warnings, [
+    ["TechData Food usage received an incomplete App Health receipt"],
+    ["TechData Food usage rejected by App Health", 503],
+    ["TechData Food usage delivery to App Health failed"],
+  ]);
+  const batch = productBatches[0] as {
+    batch_id: string; schema_version: number; environment_id: string;
+    events: Array<Record<string, unknown>>;
+  };
+  assert.equal(batch.schema_version, 1);
+  assert.equal(batch.environment_id, "env-techdata-test");
+  assert.match(batch.batch_id, /^[\da-f-]{36}$/u);
+  assert.equal(batch.events.length, 1);
+  const { event_id, occurred_at, ...fields } = batch.events[0]!;
+  assert.match(String(event_id), /^[\da-f-]{36}$/u);
+  assert.ok(Number.isSafeInteger(occurred_at));
+  assert.deepEqual(fields, {
+    schemaVersion: "app-health.product-event.v1",
+    channel: "server",
+    type: "event",
+    path: "/techdata/mcp",
+    name: "food.products_search_succeeded",
+  });
+  assert.doesNotMatch(JSON.stringify(batch), /sample-query|food-result-id|ingest-key/u);
+});
+
 test("unknown paths emit nothing and collector failure preserves the response", async () => {
   const unknown = clientSpy();
   const unknownResponse = await monitorAppHealthRequest(

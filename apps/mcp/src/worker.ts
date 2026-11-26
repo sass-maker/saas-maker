@@ -645,6 +645,7 @@ async function handleAdapter(
   route: Extract<HostedRouteDefinition, { kind: "adapter" }>,
   fetchImpl: typeof fetch,
   token?: string,
+  onToolSuccess?: (toolName: string) => void,
 ): Promise<Response> {
   const safeRequest = await boundedRequest(request);
   const server = buildServerForApp(route.app, {
@@ -653,6 +654,7 @@ async function handleAdapter(
     securitySchemes: securitySchemes(route),
     validateTokenPrefix: route.authMode !== "federated",
     ...(token ? { token } : {}),
+    ...(onToolSuccess ? { onToolSuccess } : {}),
   });
   const transport = new WebStandardStreamableHTTPServerTransport({ enableJsonResponse: true });
   await server.connect(transport);
@@ -788,6 +790,7 @@ export async function handleHostedRequest(
   authorization?: HostedRequestAuthorization,
   browserTracker?: BrowserTracker,
   activation?: { writeProducts: readonly string[] },
+  onAdapterToolSuccess?: (toolName: string) => void,
 ): Promise<Response> {
   const url = new URL(request.url);
   const footerAsset = footerAssetResponse(request);
@@ -850,7 +853,7 @@ export async function handleHostedRequest(
     const token = route.audience === "personal" ? authorization!.upstreamToken! : undefined;
     const response = route.kind === "native"
       ? await handleNative(request, route, fetchImpl, token, authorization?.grant)
-      : await handleAdapter(request, route, fetchImpl, token);
+      : await handleAdapter(request, route, fetchImpl, token, onAdapterToolSuccess);
     return withProtocolHeaders(response, request, route);
   } catch (error) {
     if (error instanceof RequestTooLargeError) {

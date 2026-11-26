@@ -327,11 +327,11 @@ test("operation routes stay on their verified surfaces", () => {
   assert.equal(evidence.path({ slug: "daily-signal" }), "/signals/daily-signal/evidence");
   const readerSearch = APP_DEFINITIONS.reader.operations.search!.path({
     q: "paper",
-    projectId: "owner_default",
+    status: "unread",
     limit: 10,
     offset: 0,
   });
-  assert.equal(new URL(readerSearch, "https://reader.example").searchParams.get("projectId"), "owner_default");
+  assert.equal(new URL(readerSearch, "https://reader.example").searchParams.get("status"), "unread");
   assert.equal(APP_DEFINITIONS["swe-interview-prep"].operations.curriculum!.path({}), "/curriculum/catalog.json");
   assert.equal(APP_DEFINITIONS["swe-interview-prep"].operations.daily!.path({}), "/api/mcp/daily");
   assert.equal(APP_DEFINITIONS["swe-interview-prep"].operations.daily!.auth, true);

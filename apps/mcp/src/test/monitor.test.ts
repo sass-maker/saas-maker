@@ -309,6 +309,7 @@ function oddFoodDatasetFetch(total: number): typeof fetch {
     const url = new URL(request.url);
     const route = hostedRoute(url.pathname, url.hostname);
     if (route?.id === "techdata" && request.method === "POST") {
+      assert.equal(request.headers.get("X-Fleet-QA"), "1");
       const message = await request.clone().json() as {
         id: number;
         method: string;

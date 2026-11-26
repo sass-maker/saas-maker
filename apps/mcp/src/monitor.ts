@@ -1,4 +1,5 @@
 import { APP_DEFINITIONS } from "./apps.js";
+import { FLEET_QA_HEADER } from "./food-usage.js";
 import { HOSTED_ROUTES, hostedRoute, initialOAuthScope, oauthResource, type HostedRouteDefinition } from "./hosted.js";
 
 const SAAS_MAKER_FIRST_PARTY_MCP_URL = "https://sassmaker.com/mcp";
@@ -51,7 +52,7 @@ const PAGINATION_CALLS: Readonly<Record<string, PaginationCall>> = Object.freeze
 });
 
 const PERSONAL_PAGINATION_CALLS: Readonly<Record<string, PaginationCall>> = Object.freeze({
-  "reader": { name: "list_reader_collections", arguments: {} },
+  "reader": { name: "search_saved_reading", arguments: {} },
   "calorie": { name: "search_saved_foods", arguments: {} },
   "anime-list": { name: "list_watchlist", arguments: {} },
 });
@@ -258,6 +259,7 @@ function mcpHeaders(authorization?: string): HeadersInit {
     Accept: "application/json, text/event-stream",
     "Content-Type": "application/json",
     "Mcp-Protocol-Version": PROTOCOL_VERSION,
+    [FLEET_QA_HEADER]: "1",
     ...(authorization ? { Authorization: authorization } : {}),
   };
 }

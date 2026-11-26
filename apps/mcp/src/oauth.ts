@@ -33,6 +33,8 @@ export interface OAuthGrantProps {
 export type HostedWorkerEnv = Env &
   Partial<Record<OpenAIChallengeSecret, string>> & {
     APP_HEALTH_INGEST_KEY?: string;
+    APP_HEALTH_TECHDATA_INGEST_KEY?: string;
+    APP_HEALTH_TECHDATA_ENVIRONMENT_ID?: string;
     APP_HEALTH_ENVIRONMENT?: string;
     APP_HEALTH_RELEASE?: string;
     APP_HEALTH_STAGE_SAMPLE_RATE?: string;

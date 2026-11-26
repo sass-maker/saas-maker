@@ -367,41 +367,34 @@ const reader: AppDefinition = {
   tokenEnv: "READER_MCP_TOKEN",
   tokenPrefix: "rdr_",
   instructions:
-    "Read-only access to the owner's saved Reader library. Never save, edit, delete, share, download PDFs, or manage credentials.",
+    "Search and retrieve saved links from the signed-in Reader inbox. The connection is read-only and fetching a link leaves its read state unchanged.",
   operations: {
     search: {
       auth: true,
       path: (a) =>
         queryPath("/api/mcp/reading", {
           q: a.q,
-          listId: a.listId,
-          projectId: a.projectId,
-          type: a.type,
+          status: a.status ?? "all",
           limit: a.limit,
           offset: a.offset,
         }),
     },
     item: { auth: true, path: (a) => `/api/mcp/reading/${encodeURIComponent(String(a.id))}` },
-    collections: {
-      auth: true,
-      path: (a) => queryPath("/api/mcp/collections", { limit: a.limit, offset: a.offset }),
-    },
   },
   tools: {
     search_saved_reading: {
       title: "Search saved reading",
-      description: "Search the owner's saved articles, links, and PDFs with bounded results.",
+      description: "Search saved links by title or URL. Omit the query to list links. Defaults to all read states.",
       inputSchema: {
-        q: boundedText,
-        listId: stableId.optional(),
-        projectId: stableId.optional(),
-        type: z.enum(["article", "link", "pdf"]).optional(),
-        limit: commonLimitInput,
+        q: optionalQuery,
+        status: z.enum(["all", "unread", "read"]).optional(),
+        limit: commonLimitInput.describe("Maximum links to return. Reader pages contain at most 20 links."),
         offset: commonOffsetInput,
       },
       operation: "search",
       mode: "owner-api",
       collectionKeys: ["items", "articles"],
+      requireCollection: true,
     },
     get_saved_item: {
       title: "Get saved item",
@@ -410,14 +403,6 @@ const reader: AppDefinition = {
       operation: "item",
       mode: "owner-api",
       detail: true,
-    },
-    list_reader_collections: {
-      title: "List Reader collections",
-      description: "List the owner's existing Reader lists for search context.",
-      inputSchema: { limit: commonLimitInput, offset: commonOffsetInput },
-      operation: "collections",
-      mode: "owner-api",
-      collectionKeys: ["items", "lists"],
     },
   },
 };
