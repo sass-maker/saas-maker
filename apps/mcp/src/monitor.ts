@@ -651,9 +651,10 @@ export async function runProductionMonitor(
   const entries = publishedRoutes(options.includePrepared);
   const expectedRouteCount = options.includePrepared ? 12 : 9;
   if (entries.length !== expectedRouteCount) throw new MonitorError("published_route_count_invalid");
-  const hostedChecks = entries.map((entry, index) => {
-    const wrongPath = entries[(index + 1) % entries.length]?.path;
-    if (!wrongPath || hostedRoute(wrongPath, new URL(entry.origin).hostname)) {
+  const hostedChecks = entries.map((entry) => {
+    const hostname = new URL(entry.origin).hostname;
+    const wrongPath = entries.find(({ path }) => !hostedRoute(path, hostname))?.path;
+    if (!wrongPath) {
       throw new MonitorError("isolation_probe_invalid");
     }
     return monitorRoute(
