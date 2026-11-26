@@ -781,111 +781,6 @@
       ]
     },
     {
-      "id": "storagedaddy",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "public"
-        },
-        {
-          "field": "presentation.directory.platforms",
-          "value": [
-            "macOS",
-            "Web"
-          ]
-        },
-        {
-          "field": "presentation.directory.purposeContract.purpose",
-          "value": "storagedaddy helps developers understand and review local storage through a native visual scanner, developer classifications and verified, deliberate cleanup."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "Public 0.1.3 build110 download returned 7,124,560 bytes with SHA-256 d2e0109d189869d6425d8c30d50ca1e3365c3b66ec76270f3fdedbedffa4baee, matching the Developer ID signed, Apple notarized, stapled DMG from protected manual run 36180923620. The live Sparkle feed and update enclosure matched the qualified signed artifacts. An isolated build106-to-108 Sparkle update and native scan were observed; build110 has not been installed for a new journey."
-        },
-        {
-          "field": "deployment.status",
-          "value": "live"
-        }
-      ]
-    },
-    {
-      "id": "browserdaddy",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "public"
-        },
-        {
-          "field": "presentation.directory.platforms",
-          "value": [
-            "macOS",
-            "Web"
-          ]
-        },
-        {
-          "field": "presentation.directory.purposeContract.purpose",
-          "value": "BrowserDaddy helps people understand their browsing history and attention locally across browsers."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "Public 0.3.1 build9 download returned 7,600,563 bytes with SHA-256 017c8eb5f92dcacdf2e5ede3ade4c3f159658739df0f2774f6b894855fad676f, matching the Developer ID signed, Apple notarized, stapled DMG from protected manual run 36183142078. The live Sparkle feed and update enclosure matched the qualified signed artifacts. An isolated build4-to-6 Sparkle update and native journey were observed; build9 has not been installed for a new journey."
-        },
-        {
-          "field": "deployment.status",
-          "value": "live"
-        }
-      ]
-    },
-    {
-      "id": "performancedaddy",
-      "applicability": "newsletter",
-      "confidence": "medium",
-      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
-      "evidence": [
-        {
-          "field": "lifecycle.status",
-          "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "public"
-        },
-        {
-          "field": "presentation.directory.platforms",
-          "value": [
-            "macOS",
-            "Web"
-          ]
-        },
-        {
-          "field": "presentation.directory.purposeContract.purpose",
-          "value": "PerformanceDaddy helps developers inspect local processes, ports and measured slowdown signals before taking action."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "Public 0.2.16 build21 published 2026-10-02 from 439d06490d3e135942d4decc62fb96c9ddca0ced. Independent https://performance.daddyrad.com/download bytes match SHA-256 f1ff1f8a59499220a102d2eebcb4182ee61de55b13d4365568afcd0894766098 and the release asset. Signed Sparkle feed, universal architectures, Developer ID signature, Apple notarization, staple and local launch verified. Live native UI acceptance remains unverified because the automation provider cannot start; installed build20 was not replaced. No 10x whole-app memory reduction is claimed."
-        },
-        {
-          "field": "deployment.status",
-          "value": "live"
-        }
-      ]
-    },
-    {
       "id": "meme-lab",
       "applicability": "newsletter",
       "confidence": "medium",
@@ -955,18 +850,14 @@
       ]
     },
     {
-      "id": "contextdaddy",
-      "applicability": "newsletter",
+      "id": "daddyrad",
+      "applicability": "undetermined",
       "confidence": "medium",
-      "rationale": "The catalog identifies a public, live web product. Invite visitors to receive product updates; do not describe the available product as unreleased.",
+      "rationale": "The brand website is public. No product-specific subscription flow was established for the unified native application.",
       "evidence": [
         {
           "field": "lifecycle.status",
           "value": "active"
-        },
-        {
-          "field": "purpose.audience",
-          "value": "public"
         },
         {
           "field": "presentation.directory.platforms",
@@ -974,18 +865,6 @@
             "macOS",
             "Web"
           ]
-        },
-        {
-          "field": "presentation.directory.purposeContract.purpose",
-          "value": "Help developers inspect coding-agent context, skill exposure, usage, and available local telemetry."
-        },
-        {
-          "field": "sharing.evidence.reason",
-          "value": "Public 0.2.10 build 20 verified at https://context.daddyrad.com/download and GitHub release v0.2.10-20 (2026-10-09, source 95b88093e9f1f9786253bbdd6cbb3e66aa44fb6d). The live download SHA-256 51acdf9eb8a39f1b9555b702f4c9b498140dfd3f43445fd74bfa261e3d575bb2 matches the release asset and its live-publication receipt; the DMG and bundled ContextDaddy.app pass Gatekeeper as a notarized Developer ID build (notary status Accepted). Updates are delivered through the Sparkle appcast at https://context.daddyrad.com/updates/appcast.xml, which offers 0.2.10 build 20. Not installed or launched in this audit; in-app Sparkle installation remains unexercised. Discovery does not prove live prompt use and retains explicit entry/depth coverage limits."
-        },
-        {
-          "field": "deployment.status",
-          "value": "live"
         }
       ]
     },

@@ -6,7 +6,7 @@ policy, developer-storage classification and exact browser-rule precedence.
 
 This executable runs the cores itself. It does not connect to a running app,
 reuse its security bookmarks, import saved captures or verify its live settings.
-The four GUI apps do not need to run. DaddyRad's website is unchanged.
+The unified GUI and the legacy apps can stay closed.
 
 ## Build and connect
 
@@ -24,6 +24,13 @@ cd apps/mcp/local/daddyrad
 swift build -c release --product daddyrad-mcp
 swift build -c release --show-bin-path
 ```
+
+A Fleet checkout can build and qualify the same adapter against the native modules
+in the consolidated Mac workspace. From this adapter directory run
+`node scripts/check.mjs --modules /absolute/path/to/Modules`. The check verifies
+all four resolved module paths, runs the adapter tests and exercises the release
+binary over stdio. Its build directory and lockfile are independent from the
+pinned public build. It prints the executable path and preserves MCP client grants.
 
 Append `/daddyrad-mcp` to the absolute directory printed by `--show-bin-path`
 and use that executable path as the command in your MCP client. Do not assume

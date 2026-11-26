@@ -360,25 +360,18 @@ describe('verified public Fleet directory', () => {
             : 'current'
       );
     }
-    const storagedaddy = catalog.directory.find(
-      (project: { id: string }) => project.id === 'storagedaddy'
-    );
-    expect(storagedaddy).toMatchObject({
+    const daddyrad = catalog.directory.find((project: { id: string }) => project.id === 'daddyrad');
+    expect(daddyrad).toMatchObject({
       lifecycle: 'active',
       shareable: true,
       category: 'utility',
       group: 'current',
       form: 'macOS app',
+      domains: ['daddyrad.com', 'www.daddyrad.com'],
     });
-    expect(storagedaddy.url).toBe(storagedaddy.publicUrl);
-    expect(storagedaddy.domains[0]).toBe('storage.daddyrad.com');
-    // StorageDaddy is intentionally MIT open-source: its public repository
-    // link is shareable anatomy, not private state.
-    expect(storagedaddy).toMatchObject({
-      repositoryUrl: 'https://github.com/Significant-Hobbies/storagedaddy',
-      roadmapUrl: 'https://github.com/Significant-Hobbies/storagedaddy/issues',
-    });
-    expect(storagedaddy).not.toHaveProperty('changelogUrl');
+    expect(daddyrad.url).toBe(daddyrad.publicUrl);
+    expect(daddyrad).not.toHaveProperty('repositoryUrl');
+    expect(daddyrad).not.toHaveProperty('roadmapUrl');
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'web-playables')
     ).toMatchObject({ lifecycle: 'active', shareable: true, group: 'current' });
