@@ -9,7 +9,7 @@
       "id": "reader",
       "name": "Reader by Significant Hobbies",
       "shortDescription": "Search and revisit your saved reading library in ChatGPT.",
-      "longDescription": "Connect your Reader account to search saved articles, links, and PDFs, inspect an item, and browse your existing collections. Every tool is read-only: the plugin cannot save, edit, delete, share, or download content.",
+      "longDescription": "Connect your Reader account to search saved links by title, URL, or read state and retrieve available text. Every tool is read-only.",
       "category": "Productivity",
       "website": "https://read.significanthobbies.com",
       "support": "https://github.com/Significant-Hobbies/reader/issues",
@@ -22,11 +22,11 @@
       "challengeSecret": "OPENAI_CHALLENGE_READER",
       "starterPrompts": [
         "Find saved reading about MCP authentication.",
-        "Show my Reader collections.",
-        "Summarize the themes in my saved articles about AI agents."
+        "Show my unread Reader links.",
+        "Find saved links about AI agents."
       ],
-      "releaseNotes": "Initial public submission of Reader's user-scoped, read-only MCP tools.",
-      "reviewFixture": "A dedicated review account with saved articles, one PDF record, and at least two collections; credentials are supplied only in the OpenAI portal.",
+      "releaseNotes": "Reader search covers read and unread links and supports filtering by read state.",
+      "reviewFixture": "A dedicated review account with at least one read link and one unread link; credentials are supplied only in the OpenAI portal.",
       "tests": {
         "positive": [
           {
@@ -35,14 +35,14 @@
             "expectedResult": "A bounded items page with schema version, provenance, pagination, and no credential fields."
           },
           {
-            "prompt": "List my Reader collections.",
-            "expectedTool": "list_reader_collections",
-            "expectedResult": "A bounded collection list belonging only to the signed-in review account."
+            "prompt": "Find my unread Reader links.",
+            "expectedTool": "search_saved_reading",
+            "expectedResult": "A bounded page of unread links from the signed-in review account."
           },
           {
-            "prompt": "Find PDFs in my saved reading.",
+            "prompt": "Find the Reader links I already read.",
             "expectedTool": "search_saved_reading",
-            "expectedResult": "Search runs with type pdf and returns metadata only, not a PDF download."
+            "expectedResult": "A bounded page of read links from the signed-in review account."
           },
           {
             "prompt": "Open the first Reader item from those results.",
@@ -63,8 +63,8 @@
           },
           {
             "prompt": "Download the PDF bytes for my first saved PDF.",
-            "expectedBehavior": "No download; offer metadata available through read-only retrieval.",
-            "reason": "PDF redistribution and downloads are excluded."
+            "expectedBehavior": "Explain that the inbox connector retrieves saved web links and available web text.",
+            "reason": "Reader exposes no PDF download tool."
           },
           {
             "prompt": "Show today's calorie totals.",

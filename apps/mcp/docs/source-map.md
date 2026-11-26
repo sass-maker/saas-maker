@@ -4,7 +4,7 @@ This is the review map for every upstream operation. Anything absent is unavaila
 
 | App | Approved source routes | Explicit exclusions |
 | --- | --- | --- |
-| Reader | `GET /api/mcp/reading`, `/api/mcp/reading/:id`, `/api/mcp/collections` | writes, sharing, PDF download, AI chat, credentials |
+| Reader | `GET /api/mcp/reading`, `/api/mcp/reading/:id` | writes, sharing, PDF download, AI chat, credentials |
 | Starboard | `GET /api/discover`, `/api/repos/:id?catalogOnly=1`, `/api/project-preview`, `/api/tools` | private GitHub data, saved projects, recommendations that require owner context, discussions/jobs/admin |
 | High Signal | `GET https://api.highsignal.app/data/daily`, `/signals/:slug/evidence` | per-source browsing, raw article bodies, watchlists, review/delivery/admin/ingest/refresh/provider operations |
 | Calorie | `GET /api/mcp/daily`, `/history`, `/foods`, `/cycles` | all `/api/app` mutations; medication and weight tables/fields |

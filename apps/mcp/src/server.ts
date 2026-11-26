@@ -34,6 +34,7 @@ export interface ServerBuildOptions {
   readProcessEnvironment?: boolean;
   securitySchemes?: readonly ToolSecurityScheme[];
   validateTokenPrefix?: boolean;
+  onToolSuccess?: (toolName: string) => void;
 }
 
 export type ToolSecurityScheme =
@@ -97,6 +98,13 @@ export function buildServerForApp(
           });
           const result = toolResultSchema.parse(normalized);
           const count = result.items?.length;
+          if (result.ok) {
+            try {
+              options.onToolSuccess?.(toolName);
+            } catch {
+              // Observing a tool call must never change its result.
+            }
+          }
           return {
             content: [
               {

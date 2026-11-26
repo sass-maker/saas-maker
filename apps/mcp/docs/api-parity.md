@@ -18,7 +18,7 @@ other capabilities outside the read-only publication boundary.
 
 | Plugin | Expected tools | Current evidence |
 | --- | ---: | --- |
-| Reader | 3 | Gateway/product tests pass; authenticated live discovery awaits the OpenAI reviewer flow |
+| Reader | 2 | Gateway/product tests pass; authenticated live discovery awaits the OpenAI reviewer flow |
 | Calorie | 4 | Gateway/product tests pass; authenticated live discovery awaits the OpenAI reviewer flow |
 | My Anime List | 34 | The signed-in route declares each tool’s required scopes in `src/hosted.ts`. Branded discovery requires OAuth. |
 | Anime List | 6 | Gateway tests enforce the exact anonymous native allowlist; activation pending |
@@ -32,8 +32,7 @@ other capabilities outside the read-only publication boundary.
 
 The private expected catalogs are:
 
-- Reader: `search_saved_reading`, `get_saved_item`,
-  `list_reader_collections`.
+- Reader: `search_saved_reading`, `get_saved_item`. Saved-link search supports all, unread, and read states.
 - Calorie: `get_daily_nutrition`, `get_nutrition_history`,
   `search_saved_foods`, `list_goal_cycles`.
 - My Anime List: the read and write allowlist for `/anime-list/mcp` in

@@ -331,6 +331,63 @@ test("private OAuth tokens remain isolated under concurrent calls and propagate 
   assert.equal(bodies.some((body) => body.includes("oauthPayload") || body.includes("oauth-")), false);
 });
 
+test("Reader advertises saved-link search and fetch and pages across read states", async () => {
+  const path = "/reader/mcp";
+  const authorization = authorizationFor(path);
+  const seen: URL[] = [];
+  const items = [
+    { id: "unread-one", status: "unread" },
+    { id: "read-one", status: "read" },
+    { id: "read-two", status: "read" },
+  ];
+  const fetchImpl: typeof fetch = async (input) => {
+    const url = new URL(String(input));
+    seen.push(url);
+    const status = url.searchParams.get("status");
+    const offset = Number(url.searchParams.get("offset") ?? 0);
+    const matching = items.filter((item) => status === "all" || item.status === status);
+    return Response.json({ items: matching.slice(offset), total: matching.length, nextOffset: null });
+  };
+
+  const listing = await handleHostedRequest(
+    requestFor(path, { jsonrpc: "2.0", id: 1, method: "tools/list", params: {} }),
+    fetchImpl,
+    authorization,
+  );
+  const tools = ((await json(listing)).result as {
+    tools: Array<{ name: string; inputSchema: { properties: Record<string, unknown> } }>;
+  }).tools;
+  assert.deepEqual(tools.map((tool) => tool.name).sort(), ["get_saved_item", "search_saved_reading"]);
+  const search = tools.find((tool) => tool.name === "search_saved_reading")!;
+  assert.deepEqual(Object.keys(search.inputSchema.properties).sort(), ["limit", "offset", "q", "status"]);
+
+  const searchPage = async (args: Record<string, unknown>) => {
+    const response = await handleHostedRequest(
+      requestFor(path, {
+        jsonrpc: "2.0", id: 2, method: "tools/call",
+        params: { name: "search_saved_reading", arguments: args },
+      }),
+      fetchImpl,
+      authorization,
+    );
+    const result = (await json(response)).result as { structuredContent: Record<string, unknown> };
+    return result.structuredContent;
+  };
+
+  const first = await searchPage({ q: "safe", limit: 1 });
+  assert.deepEqual(first.items, [items[0]]);
+  assert.equal(first.nextOffset, 1);
+  const second = await searchPage({ q: "safe", limit: 1, offset: 1 });
+  assert.deepEqual(second.items, [items[1]]);
+  assert.equal(second.nextOffset, 2);
+  const read = await searchPage({ status: "read" });
+  assert.deepEqual(read.items, items.slice(1));
+  assert.equal(read.nextOffset, null);
+  assert.deepEqual(seen.map((url) => url.pathname), Array(3).fill("/api/mcp/reading"));
+  assert.deepEqual(seen.map((url) => url.searchParams.get("status")), ["all", "all", "read"]);
+  assert.deepEqual(seen.map((url) => url.searchParams.get("q")), ["safe", "safe", null]);
+});
+
 test("SWE Interview Prep forwards the verified OAuth bearer only to private learning reads", async () => {
   const seen: Array<{ authorization: string | null; url: string }> = [];
   const fetcher = async (input: RequestInfo | URL, init?: RequestInit) => {

@@ -206,6 +206,73 @@ test("worker measures OAuth and upstream only when they run and excludes other r
   }
 });
 
+test("successful Food tools emit named App Health events while errors and QA calls do not", async (t) => {
+  const productBatches: unknown[] = [];
+  const upstream = t.mock.method(globalThis, "fetch", async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = new URL(String(input));
+    if (url.hostname === "ingest.sassmaker.com") {
+      if (url.pathname === "/v1/product-events") {
+        productBatches.push(JSON.parse(String(init?.body)));
+        assert.equal(init?.redirect, "error");
+      }
+      // Simulate a collector rejecting the metrics independently of the read.
+      return Response.json({ accepted: 0 }, { status: 503 });
+    }
+    if (url.searchParams.get("q") === "failed-query") return new Response("Unavailable", { status: 503 });
+    return Response.json({
+      products: [{ id: "food-result-id" }],
+      pagination: { page: 1, pageSize: 20, total: 1, pages: 1 },
+    });
+  });
+  const waits: Promise<unknown>[] = [];
+  const callTool = async (q: string, qa: boolean) => {
+    const response = await worker.fetch(
+      new Request("https://mcp.highsignal.app/techdata/mcp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json, text/event-stream",
+          ...(qa ? { "X-Fleet-QA": "1" } : {}),
+        },
+        body: JSON.stringify({
+          jsonrpc: "2.0", id: 1, method: "tools/call",
+          params: { name: "search_food_products", arguments: { q } },
+        }),
+      }),
+      { ...baseEnv, APP_HEALTH_INGEST_KEY: "test-ingest-key", APP_HEALTH_ENVIRONMENT: "preview", APP_HEALTH_STAGE_SAMPLE_RATE: "0" },
+      { waitUntil: (promise) => { waits.push(promise); } },
+    );
+    assert.equal(response.status, 200);
+    return (await response.json() as { result: { structuredContent: { ok: boolean } } }).result.structuredContent.ok;
+  };
+
+  assert.equal(await callTool("sample-query", false), true);
+  assert.equal(await callTool("same-query-from-monitor", true), true);
+  assert.equal(await callTool("failed-query", false), false);
+  await Promise.all(waits);
+  assert.ok(upstream.mock.callCount() >= 3);
+  assert.equal(productBatches.length, 1);
+  const batch = productBatches[0] as {
+    batch_id: string; schema_version: number; environment: string;
+    events: Array<Record<string, unknown>>;
+  };
+  assert.equal(batch.schema_version, 1);
+  assert.equal(batch.environment, "preview");
+  assert.match(batch.batch_id, /^[\da-f-]{36}$/u);
+  assert.equal(batch.events.length, 1);
+  const { event_id, occurred_at, ...fields } = batch.events[0]!;
+  assert.match(String(event_id), /^[\da-f-]{36}$/u);
+  assert.ok(Number.isSafeInteger(occurred_at));
+  assert.deepEqual(fields, {
+    schemaVersion: "app-health.product-event.v1",
+    channel: "server",
+    type: "event",
+    path: "/techdata/mcp",
+    name: "food.products_search_succeeded",
+  });
+  assert.doesNotMatch(JSON.stringify(batch), /sample-query|food-result-id|test-ingest-key/u);
+});
+
 test("unknown paths emit nothing and collector failure preserves the response", async () => {
   const unknown = clientSpy();
   const unknownResponse = await monitorAppHealthRequest(

@@ -5,9 +5,11 @@ import {
 } from "@saas-maker/app-health";
 
 import { HOSTED_ROUTES, hostedRoute, openAiChallengeSecret } from "./hosted.js";
+import type { FoodUsageEvent } from "./food-usage.js";
 import type { HostedWorkerEnv } from "./oauth.js";
 
 const APP_HEALTH_INGEST_ENDPOINT = "https://ingest.sassmaker.com/v1/ingest";
+const APP_HEALTH_PRODUCT_ENDPOINT = "https://ingest.sassmaker.com/v1/product-events";
 const AUTHORIZATION_SERVER_METADATA_PATH = "/.well-known/oauth-authorization-server";
 const OPENAI_CHALLENGE_PATH = "/.well-known/openai-apps-challenge";
 const PROTECTED_RESOURCE_METADATA_PREFIX = "/.well-known/oauth-protected-resource";
@@ -17,6 +19,35 @@ export type AppHealthClientFactory = (env: HostedWorkerEnv) => AppHealthClient |
 export interface RequestStageTiming {
   auth_ms?: number;
   upstream_ms?: number;
+  foodEvents?: FoodUsageEvent[];
+}
+
+async function sendFoodUsageEvents(env: HostedWorkerEnv, names: FoodUsageEvent[]): Promise<void> {
+  const key = env.APP_HEALTH_INGEST_KEY?.trim();
+  if (!key) return;
+  const environment = env.APP_HEALTH_ENVIRONMENT?.trim();
+  const now = Date.now();
+  const response = await fetch(APP_HEALTH_PRODUCT_ENDPOINT, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    redirect: "error",
+    signal: AbortSignal.timeout(1_500),
+    body: JSON.stringify({
+      schema_version: 1,
+      batch_id: crypto.randomUUID(),
+      ...(environment ? { environment } : {}),
+      events: names.map((name) => ({
+        schemaVersion: "app-health.product-event.v1",
+        event_id: crypto.randomUUID(),
+        occurred_at: now,
+        channel: "server",
+        type: "event",
+        path: "/techdata/mcp",
+        name,
+      })),
+    }),
+  });
+  await response.body?.cancel();
 }
 
 let firstRequest = true;
@@ -108,6 +139,12 @@ export async function monitorAppHealthRequest(
     return response;
   } finally {
     try {
+      if (status === 200 && stages.foodEvents?.length) {
+        const usageDelivery = sendFoodUsageEvents(env, stages.foodEvents).catch(() => {
+          // Product metrics must not change tool behavior on collector failure.
+        });
+        ctx?.waitUntil(usageDelivery);
+      }
       const client = makeClient(env);
       if (client) {
         client.record({

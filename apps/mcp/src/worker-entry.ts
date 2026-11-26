@@ -1,4 +1,5 @@
 import { monitorAppHealthRequest, type RequestStageTiming } from "./app-health.js";
+import { FLEET_QA_HEADER, foodEventForTool } from "./food-usage.js";
 import { hostedRoute, openAiChallengeSecret } from "./hosted.js";
 import {
   authorizeOAuthRequest,
@@ -70,7 +71,17 @@ async function handleRequest(request: Request, env: HostedWorkerEnv, stages: Req
       key: env.APP_HEALTH_BROWSER_KEY ?? "",
     });
   }
-  if (!route || route.audience === "public") return handleHostedRequest(request, upstreamFetch, undefined, undefined, activation);
+  if (!route || route.audience === "public") {
+    const onFoodToolSuccess = route?.id === "techdata" && request.headers.get(FLEET_QA_HEADER) !== "1"
+      ? (toolName: string) => {
+          const event = foodEventForTool(toolName);
+          if (!event) return;
+          const events = stages.foodEvents ??= [];
+          if (events.length < 100) events.push(event);
+        }
+      : undefined;
+    return handleHostedRequest(request, upstreamFetch, undefined, undefined, activation, onFoodToolSuccess);
+  }
 
   const authStarted = performance.now();
   const authorization = await authorizeOAuthRequest(request, route, env).finally(() => {
@@ -93,7 +104,7 @@ export default {
   async fetch(
     request: Request,
     env: HostedWorkerEnv,
-    ctx?: ExecutionContext,
+    ctx?: Pick<ExecutionContext, "waitUntil">,
   ): Promise<Response> {
     return monitorAppHealthRequest(request, env, ctx, (stages) => handleRequest(request, env, stages));
   },
