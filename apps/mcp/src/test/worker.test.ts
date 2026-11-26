@@ -8,7 +8,7 @@ import type { OAuthGrantProps } from "../oauth.js";
 import { handleHostedRequest as handleProductionRequest } from "../worker.js";
 
 const handleHostedRequest: typeof handleProductionRequest = (request, fetchImpl, authorization, browserTracker, activation) =>
-  handleProductionRequest(request, fetchImpl, authorization, browserTracker, activation ?? { writeProducts: ["anchor"] });
+  handleProductionRequest(request, fetchImpl, authorization, browserTracker, activation ?? { writeProducts: ["anchor", "anime-list"] });
 
 const protocolVersion = "2025-11-25";
 
@@ -853,4 +853,99 @@ test("Anchor initial authorization requests both declared account permissions", 
   const response = await handleHostedRequest(requestFor("/anchor/mcp", initializeRequest()), routeFetch);
   assert.equal(response.status, 401);
   assert.match(response.headers.get("www-authenticate") ?? "", /scope="anchor.read anchor.write"/u);
+});
+
+test("Anime List uses the exact delegated permissions for reads and mutations", async () => {
+  const path = "/anime-list/mcp";
+  const tools = HOSTED_ROUTES[path]!.toolScopes!;
+  const writes = Object.keys(tools).filter((name) => tools[name]!.includes("anime-list.write"));
+  assert.deepEqual(writes.sort(), [
+    "manage_watchlist_tags", "record_recommendation_feedback", "remove_watchlist_entries",
+    "set_franchise_monitor", "update_user_preferences", "upsert_watchlist_entries",
+  ]);
+  let calls = 0;
+  const upstream: typeof fetch = async () => {
+    calls++;
+    return Response.json({ jsonrpc: "2.0", id: 1, result: {} });
+  };
+  const read = authorizationFor(path);
+  const write = authorizationFor(path, { scopes: ["anime-list.read", "anime-list.write"] });
+  function call(name: string) {
+    return requestFor(path, { jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: {} } });
+  }
+  const initial = await handleHostedRequest(requestFor(path, initializeRequest()), upstream);
+  assert.match(initial.headers.get("www-authenticate") ?? "", /scope="anime-list.read"/u);
+  for (const name of writes) {
+    const denied = await handleHostedRequest(call(name), upstream, read);
+    assert.equal(denied.status, 403, name);
+    assert.match(denied.headers.get("www-authenticate") ?? "", /scope="anime-list.read anime-list.write"/u);
+    assert.equal(((await json(denied)).error as {code:number}).code, -32000);
+  }
+  assert.equal(calls, 0);
+  assert.equal((await handleHostedRequest(call("get_streaming_links"), upstream, read)).status, 200);
+  for (const name of writes) {
+    assert.equal((await handleHostedRequest(call(name), upstream, write)).status, 200, name);
+  }
+  assert.equal(calls, writes.length + 1);
+});
+
+test("disabling Anime List writes keeps signed-in reads, filters listings and rejects calls before forwarding", async () => {
+  const path = "/anime-list/mcp";
+  const read = authorizationFor(path);
+  const off = { writeProducts: ["anchor"] };
+  const listed = [{ name: "get_watchlist" }, { name: "remove_watchlist_entries" }, { name: "unknown" }];
+  let calls = 0;
+  const upstream: typeof fetch = async () => { calls++; return Response.json({ jsonrpc: "2.0", id: 41, result: { tools: listed } }); };
+  const send = (method: string, params: object) => handleProductionRequest(requestFor(path, { jsonrpc: "2.0", id: 41, method, params }), upstream, read, undefined, off);
+  assert.equal((await send("tools/call", { name: "get_watchlist", arguments: {} })).status, 200);
+  const manifest = (await json(await send("tools/list", {}))).result as { tools: { name: string; securitySchemes: unknown }[] };
+  assert.deepEqual(manifest.tools.map(t=>[t.name,t.securitySchemes]), [["get_watchlist",[{type:"oauth2",scopes:["anime-list.read"]}]]]);
+  const absent = await json(await send("tools/call", { name: "remove_watchlist_entries", arguments: {} }));
+  assert.equal((absent.result as {isError:boolean}).isError, true);
+  const alternate = await json(await send("resources/read", {}));
+  assert.equal(alternate.id, 41);
+  assert.equal(calls, 2);
+});
+
+test("both Anime List grants discover write tools and ChatGPT receives the tool-level reauthorization signal", async () => {
+  const path = "/anime-list/mcp";
+  const scopes = ["anime-list.read","anime-list.write"];
+  const read = authorizationFor(path);
+  const write = authorizationFor(path,{scopes});
+  let calls = 0;
+  const upstream: typeof fetch = async () => {
+    calls++;
+    return Response.json({jsonrpc:"2.0",id:3,result:{tools:[
+      {name:"get_watchlist",annotations:{readOnlyHint:true,destructiveHint:false}},
+      {name:"remove_watchlist_entries",annotations:{readOnlyHint:false,destructiveHint:true}},
+      {name:"not_authorized"},
+    ]}});
+  };
+  for (const grant of [read,write]) {
+    const listed = await handleHostedRequest(requestFor(path,{jsonrpc:"2.0",id:3,method:"tools/list",params:{}}),upstream,grant);
+    const result = (await json(listed)).result as {tools: {name:string;annotations:unknown;securitySchemes:unknown;_meta:{securitySchemes:unknown}}[]};
+    assert.deepEqual(result.tools.map(t=>t.name),["get_watchlist","remove_watchlist_entries"]);
+    assert.deepEqual(result.tools[1]!.securitySchemes,[{type:"oauth2",scopes}]);
+    assert.deepEqual(result.tools[1]!._meta.securitySchemes,result.tools[1]!.securitySchemes);
+    assert.deepEqual(result.tools[1]!.annotations,{readOnlyHint:false,destructiveHint:true});
+  }
+  const denied=await handleHostedRequest(requestFor(path,{jsonrpc:"2.0",id:4,method:"tools/call",params:{
+    name:"remove_watchlist_entries",arguments:{},_meta:{"openai/locale":"en-US"},
+  }}),upstream,read);
+  assert.equal(denied.status,200);
+  const result=(await json(denied)).result as {isError:boolean;_meta:Record<string,string[]>};
+  assert.equal(result.isError,true);
+  assert.deepEqual(result._meta["mcp/www_authenticate"],[denied.headers.get("www-authenticate")]);
+  assert.match(denied.headers.get("www-authenticate") ?? "",/error_description="/);
+  assert.equal(calls,2);
+});
+
+test("the explicit write setup URL requests both delegated scopes only when activation is enabled", async () => {
+  const path = "/anime-list/mcp?access=write";
+  const on = await handleHostedRequest(requestFor(path,initializeRequest()));
+  assert.equal(on.status,401);
+  assert.match(on.headers.get("www-authenticate") ?? "",/scope="anime-list.read anime-list.write"/u);
+  const off = await handleProductionRequest(requestFor(path,initializeRequest()),routeFetch,undefined,undefined,{writeProducts:[]});
+  assert.equal(off.status,401);
+  assert.match(off.headers.get("www-authenticate") ?? "",/scope="anime-list.read"/u);
 });

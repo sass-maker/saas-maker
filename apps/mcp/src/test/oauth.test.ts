@@ -380,7 +380,7 @@ test("runtime activation preserves Anchor's unauthenticated OAuth challenge", as
   assert.match(disabled.headers.get("www-authenticate") ?? "", /anchor.read anchor.write/u);
   assert.match(disabled.headers.get("www-authenticate") ?? "", /resource_metadata="https:\/\/mcp.example\/\.well-known\/oauth-protected-resource\/anchor\/mcp"/u);
   assert.equal(disabled.headers.get("cache-control"), "no-store");
-  const enabled = await worker.fetch(request(), { ...env, MCP_ENABLED_WRITE_PRODUCTS: "anchor" } as HostedWorkerEnv);
+  const enabled = await worker.fetch(request(), { ...env, MCP_ENABLED_WRITE_PRODUCTS: "anchor,anime-list" } as HostedWorkerEnv);
   assert.equal(enabled.status, 401);
   assert.match(enabled.headers.get("www-authenticate") ?? "", /anchor.read anchor.write/u);
 });
@@ -423,4 +423,24 @@ test("Anchor delegated consent cannot be expanded by account permissions", async
   }
   const full = await verifyAuth0AccessToken(await fixture.token({ audience, scope: "anchor.read anchor.write" }), request, anchor, env, fixture.getKey);
   assert.deepEqual(full.scopes, permissions);
+});
+
+
+test("Anime List keeps legacy read grants and requires both delegated scopes for writes", async () => {
+  const fixture = await signingFixture();
+  const anime = hostedRoute("/anime-list/mcp")!;
+  const audience = anime.oauthAudience!;
+  const permissions = ["anime-list.read", "anime-list.write"];
+  for (const scope of [undefined, "anime-list.read", "anime-list.write", "anime-list.read anime-list.write"]) {
+    const grant = await verifyAuth0AccessToken(await fixture.token({ audience, permissions, scope }), new Request(audience), anime, env, fixture.getKey);
+    assert.deepEqual(grant.scopes, scope === permissions.join(" ") ? permissions : ["anime-list.read"]);
+  }
+});
+
+test("Anime List advertises read-only OAuth when writes are disabled", async () => {
+  const request = new Request("https://anime-mcp.significanthobbies.com/.well-known/oauth-protected-resource/anime-list/mcp");
+  for (const [products,expected] of [["anchor",["anime-list.read"]],["anchor,anime-list",["anime-list.read","anime-list.write"]]] as const) {
+    const metadata = await handleOAuthMetadataRequest(request, { ...env, MCP_ENABLED_WRITE_PRODUCTS: products });
+    assert.deepEqual((await metadata!.json() as {scopes_supported:string[]}).scopes_supported,expected);
+  }
 });

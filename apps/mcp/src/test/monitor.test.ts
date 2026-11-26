@@ -52,7 +52,7 @@ const productionFetch: typeof fetch = async (input, init) => {
     return responseJson({
       resource: oauthResource(route, `${url.origin}${path}`),
       authorization_servers: [PRODUCTION_AUTH0_ISSUER],
-      scopes_supported: [route.scope],
+      scopes_supported: route.writeScope ? [route.scope, route.writeScope] : [route.scope],
       bearer_methods_supported: ["header"],
     });
   }
@@ -86,7 +86,7 @@ const productionFetch: typeof fetch = async (input, init) => {
   if (route.audience === "personal" && !request.headers.has("authorization")) {
     const resourceMetadata = `${url.origin}${protectedPrefix}${url.pathname}`;
     return responseJson({ jsonrpc: "2.0", error: { code: -32000 }, id: null }, 401, true, {
-      "WWW-Authenticate": `Bearer resource_metadata="${resourceMetadata}", scope="${route.scope}"`,
+      "WWW-Authenticate": `Bearer resource_metadata="${resourceMetadata}", scope="${route.writeScope && !route.preserveLegacyReads ? `${route.scope} ${route.writeScope}` : route.scope}"`,
     });
   }
   const message = await request.json() as { id: number; method: string; params?: Record<string, unknown> };
@@ -490,4 +490,19 @@ test("the first-party SaaS Maker endpoint fails the default monitor when its pro
   const failures = receipt.checks.filter(({ status }) => status === "failed");
   assert.ok(failures.every(({ id, plugin }) => plugin === "saas-maker" && id.startsWith("first-party-")));
   assert.equal(JSON.stringify(receipt).includes("gateway-private-detail"), false);
+});
+
+test("the monitor flags an Anime List resource missing delegated write capability", async () => {
+  const receipt = await runProductionMonitor({ fetchImpl: async (input, init) => {
+    const request = new Request(input, init);
+    if (request.url === "https://anime-mcp.significanthobbies.com/.well-known/oauth-protected-resource/anime-list/mcp") {
+      const response = await productionFetch(request);
+      const metadata = await response.json() as Record<string, unknown>;
+      return responseJson({ ...metadata, scopes_supported: ["anime-list.read"] });
+    }
+    return productionFetch(request);
+  } });
+  assert.deepEqual(receipt.checks.find((check) => check.plugin === "anime-list" && check.id === "oauth-resource"), {
+    id: "oauth-resource", plugin: "anime-list", status: "failed", errorCode: "resource_contract_invalid",
+  });
 });

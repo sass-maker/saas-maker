@@ -7,7 +7,7 @@
   "workers_dev": true,
   "preview_urls": false,
   "vars": {
-    "MCP_ENABLED_WRITE_PRODUCTS": "anchor"
+    "MCP_ENABLED_WRITE_PRODUCTS": "anchor,anime-list"
   },
   "routes": [
     { "pattern": "anchor-mcp.significanthobbies.com", "custom_domain": true },

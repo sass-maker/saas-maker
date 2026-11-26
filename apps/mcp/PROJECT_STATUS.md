@@ -25,8 +25,13 @@ notifications without a request ID. Tool responses retain strict JSON filtering;
 202 acknowledgements carrying content or a request ID are rejected. This
 repairs the discovery failure observed after successful OAuth sign-in.
 
-This source sets the nonsecret `MCP_ENABLED_WRITE_PRODUCTS` binding to `anchor`
-for controlled account qualification through the guarded publisher. Anonymous
+This source sets the nonsecret `MCP_ENABLED_WRITE_PRODUCTS` binding to `anchor,anime-list`. The release
+operator verifies the product Worker’s published tool manifest before merging and
+deploying this gateway. The deployment script enforces clean main and current
+MCP CI. Removing `anime-list` disables mutations through the gateway while
+keeping read grants usable. The production monitor and activation verifier
+expect the write-enabled deployment and will report the missing write scope
+during a deliberate rollback. Anime List independently controls its own endpoint. Anonymous
 initialization still returns the OAuth challenge; tool access requires Auth0
 authorization, exact resource/scopes and independent product account isolation.
 Removing `anchor` from the binding or restoring the previous disabled Worker
@@ -46,13 +51,14 @@ read-only connections retain their permissions. No directory submission is claim
 ## Why / What
 
 ChatGPT Connections is Fleet's shared MCP gateway for existing product data.
-Its other published connections remain read-only; Anchor is an explicitly
-scoped account-action integration under controlled qualification. Public product routes remain anonymous; Reader,
-Calorie, and Anime List use user-scoped federated OAuth that is verified by
-both the gateway and the owning product. CodeVetter and other device-local
+The gateway uses explicit tool allowlists for Anchor account actions and Anime
+List library, preference, feedback and franchise-monitor edits. Anime List reads
+use `anime-list.read`. Mutations also require `anime-list.write`, runtime
+activation, and independent authorization by Anime List. Public product routes
+remain anonymous. Reader and Calorie use user-scoped federated read access. CodeVetter and other device-local
 sources remain outside this gateway.
 
-Mutations outside the approved Anchor tool allowlist, device-only data upload,
+Mutations outside the approved Anchor and Anime List tool allowlists, device-only data upload,
 unscoped private Significant Hobbies records, and the full local Research Papers
 corpus remain out of scope.
 

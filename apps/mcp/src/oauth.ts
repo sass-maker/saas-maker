@@ -8,6 +8,7 @@ import {
 
 import {
   hostedRoute,
+  routeForActivation,
   oauthResource,
   type OpenAIChallengeSecret,
   type HostedRouteDefinition,
@@ -166,7 +167,7 @@ function validAuth0Claims(
     typeof payload.iat === "number" &&
     payload.exp > payload.iat &&
     payload.exp - payload.iat <= MAX_ACCESS_TOKEN_LIFETIME_SECONDS + CLOCK_TOLERANCE_SECONDS &&
-    (route.writeScope ? delegatedScopes(payload) : grantedPermissions(payload)).has(expectedScope);
+    (route.writeScope && !route.preserveLegacyReads ? delegatedScopes(payload) : grantedPermissions(payload)).has(expectedScope);
 }
 
 export async function verifyAuth0AccessToken(
@@ -190,13 +191,14 @@ export async function verifyAuth0AccessToken(
   if (!validAuth0Claims(payload, route, expectedOwnerId, route.scope)) {
     throw new joseErrors.JWTClaimValidationFailed("required Auth0 claims are invalid", payload, "sub");
   }
+  const delegated = delegatedScopes(payload);
   return {
     subject: payload.sub,
     product: route.id,
     resource,
     scope: route.scope,
     ...(route.toolScopes ? {
-      scopes: [route.scope, ...(route.writeScope && delegatedScopes(payload).has(route.writeScope)
+      scopes: [route.scope, ...(route.writeScope && delegated.has(route.scope) && delegated.has(route.writeScope)
         ? [route.writeScope] : [])],
     } : {}),
   };
@@ -253,12 +255,14 @@ function protectedMetadataRoute(pathname: string, hostname: string): HostedRoute
 
 function protectedResourceMetadata(
   request: Request,
-  route: HostedRouteDefinition,
+  registered: HostedRouteDefinition,
   issuer: string,
+  writeProducts: readonly string[],
 ): Response {
   const requestUrl = new URL(request.url);
   const routePath = protectedMetadataRoute(requestUrl.pathname, requestUrl.hostname);
-  if (routePath !== route || route.audience !== "personal" || !route.scope) {
+  const route = routeForActivation(registered, writeProducts);
+  if (routePath !== registered || route.audience !== "personal" || !route.scope) {
     return Response.json({ error: "not_found" }, { status: 404, headers: noStoreHeaders() });
   }
   const url = new URL(request.url);
@@ -364,7 +368,7 @@ async function proxyAuthorizationServerMetadata(
 
 export async function handleOAuthMetadataRequest(
   request: Request,
-  env: Pick<HostedWorkerEnv, "AUTH0_ISSUER">,
+  env: Pick<HostedWorkerEnv, "AUTH0_ISSUER"> & { MCP_ENABLED_WRITE_PRODUCTS?: string },
   fetchImpl: typeof fetch = fetch,
 ): Promise<Response | undefined> {
   const pathname = new URL(request.url).pathname;
@@ -391,5 +395,5 @@ export async function handleOAuthMetadataRequest(
   }
   const route = protectedMetadataRoute(pathname, new URL(request.url).hostname);
   if (!route) return Response.json({ error: "not_found" }, { status: 404, headers: noStoreHeaders() });
-  return protectedResourceMetadata(request, route, issuer);
+  return protectedResourceMetadata(request, route, issuer, env.MCP_ENABLED_WRITE_PRODUCTS?.split(",").map((id) => id.trim()) ?? []);
 }

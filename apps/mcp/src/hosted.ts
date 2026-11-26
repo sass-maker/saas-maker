@@ -11,6 +11,7 @@ interface HostedRouteBase {
   oauthAudience?: string;
   scope?: string;
   writeScope?: string;
+  preserveLegacyReads?: boolean;
   toolScopes?: Readonly<Record<string, readonly string[]>>;
   tokenSecret?: PrivateTokenSecret;
   productionStatus?: "prepared";
@@ -169,6 +170,44 @@ export const HOSTED_ROUTES: Readonly<Record<string, HostedRouteDefinition>> = Ob
     authMode: "federated",
     oauthAudience: "https://mcp.significanthobbies.com/anime-list/mcp",
     scope: "anime-list.read",
+    writeScope: "anime-list.write",
+    preserveLegacyReads: true,
+    toolScopes: {
+      search_anime: ["anime-list.read"],
+      search_manga: ["anime-list.read"],
+      list_search_fields: ["anime-list.read"],
+      list_filter_actions: ["anime-list.read"],
+      get_anime_detail: ["anime-list.read"],
+      get_manga_detail: ["anime-list.read"],
+      get_anime_stats: ["anime-list.read"],
+      get_random_anime: ["anime-list.read"],
+      list_watchlist: ["anime-list.read"],
+      list_manga_watchlist: ["anime-list.read"],
+      list_watchlist_tags: ["anime-list.read"],
+      get_watchlist_enriched: ["anime-list.read"],
+      get_manga_watchlist_enriched: ["anime-list.read"],
+      semantic_search: ["anime-list.read"],
+      get_similar_titles: ["anime-list.read"],
+      get_franchise: ["anime-list.read"],
+      get_streaming_links: ["anime-list.read"],
+      get_seasonal_anime: ["anime-list.read"],
+      get_watchlist: ["anime-list.read"],
+      get_watchlist_entry: ["anime-list.read"],
+      get_watchlist_stats: ["anime-list.read"],
+      list_library_tags: ["anime-list.read"],
+      discover_titles: ["anime-list.read"],
+      get_released_sequels: ["anime-list.read"],
+      get_upcoming_sequels: ["anime-list.read"],
+      get_user_preferences: ["anime-list.read"],
+      get_recommendation_feedback: ["anime-list.read"],
+      get_franchise_updates: ["anime-list.read"],
+      upsert_watchlist_entries: ["anime-list.read", "anime-list.write"],
+      remove_watchlist_entries: ["anime-list.read", "anime-list.write"],
+      manage_watchlist_tags: ["anime-list.read", "anime-list.write"],
+      update_user_preferences: ["anime-list.read", "anime-list.write"],
+      record_recommendation_feedback: ["anime-list.read", "anime-list.write"],
+      set_franchise_monitor: ["anime-list.read", "anime-list.write"],
+    },
     serverName: "anime-list-by-significant-hobbies",
     upstreamUrl: "https://anime.significanthobbies.com/api/mcp",
   },
@@ -290,4 +329,16 @@ export function openAiChallengeSecret(hostname: string): OpenAIChallengeSecret |
 
 export function oauthResource(route: HostedRouteDefinition, fallback: string): string {
   return route.oauthAudience ?? fallback;
+}
+
+export function routeForActivation(route: HostedRouteDefinition, writeProducts: readonly string[]): HostedRouteDefinition {
+  if (!route.preserveLegacyReads || !route.writeScope || writeProducts.includes(route.id)) return route;
+  const write = route.writeScope;
+  const toolScopes = Object.fromEntries(Object.entries(route.toolScopes ?? {}).filter(([, scopes]) => !scopes.includes(write)));
+  const { writeScope: _disabledWrite, ...readRoute } = route;
+  return { ...readRoute, toolScopes };
+}
+
+export function initialOAuthScope(route: HostedRouteDefinition): string | undefined {
+  return route.writeScope && !route.preserveLegacyReads ? `${route.scope} ${route.writeScope}` : route.scope;
 }

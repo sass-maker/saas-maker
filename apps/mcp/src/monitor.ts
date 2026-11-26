@@ -1,5 +1,5 @@
 import { APP_DEFINITIONS } from "./apps.js";
-import { HOSTED_ROUTES, hostedRoute, oauthResource, type HostedRouteDefinition } from "./hosted.js";
+import { HOSTED_ROUTES, hostedRoute, initialOAuthScope, oauthResource, type HostedRouteDefinition } from "./hosted.js";
 
 const SAAS_MAKER_FIRST_PARTY_MCP_URL = "https://sassmaker.com/mcp";
 const PROTOCOL_VERSION = "2025-11-25";
@@ -494,12 +494,13 @@ async function oauthChallengeCheck(
     clientInfo: { name: "fleet-production-monitor", version: "1.0.0" },
   });
   const expectedMetadata = `${origin}${PROTECTED_RESOURCE_PREFIX}${path}`;
+  const expectedScopes = initialOAuthScope(route);
   const challenge = response.headers.get("www-authenticate") ?? "";
   if (
     response.status !== 401 ||
     !noStore(response) ||
     !challenge.includes(`resource_metadata="${expectedMetadata}"`) ||
-    !challenge.includes(`scope="${route.scope}"`)
+    !challenge.includes(`scope="${expectedScopes}"`)
   ) {
     throw new MonitorError("oauth_challenge_invalid");
   }
@@ -519,12 +520,13 @@ async function protectedResourceCheck(
   const metadata = await json(response, "resource");
   const authorizationServers = stringArray(metadata.authorization_servers);
   const scopes = stringArray(metadata.scopes_supported);
+  const expectedScopes = route.writeScope ? [route.scope!, route.writeScope] : [route.scope!];
   const bearerMethods = stringArray(metadata.bearer_methods_supported);
   const resource = oauthResource(route, `${origin}${path}`);
   if (
     metadata.resource !== resource ||
     authorizationServers?.length !== 1 || authorizationServers[0] !== issuer ||
-    scopes?.length !== 1 || scopes[0] !== route.scope ||
+    scopes?.length !== expectedScopes.length || !expectedScopes.every((scope) => scopes.includes(scope)) ||
     bearerMethods?.includes("header") !== true
   ) {
     throw new MonitorError("resource_contract_invalid");

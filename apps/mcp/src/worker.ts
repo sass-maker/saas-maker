@@ -6,6 +6,8 @@ import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/
 import {
   HOSTED_ROUTES,
   hostedRoute,
+  routeForActivation,
+  initialOAuthScope,
   oauthResource,
   type HostedRouteDefinition,
 } from "./hosted.js";
@@ -619,7 +621,8 @@ function authorizationMatches(
 function oauthChallenge(request: Request, route: HostedRouteDefinition): Response {
   const url = new URL(request.url);
   const metadata = `${url.origin}/.well-known/oauth-protected-resource${url.pathname}`;
-  const scopes = route.writeScope ? `${route.scope} ${route.writeScope}` : route.scope;
+  const requestWrites = route.writeScope && url.searchParams.get("access") === "write";
+  const scopes = requestWrites ? `${route.scope} ${route.writeScope}` : initialOAuthScope(route);
   const challenge = `Bearer resource_metadata="${metadata}", scope="${scopes}", error="invalid_token", error_description="OAuth authorization is required"`;
   return jsonRpcError(401, -32000, "OAuth authorization is required.", {
     "WWW-Authenticate": challenge,
@@ -665,7 +668,7 @@ async function handleNative(
 ): Promise<Response> {
   const safeRequest = await boundedRequest(request);
   const body = await safeRequest.arrayBuffer();
-  let message: { id?: number | string; method?: string; params?: { name?: string } };
+  let message: { id?: number | string; method?: string; params?: { name?: string; _meta?: Record<string, unknown> } };
   try {
     message = JSON.parse(new TextDecoder().decode(body)) as typeof message;
   } catch {
@@ -681,7 +684,7 @@ async function handleNative(
     "tools/call",
   ]);
   if (allowlist && !allowedPublicNativeMethods.has(message.method ?? "")) {
-    return jsonRpcError(200, -32601, "Method is not available on this connection.");
+    return jsonRpcError(200, -32601, "Method is not available on this connection.", undefined, typeof message.id === "number" || typeof message.id === "string" ? message.id : null);
   }
   if (allowlist && message.method === "tools/call" && !allowlist.has(message.params?.name ?? "")) {
     return Response.json({
@@ -699,9 +702,26 @@ async function handleNative(
     if (required.some((scope) => !granted.has(scope))) {
       const url = new URL(request.url);
       const metadata = `${url.origin}/.well-known/oauth-protected-resource${url.pathname}`;
-      return jsonRpcError(403, -32000, "This action requires additional OAuth permission.", {
-        "WWW-Authenticate": `Bearer resource_metadata="${metadata}", error="insufficient_scope", scope="${required.join(" ")}"`,
-      }, typeof message.id === "string" || typeof message.id === "number" ? message.id : null);
+      const challenge = `Bearer resource_metadata="${metadata}", error="insufficient_scope", scope="${required.join(" ")}", error_description="Authorize the requested account permissions to continue"`;
+      const id = typeof message.id === "string" || typeof message.id === "number" ? message.id : null;
+      if (route.preserveLegacyReads) {
+        // ChatGPT consumes a tool-level linking challenge. HTTP MCP transports
+        // use the 403 challenge header for the same incremental authorization.
+        url.search = "?access=write";
+        const hint = `Authorize write access, then retry. If no prompt appears, connect the MCP URL ${url.href} to request write consent explicitly.`;
+        const clientMeta = message.params?._meta ?? {};
+        const openAiClient = Object.keys(clientMeta).some((key) => key.startsWith("openai/") || key === "webplus/i18n") ||
+          /chatgpt|openai/iu.test(request.headers.get("user-agent") ?? "");
+        if (openAiClient) {
+          return Response.json({ jsonrpc: "2.0", id, result: {
+            isError: true,
+            content: [{ type: "text", text: hint }],
+            _meta: { "mcp/www_authenticate": [challenge] },
+          } }, { headers: { "WWW-Authenticate": challenge } });
+        }
+        return jsonRpcError(403, -32000, hint, { "WWW-Authenticate": challenge }, id);
+      }
+      return jsonRpcError(403, -32000, "This action requires additional OAuth permission.", { "WWW-Authenticate": challenge }, id);
     }
   }
   const headers = new Headers({
@@ -787,8 +807,9 @@ export async function handleHostedRequest(
     return request.method === "HEAD" ? new Response(null, { headers: response.headers }) : response;
   }
 
-  const route = hostedRoute(url.pathname, url.hostname);
-  if (!route) return withProtocolHeaders(jsonRpcError(404, -32001, "Unknown MCP route."), request);
+  const registered = hostedRoute(url.pathname, url.hostname);
+  if (!registered) return withProtocolHeaders(jsonRpcError(404, -32001, "Unknown MCP route."), request);
+  const route = routeForActivation(registered, activation?.writeProducts ?? []);
   if (request.headers.has("origin") && !allowedOrigin(request)) {
     return withProtocolHeaders(jsonRpcError(403, -32000, "Origin is not allowed."), request, route);
   }

@@ -147,7 +147,7 @@
       "id": "anime-list",
       "name": "My Anime List by Significant Hobbies",
       "shortDescription": "Explore anime and manga alongside your personal watchlists.",
-      "longDescription": "Search anime and manga, inspect catalog details and stats, pick a random title, and read the signed-in user's anime and manga watchlists. The plugin cannot add, update, tag, score, or remove watchlist entries.",
+      "longDescription": "Search anime and manga, compare ratings, explore franchises, and read your private library. With separate write consent and confirmation, add, rate, tag or remove entries and update discovery preferences, recommendation feedback and franchise monitors.",
       "category": "Lifestyle",
       "website": "https://anime.significanthobbies.com",
       "support": "https://github.com/Significant-Hobbies/anime-list/issues",
@@ -163,7 +163,7 @@
         "What is currently on my anime watchlist?",
         "Pick a random anime and show its details."
       ],
-      "releaseNotes": "Personal Anime List connection with user-scoped read-only watchlist tools.",
+      "releaseNotes": "Private library and discovery tools with separate read and write permissions.",
       "reviewFixture": "A dedicated review account with anime and manga watchlist entries and tags; credentials are supplied only in the OpenAI portal.",
       "tests": {
         "positive": [
@@ -195,9 +195,9 @@
         ],
         "negative": [
           {
-            "prompt": "Mark the first watchlist title as completed and score it 10.",
-            "expectedBehavior": "No mutation tool call; explain that watchlists are read-only.",
-            "reason": "Watchlist writes are excluded."
+            "prompt": "Using my read-only grant, mark the first watchlist title as completed and score it 10.",
+            "expectedBehavior": "Explain that a library change requires write permission and confirmation.",
+            "reason": "A read-only grant cannot authorize library changes."
           },
           {
             "prompt": "Send an arbitrary POST request to the anime API.",
@@ -275,7 +275,7 @@
           {
             "prompt": "Mark this anime completed and score it 10.",
             "expectedBehavior": "No mutation tool call; explain that the connection is read-only.",
-            "reason": "Watchlist writes are unavailable on every Anime List connection."
+            "reason": "Watchlist writes require the separate signed-in Anime List connection and write consent."
           }
         ]
       }

@@ -36,7 +36,9 @@ MCP Connections at `apps/mcp` is the owner-approved shared MCP gateway
 absorbed from `chatgpt-connections`. Its local DaddyRad adapter lives at
 `apps/mcp/local/daddyrad` and remains a local-only Swift stdio server. It keeps its own pnpm lock and workspace
 boundary. Its existing Worker, branded endpoints and read-only
-connections remain unchanged. The owner authorized a prepared Anchor account
+connections retain their approved boundaries. The owner authorized the signed-in
+Anime List tool allowlist on 2026-11-26 with separate read and write consent
+and independent product authorization. The owner authorized a prepared Anchor account
 read/write native route on 2026-11-08, with explicit per-tool OAuth scopes,
 independent product authorization and a fail-closed runtime activation gate.
 Follow its nested `AGENTS.md`; use `pnpm check:mcp`
