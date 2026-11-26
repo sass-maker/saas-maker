@@ -230,7 +230,11 @@ test("successful Food tools emit named App Health events while errors and QA cal
     });
   });
   const waits: Promise<unknown>[] = [];
-  const callTool = async (q: string, qa: boolean, configureTechData = true) => {
+  const techDataScope = {
+    APP_HEALTH_TECHDATA_INGEST_KEY: "test-techdata-ingest-key",
+    APP_HEALTH_TECHDATA_ENVIRONMENT_ID: "env-techdata-test",
+  };
+  const callTool = async (q: string, qa: boolean, scope: Partial<typeof techDataScope> = techDataScope) => {
     const response = await worker.fetch(
       new Request("https://mcp.highsignal.app/techdata/mcp", {
         method: "POST",
@@ -248,10 +252,7 @@ test("successful Food tools emit named App Health events while errors and QA cal
         ...baseEnv,
         APP_HEALTH_INGEST_KEY: "test-gateway-ingest-key",
         APP_HEALTH_STAGE_SAMPLE_RATE: "0",
-        ...(configureTechData ? {
-          APP_HEALTH_TECHDATA_INGEST_KEY: "test-techdata-ingest-key",
-          APP_HEALTH_TECHDATA_ENVIRONMENT_ID: "env-techdata-test",
-        } : {}),
+        ...scope,
       },
       { waitUntil: (promise) => { waits.push(promise); } },
     );
@@ -263,7 +264,13 @@ test("successful Food tools emit named App Health events while errors and QA cal
   await Promise.all(waits);
   assert.deepEqual(warnings, []);
   assert.equal(await callTool("same-query-from-monitor", true), true);
-  assert.equal(await callTool("generic-gateway-key-only", false, false), true);
+  assert.equal(await callTool("generic-gateway-key-only", false, {}), true);
+  assert.equal(await callTool("missing-product-environment", false, {
+    APP_HEALTH_TECHDATA_INGEST_KEY: techDataScope.APP_HEALTH_TECHDATA_INGEST_KEY,
+  }), true);
+  assert.equal(await callTool("missing-product-key", false, {
+    APP_HEALTH_TECHDATA_ENVIRONMENT_ID: techDataScope.APP_HEALTH_TECHDATA_ENVIRONMENT_ID,
+  }), true);
   assert.equal(await callTool("failed-query", false), false);
   assert.equal(await callTool("collector-receipt-incomplete", false), true);
   await Promise.all(waits);
