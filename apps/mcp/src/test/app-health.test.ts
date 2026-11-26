@@ -216,6 +216,7 @@ test("successful Food tools emit named App Health events while errors and QA cal
       if (url.pathname === "/v1/product-events") {
         productBatches.push(JSON.parse(String(init?.body)));
         assert.equal(init?.redirect, "error");
+        assert.equal(new Headers(init?.headers).get("Authorization"), "Bearer test-techdata-ingest-key");
         return Response.json({ accepted: productBatches.length === 1 ? 1 : 0, duplicates: 0 }, { status: 202 });
       }
       return Response.json({ accepted: 1 }, { status: 202 });
@@ -227,7 +228,7 @@ test("successful Food tools emit named App Health events while errors and QA cal
     });
   });
   const waits: Promise<unknown>[] = [];
-  const callTool = async (q: string, qa: boolean) => {
+  const callTool = async (q: string, qa: boolean, configureTechData = true) => {
     const response = await worker.fetch(
       new Request("https://mcp.highsignal.app/techdata/mcp", {
         method: "POST",
@@ -241,7 +242,15 @@ test("successful Food tools emit named App Health events while errors and QA cal
           params: { name: "search_food_products", arguments: { q } },
         }),
       }),
-      { ...baseEnv, APP_HEALTH_INGEST_KEY: "test-ingest-key", APP_HEALTH_ENVIRONMENT: "preview", APP_HEALTH_STAGE_SAMPLE_RATE: "0" },
+      {
+        ...baseEnv,
+        APP_HEALTH_INGEST_KEY: "test-gateway-ingest-key",
+        APP_HEALTH_STAGE_SAMPLE_RATE: "0",
+        ...(configureTechData ? {
+          APP_HEALTH_TECHDATA_INGEST_KEY: "test-techdata-ingest-key",
+          APP_HEALTH_TECHDATA_ENVIRONMENT_ID: "env-techdata-test",
+        } : {}),
+      },
       { waitUntil: (promise) => { waits.push(promise); } },
     );
     assert.equal(response.status, 200);
@@ -252,6 +261,7 @@ test("successful Food tools emit named App Health events while errors and QA cal
   await Promise.all(waits);
   assert.deepEqual(warnings, []);
   assert.equal(await callTool("same-query-from-monitor", true), true);
+  assert.equal(await callTool("generic-gateway-key-only", false, false), true);
   assert.equal(await callTool("failed-query", false), false);
   assert.equal(await callTool("collector-receipt-incomplete", false), true);
   await Promise.all(waits);
@@ -259,11 +269,11 @@ test("successful Food tools emit named App Health events while errors and QA cal
   assert.equal(productBatches.length, 2);
   assert.deepEqual(warnings, [["TechData Food usage received an incomplete App Health receipt"]]);
   const batch = productBatches[0] as {
-    batch_id: string; schema_version: number; environment: string;
+    batch_id: string; schema_version: number; environment_id: string;
     events: Array<Record<string, unknown>>;
   };
   assert.equal(batch.schema_version, 1);
-  assert.equal(batch.environment, "preview");
+  assert.equal(batch.environment_id, "env-techdata-test");
   assert.match(batch.batch_id, /^[\da-f-]{36}$/u);
   assert.equal(batch.events.length, 1);
   const { event_id, occurred_at, ...fields } = batch.events[0]!;
@@ -276,7 +286,7 @@ test("successful Food tools emit named App Health events while errors and QA cal
     path: "/techdata/mcp",
     name: "food.products_search_succeeded",
   });
-  assert.doesNotMatch(JSON.stringify(batch), /sample-query|food-result-id|test-ingest-key/u);
+  assert.doesNotMatch(JSON.stringify(batch), /sample-query|food-result-id|ingest-key/u);
 });
 
 test("unknown paths emit nothing and collector failure preserves the response", async () => {

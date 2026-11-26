@@ -23,9 +23,9 @@ export interface RequestStageTiming {
 }
 
 async function sendFoodUsageEvents(env: HostedWorkerEnv, names: FoodUsageEvent[]): Promise<void> {
-  const key = env.APP_HEALTH_INGEST_KEY?.trim();
-  if (!key) return;
-  const environment = env.APP_HEALTH_ENVIRONMENT?.trim();
+  const key = env.APP_HEALTH_TECHDATA_INGEST_KEY?.trim();
+  const environmentId = env.APP_HEALTH_TECHDATA_ENVIRONMENT_ID?.trim();
+  if (!key || !environmentId) return;
   const now = Date.now();
   const response = await fetch(APP_HEALTH_PRODUCT_ENDPOINT, {
     method: "POST",
@@ -35,7 +35,7 @@ async function sendFoodUsageEvents(env: HostedWorkerEnv, names: FoodUsageEvent[]
     body: JSON.stringify({
       schema_version: 1,
       batch_id: crypto.randomUUID(),
-      ...(environment ? { environment } : {}),
+      environment_id: environmentId,
       events: names.map((name) => ({
         schemaVersion: "app-health.product-event.v1",
         event_id: crypto.randomUUID(),

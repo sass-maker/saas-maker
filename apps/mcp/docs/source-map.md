@@ -22,7 +22,8 @@ The shared runtime enforces GET, relative fixed paths, configured origins, a 10-
 TechData's four Food tools emit first-party App Health usage events after successful
 reads. The event contains a fixed operation name and route, a timestamp, and random
 delivery identifiers. Queries, source records, and caller identity are excluded.
-The gateway's existing App Health project credential owns these server events.
+These server events use a TechData-scoped ingest credential and the matching
+environment ID. Delivery is disabled until both are configured.
 The monitor declares its requests with `X-Fleet-QA: 1`, which omits those calls from
 product-event reporting. Clients can opt out with the same header, so counts are
 observed successful calls. Delivery runs outside the tool response and reports
