@@ -52,7 +52,7 @@ hosts; the planned-hostnames section below remains separate.
 | High Signal | `https://mcp.highsignal.app/high-signal/mcp` | None | Daily signals and evidence, plus compatible brief/search/signal/ledger methods |
 | Significant Hobbies | `https://hobbies-mcp.significanthobbies.com/significant-hobbies/mcp` | None | Public hobby, experience, and PUBLIC-timeline projections only |
 | Research Papers | `https://papers-mcp.highsignal.app/research-papers/mcp` | None | Approved public hot, sleeper, and reading-path exports only |
-| SWE Interview Prep | `https://learn-mcp.significanthobbies.com/swe-interview-prep/mcp` | OAuth, `swe-interview-prep.read` | Daily/on-demand priority, progress, answer-free understanding checks, exact product links, and published curriculum catalogs |
+| SWE Interview Prep | `https://learn-mcp.significanthobbies.com/swe-interview-prep/mcp` | OAuth, `swe-interview-prep.read`; writes `swe-interview-prep.write` after activation | Native learning-record server: adaptive daily priority, curriculum search, profile, knowledge state, courses, sessions, resources, assessments and curriculum gaps |
 | Anchor | `https://mcp.significanthobbies.com/anchor/mcp` | OAuth, `anchor.read`; mutations also require `anchor.write` | Explicitly shared account planner/history and targeted native command receipts; Codex owner flow qualified, ChatGPT refresh pending |
 
 TechData Food has a prepared read-only route at
@@ -155,7 +155,7 @@ and every other hosted product must not be added to Codex.
 | TechData Food | Public catalog and recipe GET APIs live | Anonymous route implemented; not deployed | No auth | Awaiting gateway release |
 | Significant Hobbies | Hobbies, experiences, and public timelines live | Anonymous branded route live | No auth | OpenAI portal draft/submission pending |
 | Research Papers | Public exports live | Export-only branded route live | No auth | OpenAI portal draft/submission pending |
-| SWE Interview Prep | Public catalogs and private projections live | Branded OAuth gateway route live | `swe-interview-prep.read` metadata verified | ChatGPT creation and authenticated smoke pending |
+| SWE Interview Prep | Native `/api/mcp` server prepared in the product | Branded route proxies natively; 13 write tools hidden until `MCP_ENABLED_WRITE_PRODUCTS` includes it | `swe-interview-prep.write` must be added to the Auth0 API | Product deploy, write activation and authenticated write smoke pending |
 | SaaS Maker | Public agent projection live | Gateway route implemented; not deployed | No auth | Activation pending |
 | Drank | Public validated lookup live | Gateway route implemented; not deployed | No auth | Activation pending |
 
