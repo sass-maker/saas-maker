@@ -147,6 +147,18 @@ const routeFetch: typeof fetch = async (input, init) => {
   if (request.url === "https://anime.significanthobbies.com/api/mcp") {
     return nativeMcpResponse(request);
   }
+  if (request.url === "https://learn.significanthobbies.com/api/mcp") {
+    const message = await request.clone().json() as { id: number; method: string };
+    if (message.method !== "tools/list") return nativeMcpResponse(request, "swe-interview-prep-learning");
+    const route = HOSTED_ROUTES["/swe-interview-prep/mcp"]!;
+    return Response.json({ jsonrpc: "2.0", id: message.id, result: {
+      tools: Object.entries(route.toolScopes!).map(([name, scopes]) => ({
+        name,
+        inputSchema: { type: "object", properties: {} },
+        annotations: { readOnlyHint: !scopes.includes(route.writeScope!), destructiveHint: name === "delete_learning_record" },
+      })),
+    } });
+  }
   if (request.url === "https://personal-platform.sarthakagrawal927.workers.dev/mcp") {
     return nativeMcpResponse(request, "significant-hobbies-personal-apps");
   }
@@ -388,57 +400,52 @@ test("Reader advertises saved-link search and fetch and pages across read states
   assert.deepEqual(seen.map((url) => url.searchParams.get("q")), ["safe", "safe", null]);
 });
 
-test("SWE Interview Prep forwards the verified OAuth bearer only to private learning reads", async () => {
-  const seen: Array<{ authorization: string | null; url: string }> = [];
-  const fetcher = async (input: RequestInfo | URL, init?: RequestInit) => {
-    const url = String(input);
-    seen.push({
-      authorization: new Headers(init?.headers).get("authorization"),
-      url,
-    });
-    return url.endsWith("/verification")
-      ? Response.json({ state: "verification-required", questions: [{ prompt: "Explain it." }] })
-      : Response.json({
-          priority: { kind: "retention", concept: { id: "load-balancing" } },
-          trackingPolicy: { readOnly: true },
-        });
+test("SWE Interview Prep proxies its native learning server and gates writes on activation", async () => {
+  const path = "/swe-interview-prep/mcp";
+  const route = HOSTED_ROUTES[path]!;
+  const seen: Array<{ authorization: string | null; tool: string | undefined; url: string }> = [];
+  const fetcher: typeof fetch = async (input, init) => {
+    const request = input instanceof Request ? input : new Request(input, init);
+    const message = await request.clone().json() as { params?: { name?: string } };
+    seen.push({ authorization: request.headers.get("authorization"), tool: message.params?.name, url: request.url });
+    return routeFetch(request);
   };
-  const call = (id: number, name: string) =>
+  const call = (name: string, authorization = authorizationFor(path), activation?: { writeProducts: string[] }) =>
     handleHostedRequest(
-      requestFor("/swe-interview-prep/mcp", {
-        jsonrpc: "2.0",
-        id,
-        method: "tools/call",
-        params: { name, arguments: {} },
-      }),
+      requestFor(path, { jsonrpc: "2.0", id: 9, method: "tools/call", params: { name, arguments: {} } }),
       fetcher,
-      authorizationFor("/swe-interview-prep/mcp"),
+      authorization,
+      undefined,
+      activation,
     );
+  const writeGrant = authorizationFor(path, { scopes: ["swe-interview-prep.read", "swe-interview-prep.write"] });
 
-  const [dailyResponse, verificationResponse] = await Promise.all([
-    call(9, "get_daily_learning_priority"),
-    call(10, "get_current_learning_check"),
+  const read = await call("get_daily_learning_priority");
+  assert.equal(read.status, 200);
+  assert.deepEqual(seen.map(({ url, tool }) => [url, tool]), [
+    ["https://learn.significanthobbies.com/api/mcp", "get_daily_learning_priority"],
   ]);
-  assert.equal(dailyResponse.status, 200);
-  assert.equal(verificationResponse.status, 200);
-  assert.deepEqual(new Set(seen.map(({ url }) => url)), new Set([
-    "https://learn.significanthobbies.com/api/mcp/daily",
-    "https://learn.significanthobbies.com/api/mcp/verification",
-  ]));
-  assert.equal(
-    seen.every(
-      ({ authorization }) =>
-        authorization === "Bearer sweinterviewprepHeader.oauthPayload.oauthSignature",
-    ),
-    true,
+  assert.equal(seen[0]!.authorization, `Bearer ${upstreamToken(route)}`);
+
+  // Before activation the write tools are neither listed nor callable, even with a write grant.
+  const listed = await handleHostedRequest(
+    requestFor(path, { jsonrpc: "2.0", id: 2, method: "tools/list" }), fetcher, writeGrant,
   );
-  const bodies = [
-    JSON.stringify(await json(dailyResponse)),
-    JSON.stringify(await json(verificationResponse)),
-  ];
-  assert.equal(bodies[0]!.includes("load-balancing"), true);
-  assert.equal(bodies[1]!.includes("Explain it."), true);
-  assert.equal(bodies.some((body) => body.includes("oauthPayload")), false);
+  const names = ((await json(listed)).result as { tools: { name: string }[] }).tools.map((tool) => tool.name);
+  assert.equal(names.includes("get_learning_profile"), true);
+  assert.equal(names.includes("create_course"), false);
+  const inactive = await call("create_course", writeGrant);
+  assert.equal(((await json(inactive)).result as { isError: boolean }).isError, true);
+  assert.equal(seen.length, 2);
+
+  // After activation a read-only grant is refused and a write grant is forwarded.
+  const activation = { writeProducts: ["swe-interview-prep"] };
+  const denied = await call("create_course", authorizationFor(path), activation);
+  assert.equal(denied.status, 403);
+  assert.match(denied.headers.get("www-authenticate") ?? "", /swe-interview-prep\.write/u);
+  const accepted = await call("create_course", writeGrant, activation);
+  assert.equal(accepted.status, 200);
+  assert.deepEqual(seen.at(-1)!.tool, "create_course");
 });
 
 test("Anime List proxy fixes the upstream URL and forwards the verified OAuth bearer", async () => {

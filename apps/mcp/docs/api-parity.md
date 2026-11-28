@@ -26,7 +26,7 @@ other capabilities outside the read-only publication boundary.
 | High Signal | 2 | Local contract is intentionally reduced to daily signals plus exact signal evidence, and production now serves the same 2 (`get_daily_signals`, `get_signal_evidence`) since the reduction shipped in `ef11d519`. Its live dataset is currently empty; that is tracked separately |
 | Significant Hobbies | 5 | Manual production monitor enforces exact live catalog equality |
 | Research Papers | 3 | Manual production monitor enforces exact live catalog equality |
-| SWE Interview Prep | 8 | Gateway and product tests enforce the five public curriculum tools plus three OAuth, user-scoped learning projections; the understanding check exposes prompts without answers and preserves product-owned mastery |
+| SWE Interview Prep | 32 | Gateway tests enforce the native per-tool scope allowlist and write activation; product tests enforce user scoping, write scope, idempotent retries and answer-free checks |
 | SaaS Maker | 4 | Gateway tests enforce exact catalog equality; production activation pending |
 | Drank | 1 | Gateway tests enforce exact catalog equality; production activation pending |
 
@@ -38,9 +38,10 @@ The private expected catalogs are:
 - My Anime List: the read and write allowlist for `/anime-list/mcp` in
   [hosted.ts](../src/hosted.ts) covers catalog discovery, library, preferences,
   feedback and franchise monitoring.
-- SWE Interview Prep: `get_daily_learning_priority`, `get_learning_progress`,
-  `get_current_learning_check`,
-  plus the five public curriculum and system-design tools.
+- SWE Interview Prep: the per-tool read and write allowlist for
+  `/swe-interview-prep/mcp` in [hosted.ts](../src/hosted.ts). Nineteen read
+  tools are always available; thirteen learning-record write tools are listed
+  and callable only after write activation and with `swe-interview-prep.write`.
 
 The public Anime List catalog is exactly `search_anime`, `search_manga`,
 `get_anime_detail`, `get_manga_detail`, `get_anime_stats`, and
@@ -67,9 +68,10 @@ The following surfaces remain unavailable by design:
   administrative state.
 - Research Papers full-corpus search, similarity, paid RAG, PDFs, ingest,
   enrichment, databases, and operator controls.
-- SWE Interview Prep progress writes, self-attested mastery, notes, stored
-  review answers, chats, account records, and code execution. Its three
-  personal tools expose only product-computed learning projections.
+- SWE Interview Prep product FSRS mastery, notes, stored review answers,
+  reference solutions, chats, account records, and code execution. Agent
+  writes are limited to the product's learning record, where only submitted
+  assessment evidence changes an assessed level.
 - SaaS Maker internal registry, operations, deployments, credentials, and
   owner-only data.
 - Drank provider credentials, private targets, history, and arbitrary provider
